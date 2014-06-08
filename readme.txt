@@ -1,0 +1,1 @@
+This project is on liscence GNU, meaning that everything should remain open source.
