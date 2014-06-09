@@ -5,14 +5,14 @@ namespace SEConfigTool
     partial class SEConfigTool
     {
         /// <summary>
-        /// Variable nécessaire au concepteur.
+        /// Needed member to designer.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Nettoyage des ressources utilisées.
+        /// Ressources cleanup
         /// </summary>
-        /// <param name="disposing">true si les ressources managées doivent être supprimées ; sinon, false.</param>
+        /// <param name="disposing">true if every managed ressources need to be deleeted ; else, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -25,8 +25,7 @@ namespace SEConfigTool
         #region Code généré par le Concepteur Windows Form
 
         /// <summary>
-        /// Méthode requise pour la prise en charge du concepteur - ne modifiez pas
-        /// le contenu de cette méthode avec l'éditeur de code.
+        /// Needed method for designer support - do not modofy manually.
         /// </summary>
         private void InitializeComponent()
         {
