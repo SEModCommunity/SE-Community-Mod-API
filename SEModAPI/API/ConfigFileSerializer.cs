@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using SEModAPI.Support;
 using VRageMath;
 
 
@@ -91,15 +92,10 @@ namespace SEModAPI.API
 
         public ConfigFileSerializer()
         {
-            try
-            {
-                //Prepare game installation configuration
-                _gameInstallation = new GameInstallationInfo();
-                // Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
-                ReadCubeBlockDefinitions();
-            }
-            catch (AutoException) { throw; }
-            catch (Exception) { throw; }
+            //Prepare game installation configuration
+            _gameInstallation = new GameInstallationInfo();
+            // Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
+            ReadCubeBlockDefinitions();
         }
 
         #endregion
@@ -115,7 +111,7 @@ namespace SEModAPI.API
                 IgnoreWhitespace = true,
             };
 
-            object obj = null;
+            object obj;
 
             using (var xmlReader = XmlReader.Create(stream, settings))
             {
@@ -148,7 +144,7 @@ namespace SEModAPI.API
         public T ReadSpaceEngineersFile<T, TS>(string filename)
         where TS : XmlSerializer1
         {
-            var settings = new XmlReaderSettings()
+            var settings = new XmlReaderSettings
             {
                 IgnoreComments = true,
                 IgnoreWhitespace = true,

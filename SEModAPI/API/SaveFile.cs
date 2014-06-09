@@ -3,6 +3,7 @@ using Sandbox.Common.ObjectBuilders;
 using System.Collections.Generic;
 using System.IO;
 using SEModAPI.API;
+using SEModAPI.Support;
 
 namespace SEModAPI
 {

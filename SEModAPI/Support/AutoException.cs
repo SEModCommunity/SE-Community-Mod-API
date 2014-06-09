@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace SEModAPI
+namespace SEModAPI.Support
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,7 +14,7 @@ namespace SEModAPI
     /// </summary>
     public abstract class IExceptionState
     {
-        protected IExceptionState(System.Enum State) { m_ExceptionState = (int)Convert.ChangeType(State, typeof(int)); }
+        protected IExceptionState(Enum state) { m_ExceptionState = (int)Convert.ChangeType(state, typeof(int)); }
 
         protected int m_ExceptionState;
         public int ExceptionState { get { return m_ExceptionState; } }
@@ -58,12 +53,19 @@ namespace SEModAPI
         /// <summary>
         /// Get the Object context as string
         /// </summary>
-        public string Object { get { return base.TargetSite.ReflectedType.FullName; } }
+        public string Object 
+        {
+            get
+            {
+                if (TargetSite.ReflectedType != null) return TargetSite.ReflectedType.FullName;
+                return null;
+            }
+        }
 
         /// <summary>
         /// Get the Method context as string
         /// </summary>
-        public string Method { get { return base.TargetSite.Name; } }
+        public string Method { get { return TargetSite.Name; } }
 
 
         #endregion
@@ -73,12 +75,12 @@ namespace SEModAPI
         /// <summary>
         /// Class to handle exceptions to ease debbuging by handling their context
         /// </summary>
-        /// <param name="ExceptionState">An instance of a derived class of IExceptionState</param>
-        /// <param name="CustomMessage">Additionnal informations about the exception</param>
-        public AutoException(IExceptionState ExceptionState, string AdditionnalInfo = ""): base()
+        /// <param name="exceptionState">An instance of a derived class of IExceptionState</param>
+        /// <param name="additionnalInfo">Give additionnal information about the exception</param>
+        public AutoException(IExceptionState exceptionState, string additionnalInfo = "")
         {
-            m_ExceptionState = ExceptionState;
-            m_AdditionnalInfo = AdditionnalInfo;
+            m_ExceptionState = exceptionState;
+            m_AdditionnalInfo = additionnalInfo;
         }
 
         /// <summary>
@@ -103,7 +105,7 @@ namespace SEModAPI
             base.GetObjectData(info, context);
 
             if (info == null)
-                throw new System.ArgumentNullException("info");
+                throw new ArgumentNullException("info");
             info.AddValue("Object", Object);
             info.AddValue("Method", Method);
             info.AddValue("AdditionnalInfo", m_AdditionnalInfo);

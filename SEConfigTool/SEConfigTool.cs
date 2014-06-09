@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
-using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI;
 using SEModAPI.API;
 using Sandbox.Common.ObjectBuilders;
@@ -19,8 +16,8 @@ namespace SEConfigTool
         private string _standardSavePath;
         private ConfigFileSerializer _serializer;
         private CubeBlockDefinitionsWrapper _cubeBlockDefinitionsWrapper;
-        private bool _currentlyFillingBlocksConfigurationListBox = false;
-        private bool _currentlySelecting = false;
+        private bool _currentlyFillingBlocksConfigurationListBox;
+        private bool _currentlySelecting;
 
         private NumberFormatInfo _numberFormatInfo;
         private string _decimalSeparator;
@@ -101,7 +98,7 @@ namespace SEConfigTool
                 DefaultExt = "sbs file (*.sbs)"
             };
 
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 FileInfo saveFileInfo = new FileInfo(openFileDialog.FileName);
                 if (saveFileInfo.Exists)

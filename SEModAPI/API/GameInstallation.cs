@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Security.Principal;
+using SEModAPI.Support;
 
 
 namespace SEModAPI.API
