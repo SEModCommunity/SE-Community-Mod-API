@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ConfigFileSerializer.cs" />
+    <Compile Include="API\CubeBlockDefinition.cs" />
     <Compile Include="API\GameInstallation.cs" />
     <Compile Include="API\SaveFile.cs" />
     <Compile Include="API\SEModAPIExceptions.cs" />
@@ -70,14 +72,31 @@
     <Compile Include="Interop\CubeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Support\AutoException.cs" />
+    <Compile Include="Support\NumericTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="GameLibraries\Sandbox.Common.dll" />
-    <Content Include="GameLibraries\Sandbox.Common.XmlSerializers.dll" />
-    <Content Include="GameLibraries\VRage.Common.dll" />
-    <Content Include="GameLibraries\VRage.Library.dll" />
-    <Content Include="GameLibraries\VRage.Math.dll" />
+    <EmbeddedResource Include="Support\NumericTextBox.resx">
+      <DependentUpon>NumericTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GameLibraries\Sandbox.Common.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameLibraries\Sandbox.Common.XmlSerializers.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameLibraries\VRage.Common.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameLibraries\VRage.Library.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameLibraries\VRage.Math.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

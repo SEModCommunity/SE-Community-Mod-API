@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Security.Principal;
 
 
-namespace SEModAPI
+namespace SEModAPI.API
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,8 +52,7 @@ namespace SEModAPI
         /// <summary>
         /// Checks for key directory existance in the root game folder.
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
+        /// <returns>if the current game installation is valid</returns>
         private bool ValidateSpaceEngineersInstall()
         {
             if (string.IsNullOrEmpty(m_GamePath)) { return false; }
@@ -125,7 +124,7 @@ namespace SEModAPI
 
         public bool IsBaseAssembliesChanged()
         {
-            // We use the Bin64 Path, as these assemblies are marked "AllCPU", and will work regardless of processor architecture.
+            // We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
             var baseFilePath = Path.Combine(GamePath, "Bin64");
 
             var appFilePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -141,7 +140,7 @@ namespace SEModAPI
 
         public bool UpdateBaseFiles()
         {
-            // We use the Bin64 Path, as these assemblies are marked "AllCPU", and will work regardless of processor architecture.
+            // We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
             var baseFilePath = Path.Combine(GamePath, "Bin64");
             var appFilePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
@@ -205,9 +204,12 @@ namespace SEModAPI
 
                 if (waitForExit)
                 {
-                    process.WaitForExit();
+                    if (process != null)
+                    {
+                        process.WaitForExit();
 
-                    return process.ExitCode;
+                        return process.ExitCode;
+                    }
                 }
 
                 return 0;
