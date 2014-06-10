@@ -6,7 +6,23 @@ namespace SEModAPI.API
 {
     public class CubeBlockDefinition
     {
+        #region "Attributes"
+
         private MyObjectBuilder_CubeBlockDefinition _definition;
+
+        #endregion
+
+        #region "Constructors and Initializers"
+
+        public CubeBlockDefinition(MyObjectBuilder_CubeBlockDefinition definition)
+        {
+            _definition = definition;
+            Changed = false;
+        }
+
+        #endregion
+
+        #region "Properties"
 
         public bool Changed { get; private set; }
 
@@ -34,34 +50,27 @@ namespace SEModAPI.API
         public float BuildTime
         {
             get { return _definition.BuildTimeSeconds; }
-        }
-
-        public bool SetBuildTime(float time)
-        {
-            if (_definition.BuildTimeSeconds == time) return false;
-            _definition.BuildTimeSeconds = time;
-            Changed = true;
-            return true;
+            set
+            {
+                if (_definition.BuildTimeSeconds == value) return;
+                _definition.BuildTimeSeconds = value;
+                Changed = true;
+            }
         }
 
         public float DisassembleRatio
         {
             get { return _definition.DisassembleRatio; }
+            set 
+            {
+                if (_definition.DisassembleRatio == value) return;
+                _definition.DisassembleRatio = value;
+                Changed = true;
+            }
         }
 
-        public bool SetDisassembleRatio(float disassembleRatio)
-        {
-            if (_definition.DisassembleRatio == disassembleRatio) return false;
-            _definition.DisassembleRatio = disassembleRatio;
-            Changed = true;
-            return true;
-        }
+        #endregion
 
-        public CubeBlockDefinition(MyObjectBuilder_CubeBlockDefinition definition)
-        {
-            _definition = definition;
-            Changed = false;
-        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,8 +79,30 @@ namespace SEModAPI.API
 
     public class CubeBlockDefinitionsWrapper
     {
+        #region "Attributes"
+
         private MyObjectBuilder_CubeBlockDefinition[] _definitions;
         private Dictionary<KeyValuePair<string, string>, int> _nameIndexes = new Dictionary<KeyValuePair<string, string>, int>();
+
+        #endregion
+
+        #region "Contructors and Initializers"
+
+        public CubeBlockDefinitionsWrapper(MyObjectBuilder_CubeBlockDefinition[] definitions)
+        {
+            _definitions = definitions;
+            Changed = false;
+            int index = 0;
+            foreach (var definition in _definitions)
+            {
+                _nameIndexes.Add(new KeyValuePair<string, string>(definition.BlockPairName, definition.Id.ToString()), index);
+                ++index;
+            }
+        }
+
+        #endregion
+
+        #region "Properties"
 
         public bool Changed { get; private set; }
 
@@ -86,21 +117,9 @@ namespace SEModAPI.API
             }
         }
 
-        public CubeBlockDefinition GetDefinitionOf(int index)
-        {
-            if (IsIndexValid(index))
-            {
-                return new CubeBlockDefinition(_definitions[index]);
-            }
-            return null;
-        }
+        #endregion
 
-        public int IndexOf(string name, string model)
-        {
-            int index = -1;
-            _nameIndexes.TryGetValue(new KeyValuePair<string, string>(name, model), out index);
-            return index;
-        }
+        #region "Getters"
 
         public string NameOf(int index)
         {
@@ -117,17 +136,21 @@ namespace SEModAPI.API
             return IsIndexValid(index) ? _definitions[index].BuildTimeSeconds : -1;
         }
 
+        public float DisassembleRatioOf(int index)
+        {
+            return IsIndexValid(index) ? _definitions[index].DisassembleRatio : -1;
+        }
+
+        #endregion
+
+        #region "Setters"
+
         public bool SetBuildTimeOf(int index, float time)
         {
             if (!IsIndexValid(index) || _definitions[index].BuildTimeSeconds == time) return false;
             _definitions[index].BuildTimeSeconds = time;
             Changed = true;
             return true;
-        }
-
-        public float DisassembleRatioOf(int index)
-        {
-            return IsIndexValid(index) ? _definitions[index].DisassembleRatio : -1;
         }
 
         public bool SetDisassembleRatioOf(int index, float disassembleRatio)
@@ -138,21 +161,33 @@ namespace SEModAPI.API
             return true;
         }
 
-        public CubeBlockDefinitionsWrapper(MyObjectBuilder_CubeBlockDefinition[] definitions)
+        #endregion
+
+        #region "Methods"
+
+        public CubeBlockDefinition GetDefinitionOf(int index)
         {
-            _definitions = definitions;
-            Changed = false;
-            int index = 0;
-            foreach (var definition in _definitions)
+            if (IsIndexValid(index))
             {
-                _nameIndexes.Add(new KeyValuePair<string, string>(definition.BlockPairName, definition.Id.ToString()), index);
-                ++index;
+                return new CubeBlockDefinition(_definitions[index]);
             }
+            return null;
         }
 
         private bool IsIndexValid(int index)
         {
             return ((index < _definitions.Length) && index >= 0);
         }
+
+        public int IndexOf(string name, string model)
+        {
+            int index = -1;
+            _nameIndexes.TryGetValue(new KeyValuePair<string, string>(name, model), out index);
+            return index;
+        }
+
+
+        #endregion
+
     }
 }

@@ -221,7 +221,7 @@ namespace SEConfigTool
         private void BTN_SaveBlocksConfiguration_Click(object sender, EventArgs e)
         {
             if (!_cubeBlockDefinitionsWrapper.Changed) return;
-            _serializer.SetCubeBlockDefinitions(_cubeBlockDefinitionsWrapper.Definitions);
+            _serializer.CubeBlockDefinitions = _cubeBlockDefinitionsWrapper.Definitions;
             _serializer.SaveCubeBlocksContentFile();
         }
 
@@ -267,7 +267,7 @@ namespace SEConfigTool
         private void BTN_SaveAmmoConfig_Click(object sender, EventArgs e)
         {
             if (!_ammoMagazinesDefinitionsWrapper.Changed) return;
-            _serializer.SetAmmoMagazinesDefinitions(_ammoMagazinesDefinitionsWrapper.Definitions);
+            _serializer.AmmoMagazineDefinitions = _ammoMagazinesDefinitionsWrapper.Definitions;
             _serializer.SaveAmmoMagazinesContentFile();
         }
 
@@ -314,7 +314,7 @@ namespace SEConfigTool
 		private void BTN_SaveContainerTypeConfig_Click(object sender, EventArgs e)
 		{
 			if (!_containerTypesDefinitionsWrapper.Changed) return;
-			_serializer.SetContainerTypesDefinitions(_containerTypesDefinitionsWrapper.Definitions);
+			_serializer.ContainerTypeDefinitions = _containerTypesDefinitionsWrapper.Definitions;
 			_serializer.SaveContainerTypesContentFile();
 		}
 
@@ -431,7 +431,7 @@ namespace SEConfigTool
 		private void BTN_SaveSpawnGroupConfig_Click(object sender, EventArgs e)
 		{
 			if (!_spawnGroupsDefinitionsWrapper.Changed) return;
-			_serializer.SetSpawnGroupsDefinitions(_spawnGroupsDefinitionsWrapper.Definitions);
+			_serializer.SpawnGroupDefinitions = _spawnGroupsDefinitionsWrapper.Definitions;
 			_serializer.SaveSpawnGroupsContentFile();
 		}
 

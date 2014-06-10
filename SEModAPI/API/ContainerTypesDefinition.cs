@@ -23,7 +23,20 @@ namespace SEModAPI.API
 
 		#endregion
 
-		#region "Getters"
+		#region "Properties"
+
+        public bool Changed { get; private set; }
+
+        public MyObjectBuilder_ContainerTypeDefinition Definition
+        {
+            get { return _definition; }
+            set
+            {
+                if (_definition == value) return;
+                _definition = value;
+                Changed = true;
+            }
+        }
 
 		public string Name
 		{
@@ -43,48 +56,23 @@ namespace SEModAPI.API
 		public int CountMin
 		{
 			get { return _definition.CountMin; }
+            set
+            {
+                if (_definition.CountMin == value) return;
+                _definition.CountMin = value;
+                Changed = true;
+            }
 		}
 
 		public int CountMax
 		{
 			get { return _definition.CountMax; }
-		}
-
-		#endregion
-
-		#region "Setters"
-
-		public bool SetCountMin(int countMin)
-		{
-			if (_definition.CountMin == countMin) return false;
-			_definition.CountMin = countMin;
-			Changed = true;
-			return true;
-		}
-
-		public bool SetCountMax(int countMax)
-		{
-			if (_definition.CountMax == countMax) return false;
-			_definition.CountMax = countMax;
-			Changed = true;
-			return true;
-		}
-
-		#endregion
-
-		#region "Methods"
-
-		public bool Changed { get; private set; }
-
-		public MyObjectBuilder_ContainerTypeDefinition Definition
-		{
-			get { return _definition; }
-			set
-			{
-				if (_definition == value) return;
-				_definition = value;
-				Changed = true;
-			}
+            set
+            {
+                if (_definition.CountMax == value) return;
+                _definition.CountMax = value;
+                Changed = true;
+            }
 		}
 
 		#endregion
@@ -120,9 +108,26 @@ namespace SEModAPI.API
 
 		#endregion
 
-		#region "Getters"
+        #region "Properties"
 
-		public string NameOf(int index)
+        public bool Changed { get; private set; }
+
+        public MyObjectBuilder_ContainerTypeDefinition[] Definitions
+        {
+            get { return _definitions; }
+            set
+            {
+                if (_definitions == value) return;
+                _definitions = value;
+                Changed = true;
+            }
+        }
+
+        #endregion
+
+        #region "Getters"
+
+        public string NameOf(int index)
 		{
 			return IsIndexValid(index) ? _definitions[index].Name : null;
 		}
@@ -171,18 +176,6 @@ namespace SEModAPI.API
 
 		#region "Methods"
 
-		public bool Changed { get; private set; }
-
-		public MyObjectBuilder_ContainerTypeDefinition[] Definitions
-		{
-			get { return _definitions; }
-			set
-			{
-				if (_definitions == value) return;
-				_definitions = value;
-				Changed = true;
-			}
-		}
 		public ContainerTypesDefinition GetDefinitionOf(int index)
 		{
 			if (IsIndexValid(index))

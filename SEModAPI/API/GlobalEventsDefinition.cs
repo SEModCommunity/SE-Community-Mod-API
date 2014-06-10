@@ -23,7 +23,20 @@ namespace SEModAPI.API
 
 		#endregion
 
-		#region "Getters"
+		#region "Properties"
+
+        public bool Changed { get; private set; }
+
+        public MyObjectBuilder_GlobalEventDefinition Definition
+        {
+            get { return _definition; }
+            set
+            {
+                if (_definition == value) return;
+                _definition = value;
+                Changed = true;
+            }
+        }
 
 		public string Id
 		{
@@ -33,90 +46,60 @@ namespace SEModAPI.API
 		public string Name
 		{
 			get { return _definition.DisplayName; }
+            set
+            {
+                if (_definition.DisplayName == value) return;
+                _definition.DisplayName = value;
+                Changed = true;
+            }
 		}
 
 		public string Description
 		{
 			get { return _definition.Description; }
+            set
+            {
+                if (_definition.Description == value) return;
+                _definition.Description = value;
+                Changed = true;
+            }
 		}
 
 		public long MinActivation
 		{
 			get { return _definition.MinActivationTimeMs.Value; }
+            set
+            {
+                if (_definition.MinActivationTimeMs == value) return;
+                _definition.MinActivationTimeMs = value;
+                Changed = true;
+            }
 		}
 
 		public long MaxActivation
 		{
 			get { return _definition.MaxActivationTimeMs.Value; }
+            set
+            {
+                if (_definition.MaxActivationTimeMs == value) return;
+                _definition.MaxActivationTimeMs = value;
+                Changed = true;
+            }
 		}
 
 		public long FirstActivation
 		{
 			get { return _definition.FirstActivationTimeMs.Value; }
+            set
+            {
+                if (_definition.FirstActivationTimeMs == value) return;
+                _definition.FirstActivationTimeMs = value;
+                Changed = true;
+            }
 		}
 
 		#endregion
 
-		#region "Setters"
-
-		public bool SetName(string name)
-		{
-			if (_definition.DisplayName == name) return false;
-			_definition.DisplayName = name;
-			Changed = true;
-			return true;
-		}
-
-		public bool SetDescription(string description)
-		{
-			if (_definition.Description == description) return false;
-			_definition.Description = description;
-			Changed = true;
-			return true;
-		}
-
-		public bool SetMinActivation(long activation)
-		{
-			if (_definition.MinActivationTimeMs == activation) return false;
-			_definition.MinActivationTimeMs = activation;
-			Changed = true;
-			return true;
-		}
-
-		public bool SetMaxActivation(long activation)
-		{
-			if (_definition.MaxActivationTimeMs == activation) return false;
-			_definition.MaxActivationTimeMs = activation;
-			Changed = true;
-			return true;
-		}
-
-		public bool SetFirstActivation(long activation)
-		{
-			if (_definition.FirstActivationTimeMs == activation) return false;
-			_definition.FirstActivationTimeMs = activation;
-			Changed = true;
-			return true;
-		}
-
-		#endregion
-
-		#region "Methods"
-
-		public bool Changed { get; private set; }
-
-		public MyObjectBuilder_GlobalEventDefinition Definition
-		{
-			get { return _definition; }
-			set
-			{
-				if (_definition == value) return;
-				_definition = value;
-				Changed = true;
-			}
-		}
-
-		#endregion
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,9 +132,26 @@ namespace SEModAPI.API
 
 		#endregion
 
-		#region "Getters"
+        #region "Properties"
 
-		public string IdOf(int index)
+        public bool Changed { get; private set; }
+
+        public MyObjectBuilder_GlobalEventDefinition[] Definitions
+        {
+            get { return _definitions; }
+            set
+            {
+                if (_definitions == value) return;
+                _definitions = value;
+                Changed = true;
+            }
+        }
+
+        #endregion
+
+        #region "Getters"
+
+        public string IdOf(int index)
 		{
 			return IsIndexValid(index) ? _definitions[index].Id.SubtypeId : null;
 		}
@@ -234,18 +234,6 @@ namespace SEModAPI.API
 
 		#region "Methods"
 
-		public bool Changed { get; private set; }
-
-		public MyObjectBuilder_GlobalEventDefinition[] Definitions
-		{
-			get { return _definitions; }
-			set
-			{
-				if (_definitions == value) return;
-				_definitions = value;
-				Changed = true;
-			}
-		}
 		public GlobalEventsDefinition GetDefinitionOf(int index)
 		{
 			if (IsIndexValid(index))

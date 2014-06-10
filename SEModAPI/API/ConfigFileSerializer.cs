@@ -16,32 +16,32 @@ namespace SEModAPI.API
     {
         #region "Attributes"
 
-		//Basic Definitions
+        //Basic Definitions
         private MyObjectBuilder_Definitions _ammoMagazineDefinitions;
         private MyObjectBuilder_Definitions _cubeBlockDefinitions;
         private MyObjectBuilder_Definitions _componentDefinitions;
         private MyObjectBuilder_Definitions _blueprintDefinitions;
 
-		//Item Definitions
-		private MyObjectBuilder_Definitions _handItemDefinitions;
-		private MyObjectBuilder_Definitions _physicalItemDefinitions;
+        //Item Definitions
+        private MyObjectBuilder_Definitions _handItemDefinitions;
+        private MyObjectBuilder_Definitions _physicalItemDefinitions;
 
-		//Material Definitions
-		private MyObjectBuilder_Definitions _transparentMaterialDefinitions;
+        //Material Definitions
+        private MyObjectBuilder_Definitions _transparentMaterialDefinitions;
         private MyObjectBuilder_Definitions _voxelMaterialDefinitions;
 
-		//Advanced Definitions
-		private MyObjectBuilder_Definitions _containerTypeDefinitions;
-		private MyObjectBuilder_Definitions _globalEventDefinitions;
-		private MyObjectBuilder_Definitions _spawnGroupDefinitions;
+        //Advanced Definitions
+        private MyObjectBuilder_Definitions _containerTypeDefinitions;
+        private MyObjectBuilder_Definitions _globalEventDefinitions;
+        private MyObjectBuilder_Definitions _spawnGroupDefinitions;
 
-		private Dictionary<string, byte> _materialIndex;
+        private Dictionary<string, byte> _materialIndex;
 
         private readonly GameInstallationInfo _gameInstallation;
 
-		#region "CubeOrientations"
+        #region "CubeOrientations"
 
-		public readonly Dictionary<CubeType, SerializableBlockOrientation> CubeOrientations = new Dictionary<CubeType, SerializableBlockOrientation>()
+        public readonly Dictionary<CubeType, SerializableBlockOrientation> CubeOrientations = new Dictionary<CubeType, SerializableBlockOrientation>()
         {
             // TODO: Remove the Cube Armor orientation, as these appear to work fine with the Generic.
             {CubeType.Cube, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},
@@ -106,27 +106,52 @@ namespace SEModAPI.API
             {CubeType.Axis24_Up_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
         };
 
-		#endregion
-
-		#endregion
-
-		#region "Constructors & Initializers"
-
-		public ConfigFileSerializer()
-		{
-			//Prepare game installation configuration
-			_gameInstallation = new GameInstallationInfo();
-			// Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
-			ReadCubeBlockDefinitions();
-		}
+        #endregion
 
         #endregion
 
-        #region "Getters"
+        #region "Constructors & Initializers"
+
+        public ConfigFileSerializer()
+        {
+            //Prepare game installation configuration
+            _gameInstallation = new GameInstallationInfo();
+            // Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
+            ReadCubeBlockDefinitions();
+        }
+
+        #endregion
+
+        #region "Properties"
 
         public MyObjectBuilder_CubeBlockDefinition[] CubeBlockDefinitions
         {
             get { return _cubeBlockDefinitions.CubeBlocks; }
+            set { _cubeBlockDefinitions.CubeBlocks = value; }
+        }
+
+        public MyObjectBuilder_AmmoMagazineDefinition[] AmmoMagazineDefinitions
+        {
+            get { return _ammoMagazineDefinitions.AmmoMagazines; }
+            set { _ammoMagazineDefinitions.AmmoMagazines = value; }
+        }
+
+        public MyObjectBuilder_ContainerTypeDefinition[] ContainerTypeDefinitions
+        {
+            get { return _containerTypeDefinitions.ContainerTypes; }
+            set { _containerTypeDefinitions.ContainerTypes = value; }
+        }
+
+        public MyObjectBuilder_GlobalEventDefinition[] GlobalEventDefinitions
+        {
+            get { return _globalEventDefinitions.GlobalEvents; }
+            set { _globalEventDefinitions.GlobalEvents = value; }
+        }
+
+        public MyObjectBuilder_SpawnGroupDefinition[] SpawnGroupDefinitions
+        {
+            get { return _spawnGroupDefinitions.SpawnGroups; }
+            set { _spawnGroupDefinitions.SpawnGroups = value; }
         }
 
         public MyBlockPosition[] CubeBlockPositions
@@ -144,11 +169,6 @@ namespace SEModAPI.API
             get { return _physicalItemDefinitions.PhysicalItems; }
         }
 
-        public MyObjectBuilder_AmmoMagazineDefinition[] AmmoMagazineDefinitions
-        {
-            get { return _ammoMagazineDefinitions.AmmoMagazines; }
-        }
-
         public MyObjectBuilder_VoxelMaterialDefinition[] VoxelMaterialDefinitions
         {
             get { return _voxelMaterialDefinitions.VoxelMaterials; }
@@ -159,102 +179,67 @@ namespace SEModAPI.API
             get { return _blueprintDefinitions.Blueprints; }
         }
 
-		public MyObjectBuilder_SpawnGroupDefinition[] SpawnGroupDefinitions
-		{
-			get { return _spawnGroupDefinitions.SpawnGroups; }
-		}
+        public MyObjectBuilder_HandItemDefinition[] HandItemDefinitions
+        {
+            get { return _handItemDefinitions.HandItems; }
+        }
 
-		public MyObjectBuilder_GlobalEventDefinition[] GlobalEventDefinitions
-		{
-			get { return _globalEventDefinitions.GlobalEvents; }
-		}
+        #endregion
 
-		public MyObjectBuilder_ContainerTypeDefinition[] ContainerTypeDefinitions
-		{
-			get { return _containerTypeDefinitions.ContainerTypes; }
-		}
+        #region "Setters"
 
-		public MyObjectBuilder_HandItemDefinition[] HandItemDefinitions
-		{
-			get { return _handItemDefinitions.HandItems; }
-		}
+        public void SetCubeBlockDefinitionsIndex(int index, MyObjectBuilder_CubeBlockDefinition cubeBlockDefinition)
+        {
+            if (index < _cubeBlockDefinitions.CubeBlocks.Length)
+            {
+                _cubeBlockDefinitions.CubeBlocks[index] = cubeBlockDefinition;
+            }
+        }
 
-		#endregion
+        public void SetAmmoMagazinesDefinitionsIndex(int index, MyObjectBuilder_AmmoMagazineDefinition ammoMagazinesDefinition)
+        {
+            if (index < _ammoMagazineDefinitions.AmmoMagazines.Length)
+            {
+                _ammoMagazineDefinitions.AmmoMagazines[index] = ammoMagazinesDefinition;
+            }
+        }
 
-		#region "Setters"
+        public void SetContainerTypesDefinitionsIndex(int index, MyObjectBuilder_ContainerTypeDefinition definitions)
+        {
+            if (index < _containerTypeDefinitions.ContainerTypes.Length)
+            {
+                _containerTypeDefinitions.ContainerTypes[index] = definitions;
+            }
+        }
 
-		public void SetCubeBlockDefinitions(MyObjectBuilder_CubeBlockDefinition[] cubeBlockDefinitions)
-		{
-			_cubeBlockDefinitions.CubeBlocks = cubeBlockDefinitions;
-		}
+        public void SetGlobalEventsDefinitions(MyObjectBuilder_GlobalEventDefinition[] definitions)
+        {
+            _globalEventDefinitions.GlobalEvents = definitions;
+        }
 
-		public void SetCubeBlockDefinitionsIndex(int index, MyObjectBuilder_CubeBlockDefinition cubeBlockDefinition)
-		{
-			if (index < _cubeBlockDefinitions.CubeBlocks.Length)
-			{
-				_cubeBlockDefinitions.CubeBlocks[index] = cubeBlockDefinition;
-			}
-		}
+        public void SetGlobalEventsDefinitionsIndex(int index, MyObjectBuilder_GlobalEventDefinition definitions)
+        {
+            if (index < _globalEventDefinitions.GlobalEvents.Length)
+            {
+                _globalEventDefinitions.GlobalEvents[index] = definitions;
+            }
+        }
 
-		public void SetAmmoMagazinesDefinitions(MyObjectBuilder_AmmoMagazineDefinition[] ammoMagazinesDefinitions)
-		{
-			_ammoMagazineDefinitions.AmmoMagazines = ammoMagazinesDefinitions;
-		}
+        public void SetGlobalEventsDefinitionsIndex(int index, MyObjectBuilder_SpawnGroupDefinition definitions)
+        {
+            if (index < _spawnGroupDefinitions.SpawnGroups.Length)
+            {
+                _spawnGroupDefinitions.SpawnGroups[index] = definitions;
+            }
+        }
 
-		public void SetAmmoMagazinesDefinitionsIndex(int index, MyObjectBuilder_AmmoMagazineDefinition ammoMagazinesDefinition)
-		{
-			if (index < _ammoMagazineDefinitions.AmmoMagazines.Length)
-			{
-				_ammoMagazineDefinitions.AmmoMagazines[index] = ammoMagazinesDefinition;
-			}
-		}
+        #endregion
 
-		public void SetContainerTypesDefinitions(MyObjectBuilder_ContainerTypeDefinition[] definitions)
-		{
-			_containerTypeDefinitions.ContainerTypes = definitions;
-		}
+        #region "Methods"
+        #region "Serializers"
 
-		public void SetContainerTypesDefinitionsIndex(int index, MyObjectBuilder_ContainerTypeDefinition definitions)
-		{
-			if (index < _containerTypeDefinitions.ContainerTypes.Length)
-			{
-				_containerTypeDefinitions.ContainerTypes[index] = definitions;
-			}
-		}
-
-		public void SetGlobalEventsDefinitions(MyObjectBuilder_GlobalEventDefinition[] definitions)
-		{
-			_globalEventDefinitions.GlobalEvents = definitions;
-		}
-
-		public void SetGlobalEventsDefinitionsIndex(int index, MyObjectBuilder_GlobalEventDefinition definitions)
-		{
-			if (index < _globalEventDefinitions.GlobalEvents.Length)
-			{
-				_globalEventDefinitions.GlobalEvents[index] = definitions;
-			}
-		}
-
-		public void SetSpawnGroupsDefinitions(MyObjectBuilder_SpawnGroupDefinition[] definitions)
-		{
-			_spawnGroupDefinitions.SpawnGroups = definitions;
-		}
-
-		public void SetGlobalEventsDefinitionsIndex(int index, MyObjectBuilder_SpawnGroupDefinition definitions)
-		{
-			if (index < _spawnGroupDefinitions.SpawnGroups.Length)
-			{
-				_spawnGroupDefinitions.SpawnGroups[index] = definitions;
-			}
-		}
-
-		#endregion
-
-		#region "Methods"
-		#region "Serializers"
-
-		public T ReadSpaceEngineersFile<T, TS>(Stream stream)
-			where TS : XmlSerializer1
+        public T ReadSpaceEngineersFile<T, TS>(Stream stream)
+            where TS : XmlSerializer1
         {
             var settings = new XmlReaderSettings
             {
@@ -293,7 +278,7 @@ namespace SEModAPI.API
         }
 
         public T ReadSpaceEngineersFile<T, TS>(string filename)
-			where TS : XmlSerializer1
+            where TS : XmlSerializer1
         {
             var settings = new XmlReaderSettings
             {
@@ -342,7 +327,7 @@ namespace SEModAPI.API
                 {
                     xmlTextWriter.Formatting = Formatting.Indented;
                     xmlTextWriter.Indentation = 2;
-					xmlTextWriter.IndentChar = ' ';
+                    xmlTextWriter.IndentChar = ' ';
                     TS serializer = (TS)Activator.CreateInstance(typeof(TS));
                     serializer.Serialize(xmlTextWriter, sector);
                 }
@@ -392,240 +377,240 @@ namespace SEModAPI.API
             throw new NotImplementedException(string.Format("SetCubeOrientation of type [{0}] not yet implemented.", type));
         }
 
-		#region FetchCubeBlockMass
+        #region FetchCubeBlockMass
 
-		public float FetchCubeBlockMass(MyObjectBuilderTypeEnum typeId, MyCubeSize cubeSize, string subTypeid)
-		{
-			float mass = 0;
+        public float FetchCubeBlockMass(MyObjectBuilderTypeEnum typeId, MyCubeSize cubeSize, string subTypeid)
+        {
+            float mass = 0;
 
-			var cubeBlockDefinition = GetCubeDefinition(typeId, cubeSize, subTypeid);
+            var cubeBlockDefinition = GetCubeDefinition(typeId, cubeSize, subTypeid);
 
-			if (cubeBlockDefinition != null)
-			{
-				foreach (var component in cubeBlockDefinition.Components)
-				{
-					mass += _componentDefinitions.Components.Where(c => c.Id.SubtypeId == component.Subtype).Sum(c => c.Mass) * component.Count;
-				}
-			}
+            if (cubeBlockDefinition != null)
+            {
+                foreach (var component in cubeBlockDefinition.Components)
+                {
+                    mass += _componentDefinitions.Components.Where(c => c.Id.SubtypeId == component.Subtype).Sum(c => c.Mass) * component.Count;
+                }
+            }
 
-			return mass;
-		}
+            return mass;
+        }
 
-		public void AccumulateCubeBlueprintRequirements(string subType, MyObjectBuilderTypeEnum typeId, decimal amount, Dictionary<string, MyObjectBuilder_BlueprintDefinition.Item> requirements, out TimeSpan timeTaken)
-		{
-			TimeSpan time = new TimeSpan();
-			var bp = _blueprintDefinitions.Blueprints.FirstOrDefault(b => b.Result.SubtypeId == subType && b.Result.TypeId == typeId);
-			if (bp != null)
-			{
-				foreach (var item in bp.Prerequisites)
-				{
-					if (requirements.ContainsKey(item.SubtypeId))
-					{
-						// append existing
-						requirements[item.SubtypeId].Amount += (amount / bp.Result.Amount) * item.Amount;
-					}
-					else
-					{
-						// add new
-						requirements.Add(item.SubtypeId, new MyObjectBuilder_BlueprintDefinition.Item()
-						{
-							Amount = (amount / bp.Result.Amount) * item.Amount,
-							TypeId = item.TypeId,
-							SubtypeId = item.SubtypeId,
-							Id = item.Id
-						});
-					}
+        public void AccumulateCubeBlueprintRequirements(string subType, MyObjectBuilderTypeEnum typeId, decimal amount, Dictionary<string, MyObjectBuilder_BlueprintDefinition.Item> requirements, out TimeSpan timeTaken)
+        {
+            TimeSpan time = new TimeSpan();
+            var bp = _blueprintDefinitions.Blueprints.FirstOrDefault(b => b.Result.SubtypeId == subType && b.Result.TypeId == typeId);
+            if (bp != null)
+            {
+                foreach (var item in bp.Prerequisites)
+                {
+                    if (requirements.ContainsKey(item.SubtypeId))
+                    {
+                        // append existing
+                        requirements[item.SubtypeId].Amount += (amount / bp.Result.Amount) * item.Amount;
+                    }
+                    else
+                    {
+                        // add new
+                        requirements.Add(item.SubtypeId, new MyObjectBuilder_BlueprintDefinition.Item()
+                        {
+                            Amount = (amount / bp.Result.Amount) * item.Amount,
+                            TypeId = item.TypeId,
+                            SubtypeId = item.SubtypeId,
+                            Id = item.Id
+                        });
+                    }
 
-					var ticks = TimeSpan.TicksPerSecond * (decimal)bp.BaseProductionTimeInSeconds * amount;
-					var ts = new TimeSpan((long)ticks);
-					time += ts;
-				}
-			}
+                    var ticks = TimeSpan.TicksPerSecond * (decimal)bp.BaseProductionTimeInSeconds * amount;
+                    var ts = new TimeSpan((long)ticks);
+                    time += ts;
+                }
+            }
 
-			timeTaken = time;
-		}
+            timeTaken = time;
+        }
 
-		public MyObjectBuilder_DefinitionBase GetDefinition(MyObjectBuilderTypeEnum typeId, string subTypeId)
-		{
-			var cube = _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
-			if (cube != null)
-			{
-				return cube;
-			}
+        public MyObjectBuilder_DefinitionBase GetDefinition(MyObjectBuilderTypeEnum typeId, string subTypeId)
+        {
+            var cube = _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
+            if (cube != null)
+            {
+                return cube;
+            }
 
-			var item = _physicalItemDefinitions.PhysicalItems.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
-			if (item != null)
-			{
-				return item;
-			}
+            var item = _physicalItemDefinitions.PhysicalItems.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
+            if (item != null)
+            {
+                return item;
+            }
 
-			var component = _componentDefinitions.Components.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
-			if (component != null)
-			{
-				return component;
-			}
+            var component = _componentDefinitions.Components.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
+            if (component != null)
+            {
+                return component;
+            }
 
-			var magazine = _ammoMagazineDefinitions.AmmoMagazines.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
-			if (magazine != null)
-			{
-				return magazine;
-			}
+            var magazine = _ammoMagazineDefinitions.AmmoMagazines.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
+            if (magazine != null)
+            {
+                return magazine;
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		public float GetItemMass(MyObjectBuilderTypeEnum typeId, string subTypeId)
-		{
-			var def = GetDefinition(typeId, subTypeId);
-			if (def is MyObjectBuilder_PhysicalItemDefinition)
-			{
-				var item2 = def as MyObjectBuilder_PhysicalItemDefinition;
-				return item2.Mass;
-			}
+        public float GetItemMass(MyObjectBuilderTypeEnum typeId, string subTypeId)
+        {
+            var def = GetDefinition(typeId, subTypeId);
+            if (def is MyObjectBuilder_PhysicalItemDefinition)
+            {
+                var item2 = def as MyObjectBuilder_PhysicalItemDefinition;
+                return item2.Mass;
+            }
 
-			return 0;
-		}
+            return 0;
+        }
 
-		public float GetItemVolume(MyObjectBuilderTypeEnum typeId, string subTypeId)
-		{
-			var def = GetDefinition(typeId, subTypeId);
-			if (def is MyObjectBuilder_PhysicalItemDefinition)
-			{
-				var item2 = def as MyObjectBuilder_PhysicalItemDefinition;
-				if (item2.Volume.HasValue)
-					return item2.Volume.Value;
-			}
+        public float GetItemVolume(MyObjectBuilderTypeEnum typeId, string subTypeId)
+        {
+            var def = GetDefinition(typeId, subTypeId);
+            if (def is MyObjectBuilder_PhysicalItemDefinition)
+            {
+                var item2 = def as MyObjectBuilder_PhysicalItemDefinition;
+                if (item2.Volume.HasValue)
+                    return item2.Volume.Value;
+            }
 
-			return 0;
-		}
+            return 0;
+        }
 
-		public IList<MyObjectBuilder_VoxelMaterialDefinition> GetMaterialList()
-		{
-			return _voxelMaterialDefinitions.VoxelMaterials;
-		}
+        public IList<MyObjectBuilder_VoxelMaterialDefinition> GetMaterialList()
+        {
+            return _voxelMaterialDefinitions.VoxelMaterials;
+        }
 
-		public byte GetMaterialIndex(string materialName)
-		{
-			if (_materialIndex.ContainsKey(materialName))
-				return _materialIndex[materialName];
-			else
-			{
-				var material = _voxelMaterialDefinitions.VoxelMaterials.FirstOrDefault(m => m.Name == materialName);
-				var index = (byte)_voxelMaterialDefinitions.VoxelMaterials.ToList().IndexOf(material);
-				_materialIndex.Add(materialName, index);
-				return index;
-			}
-		}
+        public byte GetMaterialIndex(string materialName)
+        {
+            if (_materialIndex.ContainsKey(materialName))
+                return _materialIndex[materialName];
+            else
+            {
+                var material = _voxelMaterialDefinitions.VoxelMaterials.FirstOrDefault(m => m.Name == materialName);
+                var index = (byte)_voxelMaterialDefinitions.VoxelMaterials.ToList().IndexOf(material);
+                _materialIndex.Add(materialName, index);
+                return index;
+            }
+        }
 
-		public string GetMaterialName(byte materialIndex, byte defaultMaterialIndex)
-		{
-			if (materialIndex <= _voxelMaterialDefinitions.VoxelMaterials.Length)
-				return _voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
-			else
-				return _voxelMaterialDefinitions.VoxelMaterials[defaultMaterialIndex].Name;
-		}
+        public string GetMaterialName(byte materialIndex, byte defaultMaterialIndex)
+        {
+            if (materialIndex <= _voxelMaterialDefinitions.VoxelMaterials.Length)
+                return _voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
+            else
+                return _voxelMaterialDefinitions.VoxelMaterials[defaultMaterialIndex].Name;
+        }
 
-		public string GetMaterialName(byte materialIndex)
-		{
-			return _voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
-		}
+        public string GetMaterialName(byte materialIndex)
+        {
+            return _voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
+        }
 
-		public MyObjectBuilder_CubeBlockDefinition GetCubeDefinition(MyObjectBuilderTypeEnum typeId, MyCubeSize cubeSize, string subtypeId)
-		{
-			if (string.IsNullOrEmpty(subtypeId))
-			{
-				return _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.CubeSize == cubeSize && d.Id.TypeId == typeId);
-			}
+        public MyObjectBuilder_CubeBlockDefinition GetCubeDefinition(MyObjectBuilderTypeEnum typeId, MyCubeSize cubeSize, string subtypeId)
+        {
+            if (string.IsNullOrEmpty(subtypeId))
+            {
+                return _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.CubeSize == cubeSize && d.Id.TypeId == typeId);
+            }
 
-			return _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.SubtypeId == subtypeId || (d.Variants != null && d.Variants.Any(v => subtypeId == d.Id.SubtypeId + v.Color)));
-			// Returns null if it doesn't find the required SubtypeId.
-		}
+            return _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.SubtypeId == subtypeId || (d.Variants != null && d.Variants.Any(v => subtypeId == d.Id.SubtypeId + v.Color)));
+            // Returns null if it doesn't find the required SubtypeId.
+        }
 
-		public BoundingBox GetBoundingBox(MyObjectBuilder_CubeGrid entity)
-		{
-			var min = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
-			var max = new Vector3(int.MinValue, int.MinValue, int.MinValue);
+        public BoundingBox GetBoundingBox(MyObjectBuilder_CubeGrid entity)
+        {
+            var min = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
+            var max = new Vector3(int.MinValue, int.MinValue, int.MinValue);
 
-			foreach (var block in entity.CubeBlocks)
-			{
-				min.X = Math.Min(min.X, block.Min.X);
-				min.Y = Math.Min(min.Y, block.Min.Y);
-				min.Z = Math.Min(min.Z, block.Min.Z);
-				max.X = Math.Max(max.X, block.Min.X);       // TODO: resolve cubetype size.
-				max.Y = Math.Max(max.Y, block.Min.Y);
-				max.Z = Math.Max(max.Z, block.Min.Z);
-			}
+            foreach (var block in entity.CubeBlocks)
+            {
+                min.X = Math.Min(min.X, block.Min.X);
+                min.Y = Math.Min(min.Y, block.Min.Y);
+                min.Z = Math.Min(min.Z, block.Min.Z);
+                max.X = Math.Max(max.X, block.Min.X);       // TODO: resolve cubetype size.
+                max.Y = Math.Max(max.Y, block.Min.Y);
+                max.Z = Math.Max(max.Z, block.Min.Z);
+            }
 
-			// scale box to GridSize
-			var size = max - min;
-			if (entity.GridSizeEnum == MyCubeSize.Large)
-			{
-				size = new Vector3(size.X * 2.5f, size.Y * 2.5f, size.Z * 2.5f);
-			}
-			else if (entity.GridSizeEnum == MyCubeSize.Small)
-			{
-				size = new Vector3(size.X * 0.5f, size.Y * 0.5f, size.Z * 0.5f);
-			}
+            // scale box to GridSize
+            var size = max - min;
+            if (entity.GridSizeEnum == MyCubeSize.Large)
+            {
+                size = new Vector3(size.X * 2.5f, size.Y * 2.5f, size.Z * 2.5f);
+            }
+            else if (entity.GridSizeEnum == MyCubeSize.Small)
+            {
+                size = new Vector3(size.X * 0.5f, size.Y * 0.5f, size.Z * 0.5f);
+            }
 
-			// translate box according to min/max, but reset origin.
-			var bb = new BoundingBox(new Vector3(0, 0, 0), size);
+            // translate box according to min/max, but reset origin.
+            var bb = new BoundingBox(new Vector3(0, 0, 0), size);
 
-			// TODO: translate for rotation.
-			//bb. ????
+            // TODO: translate for rotation.
+            //bb. ????
 
-			// translate position.
-			bb.Translate(entity.PositionAndOrientation.Value.Position);
+            // translate position.
+            bb.Translate(entity.PositionAndOrientation.Value.Position);
 
 
-			return bb;
-		}
+            return bb;
+        }
 
-		public string GetResourceName(string value)
-		{
-			if (value == null)
-				return null;
+        public string GetResourceName(string value)
+        {
+            if (value == null)
+                return null;
 
-			Sandbox.Common.Localization.MyTextsWrapperEnum myText;
+            Sandbox.Common.Localization.MyTextsWrapperEnum myText;
 
-			if (Enum.TryParse<Sandbox.Common.Localization.MyTextsWrapperEnum>(value, out myText))
-			{
-				try
-				{
-					return Sandbox.Common.Localization.MyTextsWrapper.GetFormatString(myText);
-				}
-				catch
-				{
-					return value;
-				}
-			}
+            if (Enum.TryParse<Sandbox.Common.Localization.MyTextsWrapperEnum>(value, out myText))
+            {
+                try
+                {
+                    return Sandbox.Common.Localization.MyTextsWrapper.GetFormatString(myText);
+                }
+                catch
+                {
+                    return value;
+                }
+            }
 
-			return value;
-		}
+            return value;
+        }
 
-		#endregion
-	
-		#endregion
+        #endregion
 
-		#region ReadCubeBlocksDefinitions
+        #endregion
 
-		public void ReadCubeBlockDefinitions()
+        #region ReadCubeBlocksDefinitions
+
+        public void ReadCubeBlockDefinitions()
         {
             _ammoMagazineDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("AmmoMagazines.sbc");
-			_blueprintDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Blueprints.sbc");
-			_componentDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Components.sbc");
-			_cubeBlockDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("CubeBlocks.sbc");
+            _blueprintDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Blueprints.sbc");
+            _componentDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Components.sbc");
+            _cubeBlockDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("CubeBlocks.sbc");
 
-			_handItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("HandItems.sbc");
-			_physicalItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("PhysicalItems.sbc");
+            _handItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("HandItems.sbc");
+            _physicalItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("PhysicalItems.sbc");
 
-			_transparentMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("TransparentMaterials.sbc");
-			_voxelMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("VoxelMaterials.sbc");
+            _transparentMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("TransparentMaterials.sbc");
+            _voxelMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("VoxelMaterials.sbc");
 
-			_containerTypeDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("ContainerTypes.sbc");
-			_globalEventDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("GlobalEvents.sbc");
-			_spawnGroupDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("SpawnGroups.sbc");
+            _containerTypeDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("ContainerTypes.sbc");
+            _globalEventDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("GlobalEvents.sbc");
+            _spawnGroupDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("SpawnGroups.sbc");
 
-			_materialIndex = new Dictionary<string, byte>();
+            _materialIndex = new Dictionary<string, byte>();
         }
 
         private T LoadContentFile<T, TS>(string filename) where TS : XmlSerializer1
@@ -667,30 +652,30 @@ namespace SEModAPI.API
         public void WriteCubeBlockDefinitions()
         {
             SaveAmmoMagazinesContentFile();
-			SaveBlueprintsContentFile();
-			SaveComponentsContentFile();
+            SaveBlueprintsContentFile();
+            SaveComponentsContentFile();
             SaveCubeBlocksContentFile();
 
-			SaveHandItemsContentFile();
-			SavePhysicalItemsContentFile();
+            SaveHandItemsContentFile();
+            SavePhysicalItemsContentFile();
 
-			SaveTransparentMaterialsContentFile();
-			SaveVoxelMaterialsContentFile();
+            SaveTransparentMaterialsContentFile();
+            SaveVoxelMaterialsContentFile();
 
-			SaveContainerTypesContentFile();
-			SaveGlobalEventsContentFile();
-			SaveSpawnGroupsContentFile();
-		}
+            SaveContainerTypesContentFile();
+            SaveGlobalEventsContentFile();
+            SaveSpawnGroupsContentFile();
+        }
 
         public void SaveAmmoMagazinesContentFile()
         {
             SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_ammoMagazineDefinitions, "AmmoMagazines.sbc");
         }
-		public void SaveBlueprintsContentFile()
-		{
-			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_blueprintDefinitions, "Blueprints.sbc");
-		}
-		public void SaveComponentsContentFile()
+        public void SaveBlueprintsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_blueprintDefinitions, "Blueprints.sbc");
+        }
+        public void SaveComponentsContentFile()
         {
             SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_componentDefinitions, "Components.sbc");
         }
@@ -699,38 +684,38 @@ namespace SEModAPI.API
             SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_cubeBlockDefinitions, "CubeBlocks.sbc");
         }
 
-		public void SaveHandItemsContentFile()
-		{
-			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_handItemDefinitions, "HandItems.sbc");
-		}
-		public void SavePhysicalItemsContentFile()
-		{
-			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_physicalItemDefinitions, "PhysicalItems.sbc");
-		}
+        public void SaveHandItemsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_handItemDefinitions, "HandItems.sbc");
+        }
+        public void SavePhysicalItemsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_physicalItemDefinitions, "PhysicalItems.sbc");
+        }
 
-		public void SaveTransparentMaterialsContentFile()
-		{
-			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_transparentMaterialDefinitions, "TransparentMaterials.sbc");
-		}
-		public void SaveVoxelMaterialsContentFile()
-		{
-			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_voxelMaterialDefinitions, "VoxelMaterials.sbc");
-		}
+        public void SaveTransparentMaterialsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_transparentMaterialDefinitions, "TransparentMaterials.sbc");
+        }
+        public void SaveVoxelMaterialsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_voxelMaterialDefinitions, "VoxelMaterials.sbc");
+        }
 
-		public void SaveContainerTypesContentFile()
-		{
-			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_containerTypeDefinitions, "ContainerTypes.sbc");
-		}
-		public void SaveGlobalEventsContentFile()
-		{
-			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_globalEventDefinitions, "GlobalEvents.sbc");
-		}
-		public void SaveSpawnGroupsContentFile()
-		{
-			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_spawnGroupDefinitions, "SpawnGroups.sbc");
-		}
+        public void SaveContainerTypesContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_containerTypeDefinitions, "ContainerTypes.sbc");
+        }
+        public void SaveGlobalEventsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_globalEventDefinitions, "GlobalEvents.sbc");
+        }
+        public void SaveSpawnGroupsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_spawnGroupDefinitions, "SpawnGroups.sbc");
+        }
 
-        private void SaveContentFile<T, TS>(T fileContent,string filename) where TS : XmlSerializer1
+        private void SaveContentFile<T, TS>(T fileContent, string filename) where TS : XmlSerializer1
         {
 
             string filePath = Path.Combine(Path.Combine(_gameInstallation.GamePath, @"Content\Data"), filename);
@@ -760,5 +745,5 @@ namespace SEModAPI.API
         }
 
         #endregion
-	}
+    }
 }

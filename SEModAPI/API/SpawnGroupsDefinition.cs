@@ -23,7 +23,20 @@ namespace SEModAPI.API
 
 		#endregion
 
-		#region "Getters"
+		#region "Properties"
+
+        public bool Changed { get; private set; }
+
+        public MyObjectBuilder_SpawnGroupDefinition Definition
+        {
+            get { return _definition; }
+            set
+            {
+                if (_definition == value) return;
+                _definition = value;
+                Changed = true;
+            }
+        }
 
 		public string Name
 		{
@@ -38,35 +51,13 @@ namespace SEModAPI.API
 		public int PrefabCount
 		{
 			get { return _definition.Prefabs.Length; }
-		}
+            set
+            {
+                if (_definition.Frequency == value) return;
+                _definition.Frequency = value;
+                Changed = true;
 
-		#endregion
-
-		#region "Setters"
-
-		public bool SetFrequency(float frequency)
-		{
-			if (_definition.Frequency == frequency) return false;
-			_definition.Frequency = frequency;
-			Changed = true;
-			return true;
-		}
-
-		#endregion
-
-		#region "Methods"
-
-		public bool Changed { get; private set; }
-
-		public MyObjectBuilder_SpawnGroupDefinition Definition
-		{
-			get { return _definition; }
-			set
-			{
-				if (_definition == value) return;
-				_definition = value;
-				Changed = true;
-			}
+            }
 		}
 
 		#endregion
@@ -102,9 +93,27 @@ namespace SEModAPI.API
 
 		#endregion
 
-		#region "Getters"
+        #region "Properties"
 
-		public string NameOf(int index)
+        public bool Changed { get; private set; }
+
+        public MyObjectBuilder_SpawnGroupDefinition[] Definitions
+        {
+            get { return _definitions; }
+            set
+            {
+                if (_definitions == value) return;
+                _definitions = value;
+                Changed = true;
+            }
+        }
+
+
+        #endregion
+
+        #region "Getters"
+
+        public string NameOf(int index)
 		{
 			return IsIndexValid(index) ? _definitions[index].TypeId.ToString() : null;
 		}
@@ -135,18 +144,6 @@ namespace SEModAPI.API
 
 		#region "Methods"
 
-		public bool Changed { get; private set; }
-
-		public MyObjectBuilder_SpawnGroupDefinition[] Definitions
-		{
-			get { return _definitions; }
-			set
-			{
-				if (_definitions == value) return;
-				_definitions = value;
-				Changed = true;
-			}
-		}
 		public SpawnGroupsDefinition GetDefinitionOf(int index)
 		{
 			if (IsIndexValid(index))

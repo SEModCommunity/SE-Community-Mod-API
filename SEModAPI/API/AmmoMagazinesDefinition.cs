@@ -120,7 +120,7 @@ namespace SEModAPI.API
 
         #endregion
 
-        #region "Attributes"
+        #region "Properties"
 
         public bool Changed { get; private set; }
 
@@ -137,30 +137,7 @@ namespace SEModAPI.API
 
         #endregion
 
-        #region "Methods"
-
-        private bool IsIndexValid(int index)
-        {
-            return (index < _definitions.Length && index >= 0);
-        }
-
-        public int IndexOf(string name, string model)
-        {
-            int index = -1;
-            _nameIndexes.TryGetValue(new KeyValuePair<string, string>(name, model), out index);
-            return index;
-        }
-
         #region "Getters"
-
-        public AmmoMagazinesDefinition DefinitionOf(int index)
-        {
-            if (IsIndexValid(index))
-            {
-                return new AmmoMagazinesDefinition(_definitions[index]);
-            }
-            return null;
-        }
 
         public string NameOf(int index)
         {
@@ -222,6 +199,28 @@ namespace SEModAPI.API
 
         #endregion
 
+        #region "Methods"
+
+        public AmmoMagazinesDefinition GetDefinitionOf(int index)
+        {
+            if (IsIndexValid(index))
+            {
+                return new AmmoMagazinesDefinition(_definitions[index]);
+            }
+            return null;
+        }
+
+        public int IndexOf(string name, string model)
+        {
+            int index = -1;
+            _nameIndexes.TryGetValue(new KeyValuePair<string, string>(name, model), out index);
+            return index;
+        }
+
+        private bool IsIndexValid(int index)
+        {
+            return (index < _definitions.Length && index >= 0);
+        }
         #endregion
     }
 }
