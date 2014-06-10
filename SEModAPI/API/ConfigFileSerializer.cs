@@ -145,6 +145,18 @@ namespace SEModAPI.API
             } 
         }
 
+        public void SetAmmoMagazinesDefinitions(MyObjectBuilder_AmmoMagazineDefinition[] ammoMagazinesDefinitions)
+        {
+            _ammoMagazineDefinitions.AmmoMagazines = ammoMagazinesDefinitions;
+        }
+
+        public void SetAmmoMagazinesDefinitionsIndex(int index, MyObjectBuilder_AmmoMagazineDefinition ammoMagazinesDefinition)
+        {
+            if (index < _ammoMagazineDefinitions.AmmoMagazines.Length)
+            {
+                _ammoMagazineDefinitions.AmmoMagazines[index] = ammoMagazinesDefinition;
+            }
+        }
 
 
         public MyBlockPosition[] CubeBlockPositions

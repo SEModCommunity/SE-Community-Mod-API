@@ -29,12 +29,28 @@ namespace SEConfigTool
         /// </summary>
         private void InitializeComponent()
         {
-            this.LayoutPages = new System.Windows.Forms.TabControl();
-            this.SaveGamePage = new System.Windows.Forms.TabPage();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.BTN_LoadSaveGame = new System.Windows.Forms.Button();
-            this.GBX_Blocks = new System.Windows.Forms.GroupBox();
-            this.LBX_SaveGameBlockList = new System.Windows.Forms.ListBox();
+            this.AmmoConfigurationPage = new System.Windows.Forms.TabPage();
+            this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+            this.BTN_ConfigAmmoReload = new System.Windows.Forms.Button();
+            this.BTN_SaveAmmoConfig = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+            this.LBX_AmmoConfiguration = new System.Windows.Forms.ListBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.splitContainer7 = new System.Windows.Forms.SplitContainer();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.TBX_ConfigAmmoMass = new System.Windows.Forms.TextBox();
+            this.TBX_ConfigAmmoVolume = new System.Windows.Forms.TextBox();
+            this.BTN_ConfigAmmoApply = new System.Windows.Forms.Button();
+            this.TBX_ConfigAmmoId = new System.Windows.Forms.TextBox();
+            this.TBX_ConfigAmmoCapacity = new System.Windows.Forms.TextBox();
+            this.TBX_ConfigAmmoName = new System.Windows.Forms.TextBox();
+            this.TBX_ConfigAmmoCaliber = new System.Windows.Forms.TextBox();
             this.BlocksConfigurationPage = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.BTN_ConfigReload = new System.Windows.Forms.Button();
@@ -53,13 +69,27 @@ namespace SEConfigTool
             this.TBX_ConfigDisassembleRatio = new System.Windows.Forms.TextBox();
             this.TBX_ConfigBlockName = new System.Windows.Forms.TextBox();
             this.TBX_ConfigBuildTime = new System.Windows.Forms.TextBox();
-            this.LayoutPages.SuspendLayout();
-            this.SaveGamePage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.GBX_Blocks.SuspendLayout();
+            this.SaveGamePage = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.BTN_LoadSaveGame = new System.Windows.Forms.Button();
+            this.GBX_Blocks = new System.Windows.Forms.GroupBox();
+            this.LBX_SaveGameBlockList = new System.Windows.Forms.ListBox();
+            this.LayoutPages = new System.Windows.Forms.TabControl();
+            this.AmmoConfigurationPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
+            this.splitContainer5.Panel1.SuspendLayout();
+            this.splitContainer5.Panel2.SuspendLayout();
+            this.splitContainer5.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
+            this.splitContainer6.Panel1.SuspendLayout();
+            this.splitContainer6.Panel2.SuspendLayout();
+            this.splitContainer6.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).BeginInit();
+            this.splitContainer7.Panel1.SuspendLayout();
+            this.splitContainer7.Panel2.SuspendLayout();
+            this.splitContainer7.SuspendLayout();
             this.BlocksConfigurationPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
@@ -75,80 +105,253 @@ namespace SEConfigTool
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
+            this.SaveGamePage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.GBX_Blocks.SuspendLayout();
+            this.LayoutPages.SuspendLayout();
             this.SuspendLayout();
             // 
-            // LayoutPages
+            // AmmoConfigurationPage
             // 
-            this.LayoutPages.Controls.Add(this.SaveGamePage);
-            this.LayoutPages.Controls.Add(this.BlocksConfigurationPage);
-            this.LayoutPages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LayoutPages.Location = new System.Drawing.Point(0, 0);
-            this.LayoutPages.Name = "LayoutPages";
-            this.LayoutPages.SelectedIndex = 0;
-            this.LayoutPages.Size = new System.Drawing.Size(560, 435);
-            this.LayoutPages.TabIndex = 0;
+            this.AmmoConfigurationPage.Controls.Add(this.splitContainer5);
+            this.AmmoConfigurationPage.Location = new System.Drawing.Point(4, 22);
+            this.AmmoConfigurationPage.Name = "AmmoConfigurationPage";
+            this.AmmoConfigurationPage.Padding = new System.Windows.Forms.Padding(3);
+            this.AmmoConfigurationPage.Size = new System.Drawing.Size(552, 409);
+            this.AmmoConfigurationPage.TabIndex = 3;
+            this.AmmoConfigurationPage.Text = "Ammo Configuration";
+            this.AmmoConfigurationPage.UseVisualStyleBackColor = true;
             // 
-            // SaveGamePage
+            // splitContainer5
             // 
-            this.SaveGamePage.Controls.Add(this.splitContainer1);
-            this.SaveGamePage.Location = new System.Drawing.Point(4, 22);
-            this.SaveGamePage.Name = "SaveGamePage";
-            this.SaveGamePage.Padding = new System.Windows.Forms.Padding(3);
-            this.SaveGamePage.Size = new System.Drawing.Size(552, 409);
-            this.SaveGamePage.TabIndex = 0;
-            this.SaveGamePage.Text = "SaveGame";
-            this.SaveGamePage.UseVisualStyleBackColor = true;
+            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer5.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer5.Name = "splitContainer5";
+            this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer1
+            // splitContainer5.Panel1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitContainer5.Panel1.Controls.Add(this.BTN_ConfigAmmoReload);
+            this.splitContainer5.Panel1.Controls.Add(this.BTN_SaveAmmoConfig);
             // 
-            // splitContainer1.Panel1
+            // splitContainer5.Panel2
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.BTN_LoadSaveGame);
+            this.splitContainer5.Panel2.Controls.Add(this.groupBox3);
+            this.splitContainer5.Size = new System.Drawing.Size(546, 403);
+            this.splitContainer5.SplitterDistance = 25;
+            this.splitContainer5.TabIndex = 1;
             // 
-            // splitContainer1.Panel2
+            // BTN_ConfigAmmoReload
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.GBX_Blocks);
-            this.splitContainer1.Size = new System.Drawing.Size(546, 403);
-            this.splitContainer1.SplitterDistance = 26;
-            this.splitContainer1.TabIndex = 1;
+            this.BTN_ConfigAmmoReload.Location = new System.Drawing.Point(3, 0);
+            this.BTN_ConfigAmmoReload.Name = "BTN_ConfigAmmoReload";
+            this.BTN_ConfigAmmoReload.Size = new System.Drawing.Size(116, 23);
+            this.BTN_ConfigAmmoReload.TabIndex = 2;
+            this.BTN_ConfigAmmoReload.Text = "Reload Configuration";
+            this.BTN_ConfigAmmoReload.UseVisualStyleBackColor = true;
+            this.BTN_ConfigAmmoReload.Click += new System.EventHandler(this.BTN_ConfigAmmoReload_Click);
             // 
-            // BTN_LoadSaveGame
+            // BTN_SaveAmmoConfig
             // 
-            this.BTN_LoadSaveGame.Location = new System.Drawing.Point(4, 1);
-            this.BTN_LoadSaveGame.Name = "BTN_LoadSaveGame";
-            this.BTN_LoadSaveGame.Size = new System.Drawing.Size(100, 23);
-            this.BTN_LoadSaveGame.TabIndex = 0;
-            this.BTN_LoadSaveGame.Text = "Load SaveGame";
-            this.BTN_LoadSaveGame.UseVisualStyleBackColor = true;
-            this.BTN_LoadSaveGame.Click += new System.EventHandler(this.BTN_LoadSaveGame_Click);
+            this.BTN_SaveAmmoConfig.Location = new System.Drawing.Point(122, 0);
+            this.BTN_SaveAmmoConfig.Name = "BTN_SaveAmmoConfig";
+            this.BTN_SaveAmmoConfig.Size = new System.Drawing.Size(105, 23);
+            this.BTN_SaveAmmoConfig.TabIndex = 0;
+            this.BTN_SaveAmmoConfig.Text = "Save Configuration";
+            this.BTN_SaveAmmoConfig.UseVisualStyleBackColor = true;
+            this.BTN_SaveAmmoConfig.Click += new System.EventHandler(this.BTN_SaveAmmoConfig_Click);
             // 
-            // GBX_Blocks
+            // groupBox3
             // 
-            this.GBX_Blocks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GBX_Blocks.Controls.Add(this.LBX_SaveGameBlockList);
-            this.GBX_Blocks.Location = new System.Drawing.Point(0, 0);
-            this.GBX_Blocks.Name = "GBX_Blocks";
-            this.GBX_Blocks.Size = new System.Drawing.Size(538, 395);
-            this.GBX_Blocks.TabIndex = 1;
-            this.GBX_Blocks.TabStop = false;
-            this.GBX_Blocks.Text = "Blocks";
+            this.groupBox3.Controls.Add(this.splitContainer6);
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox3.Location = new System.Drawing.Point(0, 0);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(546, 374);
+            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Ammo";
             // 
-            // LBX_SaveGameBlockList
+            // splitContainer6
             // 
-            this.LBX_SaveGameBlockList.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.LBX_SaveGameBlockList.FormattingEnabled = true;
-            this.LBX_SaveGameBlockList.Location = new System.Drawing.Point(3, 24);
-            this.LBX_SaveGameBlockList.Name = "LBX_SaveGameBlockList";
-            this.LBX_SaveGameBlockList.Size = new System.Drawing.Size(532, 368);
-            this.LBX_SaveGameBlockList.TabIndex = 0;
+            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer6.Location = new System.Drawing.Point(3, 16);
+            this.splitContainer6.Name = "splitContainer6";
+            // 
+            // splitContainer6.Panel1
+            // 
+            this.splitContainer6.Panel1.Controls.Add(this.LBX_AmmoConfiguration);
+            // 
+            // splitContainer6.Panel2
+            // 
+            this.splitContainer6.Panel2.Controls.Add(this.groupBox4);
+            this.splitContainer6.Size = new System.Drawing.Size(540, 355);
+            this.splitContainer6.SplitterDistance = 239;
+            this.splitContainer6.TabIndex = 1;
+            // 
+            // LBX_AmmoConfiguration
+            // 
+            this.LBX_AmmoConfiguration.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LBX_AmmoConfiguration.FormattingEnabled = true;
+            this.LBX_AmmoConfiguration.Location = new System.Drawing.Point(0, 0);
+            this.LBX_AmmoConfiguration.Name = "LBX_AmmoConfiguration";
+            this.LBX_AmmoConfiguration.Size = new System.Drawing.Size(239, 355);
+            this.LBX_AmmoConfiguration.TabIndex = 0;
+            this.LBX_AmmoConfiguration.SelectedIndexChanged += new System.EventHandler(this.LBX_AmmoConfiguration_SelectedIndexChanged);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.splitContainer7);
+            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox4.Location = new System.Drawing.Point(0, 0);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(297, 355);
+            this.groupBox4.TabIndex = 1;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Selected Block Informations";
+            // 
+            // splitContainer7
+            // 
+            this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer7.Location = new System.Drawing.Point(3, 16);
+            this.splitContainer7.Name = "splitContainer7";
+            // 
+            // splitContainer7.Panel1
+            // 
+            this.splitContainer7.Panel1.Controls.Add(this.label10);
+            this.splitContainer7.Panel1.Controls.Add(this.label9);
+            this.splitContainer7.Panel1.Controls.Add(this.label5);
+            this.splitContainer7.Panel1.Controls.Add(this.label6);
+            this.splitContainer7.Panel1.Controls.Add(this.label7);
+            this.splitContainer7.Panel1.Controls.Add(this.label8);
+            // 
+            // splitContainer7.Panel2
+            // 
+            this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoMass);
+            this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoVolume);
+            this.splitContainer7.Panel2.Controls.Add(this.BTN_ConfigAmmoApply);
+            this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoId);
+            this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoCapacity);
+            this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoName);
+            this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoCaliber);
+            this.splitContainer7.Size = new System.Drawing.Size(291, 336);
+            this.splitContainer7.SplitterDistance = 136;
+            this.splitContainer7.TabIndex = 4;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 119);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(35, 13);
+            this.label10.TabIndex = 8;
+            this.label10.Text = "Mass:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 145);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(45, 13);
+            this.label9.TabIndex = 7;
+            this.label9.Text = "Volume:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 41);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(91, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "Ammo Id Number:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 93);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(83, 13);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "Ammo Capacity:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 16);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(70, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Ammo Name:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 67);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(74, 13);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "Ammo Caliber:";
+            // 
+            // TBX_ConfigAmmoMass
+            // 
+            this.TBX_ConfigAmmoMass.Location = new System.Drawing.Point(3, 116);
+            this.TBX_ConfigAmmoMass.Name = "TBX_ConfigAmmoMass";
+            this.TBX_ConfigAmmoMass.Size = new System.Drawing.Size(145, 20);
+            this.TBX_ConfigAmmoMass.TabIndex = 10;
+            // 
+            // TBX_ConfigAmmoVolume
+            // 
+            this.TBX_ConfigAmmoVolume.Location = new System.Drawing.Point(3, 142);
+            this.TBX_ConfigAmmoVolume.Name = "TBX_ConfigAmmoVolume";
+            this.TBX_ConfigAmmoVolume.Size = new System.Drawing.Size(145, 20);
+            this.TBX_ConfigAmmoVolume.TabIndex = 9;
+            // 
+            // BTN_ConfigAmmoApply
+            // 
+            this.BTN_ConfigAmmoApply.Location = new System.Drawing.Point(3, 310);
+            this.BTN_ConfigAmmoApply.Name = "BTN_ConfigAmmoApply";
+            this.BTN_ConfigAmmoApply.Size = new System.Drawing.Size(145, 23);
+            this.BTN_ConfigAmmoApply.TabIndex = 8;
+            this.BTN_ConfigAmmoApply.Text = "Apply changes";
+            this.BTN_ConfigAmmoApply.UseVisualStyleBackColor = true;
+            this.BTN_ConfigAmmoApply.Visible = false;
+            this.BTN_ConfigAmmoApply.Click += new System.EventHandler(this.BTN_ConfigAmmoApply_Click);
+            // 
+            // TBX_ConfigAmmoId
+            // 
+            this.TBX_ConfigAmmoId.Location = new System.Drawing.Point(3, 38);
+            this.TBX_ConfigAmmoId.Name = "TBX_ConfigAmmoId";
+            this.TBX_ConfigAmmoId.ReadOnly = true;
+            this.TBX_ConfigAmmoId.Size = new System.Drawing.Size(145, 20);
+            this.TBX_ConfigAmmoId.TabIndex = 7;
+            // 
+            // TBX_ConfigAmmoCapacity
+            // 
+            this.TBX_ConfigAmmoCapacity.Location = new System.Drawing.Point(3, 90);
+            this.TBX_ConfigAmmoCapacity.Name = "TBX_ConfigAmmoCapacity";
+            this.TBX_ConfigAmmoCapacity.Size = new System.Drawing.Size(145, 20);
+            this.TBX_ConfigAmmoCapacity.TabIndex = 6;
+            this.TBX_ConfigAmmoCapacity.TextChanged += new System.EventHandler(this.TBX_ConfigAmmo_TextChanged);
+            // 
+            // TBX_ConfigAmmoName
+            // 
+            this.TBX_ConfigAmmoName.Location = new System.Drawing.Point(3, 13);
+            this.TBX_ConfigAmmoName.Name = "TBX_ConfigAmmoName";
+            this.TBX_ConfigAmmoName.ReadOnly = true;
+            this.TBX_ConfigAmmoName.Size = new System.Drawing.Size(145, 20);
+            this.TBX_ConfigAmmoName.TabIndex = 5;
+            // 
+            // TBX_ConfigAmmoCaliber
+            // 
+            this.TBX_ConfigAmmoCaliber.Location = new System.Drawing.Point(3, 64);
+            this.TBX_ConfigAmmoCaliber.Name = "TBX_ConfigAmmoCaliber";
+            this.TBX_ConfigAmmoCaliber.ReadOnly = true;
+            this.TBX_ConfigAmmoCaliber.Size = new System.Drawing.Size(145, 20);
+            this.TBX_ConfigAmmoCaliber.TabIndex = 4;
             // 
             // BlocksConfigurationPage
             // 
@@ -355,6 +558,80 @@ namespace SEConfigTool
             this.TBX_ConfigBuildTime.TextChanged += new System.EventHandler(this.TBX_ConfigBuildTime_TextChanged);
             this.TBX_ConfigBuildTime.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBX_ConfigBuildTime_KeyPress);
             // 
+            // SaveGamePage
+            // 
+            this.SaveGamePage.Controls.Add(this.splitContainer1);
+            this.SaveGamePage.Location = new System.Drawing.Point(4, 22);
+            this.SaveGamePage.Name = "SaveGamePage";
+            this.SaveGamePage.Padding = new System.Windows.Forms.Padding(3);
+            this.SaveGamePage.Size = new System.Drawing.Size(552, 409);
+            this.SaveGamePage.TabIndex = 0;
+            this.SaveGamePage.Text = "SaveGame";
+            this.SaveGamePage.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.BTN_LoadSaveGame);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.GBX_Blocks);
+            this.splitContainer1.Size = new System.Drawing.Size(546, 403);
+            this.splitContainer1.SplitterDistance = 26;
+            this.splitContainer1.TabIndex = 1;
+            // 
+            // BTN_LoadSaveGame
+            // 
+            this.BTN_LoadSaveGame.Location = new System.Drawing.Point(4, 1);
+            this.BTN_LoadSaveGame.Name = "BTN_LoadSaveGame";
+            this.BTN_LoadSaveGame.Size = new System.Drawing.Size(100, 23);
+            this.BTN_LoadSaveGame.TabIndex = 0;
+            this.BTN_LoadSaveGame.Text = "Load SaveGame";
+            this.BTN_LoadSaveGame.UseVisualStyleBackColor = true;
+            this.BTN_LoadSaveGame.Click += new System.EventHandler(this.BTN_LoadSaveGame_Click);
+            // 
+            // GBX_Blocks
+            // 
+            this.GBX_Blocks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.GBX_Blocks.Controls.Add(this.LBX_SaveGameBlockList);
+            this.GBX_Blocks.Location = new System.Drawing.Point(0, 0);
+            this.GBX_Blocks.Name = "GBX_Blocks";
+            this.GBX_Blocks.Size = new System.Drawing.Size(538, 395);
+            this.GBX_Blocks.TabIndex = 1;
+            this.GBX_Blocks.TabStop = false;
+            this.GBX_Blocks.Text = "Blocks";
+            // 
+            // LBX_SaveGameBlockList
+            // 
+            this.LBX_SaveGameBlockList.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.LBX_SaveGameBlockList.FormattingEnabled = true;
+            this.LBX_SaveGameBlockList.Location = new System.Drawing.Point(3, 24);
+            this.LBX_SaveGameBlockList.Name = "LBX_SaveGameBlockList";
+            this.LBX_SaveGameBlockList.Size = new System.Drawing.Size(532, 368);
+            this.LBX_SaveGameBlockList.TabIndex = 0;
+            // 
+            // LayoutPages
+            // 
+            this.LayoutPages.Controls.Add(this.SaveGamePage);
+            this.LayoutPages.Controls.Add(this.BlocksConfigurationPage);
+            this.LayoutPages.Controls.Add(this.AmmoConfigurationPage);
+            this.LayoutPages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LayoutPages.Location = new System.Drawing.Point(0, 0);
+            this.LayoutPages.Name = "LayoutPages";
+            this.LayoutPages.SelectedIndex = 0;
+            this.LayoutPages.Size = new System.Drawing.Size(560, 435);
+            this.LayoutPages.TabIndex = 0;
+            // 
             // SEConfigTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -364,13 +641,23 @@ namespace SEConfigTool
             this.Name = "SEConfigTool";
             this.Text = "SEConfigTool";
             this.Load += new System.EventHandler(this.SEConfigTool_Load);
-            this.LayoutPages.ResumeLayout(false);
-            this.SaveGamePage.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.GBX_Blocks.ResumeLayout(false);
+            this.AmmoConfigurationPage.ResumeLayout(false);
+            this.splitContainer5.Panel1.ResumeLayout(false);
+            this.splitContainer5.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
+            this.splitContainer5.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.splitContainer6.Panel1.ResumeLayout(false);
+            this.splitContainer6.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).EndInit();
+            this.splitContainer6.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.splitContainer7.Panel1.ResumeLayout(false);
+            this.splitContainer7.Panel1.PerformLayout();
+            this.splitContainer7.Panel2.ResumeLayout(false);
+            this.splitContainer7.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).EndInit();
+            this.splitContainer7.ResumeLayout(false);
             this.BlocksConfigurationPage.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
@@ -388,36 +675,66 @@ namespace SEConfigTool
             this.splitContainer4.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
             this.splitContainer4.ResumeLayout(false);
+            this.SaveGamePage.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.GBX_Blocks.ResumeLayout(false);
+            this.LayoutPages.ResumeLayout(false);
             this.ResumeLayout(false);
 
 		}
 
         #endregion
 
-        private System.Windows.Forms.TabControl LayoutPages;
-        private System.Windows.Forms.TabPage SaveGamePage;
+        private System.Windows.Forms.TabPage AmmoConfigurationPage;
+        private System.Windows.Forms.SplitContainer splitContainer5;
+        private System.Windows.Forms.Button BTN_ConfigAmmoReload;
+        private System.Windows.Forms.Button BTN_SaveAmmoConfig;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.SplitContainer splitContainer6;
+        private System.Windows.Forms.ListBox LBX_AmmoConfiguration;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.SplitContainer splitContainer7;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button BTN_ConfigAmmoApply;
+        private System.Windows.Forms.TextBox TBX_ConfigAmmoId;
+        private System.Windows.Forms.TextBox TBX_ConfigAmmoCapacity;
+        private System.Windows.Forms.TextBox TBX_ConfigAmmoName;
+        private System.Windows.Forms.TextBox TBX_ConfigAmmoCaliber;
         private System.Windows.Forms.TabPage BlocksConfigurationPage;
-        private System.Windows.Forms.GroupBox GBX_Blocks;
-        private System.Windows.Forms.ListBox LBX_SaveGameBlockList;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Button BTN_LoadSaveGame;
         private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.Button BTN_ConfigReload;
         private System.Windows.Forms.Button BTN_SaveBlocksConfiguration;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.ListBox LBX_BlocksConfiguration;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.SplitContainer splitContainer4;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.SplitContainer splitContainer4;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button BTN_ConfigApplyChanges;
+        private System.Windows.Forms.TextBox TBX_ConfigBlockId;
         private System.Windows.Forms.TextBox TBX_ConfigDisassembleRatio;
         private System.Windows.Forms.TextBox TBX_ConfigBlockName;
         private System.Windows.Forms.TextBox TBX_ConfigBuildTime;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox TBX_ConfigBlockId;
-        private System.Windows.Forms.Button BTN_ConfigReload;
-        private System.Windows.Forms.Button BTN_ConfigApplyChanges;
+        private System.Windows.Forms.TabPage SaveGamePage;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Button BTN_LoadSaveGame;
+        private System.Windows.Forms.GroupBox GBX_Blocks;
+        private System.Windows.Forms.ListBox LBX_SaveGameBlockList;
+        private System.Windows.Forms.TabControl LayoutPages;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox TBX_ConfigAmmoMass;
+        private System.Windows.Forms.TextBox TBX_ConfigAmmoVolume;
+
     }
 }
 
