@@ -7,28 +7,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using SEModAPI.Support;
 using VRageMath;
 
-namespace SEModAPI
+namespace SEModAPI.API
 {
     public class ConfigFileSerializer
     {
         #region "Attributes"
 
-        private MyObjectBuilder_Definitions m_ammoMagazineDefinitions;
-		private MyObjectBuilder_Definitions m_blueprintDefinitions;
-		private MyObjectBuilder_Definitions m_cubeBlockDefinitions;
-        private MyObjectBuilder_Definitions m_componentDefinitions;
-		private MyObjectBuilder_Definitions m_containerTypeDefinitions;
-		private MyObjectBuilder_Definitions m_globalEventDefinitions;
-		private MyObjectBuilder_Definitions m_handItemDefinitions;
-		private MyObjectBuilder_Definitions m_physicalItemDefinitions;
-		private MyObjectBuilder_Definitions m_spawnGroupDefinitions;
-		private MyObjectBuilder_Definitions m_voxelMaterialDefinitions;
+        private MyObjectBuilder_Definitions _ammoMagazineDefinitions;
+        private MyObjectBuilder_Definitions _cubeBlockDefinitions;
+        private MyObjectBuilder_Definitions _componentDefinitions;
+        private MyObjectBuilder_Definitions _blueprintDefinitions;
+        private MyObjectBuilder_Definitions _physicalItemDefinitions;
+        private MyObjectBuilder_Definitions _voxelMaterialDefinitions;
+        private Dictionary<string, byte> _materialIndex;
 
-        private Dictionary<string, byte> m_materialIndex;
-
-        private GameInstallationInfo GameInstallation;
+        private readonly GameInstallationInfo _gameInstallation;
 
         public readonly Dictionary<CubeType, SerializableBlockOrientation> CubeOrientations = new Dictionary<CubeType, SerializableBlockOrientation>()
         {
@@ -118,37 +114,55 @@ namespace SEModAPI
 
         public MyObjectBuilder_CubeBlockDefinition[] CubeBlockDefinitions
         {
-            get { return m_cubeBlockDefinitions.CubeBlocks; }
+            get
+            {
+                return _cubeBlockDefinitions.CubeBlocks;
+            }
         }
+
+        public void SetCubeBlockDefinitions(MyObjectBuilder_CubeBlockDefinition[] cubeBlockDefinitions)
+        {
+            _cubeBlockDefinitions.CubeBlocks = cubeBlockDefinitions;
+        }
+
+        public void SetCubeBlockDefinitionsIndex(int index, MyObjectBuilder_CubeBlockDefinition cubeBlockDefinition)
+        {
+            if (index < _cubeBlockDefinitions.CubeBlocks.Length)
+            {
+                _cubeBlockDefinitions.CubeBlocks[index] = cubeBlockDefinition;
+            } 
+        }
+
+
 
         public MyBlockPosition[] CubeBlockPositions
         {
-            get { return m_cubeBlockDefinitions.BlockPositions; }
+            get { return _cubeBlockDefinitions.BlockPositions; }
         }
 
         public MyObjectBuilder_ComponentDefinition[] ComponentDefinitions
         {
-            get { return m_componentDefinitions.Components; }
+            get { return _componentDefinitions.Components; }
         }
 
         public MyObjectBuilder_PhysicalItemDefinition[] PhysicalItemDefinitions
         {
-            get { return m_physicalItemDefinitions.PhysicalItems; }
+            get { return _physicalItemDefinitions.PhysicalItems; }
         }
 
         public MyObjectBuilder_AmmoMagazineDefinition[] AmmoMagazineDefinitions
         {
-            get { return m_ammoMagazineDefinitions.AmmoMagazines; }
+            get { return _ammoMagazineDefinitions.AmmoMagazines; }
         }
 
         public MyObjectBuilder_VoxelMaterialDefinition[] VoxelMaterialDefinitions
         {
-            get { return m_voxelMaterialDefinitions.VoxelMaterials; }
+            get { return _voxelMaterialDefinitions.VoxelMaterials; }
         }
 
         public MyObjectBuilder_BlueprintDefinition[] BlueprintDefinitions
         {
-            get { return m_blueprintDefinitions.Blueprints; }
+            get { return _blueprintDefinitions.Blueprints; }
         }
 
 		public MyObjectBuilder_SpawnGroupDefinition[] SpawnGroupDefinitions
@@ -165,6 +179,13 @@ namespace SEModAPI
 		{
 			get { return m_containerTypeDefinitions.ContainerTypes; }
 		}
+        public ConfigFileSerializer()
+        {
+            //Prepare game installation configuration
+            _gameInstallation = new GameInstallationInfo();
+            // Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
+            ReadCubeBlockDefinitions();
+        }
 
 		public MyObjectBuilder_HandItemDefinition[] HandItemDefinitions
 		{
@@ -188,7 +209,7 @@ namespace SEModAPI
                 IgnoreWhitespace = true,
             };
 
-            object obj = null;
+            object obj;
 
             using (var xmlReader = XmlReader.Create(stream, settings))
             {
@@ -221,7 +242,7 @@ namespace SEModAPI
         public T ReadSpaceEngineersFile<T, TS>(string filename)
 			where TS : XmlSerializer1
         {
-            var settings = new XmlReaderSettings()
+            var settings = new XmlReaderSettings
             {
                 IgnoreComments = true,
                 IgnoreWhitespace = true,
@@ -338,7 +359,7 @@ namespace SEModAPI
         {
             object fileContent = null;
 
-            string filePath = Path.Combine(Path.Combine(GameInstallation.GamePath, @"Content\Data"), filename);
+            string filePath = Path.Combine(Path.Combine(_gameInstallation.GamePath, @"Content\Data"), filename);
 
             if (!File.Exists(filePath))
             {
@@ -366,6 +387,79 @@ namespace SEModAPI
             return (T)fileContent;
         }
 
+        #endregion
+
+        #region WriteCubeBlocksDefinitions
+
+        public void WriteCubeBlockDefinitions()
+        {
+            SaveAmmoMagazinesContentFile();
+            SaveVoxelMaterialsContentFile();
+            SavePhysicalItemsContentFile();
+            SaveComponentsContentFile();
+            SaveCubeBlocksContentFile();
+            SaveBlueprintsContentFile();
+        }
+
+        public void SaveAmmoMagazinesContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_ammoMagazineDefinitions, "AmmoMagazines.sbc");
+        }
+
+        public void SaveVoxelMaterialsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_voxelMaterialDefinitions, "VoxelMaterials.sbc");
+        }
+        public void SavePhysicalItemsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_physicalItemDefinitions, "PhysicalItems.sbc");
+        }
+        public void SaveComponentsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_componentDefinitions, "Components.sbc");
+        }
+        public void SaveCubeBlocksContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_cubeBlockDefinitions, "CubeBlocks.sbc");
+        }
+        public void SaveBlueprintsContentFile()
+        {
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_blueprintDefinitions, "Blueprints.sbc");
+        }
+
+        private void SaveContentFile<T, TS>(T fileContent,string filename) where TS : XmlSerializer1
+        {
+
+            string filePath = Path.Combine(Path.Combine(_gameInstallation.GamePath, @"Content\Data"), filename);
+
+            if (!File.Exists(filePath))
+            {
+                throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileMissing), filePath);
+            }
+
+            try
+            {
+                WriteSpaceEngineersFile<T, TS>(fileContent, filePath);
+            }
+            catch
+            {
+                throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileCorrupted), filePath);
+            }
+
+            if (fileContent == null)
+            {
+                throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileEmpty), filePath);
+            }
+
+            // TODO: set a file watch to reload the files, incase modding is occuring at the same time this is open.
+            //     Lock the load during this time, in case it happens multiple times.
+            // Report a friendly error if this load fails.
+        }
+
+        #endregion
+
+        #region FetchCubeBlockMass
+
         public float FetchCubeBlockMass(MyObjectBuilderTypeEnum typeId, MyCubeSize cubeSize, string subTypeid)
         {
             float mass = 0;
@@ -376,7 +470,7 @@ namespace SEModAPI
             {
                 foreach (var component in cubeBlockDefinition.Components)
                 {
-                    mass += m_componentDefinitions.Components.Where(c => c.Id.SubtypeId == component.Subtype).Sum(c => c.Mass) * component.Count;
+                    mass += _componentDefinitions.Components.Where(c => c.Id.SubtypeId == component.Subtype).Sum(c => c.Mass) * component.Count;
                 }
             }
 
@@ -386,7 +480,7 @@ namespace SEModAPI
         public void AccumulateCubeBlueprintRequirements(string subType, MyObjectBuilderTypeEnum typeId, decimal amount, Dictionary<string, MyObjectBuilder_BlueprintDefinition.Item> requirements, out TimeSpan timeTaken)
         {
             TimeSpan time = new TimeSpan();
-            var bp = m_blueprintDefinitions.Blueprints.FirstOrDefault(b => b.Result.SubtypeId == subType && b.Result.TypeId == typeId);
+            var bp = _blueprintDefinitions.Blueprints.FirstOrDefault(b => b.Result.SubtypeId == subType && b.Result.TypeId == typeId);
             if (bp != null)
             {
                 foreach (var item in bp.Prerequisites)
@@ -419,25 +513,25 @@ namespace SEModAPI
 
         public MyObjectBuilder_DefinitionBase GetDefinition(MyObjectBuilderTypeEnum typeId, string subTypeId)
         {
-            var cube = m_cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
+            var cube = _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
             if (cube != null)
             {
                 return cube;
             }
 
-            var item = m_physicalItemDefinitions.PhysicalItems.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
+            var item = _physicalItemDefinitions.PhysicalItems.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
             if (item != null)
             {
                 return item;
             }
 
-            var component = m_componentDefinitions.Components.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
+            var component = _componentDefinitions.Components.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
             if (component != null)
             {
                 return component;
             }
 
-            var magazine = m_ammoMagazineDefinitions.AmmoMagazines.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
+            var magazine = _ammoMagazineDefinitions.AmmoMagazines.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
             if (magazine != null)
             {
                 return magazine;
@@ -473,43 +567,43 @@ namespace SEModAPI
 
         public IList<MyObjectBuilder_VoxelMaterialDefinition> GetMaterialList()
         {
-            return m_voxelMaterialDefinitions.VoxelMaterials;
+            return _voxelMaterialDefinitions.VoxelMaterials;
         }
 
         public byte GetMaterialIndex(string materialName)
         {
-            if (m_materialIndex.ContainsKey(materialName))
-                return m_materialIndex[materialName];
+            if (_materialIndex.ContainsKey(materialName))
+                return _materialIndex[materialName];
             else
             {
-                var material = m_voxelMaterialDefinitions.VoxelMaterials.FirstOrDefault(m => m.Name == materialName);
-                var index = (byte)m_voxelMaterialDefinitions.VoxelMaterials.ToList().IndexOf(material);
-                m_materialIndex.Add(materialName, index);
+                var material = _voxelMaterialDefinitions.VoxelMaterials.FirstOrDefault(m => m.Name == materialName);
+                var index = (byte)_voxelMaterialDefinitions.VoxelMaterials.ToList().IndexOf(material);
+                _materialIndex.Add(materialName, index);
                 return index;
             }
         }
 
         public string GetMaterialName(byte materialIndex, byte defaultMaterialIndex)
         {
-            if (materialIndex <= m_voxelMaterialDefinitions.VoxelMaterials.Length)
-                return m_voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
+            if (materialIndex <= _voxelMaterialDefinitions.VoxelMaterials.Length)
+                return _voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
             else
-                return m_voxelMaterialDefinitions.VoxelMaterials[defaultMaterialIndex].Name;
+                return _voxelMaterialDefinitions.VoxelMaterials[defaultMaterialIndex].Name;
         }
 
         public string GetMaterialName(byte materialIndex)
         {
-            return m_voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
+            return _voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
         }
 
         public MyObjectBuilder_CubeBlockDefinition GetCubeDefinition(MyObjectBuilderTypeEnum typeId, MyCubeSize cubeSize, string subtypeId)
         {
             if (string.IsNullOrEmpty(subtypeId))
             {
-                return m_cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.CubeSize == cubeSize && d.Id.TypeId == typeId);
+                return _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.CubeSize == cubeSize && d.Id.TypeId == typeId);
             }
 
-            return m_cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.SubtypeId == subtypeId || (d.Variants != null && d.Variants.Any(v => subtypeId == d.Id.SubtypeId + v.Color)));
+            return _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.SubtypeId == subtypeId || (d.Variants != null && d.Variants.Any(v => subtypeId == d.Id.SubtypeId + v.Color)));
             // Returns null if it doesn't find the required SubtypeId.
         }
 
