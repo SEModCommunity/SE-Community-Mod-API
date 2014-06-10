@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SEModAPI;
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEConfigTool
 {
@@ -23,20 +24,37 @@ namespace SEConfigTool
         {
             try
             {
-                ConfigFileSerializer Serializer = new ConfigFileSerializer();
-                //SaveFile save = new SaveFile(@"E:\PROGRAMATION\Formulaires c#\SANDBOX_0_0_0_.sbs", Serializer);
+				ConfigFileSerializer config = new ConfigFileSerializer();
 
-                //foreach (MyObjectBuilder_EntityBase currentObject in save.Objects)
-                //{
-                //    float x = currentObject.PositionAndOrientation.Value.Position.x;
-                //    float y = currentObject.PositionAndOrientation.Value.Position.y;
-                //    float z = currentObject.PositionAndOrientation.Value.Position.z;
+				// Initialize the block list
+				this.BlockList.BeginUpdate();
+				foreach (MyObjectBuilder_CubeBlockDefinition def in config.CubeBlockDefinitions)
+				{
+					this.BlockList.Items.Add(def.BlockPairName);
+				}
+				this.BlockList.EndUpdate();
 
-                //    float dist = (float)Math.Sqrt(x * x + y * y + z * z);
+				// Initialize the spawn group list
+				this.SpawnGroupList.BeginUpdate();
+				foreach (MyObjectBuilder_SpawnGroupDefinition def in config.SpawnGroupDefinitions)
+				{
+					this.SpawnGroupList.Items.Add("Group");
+					foreach (Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab prefab in def.Prefabs)
+					{
+						this.SpawnGroupList.Items.Add("\tFile: " + prefab.File + "\tName: " + prefab.BeaconText + "\tPosition: " + prefab.Position.ToString() + "\tSpeed: " + prefab.Speed.ToString());
+					}
+				}
+				this.SpawnGroupList.EndUpdate();
 
-                //    BlockList.Items.Add(currentObject.TypeId.ToString() + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z +";"+y);
-                //}
-            }
+				// Initialize the global events list
+				this.GlobalEventList.BeginUpdate();
+				foreach (MyObjectBuilder_GlobalEventDefinition def in config.GlobalEventDefinitions)
+				{
+					this.GlobalEventList.Items.Add(def.EventType.ToString());
+				}
+				this.GlobalEventList.EndUpdate();
+
+			}
             catch (AutoException AEx)
             {
                 string ExceptionString = AEx.GetDebugString();

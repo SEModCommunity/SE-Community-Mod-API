@@ -9,220 +9,26 @@ using System.Linq;
 using System.Xml;
 using VRageMath;
 
-
 namespace SEModAPI
 {
     public class ConfigFileSerializer
     {
-
-
         #region "Attributes"
 
         private MyObjectBuilder_Definitions m_ammoMagazineDefinitions;
-        private MyObjectBuilder_Definitions m_cubeBlockDefinitions;
+		private MyObjectBuilder_Definitions m_blueprintDefinitions;
+		private MyObjectBuilder_Definitions m_cubeBlockDefinitions;
         private MyObjectBuilder_Definitions m_componentDefinitions;
-        private MyObjectBuilder_Definitions m_blueprintDefinitions;
-        private MyObjectBuilder_Definitions m_physicalItemDefinitions;
-        private MyObjectBuilder_Definitions m_voxelMaterialDefinitions;
+		private MyObjectBuilder_Definitions m_containerTypeDefinitions;
+		private MyObjectBuilder_Definitions m_globalEventDefinitions;
+		private MyObjectBuilder_Definitions m_handItemDefinitions;
+		private MyObjectBuilder_Definitions m_physicalItemDefinitions;
+		private MyObjectBuilder_Definitions m_spawnGroupDefinitions;
+		private MyObjectBuilder_Definitions m_voxelMaterialDefinitions;
+
         private Dictionary<string, byte> m_materialIndex;
 
         private GameInstallationInfo GameInstallation;
-
-        #endregion
-
-        #region properties
-
-        public MyObjectBuilder_CubeBlockDefinition[] CubeBlockDefinitions
-        {
-            get { return m_cubeBlockDefinitions.CubeBlocks; }
-        }
-
-        public MyBlockPosition[] CubeBlockPositions
-        {
-            get { return m_cubeBlockDefinitions.BlockPositions; }
-        }
-
-        public MyObjectBuilder_ComponentDefinition[] ComponentDefinitions
-        {
-            get { return m_componentDefinitions.Components; }
-        }
-
-        public MyObjectBuilder_PhysicalItemDefinition[] PhysicalItemDefinitions
-        {
-            get { return m_physicalItemDefinitions.PhysicalItems; }
-        }
-
-        public MyObjectBuilder_AmmoMagazineDefinition[] AmmoMagazineDefinitions
-        {
-            get { return m_ammoMagazineDefinitions.AmmoMagazines; }
-        }
-
-        public MyObjectBuilder_VoxelMaterialDefinition[] VoxelMaterialDefinitions
-        {
-            get { return m_voxelMaterialDefinitions.VoxelMaterials; }
-        }
-
-        public MyObjectBuilder_BlueprintDefinition[] BlueprintDefinitions
-        {
-            get { return m_blueprintDefinitions.Blueprints; }
-        }
-
-        #endregion
-
-        #region "Constructors & Initializers"
-
-        public ConfigFileSerializer()
-        {
-            try
-            {
-                //Prepare game installation configuration
-                GameInstallation = new GameInstallationInfo();
-                // Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
-                ReadCubeBlockDefinitions();
-            }
-            catch (AutoException) { throw; }
-            catch (Exception) { throw; }
-        }
-
-        #endregion
-
-        #region Serializers
-
-        public T ReadSpaceEngineersFile<T, TS>(Stream stream)
-        where TS : XmlSerializer1
-        {
-            var settings = new XmlReaderSettings
-            {
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-            };
-
-            object obj = null;
-
-            using (var xmlReader = XmlReader.Create(stream, settings))
-            {
-
-                var serializer = (TS)Activator.CreateInstance(typeof(TS));
-                //serializer.UnknownAttribute += serializer_UnknownAttribute;
-                //serializer.UnknownElement += serializer_UnknownElement;
-                //serializer.UnknownNode += serializer_UnknownNode;
-                obj = serializer.Deserialize(xmlReader);
-            }
-
-            return (T)obj;
-        }
-
-        public bool TryReadSpaceEngineersFile<T, TS>(string filename, out T entity)
-             where TS : XmlSerializer1
-        {
-            try
-            {
-                entity = ReadSpaceEngineersFile<T, TS>(filename);
-                return true;
-            }
-            catch
-            {
-                entity = default(T);
-                return false;
-            }
-        }
-
-        public T ReadSpaceEngineersFile<T, TS>(string filename)
-        where TS : XmlSerializer1
-        {
-            var settings = new XmlReaderSettings()
-            {
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-            };
-
-            object obj = null;
-
-            if (File.Exists(filename))
-            {
-                using (var xmlReader = XmlReader.Create(filename, settings))
-                {
-                    var serializer = (TS)Activator.CreateInstance(typeof(TS));
-                    obj = serializer.Deserialize(xmlReader);
-                }
-            }
-
-            return (T)obj;
-        }
-
-        public T Deserialize<T>(string xml)
-        {
-            using (var textReader = new StringReader(xml))
-            {
-                return (T)(new XmlSerializerContract().GetSerializer(typeof(T)).Deserialize(textReader));
-            }
-        }
-
-        public string Serialize<T>(object item)
-        {
-            using (var textWriter = new StringWriter())
-            {
-                new XmlSerializerContract().GetSerializer(typeof(T)).Serialize(textWriter, item);
-                return textWriter.ToString();
-            }
-        }
-
-        public bool WriteSpaceEngineersFile<T, TS>(T sector, string filename)
-            where TS : XmlSerializer1
-        {
-            // How they appear to be writing the files currently.
-            try
-            {
-                using (var xmlTextWriter = new XmlTextWriter(filename, null))
-                {
-                    xmlTextWriter.Formatting = Formatting.Indented;
-                    xmlTextWriter.Indentation = 2;
-                    var serializer = (TS)Activator.CreateInstance(typeof(TS));
-                    serializer.Serialize(xmlTextWriter, sector);
-                }
-            }
-            catch
-            {
-                return false;
-            }
-
-            //// How they should be doing it to support Unicode.
-            //var settingsDestination = new XmlWriterSettings()
-            //{
-            //    Indent = true, // Set indent to false to compress.
-            //    Encoding = new UTF8Encoding(false)   // codepage 65001 without signature. Removes the Byte Order Mark from the start of the file.
-            //};
-
-            //try
-            //{
-            //    using (var xmlWriter = XmlWriter.Create(filename, settingsDestination))
-            //    {
-            //        S serializer = (S)Activator.CreateInstance(typeof(S));
-            //        serializer.Serialize(xmlWriter, sector);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    return false;
-            //}
-
-            return true;
-        }
-
-        #endregion
-
-        #region GenerateEntityId
-
-        public long GenerateEntityId()
-        {
-            // Not the offical SE way of generating IDs, but its fast and we don't have to worry about a random seed.
-            var buffer = Guid.NewGuid().ToByteArray();
-            return BitConverter.ToInt64(buffer, 0);
-        }
-
-        #endregion
-
-        #region SetCubeOrientation
 
         public readonly Dictionary<CubeType, SerializableBlockOrientation> CubeOrientations = new Dictionary<CubeType, SerializableBlockOrientation>()
         {
@@ -288,6 +94,221 @@ namespace SEModAPI
             {CubeType.Axis24_Up_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Left)},
             {CubeType.Axis24_Up_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
         };
+		
+		#endregion
+
+        #region "Constructors & Initializers"
+
+        public ConfigFileSerializer()
+        {
+            try
+            {
+                //Prepare game installation configuration
+                GameInstallation = new GameInstallationInfo();
+                // Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
+                ReadCubeBlockDefinitions();
+            }
+            catch (AutoException) { throw; }
+            catch (Exception) { throw; }
+        }
+
+        #endregion
+
+        #region "Getters"
+
+        public MyObjectBuilder_CubeBlockDefinition[] CubeBlockDefinitions
+        {
+            get { return m_cubeBlockDefinitions.CubeBlocks; }
+        }
+
+        public MyBlockPosition[] CubeBlockPositions
+        {
+            get { return m_cubeBlockDefinitions.BlockPositions; }
+        }
+
+        public MyObjectBuilder_ComponentDefinition[] ComponentDefinitions
+        {
+            get { return m_componentDefinitions.Components; }
+        }
+
+        public MyObjectBuilder_PhysicalItemDefinition[] PhysicalItemDefinitions
+        {
+            get { return m_physicalItemDefinitions.PhysicalItems; }
+        }
+
+        public MyObjectBuilder_AmmoMagazineDefinition[] AmmoMagazineDefinitions
+        {
+            get { return m_ammoMagazineDefinitions.AmmoMagazines; }
+        }
+
+        public MyObjectBuilder_VoxelMaterialDefinition[] VoxelMaterialDefinitions
+        {
+            get { return m_voxelMaterialDefinitions.VoxelMaterials; }
+        }
+
+        public MyObjectBuilder_BlueprintDefinition[] BlueprintDefinitions
+        {
+            get { return m_blueprintDefinitions.Blueprints; }
+        }
+
+		public MyObjectBuilder_SpawnGroupDefinition[] SpawnGroupDefinitions
+		{
+			get { return m_spawnGroupDefinitions.SpawnGroups; }
+		}
+
+		public MyObjectBuilder_GlobalEventDefinition[] GlobalEventDefinitions
+		{
+			get { return m_globalEventDefinitions.GlobalEvents; }
+		}
+
+		public MyObjectBuilder_ContainerTypeDefinition[] ContainerTypeDefinitions
+		{
+			get { return m_containerTypeDefinitions.ContainerTypes; }
+		}
+
+		public MyObjectBuilder_HandItemDefinition[] HandItemDefinitions
+		{
+			get { return m_handItemDefinitions.HandItems; }
+		}
+
+		#endregion
+
+		#region "Setters"
+		#endregion
+
+		#region "Methods"
+		#region "Serializers"
+
+		public T ReadSpaceEngineersFile<T, TS>(Stream stream)
+			where TS : XmlSerializer1
+        {
+            var settings = new XmlReaderSettings
+            {
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+            };
+
+            object obj = null;
+
+            using (var xmlReader = XmlReader.Create(stream, settings))
+            {
+
+                var serializer = (TS)Activator.CreateInstance(typeof(TS));
+                //serializer.UnknownAttribute += serializer_UnknownAttribute;
+                //serializer.UnknownElement += serializer_UnknownElement;
+                //serializer.UnknownNode += serializer_UnknownNode;
+                obj = serializer.Deserialize(xmlReader);
+            }
+
+            return (T)obj;
+        }
+
+        public bool TryReadSpaceEngineersFile<T, TS>(string filename, out T entity)
+             where TS : XmlSerializer1
+        {
+            try
+            {
+                entity = ReadSpaceEngineersFile<T, TS>(filename);
+                return true;
+            }
+            catch
+            {
+                entity = default(T);
+                return false;
+            }
+        }
+
+        public T ReadSpaceEngineersFile<T, TS>(string filename)
+			where TS : XmlSerializer1
+        {
+            var settings = new XmlReaderSettings()
+            {
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+            };
+
+            object obj = null;
+
+            if (File.Exists(filename))
+            {
+                using (var xmlReader = XmlReader.Create(filename, settings))
+                {
+                    var serializer = (TS)Activator.CreateInstance(typeof(TS));
+                    obj = serializer.Deserialize(xmlReader);
+                }
+            }
+
+            return (T)obj;
+        }
+
+        public T Deserialize<T>(string xml)
+        {
+            using (var textReader = new StringReader(xml))
+            {
+                return (T)(new XmlSerializerContract().GetSerializer(typeof(T)).Deserialize(textReader));
+            }
+        }
+
+        public string Serialize<T>(object item)
+        {
+            using (var textWriter = new StringWriter())
+            {
+                new XmlSerializerContract().GetSerializer(typeof(T)).Serialize(textWriter, item);
+                return textWriter.ToString();
+            }
+        }
+
+        public bool WriteSpaceEngineersFile<T, TS>(T sector, string filename)
+            where TS : XmlSerializer1
+        {
+            // How they appear to be writing the files currently.
+            try
+            {
+                using (var xmlTextWriter = new XmlTextWriter(filename, null))
+                {
+                    xmlTextWriter.Formatting = Formatting.Indented;
+                    xmlTextWriter.Indentation = 2;
+					xmlTextWriter.IndentChar = ' ';
+                    TS serializer = (TS)Activator.CreateInstance(typeof(TS));
+                    serializer.Serialize(xmlTextWriter, sector);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            //// How they should be doing it to support Unicode.
+            //var settingsDestination = new XmlWriterSettings()
+            //{
+            //    Indent = true, // Set indent to false to compress.
+            //    Encoding = new UTF8Encoding(false)   // codepage 65001 without signature. Removes the Byte Order Mark from the start of the file.
+            //};
+
+            //try
+            //{
+            //    using (var xmlWriter = XmlWriter.Create(filename, settingsDestination))
+            //    {
+            //        S serializer = (S)Activator.CreateInstance(typeof(S));
+            //        serializer.Serialize(xmlWriter, sector);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return false;
+            //}
+
+            return true;
+        }
+
+        #endregion
+
+        public long GenerateEntityId()
+        {
+            // Not the offical SE way of generating IDs, but its fast and we don't have to worry about a random seed.
+            var buffer = Guid.NewGuid().ToByteArray();
+            return BitConverter.ToInt64(buffer, 0);
+        }
 
         public SerializableBlockOrientation GetCubeOrientation(CubeType type)
         {
@@ -297,19 +318,20 @@ namespace SEModAPI
             throw new NotImplementedException(string.Format("SetCubeOrientation of type [{0}] not yet implemented.", type));
         }
 
-        #endregion
-
-        #region ReadCubeBlockDefinitions
-
         public void ReadCubeBlockDefinitions()
         {
             m_ammoMagazineDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("AmmoMagazines.sbc");
-            m_voxelMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("VoxelMaterials.sbc");
-            m_physicalItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("PhysicalItems.sbc");
-            m_componentDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Components.sbc");
-            m_cubeBlockDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("CubeBlocks.sbc");
-            m_blueprintDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Blueprints.sbc");
-            m_materialIndex = new Dictionary<string, byte>();
+			m_blueprintDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Blueprints.sbc");
+			m_componentDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Components.sbc");
+			m_containerTypeDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("ContainerTypes.sbc");
+			m_cubeBlockDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("CubeBlocks.sbc");
+			m_globalEventDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("GlobalEvents.sbc");
+			m_handItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("HandItems.sbc");
+			m_physicalItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("PhysicalItems.sbc");
+			m_spawnGroupDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("SpawnGroups.sbc");
+			m_voxelMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("VoxelMaterials.sbc");
+
+			m_materialIndex = new Dictionary<string, byte>();
         }
 
         private T LoadContentFile<T, TS>(string filename) where TS : XmlSerializer1
@@ -343,10 +365,6 @@ namespace SEModAPI
 
             return (T)fileContent;
         }
-
-        #endregion
-
-        #region FetchCubeBlockMass
 
         public float FetchCubeBlockMass(MyObjectBuilderTypeEnum typeId, MyCubeSize cubeSize, string subTypeid)
         {
@@ -484,10 +502,6 @@ namespace SEModAPI
             return m_voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
         }
 
-        #endregion
-
-        #region GetCubeDefinition
-
         public MyObjectBuilder_CubeBlockDefinition GetCubeDefinition(MyObjectBuilderTypeEnum typeId, MyCubeSize cubeSize, string subtypeId)
         {
             if (string.IsNullOrEmpty(subtypeId))
@@ -498,10 +512,6 @@ namespace SEModAPI
             return m_cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.SubtypeId == subtypeId || (d.Variants != null && d.Variants.Any(v => subtypeId == d.Id.SubtypeId + v.Color)));
             // Returns null if it doesn't find the required SubtypeId.
         }
-
-        #endregion
-
-        #region GetBoundingBox
 
         public BoundingBox GetBoundingBox(MyObjectBuilder_CubeGrid entity)
         {
@@ -542,8 +552,6 @@ namespace SEModAPI
             return bb;
         }
 
-        #endregion
-
         public string GetResourceName(string value)
         {
             if (value == null)
@@ -564,6 +572,8 @@ namespace SEModAPI
             }
 
             return value;
-        }
-    }
+		}
+
+		#endregion
+	}
 }
