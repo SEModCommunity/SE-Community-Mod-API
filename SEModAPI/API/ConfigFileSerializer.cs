@@ -16,17 +16,32 @@ namespace SEModAPI.API
     {
         #region "Attributes"
 
+		//Basic Definitions
         private MyObjectBuilder_Definitions _ammoMagazineDefinitions;
         private MyObjectBuilder_Definitions _cubeBlockDefinitions;
         private MyObjectBuilder_Definitions _componentDefinitions;
         private MyObjectBuilder_Definitions _blueprintDefinitions;
-        private MyObjectBuilder_Definitions _physicalItemDefinitions;
+
+		//Item Definitions
+		private MyObjectBuilder_Definitions _handItemDefinitions;
+		private MyObjectBuilder_Definitions _physicalItemDefinitions;
+
+		//Material Definitions
+		private MyObjectBuilder_Definitions _transparentMaterialDefinitions;
         private MyObjectBuilder_Definitions _voxelMaterialDefinitions;
-        private Dictionary<string, byte> _materialIndex;
+
+		//Advanced Definitions
+		private MyObjectBuilder_Definitions _containerTypeDefinitions;
+		private MyObjectBuilder_Definitions _globalEventDefinitions;
+		private MyObjectBuilder_Definitions _spawnGroupDefinitions;
+
+		private Dictionary<string, byte> _materialIndex;
 
         private readonly GameInstallationInfo _gameInstallation;
 
-        public readonly Dictionary<CubeType, SerializableBlockOrientation> CubeOrientations = new Dictionary<CubeType, SerializableBlockOrientation>()
+		#region "CubeOrientations"
+
+		public readonly Dictionary<CubeType, SerializableBlockOrientation> CubeOrientations = new Dictionary<CubeType, SerializableBlockOrientation>()
         {
             // TODO: Remove the Cube Armor orientation, as these appear to work fine with the Generic.
             {CubeType.Cube, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},
@@ -90,23 +105,20 @@ namespace SEModAPI.API
             {CubeType.Axis24_Up_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Left)},
             {CubeType.Axis24_Up_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
         };
-		
+
 		#endregion
 
-        #region "Constructors & Initializers"
+		#endregion
 
-        public ConfigFileSerializer()
-        {
-            try
-            {
-                //Prepare game installation configuration
-                GameInstallation = new GameInstallationInfo();
-                // Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
-                ReadCubeBlockDefinitions();
-            }
-            catch (AutoException) { throw; }
-            catch (Exception) { throw; }
-        }
+		#region "Constructors & Initializers"
+
+		public ConfigFileSerializer()
+		{
+			//Prepare game installation configuration
+			_gameInstallation = new GameInstallationInfo();
+			// Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
+			ReadCubeBlockDefinitions();
+		}
 
         #endregion
 
@@ -167,29 +179,22 @@ namespace SEModAPI.API
 
 		public MyObjectBuilder_SpawnGroupDefinition[] SpawnGroupDefinitions
 		{
-			get { return m_spawnGroupDefinitions.SpawnGroups; }
+			get { return _spawnGroupDefinitions.SpawnGroups; }
 		}
 
 		public MyObjectBuilder_GlobalEventDefinition[] GlobalEventDefinitions
 		{
-			get { return m_globalEventDefinitions.GlobalEvents; }
+			get { return _globalEventDefinitions.GlobalEvents; }
 		}
 
 		public MyObjectBuilder_ContainerTypeDefinition[] ContainerTypeDefinitions
 		{
-			get { return m_containerTypeDefinitions.ContainerTypes; }
+			get { return _containerTypeDefinitions.ContainerTypes; }
 		}
-        public ConfigFileSerializer()
-        {
-            //Prepare game installation configuration
-            _gameInstallation = new GameInstallationInfo();
-            // Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
-            ReadCubeBlockDefinitions();
-        }
 
 		public MyObjectBuilder_HandItemDefinition[] HandItemDefinitions
 		{
-			get { return m_handItemDefinitions.HandItems; }
+			get { return _handItemDefinitions.HandItems; }
 		}
 
 		#endregion
@@ -339,20 +344,28 @@ namespace SEModAPI.API
             throw new NotImplementedException(string.Format("SetCubeOrientation of type [{0}] not yet implemented.", type));
         }
 
-        public void ReadCubeBlockDefinitions()
-        {
-            m_ammoMagazineDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("AmmoMagazines.sbc");
-			m_blueprintDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Blueprints.sbc");
-			m_componentDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Components.sbc");
-			m_containerTypeDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("ContainerTypes.sbc");
-			m_cubeBlockDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("CubeBlocks.sbc");
-			m_globalEventDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("GlobalEvents.sbc");
-			m_handItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("HandItems.sbc");
-			m_physicalItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("PhysicalItems.sbc");
-			m_spawnGroupDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("SpawnGroups.sbc");
-			m_voxelMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("VoxelMaterials.sbc");
+		#endregion
 
-			m_materialIndex = new Dictionary<string, byte>();
+		#region ReadCubeBlocksDefinitions
+
+		public void ReadCubeBlockDefinitions()
+        {
+            _ammoMagazineDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("AmmoMagazines.sbc");
+			_blueprintDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Blueprints.sbc");
+			_componentDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Components.sbc");
+			_cubeBlockDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("CubeBlocks.sbc");
+
+			_handItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("HandItems.sbc");
+			_physicalItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("PhysicalItems.sbc");
+
+			_transparentMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("TransparentMaterials.sbc");
+			_voxelMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("VoxelMaterials.sbc");
+
+			_containerTypeDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("ContainerTypes.sbc");
+			_globalEventDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("GlobalEvents.sbc");
+			_spawnGroupDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("SpawnGroups.sbc");
+
+			_materialIndex = new Dictionary<string, byte>();
         }
 
         private T LoadContentFile<T, TS>(string filename) where TS : XmlSerializer1
@@ -394,27 +407,30 @@ namespace SEModAPI.API
         public void WriteCubeBlockDefinitions()
         {
             SaveAmmoMagazinesContentFile();
-            SaveVoxelMaterialsContentFile();
-            SavePhysicalItemsContentFile();
-            SaveComponentsContentFile();
+			SaveBlueprintsContentFile();
+			SaveComponentsContentFile();
             SaveCubeBlocksContentFile();
-            SaveBlueprintsContentFile();
-        }
+
+			SaveHandItemsContentFile();
+			SavePhysicalItemsContentFile();
+
+			SaveTransparentMaterialsContentFile();
+			SaveVoxelMaterialsContentFile();
+
+			SaveContainerTypesContentFile();
+			SaveGlobalEventsContentFile();
+			SaveSpawnGroupsContentFile();
+		}
 
         public void SaveAmmoMagazinesContentFile()
         {
             SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_ammoMagazineDefinitions, "AmmoMagazines.sbc");
         }
-
-        public void SaveVoxelMaterialsContentFile()
-        {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_voxelMaterialDefinitions, "VoxelMaterials.sbc");
-        }
-        public void SavePhysicalItemsContentFile()
-        {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_physicalItemDefinitions, "PhysicalItems.sbc");
-        }
-        public void SaveComponentsContentFile()
+		public void SaveBlueprintsContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_blueprintDefinitions, "Blueprints.sbc");
+		}
+		public void SaveComponentsContentFile()
         {
             SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_componentDefinitions, "Components.sbc");
         }
@@ -422,10 +438,37 @@ namespace SEModAPI.API
         {
             SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_cubeBlockDefinitions, "CubeBlocks.sbc");
         }
-        public void SaveBlueprintsContentFile()
-        {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_blueprintDefinitions, "Blueprints.sbc");
-        }
+
+		public void SaveHandItemsContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_handItemDefinitions, "HandItems.sbc");
+		}
+		public void SavePhysicalItemsContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_physicalItemDefinitions, "PhysicalItems.sbc");
+		}
+
+		public void SaveTransparentMaterialsContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_transparentMaterialDefinitions, "TransparentMaterials.sbc");
+		}
+		public void SaveVoxelMaterialsContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_voxelMaterialDefinitions, "VoxelMaterials.sbc");
+		}
+
+		public void SaveContainerTypesContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_containerTypeDefinitions, "ContainerTypes.sbc");
+		}
+		public void SaveGlobalEventsContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_globalEventDefinitions, "GlobalEvents.sbc");
+		}
+		public void SaveSpawnGroupsContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_spawnGroupDefinitions, "SpawnGroups.sbc");
+		}
 
         private void SaveContentFile<T, TS>(T fileContent,string filename) where TS : XmlSerializer1
         {
