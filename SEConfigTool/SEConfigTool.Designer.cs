@@ -119,26 +119,20 @@ namespace SEConfigTool
 			this.TBX_ConfigGlobalEventDescription = new System.Windows.Forms.TextBox();
 			this.SpawnGroupConfiguration = new System.Windows.Forms.TabPage();
 			this.splitContainer14 = new System.Windows.Forms.SplitContainer();
-			this.button7 = new System.Windows.Forms.Button();
-			this.button8 = new System.Windows.Forms.Button();
+			this.BTN_ConfigSpawnGroupReload = new System.Windows.Forms.Button();
+			this.BTN_SaveSpawnGroupConfig = new System.Windows.Forms.Button();
 			this.groupBox9 = new System.Windows.Forms.GroupBox();
 			this.splitContainer15 = new System.Windows.Forms.SplitContainer();
 			this.LBX_SpawnGroupConfiguration = new System.Windows.Forms.ListBox();
 			this.groupBox10 = new System.Windows.Forms.GroupBox();
 			this.splitContainer16 = new System.Windows.Forms.SplitContainer();
-			this.label23 = new System.Windows.Forms.Label();
-			this.label24 = new System.Windows.Forms.Label();
 			this.label25 = new System.Windows.Forms.Label();
-			this.label26 = new System.Windows.Forms.Label();
 			this.label27 = new System.Windows.Forms.Label();
 			this.label28 = new System.Windows.Forms.Label();
-			this.textBox13 = new System.Windows.Forms.TextBox();
-			this.textBox14 = new System.Windows.Forms.TextBox();
-			this.button9 = new System.Windows.Forms.Button();
-			this.textBox15 = new System.Windows.Forms.TextBox();
-			this.textBox16 = new System.Windows.Forms.TextBox();
-			this.textBox17 = new System.Windows.Forms.TextBox();
-			this.textBox18 = new System.Windows.Forms.TextBox();
+			this.BTN_ConfigSpawnGroupApply = new System.Windows.Forms.Button();
+			this.TBX_ConfigSpawnGroupPrefabCount = new System.Windows.Forms.TextBox();
+			this.TBX_ConfigSpawnGroupName = new System.Windows.Forms.TextBox();
+			this.TBX_ConfigSpawnGroupFrequency = new System.Windows.Forms.TextBox();
 			this.label12 = new System.Windows.Forms.Label();
 			this.TBX_ConfigGlobalEventFirstActivation = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
@@ -845,7 +839,7 @@ namespace SEConfigTool
 			this.groupBox6.Size = new System.Drawing.Size(297, 355);
 			this.groupBox6.TabIndex = 1;
 			this.groupBox6.TabStop = false;
-			this.groupBox6.Text = "Selected Entry Information";
+			this.groupBox6.Text = "Selected Container Information";
 			// 
 			// splitContainer10
 			// 
@@ -1067,7 +1061,7 @@ namespace SEConfigTool
 			this.groupBox8.Size = new System.Drawing.Size(297, 355);
 			this.groupBox8.TabIndex = 1;
 			this.groupBox8.TabStop = false;
-			this.groupBox8.Text = "Selected Block Informations";
+			this.groupBox8.Text = "Selected Event Information";
 			// 
 			// splitContainer13
 			// 
@@ -1233,8 +1227,8 @@ namespace SEConfigTool
 			// 
 			// splitContainer14.Panel1
 			// 
-			this.splitContainer14.Panel1.Controls.Add(this.button7);
-			this.splitContainer14.Panel1.Controls.Add(this.button8);
+			this.splitContainer14.Panel1.Controls.Add(this.BTN_ConfigSpawnGroupReload);
+			this.splitContainer14.Panel1.Controls.Add(this.BTN_SaveSpawnGroupConfig);
 			// 
 			// splitContainer14.Panel2
 			// 
@@ -1243,23 +1237,25 @@ namespace SEConfigTool
 			this.splitContainer14.SplitterDistance = 25;
 			this.splitContainer14.TabIndex = 1;
 			// 
-			// button7
+			// BTN_ConfigSpawnGroupReload
 			// 
-			this.button7.Location = new System.Drawing.Point(3, 0);
-			this.button7.Name = "button7";
-			this.button7.Size = new System.Drawing.Size(116, 23);
-			this.button7.TabIndex = 2;
-			this.button7.Text = "Reload Configuration";
-			this.button7.UseVisualStyleBackColor = true;
+			this.BTN_ConfigSpawnGroupReload.Location = new System.Drawing.Point(3, 0);
+			this.BTN_ConfigSpawnGroupReload.Name = "BTN_ConfigSpawnGroupReload";
+			this.BTN_ConfigSpawnGroupReload.Size = new System.Drawing.Size(116, 23);
+			this.BTN_ConfigSpawnGroupReload.TabIndex = 2;
+			this.BTN_ConfigSpawnGroupReload.Text = "Reload Configuration";
+			this.BTN_ConfigSpawnGroupReload.UseVisualStyleBackColor = true;
+			this.BTN_ConfigSpawnGroupReload.Click += new System.EventHandler(this.BTN_ConfigSpawnGroupReload_Click);
 			// 
-			// button8
+			// BTN_SaveSpawnGroupConfig
 			// 
-			this.button8.Location = new System.Drawing.Point(122, 0);
-			this.button8.Name = "button8";
-			this.button8.Size = new System.Drawing.Size(105, 23);
-			this.button8.TabIndex = 0;
-			this.button8.Text = "Save Configuration";
-			this.button8.UseVisualStyleBackColor = true;
+			this.BTN_SaveSpawnGroupConfig.Location = new System.Drawing.Point(122, 0);
+			this.BTN_SaveSpawnGroupConfig.Name = "BTN_SaveSpawnGroupConfig";
+			this.BTN_SaveSpawnGroupConfig.Size = new System.Drawing.Size(105, 23);
+			this.BTN_SaveSpawnGroupConfig.TabIndex = 0;
+			this.BTN_SaveSpawnGroupConfig.Text = "Save Configuration";
+			this.BTN_SaveSpawnGroupConfig.UseVisualStyleBackColor = true;
+			this.BTN_SaveSpawnGroupConfig.Click += new System.EventHandler(this.BTN_SaveSpawnGroupConfig_Click);
 			// 
 			// groupBox9
 			// 
@@ -1297,6 +1293,7 @@ namespace SEConfigTool
 			this.LBX_SpawnGroupConfiguration.Name = "LBX_SpawnGroupConfiguration";
 			this.LBX_SpawnGroupConfiguration.Size = new System.Drawing.Size(239, 355);
 			this.LBX_SpawnGroupConfiguration.TabIndex = 0;
+			this.LBX_SpawnGroupConfiguration.SelectedIndexChanged += new System.EventHandler(this.LBX_SpawnGroupConfiguration_SelectedIndexChanged);
 			// 
 			// groupBox10
 			// 
@@ -1307,7 +1304,7 @@ namespace SEConfigTool
 			this.groupBox10.Size = new System.Drawing.Size(297, 355);
 			this.groupBox10.TabIndex = 1;
 			this.groupBox10.TabStop = false;
-			this.groupBox10.Text = "Selected Block Informations";
+			this.groupBox10.Text = "Selected Group Information";
 			// 
 			// splitContainer16
 			// 
@@ -1317,134 +1314,81 @@ namespace SEConfigTool
 			// 
 			// splitContainer16.Panel1
 			// 
-			this.splitContainer16.Panel1.Controls.Add(this.label23);
-			this.splitContainer16.Panel1.Controls.Add(this.label24);
 			this.splitContainer16.Panel1.Controls.Add(this.label25);
-			this.splitContainer16.Panel1.Controls.Add(this.label26);
 			this.splitContainer16.Panel1.Controls.Add(this.label27);
 			this.splitContainer16.Panel1.Controls.Add(this.label28);
 			// 
 			// splitContainer16.Panel2
 			// 
-			this.splitContainer16.Panel2.Controls.Add(this.textBox13);
-			this.splitContainer16.Panel2.Controls.Add(this.textBox14);
-			this.splitContainer16.Panel2.Controls.Add(this.button9);
-			this.splitContainer16.Panel2.Controls.Add(this.textBox15);
-			this.splitContainer16.Panel2.Controls.Add(this.textBox16);
-			this.splitContainer16.Panel2.Controls.Add(this.textBox17);
-			this.splitContainer16.Panel2.Controls.Add(this.textBox18);
+			this.splitContainer16.Panel2.Controls.Add(this.BTN_ConfigSpawnGroupApply);
+			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupPrefabCount);
+			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupName);
+			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupFrequency);
 			this.splitContainer16.Size = new System.Drawing.Size(291, 336);
 			this.splitContainer16.SplitterDistance = 136;
 			this.splitContainer16.TabIndex = 4;
-			// 
-			// label23
-			// 
-			this.label23.AutoSize = true;
-			this.label23.Location = new System.Drawing.Point(6, 119);
-			this.label23.Name = "label23";
-			this.label23.Size = new System.Drawing.Size(35, 13);
-			this.label23.TabIndex = 8;
-			this.label23.Text = "Mass:";
-			// 
-			// label24
-			// 
-			this.label24.AutoSize = true;
-			this.label24.Location = new System.Drawing.Point(6, 145);
-			this.label24.Name = "label24";
-			this.label24.Size = new System.Drawing.Size(45, 13);
-			this.label24.TabIndex = 7;
-			this.label24.Text = "Volume:";
 			// 
 			// label25
 			// 
 			this.label25.AutoSize = true;
 			this.label25.Location = new System.Drawing.Point(6, 41);
 			this.label25.Name = "label25";
-			this.label25.Size = new System.Drawing.Size(91, 13);
+			this.label25.Size = new System.Drawing.Size(72, 13);
 			this.label25.TabIndex = 6;
-			this.label25.Text = "Ammo Id Number:";
-			// 
-			// label26
-			// 
-			this.label26.AutoSize = true;
-			this.label26.Location = new System.Drawing.Point(6, 93);
-			this.label26.Name = "label26";
-			this.label26.Size = new System.Drawing.Size(83, 13);
-			this.label26.TabIndex = 3;
-			this.label26.Text = "Ammo Capacity:";
+			this.label25.Text = "Prefab Count:";
 			// 
 			// label27
 			// 
 			this.label27.AutoSize = true;
 			this.label27.Location = new System.Drawing.Point(6, 16);
 			this.label27.Name = "label27";
-			this.label27.Size = new System.Drawing.Size(70, 13);
+			this.label27.Size = new System.Drawing.Size(38, 13);
 			this.label27.TabIndex = 0;
-			this.label27.Text = "Ammo Name:";
+			this.label27.Text = "Name:";
 			// 
 			// label28
 			// 
 			this.label28.AutoSize = true;
 			this.label28.Location = new System.Drawing.Point(6, 67);
 			this.label28.Name = "label28";
-			this.label28.Size = new System.Drawing.Size(74, 13);
+			this.label28.Size = new System.Drawing.Size(60, 13);
 			this.label28.TabIndex = 2;
-			this.label28.Text = "Ammo Caliber:";
+			this.label28.Text = "Frequency:";
 			// 
-			// textBox13
+			// BTN_ConfigSpawnGroupApply
 			// 
-			this.textBox13.Location = new System.Drawing.Point(3, 116);
-			this.textBox13.Name = "textBox13";
-			this.textBox13.Size = new System.Drawing.Size(145, 20);
-			this.textBox13.TabIndex = 10;
+			this.BTN_ConfigSpawnGroupApply.Location = new System.Drawing.Point(3, 310);
+			this.BTN_ConfigSpawnGroupApply.Name = "BTN_ConfigSpawnGroupApply";
+			this.BTN_ConfigSpawnGroupApply.Size = new System.Drawing.Size(145, 23);
+			this.BTN_ConfigSpawnGroupApply.TabIndex = 8;
+			this.BTN_ConfigSpawnGroupApply.Text = "Apply changes";
+			this.BTN_ConfigSpawnGroupApply.UseVisualStyleBackColor = true;
+			this.BTN_ConfigSpawnGroupApply.Visible = false;
+			this.BTN_ConfigSpawnGroupApply.Click += new System.EventHandler(this.BTN_ConfigSpawnGroupApply_Click);
 			// 
-			// textBox14
+			// TBX_ConfigSpawnGroupPrefabCount
 			// 
-			this.textBox14.Location = new System.Drawing.Point(3, 142);
-			this.textBox14.Name = "textBox14";
-			this.textBox14.Size = new System.Drawing.Size(145, 20);
-			this.textBox14.TabIndex = 9;
+			this.TBX_ConfigSpawnGroupPrefabCount.Location = new System.Drawing.Point(3, 38);
+			this.TBX_ConfigSpawnGroupPrefabCount.Name = "TBX_ConfigSpawnGroupPrefabCount";
+			this.TBX_ConfigSpawnGroupPrefabCount.ReadOnly = true;
+			this.TBX_ConfigSpawnGroupPrefabCount.Size = new System.Drawing.Size(145, 20);
+			this.TBX_ConfigSpawnGroupPrefabCount.TabIndex = 7;
 			// 
-			// button9
+			// TBX_ConfigSpawnGroupName
 			// 
-			this.button9.Location = new System.Drawing.Point(3, 310);
-			this.button9.Name = "button9";
-			this.button9.Size = new System.Drawing.Size(145, 23);
-			this.button9.TabIndex = 8;
-			this.button9.Text = "Apply changes";
-			this.button9.UseVisualStyleBackColor = true;
-			this.button9.Visible = false;
+			this.TBX_ConfigSpawnGroupName.Location = new System.Drawing.Point(3, 13);
+			this.TBX_ConfigSpawnGroupName.Name = "TBX_ConfigSpawnGroupName";
+			this.TBX_ConfigSpawnGroupName.ReadOnly = true;
+			this.TBX_ConfigSpawnGroupName.Size = new System.Drawing.Size(145, 20);
+			this.TBX_ConfigSpawnGroupName.TabIndex = 5;
 			// 
-			// textBox15
+			// TBX_ConfigSpawnGroupFrequency
 			// 
-			this.textBox15.Location = new System.Drawing.Point(3, 38);
-			this.textBox15.Name = "textBox15";
-			this.textBox15.ReadOnly = true;
-			this.textBox15.Size = new System.Drawing.Size(145, 20);
-			this.textBox15.TabIndex = 7;
-			// 
-			// textBox16
-			// 
-			this.textBox16.Location = new System.Drawing.Point(3, 90);
-			this.textBox16.Name = "textBox16";
-			this.textBox16.Size = new System.Drawing.Size(145, 20);
-			this.textBox16.TabIndex = 6;
-			// 
-			// textBox17
-			// 
-			this.textBox17.Location = new System.Drawing.Point(3, 13);
-			this.textBox17.Name = "textBox17";
-			this.textBox17.ReadOnly = true;
-			this.textBox17.Size = new System.Drawing.Size(145, 20);
-			this.textBox17.TabIndex = 5;
-			// 
-			// textBox18
-			// 
-			this.textBox18.Location = new System.Drawing.Point(3, 64);
-			this.textBox18.Name = "textBox18";
-			this.textBox18.ReadOnly = true;
-			this.textBox18.Size = new System.Drawing.Size(145, 20);
-			this.textBox18.TabIndex = 4;
+			this.TBX_ConfigSpawnGroupFrequency.Location = new System.Drawing.Point(3, 64);
+			this.TBX_ConfigSpawnGroupFrequency.Name = "TBX_ConfigSpawnGroupFrequency";
+			this.TBX_ConfigSpawnGroupFrequency.Size = new System.Drawing.Size(145, 20);
+			this.TBX_ConfigSpawnGroupFrequency.TabIndex = 4;
+			this.TBX_ConfigSpawnGroupFrequency.TextChanged += new System.EventHandler(this.TBX_ConfigSpawnGroupFrequency_TextChanged);
 			// 
 			// label12
 			// 
@@ -1656,26 +1600,20 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventDescription;
 		private System.Windows.Forms.TabPage SpawnGroupConfiguration;
 		private System.Windows.Forms.SplitContainer splitContainer14;
-		private System.Windows.Forms.Button button7;
-		private System.Windows.Forms.Button button8;
+		private System.Windows.Forms.Button BTN_ConfigSpawnGroupReload;
+		private System.Windows.Forms.Button BTN_SaveSpawnGroupConfig;
 		private System.Windows.Forms.GroupBox groupBox9;
 		private System.Windows.Forms.SplitContainer splitContainer15;
 		private System.Windows.Forms.ListBox LBX_SpawnGroupConfiguration;
 		private System.Windows.Forms.GroupBox groupBox10;
 		private System.Windows.Forms.SplitContainer splitContainer16;
-		private System.Windows.Forms.Label label23;
-		private System.Windows.Forms.Label label24;
 		private System.Windows.Forms.Label label25;
-		private System.Windows.Forms.Label label26;
 		private System.Windows.Forms.Label label27;
 		private System.Windows.Forms.Label label28;
-		private System.Windows.Forms.TextBox textBox13;
-		private System.Windows.Forms.TextBox textBox14;
-		private System.Windows.Forms.Button button9;
-		private System.Windows.Forms.TextBox textBox15;
-		private System.Windows.Forms.TextBox textBox16;
-		private System.Windows.Forms.TextBox textBox17;
-		private System.Windows.Forms.TextBox textBox18;
+		private System.Windows.Forms.Button BTN_ConfigSpawnGroupApply;
+		private System.Windows.Forms.TextBox TBX_ConfigSpawnGroupPrefabCount;
+		private System.Windows.Forms.TextBox TBX_ConfigSpawnGroupName;
+		private System.Windows.Forms.TextBox TBX_ConfigSpawnGroupFrequency;
 		private System.Windows.Forms.Label label16;
 		private System.Windows.Forms.TextBox TBX_ConfigContainerTypeItemCount;
 		private System.Windows.Forms.Label label11;

@@ -10,7 +10,6 @@ namespace SEConfigTool
 {
     public partial class SEConfigTool : Form
     {
-
         #region Attributes
 
         private string _standardSavePath;
@@ -19,6 +18,7 @@ namespace SEConfigTool
         private AmmoMagazinesDefinitionsWrapper _ammoMagazinesDefinitionsWrapper;
 		private ContainerTypesDefinitionsWrapper _containerTypesDefinitionsWrapper;
 		private GlobalEventsDefinitionsWrapper _globalEventsDefinitionsWrapper;
+		private SpawnGroupsDefinitionsWrapper _spawnGroupsDefinitionsWrapper;
 
         private bool _currentlyFillingConfigurationListBox;
         private bool _currentlySelecting;
@@ -128,6 +128,21 @@ namespace SEConfigTool
 			_currentlyFillingConfigurationListBox = false;
 		}
 
+		private void FillSpawnGroupConfigurationListBox()
+		{
+			_currentlyFillingConfigurationListBox = true;
+			LBX_SpawnGroupConfiguration.Items.Clear();
+
+			_spawnGroupsDefinitionsWrapper = new SpawnGroupsDefinitionsWrapper(_serializer.SpawnGroupDefinitions);
+
+			foreach (var definition in _serializer.SpawnGroupDefinitions)
+			{
+				//TODO - Find a better way to uniquely label the spawn groups
+				LBX_SpawnGroupConfiguration.Items.Add("Spawn Group " + LBX_SpawnGroupConfiguration.Items.Count.ToString());
+			}
+			_currentlyFillingConfigurationListBox = false;
+		}
+
 		#endregion
 
         #region Form events
@@ -141,6 +156,7 @@ namespace SEConfigTool
             FillAmmoConfigurationListBox();
 			FillContainerTypeConfigurationListBox();
 			FillGlobalEventConfigurationListBox();
+			FillSpawnGroupConfigurationListBox();
         }
 
         private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
@@ -388,6 +404,49 @@ namespace SEConfigTool
 			if (!_currentlyFillingConfigurationListBox && !_currentlySelecting)
 			{
 				BTN_ConfigGlobalEventApply.Visible = true;
+			}
+		}
+
+		#endregion
+
+		#region SpawnGroups
+
+		private void LBX_SpawnGroupConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_currentlySelecting = true;
+			int index = LBX_SpawnGroupConfiguration.SelectedIndex;
+
+			TBX_ConfigSpawnGroupName.Text = _spawnGroupsDefinitionsWrapper.NameOf(index);
+			TBX_ConfigSpawnGroupPrefabCount.Text = _spawnGroupsDefinitionsWrapper.PrefabCountOf(index).ToString();
+			TBX_ConfigSpawnGroupFrequency.Text = _spawnGroupsDefinitionsWrapper.FrequencyOf(index).ToString();
+
+			_currentlySelecting = false;
+		}
+
+		private void BTN_ConfigSpawnGroupReload_Click(object sender, EventArgs e)
+		{
+			FillSpawnGroupConfigurationListBox();
+		}
+
+		private void BTN_SaveSpawnGroupConfig_Click(object sender, EventArgs e)
+		{
+			if (!_spawnGroupsDefinitionsWrapper.Changed) return;
+			_serializer.SetSpawnGroupsDefinitions(_spawnGroupsDefinitionsWrapper.Definitions);
+			_serializer.SaveSpawnGroupsContentFile();
+		}
+
+		private void BTN_ConfigSpawnGroupApply_Click(object sender, EventArgs e)
+		{
+			int index = LBX_SpawnGroupConfiguration.SelectedIndex;
+			_spawnGroupsDefinitionsWrapper.SetFrequencyOf(index, Convert.ToSingle(TBX_ConfigSpawnGroupFrequency.Text, _numberFormatInfo));
+			BTN_ConfigSpawnGroupApply.Visible = false;
+		}
+
+		private void TBX_ConfigSpawnGroupFrequency_TextChanged(object sender, EventArgs e)
+		{
+			if (!_currentlyFillingConfigurationListBox && !_currentlySelecting)
+			{
+				BTN_ConfigSpawnGroupApply.Visible = true;
 			}
 		}
 
