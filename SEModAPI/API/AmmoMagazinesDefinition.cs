@@ -40,7 +40,7 @@ namespace SEModAPI.API
 
         public string Name
         {
-            get { return _definition.DisplayName; }
+            get { return _definition.TypeId.ToString(); }
         }
 
         public string Id
@@ -113,7 +113,7 @@ namespace SEModAPI.API
 
             foreach (var definition in _definitions)
             {
-                _nameIndexes.Add(new KeyValuePair<string, string>(definition.DisplayName, definition.Id.ToString()), index);
+                _nameIndexes.Add(new KeyValuePair<string, string>(definition.TypeId.ToString(), definition.Id.ToString()), index);
                 ++index;
             }
         }
@@ -139,9 +139,14 @@ namespace SEModAPI.API
 
         #region "Getters"
 
+        public AmmoMagazinesDefinition GetDefinitionOf(int index)
+        {
+            return _definitions[index];
+        }
+
         public string NameOf(int index)
         {
-            return IsIndexValid(index) ? _definitions[index].DisplayName : null;
+            return IsIndexValid(index) ? _definitions[index].Id.SubtypeId.ToString() : null;
         }
 
         public string IdOf(int index)
@@ -201,14 +206,14 @@ namespace SEModAPI.API
 
         #region "Methods"
 
-        public AmmoMagazinesDefinition GetDefinitionOf(int index)
-        {
-            if (IsIndexValid(index))
-            {
-                return new AmmoMagazinesDefinition(_definitions[index]);
-            }
-            return null;
-        }
+        //public AmmoMagazinesDefinition GetDefinitionOf(int index)
+        //{
+        //    if (IsIndexValid(index))
+        //    {
+        //        return new AmmoMagazinesDefinition(_definitions[index]);
+        //    }
+        //    return null;
+        //}
 
         public int IndexOf(string name, string model)
         {
