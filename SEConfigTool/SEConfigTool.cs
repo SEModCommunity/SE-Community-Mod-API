@@ -16,7 +16,8 @@ namespace SEConfigTool
         private string _standardSavePath;
         private ConfigFileSerializer _serializer;
         private CubeBlockDefinitionsWrapper _cubeBlockDefinitionsWrapper;
-        private bool _currentlyFillingBlocksConfigurationListBox;
+        private AmmoMagazinesDefinitionsWrapper _ammoMagazinesDefinitionsWrapper;
+        private bool _currentlyFillingConfigurationListBox;
         private bool _currentlySelecting;
 
         private NumberFormatInfo _numberFormatInfo;
@@ -60,7 +61,7 @@ namespace SEConfigTool
 
         private void FillBlocksConfigurationListBox()
         {
-            _currentlyFillingBlocksConfigurationListBox = true;
+            _currentlyFillingConfigurationListBox = true;
             LBX_BlocksConfiguration.Items.Clear();
 
             TBX_ConfigBlockId.Text = "";
@@ -74,7 +75,26 @@ namespace SEConfigTool
             {
                 LBX_BlocksConfiguration.Items.Add(definition.BlockPairName);
             }
-            _currentlyFillingBlocksConfigurationListBox = false;
+            _currentlyFillingConfigurationListBox = false;
+        }
+
+        private void FillAmmoConfigurationListBox()
+        {
+            _currentlyFillingConfigurationListBox = true;
+            LBX_AmmoConfiguration.Items.Clear();
+
+            //TBX_ConfigBlockId.Text = "";
+            //TBX_ConfigBlockName.Text = "";
+            //TBX_ConfigBuildTime.Text = "";
+            //TBX_ConfigDisassembleRatio.Text = "";
+
+            _ammoMagazinesDefinitionsWrapper = new AmmoMagazinesDefinitionsWrapper(_serializer.AmmoMagazineDefinitions);
+
+            foreach (var definition in _serializer.AmmoMagazineDefinitions)
+            {
+                LBX_AmmoConfiguration.Items.Add(definition.DisplayName);
+            }
+            _currentlyFillingConfigurationListBox = false;
         }
 
         #endregion
@@ -87,6 +107,7 @@ namespace SEConfigTool
             _standardSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
             FillBlocksConfigurationListBox();
+            FillAmmoConfigurationListBox();
         }
 
 
@@ -114,6 +135,8 @@ namespace SEConfigTool
                 }
             }
         }
+
+        #region CubeBlock
 
         private void LBX_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -156,7 +179,7 @@ namespace SEConfigTool
 
         private void TBX_ConfigBuildTime_TextChanged(object sender, EventArgs e)
         {
-            if (!_currentlyFillingBlocksConfigurationListBox && _currentlySelecting)
+            if (!_currentlyFillingConfigurationListBox && !_currentlySelecting)
             {
                 BTN_ConfigApplyChanges.Visible = true;
             }
@@ -169,6 +192,55 @@ namespace SEConfigTool
             _cubeBlockDefinitionsWrapper.SetDisassembleRatioOf(index, Convert.ToSingle(TBX_ConfigDisassembleRatio.Text, _numberFormatInfo));
             BTN_ConfigApplyChanges.Visible = false;
         }
+
+        #endregion
+
+        #region AmmoMagazines
+
+        private void LBX_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _currentlySelecting = true;
+            int index = LBX_AmmoConfiguration.SelectedIndex;
+
+            TBX_ConfigAmmoName.Text = _ammoMagazinesDefinitionsWrapper.NameOf(index);
+            TBX_ConfigAmmoId.Text = _ammoMagazinesDefinitionsWrapper.IdOf(index);
+            TBX_ConfigAmmoCaliber.Text = _ammoMagazinesDefinitionsWrapper.CaliberOf(index);
+            TBX_ConfigAmmoCapacity.Text = _ammoMagazinesDefinitionsWrapper.CapacityOf(index).ToString(_numberFormatInfo);
+            TBX_ConfigAmmoVolume.Text = _ammoMagazinesDefinitionsWrapper.VolumeOf(index).ToString(_numberFormatInfo);
+            TBX_ConfigAmmoMass.Text = _ammoMagazinesDefinitionsWrapper.MassOf(index).ToString(_numberFormatInfo);
+            _currentlySelecting = false;
+        }
+
+        private void BTN_ConfigAmmoReload_Click(object sender, EventArgs e)
+        {
+            FillAmmoConfigurationListBox();
+        }
+
+        private void BTN_SaveAmmoConfig_Click(object sender, EventArgs e)
+        {
+            if (!_ammoMagazinesDefinitionsWrapper.Changed) return;
+            _serializer.SetAmmoMagazinesDefinitions(_ammoMagazinesDefinitionsWrapper.Definitions);
+            _serializer.SaveAmmoMagazinesContentFile();
+        }
+
+        private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
+        {
+            int index = LBX_AmmoConfiguration.SelectedIndex;
+            _ammoMagazinesDefinitionsWrapper.SetCapacityOf(index, Convert.ToInt32(TBX_ConfigAmmoCapacity.Text, _numberFormatInfo));
+            _ammoMagazinesDefinitionsWrapper.SetMassOf(index, Convert.ToSingle(TBX_ConfigAmmoMass.Text, _numberFormatInfo));
+            _ammoMagazinesDefinitionsWrapper.SetMassOf(index, Convert.ToSingle(TBX_ConfigAmmoVolume.Text, _numberFormatInfo));
+            BTN_ConfigAmmoApply.Visible = false;
+        }
+
+        private void TBX_ConfigAmmo_TextChanged(object sender, EventArgs e)
+        {
+            if (!_currentlyFillingConfigurationListBox && !_currentlySelecting)
+            {
+                BTN_ConfigAmmoApply.Visible = true;
+            }
+        }
+
+        #endregion
     }
     #endregion
 }
