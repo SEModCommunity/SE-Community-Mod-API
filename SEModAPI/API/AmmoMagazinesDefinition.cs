@@ -7,7 +7,23 @@ namespace SEModAPI.API
 {
     public class AmmoMagazinesDefinition
     {
+        #region "Attributes"
+
         private MyObjectBuilder_AmmoMagazineDefinition _definition;
+
+        #endregion
+
+        #region "Constructors and Initializers"
+
+        public AmmoMagazinesDefinition(MyObjectBuilder_AmmoMagazineDefinition definition)
+        {
+            _definition = definition;
+            Changed = false;
+        }
+
+        #endregion
+
+        #region "Properties"
 
         public bool Changed { get; private set; }
 
@@ -21,6 +37,7 @@ namespace SEModAPI.API
                 Changed = true;
             }
         }
+
         public string Name
         {
             get { return _definition.DisplayName; }
@@ -39,47 +56,38 @@ namespace SEModAPI.API
         public int Capacity
         {
             get { return _definition.Capacity; }
-        }
-
-        public bool SetCapacity(int capacity)
-        {
-            if (_definition.Capacity == capacity) return false;
-            _definition.Capacity = capacity;
-            Changed = true;
-            return true;
+            set
+            {
+                if (_definition.Capacity == value) return;
+                _definition.Capacity = value;
+                Changed = true;
+            }
         }
 
         public float Mass
         {
             get { return _definition.Mass; }
-        }
-
-        public bool SetMass(float mass)
-        {
-            if (_definition.Mass == mass) return false;
-            _definition.Mass = mass;
-            Changed = true;
-            return true;
+            set
+            {
+                if (_definition.Mass == value) return;
+                _definition.Mass = value;
+                Changed = true;
+            }
         }
 
         public float Volume
         {
             get { return _definition.Volume.GetValueOrDefault(-1); }
+            set
+            {
+                if (_definition.Volume == value) return;
+                _definition.Volume = value;
+                Changed = true;
+
+            }
         }
 
-        public bool SetVolume(float volume)
-        {
-            if (_definition.Volume == volume) return false;
-            _definition.Volume = volume;
-            Changed = true;
-            return true;
-        }
-
-        public AmmoMagazinesDefinition(MyObjectBuilder_AmmoMagazineDefinition definition)
-        {
-            _definition = definition;
-            Changed = false;
-        }
+        #endregion
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,8 +96,31 @@ namespace SEModAPI.API
 
     public class AmmoMagazinesDefinitionsWrapper
     {
+        #region "Attributes"
+
         private MyObjectBuilder_AmmoMagazineDefinition[] _definitions;
         private Dictionary<KeyValuePair<string, string>, int> _nameIndexes = new Dictionary<KeyValuePair<string, string>, int>();
+
+        #endregion
+
+        #region "Constructors and Initializers"
+
+        public AmmoMagazinesDefinitionsWrapper(MyObjectBuilder_AmmoMagazineDefinition[] definitions)
+        {
+            _definitions = definitions;
+            Changed = false;
+            int index = 0;
+
+            foreach (var definition in _definitions)
+            {
+                _nameIndexes.Add(new KeyValuePair<string, string>(definition.DisplayName, definition.Id.ToString()), index);
+                ++index;
+            }
+        }
+
+        #endregion
+
+        #region "Attributes"
 
         public bool Changed { get; private set; }
 
@@ -103,20 +134,32 @@ namespace SEModAPI.API
                 Changed = true;
             }
         }
-        public AmmoMagazinesDefinition GetDefinitionOf(int index)
+
+        #endregion
+
+        #region "Methods"
+
+        private bool IsIndexValid(int index)
+        {
+            return (index < _definitions.Length && index >= 0);
+        }
+
+        public int IndexOf(string name, string model)
+        {
+            int index = -1;
+            _nameIndexes.TryGetValue(new KeyValuePair<string, string>(name, model), out index);
+            return index;
+        }
+
+        #region "Getters"
+
+        public AmmoMagazinesDefinition DefinitionOf(int index)
         {
             if (IsIndexValid(index))
             {
                 return new AmmoMagazinesDefinition(_definitions[index]);
             }
             return null;
-        }
-
-        public int IndexOf(string name, string model)
-        {
-            int index = -1;
-            _nameIndexes.TryGetValue(new KeyValuePair<string,string>(name, model), out index);
-            return index;
         }
 
         public string NameOf(int index)
@@ -139,17 +182,26 @@ namespace SEModAPI.API
             return IsIndexValid(index) ? _definitions[index].Capacity : -1;
         }
 
+        public float MassOf(int index)
+        {
+            return IsIndexValid(index) ? _definitions[index].Mass : -1;
+        }
+
+        public float VolumeOf(int index)
+        {
+            return IsIndexValid(index) ? _definitions[index].Volume.GetValueOrDefault(-1) : -1;
+        }
+
+        #endregion
+
+        #region "Setters"
+
         public bool SetCapacityOf(int index, int capacity)
         {
             if (!IsIndexValid(index) || _definitions[index].Capacity == capacity) return false;
             _definitions[index].Capacity = capacity;
             Changed = true;
             return true;
-        }
-
-        public float MassOf(int index)
-        {
-            return IsIndexValid(index) ? _definitions[index].Mass : -1;
         }
 
         public bool SetMassOf(int index, float mass)
@@ -160,35 +212,16 @@ namespace SEModAPI.API
             return true;
         }
 
-        public float VolumeOf(int index)
-        {
-            return IsIndexValid(index) ? _definitions[index].Volume.GetValueOrDefault(-1) : -1;
-        }
-
         public bool SetVolumeOf(int index, float volume)
         {
-            if (!IsIndexValid(index) || _definitions[index].Volume== volume) return false;
+            if (!IsIndexValid(index) || _definitions[index].Volume == volume) return false;
             _definitions[index].Volume = volume;
             Changed = true;
             return true;
         }
 
-        public AmmoMagazinesDefinitionsWrapper(MyObjectBuilder_AmmoMagazineDefinition[] definitions)
-        {
-            _definitions = definitions;
-            Changed = false;
-            int index = 0;
+        #endregion
 
-            foreach (var definition in _definitions)
-            {
-                _nameIndexes.Add(new KeyValuePair<string, string>(definition.DisplayName, definition.Id.ToString()), index);
-                ++index;
-            }
-        }
-
-        private bool IsIndexValid(int index)
-        {
-            return (index < _definitions.Length && index >= 0);
-        }
+        #endregion
     }
 }
