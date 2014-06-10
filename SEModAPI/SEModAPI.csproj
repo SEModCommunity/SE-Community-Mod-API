@@ -65,6 +65,8 @@
   <ItemGroup>
     <Compile Include="API\AmmoMagazinesDefinition.cs" />
     <Compile Include="API\ConfigFileSerializer.cs" />
+    <Compile Include="API\ContainerTypesDefinition.cs" />
+    <Compile Include="API\GlobalEventsDefinition.cs" />
     <Compile Include="API\CubeBlockDefinition.cs" />
     <Compile Include="API\GameInstallation.cs" />
     <Compile Include="API\SaveFile.cs" />

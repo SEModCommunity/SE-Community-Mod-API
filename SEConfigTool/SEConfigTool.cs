@@ -17,6 +17,9 @@ namespace SEConfigTool
         private ConfigFileSerializer _serializer;
         private CubeBlockDefinitionsWrapper _cubeBlockDefinitionsWrapper;
         private AmmoMagazinesDefinitionsWrapper _ammoMagazinesDefinitionsWrapper;
+		private ContainerTypesDefinitionsWrapper _containerTypesDefinitionsWrapper;
+		private GlobalEventsDefinitionsWrapper _globalEventsDefinitionsWrapper;
+
         private bool _currentlyFillingConfigurationListBox;
         private bool _currentlySelecting;
 
@@ -97,7 +100,35 @@ namespace SEConfigTool
             _currentlyFillingConfigurationListBox = false;
         }
 
-        #endregion
+		private void FillContainerTypeConfigurationListBox()
+		{
+			_currentlyFillingConfigurationListBox = true;
+			LBX_ContainerTypeConfiguration.Items.Clear();
+
+			_containerTypesDefinitionsWrapper = new ContainerTypesDefinitionsWrapper(_serializer.ContainerTypeDefinitions);
+
+			foreach (var definition in _serializer.ContainerTypeDefinitions)
+			{
+				LBX_ContainerTypeConfiguration.Items.Add(definition.Name);
+			}
+			_currentlyFillingConfigurationListBox = false;
+		}
+
+		private void FillGlobalEventConfigurationListBox()
+		{
+			_currentlyFillingConfigurationListBox = true;
+			LBX_GlobalEventConfiguration.Items.Clear();
+
+			_globalEventsDefinitionsWrapper = new GlobalEventsDefinitionsWrapper(_serializer.GlobalEventDefinitions);
+
+			foreach (var definition in _serializer.GlobalEventDefinitions)
+			{
+				LBX_GlobalEventConfiguration.Items.Add(definition.DisplayName);
+			}
+			_currentlyFillingConfigurationListBox = false;
+		}
+
+		#endregion
 
         #region Form events
 
@@ -108,8 +139,9 @@ namespace SEConfigTool
 
             FillBlocksConfigurationListBox();
             FillAmmoConfigurationListBox();
+			FillContainerTypeConfigurationListBox();
+			FillGlobalEventConfigurationListBox();
         }
-
 
         private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
         {
@@ -241,6 +273,126 @@ namespace SEConfigTool
         }
 
         #endregion
-    }
-    #endregion
+
+		#region ContainerTypes
+
+		private void LBX_ContainerTypeConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_currentlySelecting = true;
+			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
+
+			TBX_ConfigContainerTypeName.Text = _containerTypesDefinitionsWrapper.NameOf(index);
+			TBX_ConfigContainerTypeId.Text = _containerTypesDefinitionsWrapper.IdOf(index);
+			TBX_ConfigContainerTypeItemCount.Text = _containerTypesDefinitionsWrapper.ItemCountOf(index).ToString();
+			TBX_ConfigContainerTypeCountMax.Text = _containerTypesDefinitionsWrapper.CountMaxOf(index).ToString();
+			TBX_ConfigContainerTypeCountMin.Text = _containerTypesDefinitionsWrapper.CountMinOf(index).ToString();
+
+			_currentlySelecting = false;
+		}
+
+		private void BTN_ConfigContainerTypeReload_Click(object sender, EventArgs e)
+		{
+			FillContainerTypeConfigurationListBox();
+		}
+
+		private void BTN_SaveContainerTypeConfig_Click(object sender, EventArgs e)
+		{
+			if (!_containerTypesDefinitionsWrapper.Changed) return;
+			_serializer.SetContainerTypesDefinitions(_containerTypesDefinitionsWrapper.Definitions);
+			_serializer.SaveContainerTypesContentFile();
+		}
+
+		private void BTN_ConfigContainerTypeApply_Click(object sender, EventArgs e)
+		{
+			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
+			_containerTypesDefinitionsWrapper.SetCountMaxOf(index, Convert.ToInt32(TBX_ConfigContainerTypeCountMax.Text, _numberFormatInfo));
+			_containerTypesDefinitionsWrapper.SetCountMinOf(index, Convert.ToInt32(TBX_ConfigContainerTypeCountMin.Text, _numberFormatInfo));
+			BTN_ConfigContainerTypeApply.Visible = false;
+		}
+
+		private void TBX_ConfigContainerTypeCountMax_TextChanged(object sender, EventArgs e)
+		{
+			if (!_currentlyFillingConfigurationListBox && !_currentlySelecting)
+			{
+				BTN_ConfigContainerTypeApply.Visible = true;
+			}
+		}
+
+		private void TBX_ConfigContainerTypeCountMin_TextChanged(object sender, EventArgs e)
+		{
+			if (!_currentlyFillingConfigurationListBox && !_currentlySelecting)
+			{
+				BTN_ConfigContainerTypeApply.Visible = true;
+			}
+		}
+
+		#endregion
+
+		#region GlobalEvents
+
+		private void LBX_GlobalEventConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_currentlySelecting = true;
+			int index = LBX_GlobalEventConfiguration.SelectedIndex;
+
+			TBX_ConfigGlobalEventId.Text = _globalEventsDefinitionsWrapper.IdOf(index);
+			TBX_ConfigGlobalEventName.Text = _globalEventsDefinitionsWrapper.NameOf(index);
+			TBX_ConfigGlobalEventDescription.Text = _globalEventsDefinitionsWrapper.DescriptionOf(index);
+			TBX_ConfigGlobalEventType.Text = _globalEventsDefinitionsWrapper.TypeOf(index);
+			TBX_ConfigGlobalEventMinActivation.Text = _globalEventsDefinitionsWrapper.MinActivationOf(index).ToString();
+			TBX_ConfigGlobalEventMaxActivation.Text = _globalEventsDefinitionsWrapper.MaxActivationOf(index).ToString();
+			TBX_ConfigGlobalEventFirstActivation.Text = _globalEventsDefinitionsWrapper.FirstActivationOf(index).ToString();
+
+			_currentlySelecting = false;
+		}
+
+		private void BTN_ConfigGlobalEventReload_Click(object sender, EventArgs e)
+		{
+			FillGlobalEventConfigurationListBox();
+		}
+
+		private void BTN_SaveGlobalEventConfig_Click(object sender, EventArgs e)
+		{
+			if (!_globalEventsDefinitionsWrapper.Changed) return;
+			_serializer.SetGlobalEventsDefinitions(_globalEventsDefinitionsWrapper.Definitions);
+			_serializer.SaveGlobalEventsContentFile();
+		}
+
+		private void BTN_ConfigGlobalEventApply_Click(object sender, EventArgs e)
+		{
+			int index = LBX_GlobalEventConfiguration.SelectedIndex;
+			_globalEventsDefinitionsWrapper.SetMinActivationOf(index, Convert.ToInt32(TBX_ConfigGlobalEventMinActivation.Text, _numberFormatInfo));
+			_globalEventsDefinitionsWrapper.SetMaxActivationOf(index, Convert.ToInt32(TBX_ConfigGlobalEventMaxActivation.Text, _numberFormatInfo));
+			_globalEventsDefinitionsWrapper.SetFirstActivationOf(index, Convert.ToInt32(TBX_ConfigGlobalEventFirstActivation.Text, _numberFormatInfo));
+			BTN_ConfigGlobalEventApply.Visible = false;
+		}
+
+		private void TBX_ConfigGlobalEventMinActivation_TextChanged(object sender, EventArgs e)
+		{
+			if (!_currentlyFillingConfigurationListBox && !_currentlySelecting)
+			{
+				BTN_ConfigGlobalEventApply.Visible = true;
+			}
+		}
+
+		private void TBX_ConfigGlobalEventMaxActivation_TextChanged(object sender, EventArgs e)
+		{
+			if (!_currentlyFillingConfigurationListBox && !_currentlySelecting)
+			{
+				BTN_ConfigGlobalEventApply.Visible = true;
+			}
+		}
+
+		private void TBX_ConfigGlobalEventFirstActivation_TextChanged(object sender, EventArgs e)
+		{
+			if (!_currentlyFillingConfigurationListBox && !_currentlySelecting)
+			{
+				BTN_ConfigGlobalEventApply.Visible = true;
+			}
+		}
+
+		#endregion
+
+		#endregion
+	}
 }

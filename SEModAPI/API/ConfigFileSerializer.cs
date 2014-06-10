@@ -209,6 +209,45 @@ namespace SEModAPI.API
 			}
 		}
 
+		public void SetContainerTypesDefinitions(MyObjectBuilder_ContainerTypeDefinition[] definitions)
+		{
+			_containerTypeDefinitions.ContainerTypes = definitions;
+		}
+
+		public void SetContainerTypesDefinitionsIndex(int index, MyObjectBuilder_ContainerTypeDefinition definitions)
+		{
+			if (index < _containerTypeDefinitions.ContainerTypes.Length)
+			{
+				_containerTypeDefinitions.ContainerTypes[index] = definitions;
+			}
+		}
+
+		public void SetGlobalEventsDefinitions(MyObjectBuilder_GlobalEventDefinition[] definitions)
+		{
+			_globalEventDefinitions.GlobalEvents = definitions;
+		}
+
+		public void SetGlobalEventsDefinitionsIndex(int index, MyObjectBuilder_GlobalEventDefinition definitions)
+		{
+			if (index < _globalEventDefinitions.GlobalEvents.Length)
+			{
+				_globalEventDefinitions.GlobalEvents[index] = definitions;
+			}
+		}
+
+		public void SetSpawnGroupsDefinitions(MyObjectBuilder_SpawnGroupDefinition[] definitions)
+		{
+			_spawnGroupDefinitions.SpawnGroups = definitions;
+		}
+
+		public void SetGlobalEventsDefinitionsIndex(int index, MyObjectBuilder_SpawnGroupDefinition definitions)
+		{
+			if (index < _spawnGroupDefinitions.SpawnGroups.Length)
+			{
+				_spawnGroupDefinitions.SpawnGroups[index] = definitions;
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
