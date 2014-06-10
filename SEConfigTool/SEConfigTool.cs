@@ -104,6 +104,7 @@ namespace SEConfigTool
 		{
 			_currentlyFillingConfigurationListBox = true;
 			LBX_ContainerTypeConfiguration.Items.Clear();
+			LBX_ContainerTypeConfig_Details_Items.Items.Clear();
 
 			_containerTypesDefinitionsWrapper = new ContainerTypesDefinitionsWrapper(_serializer.ContainerTypeDefinitions);
 
@@ -132,6 +133,7 @@ namespace SEConfigTool
 		{
 			_currentlyFillingConfigurationListBox = true;
 			LBX_SpawnGroupConfiguration.Items.Clear();
+			LBX_SpawnGroupConfig_Details_Prefabs.Items.Clear();
 
 			_spawnGroupsDefinitionsWrapper = new SpawnGroupsDefinitionsWrapper(_serializer.SpawnGroupDefinitions);
 
@@ -195,6 +197,13 @@ namespace SEConfigTool
             TBX_ConfigBlockId.Text = _cubeBlockDefinitionsWrapper.IdOf(index);
             TBX_ConfigBuildTime.Text = _cubeBlockDefinitionsWrapper.BuildTimeOf(index).ToString(_numberFormatInfo);
             TBX_ConfigDisassembleRatio.Text = _cubeBlockDefinitionsWrapper.DisassembleRatioOf(index).ToString(_numberFormatInfo);
+
+			LBX_BlocksConfig_Components.Items.Clear();
+			foreach(var def in _cubeBlockDefinitionsWrapper.ComponentsOf(index))
+			{
+				LBX_BlocksConfig_Components.Items.Add(def.Subtype + " x" + def.Count.ToString());
+			}
+
             _currentlySelecting = false;
         }
 
@@ -303,6 +312,17 @@ namespace SEConfigTool
 			TBX_ConfigContainerTypeCountMax.Text = _containerTypesDefinitionsWrapper.CountMaxOf(index).ToString();
 			TBX_ConfigContainerTypeCountMin.Text = _containerTypesDefinitionsWrapper.CountMinOf(index).ToString();
 
+			LBX_ContainerTypeConfig_Details_Items.Items.Clear();
+			foreach (var def in _containerTypesDefinitionsWrapper.ItemsOf(index))
+			{
+				LBX_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
+			}
+			TBX_ContainerTypeConfig_ItemType.Text = "";
+			TBX_ContainerTypeConfig_ItemSubType.Text = "";
+			TBX_ContainerTypeConfig_ItemAmountMin.Text = "";
+			TBX_ContainerTypeConfig_ItemAmountMax.Text = "";
+			TBX_ContainerTypeConfig_ItemFrequency.Text = "";
+
 			_currentlySelecting = false;
 		}
 
@@ -341,6 +361,26 @@ namespace SEConfigTool
 				BTN_ConfigContainerTypeApply.Visible = true;
 			}
 		}
+
+		#region Items
+
+		private void LBX_ContainerTypeConfiguration_Items_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_currentlySelecting = true;
+			int index = LBX_ContainerTypeConfig_Details_Items.SelectedIndex;
+
+			var items = _containerTypesDefinitionsWrapper.ItemsOf(LBX_ContainerTypeConfiguration.SelectedIndex);
+
+			TBX_ContainerTypeConfig_ItemType.Text = items[index].Id.TypeId.ToString();
+			TBX_ContainerTypeConfig_ItemSubType.Text = items[index].Id.SubtypeId.ToString();
+			TBX_ContainerTypeConfig_ItemAmountMin.Text = items[index].AmountMin.ToString();
+			TBX_ContainerTypeConfig_ItemAmountMax.Text = items[index].AmountMax.ToString();
+			TBX_ContainerTypeConfig_ItemFrequency.Text = items[index].Frequency.ToString();
+
+			_currentlySelecting = false;
+		}
+
+		#endregion
 
 		#endregion
 
@@ -420,6 +460,16 @@ namespace SEConfigTool
 			TBX_ConfigSpawnGroupPrefabCount.Text = _spawnGroupsDefinitionsWrapper.PrefabCountOf(index).ToString();
 			TBX_ConfigSpawnGroupFrequency.Text = _spawnGroupsDefinitionsWrapper.FrequencyOf(index).ToString();
 
+			LBX_SpawnGroupConfig_Details_Prefabs.Items.Clear();
+			foreach (var def in _spawnGroupsDefinitionsWrapper.PrefabsOf(index))
+			{
+				LBX_SpawnGroupConfig_Details_Prefabs.Items.Add(def.BeaconText);
+			}
+			TBX_SpawnGroupConfig_Details_PrefabFile.Text = "";
+			TBX_SpawnGroupConfig_Details_PrefabPosition.Text = "";
+			TBX_SpawnGroupConfig_Details_PrefabBeaconText.Text = "";
+			TBX_SpawnGroupConfig_Details_PrefabSpeed.Text = "";
+
 			_currentlySelecting = false;
 		}
 
@@ -449,6 +499,25 @@ namespace SEConfigTool
 				BTN_ConfigSpawnGroupApply.Visible = true;
 			}
 		}
+
+		#region Prefabs
+
+		private void LBX_SpawnGroupConfig_Details_Prefabs_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_currentlySelecting = true;
+			int index = LBX_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
+
+			var items = _spawnGroupsDefinitionsWrapper.PrefabsOf(LBX_SpawnGroupConfiguration.SelectedIndex);
+
+			TBX_SpawnGroupConfig_Details_PrefabFile.Text = items[index].File;
+			TBX_SpawnGroupConfig_Details_PrefabPosition.Text = items[index].Position.ToString();
+			TBX_SpawnGroupConfig_Details_PrefabBeaconText.Text = items[index].BeaconText;
+			TBX_SpawnGroupConfig_Details_PrefabSpeed.Text = items[index].Speed.ToString();
+
+			_currentlySelecting = false;
+		}
+
+		#endregion
 
 		#endregion
 

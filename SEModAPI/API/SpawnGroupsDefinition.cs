@@ -60,6 +60,11 @@ namespace SEModAPI.API
             }
 		}
 
+		public MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab[] Prefabs
+		{
+			get { return _definition.Prefabs; }
+		}
+
 		#endregion
 	}
 
@@ -126,6 +131,11 @@ namespace SEModAPI.API
 		public int PrefabCountOf(int index)
 		{
 			return IsIndexValid(index) ? _definitions[index].Prefabs.Length : -1;
+		}
+
+		public MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab[] PrefabsOf(int index)
+		{
+			return IsIndexValid(index) ? _definitions[index].Prefabs : null;
 		}
 
 		#endregion

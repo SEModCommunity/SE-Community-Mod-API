@@ -69,6 +69,11 @@ namespace SEModAPI.API
             }
         }
 
+		public MyObjectBuilder_CubeBlockDefinition.CubeBlockComponent[] Components
+		{
+			get { return _definition.Components; }
+		}
+
         #endregion
 
     }
@@ -140,6 +145,11 @@ namespace SEModAPI.API
         {
             return IsIndexValid(index) ? _definitions[index].DisassembleRatio : -1;
         }
+
+		public MyObjectBuilder_CubeBlockDefinition.CubeBlockComponent[] ComponentsOf(int index)
+		{
+			return IsIndexValid(index) ? _definitions[index].Components : null;
+		}
 
         #endregion
 

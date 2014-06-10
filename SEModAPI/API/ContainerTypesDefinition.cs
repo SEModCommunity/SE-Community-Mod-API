@@ -45,7 +45,7 @@ namespace SEModAPI.API
 
 		public string Id
 		{
-			get { return _definition.Name; }
+			get { return _definition.TypeId.ToString(); }
 		}
 
 		public int ItemCount
@@ -73,6 +73,11 @@ namespace SEModAPI.API
                 _definition.CountMax = value;
                 Changed = true;
             }
+		}
+
+		public MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] Items
+		{
+			get { return _definition.Items; }
 		}
 
 		#endregion
@@ -134,7 +139,7 @@ namespace SEModAPI.API
 
 		public string IdOf(int index)
 		{
-			return IsIndexValid(index) ? _definitions[index].Name : null;
+			return IsIndexValid(index) ? _definitions[index].TypeId.ToString() : null;
 		}
 
 		public int ItemCountOf(int index)
@@ -150,6 +155,11 @@ namespace SEModAPI.API
 		public int CountMaxOf(int index)
 		{
 			return IsIndexValid(index) ? _definitions[index].CountMax : -1;
+		}
+
+		public MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] ItemsOf(int index)
+		{
+			return IsIndexValid(index) ? _definitions[index].Items : null;
 		}
 
 		#endregion
