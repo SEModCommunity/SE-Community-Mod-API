@@ -63,12 +63,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\AmmoMagazinesDefinition.cs" />
+    <Compile Include="API\Definitions\AmmoMagazinesDefinition.cs" />
+    <Compile Include="API\Definitions\BaseDefinition.cs" />
     <Compile Include="API\ConfigFileSerializer.cs" />
-    <Compile Include="API\ContainerTypesDefinition.cs" />
-    <Compile Include="API\SpawnGroupsDefinition.cs" />
-    <Compile Include="API\GlobalEventsDefinition.cs" />
-    <Compile Include="API\CubeBlockDefinition.cs" />
+    <Compile Include="API\Definitions\ContainerTypesDefinition.cs" />
+    <Compile Include="API\Definitions\SpawnGroupsDefinition.cs" />
+    <Compile Include="API\Definitions\GlobalEventsDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlockDefinition.cs" />
     <Compile Include="API\GameInstallation.cs" />
     <Compile Include="API\SaveFile.cs" />
     <Compile Include="API\SEModAPIExceptions.cs" />

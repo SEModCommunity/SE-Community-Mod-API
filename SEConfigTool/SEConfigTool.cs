@@ -193,13 +193,15 @@ namespace SEConfigTool
             _currentlySelecting = true;
             int index = LBX_BlocksConfiguration.SelectedIndex;
 
-            TBX_ConfigBlockName.Text = _cubeBlockDefinitionsWrapper.NameOf(index);
-            TBX_ConfigBlockId.Text = _cubeBlockDefinitionsWrapper.IdOf(index);
-            TBX_ConfigBuildTime.Text = _cubeBlockDefinitionsWrapper.BuildTimeOf(index).ToString(_numberFormatInfo);
-            TBX_ConfigDisassembleRatio.Text = _cubeBlockDefinitionsWrapper.DisassembleRatioOf(index).ToString(_numberFormatInfo);
+			CubeBlockDefinition cubeBlock = _cubeBlockDefinitionsWrapper.GetDefinitionOf(index);
+
+			TBX_ConfigBlockName.Text = cubeBlock.Name;
+            TBX_ConfigBlockId.Text = cubeBlock.Id.ToString();
+			TBX_ConfigBuildTime.Text = cubeBlock.BuildTime.ToString(_numberFormatInfo);
+			TBX_ConfigDisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(_numberFormatInfo);
 
 			LBX_BlocksConfig_Components.Items.Clear();
-			foreach(var def in _cubeBlockDefinitionsWrapper.ComponentsOf(index))
+			foreach (var def in cubeBlock.Components)
 			{
 				LBX_BlocksConfig_Components.Items.Add(def.Subtype + " x" + def.Count.ToString());
 			}
@@ -230,7 +232,7 @@ namespace SEConfigTool
         private void BTN_SaveBlocksConfiguration_Click(object sender, EventArgs e)
         {
             if (!_cubeBlockDefinitionsWrapper.Changed) return;
-            _serializer.CubeBlockDefinitions = _cubeBlockDefinitionsWrapper.Definitions;
+            _serializer.CubeBlockDefinitions = _cubeBlockDefinitionsWrapper.RawDefinitions;
             _serializer.SaveCubeBlocksContentFile();
         }
 
@@ -245,8 +247,12 @@ namespace SEConfigTool
         private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
         {
             int index = LBX_BlocksConfiguration.SelectedIndex;
-            _cubeBlockDefinitionsWrapper.SetBuildTimeOf(index, Convert.ToSingle(TBX_ConfigBuildTime.Text, _numberFormatInfo));
-            _cubeBlockDefinitionsWrapper.SetDisassembleRatioOf(index, Convert.ToSingle(TBX_ConfigDisassembleRatio.Text, _numberFormatInfo));
+
+			CubeBlockDefinition cubeBlock = _cubeBlockDefinitionsWrapper.GetDefinitionOf(index);
+
+			cubeBlock.BuildTime = Convert.ToSingle(TBX_ConfigBuildTime.Text, _numberFormatInfo);
+            cubeBlock.DisassembleRatio = Convert.ToSingle(TBX_ConfigDisassembleRatio.Text, _numberFormatInfo);
+
             BTN_ConfigApplyChanges.Visible = false;
         }
 
@@ -259,12 +265,15 @@ namespace SEConfigTool
             _currentlySelecting = true;
             int index = LBX_AmmoConfiguration.SelectedIndex;
 
-            TBX_ConfigAmmoName.Text = _ammoMagazinesDefinitionsWrapper.NameOf(index);
-            TBX_ConfigAmmoId.Text = _ammoMagazinesDefinitionsWrapper.IdOf(index);
-            TBX_ConfigAmmoCaliber.Text = _ammoMagazinesDefinitionsWrapper.CaliberOf(index);
-            TBX_ConfigAmmoCapacity.Text = _ammoMagazinesDefinitionsWrapper.CapacityOf(index).ToString(_numberFormatInfo);
-            TBX_ConfigAmmoVolume.Text = _ammoMagazinesDefinitionsWrapper.VolumeOf(index).ToString(_numberFormatInfo);
-            TBX_ConfigAmmoMass.Text = _ammoMagazinesDefinitionsWrapper.MassOf(index).ToString(_numberFormatInfo);
+			AmmoMagazinesDefinition ammoMagazine = _ammoMagazinesDefinitionsWrapper.GetDefinitionOf(index);
+
+			TBX_ConfigAmmoName.Text = ammoMagazine.Name;
+			TBX_ConfigAmmoId.Text = ammoMagazine.Id.ToString();
+			TBX_ConfigAmmoCaliber.Text = ammoMagazine.Caliber.ToString();
+			TBX_ConfigAmmoCapacity.Text = ammoMagazine.Capacity.ToString(_numberFormatInfo);
+			TBX_ConfigAmmoVolume.Text = ammoMagazine.Volume.ToString(_numberFormatInfo);
+			TBX_ConfigAmmoMass.Text = ammoMagazine.Mass.ToString(_numberFormatInfo);
+
             _currentlySelecting = false;
         }
 
@@ -276,16 +285,20 @@ namespace SEConfigTool
         private void BTN_SaveAmmoConfig_Click(object sender, EventArgs e)
         {
             if (!_ammoMagazinesDefinitionsWrapper.Changed) return;
-            _serializer.AmmoMagazineDefinitions = _ammoMagazinesDefinitionsWrapper.Definitions;
+            _serializer.AmmoMagazineDefinitions = _ammoMagazinesDefinitionsWrapper.RawDefinitions;
             _serializer.SaveAmmoMagazinesContentFile();
         }
 
         private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
         {
             int index = LBX_AmmoConfiguration.SelectedIndex;
-            _ammoMagazinesDefinitionsWrapper.SetCapacityOf(index, Convert.ToInt32(TBX_ConfigAmmoCapacity.Text, _numberFormatInfo));
-            _ammoMagazinesDefinitionsWrapper.SetMassOf(index, Convert.ToSingle(TBX_ConfigAmmoMass.Text, _numberFormatInfo));
-            _ammoMagazinesDefinitionsWrapper.SetMassOf(index, Convert.ToSingle(TBX_ConfigAmmoVolume.Text, _numberFormatInfo));
+
+			AmmoMagazinesDefinition ammoMagazine = _ammoMagazinesDefinitionsWrapper.GetDefinitionOf(index);
+
+			ammoMagazine.Capacity = Convert.ToInt32(TBX_ConfigAmmoCapacity.Text, _numberFormatInfo);
+			ammoMagazine.Mass = Convert.ToSingle(TBX_ConfigAmmoMass.Text, _numberFormatInfo);
+			ammoMagazine.Volume = Convert.ToSingle(TBX_ConfigAmmoVolume.Text, _numberFormatInfo);
+
             BTN_ConfigAmmoApply.Visible = false;
         }
 
@@ -306,14 +319,16 @@ namespace SEConfigTool
 			_currentlySelecting = true;
 			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
 
-			TBX_ConfigContainerTypeName.Text = _containerTypesDefinitionsWrapper.NameOf(index);
-			TBX_ConfigContainerTypeId.Text = _containerTypesDefinitionsWrapper.IdOf(index);
-			TBX_ConfigContainerTypeItemCount.Text = _containerTypesDefinitionsWrapper.ItemCountOf(index).ToString();
-			TBX_ConfigContainerTypeCountMax.Text = _containerTypesDefinitionsWrapper.CountMaxOf(index).ToString();
-			TBX_ConfigContainerTypeCountMin.Text = _containerTypesDefinitionsWrapper.CountMinOf(index).ToString();
+			ContainerTypesDefinition containerType = _containerTypesDefinitionsWrapper.GetDefinitionOf(index);
+
+			TBX_ConfigContainerTypeName.Text = containerType.Name;
+			TBX_ConfigContainerTypeId.Text = containerType.TypeId.ToString();
+			TBX_ConfigContainerTypeItemCount.Text = containerType.ItemCount.ToString();
+			TBX_ConfigContainerTypeCountMax.Text = containerType.CountMax.ToString();
+			TBX_ConfigContainerTypeCountMin.Text = containerType.CountMin.ToString();
 
 			LBX_ContainerTypeConfig_Details_Items.Items.Clear();
-			foreach (var def in _containerTypesDefinitionsWrapper.ItemsOf(index))
+			foreach (var def in containerType.Items)
 			{
 				LBX_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
 			}
@@ -334,15 +349,19 @@ namespace SEConfigTool
 		private void BTN_SaveContainerTypeConfig_Click(object sender, EventArgs e)
 		{
 			if (!_containerTypesDefinitionsWrapper.Changed) return;
-			_serializer.ContainerTypeDefinitions = _containerTypesDefinitionsWrapper.Definitions;
+			_serializer.ContainerTypeDefinitions = _containerTypesDefinitionsWrapper.RawDefinitions;
 			_serializer.SaveContainerTypesContentFile();
 		}
 
 		private void BTN_ConfigContainerTypeApply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
-			_containerTypesDefinitionsWrapper.SetCountMaxOf(index, Convert.ToInt32(TBX_ConfigContainerTypeCountMax.Text, _numberFormatInfo));
-			_containerTypesDefinitionsWrapper.SetCountMinOf(index, Convert.ToInt32(TBX_ConfigContainerTypeCountMin.Text, _numberFormatInfo));
+
+			ContainerTypesDefinition containerType = _containerTypesDefinitionsWrapper.GetDefinitionOf(index);
+
+			containerType.CountMax = Convert.ToInt32(TBX_ConfigContainerTypeCountMax.Text, _numberFormatInfo);
+			containerType.CountMin = Convert.ToInt32(TBX_ConfigContainerTypeCountMin.Text, _numberFormatInfo);
+
 			BTN_ConfigContainerTypeApply.Visible = false;
 		}
 
@@ -369,7 +388,9 @@ namespace SEConfigTool
 			_currentlySelecting = true;
 			int index = LBX_ContainerTypeConfig_Details_Items.SelectedIndex;
 
-			var items = _containerTypesDefinitionsWrapper.ItemsOf(LBX_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypesDefinition containerType = _containerTypesDefinitionsWrapper.GetDefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
+
+			var items = containerType.Items;
 
 			TBX_ContainerTypeConfig_ItemType.Text = items[index].Id.TypeId.ToString();
 			TBX_ContainerTypeConfig_ItemSubType.Text = items[index].Id.SubtypeId.ToString();
@@ -391,13 +412,15 @@ namespace SEConfigTool
 			_currentlySelecting = true;
 			int index = LBX_GlobalEventConfiguration.SelectedIndex;
 
-			TBX_ConfigGlobalEventId.Text = _globalEventsDefinitionsWrapper.IdOf(index);
-			TBX_ConfigGlobalEventName.Text = _globalEventsDefinitionsWrapper.NameOf(index);
-			TBX_ConfigGlobalEventDescription.Text = _globalEventsDefinitionsWrapper.DescriptionOf(index);
-			TBX_ConfigGlobalEventType.Text = _globalEventsDefinitionsWrapper.TypeOf(index);
-			TBX_ConfigGlobalEventMinActivation.Text = _globalEventsDefinitionsWrapper.MinActivationOf(index).ToString();
-			TBX_ConfigGlobalEventMaxActivation.Text = _globalEventsDefinitionsWrapper.MaxActivationOf(index).ToString();
-			TBX_ConfigGlobalEventFirstActivation.Text = _globalEventsDefinitionsWrapper.FirstActivationOf(index).ToString();
+			GlobalEventsDefinition globalEvent = _globalEventsDefinitionsWrapper.GetDefinitionOf(index);
+
+			TBX_ConfigGlobalEventId.Text = globalEvent.SubtypeId;
+			TBX_ConfigGlobalEventName.Text = globalEvent.Name;
+			TBX_ConfigGlobalEventDescription.Text = globalEvent.Description;
+			TBX_ConfigGlobalEventType.Text = globalEvent.TypeId.ToString();
+			TBX_ConfigGlobalEventMinActivation.Text = globalEvent.MinActivation.ToString();
+			TBX_ConfigGlobalEventMaxActivation.Text = globalEvent.MaxActivation.ToString();
+			TBX_ConfigGlobalEventFirstActivation.Text = globalEvent.FirstActivation.ToString();
 
 			_currentlySelecting = false;
 		}
@@ -410,16 +433,20 @@ namespace SEConfigTool
 		private void BTN_SaveGlobalEventConfig_Click(object sender, EventArgs e)
 		{
 			if (!_globalEventsDefinitionsWrapper.Changed) return;
-			_serializer.SetGlobalEventsDefinitions(_globalEventsDefinitionsWrapper.Definitions);
+			_serializer.SetGlobalEventsDefinitions(_globalEventsDefinitionsWrapper.RawDefinitions);
 			_serializer.SaveGlobalEventsContentFile();
 		}
 
 		private void BTN_ConfigGlobalEventApply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_GlobalEventConfiguration.SelectedIndex;
-			_globalEventsDefinitionsWrapper.SetMinActivationOf(index, Convert.ToInt32(TBX_ConfigGlobalEventMinActivation.Text, _numberFormatInfo));
-			_globalEventsDefinitionsWrapper.SetMaxActivationOf(index, Convert.ToInt32(TBX_ConfigGlobalEventMaxActivation.Text, _numberFormatInfo));
-			_globalEventsDefinitionsWrapper.SetFirstActivationOf(index, Convert.ToInt32(TBX_ConfigGlobalEventFirstActivation.Text, _numberFormatInfo));
+
+			GlobalEventsDefinition globalEvent = _globalEventsDefinitionsWrapper.GetDefinitionOf(index);
+
+			globalEvent.MinActivation = Convert.ToInt32(TBX_ConfigGlobalEventMinActivation.Text, _numberFormatInfo);
+			globalEvent.MaxActivation = Convert.ToInt32(TBX_ConfigGlobalEventMaxActivation.Text, _numberFormatInfo);
+			globalEvent.FirstActivation = Convert.ToInt32(TBX_ConfigGlobalEventFirstActivation.Text, _numberFormatInfo);
+
 			BTN_ConfigGlobalEventApply.Visible = false;
 		}
 
@@ -456,12 +483,14 @@ namespace SEConfigTool
 			_currentlySelecting = true;
 			int index = LBX_SpawnGroupConfiguration.SelectedIndex;
 
-			TBX_ConfigSpawnGroupName.Text = _spawnGroupsDefinitionsWrapper.NameOf(index);
-			TBX_ConfigSpawnGroupPrefabCount.Text = _spawnGroupsDefinitionsWrapper.PrefabCountOf(index).ToString();
-			TBX_ConfigSpawnGroupFrequency.Text = _spawnGroupsDefinitionsWrapper.FrequencyOf(index).ToString();
+			SpawnGroupDefinition spawnGroup = _spawnGroupsDefinitionsWrapper.GetDefinitionOf(index);
+
+			TBX_ConfigSpawnGroupName.Text = spawnGroup.Name;
+			TBX_ConfigSpawnGroupPrefabCount.Text = spawnGroup.PrefabCount.ToString();
+			TBX_ConfigSpawnGroupFrequency.Text = spawnGroup.Frequency.ToString();
 
 			LBX_SpawnGroupConfig_Details_Prefabs.Items.Clear();
-			foreach (var def in _spawnGroupsDefinitionsWrapper.PrefabsOf(index))
+			foreach (var def in spawnGroup.Prefabs)
 			{
 				LBX_SpawnGroupConfig_Details_Prefabs.Items.Add(def.BeaconText);
 			}
@@ -481,14 +510,16 @@ namespace SEConfigTool
 		private void BTN_SaveSpawnGroupConfig_Click(object sender, EventArgs e)
 		{
 			if (!_spawnGroupsDefinitionsWrapper.Changed) return;
-			_serializer.SpawnGroupDefinitions = _spawnGroupsDefinitionsWrapper.Definitions;
+			_serializer.SpawnGroupDefinitions = _spawnGroupsDefinitionsWrapper.RawDefinitions;
 			_serializer.SaveSpawnGroupsContentFile();
 		}
 
 		private void BTN_ConfigSpawnGroupApply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_SpawnGroupConfiguration.SelectedIndex;
-			_spawnGroupsDefinitionsWrapper.SetFrequencyOf(index, Convert.ToSingle(TBX_ConfigSpawnGroupFrequency.Text, _numberFormatInfo));
+			SpawnGroupDefinition spawnGroup = _spawnGroupsDefinitionsWrapper.GetDefinitionOf(index);
+			spawnGroup.Frequency = Convert.ToSingle(TBX_ConfigSpawnGroupFrequency.Text, _numberFormatInfo);
+
 			BTN_ConfigSpawnGroupApply.Visible = false;
 		}
 
@@ -507,12 +538,13 @@ namespace SEConfigTool
 			_currentlySelecting = true;
 			int index = LBX_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
 
-			var items = _spawnGroupsDefinitionsWrapper.PrefabsOf(LBX_SpawnGroupConfiguration.SelectedIndex);
+			SpawnGroupDefinition spawnGroup = _spawnGroupsDefinitionsWrapper.GetDefinitionOf(LBX_SpawnGroupConfiguration.SelectedIndex);
+			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
 
-			TBX_SpawnGroupConfig_Details_PrefabFile.Text = items[index].File;
-			TBX_SpawnGroupConfig_Details_PrefabPosition.Text = items[index].Position.ToString();
-			TBX_SpawnGroupConfig_Details_PrefabBeaconText.Text = items[index].BeaconText;
-			TBX_SpawnGroupConfig_Details_PrefabSpeed.Text = items[index].Speed.ToString();
+			TBX_SpawnGroupConfig_Details_PrefabFile.Text = spawnGroupPrefab.File;
+			TBX_SpawnGroupConfig_Details_PrefabPosition.Text = spawnGroupPrefab.Position.ToString();
+			TBX_SpawnGroupConfig_Details_PrefabBeaconText.Text = spawnGroupPrefab.BeaconText;
+			TBX_SpawnGroupConfig_Details_PrefabSpeed.Text = spawnGroupPrefab.Speed.ToString();
 
 			_currentlySelecting = false;
 		}
