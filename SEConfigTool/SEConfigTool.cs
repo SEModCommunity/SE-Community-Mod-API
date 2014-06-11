@@ -26,7 +26,7 @@ namespace SEConfigTool
 		private GlobalEventsDefinitionsWrapper m_globalEventsDefinitionsWrapper;
 		private SpawnGroupsDefinitionsWrapper m_spawnGroupsDefinitionsWrapper;
 		private PhysicalItemDefinitionsWrapper<MyObjectBuilder_PhysicalItemDefinition> m_physicalItemsDefinitionsWrapper;
-		private PhysicalItemDefinitionsWrapper<MyObjectBuilder_ComponentDefinition> m_componentsDefinitionsWrapper;
+		private ComponentDefinitionsWrapper m_componentsDefinitionsWrapper;
 
         private bool m_currentlyFillingConfigurationListBox;
         private bool m_currentlySelecting;
@@ -73,67 +73,57 @@ namespace SEConfigTool
         private void FillBlocksConfigurationListBox()
         {
             m_currentlyFillingConfigurationListBox = true;
+
             LBX_BlocksConfiguration.Items.Clear();
-
-            TBX_ConfigBlockId.Text = "";
-            TBX_ConfigBlockName.Text = "";
-            TBX_ConfigBuildTime.Text = "";
-            TBX_ConfigDisassembleRatio.Text = "";
-
             m_cubeBlockDefinitionsWrapper = new CubeBlockDefinitionsWrapper(m_configSerializer.CubeBlockDefinitions);
-
-            foreach (var definition in m_configSerializer.CubeBlockDefinitions)
+			foreach (var definition in m_cubeBlockDefinitionsWrapper.Definitions)
             {
-                LBX_BlocksConfiguration.Items.Add(definition.BlockPairName);
+                LBX_BlocksConfiguration.Items.Add(definition.Name);
             }
+
             m_currentlyFillingConfigurationListBox = false;
         }
 
         private void FillAmmoConfigurationListBox()
         {
             m_currentlyFillingConfigurationListBox = true;
+
             LBX_AmmoConfiguration.Items.Clear();
-
-            //TBX_ConfigBlockId.Text = "";
-            //TBX_ConfigBlockName.Text = "";
-            //TBX_ConfigBuildTime.Text = "";
-            //TBX_ConfigDisassembleRatio.Text = "";
-
             m_ammoMagazinesDefinitionsWrapper = new AmmoMagazinesDefinitionsWrapper(m_configSerializer.AmmoMagazineDefinitions);
-
-            foreach (var definition in m_configSerializer.AmmoMagazineDefinitions)
+			foreach (var definition in m_ammoMagazinesDefinitionsWrapper.Definitions)
             {
-                LBX_AmmoConfiguration.Items.Add(definition.DisplayName);
+                LBX_AmmoConfiguration.Items.Add(definition.Name);
             }
+
             m_currentlyFillingConfigurationListBox = false;
         }
 
 		private void FillContainerTypeConfigurationListBox()
 		{
 			m_currentlyFillingConfigurationListBox = true;
+
 			LBX_ContainerTypeConfiguration.Items.Clear();
 			LBX_ContainerTypeConfig_Details_Items.Items.Clear();
-
 			m_containerTypesDefinitionsWrapper = new ContainerTypesDefinitionsWrapper(m_configSerializer.ContainerTypeDefinitions);
-
-			foreach (var definition in m_configSerializer.ContainerTypeDefinitions)
+			foreach (var definition in m_containerTypesDefinitionsWrapper.Definitions)
 			{
 				LBX_ContainerTypeConfiguration.Items.Add(definition.Name);
 			}
+
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
 		private void FillGlobalEventConfigurationListBox()
 		{
 			m_currentlyFillingConfigurationListBox = true;
+
 			LBX_GlobalEventConfiguration.Items.Clear();
-
 			m_globalEventsDefinitionsWrapper = new GlobalEventsDefinitionsWrapper(m_configSerializer.GlobalEventDefinitions);
-
-			foreach (var definition in m_configSerializer.GlobalEventDefinitions)
+			foreach (var definition in m_globalEventsDefinitionsWrapper.Definitions)
 			{
-				LBX_GlobalEventConfiguration.Items.Add(definition.DisplayName);
+				LBX_GlobalEventConfiguration.Items.Add(definition.Name);
 			}
+
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
@@ -167,6 +157,20 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		private void FillComponentConfigurationListBox()
+		{
+			m_currentlyFillingConfigurationListBox = true;
+
+			m_componentsDefinitionsWrapper = new ComponentDefinitionsWrapper(m_configSerializer.ComponentDefinitions);
+			LBX_ComponentsConfig.Items.Clear();
+			foreach (var definition in m_componentsDefinitionsWrapper.Definitions)
+			{
+				LBX_ComponentsConfig.Items.Add(definition.Name);
+			}
+
+			m_currentlyFillingConfigurationListBox = false;
+		}
+
 		#endregion
 
         #region Form events
@@ -182,6 +186,7 @@ namespace SEConfigTool
 			FillGlobalEventConfigurationListBox();
 			FillSpawnGroupConfigurationListBox();
 			FillPhysicalItemConfigurationListBox();
+			FillComponentConfigurationListBox();
         }
 
         private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
@@ -230,6 +235,8 @@ namespace SEConfigTool
 			}
 
             m_currentlySelecting = false;
+
+			BTN_ConfigApplyChanges.Visible = false;
         }
 
         private void TBX_ConfigBuildTime_KeyPress(object sender, KeyPressEventArgs e)
@@ -259,7 +266,7 @@ namespace SEConfigTool
             m_configSerializer.SaveCubeBlocksContentFile();
         }
 
-        private void TBX_ConfigBuildTime_TextChanged(object sender, EventArgs e)
+        private void TBX_ConfigBlocks_TextChanged(object sender, EventArgs e)
         {
             if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
             {
@@ -298,6 +305,8 @@ namespace SEConfigTool
 			TBX_ConfigAmmoMass.Text = ammoMagazine.Mass.ToString(m_numberFormatInfo);
 
             m_currentlySelecting = false;
+
+			BTN_ConfigAmmoApply.Visible = false;
         }
 
         private void BTN_ConfigAmmoReload_Click(object sender, EventArgs e)
@@ -362,6 +371,8 @@ namespace SEConfigTool
 			TBX_ContainerTypeConfig_ItemFrequency.Text = "";
 
 			m_currentlySelecting = false;
+
+			BTN_ConfigContainerTypeApply.Visible = false;
 		}
 
 		private void BTN_ConfigContainerTypeReload_Click(object sender, EventArgs e)
@@ -388,15 +399,7 @@ namespace SEConfigTool
 			BTN_ConfigContainerTypeApply.Visible = false;
 		}
 
-		private void TBX_ConfigContainerTypeCountMax_TextChanged(object sender, EventArgs e)
-		{
-			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-			{
-				BTN_ConfigContainerTypeApply.Visible = true;
-			}
-		}
-
-		private void TBX_ConfigContainerTypeCountMin_TextChanged(object sender, EventArgs e)
+		private void TBX_ConfigContainerType_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -446,6 +449,8 @@ namespace SEConfigTool
 			TBX_ConfigGlobalEventFirstActivation.Text = globalEvent.FirstActivation.ToString();
 
 			m_currentlySelecting = false;
+
+			BTN_ConfigGlobalEventApply.Visible = false;
 		}
 
 		private void BTN_ConfigGlobalEventReload_Click(object sender, EventArgs e)
@@ -508,6 +513,8 @@ namespace SEConfigTool
 			TBX_SpawnGroupConfig_Details_PrefabSpeed.Text = "";
 
 			m_currentlySelecting = false;
+
+			BTN_ConfigSpawnGroupApply.Visible = false;
 		}
 
 		private void BTN_ConfigSpawnGroupReload_Click(object sender, EventArgs e)
@@ -531,7 +538,7 @@ namespace SEConfigTool
 			BTN_ConfigSpawnGroupApply.Visible = false;
 		}
 
-		private void TBX_ConfigSpawnGroupFrequency_TextChanged(object sender, EventArgs e)
+		private void TBX_ConfigSpawnGroup_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -573,8 +580,16 @@ namespace SEConfigTool
 			TBX_PhysicalItemConfig_Id.Text = physicalItem.Id.ToString();
 			TBX_PhysicalItemConfig_Name.Text = physicalItem.Name;
 			TBX_PhysicalItemConfig_Description.Text = physicalItem.Description;
+			TBX_PhysicalItemConfig_Size.Text = physicalItem.Size.ToString();
+			TBX_PhysicalItemConfig_Mass.Text = physicalItem.Mass.ToString();
+			TBX_PhysicalItemConfig_Volume.Text = physicalItem.Volume.ToString();
+			TBX_PhysicalItemConfig_Model.Text = physicalItem.Model;
+			TBX_PhysicalItemConfig_Icon.Text = physicalItem.Icon;
+			TBX_PhysicalItemConfig_IconSymbol.Text = physicalItem.IconSymbol.ToString();
 
 			m_currentlySelecting = false;
+
+			BTN_PhysicalItemConfig_Details_Apply.Visible = false;
 		}
 
 		private void BTN_ConfigPhysicalItemReload_Click(object sender, EventArgs e)
@@ -592,12 +607,88 @@ namespace SEConfigTool
 
 		private void BTN_ConfigPhysicalItemApply_Click(object sender, EventArgs e)
 		{
+			int index = LBX_PhysicalItemConfiguration.SelectedIndex;
 
+			PhysicalItemsDefinition<MyObjectBuilder_PhysicalItemDefinition> physicalItem = m_physicalItemsDefinitionsWrapper.GetDefinitionOf(index);
+
+			physicalItem.Mass = Convert.ToSingle(TBX_PhysicalItemConfig_Mass.Text, m_numberFormatInfo);
+			physicalItem.Volume = Convert.ToSingle(TBX_PhysicalItemConfig_Volume.Text, m_numberFormatInfo);
+
+			BTN_PhysicalItemConfig_Details_Apply.Visible = false;
+		}
+
+		private void TBX_PhysicalItemConfig_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_PhysicalItemConfig_Details_Apply.Visible = true;
+			}
+		}
+
+		#endregion
+
+		#region Components
+
+		private void LBX_ComponentsConfig_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int index = LBX_ComponentsConfig.SelectedIndex;
+
+			ComponentsDefinition component = (ComponentsDefinition) m_componentsDefinitionsWrapper.GetDefinitionOf(index);
+
+			TBX_ComponentConfig_Id.Text = component.Id.ToString();
+			TBX_ComponentConfig_Name.Text = component.Name;
+			TBX_ComponentConfig_Description.Text = component.Description;
+			TBX_ComponentConfig_Size.Text = component.Size.ToString();
+			TBX_ComponentConfig_Mass.Text = component.Mass.ToString();
+			TBX_ComponentConfig_Volume.Text = component.Volume.ToString();
+			TBX_ComponentConfig_Model.Text = component.Model;
+			TBX_ComponentConfig_Icon.Text = component.Icon;
+			TBX_ComponentConfig_MaxIntegrity.Text = component.MaxIntegrity.ToString();
+			TBX_ComponentConfig_DropProbability.Text = component.DropProbability.ToString();
+
+			m_currentlySelecting = false;
+
+			BTN_ComponentConfig_Details_Apply.Visible = false;
+		}
+
+		private void BTN_ComponentConfig_Reload_Click(object sender, EventArgs e)
+		{
+			FillComponentConfigurationListBox();
+		}
+
+		private void BTN_ComponentConfig_Save_Click(object sender, EventArgs e)
+		{
+			if (!m_componentsDefinitionsWrapper.Changed) return;
+
+			m_configSerializer.ComponentDefinitions = m_componentsDefinitionsWrapper.RawDefinitions;
+			m_configSerializer.SaveComponentsContentFile();
+		}
+
+		private void BTN_ComponentConfig_Details_Apply_Click(object sender, EventArgs e)
+		{
+			int index = LBX_ComponentsConfig.SelectedIndex;
+
+			ComponentsDefinition component = (ComponentsDefinition) m_componentsDefinitionsWrapper.GetDefinitionOf(index);
+
+			component.Mass = Convert.ToSingle(TBX_ComponentConfig_Mass.Text, m_numberFormatInfo);
+			component.Volume = Convert.ToSingle(TBX_ComponentConfig_Volume.Text, m_numberFormatInfo);
+			component.MaxIntegrity = Convert.ToInt32(TBX_ComponentConfig_MaxIntegrity.Text, m_numberFormatInfo);
+			component.DropProbability = Convert.ToSingle(TBX_ComponentConfig_DropProbability.Text, m_numberFormatInfo);
+
+			BTN_ComponentConfig_Details_Apply.Visible = false;
+		}
+
+		private void TBX_ComponentConfig_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_ComponentConfig_Details_Apply.Visible = true;
+			}
 		}
 
 		#endregion
 
 		#endregion
-
 	}
 }
