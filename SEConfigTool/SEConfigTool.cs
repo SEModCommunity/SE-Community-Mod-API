@@ -20,14 +20,14 @@ namespace SEConfigTool
 
         private ConfigFileSerializer m_configSerializer;
 
-        private CubeBlockDefinitionsWrapper m_cubeBlockDefinitionsWrapper;
-        private AmmoMagazinesDefinitionsWrapper m_ammoMagazinesDefinitionsWrapper;
-		private ContainerTypesDefinitionsWrapper m_containerTypesDefinitionsWrapper;
-		private GlobalEventsDefinitionsWrapper m_globalEventsDefinitionsWrapper;
-		private SpawnGroupsDefinitionsWrapper m_spawnGroupsDefinitionsWrapper;
-		private PhysicalItemDefinitionsWrapper<MyObjectBuilder_PhysicalItemDefinition> m_physicalItemsDefinitionsWrapper;
-		private ComponentDefinitionsWrapper m_componentsDefinitionsWrapper;
-		private BlueprintDefinitionsWrapper m_blueprintsDefinitionsWrapper;
+        private CubeBlockDefinitionsManager m_cubeBlockDefinitionsManager;
+        private AmmoMagazinesDefinitionsManager m_ammoMagazinesDefinitionsManager;
+        private ContainerTypesDefinitionsManager m_containerTypesDefinitionsManager;
+		private GlobalEventsDefinitionsManager m_globalEventsDefinitionsManager;
+        private SpawnGroupsDefinitionsManager m_spawnGroupsDefinitionsManager;
+        private PhysicalItemDefinitionsManager m_physicalItemsDefinitionsManager;
+		private ComponentDefinitionsManager m_componentsDefinitionsManager;
+        private BlueprintDefinitionsManager m_blueprintsDefinitionsManager;
 
         private bool m_currentlyFillingConfigurationListBox;
         private bool m_currentlySelecting;
@@ -76,8 +76,8 @@ namespace SEConfigTool
             m_currentlyFillingConfigurationListBox = true;
 
             LBX_BlocksConfiguration.Items.Clear();
-            m_cubeBlockDefinitionsWrapper = new CubeBlockDefinitionsWrapper(m_configSerializer.CubeBlockDefinitions);
-			foreach (var definition in m_cubeBlockDefinitionsWrapper.Definitions)
+            m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager(m_configSerializer.CubeBlockDefinitions);
+			foreach (var definition in m_cubeBlockDefinitionsManager.Definitions)
             {
                 LBX_BlocksConfiguration.Items.Add(definition.Name);
             }
@@ -90,8 +90,8 @@ namespace SEConfigTool
             m_currentlyFillingConfigurationListBox = true;
 
             LBX_AmmoConfiguration.Items.Clear();
-            m_ammoMagazinesDefinitionsWrapper = new AmmoMagazinesDefinitionsWrapper(m_configSerializer.AmmoMagazineDefinitions);
-			foreach (var definition in m_ammoMagazinesDefinitionsWrapper.Definitions)
+            m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager(m_configSerializer.AmmoMagazineDefinitions);
+			foreach (var definition in m_ammoMagazinesDefinitionsManager.Definitions)
             {
                 LBX_AmmoConfiguration.Items.Add(definition.Name);
             }
@@ -105,8 +105,8 @@ namespace SEConfigTool
 
 			LBX_ContainerTypeConfiguration.Items.Clear();
 			LBX_ContainerTypeConfig_Details_Items.Items.Clear();
-			m_containerTypesDefinitionsWrapper = new ContainerTypesDefinitionsWrapper(m_configSerializer.ContainerTypeDefinitions);
-			foreach (var definition in m_containerTypesDefinitionsWrapper.Definitions)
+			m_containerTypesDefinitionsManager = new ContainerTypesDefinitionsManager(m_configSerializer.ContainerTypeDefinitions);
+			foreach (var definition in m_containerTypesDefinitionsManager.Definitions)
 			{
 				LBX_ContainerTypeConfiguration.Items.Add(definition.Name);
 			}
@@ -119,8 +119,8 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = true;
 
 			LBX_GlobalEventConfiguration.Items.Clear();
-			m_globalEventsDefinitionsWrapper = new GlobalEventsDefinitionsWrapper(m_configSerializer.GlobalEventDefinitions);
-			foreach (var definition in m_globalEventsDefinitionsWrapper.Definitions)
+			m_globalEventsDefinitionsManager = new GlobalEventsDefinitionsManager(m_configSerializer.GlobalEventDefinitions);
+			foreach (var definition in m_globalEventsDefinitionsManager.Definitions)
 			{
 				LBX_GlobalEventConfiguration.Items.Add(definition.Name);
 			}
@@ -134,9 +134,9 @@ namespace SEConfigTool
 			LBX_SpawnGroupConfiguration.Items.Clear();
 			LBX_SpawnGroupConfig_Details_Prefabs.Items.Clear();
 
-			m_spawnGroupsDefinitionsWrapper = new SpawnGroupsDefinitionsWrapper(m_configSerializer.SpawnGroupDefinitions);
+			m_spawnGroupsDefinitionsManager = new SpawnGroupsDefinitionsManager(m_configSerializer.SpawnGroupDefinitions);
 
-			foreach (var definition in m_spawnGroupsDefinitionsWrapper.Definitions)
+			foreach (var definition in m_spawnGroupsDefinitionsManager.Definitions)
 			{
 				//TODO - Find a better way to uniquely label the spawn groups
 				LBX_SpawnGroupConfiguration.Items.Add("Spawn Group " + LBX_SpawnGroupConfiguration.Items.Count.ToString());
@@ -148,9 +148,9 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_physicalItemsDefinitionsWrapper = new PhysicalItemDefinitionsWrapper<MyObjectBuilder_PhysicalItemDefinition>(m_configSerializer.PhysicalItemDefinitions);
+			m_physicalItemsDefinitionsManager = new PhysicalItemDefinitionsManager(m_configSerializer.PhysicalItemDefinitions);
 			LBX_PhysicalItemConfiguration.Items.Clear();
-			foreach (var definition in m_physicalItemsDefinitionsWrapper.Definitions)
+			foreach (var definition in m_physicalItemsDefinitionsManager.Definitions)
 			{
 				LBX_PhysicalItemConfiguration.Items.Add(definition.Name);
 			}
@@ -162,9 +162,9 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_componentsDefinitionsWrapper = new ComponentDefinitionsWrapper(m_configSerializer.ComponentDefinitions);
+			m_componentsDefinitionsManager = new ComponentDefinitionsManager(m_configSerializer.ComponentDefinitions);
 			LBX_ComponentsConfig.Items.Clear();
-			foreach (var definition in m_componentsDefinitionsWrapper.Definitions)
+			foreach (var definition in m_componentsDefinitionsManager.Definitions)
 			{
 				LBX_ComponentsConfig.Items.Add(definition.Name);
 			}
@@ -176,9 +176,9 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_blueprintsDefinitionsWrapper = new BlueprintDefinitionsWrapper(m_configSerializer.BlueprintDefinitions);
+			m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager(m_configSerializer.BlueprintDefinitions);
 			LBX_BlueprintConfig.Items.Clear();
-			foreach (var definition in m_blueprintsDefinitionsWrapper.Definitions)
+			foreach (var definition in m_blueprintsDefinitionsManager.Definitions)
 			{
 				//TODO - Find a better way to uniquely label the spawn groups
 				LBX_BlueprintConfig.Items.Add("Blueprint " + LBX_BlueprintConfig.Items.Count.ToString());
@@ -238,7 +238,7 @@ namespace SEConfigTool
             m_currentlySelecting = true;
             int index = LBX_BlocksConfiguration.SelectedIndex;
 
-			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsWrapper.GetDefinitionOf(index);
+			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.GetDefinitionOf(index);
 
 			TBX_ConfigBlockName.Text = cubeBlock.Name;
             TBX_ConfigBlockId.Text = cubeBlock.Id.ToString();
@@ -278,7 +278,7 @@ namespace SEConfigTool
 
         private void BTN_SaveBlocksConfiguration_Click(object sender, EventArgs e)
         {
-			m_cubeBlockDefinitionsWrapper.Save();
+			m_cubeBlockDefinitionsManager.Save();
         }
 
         private void TBX_ConfigBlocks_TextChanged(object sender, EventArgs e)
@@ -293,7 +293,7 @@ namespace SEConfigTool
         {
             int index = LBX_BlocksConfiguration.SelectedIndex;
 
-			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsWrapper.GetDefinitionOf(index);
+			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.GetDefinitionOf(index);
 
 			cubeBlock.BuildTime = Convert.ToSingle(TBX_ConfigBuildTime.Text, m_numberFormatInfo);
             cubeBlock.DisassembleRatio = Convert.ToSingle(TBX_ConfigDisassembleRatio.Text, m_numberFormatInfo);
@@ -310,7 +310,7 @@ namespace SEConfigTool
             m_currentlySelecting = true;
             int index = LBX_AmmoConfiguration.SelectedIndex;
 
-			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsWrapper.GetDefinitionOf(index);
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.GetDefinitionOf(index);
 
 			TBX_ConfigAmmoName.Text = ammoMagazine.Name;
 			TBX_ConfigAmmoId.Text = ammoMagazine.Id.ToString();
@@ -331,14 +331,14 @@ namespace SEConfigTool
 
         private void BTN_SaveAmmoConfig_Click(object sender, EventArgs e)
         {
-			m_ammoMagazinesDefinitionsWrapper.Save();
+			m_ammoMagazinesDefinitionsManager.Save();
         }
 
         private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
         {
             int index = LBX_AmmoConfiguration.SelectedIndex;
 
-			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsWrapper.GetDefinitionOf(index);
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.GetDefinitionOf(index);
 
 			ammoMagazine.Capacity = Convert.ToInt32(TBX_ConfigAmmoCapacity.Text, m_numberFormatInfo);
 			ammoMagazine.Mass = Convert.ToSingle(TBX_ConfigAmmoMass.Text, m_numberFormatInfo);
@@ -364,7 +364,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsWrapper.GetDefinitionOf(index);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.GetDefinitionOf(index);
 
 			TBX_ConfigContainerTypeName.Text = containerType.Name;
 			TBX_ConfigContainerTypeId.Text = containerType.TypeId.ToString();
@@ -395,14 +395,14 @@ namespace SEConfigTool
 
 		private void BTN_SaveContainerTypeConfig_Click(object sender, EventArgs e)
 		{
-			m_containerTypesDefinitionsWrapper.Save();
+			m_containerTypesDefinitionsManager.Save();
 		}
 
 		private void BTN_ConfigContainerTypeApply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsWrapper.GetDefinitionOf(index);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.GetDefinitionOf(index);
 
 			containerType.CountMax = Convert.ToInt32(TBX_ConfigContainerTypeCountMax.Text, m_numberFormatInfo);
 			containerType.CountMin = Convert.ToInt32(TBX_ConfigContainerTypeCountMin.Text, m_numberFormatInfo);
@@ -425,7 +425,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_ContainerTypeConfig_Details_Items.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsWrapper.GetDefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.GetDefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
 			TBX_ContainerTypeConfig_ItemType.Text = containerItem.Id.TypeId.ToString();
@@ -443,7 +443,7 @@ namespace SEConfigTool
 		{
 			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsWrapper.GetDefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.GetDefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
 			containerItem.AmountMin = Convert.ToInt32(TBX_ContainerTypeConfig_ItemAmountMin.Text, m_numberFormatInfo);
@@ -472,7 +472,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_GlobalEventConfiguration.SelectedIndex;
 
-			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsWrapper.GetDefinitionOf(index);
+			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.GetDefinitionOf(index);
 
 			TBX_ConfigGlobalEventId.Text = globalEvent.Id.ToString();
 			TBX_ConfigGlobalEventName.Text = globalEvent.Name;
@@ -494,14 +494,14 @@ namespace SEConfigTool
 
 		private void BTN_SaveGlobalEventConfig_Click(object sender, EventArgs e)
 		{
-			m_globalEventsDefinitionsWrapper.Save();
+			m_globalEventsDefinitionsManager.Save();
 		}
 
 		private void BTN_ConfigGlobalEventApply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_GlobalEventConfiguration.SelectedIndex;
 
-			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsWrapper.GetDefinitionOf(index);
+			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.GetDefinitionOf(index);
 
 			globalEvent.MinActivation = Convert.ToInt32(TBX_ConfigGlobalEventMinActivation.Text, m_numberFormatInfo);
 			globalEvent.MaxActivation = Convert.ToInt32(TBX_ConfigGlobalEventMaxActivation.Text, m_numberFormatInfo);
@@ -527,7 +527,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_SpawnGroupConfiguration.SelectedIndex;
 
-			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsWrapper.GetDefinitionOf(index);
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.GetDefinitionOf(index);
 
 			TBX_ConfigSpawnGroupName.Text = spawnGroup.Name;
 			TBX_ConfigSpawnGroupPrefabCount.Text = spawnGroup.PrefabCount.ToString();
@@ -555,13 +555,13 @@ namespace SEConfigTool
 
 		private void BTN_SaveSpawnGroupConfig_Click(object sender, EventArgs e)
 		{
-			m_spawnGroupsDefinitionsWrapper.Save();
+			m_spawnGroupsDefinitionsManager.Save();
 		}
 
 		private void BTN_ConfigSpawnGroupApply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_SpawnGroupConfiguration.SelectedIndex;
-			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsWrapper.GetDefinitionOf(index);
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.GetDefinitionOf(index);
 			spawnGroup.Frequency = Convert.ToSingle(TBX_ConfigSpawnGroupFrequency.Text, m_numberFormatInfo);
 
 			BTN_ConfigSpawnGroupApply.Visible = false;
@@ -582,7 +582,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
 
-			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsWrapper.GetDefinitionOf(LBX_SpawnGroupConfiguration.SelectedIndex);
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.GetDefinitionOf(LBX_SpawnGroupConfiguration.SelectedIndex);
 			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
 
 			TBX_SpawnGroupConfig_Details_PrefabFile.Text = spawnGroupPrefab.File;
@@ -599,7 +599,7 @@ namespace SEConfigTool
 		{
 			int index = LBX_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
 
-			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsWrapper.GetDefinitionOf(LBX_SpawnGroupConfiguration.SelectedIndex);
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.GetDefinitionOf(LBX_SpawnGroupConfiguration.SelectedIndex);
 			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
 
 			spawnGroupPrefab.BeaconText = TBX_SpawnGroupConfig_Details_PrefabBeaconText.Text;
@@ -627,7 +627,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_PhysicalItemConfiguration.SelectedIndex;
 
-			PhysicalItemsDefinition<MyObjectBuilder_PhysicalItemDefinition> physicalItem = m_physicalItemsDefinitionsWrapper.GetDefinitionOf(index);
+			PhysicalItemsDefinition<MyObjectBuilder_PhysicalItemDefinition> physicalItem = m_physicalItemsDefinitionsManager.GetDefinitionOf(index);
 
 			TBX_PhysicalItemConfig_Id.Text = physicalItem.Id.ToString();
 			TBX_PhysicalItemConfig_Name.Text = physicalItem.Name;
@@ -651,14 +651,14 @@ namespace SEConfigTool
 
 		private void BTN_SavePhysicalItemConfig_Click(object sender, EventArgs e)
 		{
-			m_physicalItemsDefinitionsWrapper.Save();
+			m_physicalItemsDefinitionsManager.Save();
 		}
 
 		private void BTN_ConfigPhysicalItemApply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_PhysicalItemConfiguration.SelectedIndex;
 
-			PhysicalItemsDefinition<MyObjectBuilder_PhysicalItemDefinition> physicalItem = m_physicalItemsDefinitionsWrapper.GetDefinitionOf(index);
+			PhysicalItemsDefinition<MyObjectBuilder_PhysicalItemDefinition> physicalItem = m_physicalItemsDefinitionsManager.GetDefinitionOf(index);
 
 			physicalItem.Mass = Convert.ToSingle(TBX_PhysicalItemConfig_Mass.Text, m_numberFormatInfo);
 			physicalItem.Volume = Convert.ToSingle(TBX_PhysicalItemConfig_Volume.Text, m_numberFormatInfo);
@@ -683,7 +683,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_ComponentsConfig.SelectedIndex;
 
-			ComponentsDefinition component = (ComponentsDefinition) m_componentsDefinitionsWrapper.GetDefinitionOf(index);
+			ComponentsDefinition component = (ComponentsDefinition) m_componentsDefinitionsManager.GetDefinitionOf(index);
 
 			TBX_ComponentConfig_Id.Text = component.Id.ToString();
 			TBX_ComponentConfig_Name.Text = component.Name;
@@ -708,14 +708,14 @@ namespace SEConfigTool
 
 		private void BTN_ComponentConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_componentsDefinitionsWrapper.Save();
+			m_componentsDefinitionsManager.Save();
 		}
 
 		private void BTN_ComponentConfig_Details_Apply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_ComponentsConfig.SelectedIndex;
 
-			ComponentsDefinition component = (ComponentsDefinition) m_componentsDefinitionsWrapper.GetDefinitionOf(index);
+			ComponentsDefinition component = (ComponentsDefinition) m_componentsDefinitionsManager.GetDefinitionOf(index);
 
 			component.Mass = Convert.ToSingle(TBX_ComponentConfig_Mass.Text, m_numberFormatInfo);
 			component.Volume = Convert.ToSingle(TBX_ComponentConfig_Volume.Text, m_numberFormatInfo);
@@ -742,7 +742,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_BlueprintConfig.SelectedIndex;
 
-			BlueprintsDefinition blueprint = m_blueprintsDefinitionsWrapper.GetDefinitionOf(index);
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.GetDefinitionOf(index);
 
 			TBX_BlueprintConfig_Details_Result.Text = blueprint.Result.TypeId.ToString() + "/" + blueprint.Result.SubtypeId;
 			TBX_BlueprintConfig_Details_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString();
@@ -764,14 +764,14 @@ namespace SEConfigTool
 
 		private void BTN_BlueprintConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_blueprintsDefinitionsWrapper.Save();
+			m_blueprintsDefinitionsManager.Save();
 		}
 
 		private void BTN_BlueprintConfig_Details_Apply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_BlueprintConfig.SelectedIndex;
 
-			BlueprintsDefinition blueprint = m_blueprintsDefinitionsWrapper.GetDefinitionOf(index);
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.GetDefinitionOf(index);
 
 			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TBX_BlueprintConfig_Details_BaseProductionTime.Text, m_numberFormatInfo);
 

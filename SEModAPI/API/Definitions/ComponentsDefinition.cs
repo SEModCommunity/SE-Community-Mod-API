@@ -56,21 +56,12 @@ namespace SEModAPI.API.Definitions
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public class ComponentDefinitionsWrapper : OverLayerDefinitionsManager<MyObjectBuilder_ComponentDefinition, ComponentsDefinition>
+    public class ComponentDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_ComponentDefinition, ComponentsDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public ComponentDefinitionsWrapper(MyObjectBuilder_ComponentDefinition[] definitions)
-			: base(definitions)
-		{
-			int index = 0;
-			foreach (var definition in definitions)
-			{
-				m_nameTypeIndexes.Add(new KeyValuePair<string, SerializableDefinitionId>(definition.DisplayName, definition.Id), index);
-
-				index++;
-			}
-		}
+        public ComponentDefinitionsManager(MyObjectBuilder_ComponentDefinition[] definitions): base(definitions)
+		{}
 
 		#endregion
 

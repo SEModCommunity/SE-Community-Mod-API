@@ -74,11 +74,11 @@ namespace SEModAPI.API.Definitions
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public class GlobalEventsDefinitionsWrapper : OverLayerDefinitionsManager<MyObjectBuilder_GlobalEventDefinition, GlobalEventsDefinition>
+    public class GlobalEventsDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_GlobalEventDefinition, GlobalEventsDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public GlobalEventsDefinitionsWrapper(MyObjectBuilder_GlobalEventDefinition[] definitions): base(definitions)
+        public GlobalEventsDefinitionsManager(MyObjectBuilder_GlobalEventDefinition[] definitions): base(definitions)
 		{}
 
 		#endregion
