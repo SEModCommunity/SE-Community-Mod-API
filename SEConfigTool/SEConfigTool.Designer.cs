@@ -204,7 +204,7 @@ namespace SEConfigTool
 			this.GBX_ComponentsConfig = new System.Windows.Forms.GroupBox();
 			this.splitContainer25 = new System.Windows.Forms.SplitContainer();
 			this.LBX_ComponentsConfig = new System.Windows.Forms.ListBox();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.GBX_ComponentsConfig_Details = new System.Windows.Forms.GroupBox();
 			this.splitContainer26 = new System.Windows.Forms.SplitContainer();
 			this.label54 = new System.Windows.Forms.Label();
 			this.label45 = new System.Windows.Forms.Label();
@@ -234,7 +234,7 @@ namespace SEConfigTool
 			this.GBX_BlueprintConfig = new System.Windows.Forms.GroupBox();
 			this.splitContainer28 = new System.Windows.Forms.SplitContainer();
 			this.LBX_BlueprintConfig = new System.Windows.Forms.ListBox();
-			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.GBX_BlueprintsConfig_Details = new System.Windows.Forms.GroupBox();
 			this.splitContainer29 = new System.Windows.Forms.SplitContainer();
 			this.label62 = new System.Windows.Forms.Label();
 			this.label63 = new System.Windows.Forms.Label();
@@ -243,6 +243,38 @@ namespace SEConfigTool
 			this.TBX_BlueprintConfig_Details_BaseProductionTime = new System.Windows.Forms.TextBox();
 			this.TBX_BlueprintConfig_Details_Result = new System.Windows.Forms.TextBox();
 			this.label55 = new System.Windows.Forms.Label();
+			this.VoxelMaterialConfiguration = new System.Windows.Forms.TabPage();
+			this.splitContainer30 = new System.Windows.Forms.SplitContainer();
+			this.BTN_VoxelMaterialsConfig_Reload = new System.Windows.Forms.Button();
+			this.BTN_VoxelMaterialsConfig_Save = new System.Windows.Forms.Button();
+			this.GBX_VoxelMaterialsConfig = new System.Windows.Forms.GroupBox();
+			this.splitContainer31 = new System.Windows.Forms.SplitContainer();
+			this.LBX_VoxelMaterialsConfig = new System.Windows.Forms.ListBox();
+			this.GBX_VoxelMaterialsConfig_Details = new System.Windows.Forms.GroupBox();
+			this.splitContainer32 = new System.Windows.Forms.SplitContainer();
+			this.label56 = new System.Windows.Forms.Label();
+			this.label58 = new System.Windows.Forms.Label();
+			this.TBX_VoxelMaterialsConfig_Details_Name = new System.Windows.Forms.TextBox();
+			this.BTN_VoxelMaterialsConfig_Details_Apply = new System.Windows.Forms.Button();
+			this.TBX_VoxelMaterialsConfig_Details_MinedOre = new System.Windows.Forms.TextBox();
+			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.textBox3 = new System.Windows.Forms.TextBox();
+			this.textBox4 = new System.Windows.Forms.TextBox();
+			this.textBox5 = new System.Windows.Forms.TextBox();
+			this.textBox6 = new System.Windows.Forms.TextBox();
+			this.textBox7 = new System.Windows.Forms.TextBox();
+			this.textBox8 = new System.Windows.Forms.TextBox();
+			this.textBox9 = new System.Windows.Forms.TextBox();
+			this.label57 = new System.Windows.Forms.Label();
+			this.label59 = new System.Windows.Forms.Label();
+			this.label60 = new System.Windows.Forms.Label();
+			this.label61 = new System.Windows.Forms.Label();
+			this.label64 = new System.Windows.Forms.Label();
+			this.label65 = new System.Windows.Forms.Label();
+			this.label66 = new System.Windows.Forms.Label();
+			this.label67 = new System.Windows.Forms.Label();
+			this.label68 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 			this.splitContainer5.Panel1.SuspendLayout();
 			this.splitContainer5.Panel2.SuspendLayout();
@@ -372,7 +404,7 @@ namespace SEConfigTool
 			this.splitContainer25.Panel1.SuspendLayout();
 			this.splitContainer25.Panel2.SuspendLayout();
 			this.splitContainer25.SuspendLayout();
-			this.groupBox2.SuspendLayout();
+			this.GBX_ComponentsConfig_Details.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer26)).BeginInit();
 			this.splitContainer26.Panel1.SuspendLayout();
 			this.splitContainer26.Panel2.SuspendLayout();
@@ -387,11 +419,26 @@ namespace SEConfigTool
 			this.splitContainer28.Panel1.SuspendLayout();
 			this.splitContainer28.Panel2.SuspendLayout();
 			this.splitContainer28.SuspendLayout();
-			this.groupBox3.SuspendLayout();
+			this.GBX_BlueprintsConfig_Details.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer29)).BeginInit();
 			this.splitContainer29.Panel1.SuspendLayout();
 			this.splitContainer29.Panel2.SuspendLayout();
 			this.splitContainer29.SuspendLayout();
+			this.VoxelMaterialConfiguration.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer30)).BeginInit();
+			this.splitContainer30.Panel1.SuspendLayout();
+			this.splitContainer30.Panel2.SuspendLayout();
+			this.splitContainer30.SuspendLayout();
+			this.GBX_VoxelMaterialsConfig.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer31)).BeginInit();
+			this.splitContainer31.Panel1.SuspendLayout();
+			this.splitContainer31.Panel2.SuspendLayout();
+			this.splitContainer31.SuspendLayout();
+			this.GBX_VoxelMaterialsConfig_Details.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer32)).BeginInit();
+			this.splitContainer32.Panel1.SuspendLayout();
+			this.splitContainer32.Panel2.SuspendLayout();
+			this.splitContainer32.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer5
@@ -942,6 +989,7 @@ namespace SEConfigTool
 			this.LayoutPages.Controls.Add(this.PhysicalItemsConfiguration);
 			this.LayoutPages.Controls.Add(this.ComponentConfiguration);
 			this.LayoutPages.Controls.Add(this.BlueprintConfiguration);
+			this.LayoutPages.Controls.Add(this.VoxelMaterialConfiguration);
 			this.LayoutPages.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LayoutPages.Location = new System.Drawing.Point(0, 0);
 			this.LayoutPages.Name = "LayoutPages";
@@ -2357,7 +2405,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer25.Panel2
 			// 
-			this.splitContainer25.Panel2.Controls.Add(this.groupBox2);
+			this.splitContainer25.Panel2.Controls.Add(this.GBX_ComponentsConfig_Details);
 			this.splitContainer25.Size = new System.Drawing.Size(790, 382);
 			this.splitContainer25.SplitterDistance = 200;
 			this.splitContainer25.TabIndex = 1;
@@ -2372,16 +2420,16 @@ namespace SEConfigTool
 			this.LBX_ComponentsConfig.TabIndex = 0;
 			this.LBX_ComponentsConfig.SelectedIndexChanged += new System.EventHandler(this.LBX_ComponentsConfig_SelectedIndexChanged);
 			// 
-			// groupBox2
+			// GBX_ComponentsConfig_Details
 			// 
-			this.groupBox2.Controls.Add(this.splitContainer26);
-			this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.groupBox2.Location = new System.Drawing.Point(0, 0);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(586, 382);
-			this.groupBox2.TabIndex = 1;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Selected Item Information";
+			this.GBX_ComponentsConfig_Details.Controls.Add(this.splitContainer26);
+			this.GBX_ComponentsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GBX_ComponentsConfig_Details.Location = new System.Drawing.Point(0, 0);
+			this.GBX_ComponentsConfig_Details.Name = "GBX_ComponentsConfig_Details";
+			this.GBX_ComponentsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_ComponentsConfig_Details.TabIndex = 1;
+			this.GBX_ComponentsConfig_Details.TabStop = false;
+			this.GBX_ComponentsConfig_Details.Text = "Selected Item Information";
 			// 
 			// splitContainer26
 			// 
@@ -2678,7 +2726,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer28.Panel2
 			// 
-			this.splitContainer28.Panel2.Controls.Add(this.groupBox3);
+			this.splitContainer28.Panel2.Controls.Add(this.GBX_BlueprintsConfig_Details);
 			this.splitContainer28.Size = new System.Drawing.Size(790, 382);
 			this.splitContainer28.SplitterDistance = 200;
 			this.splitContainer28.TabIndex = 1;
@@ -2693,16 +2741,16 @@ namespace SEConfigTool
 			this.LBX_BlueprintConfig.TabIndex = 0;
 			this.LBX_BlueprintConfig.SelectedIndexChanged += new System.EventHandler(this.LBX_BlueprintConfig_SelectedIndexChanged);
 			// 
-			// groupBox3
+			// GBX_BlueprintsConfig_Details
 			// 
-			this.groupBox3.Controls.Add(this.splitContainer29);
-			this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.groupBox3.Location = new System.Drawing.Point(0, 0);
-			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(586, 382);
-			this.groupBox3.TabIndex = 1;
-			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Selected Item Information";
+			this.GBX_BlueprintsConfig_Details.Controls.Add(this.splitContainer29);
+			this.GBX_BlueprintsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GBX_BlueprintsConfig_Details.Location = new System.Drawing.Point(0, 0);
+			this.GBX_BlueprintsConfig_Details.Name = "GBX_BlueprintsConfig_Details";
+			this.GBX_BlueprintsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_BlueprintsConfig_Details.TabIndex = 1;
+			this.GBX_BlueprintsConfig_Details.TabStop = false;
+			this.GBX_BlueprintsConfig_Details.Text = "Selected Item Information";
 			// 
 			// splitContainer29
 			// 
@@ -2789,6 +2837,346 @@ namespace SEConfigTool
 			this.label55.Size = new System.Drawing.Size(40, 13);
 			this.label55.TabIndex = 7;
 			this.label55.Text = "Result:";
+			// 
+			// VoxelMaterialConfiguration
+			// 
+			this.VoxelMaterialConfiguration.Controls.Add(this.splitContainer30);
+			this.VoxelMaterialConfiguration.Location = new System.Drawing.Point(4, 22);
+			this.VoxelMaterialConfiguration.Name = "VoxelMaterialConfiguration";
+			this.VoxelMaterialConfiguration.Padding = new System.Windows.Forms.Padding(3);
+			this.VoxelMaterialConfiguration.Size = new System.Drawing.Size(802, 436);
+			this.VoxelMaterialConfiguration.TabIndex = 11;
+			this.VoxelMaterialConfiguration.Text = "Voxel Materials";
+			this.VoxelMaterialConfiguration.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer30
+			// 
+			this.splitContainer30.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer30.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer30.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer30.Name = "splitContainer30";
+			this.splitContainer30.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer30.Panel1
+			// 
+			this.splitContainer30.Panel1.Controls.Add(this.BTN_VoxelMaterialsConfig_Reload);
+			this.splitContainer30.Panel1.Controls.Add(this.BTN_VoxelMaterialsConfig_Save);
+			// 
+			// splitContainer30.Panel2
+			// 
+			this.splitContainer30.Panel2.Controls.Add(this.GBX_VoxelMaterialsConfig);
+			this.splitContainer30.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer30.SplitterDistance = 25;
+			this.splitContainer30.TabIndex = 5;
+			// 
+			// BTN_VoxelMaterialsConfig_Reload
+			// 
+			this.BTN_VoxelMaterialsConfig_Reload.Location = new System.Drawing.Point(3, 0);
+			this.BTN_VoxelMaterialsConfig_Reload.Name = "BTN_VoxelMaterialsConfig_Reload";
+			this.BTN_VoxelMaterialsConfig_Reload.Size = new System.Drawing.Size(116, 23);
+			this.BTN_VoxelMaterialsConfig_Reload.TabIndex = 2;
+			this.BTN_VoxelMaterialsConfig_Reload.Text = "Reload Configuration";
+			this.BTN_VoxelMaterialsConfig_Reload.UseVisualStyleBackColor = true;
+			this.BTN_VoxelMaterialsConfig_Reload.Click += new System.EventHandler(this.BTN_VoxelMaterialsConfig_Reload_Click);
+			// 
+			// BTN_VoxelMaterialsConfig_Save
+			// 
+			this.BTN_VoxelMaterialsConfig_Save.Location = new System.Drawing.Point(122, 0);
+			this.BTN_VoxelMaterialsConfig_Save.Name = "BTN_VoxelMaterialsConfig_Save";
+			this.BTN_VoxelMaterialsConfig_Save.Size = new System.Drawing.Size(105, 23);
+			this.BTN_VoxelMaterialsConfig_Save.TabIndex = 0;
+			this.BTN_VoxelMaterialsConfig_Save.Text = "Save Configuration";
+			this.BTN_VoxelMaterialsConfig_Save.UseVisualStyleBackColor = true;
+			this.BTN_VoxelMaterialsConfig_Save.Click += new System.EventHandler(this.BTN_VoxelMaterialsConfig_Save_Click);
+			// 
+			// GBX_VoxelMaterialsConfig
+			// 
+			this.GBX_VoxelMaterialsConfig.Controls.Add(this.splitContainer31);
+			this.GBX_VoxelMaterialsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GBX_VoxelMaterialsConfig.Location = new System.Drawing.Point(0, 0);
+			this.GBX_VoxelMaterialsConfig.Name = "GBX_VoxelMaterialsConfig";
+			this.GBX_VoxelMaterialsConfig.Size = new System.Drawing.Size(796, 401);
+			this.GBX_VoxelMaterialsConfig.TabIndex = 2;
+			this.GBX_VoxelMaterialsConfig.TabStop = false;
+			this.GBX_VoxelMaterialsConfig.Text = "Voxel Materials";
+			// 
+			// splitContainer31
+			// 
+			this.splitContainer31.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer31.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer31.Location = new System.Drawing.Point(3, 16);
+			this.splitContainer31.Name = "splitContainer31";
+			// 
+			// splitContainer31.Panel1
+			// 
+			this.splitContainer31.Panel1.Controls.Add(this.LBX_VoxelMaterialsConfig);
+			this.splitContainer31.Panel1MinSize = 200;
+			// 
+			// splitContainer31.Panel2
+			// 
+			this.splitContainer31.Panel2.Controls.Add(this.GBX_VoxelMaterialsConfig_Details);
+			this.splitContainer31.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer31.SplitterDistance = 200;
+			this.splitContainer31.TabIndex = 1;
+			// 
+			// LBX_VoxelMaterialsConfig
+			// 
+			this.LBX_VoxelMaterialsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LBX_VoxelMaterialsConfig.FormattingEnabled = true;
+			this.LBX_VoxelMaterialsConfig.Location = new System.Drawing.Point(0, 0);
+			this.LBX_VoxelMaterialsConfig.Name = "LBX_VoxelMaterialsConfig";
+			this.LBX_VoxelMaterialsConfig.Size = new System.Drawing.Size(200, 382);
+			this.LBX_VoxelMaterialsConfig.TabIndex = 0;
+			this.LBX_VoxelMaterialsConfig.SelectedIndexChanged += new System.EventHandler(this.LBX_VoxelMaterialsConfig_SelectedIndexChanged);
+			// 
+			// GBX_VoxelMaterialsConfig_Details
+			// 
+			this.GBX_VoxelMaterialsConfig_Details.Controls.Add(this.splitContainer32);
+			this.GBX_VoxelMaterialsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GBX_VoxelMaterialsConfig_Details.Location = new System.Drawing.Point(0, 0);
+			this.GBX_VoxelMaterialsConfig_Details.Name = "GBX_VoxelMaterialsConfig_Details";
+			this.GBX_VoxelMaterialsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_VoxelMaterialsConfig_Details.TabIndex = 1;
+			this.GBX_VoxelMaterialsConfig_Details.TabStop = false;
+			this.GBX_VoxelMaterialsConfig_Details.Text = "Selected Item Information";
+			// 
+			// splitContainer32
+			// 
+			this.splitContainer32.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer32.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer32.Location = new System.Drawing.Point(3, 16);
+			this.splitContainer32.Name = "splitContainer32";
+			// 
+			// splitContainer32.Panel1
+			// 
+			this.splitContainer32.Panel1.Controls.Add(this.label68);
+			this.splitContainer32.Panel1.Controls.Add(this.label67);
+			this.splitContainer32.Panel1.Controls.Add(this.label66);
+			this.splitContainer32.Panel1.Controls.Add(this.label65);
+			this.splitContainer32.Panel1.Controls.Add(this.label64);
+			this.splitContainer32.Panel1.Controls.Add(this.label61);
+			this.splitContainer32.Panel1.Controls.Add(this.label60);
+			this.splitContainer32.Panel1.Controls.Add(this.label59);
+			this.splitContainer32.Panel1.Controls.Add(this.label57);
+			this.splitContainer32.Panel1.Controls.Add(this.label56);
+			this.splitContainer32.Panel1.Controls.Add(this.label58);
+			this.splitContainer32.Panel1MinSize = 150;
+			// 
+			// splitContainer32.Panel2
+			// 
+			this.splitContainer32.Panel2.Controls.Add(this.textBox9);
+			this.splitContainer32.Panel2.Controls.Add(this.textBox8);
+			this.splitContainer32.Panel2.Controls.Add(this.textBox7);
+			this.splitContainer32.Panel2.Controls.Add(this.textBox6);
+			this.splitContainer32.Panel2.Controls.Add(this.textBox5);
+			this.splitContainer32.Panel2.Controls.Add(this.textBox4);
+			this.splitContainer32.Panel2.Controls.Add(this.textBox3);
+			this.splitContainer32.Panel2.Controls.Add(this.textBox2);
+			this.splitContainer32.Panel2.Controls.Add(this.textBox1);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_Name);
+			this.splitContainer32.Panel2.Controls.Add(this.BTN_VoxelMaterialsConfig_Details_Apply);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_MinedOre);
+			this.splitContainer32.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer32.SplitterDistance = 150;
+			this.splitContainer32.TabIndex = 4;
+			// 
+			// label56
+			// 
+			this.label56.AutoSize = true;
+			this.label56.Location = new System.Drawing.Point(3, 6);
+			this.label56.Name = "label56";
+			this.label56.Size = new System.Drawing.Size(38, 13);
+			this.label56.TabIndex = 7;
+			this.label56.Text = "Name:";
+			// 
+			// label58
+			// 
+			this.label58.AutoSize = true;
+			this.label58.Location = new System.Drawing.Point(3, 32);
+			this.label58.Name = "label58";
+			this.label58.Size = new System.Drawing.Size(59, 13);
+			this.label58.TabIndex = 0;
+			this.label58.Text = "Mined Ore:";
+			// 
+			// TBX_VoxelMaterialsConfig_Details_Name
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_Name.Location = new System.Drawing.Point(3, 3);
+			this.TBX_VoxelMaterialsConfig_Details_Name.Name = "TBX_VoxelMaterialsConfig_Details_Name";
+			this.TBX_VoxelMaterialsConfig_Details_Name.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_Name.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_Name.TabIndex = 10;
+			// 
+			// BTN_VoxelMaterialsConfig_Details_Apply
+			// 
+			this.BTN_VoxelMaterialsConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
+			this.BTN_VoxelMaterialsConfig_Details_Apply.Name = "BTN_VoxelMaterialsConfig_Details_Apply";
+			this.BTN_VoxelMaterialsConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_VoxelMaterialsConfig_Details_Apply.TabIndex = 8;
+			this.BTN_VoxelMaterialsConfig_Details_Apply.Text = "Apply changes";
+			this.BTN_VoxelMaterialsConfig_Details_Apply.UseVisualStyleBackColor = true;
+			this.BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
+			this.BTN_VoxelMaterialsConfig_Details_Apply.Click += new System.EventHandler(this.BTN_VoxelMaterialsConfig_Details_Apply_Click);
+			// 
+			// TBX_VoxelMaterialsConfig_Details_MinedOre
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_MinedOre.Location = new System.Drawing.Point(3, 29);
+			this.TBX_VoxelMaterialsConfig_Details_MinedOre.Name = "TBX_VoxelMaterialsConfig_Details_MinedOre";
+			this.TBX_VoxelMaterialsConfig_Details_MinedOre.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_MinedOre.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TabIndex = 5;
+			// 
+			// textBox1
+			// 
+			this.textBox1.Location = new System.Drawing.Point(3, 55);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.ReadOnly = true;
+			this.textBox1.Size = new System.Drawing.Size(150, 20);
+			this.textBox1.TabIndex = 11;
+			// 
+			// textBox2
+			// 
+			this.textBox2.Location = new System.Drawing.Point(3, 81);
+			this.textBox2.Name = "textBox2";
+			this.textBox2.ReadOnly = true;
+			this.textBox2.Size = new System.Drawing.Size(150, 20);
+			this.textBox2.TabIndex = 12;
+			// 
+			// textBox3
+			// 
+			this.textBox3.Location = new System.Drawing.Point(3, 107);
+			this.textBox3.Name = "textBox3";
+			this.textBox3.ReadOnly = true;
+			this.textBox3.Size = new System.Drawing.Size(150, 20);
+			this.textBox3.TabIndex = 13;
+			// 
+			// textBox4
+			// 
+			this.textBox4.Location = new System.Drawing.Point(3, 133);
+			this.textBox4.Name = "textBox4";
+			this.textBox4.ReadOnly = true;
+			this.textBox4.Size = new System.Drawing.Size(150, 20);
+			this.textBox4.TabIndex = 14;
+			// 
+			// textBox5
+			// 
+			this.textBox5.Location = new System.Drawing.Point(3, 159);
+			this.textBox5.Name = "textBox5";
+			this.textBox5.ReadOnly = true;
+			this.textBox5.Size = new System.Drawing.Size(150, 20);
+			this.textBox5.TabIndex = 15;
+			// 
+			// textBox6
+			// 
+			this.textBox6.Location = new System.Drawing.Point(3, 185);
+			this.textBox6.Name = "textBox6";
+			this.textBox6.ReadOnly = true;
+			this.textBox6.Size = new System.Drawing.Size(150, 20);
+			this.textBox6.TabIndex = 16;
+			// 
+			// textBox7
+			// 
+			this.textBox7.Location = new System.Drawing.Point(3, 211);
+			this.textBox7.Name = "textBox7";
+			this.textBox7.ReadOnly = true;
+			this.textBox7.Size = new System.Drawing.Size(150, 20);
+			this.textBox7.TabIndex = 17;
+			// 
+			// textBox8
+			// 
+			this.textBox8.Location = new System.Drawing.Point(3, 237);
+			this.textBox8.Name = "textBox8";
+			this.textBox8.ReadOnly = true;
+			this.textBox8.Size = new System.Drawing.Size(150, 20);
+			this.textBox8.TabIndex = 18;
+			// 
+			// textBox9
+			// 
+			this.textBox9.Location = new System.Drawing.Point(3, 263);
+			this.textBox9.Name = "textBox9";
+			this.textBox9.ReadOnly = true;
+			this.textBox9.Size = new System.Drawing.Size(150, 20);
+			this.textBox9.TabIndex = 19;
+			// 
+			// label57
+			// 
+			this.label57.AutoSize = true;
+			this.label57.Location = new System.Drawing.Point(3, 58);
+			this.label57.Name = "label57";
+			this.label57.Size = new System.Drawing.Size(87, 13);
+			this.label57.TabIndex = 8;
+			this.label57.Text = "Mined Ore Ratio:";
+			// 
+			// label59
+			// 
+			this.label59.AutoSize = true;
+			this.label59.Location = new System.Drawing.Point(3, 84);
+			this.label59.Name = "label59";
+			this.label59.Size = new System.Drawing.Size(97, 13);
+			this.label59.TabIndex = 9;
+			this.label59.Text = "Can Be Harvested:";
+			// 
+			// label60
+			// 
+			this.label60.AutoSize = true;
+			this.label60.Location = new System.Drawing.Point(3, 110);
+			this.label60.Name = "label60";
+			this.label60.Size = new System.Drawing.Size(44, 13);
+			this.label60.TabIndex = 10;
+			this.label60.Text = "Is Rare:";
+			// 
+			// label61
+			// 
+			this.label61.AutoSize = true;
+			this.label61.Location = new System.Drawing.Point(3, 136);
+			this.label61.Name = "label61";
+			this.label61.Size = new System.Drawing.Size(90, 13);
+			this.label61.TabIndex = 11;
+			this.label61.Text = "Is Indesctructible:";
+			// 
+			// label64
+			// 
+			this.label64.AutoSize = true;
+			this.label64.Location = new System.Drawing.Point(3, 162);
+			this.label64.Name = "label64";
+			this.label64.Size = new System.Drawing.Size(78, 13);
+			this.label64.TabIndex = 12;
+			this.label64.Text = "Damage Ratio:";
+			// 
+			// label65
+			// 
+			this.label65.AutoSize = true;
+			this.label65.Location = new System.Drawing.Point(3, 188);
+			this.label65.Name = "label65";
+			this.label65.Size = new System.Drawing.Size(67, 13);
+			this.label65.TabIndex = 13;
+			this.label65.Text = "Asset Name:";
+			// 
+			// label66
+			// 
+			this.label66.AutoSize = true;
+			this.label66.Location = new System.Drawing.Point(3, 214);
+			this.label66.Name = "label66";
+			this.label66.Size = new System.Drawing.Size(97, 13);
+			this.label66.TabIndex = 14;
+			this.label66.Text = "Use Two Textures:";
+			// 
+			// label67
+			// 
+			this.label67.AutoSize = true;
+			this.label67.Location = new System.Drawing.Point(3, 240);
+			this.label67.Name = "label67";
+			this.label67.Size = new System.Drawing.Size(85, 13);
+			this.label67.TabIndex = 15;
+			this.label67.Text = "Specular Power:";
+			// 
+			// label68
+			// 
+			this.label68.AutoSize = true;
+			this.label68.Location = new System.Drawing.Point(3, 266);
+			this.label68.Name = "label68";
+			this.label68.Size = new System.Drawing.Size(100, 13);
+			this.label68.TabIndex = 16;
+			this.label68.Text = "Specular Shininess:";
 			// 
 			// SEConfigTool
 			// 
@@ -2945,7 +3333,7 @@ namespace SEConfigTool
 			this.splitContainer25.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer25)).EndInit();
 			this.splitContainer25.ResumeLayout(false);
-			this.groupBox2.ResumeLayout(false);
+			this.GBX_ComponentsConfig_Details.ResumeLayout(false);
 			this.splitContainer26.Panel1.ResumeLayout(false);
 			this.splitContainer26.Panel1.PerformLayout();
 			this.splitContainer26.Panel2.ResumeLayout(false);
@@ -2962,13 +3350,30 @@ namespace SEConfigTool
 			this.splitContainer28.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer28)).EndInit();
 			this.splitContainer28.ResumeLayout(false);
-			this.groupBox3.ResumeLayout(false);
+			this.GBX_BlueprintsConfig_Details.ResumeLayout(false);
 			this.splitContainer29.Panel1.ResumeLayout(false);
 			this.splitContainer29.Panel1.PerformLayout();
 			this.splitContainer29.Panel2.ResumeLayout(false);
 			this.splitContainer29.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer29)).EndInit();
 			this.splitContainer29.ResumeLayout(false);
+			this.VoxelMaterialConfiguration.ResumeLayout(false);
+			this.splitContainer30.Panel1.ResumeLayout(false);
+			this.splitContainer30.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer30)).EndInit();
+			this.splitContainer30.ResumeLayout(false);
+			this.GBX_VoxelMaterialsConfig.ResumeLayout(false);
+			this.splitContainer31.Panel1.ResumeLayout(false);
+			this.splitContainer31.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer31)).EndInit();
+			this.splitContainer31.ResumeLayout(false);
+			this.GBX_VoxelMaterialsConfig_Details.ResumeLayout(false);
+			this.splitContainer32.Panel1.ResumeLayout(false);
+			this.splitContainer32.Panel1.PerformLayout();
+			this.splitContainer32.Panel2.ResumeLayout(false);
+			this.splitContainer32.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer32)).EndInit();
+			this.splitContainer32.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -3150,7 +3555,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.GroupBox GBX_ComponentsConfig;
 		private System.Windows.Forms.SplitContainer splitContainer25;
 		private System.Windows.Forms.ListBox LBX_ComponentsConfig;
-		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.GroupBox GBX_ComponentsConfig_Details;
 		private System.Windows.Forms.SplitContainer splitContainer26;
 		private System.Windows.Forms.Label label54;
 		private System.Windows.Forms.Label label45;
@@ -3180,7 +3585,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.GroupBox GBX_BlueprintConfig;
 		private System.Windows.Forms.SplitContainer splitContainer28;
 		private System.Windows.Forms.ListBox LBX_BlueprintConfig;
-		private System.Windows.Forms.GroupBox groupBox3;
+		private System.Windows.Forms.GroupBox GBX_BlueprintsConfig_Details;
 		private System.Windows.Forms.SplitContainer splitContainer29;
 		private System.Windows.Forms.Label label62;
 		private System.Windows.Forms.Label label63;
@@ -3189,6 +3594,38 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TBX_BlueprintConfig_Details_BaseProductionTime;
 		private System.Windows.Forms.Label label55;
 		private System.Windows.Forms.TextBox TBX_BlueprintConfig_Details_Result;
+		private System.Windows.Forms.TabPage VoxelMaterialConfiguration;
+		private System.Windows.Forms.SplitContainer splitContainer30;
+		private System.Windows.Forms.Button BTN_VoxelMaterialsConfig_Reload;
+		private System.Windows.Forms.Button BTN_VoxelMaterialsConfig_Save;
+		private System.Windows.Forms.GroupBox GBX_VoxelMaterialsConfig;
+		private System.Windows.Forms.SplitContainer splitContainer31;
+		private System.Windows.Forms.ListBox LBX_VoxelMaterialsConfig;
+		private System.Windows.Forms.GroupBox GBX_VoxelMaterialsConfig_Details;
+		private System.Windows.Forms.SplitContainer splitContainer32;
+		private System.Windows.Forms.Label label56;
+		private System.Windows.Forms.Label label58;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_Name;
+		private System.Windows.Forms.Button BTN_VoxelMaterialsConfig_Details_Apply;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_MinedOre;
+		private System.Windows.Forms.Label label68;
+		private System.Windows.Forms.Label label67;
+		private System.Windows.Forms.Label label66;
+		private System.Windows.Forms.Label label65;
+		private System.Windows.Forms.Label label64;
+		private System.Windows.Forms.Label label61;
+		private System.Windows.Forms.Label label60;
+		private System.Windows.Forms.Label label59;
+		private System.Windows.Forms.Label label57;
+		private System.Windows.Forms.TextBox textBox9;
+		private System.Windows.Forms.TextBox textBox8;
+		private System.Windows.Forms.TextBox textBox7;
+		private System.Windows.Forms.TextBox textBox6;
+		private System.Windows.Forms.TextBox textBox5;
+		private System.Windows.Forms.TextBox textBox4;
+		private System.Windows.Forms.TextBox textBox3;
+		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.TextBox textBox1;
 
     }
 }

@@ -28,6 +28,7 @@ namespace SEConfigTool
 		private PhysicalItemDefinitionsWrapper<MyObjectBuilder_PhysicalItemDefinition> m_physicalItemsDefinitionsWrapper;
 		private ComponentDefinitionsWrapper m_componentsDefinitionsWrapper;
 		private BlueprintDefinitionsWrapper m_blueprintsDefinitionsWrapper;
+		private VoxelMaterialDefinitionsWrapper m_voxelMaterialsDefinitionsWrapper;
 
         private bool m_currentlyFillingConfigurationListBox;
         private bool m_currentlySelecting;
@@ -187,6 +188,20 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		private void FillVoxelMaterialConfigurationListBox()
+		{
+			m_currentlyFillingConfigurationListBox = true;
+
+			m_voxelMaterialsDefinitionsWrapper = new VoxelMaterialDefinitionsWrapper(m_configSerializer.VoxelMaterialDefinitions);
+			LBX_VoxelMaterialsConfig.Items.Clear();
+			foreach (var definition in m_voxelMaterialsDefinitionsWrapper.Definitions)
+			{
+				LBX_VoxelMaterialsConfig.Items.Add(definition.Name);
+			}
+
+			m_currentlyFillingConfigurationListBox = false;
+		}
+
 		#endregion
 
         #region Form events
@@ -204,6 +219,7 @@ namespace SEConfigTool
 			FillPhysicalItemConfigurationListBox();
 			FillComponentConfigurationListBox();
 			FillBlueprintConfigurationListBox();
+			FillVoxelMaterialConfigurationListBox();
         }
 
         private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
@@ -744,13 +760,13 @@ namespace SEConfigTool
 
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsWrapper.GetDefinitionOf(index);
 
-			TBX_BlueprintConfig_Details_Result.Text = blueprint.Result.TypeId.ToString() + "/" + blueprint.Result.SubtypeId;
+			TBX_BlueprintConfig_Details_Result.Text = blueprint.Result.TypeId.ToString() + "/" + blueprint.Result.SubtypeId + " x" + blueprint.Result.Amount.ToString();
 			TBX_BlueprintConfig_Details_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString();
 
 			LBX_BlueprintConfig_Details_Prerequisites.Items.Clear();
 			foreach (var prereq in blueprint.Prerequisites)
 			{
-				LBX_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.TypeId.ToString() + "/" + prereq.SubtypeId);
+				LBX_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.TypeId.ToString() + "/" + prereq.SubtypeId + " x" + prereq.Amount.ToString());
 			}
 
 			m_currentlySelecting = false;
@@ -784,6 +800,39 @@ namespace SEConfigTool
 			{
 				BTN_BlueprintConfig_Details_Apply.Visible = true;
 			}
+		}
+
+		#endregion
+
+		#region VoxelMaterials
+
+		private void LBX_VoxelMaterialsConfig_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int index = LBX_VoxelMaterialsConfig.SelectedIndex;
+
+			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsWrapper.GetDefinitionOf(index);
+
+			TBX_VoxelMaterialsConfig_Details_Name.Text = voxelMaterial.Name;
+			TBX_VoxelMaterialsConfig_Details_MinedOre.Text = voxelMaterial.MinedOre;
+
+			m_currentlySelecting = false;
+			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
+		}
+
+		private void BTN_VoxelMaterialsConfig_Reload_Click(object sender, EventArgs e)
+		{
+			FillVoxelMaterialConfigurationListBox();
+		}
+
+		private void BTN_VoxelMaterialsConfig_Save_Click(object sender, EventArgs e)
+		{
+			m_voxelMaterialsDefinitionsWrapper.Save();
+		}
+
+		private void BTN_VoxelMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
+		{
+
 		}
 
 		#endregion
