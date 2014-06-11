@@ -56,7 +56,7 @@ namespace SEModAPI.API.Definitions
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public class ComponentDefinitionsWrapper : OverLayerDefinitionsManager<MyObjectBuilder_ComponentDefinition, ComponentsDefinition>
+    public class ComponentDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_ComponentDefinition, ComponentsDefinition>
 	{
 		#region "Constructors and Initializers"
 
