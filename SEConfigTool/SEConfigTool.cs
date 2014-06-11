@@ -20,14 +20,14 @@ namespace SEConfigTool
 
         private ConfigFileSerializer m_configSerializer;
 
-        private CubeBlockDefinitionsWrapper m_cubeBlockDefinitionsWrapper;
-        private AmmoMagazinesDefinitionsWrapper m_ammoMagazinesDefinitionsWrapper;
-		private ContainerTypesDefinitionsWrapper m_containerTypesDefinitionsWrapper;
+		private CubeBlockDefinitionsManager m_cubeBlockDefinitionsWrapper;
+		private AmmoMagazinesDefinitionsManager m_ammoMagazinesDefinitionsWrapper;
+		private ContainerTypesDefinitionsManager m_containerTypesDefinitionsWrapper;
 		private GlobalEventsDefinitionsWrapper m_globalEventsDefinitionsWrapper;
-		private SpawnGroupsDefinitionsWrapper m_spawnGroupsDefinitionsWrapper;
-		private PhysicalItemDefinitionsWrapper<MyObjectBuilder_PhysicalItemDefinition> m_physicalItemsDefinitionsWrapper;
+		private SpawnGroupsDefinitionsManager m_spawnGroupsDefinitionsWrapper;
+		private PhysicalItemDefinitionsManager m_physicalItemsDefinitionsWrapper;
 		private ComponentDefinitionsWrapper m_componentsDefinitionsWrapper;
-		private BlueprintDefinitionsWrapper m_blueprintsDefinitionsWrapper;
+		private BlueprintDefinitionsManager m_blueprintsDefinitionsWrapper;
 		private VoxelMaterialDefinitionsWrapper m_voxelMaterialsDefinitionsWrapper;
 
         private bool m_currentlyFillingConfigurationListBox;
@@ -77,7 +77,7 @@ namespace SEConfigTool
             m_currentlyFillingConfigurationListBox = true;
 
             LBX_BlocksConfiguration.Items.Clear();
-            m_cubeBlockDefinitionsWrapper = new CubeBlockDefinitionsWrapper(m_configSerializer.CubeBlockDefinitions);
+            m_cubeBlockDefinitionsWrapper = new CubeBlockDefinitionsManager(m_configSerializer.CubeBlockDefinitions);
 			foreach (var definition in m_cubeBlockDefinitionsWrapper.Definitions)
             {
                 LBX_BlocksConfiguration.Items.Add(definition.Name);
@@ -91,7 +91,7 @@ namespace SEConfigTool
             m_currentlyFillingConfigurationListBox = true;
 
             LBX_AmmoConfiguration.Items.Clear();
-            m_ammoMagazinesDefinitionsWrapper = new AmmoMagazinesDefinitionsWrapper(m_configSerializer.AmmoMagazineDefinitions);
+			m_ammoMagazinesDefinitionsWrapper = new AmmoMagazinesDefinitionsManager(m_configSerializer.AmmoMagazineDefinitions);
 			foreach (var definition in m_ammoMagazinesDefinitionsWrapper.Definitions)
             {
                 LBX_AmmoConfiguration.Items.Add(definition.Name);
@@ -106,7 +106,7 @@ namespace SEConfigTool
 
 			LBX_ContainerTypeConfiguration.Items.Clear();
 			LBX_ContainerTypeConfig_Details_Items.Items.Clear();
-			m_containerTypesDefinitionsWrapper = new ContainerTypesDefinitionsWrapper(m_configSerializer.ContainerTypeDefinitions);
+			m_containerTypesDefinitionsWrapper = new ContainerTypesDefinitionsManager(m_configSerializer.ContainerTypeDefinitions);
 			foreach (var definition in m_containerTypesDefinitionsWrapper.Definitions)
 			{
 				LBX_ContainerTypeConfiguration.Items.Add(definition.Name);
@@ -135,7 +135,7 @@ namespace SEConfigTool
 			LBX_SpawnGroupConfiguration.Items.Clear();
 			LBX_SpawnGroupConfig_Details_Prefabs.Items.Clear();
 
-			m_spawnGroupsDefinitionsWrapper = new SpawnGroupsDefinitionsWrapper(m_configSerializer.SpawnGroupDefinitions);
+			m_spawnGroupsDefinitionsWrapper = new SpawnGroupsDefinitionsManager(m_configSerializer.SpawnGroupDefinitions);
 
 			foreach (var definition in m_spawnGroupsDefinitionsWrapper.Definitions)
 			{
@@ -149,7 +149,7 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_physicalItemsDefinitionsWrapper = new PhysicalItemDefinitionsWrapper<MyObjectBuilder_PhysicalItemDefinition>(m_configSerializer.PhysicalItemDefinitions);
+			m_physicalItemsDefinitionsWrapper = new PhysicalItemDefinitionsManager(m_configSerializer.PhysicalItemDefinitions);
 			LBX_PhysicalItemConfiguration.Items.Clear();
 			foreach (var definition in m_physicalItemsDefinitionsWrapper.Definitions)
 			{
@@ -177,7 +177,7 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_blueprintsDefinitionsWrapper = new BlueprintDefinitionsWrapper(m_configSerializer.BlueprintDefinitions);
+			m_blueprintsDefinitionsWrapper = new BlueprintDefinitionsManager(m_configSerializer.BlueprintDefinitions);
 			LBX_BlueprintConfig.Items.Clear();
 			foreach (var definition in m_blueprintsDefinitionsWrapper.Definitions)
 			{

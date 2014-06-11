@@ -62,25 +62,17 @@ namespace SEModAPI.API.Definitions
 
 		public ComponentDefinitionsWrapper(MyObjectBuilder_ComponentDefinition[] definitions)
 			: base(definitions)
-		{
-			int index = 0;
-			foreach (var definition in definitions)
-			{
-				m_nameTypeIndexes.Add(new KeyValuePair<string, SerializableDefinitionId>(definition.DisplayName, definition.Id), index);
-
-				index++;
-			}
-		}
+		{}
 
 		#endregion
 
 		#region "Methods"
 
-		public void Save()
+		public override void Save()
 		{
 			if (!this.Changed) return;
 
-			m_configSerializer.ComponentDefinitions = this.RawDefinitions;
+			m_configSerializer.ComponentDefinitions = this.ExtractBaseDefinitions().ToArray();
 			m_configSerializer.SaveComponentsContentFile();
 		}
 

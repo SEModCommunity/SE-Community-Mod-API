@@ -100,11 +100,11 @@ namespace SEModAPI.API.Definitions
             return overLayer.Changed;
         }
 
-		public void Save()
+		public override void Save()
 		{
 			if (!this.Changed) return;
 
-			m_configSerializer.GlobalEventDefinitions = this.RawDefinitions;
+			m_configSerializer.GlobalEventDefinitions = this.ExtractBaseDefinitions().ToArray();
 			m_configSerializer.SaveGlobalEventsContentFile();
 		}
 
