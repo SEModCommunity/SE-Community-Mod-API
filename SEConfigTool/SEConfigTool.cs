@@ -70,13 +70,16 @@ namespace SEConfigTool
 			}
 
 			TRV_SavedGame_Objects.BeginUpdate();
+			TRV_SavedGame_Objects.Nodes.Clear();
+
+			//Add the sector object categories
 			TRV_SavedGame_Objects.Nodes.Add("Cube Grids");
 			TRV_SavedGame_Objects.Nodes.Add("Voxel Maps");
 			TRV_SavedGame_Objects.Nodes.Add("Floating Objects");
 			TRV_SavedGame_Objects.Nodes.Add("Meteors");
 			TRV_SavedGame_Objects.Nodes.Add("Unknown");
-			TRV_SavedGame_Objects.EndUpdate();
 
+			//Add the cube grids
 			foreach (CubeGrid cubeGrid in save.CubeGrids)
             {
 				float x = cubeGrid.PositionAndOrientation.Position.x;
@@ -85,8 +88,21 @@ namespace SEConfigTool
 
                 float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-				TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				TreeNode newNode = TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+
+				//Create the cube grid sub-item categories
+				newNode.Nodes.Add("Cube Blocks");
+				newNode.Nodes.Add("Conveyor Lines");
+				newNode.Nodes.Add("Block Groups");
+
+				//Add the cube blocks
+				foreach (CubeBlock cubeBlock in cubeGrid.CubeBlocks)
+				{
+					newNode.Nodes[0].Nodes.Add(cubeBlock.Name);
+				}
             }
+
+			//Add the voxel maps
 			foreach (VoxelMap voxelMap in save.VoxelMaps)
 			{
 				float x = voxelMap.PositionAndOrientation.Position.x;
@@ -97,6 +113,8 @@ namespace SEConfigTool
 
 				TRV_SavedGame_Objects.Nodes[1].Nodes.Add(voxelMap.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
 			}
+
+			//Add the floating objects
 			foreach (FloatingObject floatingObject in save.FloatingObjects)
 			{
 				float x = floatingObject.PositionAndOrientation.Position.x;
@@ -107,6 +125,8 @@ namespace SEConfigTool
 
 				TRV_SavedGame_Objects.Nodes[2].Nodes.Add(floatingObject.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
 			}
+
+			//Add the meteors
 			foreach (Meteor meteor in save.Meteors)
 			{
 				float x = meteor.PositionAndOrientation.Position.x;
@@ -117,6 +137,8 @@ namespace SEConfigTool
 
 				TRV_SavedGame_Objects.Nodes[3].Nodes.Add(meteor.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
 			}
+
+			//Add any unknown objects
 			foreach (SectorObject<MyObjectBuilder_EntityBase> unknown in save.UnknownObjects)
 			{
 				float x = unknown.PositionAndOrientation.Position.x;
@@ -127,6 +149,8 @@ namespace SEConfigTool
 
 				TRV_SavedGame_Objects.Nodes[4].Nodes.Add(unknown.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
 			}
+
+			TRV_SavedGame_Objects.EndUpdate();
 		}
 
         private void FillBlocksConfigurationListBox()
@@ -279,7 +303,9 @@ namespace SEConfigTool
 			FillVoxelMaterialConfigurationListBox();
         }
 
-        private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
+		#region SavedGame
+
+		private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -304,9 +330,28 @@ namespace SEConfigTool
             }
         }
 
-        #region CubeBlock
+		private void TRV_SavedGame_Objects_AfterSelect(object sender, TreeViewEventArgs e)
+		{
+			//Ignore top-level nodes
+			if (e.Node.Level == 0)
+				return;
 
-        private void LBX_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+			//Sector object nodes
+			if (e.Node.Level == 1)
+			{
+			}
+
+			//Sector object parts nodes
+			if (e.Node.Level == 2)
+			{
+			}
+		}
+
+		#endregion
+
+		#region CubeBlock
+
+		private void LBX_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_currentlySelecting = true;
             int index = LBX_BlocksConfiguration.SelectedIndex;

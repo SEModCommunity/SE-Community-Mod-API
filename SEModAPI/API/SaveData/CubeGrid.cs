@@ -10,11 +10,24 @@ namespace SEModAPI.API.SaveData
 {
 	public class CubeGrid : SectorObject<MyObjectBuilder_CubeGrid>
 	{
+		#region "Attributes"
+
+		private List<CubeBlock> m_cubeBlocks;
+
+		#endregion
+
 		#region "Constructors and Initializers"
 
 		public CubeGrid(MyObjectBuilder_CubeGrid definition)
 			: base(definition)
-		{}
+		{
+			//TODO - Change this to use a manager rather than a flat list
+			m_cubeBlocks = new List<CubeBlock>();
+			foreach (MyObjectBuilder_CubeBlock cubeBlock in definition.CubeBlocks)
+			{
+				m_cubeBlocks.Add(new CubeBlock(cubeBlock));
+			}
+		}
 
 		#endregion
 
@@ -64,9 +77,9 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
-		public List<MyObjectBuilder_CubeBlock> CubeBlocks
+		public List<CubeBlock> CubeBlocks
 		{
-			get { return m_baseDefinition.CubeBlocks; }
+			get { return m_cubeBlocks; }
 		}
 
 		public List<BoneInfo> Skeleton

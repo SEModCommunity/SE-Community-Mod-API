@@ -3205,9 +3205,9 @@ namespace SEConfigTool
 			// splitContainer33.Panel1
 			// 
 			this.splitContainer33.Panel1.Controls.Add(this.TRV_SavedGame_Objects);
-			this.splitContainer33.Panel1MinSize = 200;
+			this.splitContainer33.Panel1MinSize = 300;
 			this.splitContainer33.Size = new System.Drawing.Size(776, 349);
-			this.splitContainer33.SplitterDistance = 200;
+			this.splitContainer33.SplitterDistance = 300;
 			this.splitContainer33.TabIndex = 1;
 			// 
 			// splitContainer34
@@ -3294,8 +3294,9 @@ namespace SEConfigTool
 			this.TRV_SavedGame_Objects.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TRV_SavedGame_Objects.Location = new System.Drawing.Point(0, 0);
 			this.TRV_SavedGame_Objects.Name = "TRV_SavedGame_Objects";
-			this.TRV_SavedGame_Objects.Size = new System.Drawing.Size(200, 349);
+			this.TRV_SavedGame_Objects.Size = new System.Drawing.Size(300, 349);
 			this.TRV_SavedGame_Objects.TabIndex = 0;
+			this.TRV_SavedGame_Objects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_SavedGame_Objects_AfterSelect);
 			// 
 			// SEConfigTool
 			// 
