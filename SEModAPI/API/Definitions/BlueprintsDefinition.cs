@@ -72,7 +72,7 @@ namespace SEModAPI.API.Definitions
             return overLayer.Changed;
         }
 
-		public override void Save()
+        protected override void Save()
 		{
 			if (!this.Changed) return;
 

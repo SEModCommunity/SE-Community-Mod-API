@@ -10,19 +10,12 @@ namespace SEModAPI.API.Definitions
 	{
 		#region "Constructors and Initializers"
 
-		public VoxelMaterialsDefinition(MyObjectBuilder_VoxelMaterialDefinition definition)
-			: base(definition)
-		{
-		}
+		public VoxelMaterialsDefinition(MyObjectBuilder_VoxelMaterialDefinition definition): base(definition)
+		{}
 
 		#endregion
 
 		#region "Properties"
-
-		new public string Name
-		{
-			get { return m_baseDefinition.Name; }
-		}
 
 		public string MinedOre
 		{
