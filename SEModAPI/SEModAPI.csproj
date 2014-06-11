@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Definitions\AmmoMagazinesDefinition.cs" />
-    <Compile Include="API\Definitions\BaseDefinition.cs" />
+    <Compile Include="API\Definitions\OverLayerDefinition.cs" />
     <Compile Include="API\ConfigFileSerializer.cs" />
     <Compile Include="API\Definitions\BlueprintsDefinition.cs" />
     <Compile Include="API\Definitions\ConfigurationDefinition.cs" />

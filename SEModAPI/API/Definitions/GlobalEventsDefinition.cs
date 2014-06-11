@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using SEModAPI.Support;
+﻿using Sandbox.Common.ObjectBuilders.Definitions;
+using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API
 {
-	public class GlobalEventsDefinition : ObjectBuilderDefinition<MyObjectBuilder_GlobalEventDefinition>
+	public class GlobalEventsDefinition : OverLayerDefinition<MyObjectBuilder_GlobalEventDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public GlobalEventsDefinition(MyObjectBuilder_GlobalEventDefinition definition)
-			: base(definition)
-		{
-		}
+		public GlobalEventsDefinition(MyObjectBuilder_GlobalEventDefinition definition): base(definition)
+		{}
 
 		#endregion
 
@@ -21,126 +16,89 @@ namespace SEModAPI.API
 
 		public MyGlobalEventTypeEnum EventType
 		{
-			get { return m_definition.EventType; }
+			get { return m_baseDefinition.EventType; }
 			set
 			{
-				if (m_definition.EventType == value) return;
-				m_definition.EventType = value;
+				if (m_baseDefinition.EventType == value) return;
+				m_baseDefinition.EventType = value;
 				Changed = true;
 			}
 		}
 
 		public long MinActivation
 		{
-			get { return m_definition.MinActivationTimeMs.Value; }
+			get { return m_baseDefinition.MinActivationTimeMs.Value; }
             set
             {
-				if (m_definition.MinActivationTimeMs == value) return;
-				m_definition.MinActivationTimeMs = value;
+				if (m_baseDefinition.MinActivationTimeMs == value) return;
+				m_baseDefinition.MinActivationTimeMs = value;
                 Changed = true;
             }
 		}
 
 		public long MaxActivation
 		{
-			get { return m_definition.MaxActivationTimeMs.Value; }
+			get { return m_baseDefinition.MaxActivationTimeMs.Value; }
             set
             {
-				if (m_definition.MaxActivationTimeMs == value) return;
-				m_definition.MaxActivationTimeMs = value;
+				if (m_baseDefinition.MaxActivationTimeMs == value) return;
+				m_baseDefinition.MaxActivationTimeMs = value;
                 Changed = true;
             }
 		}
 
 		public long FirstActivation
 		{
-			get { return m_definition.FirstActivationTimeMs.Value; }
+			get { return m_baseDefinition.FirstActivationTimeMs.Value; }
             set
             {
-				if (m_definition.FirstActivationTimeMs == value) return;
-				m_definition.FirstActivationTimeMs = value;
+				if (m_baseDefinition.FirstActivationTimeMs == value) return;
+				m_baseDefinition.FirstActivationTimeMs = value;
                 Changed = true;
             }
 		}
 
 		#endregion
-	}
+
+        #region "Methods"
+
+        protected override string GetNameFrom(MyObjectBuilder_GlobalEventDefinition definition)
+	    {
+	        return definition.DisplayName;
+        }
+
+        #endregion
+    }
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public class GlobalEventsDefinitionsWrapper : BaseDefinitionsWrapper<MyObjectBuilder_GlobalEventDefinition, GlobalEventsDefinition>
+    public class GlobalEventsDefinitionsWrapper : OverLayerDefinitionsManager<MyObjectBuilder_GlobalEventDefinition, GlobalEventsDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public GlobalEventsDefinitionsWrapper(MyObjectBuilder_GlobalEventDefinition[] definitions)
-			: base(definitions)
-		{
-		}
-
-		#endregion
-
-		#region "Properties"
-
-		new public bool Changed
-		{
-			get
-			{
-				foreach (var def in m_definitions)
-				{
-					if (def.Value.Changed)
-						return true;
-				}
-
-				return false;
-			}
-			set
-			{
-				base.Changed = value;
-			}
-		}
-
-		public MyObjectBuilder_GlobalEventDefinition[] RawDefinitions
-		{
-			get
-			{
-				MyObjectBuilder_GlobalEventDefinition[] temp = new MyObjectBuilder_GlobalEventDefinition[m_definitions.Count];
-				GlobalEventsDefinition[] definitionsArray = this.Definitions;
-
-				for (int i = 0; i < definitionsArray.Length; i++)
-				{
-					temp[i] = definitionsArray[i].Definition;
-				}
-
-				return temp;
-			}
-		}
+		public GlobalEventsDefinitionsWrapper(MyObjectBuilder_GlobalEventDefinition[] definitions): base(definitions)
+		{}
 
 		#endregion
 
 		#region "Methods"
 
-		public int IndexOf(GlobalEventsDefinition item)
-		{
-			int index = 0;
-			bool foundMatch = false;
-			foreach (var def in m_definitions)
-			{
-				if (def.Value == item)
-				{
-					foundMatch = true;
-					break;
-				}
+        protected override GlobalEventsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_GlobalEventDefinition definition)
+        {
+            return new GlobalEventsDefinition(definition);
+        }
 
-				index++;
-			}
+        protected override MyObjectBuilder_GlobalEventDefinition GetBaseTypeOf(GlobalEventsDefinition overLayer)
+        {
+            return overLayer.BaseDefinition;
+        }
 
-			if (foundMatch)
-				return index;
-			else
-				return -1;
-		}
+        protected override bool GetChangedState(GlobalEventsDefinition overLayer)
+        {
+            return overLayer.Changed;
+        }
 
 		#endregion
 	}

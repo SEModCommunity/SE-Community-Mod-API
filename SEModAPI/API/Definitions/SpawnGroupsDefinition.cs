@@ -1,67 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using SEModAPI.Support;
+﻿using Sandbox.Common.ObjectBuilders.Definitions;
+using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API
 {
-	public class SpawnGroupDefinition : BaseDefinition<MyObjectBuilder_SpawnGroupDefinition>
+	public class SpawnGroupDefinition : OverLayerDefinition<MyObjectBuilder_SpawnGroupDefinition>
 	{
-		#region "Attributes"
-
-		private SpawnGroupPrefabsWrapper m_prefabsWrapper;
-
-		#endregion
-
 		#region "Constructors and Initializers"
 
-		public SpawnGroupDefinition(MyObjectBuilder_SpawnGroupDefinition definition)
-			: base(definition)
-		{
-			m_prefabsWrapper = new SpawnGroupPrefabsWrapper(m_definition.Prefabs);
-		}
+		public SpawnGroupDefinition(MyObjectBuilder_SpawnGroupDefinition myObjectBuilderDefinitionSubType): base(myObjectBuilderDefinitionSubType)
+		{}
 
 		#endregion
 
 		#region "Properties"
 
-		public string Name
+	    public float Frequency
 		{
-			get { return m_definition.TypeId.ToString(); }
-		}
-
-		public float Frequency
-		{
-			get { return m_definition.Frequency; }
+			get { return m_baseDefinition.Frequency; }
 			set
 			{
-				if (m_definition.Frequency == value) return;
-				m_definition.Frequency = value;
+                if (m_baseDefinition.Frequency == value) return;
+                m_baseDefinition.Frequency = value;
 				Changed = true;
 			}
 		}
 
 		public int PrefabCount
 		{
-			get { return m_definition.Prefabs.Length; }
-		}
-
-		public SpawnGroupPrefab[] Prefabs
-		{
-			get { return m_prefabsWrapper.Definitions; }
+            get { return m_baseDefinition.Prefabs.Length; }
 		}
 
 		#endregion
-	}
 
-	public class SpawnGroupPrefab : BaseDefinition<MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab>
+        #region "Methods"
+
+        protected override string GetNameFrom(MyObjectBuilder_SpawnGroupDefinition definition)
+        {
+            return definition.TypeId.ToString();
+        }
+
+        #endregion
+    }
+
+	public class SpawnGroupPrefab : OverLayerDefinition<MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab>
 	{
 		#region "Constructors and Initializers"
 
-		public SpawnGroupPrefab(MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab definition)
-			: base(definition)
-		{
-		}
+		public SpawnGroupPrefab(MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab myObjectBuilderDefinitionSubType): base(myObjectBuilderDefinitionSubType)
+		{}
 
 		#endregion
 
@@ -69,185 +55,118 @@ namespace SEModAPI.API
 
 		public string File
 		{
-			get { return m_definition.File; }
+			get { return m_baseDefinition.File; }
 			set
 			{
-				if (m_definition.File == value) return;
-				m_definition.File = value;
+                if (m_baseDefinition.File == value) return;
+                m_baseDefinition.File = value;
 				Changed = true;
 			}
 		}
 
 		public VRageMath.Vector3 Position
 		{
-			get { return m_definition.Position; }
+            get { return m_baseDefinition.Position; }
 			set
 			{
-				if (m_definition.Position == value) return;
-				m_definition.Position = value;
+                if (m_baseDefinition.Position == value) return;
+                m_baseDefinition.Position = value;
 				Changed = true;
 			}
 		}
 
 		public string BeaconText
 		{
-			get { return m_definition.BeaconText; }
+            get { return m_baseDefinition.BeaconText; }
 			set
 			{
-				if (m_definition.BeaconText == value) return;
-				m_definition.BeaconText = value;
+                if (m_baseDefinition.BeaconText == value) return;
+                m_baseDefinition.BeaconText = value;
 				Changed = true;
 			}
 		}
 
 		public float Speed
 		{
-			get { return m_definition.Speed; }
+            get { return m_baseDefinition.Speed; }
 			set
 			{
-				if (m_definition.Speed == value) return;
-				m_definition.Speed = value;
+                if (m_baseDefinition.Speed == value) return;
+                m_baseDefinition.Speed = value;
 				Changed = true;
 			}
 		}
 
 		#endregion
-	}
+
+        #region "Methods"
+
+        protected override string GetNameFrom(MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab definition)
+	    {
+	        return definition.BeaconText;
+        }
+
+        #endregion
+    }
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public class SpawnGroupsDefinitionsWrapper : BaseDefinitionsWrapper<MyObjectBuilder_SpawnGroupDefinition, SpawnGroupDefinition>
+    public class SpawnGroupsDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_SpawnGroupDefinition, SpawnGroupDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public SpawnGroupsDefinitionsWrapper(MyObjectBuilder_SpawnGroupDefinition[] definitions)
-			: base(definitions)
-		{
-		}
-
-		#endregion
-
-		#region "Properties"
-
-		new public bool Changed
-		{
-			get
-			{
-				foreach (var def in m_definitions)
-				{
-					if (def.Value.Changed)
-						return true;
-				}
-
-				return false;
-			}
-			set
-			{
-				base.Changed = value;
-			}
-		}
-
-		public MyObjectBuilder_SpawnGroupDefinition[] RawDefinitions
-		{
-			get
-			{
-				MyObjectBuilder_SpawnGroupDefinition[] temp = new MyObjectBuilder_SpawnGroupDefinition[m_definitions.Count];
-				SpawnGroupDefinition[] definitionsArray = this.Definitions;
-
-				for (int i = 0; i < definitionsArray.Length; i++)
-				{
-					temp[i] = definitionsArray[i].Definition;
-				}
-
-				return temp;
-			}
-		}
+		public SpawnGroupsDefinitionsManager(MyObjectBuilder_SpawnGroupDefinition[] definitions): base(definitions)
+        {}
 
 		#endregion
 
 		#region "Methods"
 
-		public int IndexOf(SpawnGroupDefinition item)
-		{
-			int index = 0;
-			bool foundMatch = false;
-			foreach (var def in m_definitions)
-			{
-				if (def.Value == item)
-				{
-					foundMatch = true;
-					break;
-				}
+        protected override SpawnGroupDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_SpawnGroupDefinition definition)
+        {
+            return new SpawnGroupDefinition(definition);
+        }
 
-				index++;
-			}
+        protected override MyObjectBuilder_SpawnGroupDefinition GetBaseTypeOf(SpawnGroupDefinition overLayer)
+        {
+            return overLayer.BaseDefinition;
+        }
 
-			if (foundMatch)
-				return index;
-			else
-				return -1;
-		}
+        protected override bool GetChangedState(SpawnGroupDefinition overLayer)
+        {
+            return overLayer.Changed;
+        }
 
 		#endregion
 	}
 
-	public class SpawnGroupPrefabsWrapper : BaseDefinitionsWrapper<MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab, SpawnGroupPrefab>
+    public class SpawnGroupPrefabsManager : OverLayerDefinitionsManager<MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab, SpawnGroupPrefab>
 	{
 		#region "Constructors and Initializers"
 
-		public SpawnGroupPrefabsWrapper(MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab[] definitions)
-			: base(definitions)
-		{
-		}
-
-		#endregion
-
-		#region "Properties"
-
-		new public bool Changed
-		{
-			get
-			{
-				foreach (var def in m_definitions)
-				{
-					if (def.Value.Changed)
-						return true;
-				}
-
-				return false;
-			}
-			set
-			{
-				base.Changed = value;
-			}
-		}
+		public SpawnGroupPrefabsManager(MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab[] definitions): base(definitions)
+		{}
 
 		#endregion
 
 		#region "Methods"
 
-		public int IndexOf(SpawnGroupPrefab spawnGroup)
-		{
-			int index = 0;
-			bool foundMatch = false;
-			foreach (var def in m_definitions)
-			{
-				if (def.Value == spawnGroup)
-				{
-					foundMatch = true;
-					break;
-				}
+        protected override SpawnGroupPrefab CreateOverLayerSubTypeInstance(MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab definition)
+        {
+            return new SpawnGroupPrefab(definition);
+        }
 
-				index++;
-			}
+        protected override MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab GetBaseTypeOf(SpawnGroupPrefab overLayer)
+        {
+            return overLayer.BaseDefinition;
+        }
 
-			if (foundMatch)
-				return index;
-			else
-				return -1;
-		}
+        protected override bool GetChangedState(SpawnGroupPrefab overLayer)
+        {
+            return overLayer.Changed;
+        }
 
 		#endregion
 	}

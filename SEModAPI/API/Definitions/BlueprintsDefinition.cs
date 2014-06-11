@@ -8,5 +8,8 @@ namespace SEModAPI.API.Definitions
 {
 	class BlueprintsDefinition : BaseDefinition<MyObjectBuilder_BlueprintDefinition>
 	{
+	    public BlueprintsDefinition(MyObjectBuilder_BlueprintDefinition myObjectBuilderDefinitionSubType) : base(myObjectBuilderDefinitionSubType)
+	    {
+	    }
 	}
 }
