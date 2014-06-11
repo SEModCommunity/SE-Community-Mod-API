@@ -141,11 +141,11 @@ namespace SEModAPI.API.Definitions
             return overLayer.Changed;
         }
 
-        public void Save()
+        public override void Save()
         {
             if (!this.Changed) return;
 
-            m_configSerializer.SpawnGroupDefinitions = this.RawDefinitions;
+			m_configSerializer.SpawnGroupDefinitions = this.ExtractBaseDefinitions().ToArray();
             m_configSerializer.SaveSpawnGroupsContentFile();
         }
 

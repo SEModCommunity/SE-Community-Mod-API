@@ -57,10 +57,6 @@ namespace SEModAPI.API.Definitions
 
         #region "Methods"
 
-        public void Save()
-        {
-        }
-
         protected override BlueprintsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_BlueprintDefinition definition)
         {
             return new BlueprintsDefinition(definition);
@@ -76,6 +72,14 @@ namespace SEModAPI.API.Definitions
             return overLayer.Changed;
         }
 
-        #endregion  
+		public override void Save()
+		{
+			if (!this.Changed) return;
+
+			m_configSerializer.BlueprintDefinitions = this.ExtractBaseDefinitions().ToArray();
+			m_configSerializer.SaveBlueprintsContentFile();
+		}
+		
+		#endregion  
     }
 }
