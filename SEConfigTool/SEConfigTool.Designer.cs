@@ -257,15 +257,15 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_VoxelMaterialsConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre = new System.Windows.Forms.TextBox();
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.textBox2 = new System.Windows.Forms.TextBox();
-			this.textBox3 = new System.Windows.Forms.TextBox();
-			this.textBox4 = new System.Windows.Forms.TextBox();
-			this.textBox5 = new System.Windows.Forms.TextBox();
-			this.textBox6 = new System.Windows.Forms.TextBox();
-			this.textBox7 = new System.Windows.Forms.TextBox();
-			this.textBox8 = new System.Windows.Forms.TextBox();
-			this.textBox9 = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_IsRare = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_AssetName = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess = new System.Windows.Forms.TextBox();
 			this.label57 = new System.Windows.Forms.Label();
 			this.label59 = new System.Windows.Forms.Label();
 			this.label60 = new System.Windows.Forms.Label();
@@ -2964,15 +2964,15 @@ namespace SEConfigTool
 			// 
 			// splitContainer32.Panel2
 			// 
-			this.splitContainer32.Panel2.Controls.Add(this.textBox9);
-			this.splitContainer32.Panel2.Controls.Add(this.textBox8);
-			this.splitContainer32.Panel2.Controls.Add(this.textBox7);
-			this.splitContainer32.Panel2.Controls.Add(this.textBox6);
-			this.splitContainer32.Panel2.Controls.Add(this.textBox5);
-			this.splitContainer32.Panel2.Controls.Add(this.textBox4);
-			this.splitContainer32.Panel2.Controls.Add(this.textBox3);
-			this.splitContainer32.Panel2.Controls.Add(this.textBox2);
-			this.splitContainer32.Panel2.Controls.Add(this.textBox1);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_SpecularShininess);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_SpecularPower);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_AssetName);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_DamageRatio);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_IsIndestructible);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_IsRare);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested);
+			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_Name);
 			this.splitContainer32.Panel2.Controls.Add(this.BTN_VoxelMaterialsConfig_Details_Apply);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_MinedOre);
@@ -3025,77 +3025,77 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TabIndex = 5;
 			// 
-			// textBox1
+			// TBX_VoxelMaterialsConfig_Details_MinedOreRatio
 			// 
-			this.textBox1.Location = new System.Drawing.Point(3, 55);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.ReadOnly = true;
-			this.textBox1.Size = new System.Drawing.Size(150, 20);
-			this.textBox1.TabIndex = 11;
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Location = new System.Drawing.Point(3, 55);
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Name = "TBX_VoxelMaterialsConfig_Details_MinedOreRatio";
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.TabIndex = 11;
 			// 
-			// textBox2
+			// TBX_VoxelMaterialsConfig_Details_CanBeHarvested
 			// 
-			this.textBox2.Location = new System.Drawing.Point(3, 81);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.ReadOnly = true;
-			this.textBox2.Size = new System.Drawing.Size(150, 20);
-			this.textBox2.TabIndex = 12;
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Location = new System.Drawing.Point(3, 81);
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Name = "TBX_VoxelMaterialsConfig_Details_CanBeHarvested";
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.TabIndex = 12;
 			// 
-			// textBox3
+			// TBX_VoxelMaterialsConfig_Details_IsRare
 			// 
-			this.textBox3.Location = new System.Drawing.Point(3, 107);
-			this.textBox3.Name = "textBox3";
-			this.textBox3.ReadOnly = true;
-			this.textBox3.Size = new System.Drawing.Size(150, 20);
-			this.textBox3.TabIndex = 13;
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.Location = new System.Drawing.Point(3, 107);
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.Name = "TBX_VoxelMaterialsConfig_Details_IsRare";
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.TabIndex = 13;
 			// 
-			// textBox4
+			// TBX_VoxelMaterialsConfig_Details_IsIndestructible
 			// 
-			this.textBox4.Location = new System.Drawing.Point(3, 133);
-			this.textBox4.Name = "textBox4";
-			this.textBox4.ReadOnly = true;
-			this.textBox4.Size = new System.Drawing.Size(150, 20);
-			this.textBox4.TabIndex = 14;
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Location = new System.Drawing.Point(3, 133);
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Name = "TBX_VoxelMaterialsConfig_Details_IsIndestructible";
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.TabIndex = 14;
 			// 
-			// textBox5
+			// TBX_VoxelMaterialsConfig_Details_DamageRatio
 			// 
-			this.textBox5.Location = new System.Drawing.Point(3, 159);
-			this.textBox5.Name = "textBox5";
-			this.textBox5.ReadOnly = true;
-			this.textBox5.Size = new System.Drawing.Size(150, 20);
-			this.textBox5.TabIndex = 15;
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Location = new System.Drawing.Point(3, 159);
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Name = "TBX_VoxelMaterialsConfig_Details_DamageRatio";
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.TabIndex = 15;
 			// 
-			// textBox6
+			// TBX_VoxelMaterialsConfig_Details_AssetName
 			// 
-			this.textBox6.Location = new System.Drawing.Point(3, 185);
-			this.textBox6.Name = "textBox6";
-			this.textBox6.ReadOnly = true;
-			this.textBox6.Size = new System.Drawing.Size(150, 20);
-			this.textBox6.TabIndex = 16;
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.Location = new System.Drawing.Point(3, 185);
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.Name = "TBX_VoxelMaterialsConfig_Details_AssetName";
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.TabIndex = 16;
 			// 
-			// textBox7
+			// TBX_VoxelMaterialsConfig_Details_UseTwoTextures
 			// 
-			this.textBox7.Location = new System.Drawing.Point(3, 211);
-			this.textBox7.Name = "textBox7";
-			this.textBox7.ReadOnly = true;
-			this.textBox7.Size = new System.Drawing.Size(150, 20);
-			this.textBox7.TabIndex = 17;
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Location = new System.Drawing.Point(3, 211);
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Name = "TBX_VoxelMaterialsConfig_Details_UseTwoTextures";
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.TabIndex = 17;
 			// 
-			// textBox8
+			// TBX_VoxelMaterialsConfig_Details_SpecularPower
 			// 
-			this.textBox8.Location = new System.Drawing.Point(3, 237);
-			this.textBox8.Name = "textBox8";
-			this.textBox8.ReadOnly = true;
-			this.textBox8.Size = new System.Drawing.Size(150, 20);
-			this.textBox8.TabIndex = 18;
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Location = new System.Drawing.Point(3, 237);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Name = "TBX_VoxelMaterialsConfig_Details_SpecularPower";
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.TabIndex = 18;
 			// 
-			// textBox9
+			// TBX_VoxelMaterialsConfig_Details_SpecularShininess
 			// 
-			this.textBox9.Location = new System.Drawing.Point(3, 263);
-			this.textBox9.Name = "textBox9";
-			this.textBox9.ReadOnly = true;
-			this.textBox9.Size = new System.Drawing.Size(150, 20);
-			this.textBox9.TabIndex = 19;
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Location = new System.Drawing.Point(3, 263);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Name = "TBX_VoxelMaterialsConfig_Details_SpecularShininess";
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.TabIndex = 19;
 			// 
 			// label57
 			// 
@@ -3617,15 +3617,15 @@ namespace SEConfigTool
 		private System.Windows.Forms.Label label60;
 		private System.Windows.Forms.Label label59;
 		private System.Windows.Forms.Label label57;
-		private System.Windows.Forms.TextBox textBox9;
-		private System.Windows.Forms.TextBox textBox8;
-		private System.Windows.Forms.TextBox textBox7;
-		private System.Windows.Forms.TextBox textBox6;
-		private System.Windows.Forms.TextBox textBox5;
-		private System.Windows.Forms.TextBox textBox4;
-		private System.Windows.Forms.TextBox textBox3;
-		private System.Windows.Forms.TextBox textBox2;
-		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_SpecularShininess;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_SpecularPower;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_UseTwoTextures;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_AssetName;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_DamageRatio;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_IsIndestructible;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_IsRare;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_CanBeHarvested;
+		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_MinedOreRatio;
 
     }
 }

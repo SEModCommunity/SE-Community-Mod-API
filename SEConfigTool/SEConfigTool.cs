@@ -815,6 +815,15 @@ namespace SEConfigTool
 
 			TBX_VoxelMaterialsConfig_Details_Name.Text = voxelMaterial.Name;
 			TBX_VoxelMaterialsConfig_Details_MinedOre.Text = voxelMaterial.MinedOre;
+			TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Text = "";
+			TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Text = "";
+			TBX_VoxelMaterialsConfig_Details_IsRare.Text = "";
+			TBX_VoxelMaterialsConfig_Details_IsIndestructible.Text = "";
+			TBX_VoxelMaterialsConfig_Details_DamageRatio.Text = "";
+			TBX_VoxelMaterialsConfig_Details_AssetName.Text = "";
+			TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Text = "";
+			TBX_VoxelMaterialsConfig_Details_SpecularPower.Text = "";
+			TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text = "";
 
 			m_currentlySelecting = false;
 			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
