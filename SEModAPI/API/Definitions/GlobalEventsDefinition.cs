@@ -6,7 +6,7 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API
 {
-	public class GlobalEventsDefinition : BaseDefinition<MyObjectBuilder_GlobalEventDefinition>
+	public class GlobalEventsDefinition : ObjectBuilderDefinition<MyObjectBuilder_GlobalEventDefinition>
 	{
 		#region "Constructors and Initializers"
 
@@ -19,48 +19,15 @@ namespace SEModAPI.API
 
 		#region "Properties"
 
-		public MyObjectBuilderTypeEnum TypeId
+		public MyGlobalEventTypeEnum EventType
 		{
-			get { return m_definition.Id.TypeId; }
+			get { return m_definition.EventType; }
 			set
 			{
-				if (m_definition.Id.TypeId == value) return;
-				m_definition.Id.TypeId = value;
+				if (m_definition.EventType == value) return;
+				m_definition.EventType = value;
 				Changed = true;
 			}
-		}
-
-		public string SubtypeId
-		{
-			get { return m_definition.Id.SubtypeId; }
-			set
-			{
-				if (m_definition.Id.SubtypeId == value) return;
-				m_definition.Id.SubtypeId = value;
-				Changed = true;
-			}
-		}
-
-		public string Name
-		{
-			get { return m_definition.DisplayName; }
-            set
-            {
-				if (m_definition.DisplayName == value) return;
-				m_definition.DisplayName = value;
-                Changed = true;
-            }
-		}
-
-		public string Description
-		{
-			get { return m_definition.Description; }
-            set
-            {
-				if (m_definition.Description == value) return;
-				m_definition.Description = value;
-                Changed = true;
-            }
 		}
 
 		public long MinActivation

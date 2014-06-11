@@ -6,7 +6,7 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API
 {
-    public class AmmoMagazinesDefinition : BaseDefinition<MyObjectBuilder_AmmoMagazineDefinition>
+	public class AmmoMagazinesDefinition : ObjectBuilderDefinition<MyObjectBuilder_AmmoMagazineDefinition>
     {
 		#region "Constructors and Initializers"
 
@@ -18,28 +18,6 @@ namespace SEModAPI.API
 		#endregion
 
         #region "Properties"
-
-		public SerializableDefinitionId Id
-		{
-			get { return m_definition.Id; }
-			set
-			{
-				if (m_definition.Id.ToString() == value.ToString()) return;
-				m_definition.Id = value;
-				Changed = true;
-			}
-		}
-
-		public string Name
-		{
-			get { return m_definition.DisplayName; }
-			set
-			{
-				if (m_definition.DisplayName == value) return;
-				m_definition.DisplayName = value;
-				Changed = true;
-			}
-		}
 
         public MyAmmoCategoryEnum Caliber
         {

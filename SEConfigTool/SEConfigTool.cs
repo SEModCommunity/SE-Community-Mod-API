@@ -414,10 +414,10 @@ namespace SEConfigTool
 
 			GlobalEventsDefinition globalEvent = _globalEventsDefinitionsWrapper.GetDefinitionOf(index);
 
-			TBX_ConfigGlobalEventId.Text = globalEvent.SubtypeId;
+			TBX_ConfigGlobalEventId.Text = globalEvent.Id.ToString();
 			TBX_ConfigGlobalEventName.Text = globalEvent.Name;
 			TBX_ConfigGlobalEventDescription.Text = globalEvent.Description;
-			TBX_ConfigGlobalEventType.Text = globalEvent.TypeId.ToString();
+			TBX_ConfigGlobalEventType.Text = globalEvent.EventType.ToString();
 			TBX_ConfigGlobalEventMinActivation.Text = globalEvent.MinActivation.ToString();
 			TBX_ConfigGlobalEventMaxActivation.Text = globalEvent.MaxActivation.ToString();
 			TBX_ConfigGlobalEventFirstActivation.Text = globalEvent.FirstActivation.ToString();

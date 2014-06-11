@@ -7,6 +7,10 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API
 {
+	/// <summary>
+	/// Base definition that wraps around an object
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	public class BaseDefinition<T>
 	{
 		#region "Attributes"
@@ -49,6 +53,64 @@ namespace SEModAPI.API
 		#endregion
 	}
 
+	public class ObjectBuilderDefinition<T> : BaseDefinition<T> where T : MyObjectBuilder_DefinitionBase
+	{
+		#region "Constructors and Initializers"
+
+		public ObjectBuilderDefinition(T definition)
+			: base(definition)
+		{
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		public SerializableDefinitionId Id
+		{
+			get { return m_definition.Id; }
+			set
+			{
+				if (m_definition.Id.ToString() == value.ToString()) return;
+				m_definition.Id = value;
+				Changed = true;
+			}
+		}
+
+		public string Name
+		{
+			get { return m_definition.DisplayName; }
+			set
+			{
+				if (m_definition.DisplayName == value) return;
+				m_definition.DisplayName = value;
+				Changed = true;
+			}
+		}
+
+		public string Description
+		{
+			get { return m_definition.Description; }
+			set
+			{
+				if (m_definition.Description == value) return;
+				m_definition.Description = value;
+				Changed = true;
+			}
+		}
+
+		#endregion
+	}
+
+	//////////////
+	// Wrappers //
+	//////////////
+
+	/// <summary>
+	/// Base definition collection wrapper
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="U"></typeparam>
 	public class BaseDefinitionsWrapper<T, U>
 	{
 		#region "Attributes"
@@ -133,7 +195,7 @@ namespace SEModAPI.API
 		#endregion
 	}
 
-	public class NameIdIndexedWrapper<T, U> : BaseDefinitionsWrapper<T, U>
+	public class NameIdIndexedWrapper<T, U> : BaseDefinitionsWrapper<T, U> where T : MyObjectBuilder_DefinitionBase
 	{
 		#region "Attributes"
 

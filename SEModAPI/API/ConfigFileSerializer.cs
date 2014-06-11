@@ -162,11 +162,13 @@ namespace SEModAPI.API
         public MyObjectBuilder_ComponentDefinition[] ComponentDefinitions
         {
             get { return _componentDefinitions.Components; }
+			set { _componentDefinitions.Components = value; }
         }
 
         public MyObjectBuilder_PhysicalItemDefinition[] PhysicalItemDefinitions
         {
             get { return _physicalItemDefinitions.PhysicalItems; }
+			set { _physicalItemDefinitions.PhysicalItems = value; }
         }
 
         public MyObjectBuilder_VoxelMaterialDefinition[] VoxelMaterialDefinitions

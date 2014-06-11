@@ -5,7 +5,7 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API
 {
-    public class CubeBlockDefinition : BaseDefinition<MyObjectBuilder_CubeBlockDefinition>
+	public class CubeBlockDefinition : ObjectBuilderDefinition<MyObjectBuilder_CubeBlockDefinition>
     {
 		#region "Constructors and Initializers"
 
@@ -18,18 +18,7 @@ namespace SEModAPI.API
 
         #region "Properties"
 
-		public SerializableDefinitionId Id
-		{
-			get { return m_definition.Id; }
-			set
-			{
-				if (m_definition.Id.ToString() == value.ToString()) return;
-				m_definition.Id = value;
-				Changed = true;
-			}
-		}
-
-		public string Name
+		new public string Name
 		{
 			get { return m_definition.BlockPairName; }
 			set
