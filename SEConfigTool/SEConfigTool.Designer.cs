@@ -108,7 +108,7 @@ namespace SEConfigTool
 			this.label26 = new System.Windows.Forms.Label();
 			this.label30 = new System.Windows.Forms.Label();
 			this.label29 = new System.Windows.Forms.Label();
-			this.BTN_ConfigContainerTypeApply_Items = new System.Windows.Forms.Button();
+			this.BTN_ContainerTypeConfig_Items_Apply = new System.Windows.Forms.Button();
 			this.TBX_ContainerTypeConfig_ItemAmountMax = new System.Windows.Forms.TextBox();
 			this.TBX_ContainerTypeConfig_ItemType = new System.Windows.Forms.TextBox();
 			this.TBX_ContainerTypeConfig_ItemSubType = new System.Windows.Forms.TextBox();
@@ -164,7 +164,7 @@ namespace SEConfigTool
 			this.label34 = new System.Windows.Forms.Label();
 			this.label33 = new System.Windows.Forms.Label();
 			this.label32 = new System.Windows.Forms.Label();
-			this.BTN_ConfigSpawnGroupApply_Prefabs = new System.Windows.Forms.Button();
+			this.BTN_SpawnGroupConfig_Prefabs_Apply = new System.Windows.Forms.Button();
 			this.TBX_SpawnGroupConfig_Details_PrefabSpeed = new System.Windows.Forms.TextBox();
 			this.TBX_SpawnGroupConfig_Details_PrefabBeaconText = new System.Windows.Forms.TextBox();
 			this.TBX_SpawnGroupConfig_Details_PrefabPosition = new System.Windows.Forms.TextBox();
@@ -1220,7 +1220,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer21.Panel2
 			// 
-			this.splitContainer21.Panel2.Controls.Add(this.BTN_ConfigContainerTypeApply_Items);
+			this.splitContainer21.Panel2.Controls.Add(this.BTN_ContainerTypeConfig_Items_Apply);
 			this.splitContainer21.Panel2.Controls.Add(this.TBX_ContainerTypeConfig_ItemAmountMax);
 			this.splitContainer21.Panel2.Controls.Add(this.TBX_ContainerTypeConfig_ItemType);
 			this.splitContainer21.Panel2.Controls.Add(this.TBX_ContainerTypeConfig_ItemSubType);
@@ -1275,24 +1275,24 @@ namespace SEConfigTool
 			this.label29.TabIndex = 7;
 			this.label29.Text = "AmountMin";
 			// 
-			// BTN_ConfigContainerTypeApply_Items
+			// BTN_ContainerTypeConfig_Items_Apply
 			// 
-			this.BTN_ConfigContainerTypeApply_Items.Location = new System.Drawing.Point(28, 305);
-			this.BTN_ConfigContainerTypeApply_Items.Name = "BTN_ConfigContainerTypeApply_Items";
-			this.BTN_ConfigContainerTypeApply_Items.Size = new System.Drawing.Size(100, 23);
-			this.BTN_ConfigContainerTypeApply_Items.TabIndex = 9;
-			this.BTN_ConfigContainerTypeApply_Items.Text = "Apply changes";
-			this.BTN_ConfigContainerTypeApply_Items.UseVisualStyleBackColor = true;
-			this.BTN_ConfigContainerTypeApply_Items.Visible = false;
+			this.BTN_ContainerTypeConfig_Items_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_ContainerTypeConfig_Items_Apply.Name = "BTN_ContainerTypeConfig_Items_Apply";
+			this.BTN_ContainerTypeConfig_Items_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_ContainerTypeConfig_Items_Apply.TabIndex = 9;
+			this.BTN_ContainerTypeConfig_Items_Apply.Text = "Apply changes";
+			this.BTN_ContainerTypeConfig_Items_Apply.UseVisualStyleBackColor = true;
+			this.BTN_ContainerTypeConfig_Items_Apply.Visible = false;
+			this.BTN_ContainerTypeConfig_Items_Apply.Click += new System.EventHandler(this.BTN_ContainerTypeConfig_Items_Apply_Click);
 			// 
 			// TBX_ContainerTypeConfig_ItemAmountMax
 			// 
 			this.TBX_ContainerTypeConfig_ItemAmountMax.Location = new System.Drawing.Point(3, 81);
 			this.TBX_ContainerTypeConfig_ItemAmountMax.Name = "TBX_ContainerTypeConfig_ItemAmountMax";
-			this.TBX_ContainerTypeConfig_ItemAmountMax.ReadOnly = true;
 			this.TBX_ContainerTypeConfig_ItemAmountMax.Size = new System.Drawing.Size(150, 20);
 			this.TBX_ContainerTypeConfig_ItemAmountMax.TabIndex = 6;
-			this.TBX_ContainerTypeConfig_ItemAmountMax.TextChanged += new System.EventHandler(this.TBX_ConfigContainerType_TextChanged);
+			this.TBX_ContainerTypeConfig_ItemAmountMax.TextChanged += new System.EventHandler(this.TBX_ContainerTypeConfig_Item_TextChanged);
 			// 
 			// TBX_ContainerTypeConfig_ItemType
 			// 
@@ -1314,18 +1314,17 @@ namespace SEConfigTool
 			// 
 			this.TBX_ContainerTypeConfig_ItemAmountMin.Location = new System.Drawing.Point(3, 55);
 			this.TBX_ContainerTypeConfig_ItemAmountMin.Name = "TBX_ContainerTypeConfig_ItemAmountMin";
-			this.TBX_ContainerTypeConfig_ItemAmountMin.ReadOnly = true;
 			this.TBX_ContainerTypeConfig_ItemAmountMin.Size = new System.Drawing.Size(150, 20);
 			this.TBX_ContainerTypeConfig_ItemAmountMin.TabIndex = 3;
-			this.TBX_ContainerTypeConfig_ItemAmountMin.TextChanged += new System.EventHandler(this.TBX_ConfigContainerType_TextChanged);
+			this.TBX_ContainerTypeConfig_ItemAmountMin.TextChanged += new System.EventHandler(this.TBX_ContainerTypeConfig_Item_TextChanged);
 			// 
 			// TBX_ContainerTypeConfig_ItemFrequency
 			// 
 			this.TBX_ContainerTypeConfig_ItemFrequency.Location = new System.Drawing.Point(3, 107);
 			this.TBX_ContainerTypeConfig_ItemFrequency.Name = "TBX_ContainerTypeConfig_ItemFrequency";
-			this.TBX_ContainerTypeConfig_ItemFrequency.ReadOnly = true;
 			this.TBX_ContainerTypeConfig_ItemFrequency.Size = new System.Drawing.Size(150, 20);
 			this.TBX_ContainerTypeConfig_ItemFrequency.TabIndex = 4;
+			this.TBX_ContainerTypeConfig_ItemFrequency.TextChanged += new System.EventHandler(this.TBX_ContainerTypeConfig_Item_TextChanged);
 			// 
 			// GlobalEventConfiguration
 			// 
@@ -1858,7 +1857,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer18.Panel2
 			// 
-			this.splitContainer18.Panel2.Controls.Add(this.BTN_ConfigSpawnGroupApply_Prefabs);
+			this.splitContainer18.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Prefabs_Apply);
 			this.splitContainer18.Panel2.Controls.Add(this.TBX_SpawnGroupConfig_Details_PrefabSpeed);
 			this.splitContainer18.Panel2.Controls.Add(this.TBX_SpawnGroupConfig_Details_PrefabBeaconText);
 			this.splitContainer18.Panel2.Controls.Add(this.TBX_SpawnGroupConfig_Details_PrefabPosition);
@@ -1903,31 +1902,32 @@ namespace SEConfigTool
 			this.label32.TabIndex = 1;
 			this.label32.Text = "File:";
 			// 
-			// BTN_ConfigSpawnGroupApply_Prefabs
+			// BTN_SpawnGroupConfig_Prefabs_Apply
 			// 
-			this.BTN_ConfigSpawnGroupApply_Prefabs.Location = new System.Drawing.Point(28, 305);
-			this.BTN_ConfigSpawnGroupApply_Prefabs.Name = "BTN_ConfigSpawnGroupApply_Prefabs";
-			this.BTN_ConfigSpawnGroupApply_Prefabs.Size = new System.Drawing.Size(100, 23);
-			this.BTN_ConfigSpawnGroupApply_Prefabs.TabIndex = 10;
-			this.BTN_ConfigSpawnGroupApply_Prefabs.Text = "Apply changes";
-			this.BTN_ConfigSpawnGroupApply_Prefabs.UseVisualStyleBackColor = true;
-			this.BTN_ConfigSpawnGroupApply_Prefabs.Visible = false;
+			this.BTN_SpawnGroupConfig_Prefabs_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_SpawnGroupConfig_Prefabs_Apply.Name = "BTN_SpawnGroupConfig_Prefabs_Apply";
+			this.BTN_SpawnGroupConfig_Prefabs_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_SpawnGroupConfig_Prefabs_Apply.TabIndex = 10;
+			this.BTN_SpawnGroupConfig_Prefabs_Apply.Text = "Apply changes";
+			this.BTN_SpawnGroupConfig_Prefabs_Apply.UseVisualStyleBackColor = true;
+			this.BTN_SpawnGroupConfig_Prefabs_Apply.Visible = false;
+			this.BTN_SpawnGroupConfig_Prefabs_Apply.Click += new System.EventHandler(this.BTN_SpawnGroupConfig_Prefabs_Apply_Click);
 			// 
 			// TBX_SpawnGroupConfig_Details_PrefabSpeed
 			// 
 			this.TBX_SpawnGroupConfig_Details_PrefabSpeed.Location = new System.Drawing.Point(3, 81);
 			this.TBX_SpawnGroupConfig_Details_PrefabSpeed.Name = "TBX_SpawnGroupConfig_Details_PrefabSpeed";
-			this.TBX_SpawnGroupConfig_Details_PrefabSpeed.ReadOnly = true;
 			this.TBX_SpawnGroupConfig_Details_PrefabSpeed.Size = new System.Drawing.Size(150, 20);
 			this.TBX_SpawnGroupConfig_Details_PrefabSpeed.TabIndex = 9;
+			this.TBX_SpawnGroupConfig_Details_PrefabSpeed.TextChanged += new System.EventHandler(this.TBX_SpawnGroupConfig_Details_PrefabText_TextChanged);
 			// 
 			// TBX_SpawnGroupConfig_Details_PrefabBeaconText
 			// 
 			this.TBX_SpawnGroupConfig_Details_PrefabBeaconText.Location = new System.Drawing.Point(3, 55);
 			this.TBX_SpawnGroupConfig_Details_PrefabBeaconText.Name = "TBX_SpawnGroupConfig_Details_PrefabBeaconText";
-			this.TBX_SpawnGroupConfig_Details_PrefabBeaconText.ReadOnly = true;
 			this.TBX_SpawnGroupConfig_Details_PrefabBeaconText.Size = new System.Drawing.Size(150, 20);
 			this.TBX_SpawnGroupConfig_Details_PrefabBeaconText.TabIndex = 8;
+			this.TBX_SpawnGroupConfig_Details_PrefabBeaconText.TextChanged += new System.EventHandler(this.TBX_SpawnGroupConfig_Details_PrefabText_TextChanged);
 			// 
 			// TBX_SpawnGroupConfig_Details_PrefabPosition
 			// 
@@ -2852,7 +2852,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TBX_ConfigDisassembleRatio;
 		private System.Windows.Forms.TextBox TBX_ConfigBlockName;
 		private System.Windows.Forms.TextBox TBX_ConfigBuildTime;
-		private System.Windows.Forms.Button BTN_ConfigContainerTypeApply_Items;
+		private System.Windows.Forms.Button BTN_ContainerTypeConfig_Items_Apply;
 		private System.Windows.Forms.GroupBox GBX_SpawnGroupConfig_Details;
 		private System.Windows.Forms.TabControl TC_SpawnGroupConfig_Details;
 		private System.Windows.Forms.TabPage TP_SpawnGroupConfig_Details_Information;
@@ -2871,7 +2871,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.Label label34;
 		private System.Windows.Forms.Label label33;
 		private System.Windows.Forms.Label label32;
-		private System.Windows.Forms.Button BTN_ConfigSpawnGroupApply_Prefabs;
+		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Prefabs_Apply;
 		private System.Windows.Forms.TextBox TBX_SpawnGroupConfig_Details_PrefabSpeed;
 		private System.Windows.Forms.TextBox TBX_SpawnGroupConfig_Details_PrefabBeaconText;
 		private System.Windows.Forms.TextBox TBX_SpawnGroupConfig_Details_PrefabPosition;

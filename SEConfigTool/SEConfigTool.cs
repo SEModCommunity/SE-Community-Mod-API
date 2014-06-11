@@ -383,6 +383,7 @@ namespace SEConfigTool
 		private void BTN_SaveContainerTypeConfig_Click(object sender, EventArgs e)
 		{
 			if (!m_containerTypesDefinitionsWrapper.Changed) return;
+
 			m_configSerializer.ContainerTypeDefinitions = m_containerTypesDefinitionsWrapper.RawDefinitions;
 			m_configSerializer.SaveContainerTypesContentFile();
 		}
@@ -415,16 +416,39 @@ namespace SEConfigTool
 			int index = LBX_ContainerTypeConfig_Details_Items.SelectedIndex;
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsWrapper.GetDefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypeItem containerItem = containerType.Items[index];
 
-			var items = containerType.Items;
-
-			TBX_ContainerTypeConfig_ItemType.Text = items[index].Id.TypeId.ToString();
-			TBX_ContainerTypeConfig_ItemSubType.Text = items[index].Id.SubtypeId.ToString();
-			TBX_ContainerTypeConfig_ItemAmountMin.Text = items[index].AmountMin.ToString();
-			TBX_ContainerTypeConfig_ItemAmountMax.Text = items[index].AmountMax.ToString();
-			TBX_ContainerTypeConfig_ItemFrequency.Text = items[index].Frequency.ToString();
+			TBX_ContainerTypeConfig_ItemType.Text = containerItem.Id.TypeId.ToString();
+			TBX_ContainerTypeConfig_ItemSubType.Text = containerItem.Id.SubtypeId.ToString();
+			TBX_ContainerTypeConfig_ItemAmountMin.Text = containerItem.AmountMin.ToString();
+			TBX_ContainerTypeConfig_ItemAmountMax.Text = containerItem.AmountMax.ToString();
+			TBX_ContainerTypeConfig_ItemFrequency.Text = containerItem.Frequency.ToString();
 
 			m_currentlySelecting = false;
+
+			BTN_ContainerTypeConfig_Items_Apply.Visible = false;
+		}
+
+		private void BTN_ContainerTypeConfig_Items_Apply_Click(object sender, EventArgs e)
+		{
+			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
+
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsWrapper.GetDefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypeItem containerItem = containerType.Items[index];
+
+			containerItem.AmountMin = Convert.ToInt32(TBX_ContainerTypeConfig_ItemAmountMin.Text, m_numberFormatInfo);
+			containerItem.AmountMax = Convert.ToInt32(TBX_ContainerTypeConfig_ItemAmountMax.Text, m_numberFormatInfo);
+			containerItem.Frequency = Convert.ToSingle(TBX_ContainerTypeConfig_ItemFrequency.Text, m_numberFormatInfo);
+
+			BTN_ContainerTypeConfig_Items_Apply.Visible = false;
+		}
+
+		private void TBX_ContainerTypeConfig_Item_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_ContainerTypeConfig_Items_Apply.Visible = true;
+			}
 		}
 
 		#endregion
@@ -562,6 +586,29 @@ namespace SEConfigTool
 			TBX_SpawnGroupConfig_Details_PrefabSpeed.Text = spawnGroupPrefab.Speed.ToString();
 
 			m_currentlySelecting = false;
+
+			BTN_SpawnGroupConfig_Prefabs_Apply.Visible = false;
+		}
+
+		private void BTN_SpawnGroupConfig_Prefabs_Apply_Click(object sender, EventArgs e)
+		{
+			int index = LBX_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
+
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsWrapper.GetDefinitionOf(LBX_SpawnGroupConfiguration.SelectedIndex);
+			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
+
+			spawnGroupPrefab.BeaconText = TBX_SpawnGroupConfig_Details_PrefabBeaconText.Text;
+			spawnGroupPrefab.Speed = Convert.ToSingle(TBX_SpawnGroupConfig_Details_PrefabSpeed.Text, m_numberFormatInfo);
+
+			BTN_SpawnGroupConfig_Prefabs_Apply.Visible = false;
+		}
+
+		private void TBX_SpawnGroupConfig_Details_PrefabText_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_SpawnGroupConfig_Prefabs_Apply.Visible = true;
+			}
 		}
 
 		#endregion

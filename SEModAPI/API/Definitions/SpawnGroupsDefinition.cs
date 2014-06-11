@@ -25,6 +25,24 @@ namespace SEModAPI.API.Definitions
 
 		#region "Properties"
 
+		new public bool Changed
+		{
+			get
+			{
+				foreach (var def in m_prefabsWrapper.Definitions)
+				{
+					if (def.Changed)
+						return true;
+				}
+
+				return false;
+			}
+			set
+			{
+				base.Changed = value;
+			}
+		}
+
 		new public MyObjectBuilder_SpawnGroupDefinition Definition
 		{
 			get {
