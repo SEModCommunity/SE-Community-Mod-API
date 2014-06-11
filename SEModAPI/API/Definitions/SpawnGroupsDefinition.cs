@@ -25,6 +25,14 @@ namespace SEModAPI.API.Definitions
 
 		#region "Properties"
 
+		new public MyObjectBuilder_SpawnGroupDefinition Definition
+		{
+			get {
+				m_definition.Prefabs = m_prefabsWrapper.RawDefinitions;
+				return m_definition;
+			}
+		}
+
 		public string Name
 		{
 			get { return m_definition.TypeId.ToString(); }
@@ -221,6 +229,22 @@ namespace SEModAPI.API.Definitions
 			set
 			{
 				base.Changed = value;
+			}
+		}
+
+		public MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab[] RawDefinitions
+		{
+			get
+			{
+				MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab[] temp = new MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab[m_definitions.Count];
+				SpawnGroupPrefab[] definitionsArray = this.Definitions;
+
+				for (int i = 0; i < definitionsArray.Length; i++)
+				{
+					temp[i] = definitionsArray[i].Definition;
+				}
+
+				return temp;
 			}
 		}
 
