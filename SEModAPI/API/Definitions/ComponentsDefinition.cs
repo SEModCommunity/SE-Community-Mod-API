@@ -7,14 +7,12 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API.Definitions
 {
-	public class ComponentsDefinition : PhysicalItemsDefinition<MyObjectBuilder_ComponentDefinition>
+    public class ComponentsDefinition : OverLayerDefinition<MyObjectBuilder_ComponentDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public ComponentsDefinition(MyObjectBuilder_ComponentDefinition definition)
-			: base(definition)
-		{
-		}
+		public ComponentsDefinition(MyObjectBuilder_ComponentDefinition definition): base(definition)
+		{}
 
 		#endregion
 
@@ -22,34 +20,43 @@ namespace SEModAPI.API.Definitions
 
 		public int MaxIntegrity
 		{
-			get { return m_definition.MaxIntegrity; }
+			get { return m_baseDefinition.MaxIntegrity; }
 			set
 			{
-				if (m_definition.MaxIntegrity == value) return;
-				m_definition.MaxIntegrity = value;
+                if (m_baseDefinition.MaxIntegrity == value) return;
+                m_baseDefinition.MaxIntegrity = value;
 				Changed = true;
 			}
 		}
 
 		public float DropProbability
 		{
-			get { return m_definition.DropProbability; }
+            get { return m_baseDefinition.DropProbability; }
 			set
 			{
-				if (m_definition.DropProbability == value) return;
-				m_definition.DropProbability = value;
+                if (m_baseDefinition.DropProbability == value) return;
+                m_baseDefinition.DropProbability = value;
 				Changed = true;
 			}
 		}
 
 		#endregion
+
+        #region "Methods"
+
+        protected override string GetNameFrom(MyObjectBuilder_ComponentDefinition definition)
+        {
+            return definition.DisplayName;
+        }
+
+        #endregion
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public class ComponentDefinitionsWrapper : NameIdIndexedWrapper<MyObjectBuilder_ComponentDefinition, ComponentsDefinition>
+    public class ComponentDefinitionsWrapper : OverLayerDefinitionsManager<MyObjectBuilder_ComponentDefinition, ComponentsDefinition>
 	{
 		#region "Constructors and Initializers"
 
@@ -67,44 +74,6 @@ namespace SEModAPI.API.Definitions
 
 		#endregion
 
-		#region "Properties"
-
-		new public bool Changed
-		{
-			get
-			{
-				foreach (var def in m_definitions)
-				{
-					if (def.Value.Changed)
-						return true;
-				}
-
-				return false;
-			}
-			set
-			{
-				base.Changed = value;
-			}
-		}
-
-		public MyObjectBuilder_ComponentDefinition[] RawDefinitions
-		{
-			get
-			{
-				MyObjectBuilder_ComponentDefinition[] temp = new MyObjectBuilder_ComponentDefinition[m_definitions.Count];
-				ComponentsDefinition[] definitionsArray = this.Definitions;
-
-				for (int i = 0; i < definitionsArray.Length; i++)
-				{
-					temp[i] = definitionsArray[i].Definition;
-				}
-
-				return temp;
-			}
-		}
-
-		#endregion
-
 		#region "Methods"
 
 		public void Save()
@@ -115,6 +84,21 @@ namespace SEModAPI.API.Definitions
 			m_configSerializer.SaveComponentsContentFile();
 		}
 
-		#endregion
+        protected override ComponentsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_ComponentDefinition definition)
+        {
+            return new ComponentsDefinition(definition);
+        }
+
+        protected override MyObjectBuilder_ComponentDefinition GetBaseTypeOf(ComponentsDefinition overLayer)
+        {
+            return overLayer.BaseDefinition;
+        }
+
+        protected override bool GetChangedState(ComponentsDefinition overLayer)
+        {
+            return overLayer.Changed;
+        }
+
+		#endregion    
 	}
 }

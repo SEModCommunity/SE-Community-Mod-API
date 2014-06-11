@@ -6,15 +6,22 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API.Definitions
 {
-	public class ConfigurationDefinition : BaseDefinition<MyObjectBuilder_Configuration>
+    public class ConfigurationDefinition : OverLayerDefinition<MyObjectBuilder_Configuration>
 	{
 		#region "Constructors and Initializers"
 
-		public ConfigurationDefinition(MyObjectBuilder_Configuration definition)
-			: base(definition)
-		{
-		}
+		public ConfigurationDefinition(MyObjectBuilder_Configuration definition): base(definition)
+		{}
 
 		#endregion
-	}
+
+        #region "Methods"
+
+        protected override string GetNameFrom(MyObjectBuilder_Configuration definition)
+        {
+            return null;
+        }
+
+        #endregion
+    }
 }
