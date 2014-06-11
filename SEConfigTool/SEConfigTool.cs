@@ -41,7 +41,7 @@ namespace SEConfigTool
 
 		#region Constructors and Initializers
 
-		public SEConfigTool()
+        public SEConfigTool()
         {
             InitializeComponent();
 
@@ -53,9 +53,9 @@ namespace SEConfigTool
 
 		#endregion
 
-		#region Form methods
+        #region Form methods
 
-		private void LoadSaveFile(FileInfo saveFileInfo)
+        private void LoadSaveFile(FileInfo saveFileInfo)
         {
             SaveFile save = new SaveFile(saveFileInfo.FullName, m_configSerializer);
 
@@ -289,7 +289,7 @@ namespace SEConfigTool
             }
         }
 
-		private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
+        private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
         {
             int index = LBX_BlocksConfiguration.SelectedIndex;
 

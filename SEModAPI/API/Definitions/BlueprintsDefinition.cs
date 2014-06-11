@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using SEModAPI.Support;
+﻿using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API.Definitions
 {
-	public class BlueprintsDefinition : BaseDefinition<MyObjectBuilder_BlueprintDefinition>
+	public class BlueprintsDefinition : OverLayerDefinition<MyObjectBuilder_BlueprintDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public BlueprintsDefinition(MyObjectBuilder_BlueprintDefinition definition)
-			: base(definition)
-		{
-		}
+		public BlueprintsDefinition(MyObjectBuilder_BlueprintDefinition definition): base(definition)
+		{}
 
 		#endregion
 
@@ -21,87 +15,67 @@ namespace SEModAPI.API.Definitions
 
 		public float BaseProductionTimeInSeconds
 		{
-			get { return m_definition.BaseProductionTimeInSeconds; }
+			get { return m_baseDefinition.BaseProductionTimeInSeconds; }
 			set
 			{
-				if (m_definition.BaseProductionTimeInSeconds == value) return;
-				m_definition.BaseProductionTimeInSeconds = value;
+				if (m_baseDefinition.BaseProductionTimeInSeconds == value) return;
+				m_baseDefinition.BaseProductionTimeInSeconds = value;
 				Changed = true;
 			}
 		}
 
 		public MyObjectBuilder_BlueprintDefinition.Item Result
 		{
-			get { return m_definition.Result; }
+			get { return m_baseDefinition.Result; }
 		}
 
 		public MyObjectBuilder_BlueprintDefinition.Item[] Prerequisites
 		{
-			get { return m_definition.Prerequisites; }
+			get { return m_baseDefinition.Prerequisites; }
 		}
 
 		#endregion
+
+        #region "Methods"
+
+	    protected override string GetNameFrom(MyObjectBuilder_BlueprintDefinition definition)
+	    {
+	        return definition.TypeId.ToString() + "_" + definition.SubtypeId.ToString();
+	    }
+
+        #endregion
 	}
 
-	public class BlueprintDefinitionsWrapper : BaseDefinitionsWrapper<MyObjectBuilder_BlueprintDefinition, BlueprintsDefinition>
-	{
-		#region "Constructors and Initializers"
+    public class BlueprintDefinitionsManager :OverLayerDefinitionsManager<MyObjectBuilder_BlueprintDefinition, BlueprintsDefinition>
+    {
+        #region "Constructors and Initializers"
 
-		public BlueprintDefinitionsWrapper(MyObjectBuilder_BlueprintDefinition[] definitions)
-			: base(definitions)
-		{
-		}
+        public BlueprintDefinitionsManager(MyObjectBuilder_BlueprintDefinition[] definitions): base(definitions)
+        {}
 
-		#endregion
+        #endregion
 
-		#region "Properties"
+        #region "Methods"
 
-		new public bool Changed
-		{
-			get
-			{
-				foreach (var def in m_definitions)
-				{
-					if (def.Value.Changed)
-						return true;
-				}
+        public void Save()
+        {
+        }
 
-				return false;
-			}
-			set
-			{
-				base.Changed = value;
-			}
-		}
+        protected override BlueprintsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_BlueprintDefinition definition)
+        {
+            return new BlueprintsDefinition(definition);
+        }
 
-		public MyObjectBuilder_BlueprintDefinition[] RawDefinitions
-		{
-			get
-			{
-				MyObjectBuilder_BlueprintDefinition[] temp = new MyObjectBuilder_BlueprintDefinition[m_definitions.Count];
-				BlueprintsDefinition[] definitionsArray = this.Definitions;
+        protected override MyObjectBuilder_BlueprintDefinition GetBaseTypeOf(BlueprintsDefinition overLayer)
+        {
+            return overLayer.BaseDefinition;
+        }
 
-				for (int i = 0; i < definitionsArray.Length; i++)
-				{
-					temp[i] = definitionsArray[i].Definition;
-				}
+        protected override bool GetChangedState(BlueprintsDefinition overLayer)
+        {
+            return overLayer.Changed;
+        }
 
-				return temp;
-			}
-		}
-
-		#endregion
-
-		#region "Methods"
-
-		public void Save()
-	{
-			if (!this.Changed) return;
-
-			m_configSerializer.BlueprintDefinitions = this.RawDefinitions;
-			m_configSerializer.SaveBlueprintsContentFile();
-		}
-
-		#endregion
-	}
+        #endregion  
+    }
 }
