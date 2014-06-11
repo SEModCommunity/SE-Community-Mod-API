@@ -92,8 +92,8 @@ namespace SEModAPI.API.Definitions
         {
             return definition.DisplayName;
         }
-        #endregion
-    }
+		#endregion
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,21 +111,32 @@ namespace SEModAPI.API.Definitions
         #region "Methods"
 
         protected override PhysicalItemsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_PhysicalItemDefinition definition)
-        {
+		{
             return new PhysicalItemsDefinition(definition);
-        }
+				}
 
         protected override MyObjectBuilder_PhysicalItemDefinition GetBaseTypeOf(PhysicalItemsDefinition overLayer)
-        {
+			{
             return overLayer.BaseDefinition;
-        }
+		}
 
         protected override bool GetChangedState(PhysicalItemsDefinition overLayer)
-        {
+				{
             return overLayer.Changed;
-        }
+		}
 
-        #endregion
-    }
+		#endregion
+		
+		#region "Methods"
 
+		public void Save()
+		{
+			if (!this.Changed) return;
+
+			m_configSerializer.PhysicalItemDefinitions = this.RawDefinitions;
+			m_configSerializer.SavePhysicalItemsContentFile();
+	}
+
+		#endregion
+	}
 }

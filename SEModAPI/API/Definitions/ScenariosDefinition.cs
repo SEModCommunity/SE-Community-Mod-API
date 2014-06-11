@@ -6,7 +6,15 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API.Definitions
 {
-	class ScenariosDefinition : BaseDefinition<MyObjectBuilder_ScenarioDefinition>
+	public class ScenariosDefinition : BaseDefinition<MyObjectBuilder_ScenarioDefinition>
 	{
+		#region "Constructors and Initializers"
+
+		public ScenariosDefinition(MyObjectBuilder_ScenarioDefinition definition)
+			: base(definition)
+		{
+		}
+
+		#endregion
 	}
 }

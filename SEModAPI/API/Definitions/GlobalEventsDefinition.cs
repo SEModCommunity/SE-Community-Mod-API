@@ -1,7 +1,7 @@
 ﻿using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI.API.Definitions;
 
-namespace SEModAPI.API
+namespace SEModAPI.API.Definitions
 {
 	public class GlobalEventsDefinition : OverLayerDefinition<MyObjectBuilder_GlobalEventDefinition>
 	{
@@ -99,6 +99,14 @@ namespace SEModAPI.API
         {
             return overLayer.Changed;
         }
+
+		public void Save()
+		{
+			if (!this.Changed) return;
+
+			m_configSerializer.GlobalEventDefinitions = this.RawDefinitions;
+			m_configSerializer.SaveGlobalEventsContentFile();
+		}
 
 		#endregion
 	}

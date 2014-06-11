@@ -1,7 +1,7 @@
 ﻿using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI.API.Definitions;
 
-namespace SEModAPI.API
+namespace SEModAPI.API.Definitions
 {
 	public class SpawnGroupDefinition : OverLayerDefinition<MyObjectBuilder_SpawnGroupDefinition>
 	{
@@ -14,7 +14,7 @@ namespace SEModAPI.API
 
 		#region "Properties"
 
-	    public float Frequency
+		public float Frequency
 		{
 			get { return m_baseDefinition.Frequency; }
 			set
@@ -35,12 +35,12 @@ namespace SEModAPI.API
         #region "Methods"
 
         protected override string GetNameFrom(MyObjectBuilder_SpawnGroupDefinition definition)
-        {
+		{
             return definition.TypeId.ToString();
-        }
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 
 	public class SpawnGroupPrefab : OverLayerDefinition<MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab>
 	{
@@ -102,19 +102,19 @@ namespace SEModAPI.API
         #region "Methods"
 
         protected override string GetNameFrom(MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab definition)
-	    {
+	{
 	        return definition.BeaconText;
-        }
+		}
 
-        #endregion
-    }
+		#endregion
+				}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public class SpawnGroupsDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_SpawnGroupDefinition, SpawnGroupDefinition>
-	{
+				{
 		#region "Constructors and Initializers"
 
 		public SpawnGroupsDefinitionsManager(MyObjectBuilder_SpawnGroupDefinition[] definitions): base(definitions)
@@ -125,19 +125,27 @@ namespace SEModAPI.API
 		#region "Methods"
 
         protected override SpawnGroupDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_SpawnGroupDefinition definition)
-        {
+				{
             return new SpawnGroupDefinition(definition);
-        }
+				}
 
         protected override MyObjectBuilder_SpawnGroupDefinition GetBaseTypeOf(SpawnGroupDefinition overLayer)
         {
             return overLayer.BaseDefinition;
-        }
+			}
 
         protected override bool GetChangedState(SpawnGroupDefinition overLayer)
         {
             return overLayer.Changed;
-        }
+		}
+
+		public void Save()
+		{
+			if (!this.Changed) return;
+
+			m_configSerializer.SpawnGroupDefinitions = this.RawDefinitions;
+			m_configSerializer.SaveSpawnGroupsContentFile();
+		}
 
 		#endregion
 	}
@@ -154,19 +162,29 @@ namespace SEModAPI.API
 		#region "Methods"
 
         protected override SpawnGroupPrefab CreateOverLayerSubTypeInstance(MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab definition)
-        {
+				{
             return new SpawnGroupPrefab(definition);
-        }
+				}
 
         protected override MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab GetBaseTypeOf(SpawnGroupPrefab overLayer)
-        {
+			{
             return overLayer.BaseDefinition;
-        }
+		}
 
-        protected override bool GetChangedState(SpawnGroupPrefab overLayer)
-        {
+		#endregion
+
+		#region "Methods"
+
+		public int IndexOf(SpawnGroupPrefab spawnGroup)
+		{
+			int index = 0;
+			bool foundMatch = false;
+			foreach (var def in m_definitions)
+			{
+				if (def.Value == spawnGroup)
+				{
             return overLayer.Changed;
-        }
+		}
 
 		#endregion
 	}

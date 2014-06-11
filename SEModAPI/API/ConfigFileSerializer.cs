@@ -1,13 +1,17 @@
 ﻿using Microsoft.Xml.Serialization.GeneratedAssembly;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Common.ObjectBuilders.VRageData;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+
 using SEModAPI.Support;
+
+using Sandbox.Common.ObjectBuilders;
+using Sandbox.Common.ObjectBuilders.Definitions;
+using Sandbox.Common.ObjectBuilders.VRageData;
+
 using VRageMath;
 
 namespace SEModAPI.API
@@ -174,65 +178,19 @@ namespace SEModAPI.API
         public MyObjectBuilder_VoxelMaterialDefinition[] VoxelMaterialDefinitions
         {
             get { return _voxelMaterialDefinitions.VoxelMaterials; }
+			set { _voxelMaterialDefinitions.VoxelMaterials = value; }
         }
 
         public MyObjectBuilder_BlueprintDefinition[] BlueprintDefinitions
         {
             get { return _blueprintDefinitions.Blueprints; }
+			set { _blueprintDefinitions.Blueprints = value; }
         }
 
         public MyObjectBuilder_HandItemDefinition[] HandItemDefinitions
         {
             get { return _handItemDefinitions.HandItems; }
-        }
-
-        #endregion
-
-        #region "Setters"
-
-        public void SetCubeBlockDefinitionsIndex(int index, MyObjectBuilder_CubeBlockDefinition cubeBlockDefinition)
-        {
-            if (index < _cubeBlockDefinitions.CubeBlocks.Length)
-            {
-                _cubeBlockDefinitions.CubeBlocks[index] = cubeBlockDefinition;
-            }
-        }
-
-        public void SetAmmoMagazinesDefinitionsIndex(int index, MyObjectBuilder_AmmoMagazineDefinition ammoMagazinesDefinition)
-        {
-            if (index < _ammoMagazineDefinitions.AmmoMagazines.Length)
-            {
-                _ammoMagazineDefinitions.AmmoMagazines[index] = ammoMagazinesDefinition;
-            }
-        }
-
-        public void SetContainerTypesDefinitionsIndex(int index, MyObjectBuilder_ContainerTypeDefinition definitions)
-        {
-            if (index < _containerTypeDefinitions.ContainerTypes.Length)
-            {
-                _containerTypeDefinitions.ContainerTypes[index] = definitions;
-            }
-        }
-
-        public void SetGlobalEventsDefinitions(MyObjectBuilder_GlobalEventDefinition[] definitions)
-        {
-            _globalEventDefinitions.GlobalEvents = definitions;
-        }
-
-        public void SetGlobalEventsDefinitionsIndex(int index, MyObjectBuilder_GlobalEventDefinition definitions)
-        {
-            if (index < _globalEventDefinitions.GlobalEvents.Length)
-            {
-                _globalEventDefinitions.GlobalEvents[index] = definitions;
-            }
-        }
-
-        public void SetGlobalEventsDefinitionsIndex(int index, MyObjectBuilder_SpawnGroupDefinition definitions)
-        {
-            if (index < _spawnGroupDefinitions.SpawnGroups.Length)
-            {
-                _spawnGroupDefinitions.SpawnGroups[index] = definitions;
-            }
+			set { _handItemDefinitions.HandItems = value; }
         }
 
         #endregion

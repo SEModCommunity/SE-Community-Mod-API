@@ -67,6 +67,7 @@
     <Compile Include="API\Definitions\OverLayerDefinition.cs" />
     <Compile Include="API\ConfigFileSerializer.cs" />
     <Compile Include="API\Definitions\BlueprintsDefinition.cs" />
+    <Compile Include="API\Definitions\ComponentsDefinition.cs" />
     <Compile Include="API\Definitions\ConfigurationDefinition.cs" />
     <Compile Include="API\Definitions\ContainerTypesDefinition.cs" />
     <Compile Include="API\Definitions\EnvironmentDefinition.cs" />

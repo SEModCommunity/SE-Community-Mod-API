@@ -6,7 +6,15 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API.Definitions
 {
-	class VoxelMaterialsDefinition : BaseDefinition<MyObjectBuilder_VoxelMaterialDefinition>
+	public class VoxelMaterialsDefinition : BaseDefinition<MyObjectBuilder_VoxelMaterialDefinition>
 	{
+		#region "Constructors and Initializers"
+
+		public VoxelMaterialsDefinition(MyObjectBuilder_VoxelMaterialDefinition definition)
+			: base(definition)
+		{
+		}
+
+		#endregion
 	}
 }

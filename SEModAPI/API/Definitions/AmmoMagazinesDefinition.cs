@@ -1,7 +1,7 @@
 ﻿using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI.API.Definitions;
 
-namespace SEModAPI.API
+namespace SEModAPI.API.Definitions
 {
     public class AmmoMagazinesDefinition : OverLayerDefinition<MyObjectBuilder_AmmoMagazineDefinition>
     {
@@ -66,7 +66,7 @@ namespace SEModAPI.API
         protected override string GetNameFrom(MyObjectBuilder_AmmoMagazineDefinition definition)
         {
             return definition.DisplayName;
-        }
+    }
 
         #endregion
     }
@@ -87,21 +87,32 @@ namespace SEModAPI.API
         #region "Methods"
 
         protected override AmmoMagazinesDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_AmmoMagazineDefinition definition)
-        {
+				{
             return new AmmoMagazinesDefinition(definition);
-        }
+				}
 
         protected override MyObjectBuilder_AmmoMagazineDefinition GetBaseTypeOf(AmmoMagazinesDefinition overLayer)
-        {
+			{
             return overLayer.BaseDefinition;
-        }
+		}
 
         protected override bool GetChangedState(AmmoMagazinesDefinition overLayer)
-        {
+				{
             return overLayer.Changed;
-        }
+		}
 
-        #endregion
+		#endregion
 
+		#region "Methods"
+
+		public void Save()
+		{
+			if (!this.Changed) return;
+
+			m_configSerializer.AmmoMagazineDefinitions = this.RawDefinitions;
+			m_configSerializer.SaveAmmoMagazinesContentFile();
+		}
+
+		#endregion
     }
 }
