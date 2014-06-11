@@ -8,7 +8,7 @@ namespace SEModAPI.API.Definitions
     {
         #region "Attributes"
 
-        private ContainerTypeItemsWrapper m_itemsWrapper;
+        private ContainerTypeItemsManager m_itemsManager;
 
         #endregion
 
@@ -16,7 +16,9 @@ namespace SEModAPI.API.Definitions
 
         public ContainerTypesDefinition(MyObjectBuilder_ContainerTypeDefinition myObjectBuilderDefinitionSubType)
             : base(myObjectBuilderDefinitionSubType)
-        { }
+        {
+			m_itemsManager = new ContainerTypeItemsManager(myObjectBuilderDefinitionSubType.Items);
+		}
 
         #endregion
 
@@ -26,7 +28,7 @@ namespace SEModAPI.API.Definitions
         {
             get
             {
-                foreach (var def in m_itemsWrapper.Definitions)
+				foreach (var def in m_itemsManager.Definitions)
                 {
                     if (def.Changed)
                         return true;
@@ -37,15 +39,6 @@ namespace SEModAPI.API.Definitions
             set
             {
                 base.Changed = value;
-            }
-        }
-
-        new public MyObjectBuilder_ContainerTypeDefinition Definition
-        {
-            get
-            {
-                m_baseDefinition.Items = m_itemsWrapper.RawDefinitions;
-                return m_definition;
             }
         }
 
@@ -88,7 +81,7 @@ namespace SEModAPI.API.Definitions
 
         public ContainerTypeItem[] Items
         {
-            get { return m_itemsWrapper.Definitions; }
+            get { return m_itemsManager.Definitions; }
         }
 
         #endregion
@@ -214,11 +207,11 @@ namespace SEModAPI.API.Definitions
         #endregion
     }
 
-    public class ContainerTypeItemsWrapper : OverLayerDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem, ContainerTypeItem>
+    public class ContainerTypeItemsManager : OverLayerDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem, ContainerTypeItem>
     {
         #region "Constructors and Initializers"
 
-        public ContainerTypeItemsWrapper(MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] definitions)
+        public ContainerTypeItemsManager(MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] definitions)
             : base(definitions)
         {
         }
@@ -242,6 +235,11 @@ namespace SEModAPI.API.Definitions
             return overLayer.Changed;
         }
 
-        #endregion
+		public override void Save()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		#endregion
     }
 }

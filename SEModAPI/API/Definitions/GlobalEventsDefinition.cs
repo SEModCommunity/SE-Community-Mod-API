@@ -3,7 +3,7 @@ using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API.Definitions
 {
-	public class GlobalEventsDefinition : OverLayerDefinition<MyObjectBuilder_GlobalEventDefinition>
+	public class GlobalEventsDefinition : ObjectOverLayerDefinition<MyObjectBuilder_GlobalEventDefinition>
 	{
 		#region "Constructors and Initializers"
 

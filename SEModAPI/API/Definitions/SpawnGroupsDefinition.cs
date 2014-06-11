@@ -4,18 +4,26 @@ using SEModAPI.API.Definitions;
 namespace SEModAPI.API.Definitions
 {
     public class SpawnGroupDefinition : OverLayerDefinition<MyObjectBuilder_SpawnGroupDefinition>
-    {
-        #region "Constructors and Initializers"
+	{
+		#region "Attributes"
 
-        public SpawnGroupDefinition(MyObjectBuilder_SpawnGroupDefinition myObjectBuilderDefinitionSubType)
+		private SpawnGroupPrefabsManager m_prefabsManager;
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public SpawnGroupDefinition(MyObjectBuilder_SpawnGroupDefinition myObjectBuilderDefinitionSubType)
             : base(myObjectBuilderDefinitionSubType)
-        { }
+        {
+			m_prefabsManager = new SpawnGroupPrefabsManager(myObjectBuilderDefinitionSubType.Prefabs);
+		}
 
         #endregion
 
         #region "Properties"
 
-        public float Frequency
+		public float Frequency
         {
             get { return m_baseDefinition.Frequency; }
             set
@@ -30,6 +38,11 @@ namespace SEModAPI.API.Definitions
         {
             get { return m_baseDefinition.Prefabs.Length; }
         }
+
+		public SpawnGroupPrefab[] Prefabs
+		{
+			get { return m_prefabsManager.Definitions; }
+		}
 
         #endregion
 
@@ -164,7 +177,6 @@ namespace SEModAPI.API.Definitions
 
         #region "Methods"
 
-
         protected override SpawnGroupPrefab CreateOverLayerSubTypeInstance(MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab definition)
         {
             return new SpawnGroupPrefab(definition);
@@ -179,6 +191,11 @@ namespace SEModAPI.API.Definitions
         {
             return overLayer.Changed;
         }
+
+		public override void Save()
+		{
+			throw new System.NotImplementedException();
+		}
 
         #endregion
     }

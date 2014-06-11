@@ -7,7 +7,7 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API.Definitions
 {
-    public class ComponentsDefinition : OverLayerDefinition<MyObjectBuilder_ComponentDefinition>
+	public class ComponentsDefinition : ObjectOverLayerDefinition<MyObjectBuilder_ComponentDefinition>
 	{
 		#region "Constructors and Initializers"
 
@@ -17,6 +17,61 @@ namespace SEModAPI.API.Definitions
 		#endregion
 
         #region "Properties"
+
+		public VRageMath.Vector3 Size
+		{
+			get { return m_baseDefinition.Size; }
+			set
+			{
+				if (m_baseDefinition.Size == value) return;
+				m_baseDefinition.Size = value;
+				Changed = true;
+			}
+		}
+
+		public float Mass
+		{
+			get { return m_baseDefinition.Mass; }
+			set
+			{
+				if (m_baseDefinition.Mass == value) return;
+				m_baseDefinition.Mass = value;
+				Changed = true;
+			}
+		}
+
+		public float Volume
+		{
+			get { return m_baseDefinition.Volume.Value; }
+			set
+			{
+				if (m_baseDefinition.Volume == value) return;
+				m_baseDefinition.Volume = value;
+				Changed = true;
+			}
+		}
+
+		public string Model
+		{
+			get { return m_baseDefinition.Model; }
+			set
+			{
+				if (m_baseDefinition.Model == value) return;
+				m_baseDefinition.Model = value;
+				Changed = true;
+			}
+		}
+
+		public string Icon
+		{
+			get { return m_baseDefinition.Icon; }
+			set
+			{
+				if (m_baseDefinition.Icon == value) return;
+				m_baseDefinition.Icon = value;
+				Changed = true;
+			}
+		}
 
 		public int MaxIntegrity
 		{
@@ -60,7 +115,7 @@ namespace SEModAPI.API.Definitions
 	{
 		#region "Constructors and Initializers"
 
-		public ComponentDefinitionsWrapper(MyObjectBuilder_ComponentDefinition[] definitions)
+		public ComponentDefinitionsManager(MyObjectBuilder_ComponentDefinition[] definitions)
 			: base(definitions)
 		{}
 

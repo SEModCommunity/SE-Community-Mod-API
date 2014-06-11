@@ -5,7 +5,7 @@ using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API.Definitions
 {
-    public class CubeBlockDefinition : OverLayerDefinition<MyObjectBuilder_CubeBlockDefinition>
+	public class CubeBlockDefinition : ObjectOverLayerDefinition<MyObjectBuilder_CubeBlockDefinition>
     {
 		#region "Constructors and Initializers"
 

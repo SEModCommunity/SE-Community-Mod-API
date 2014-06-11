@@ -3,7 +3,7 @@ using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API.Definitions
 {
-    public class AmmoMagazinesDefinition : OverLayerDefinition<MyObjectBuilder_AmmoMagazineDefinition>
+	public class AmmoMagazinesDefinition : ObjectOverLayerDefinition<MyObjectBuilder_AmmoMagazineDefinition>
     {
 		#region "Constructors and Initializers"
 
@@ -66,7 +66,7 @@ namespace SEModAPI.API.Definitions
         protected override string GetNameFrom(MyObjectBuilder_AmmoMagazineDefinition definition)
         {
             return definition.DisplayName;
-    }
+		}
 
         #endregion
     }

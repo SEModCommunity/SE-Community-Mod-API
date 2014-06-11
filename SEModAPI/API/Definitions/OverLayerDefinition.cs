@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API.Definitions
 {
@@ -41,7 +42,6 @@ namespace SEModAPI.API.Definitions
 
         #region "Methods"
 
-
         /// <summary>
         /// This template method should return the representative name of the sub type underlayed by a children
         /// </summary>
@@ -50,6 +50,43 @@ namespace SEModAPI.API.Definitions
         protected abstract string GetNameFrom(TMyObjectBuilder_Definitions_SubType definition);
 
         #endregion
+	}
+
+	public abstract class ObjectOverLayerDefinition<TMyObjectBuilder_Definitions_SubType> : OverLayerDefinition<TMyObjectBuilder_Definitions_SubType> where TMyObjectBuilder_Definitions_SubType : MyObjectBuilder_DefinitionBase
+	{
+		#region "Constructors and Initializers"
+
+		protected ObjectOverLayerDefinition(TMyObjectBuilder_Definitions_SubType baseDefinition)
+			: base(baseDefinition)
+		{}
+
+		#endregion
+
+		#region "Properties"
+
+		public SerializableDefinitionId Id
+		{
+			get { return m_baseDefinition.Id; }
+			set
+			{
+				if (m_baseDefinition.Id.ToString() == value.ToString()) return;
+				m_baseDefinition.Id = value;
+				Changed = true;
+			}
+		}
+
+		public string Description
+		{
+			get { return m_baseDefinition.Description; }
+			set
+			{
+				if (m_baseDefinition.Description == value) return;
+				m_baseDefinition.Description = value;
+				Changed = true;
+			}
+		}
+
+		#endregion
 	}
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +213,7 @@ namespace SEModAPI.API.Definitions
 		/// <summary>
 		/// This template method is used to save the definitions out to the file
 		/// </summary>
-		protected abstract void Save();
+		public abstract void Save();
 
         #endregion
 	}
