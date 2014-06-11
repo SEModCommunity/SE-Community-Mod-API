@@ -151,7 +151,13 @@ namespace SEModAPI.API.Definitions
 
         protected override bool GetChangedState(SpawnGroupDefinition overLayer)
         {
-            return overLayer.Changed;
+			foreach (var def in overLayer.Prefabs)
+			{
+				if (def.Changed)
+					return true;
+			}
+
+			return overLayer.Changed;
         }
 
 		public override void Save()
@@ -189,7 +195,7 @@ namespace SEModAPI.API.Definitions
 
         protected override bool GetChangedState(SpawnGroupPrefab overLayer)
         {
-            return overLayer.Changed;
+			return overLayer.Changed;
         }
 
 		public override void Save()

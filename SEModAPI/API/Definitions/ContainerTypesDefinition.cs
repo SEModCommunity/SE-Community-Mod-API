@@ -204,7 +204,13 @@ namespace SEModAPI.API.Definitions
 
         protected override bool GetChangedState(ContainerTypesDefinition overLayer)
         {
-            return overLayer.Changed;
+			foreach (var def in overLayer.Items)
+			{
+				if (def.Changed)
+					return true;
+			}
+
+			return overLayer.Changed;
         }
 
 		public override void Save()
