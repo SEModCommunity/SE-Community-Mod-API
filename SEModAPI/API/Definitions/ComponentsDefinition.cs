@@ -67,11 +67,11 @@ namespace SEModAPI.API.Definitions
 
 		#region "Methods"
 
-		public void Save()
+        protected override void Save()
 		{
 			if (!this.Changed) return;
 
-			m_configSerializer.ComponentDefinitions = this.RawDefinitions;
+			m_configSerializer.ComponentDefinitions = this.ExtractBaseDefinitions().ToArray();
 			m_configSerializer.SaveComponentsContentFile();
 		}
 

@@ -203,7 +203,7 @@ namespace SEModAPI.API.Definitions
             return overLayer.Changed;
         }
 
-        public override void Save()
+        protected override void Save()
         {
             if (!this.Changed) return;
 
@@ -240,6 +240,14 @@ namespace SEModAPI.API.Definitions
         protected override bool GetChangedState(ContainerTypeItem overLayer)
         {
             return overLayer.Changed;
+        }
+
+        protected override void Save()
+        {
+            if (!this.Changed) return;
+
+            m_configSerializer.ContainerTypeDefinitions = this.ExtractBaseDefinitions().ToArray();
+            m_configSerializer.SaveGlobalEventsContentFile();
         }
 
         #endregion

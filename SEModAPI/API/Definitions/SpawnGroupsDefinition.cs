@@ -141,7 +141,7 @@ namespace SEModAPI.API.Definitions
             return overLayer.Changed;
         }
 
-        public override void Save()
+        protected override void Save()
         {
             if (!this.Changed) return;
 
@@ -178,6 +178,14 @@ namespace SEModAPI.API.Definitions
         protected override bool GetChangedState(SpawnGroupPrefab overLayer)
         {
             return overLayer.Changed;
+        }
+
+        protected override void Save()
+        {
+            if (!this.Changed) return;
+
+            m_configSerializer.SpawnGroupDefinitions = this.ExtractBaseDefinitions().ToArray();
+            m_configSerializer.SpawnGroupDefinitions();
         }
 
         #endregion
