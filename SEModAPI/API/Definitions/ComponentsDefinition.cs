@@ -7,7 +7,7 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API.Definitions
 {
-	class ComponentsDefinition : PhysicalItemsDefinition<MyObjectBuilder_ComponentDefinition>
+	public class ComponentsDefinition : PhysicalItemsDefinition<MyObjectBuilder_ComponentDefinition>
 	{
 		#region "Constructors and Initializers"
 

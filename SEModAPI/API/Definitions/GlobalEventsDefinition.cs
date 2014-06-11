@@ -4,7 +4,7 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI.Support;
 
-namespace SEModAPI.API
+namespace SEModAPI.API.Definitions
 {
 	public class GlobalEventsDefinition : ObjectBuilderDefinition<MyObjectBuilder_GlobalEventDefinition>
 	{

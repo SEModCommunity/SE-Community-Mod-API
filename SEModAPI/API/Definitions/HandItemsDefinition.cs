@@ -6,7 +6,15 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API.Definitions
 {
-	class HandItemsDefinition : BaseDefinition<MyObjectBuilder_HandItemDefinition>
+	public class HandItemsDefinition : BaseDefinition<MyObjectBuilder_HandItemDefinition>
 	{
+		#region "Constructors and Initializers"
+
+		public HandItemsDefinition(MyObjectBuilder_HandItemDefinition definition)
+			: base(definition)
+		{
+		}
+
+		#endregion
 	}
 }

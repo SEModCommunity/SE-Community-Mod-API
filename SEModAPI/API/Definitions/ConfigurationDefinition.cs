@@ -6,7 +6,15 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API.Definitions
 {
-	class ConfigurationDefinition : BaseDefinition<MyObjectBuilder_Configuration>
+	public class ConfigurationDefinition : BaseDefinition<MyObjectBuilder_Configuration>
 	{
+		#region "Constructors and Initializers"
+
+		public ConfigurationDefinition(MyObjectBuilder_Configuration definition)
+			: base(definition)
+		{
+		}
+
+		#endregion
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 
-namespace SEModAPI.API
+namespace SEModAPI.API.Definitions
 {
 	public class CubeBlockDefinition : ObjectBuilderDefinition<MyObjectBuilder_CubeBlockDefinition>
     {

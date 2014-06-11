@@ -5,7 +5,7 @@ using System.Text;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 
-namespace SEModAPI.API
+namespace SEModAPI.API.Definitions
 {
 	/// <summary>
 	/// Base definition that wraps around an object
