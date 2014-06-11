@@ -152,7 +152,7 @@ namespace SEModAPI.API
             set { _globalEventDefinitions.GlobalEvents = value; }
         }
 
-        public MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab[] SpawnGroupDefinitions
+        public MyObjectBuilder_SpawnGroupDefinition[] SpawnGroupDefinitions
         {
             get { return _spawnGroupDefinitions.SpawnGroups; }
             set { _spawnGroupDefinitions.SpawnGroups = value; }

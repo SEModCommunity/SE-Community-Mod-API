@@ -17,6 +17,17 @@ namespace SEModAPI.API.Definitions
 
 		#region "Properties"
 
+		new public string Name
+		{
+			get { return m_baseDefinition.Name; }
+			set
+			{
+				if (m_baseDefinition.Name == value) return;
+				m_baseDefinition.Name = value;
+				Changed = true;
+			}
+		}
+
 		public string MinedOre
 		{
 			get { return m_baseDefinition.MinedOre; }

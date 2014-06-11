@@ -75,6 +75,17 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		new public string Name
+		{
+			get { return m_baseDefinition.DisplayName; }
+			set
+			{
+				if (m_baseDefinition.DisplayName == value) return;
+				m_baseDefinition.DisplayName = value;
+				Changed = true;
+			}
+		}
+
 		public string Description
 		{
 			get { return m_baseDefinition.Description; }

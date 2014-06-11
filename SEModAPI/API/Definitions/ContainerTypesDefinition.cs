@@ -42,7 +42,18 @@ namespace SEModAPI.API.Definitions
             }
         }
 
-        public MyObjectBuilderTypeEnum TypeId
+		new public string Name
+		{
+			get { return m_baseDefinition.Name; }
+			set
+			{
+				if (m_baseDefinition.Name == value) return;
+				m_baseDefinition.Name = value;
+				Changed = true;
+			}
+		}
+
+		public MyObjectBuilderTypeEnum TypeId
         {
             get { return m_baseDefinition.TypeId; }
         }
@@ -196,7 +207,7 @@ namespace SEModAPI.API.Definitions
             return overLayer.Changed;
         }
 
-        protected override void Save()
+		public override void Save()
         {
             if (!this.Changed) return;
 

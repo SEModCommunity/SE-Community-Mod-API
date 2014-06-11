@@ -545,7 +545,6 @@ namespace SEConfigTool
 
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(index);
 
-			TBX_ConfigSpawnGroupName.Text = spawnGroup.Name;
 			TBX_ConfigSpawnGroupPrefabCount.Text = spawnGroup.PrefabCount.ToString();
 			TBX_ConfigSpawnGroupFrequency.Text = spawnGroup.Frequency.ToString();
 
@@ -577,7 +576,9 @@ namespace SEConfigTool
 		private void BTN_ConfigSpawnGroupApply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_SpawnGroupConfiguration.SelectedIndex;
+
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(index);
+
 			spawnGroup.Frequency = Convert.ToSingle(TBX_ConfigSpawnGroupFrequency.Text, m_numberFormatInfo);
 
 			BTN_ConfigSpawnGroupApply.Visible = false;

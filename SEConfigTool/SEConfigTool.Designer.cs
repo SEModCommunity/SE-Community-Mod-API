@@ -150,11 +150,9 @@ namespace SEConfigTool
 			this.TP_SpawnGroupConfig_Details_Information = new System.Windows.Forms.TabPage();
 			this.splitContainer16 = new System.Windows.Forms.SplitContainer();
 			this.label25 = new System.Windows.Forms.Label();
-			this.label27 = new System.Windows.Forms.Label();
 			this.label28 = new System.Windows.Forms.Label();
 			this.BTN_ConfigSpawnGroupApply = new System.Windows.Forms.Button();
 			this.TBX_ConfigSpawnGroupPrefabCount = new System.Windows.Forms.TextBox();
-			this.TBX_ConfigSpawnGroupName = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigSpawnGroupFrequency = new System.Windows.Forms.TextBox();
 			this.TP_SpawnGroupConfig_Details_Prefabs = new System.Windows.Forms.TabPage();
 			this.splitContainer17 = new System.Windows.Forms.SplitContainer();
@@ -236,13 +234,13 @@ namespace SEConfigTool
 			this.LBX_BlueprintConfig = new System.Windows.Forms.ListBox();
 			this.GBX_BlueprintsConfig_Details = new System.Windows.Forms.GroupBox();
 			this.splitContainer29 = new System.Windows.Forms.SplitContainer();
+			this.label55 = new System.Windows.Forms.Label();
 			this.label62 = new System.Windows.Forms.Label();
 			this.label63 = new System.Windows.Forms.Label();
+			this.TBX_BlueprintConfig_Details_Result = new System.Windows.Forms.TextBox();
 			this.LBX_BlueprintConfig_Details_Prerequisites = new System.Windows.Forms.ListBox();
 			this.BTN_BlueprintConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_BlueprintConfig_Details_BaseProductionTime = new System.Windows.Forms.TextBox();
-			this.TBX_BlueprintConfig_Details_Result = new System.Windows.Forms.TextBox();
-			this.label55 = new System.Windows.Forms.Label();
 			this.VoxelMaterialConfiguration = new System.Windows.Forms.TabPage();
 			this.splitContainer30 = new System.Windows.Forms.SplitContainer();
 			this.BTN_VoxelMaterialsConfig_Reload = new System.Windows.Forms.Button();
@@ -252,29 +250,29 @@ namespace SEConfigTool
 			this.LBX_VoxelMaterialsConfig = new System.Windows.Forms.ListBox();
 			this.GBX_VoxelMaterialsConfig_Details = new System.Windows.Forms.GroupBox();
 			this.splitContainer32 = new System.Windows.Forms.SplitContainer();
+			this.label68 = new System.Windows.Forms.Label();
+			this.label67 = new System.Windows.Forms.Label();
+			this.label66 = new System.Windows.Forms.Label();
+			this.label65 = new System.Windows.Forms.Label();
+			this.label64 = new System.Windows.Forms.Label();
+			this.label61 = new System.Windows.Forms.Label();
+			this.label60 = new System.Windows.Forms.Label();
+			this.label59 = new System.Windows.Forms.Label();
+			this.label57 = new System.Windows.Forms.Label();
 			this.label56 = new System.Windows.Forms.Label();
 			this.label58 = new System.Windows.Forms.Label();
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_AssetName = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_IsRare = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested = new System.Windows.Forms.TextBox();
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_VoxelMaterialsConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_IsRare = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_DamageRatio = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_AssetName = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_SpecularPower = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess = new System.Windows.Forms.TextBox();
-			this.label57 = new System.Windows.Forms.Label();
-			this.label59 = new System.Windows.Forms.Label();
-			this.label60 = new System.Windows.Forms.Label();
-			this.label61 = new System.Windows.Forms.Label();
-			this.label64 = new System.Windows.Forms.Label();
-			this.label65 = new System.Windows.Forms.Label();
-			this.label66 = new System.Windows.Forms.Label();
-			this.label67 = new System.Windows.Forms.Label();
-			this.label68 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 			this.splitContainer5.Panel1.SuspendLayout();
 			this.splitContainer5.Panel2.SuspendLayout();
@@ -1806,7 +1804,6 @@ namespace SEConfigTool
 			// splitContainer16.Panel1
 			// 
 			this.splitContainer16.Panel1.Controls.Add(this.label25);
-			this.splitContainer16.Panel1.Controls.Add(this.label27);
 			this.splitContainer16.Panel1.Controls.Add(this.label28);
 			this.splitContainer16.Panel1MinSize = 150;
 			// 
@@ -1814,7 +1811,6 @@ namespace SEConfigTool
 			// 
 			this.splitContainer16.Panel2.Controls.Add(this.BTN_ConfigSpawnGroupApply);
 			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupPrefabCount);
-			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupName);
 			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupFrequency);
 			this.splitContainer16.Size = new System.Drawing.Size(566, 331);
 			this.splitContainer16.SplitterDistance = 150;
@@ -1823,25 +1819,16 @@ namespace SEConfigTool
 			// label25
 			// 
 			this.label25.AutoSize = true;
-			this.label25.Location = new System.Drawing.Point(3, 32);
+			this.label25.Location = new System.Drawing.Point(3, 6);
 			this.label25.Name = "label25";
 			this.label25.Size = new System.Drawing.Size(72, 13);
 			this.label25.TabIndex = 6;
 			this.label25.Text = "Prefab Count:";
 			// 
-			// label27
-			// 
-			this.label27.AutoSize = true;
-			this.label27.Location = new System.Drawing.Point(3, 6);
-			this.label27.Name = "label27";
-			this.label27.Size = new System.Drawing.Size(38, 13);
-			this.label27.TabIndex = 0;
-			this.label27.Text = "Name:";
-			// 
 			// label28
 			// 
 			this.label28.AutoSize = true;
-			this.label28.Location = new System.Drawing.Point(3, 58);
+			this.label28.Location = new System.Drawing.Point(3, 32);
 			this.label28.Name = "label28";
 			this.label28.Size = new System.Drawing.Size(60, 13);
 			this.label28.TabIndex = 2;
@@ -1860,23 +1847,15 @@ namespace SEConfigTool
 			// 
 			// TBX_ConfigSpawnGroupPrefabCount
 			// 
-			this.TBX_ConfigSpawnGroupPrefabCount.Location = new System.Drawing.Point(3, 29);
+			this.TBX_ConfigSpawnGroupPrefabCount.Location = new System.Drawing.Point(3, 3);
 			this.TBX_ConfigSpawnGroupPrefabCount.Name = "TBX_ConfigSpawnGroupPrefabCount";
 			this.TBX_ConfigSpawnGroupPrefabCount.ReadOnly = true;
 			this.TBX_ConfigSpawnGroupPrefabCount.Size = new System.Drawing.Size(150, 20);
 			this.TBX_ConfigSpawnGroupPrefabCount.TabIndex = 7;
 			// 
-			// TBX_ConfigSpawnGroupName
-			// 
-			this.TBX_ConfigSpawnGroupName.Location = new System.Drawing.Point(3, 3);
-			this.TBX_ConfigSpawnGroupName.Name = "TBX_ConfigSpawnGroupName";
-			this.TBX_ConfigSpawnGroupName.ReadOnly = true;
-			this.TBX_ConfigSpawnGroupName.Size = new System.Drawing.Size(150, 20);
-			this.TBX_ConfigSpawnGroupName.TabIndex = 5;
-			// 
 			// TBX_ConfigSpawnGroupFrequency
 			// 
-			this.TBX_ConfigSpawnGroupFrequency.Location = new System.Drawing.Point(3, 55);
+			this.TBX_ConfigSpawnGroupFrequency.Location = new System.Drawing.Point(3, 29);
 			this.TBX_ConfigSpawnGroupFrequency.Name = "TBX_ConfigSpawnGroupFrequency";
 			this.TBX_ConfigSpawnGroupFrequency.Size = new System.Drawing.Size(150, 20);
 			this.TBX_ConfigSpawnGroupFrequency.TabIndex = 4;
@@ -2776,6 +2755,15 @@ namespace SEConfigTool
 			this.splitContainer29.SplitterDistance = 150;
 			this.splitContainer29.TabIndex = 4;
 			// 
+			// label55
+			// 
+			this.label55.AutoSize = true;
+			this.label55.Location = new System.Drawing.Point(3, 6);
+			this.label55.Name = "label55";
+			this.label55.Size = new System.Drawing.Size(40, 13);
+			this.label55.TabIndex = 7;
+			this.label55.Text = "Result:";
+			// 
 			// label62
 			// 
 			this.label62.AutoSize = true;
@@ -2793,6 +2781,14 @@ namespace SEConfigTool
 			this.label63.Size = new System.Drawing.Size(114, 13);
 			this.label63.TabIndex = 0;
 			this.label63.Text = "Base Production Time:";
+			// 
+			// TBX_BlueprintConfig_Details_Result
+			// 
+			this.TBX_BlueprintConfig_Details_Result.Location = new System.Drawing.Point(3, 3);
+			this.TBX_BlueprintConfig_Details_Result.Name = "TBX_BlueprintConfig_Details_Result";
+			this.TBX_BlueprintConfig_Details_Result.ReadOnly = true;
+			this.TBX_BlueprintConfig_Details_Result.Size = new System.Drawing.Size(150, 20);
+			this.TBX_BlueprintConfig_Details_Result.TabIndex = 10;
 			// 
 			// LBX_BlueprintConfig_Details_Prerequisites
 			// 
@@ -2820,23 +2816,6 @@ namespace SEConfigTool
 			this.TBX_BlueprintConfig_Details_BaseProductionTime.Size = new System.Drawing.Size(150, 20);
 			this.TBX_BlueprintConfig_Details_BaseProductionTime.TabIndex = 5;
 			this.TBX_BlueprintConfig_Details_BaseProductionTime.TextChanged += new System.EventHandler(this.TBX_BlueprintConfig_Details_TextChanged);
-			// 
-			// TBX_BlueprintConfig_Details_Result
-			// 
-			this.TBX_BlueprintConfig_Details_Result.Location = new System.Drawing.Point(3, 3);
-			this.TBX_BlueprintConfig_Details_Result.Name = "TBX_BlueprintConfig_Details_Result";
-			this.TBX_BlueprintConfig_Details_Result.ReadOnly = true;
-			this.TBX_BlueprintConfig_Details_Result.Size = new System.Drawing.Size(150, 20);
-			this.TBX_BlueprintConfig_Details_Result.TabIndex = 10;
-			// 
-			// label55
-			// 
-			this.label55.AutoSize = true;
-			this.label55.Location = new System.Drawing.Point(3, 6);
-			this.label55.Name = "label55";
-			this.label55.Size = new System.Drawing.Size(40, 13);
-			this.label55.TabIndex = 7;
-			this.label55.Text = "Result:";
 			// 
 			// VoxelMaterialConfiguration
 			// 
@@ -2980,6 +2959,87 @@ namespace SEConfigTool
 			this.splitContainer32.SplitterDistance = 150;
 			this.splitContainer32.TabIndex = 4;
 			// 
+			// label68
+			// 
+			this.label68.AutoSize = true;
+			this.label68.Location = new System.Drawing.Point(3, 266);
+			this.label68.Name = "label68";
+			this.label68.Size = new System.Drawing.Size(100, 13);
+			this.label68.TabIndex = 16;
+			this.label68.Text = "Specular Shininess:";
+			// 
+			// label67
+			// 
+			this.label67.AutoSize = true;
+			this.label67.Location = new System.Drawing.Point(3, 240);
+			this.label67.Name = "label67";
+			this.label67.Size = new System.Drawing.Size(85, 13);
+			this.label67.TabIndex = 15;
+			this.label67.Text = "Specular Power:";
+			// 
+			// label66
+			// 
+			this.label66.AutoSize = true;
+			this.label66.Location = new System.Drawing.Point(3, 214);
+			this.label66.Name = "label66";
+			this.label66.Size = new System.Drawing.Size(97, 13);
+			this.label66.TabIndex = 14;
+			this.label66.Text = "Use Two Textures:";
+			// 
+			// label65
+			// 
+			this.label65.AutoSize = true;
+			this.label65.Location = new System.Drawing.Point(3, 188);
+			this.label65.Name = "label65";
+			this.label65.Size = new System.Drawing.Size(67, 13);
+			this.label65.TabIndex = 13;
+			this.label65.Text = "Asset Name:";
+			// 
+			// label64
+			// 
+			this.label64.AutoSize = true;
+			this.label64.Location = new System.Drawing.Point(3, 162);
+			this.label64.Name = "label64";
+			this.label64.Size = new System.Drawing.Size(78, 13);
+			this.label64.TabIndex = 12;
+			this.label64.Text = "Damage Ratio:";
+			// 
+			// label61
+			// 
+			this.label61.AutoSize = true;
+			this.label61.Location = new System.Drawing.Point(3, 136);
+			this.label61.Name = "label61";
+			this.label61.Size = new System.Drawing.Size(90, 13);
+			this.label61.TabIndex = 11;
+			this.label61.Text = "Is Indesctructible:";
+			// 
+			// label60
+			// 
+			this.label60.AutoSize = true;
+			this.label60.Location = new System.Drawing.Point(3, 110);
+			this.label60.Name = "label60";
+			this.label60.Size = new System.Drawing.Size(44, 13);
+			this.label60.TabIndex = 10;
+			this.label60.Text = "Is Rare:";
+			// 
+			// label59
+			// 
+			this.label59.AutoSize = true;
+			this.label59.Location = new System.Drawing.Point(3, 84);
+			this.label59.Name = "label59";
+			this.label59.Size = new System.Drawing.Size(97, 13);
+			this.label59.TabIndex = 9;
+			this.label59.Text = "Can Be Harvested:";
+			// 
+			// label57
+			// 
+			this.label57.AutoSize = true;
+			this.label57.Location = new System.Drawing.Point(3, 58);
+			this.label57.Name = "label57";
+			this.label57.Size = new System.Drawing.Size(87, 13);
+			this.label57.TabIndex = 8;
+			this.label57.Text = "Mined Ore Ratio:";
+			// 
 			// label56
 			// 
 			this.label56.AutoSize = true;
@@ -2997,6 +3057,78 @@ namespace SEConfigTool
 			this.label58.Size = new System.Drawing.Size(59, 13);
 			this.label58.TabIndex = 0;
 			this.label58.Text = "Mined Ore:";
+			// 
+			// TBX_VoxelMaterialsConfig_Details_SpecularShininess
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Location = new System.Drawing.Point(3, 263);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Name = "TBX_VoxelMaterialsConfig_Details_SpecularShininess";
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.TabIndex = 19;
+			// 
+			// TBX_VoxelMaterialsConfig_Details_SpecularPower
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Location = new System.Drawing.Point(3, 237);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Name = "TBX_VoxelMaterialsConfig_Details_SpecularPower";
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.TabIndex = 18;
+			// 
+			// TBX_VoxelMaterialsConfig_Details_UseTwoTextures
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Location = new System.Drawing.Point(3, 211);
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Name = "TBX_VoxelMaterialsConfig_Details_UseTwoTextures";
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.TabIndex = 17;
+			// 
+			// TBX_VoxelMaterialsConfig_Details_AssetName
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.Location = new System.Drawing.Point(3, 185);
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.Name = "TBX_VoxelMaterialsConfig_Details_AssetName";
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.TabIndex = 16;
+			// 
+			// TBX_VoxelMaterialsConfig_Details_DamageRatio
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Location = new System.Drawing.Point(3, 159);
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Name = "TBX_VoxelMaterialsConfig_Details_DamageRatio";
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.TabIndex = 15;
+			// 
+			// TBX_VoxelMaterialsConfig_Details_IsIndestructible
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Location = new System.Drawing.Point(3, 133);
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Name = "TBX_VoxelMaterialsConfig_Details_IsIndestructible";
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.TabIndex = 14;
+			// 
+			// TBX_VoxelMaterialsConfig_Details_IsRare
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.Location = new System.Drawing.Point(3, 107);
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.Name = "TBX_VoxelMaterialsConfig_Details_IsRare";
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.TabIndex = 13;
+			// 
+			// TBX_VoxelMaterialsConfig_Details_CanBeHarvested
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Location = new System.Drawing.Point(3, 81);
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Name = "TBX_VoxelMaterialsConfig_Details_CanBeHarvested";
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.TabIndex = 12;
+			// 
+			// TBX_VoxelMaterialsConfig_Details_MinedOreRatio
+			// 
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Location = new System.Drawing.Point(3, 55);
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Name = "TBX_VoxelMaterialsConfig_Details_MinedOreRatio";
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.ReadOnly = true;
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Size = new System.Drawing.Size(150, 20);
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.TabIndex = 11;
 			// 
 			// TBX_VoxelMaterialsConfig_Details_Name
 			// 
@@ -3024,159 +3156,6 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TabIndex = 5;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_MinedOreRatio
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Location = new System.Drawing.Point(3, 55);
-			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Name = "TBX_VoxelMaterialsConfig_Details_MinedOreRatio";
-			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.TabIndex = 11;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_CanBeHarvested
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Location = new System.Drawing.Point(3, 81);
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Name = "TBX_VoxelMaterialsConfig_Details_CanBeHarvested";
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.TabIndex = 12;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_IsRare
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.Location = new System.Drawing.Point(3, 107);
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.Name = "TBX_VoxelMaterialsConfig_Details_IsRare";
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.TabIndex = 13;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_IsIndestructible
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Location = new System.Drawing.Point(3, 133);
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Name = "TBX_VoxelMaterialsConfig_Details_IsIndestructible";
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.TabIndex = 14;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_DamageRatio
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Location = new System.Drawing.Point(3, 159);
-			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Name = "TBX_VoxelMaterialsConfig_Details_DamageRatio";
-			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.TabIndex = 15;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_AssetName
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_AssetName.Location = new System.Drawing.Point(3, 185);
-			this.TBX_VoxelMaterialsConfig_Details_AssetName.Name = "TBX_VoxelMaterialsConfig_Details_AssetName";
-			this.TBX_VoxelMaterialsConfig_Details_AssetName.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_AssetName.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_AssetName.TabIndex = 16;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_UseTwoTextures
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Location = new System.Drawing.Point(3, 211);
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Name = "TBX_VoxelMaterialsConfig_Details_UseTwoTextures";
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.TabIndex = 17;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_SpecularPower
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Location = new System.Drawing.Point(3, 237);
-			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Name = "TBX_VoxelMaterialsConfig_Details_SpecularPower";
-			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.TabIndex = 18;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_SpecularShininess
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Location = new System.Drawing.Point(3, 263);
-			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Name = "TBX_VoxelMaterialsConfig_Details_SpecularShininess";
-			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.TabIndex = 19;
-			// 
-			// label57
-			// 
-			this.label57.AutoSize = true;
-			this.label57.Location = new System.Drawing.Point(3, 58);
-			this.label57.Name = "label57";
-			this.label57.Size = new System.Drawing.Size(87, 13);
-			this.label57.TabIndex = 8;
-			this.label57.Text = "Mined Ore Ratio:";
-			// 
-			// label59
-			// 
-			this.label59.AutoSize = true;
-			this.label59.Location = new System.Drawing.Point(3, 84);
-			this.label59.Name = "label59";
-			this.label59.Size = new System.Drawing.Size(97, 13);
-			this.label59.TabIndex = 9;
-			this.label59.Text = "Can Be Harvested:";
-			// 
-			// label60
-			// 
-			this.label60.AutoSize = true;
-			this.label60.Location = new System.Drawing.Point(3, 110);
-			this.label60.Name = "label60";
-			this.label60.Size = new System.Drawing.Size(44, 13);
-			this.label60.TabIndex = 10;
-			this.label60.Text = "Is Rare:";
-			// 
-			// label61
-			// 
-			this.label61.AutoSize = true;
-			this.label61.Location = new System.Drawing.Point(3, 136);
-			this.label61.Name = "label61";
-			this.label61.Size = new System.Drawing.Size(90, 13);
-			this.label61.TabIndex = 11;
-			this.label61.Text = "Is Indesctructible:";
-			// 
-			// label64
-			// 
-			this.label64.AutoSize = true;
-			this.label64.Location = new System.Drawing.Point(3, 162);
-			this.label64.Name = "label64";
-			this.label64.Size = new System.Drawing.Size(78, 13);
-			this.label64.TabIndex = 12;
-			this.label64.Text = "Damage Ratio:";
-			// 
-			// label65
-			// 
-			this.label65.AutoSize = true;
-			this.label65.Location = new System.Drawing.Point(3, 188);
-			this.label65.Name = "label65";
-			this.label65.Size = new System.Drawing.Size(67, 13);
-			this.label65.TabIndex = 13;
-			this.label65.Text = "Asset Name:";
-			// 
-			// label66
-			// 
-			this.label66.AutoSize = true;
-			this.label66.Location = new System.Drawing.Point(3, 214);
-			this.label66.Name = "label66";
-			this.label66.Size = new System.Drawing.Size(97, 13);
-			this.label66.TabIndex = 14;
-			this.label66.Text = "Use Two Textures:";
-			// 
-			// label67
-			// 
-			this.label67.AutoSize = true;
-			this.label67.Location = new System.Drawing.Point(3, 240);
-			this.label67.Name = "label67";
-			this.label67.Size = new System.Drawing.Size(85, 13);
-			this.label67.TabIndex = 15;
-			this.label67.Text = "Specular Power:";
-			// 
-			// label68
-			// 
-			this.label68.AutoSize = true;
-			this.label68.Location = new System.Drawing.Point(3, 266);
-			this.label68.Name = "label68";
-			this.label68.Size = new System.Drawing.Size(100, 13);
-			this.label68.TabIndex = 16;
-			this.label68.Text = "Specular Shininess:";
 			// 
 			// SEConfigTool
 			// 
@@ -3502,10 +3481,8 @@ namespace SEConfigTool
 		private System.Windows.Forms.TabPage TP_SpawnGroupConfig_Details_Information;
 		private System.Windows.Forms.SplitContainer splitContainer16;
 		private System.Windows.Forms.Label label25;
-		private System.Windows.Forms.Label label27;
 		private System.Windows.Forms.Label label28;
 		private System.Windows.Forms.TextBox TBX_ConfigSpawnGroupPrefabCount;
-		private System.Windows.Forms.TextBox TBX_ConfigSpawnGroupName;
 		private System.Windows.Forms.TextBox TBX_ConfigSpawnGroupFrequency;
 		private System.Windows.Forms.TabPage TP_SpawnGroupConfig_Details_Prefabs;
 		private System.Windows.Forms.SplitContainer splitContainer17;
