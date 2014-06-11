@@ -6,6 +6,7 @@ using System.IO;
 using SEModAPI;
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
+using SEModAPI.API.SaveData;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -63,22 +64,70 @@ namespace SEConfigTool
 			TBX_SavedGame_Properties_Position.Text = save.Position.ToString();
 			TBX_SavedGame_Properties_AppVersion.Text = save.AppVersion.ToString();
 
-			foreach (MyObjectBuilder_GlobalEventBase currentEvent in save.Events.Events)
+			foreach (Event currentEvent in save.Events)
 			{
-				LBX_SavedGame_Events.Items.Add(currentEvent.EventType.ToString());
+				LBX_SavedGame_Events.Items.Add(currentEvent.Name);
 			}
 
-			foreach (MyObjectBuilder_EntityBase currentObject in save.Objects)
+			TRV_SavedGame_Objects.BeginUpdate();
+			TRV_SavedGame_Objects.Nodes.Add("Cube Grids");
+			TRV_SavedGame_Objects.Nodes.Add("Voxel Maps");
+			TRV_SavedGame_Objects.Nodes.Add("Floating Objects");
+			TRV_SavedGame_Objects.Nodes.Add("Meteors");
+			TRV_SavedGame_Objects.Nodes.Add("Unknown");
+			TRV_SavedGame_Objects.EndUpdate();
+
+			foreach (CubeGrid cubeGrid in save.CubeGrids)
             {
-                float x = currentObject.PositionAndOrientation.Value.Position.x;
-                float y = currentObject.PositionAndOrientation.Value.Position.y;
-                float z = currentObject.PositionAndOrientation.Value.Position.z;
+				float x = cubeGrid.PositionAndOrientation.Position.x;
+				float y = cubeGrid.PositionAndOrientation.Position.y;
+				float z = cubeGrid.PositionAndOrientation.Position.z;
 
                 float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-                LBX_SavedGame_Objects.Items.Add(currentObject.TypeId.ToString() + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
             }
-        }
+			foreach (VoxelMap voxelMap in save.VoxelMaps)
+			{
+				float x = voxelMap.PositionAndOrientation.Position.x;
+				float y = voxelMap.PositionAndOrientation.Position.y;
+				float z = voxelMap.PositionAndOrientation.Position.z;
+
+				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
+
+				TRV_SavedGame_Objects.Nodes[1].Nodes.Add(voxelMap.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+			}
+			foreach (FloatingObject floatingObject in save.FloatingObjects)
+			{
+				float x = floatingObject.PositionAndOrientation.Position.x;
+				float y = floatingObject.PositionAndOrientation.Position.y;
+				float z = floatingObject.PositionAndOrientation.Position.z;
+
+				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
+
+				TRV_SavedGame_Objects.Nodes[2].Nodes.Add(floatingObject.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+			}
+			foreach (Meteor meteor in save.Meteors)
+			{
+				float x = meteor.PositionAndOrientation.Position.x;
+				float y = meteor.PositionAndOrientation.Position.y;
+				float z = meteor.PositionAndOrientation.Position.z;
+
+				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
+
+				TRV_SavedGame_Objects.Nodes[3].Nodes.Add(meteor.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+			}
+			foreach (SectorObject<MyObjectBuilder_EntityBase> unknown in save.UnknownObjects)
+			{
+				float x = unknown.PositionAndOrientation.Position.x;
+				float y = unknown.PositionAndOrientation.Position.y;
+				float z = unknown.PositionAndOrientation.Position.z;
+
+				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
+
+				TRV_SavedGame_Objects.Nodes[4].Nodes.Add(unknown.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+			}
+		}
 
         private void FillBlocksConfigurationListBox()
         {

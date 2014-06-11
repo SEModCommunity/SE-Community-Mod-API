@@ -84,7 +84,11 @@
     <Compile Include="API\Definitions\TransparentMaterialsDefinition.cs" />
     <Compile Include="API\Definitions\VoxelMaterialsDefinition.cs" />
     <Compile Include="API\GameInstallation.cs" />
+    <Compile Include="API\SaveData\Event.cs" />
+    <Compile Include="API\SaveData\FloatingObject.cs" />
+    <Compile Include="API\SaveData\Meteor.cs" />
     <Compile Include="API\SaveData\Sector.cs" />
+    <Compile Include="API\SaveData\SectorObject.cs" />
     <Compile Include="API\SaveData\VoxelMap.cs" />
     <Compile Include="API\SaveFileSerializer.cs" />
     <Compile Include="API\SEModAPIExceptions.cs" />

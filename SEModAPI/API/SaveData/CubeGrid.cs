@@ -8,7 +8,7 @@ using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API.SaveData
 {
-	public class CubeGrid : OverLayerDefinition<MyObjectBuilder_CubeGrid>
+	public class CubeGrid : SectorObject<MyObjectBuilder_CubeGrid>
 	{
 		#region "Constructors and Initializers"
 
@@ -19,44 +19,6 @@ namespace SEModAPI.API.SaveData
 		#endregion
 
 		#region "Properties"
-
-		public string Name
-		{
-			get { return this.GetNameFrom(m_baseDefinition); }
-		}
-
-		public long EntityId
-		{
-			get { return m_baseDefinition.EntityId; }
-			set
-			{
-				if (m_baseDefinition.EntityId == value) return;
-				m_baseDefinition.EntityId = value;
-				Changed = true;
-			}
-		}
-
-		public MyPersistentEntityFlags2 PersistentFlags
-		{
-			get { return m_baseDefinition.PersistentFlags; }
-			set
-			{
-				if (m_baseDefinition.PersistentFlags == value) return;
-				m_baseDefinition.PersistentFlags = value;
-				Changed = true;
-			}
-		}
-
-		public MyPositionAndOrientation PositionAndOrientation
-		{
-			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault(); }
-			set
-			{
-				if (m_baseDefinition.PositionAndOrientation.ToString() == value.ToString()) return;
-				m_baseDefinition.PositionAndOrientation = value;
-				Changed = true;
-			}
-		}
 
 		public MyCubeSize GridSizeEnum
 		{
