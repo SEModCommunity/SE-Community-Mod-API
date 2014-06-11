@@ -27,6 +27,7 @@ namespace SEConfigTool
 		private SpawnGroupsDefinitionsWrapper m_spawnGroupsDefinitionsWrapper;
 		private PhysicalItemDefinitionsWrapper<MyObjectBuilder_PhysicalItemDefinition> m_physicalItemsDefinitionsWrapper;
 		private ComponentDefinitionsWrapper m_componentsDefinitionsWrapper;
+		private BlueprintDefinitionsWrapper m_blueprintsDefinitionsWrapper;
 
         private bool m_currentlyFillingConfigurationListBox;
         private bool m_currentlySelecting;
@@ -171,6 +172,21 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		private void FillBlueprintConfigurationListBox()
+		{
+			m_currentlyFillingConfigurationListBox = true;
+
+			m_blueprintsDefinitionsWrapper = new BlueprintDefinitionsWrapper(m_configSerializer.BlueprintDefinitions);
+			LBX_BlueprintConfig.Items.Clear();
+			foreach (var definition in m_blueprintsDefinitionsWrapper.Definitions)
+			{
+				//TODO - Find a better way to uniquely label the spawn groups
+				LBX_BlueprintConfig.Items.Add("Blueprint " + LBX_BlueprintConfig.Items.Count.ToString());
+			}
+
+			m_currentlyFillingConfigurationListBox = false;
+		}
+
 		#endregion
 
         #region Form events
@@ -187,6 +203,7 @@ namespace SEConfigTool
 			FillSpawnGroupConfigurationListBox();
 			FillPhysicalItemConfigurationListBox();
 			FillComponentConfigurationListBox();
+			FillBlueprintConfigurationListBox();
         }
 
         private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
@@ -713,6 +730,59 @@ namespace SEConfigTool
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
 				BTN_ComponentConfig_Details_Apply.Visible = true;
+			}
+		}
+
+		#endregion
+
+		#region Blueprints
+
+		private void LBX_BlueprintConfig_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int index = LBX_BlueprintConfig.SelectedIndex;
+
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsWrapper.GetDefinitionOf(index);
+
+			TBX_BlueprintConfig_Details_Result.Text = blueprint.Result.TypeId.ToString() + "/" + blueprint.Result.SubtypeId;
+			TBX_BlueprintConfig_Details_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString();
+
+			LBX_BlueprintConfig_Details_Prerequisites.Items.Clear();
+			foreach (var prereq in blueprint.Prerequisites)
+			{
+				LBX_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.TypeId.ToString() + "/" + prereq.SubtypeId);
+			}
+
+			m_currentlySelecting = false;
+			BTN_BlueprintConfig_Details_Apply.Visible = false;
+		}
+
+		private void BTN_BlueprintConfig_Reload_Click(object sender, EventArgs e)
+		{
+			FillBlueprintConfigurationListBox();
+		}
+
+		private void BTN_BlueprintConfig_Save_Click(object sender, EventArgs e)
+		{
+			m_blueprintsDefinitionsWrapper.Save();
+		}
+
+		private void BTN_BlueprintConfig_Details_Apply_Click(object sender, EventArgs e)
+		{
+			int index = LBX_BlueprintConfig.SelectedIndex;
+
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsWrapper.GetDefinitionOf(index);
+
+			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TBX_BlueprintConfig_Details_BaseProductionTime.Text, m_numberFormatInfo);
+
+			BTN_BlueprintConfig_Details_Apply.Visible = false;
+		}
+
+		private void TBX_BlueprintConfig_Details_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_BlueprintConfig_Details_Apply.Visible = true;
 			}
 		}
 
