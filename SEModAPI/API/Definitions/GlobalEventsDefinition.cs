@@ -27,7 +27,7 @@ namespace SEModAPI.API.Definitions
 
 		public long MinActivation
 		{
-			get { return m_baseDefinition.MinActivationTimeMs.Value; }
+			get { return m_baseDefinition.MinActivationTimeMs.GetValueOrDefault(0); }
             set
             {
 				if (m_baseDefinition.MinActivationTimeMs == value) return;
@@ -38,7 +38,7 @@ namespace SEModAPI.API.Definitions
 
 		public long MaxActivation
 		{
-			get { return m_baseDefinition.MaxActivationTimeMs.Value; }
+			get { return m_baseDefinition.MaxActivationTimeMs.GetValueOrDefault(0); }
             set
             {
 				if (m_baseDefinition.MaxActivationTimeMs == value) return;
@@ -49,7 +49,7 @@ namespace SEModAPI.API.Definitions
 
 		public long FirstActivation
 		{
-			get { return m_baseDefinition.FirstActivationTimeMs.Value; }
+			get { return m_baseDefinition.FirstActivationTimeMs.GetValueOrDefault(0); }
             set
             {
 				if (m_baseDefinition.FirstActivationTimeMs == value) return;

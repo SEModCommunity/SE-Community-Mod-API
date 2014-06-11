@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Sandbox.Common.ObjectBuilders.Definitions;
+
 using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API.Definitions
@@ -60,7 +62,7 @@ namespace SEModAPI.API.Definitions
         protected override string GetNameFrom(MyObjectBuilder_CubeBlockDefinition definition)
         {
             return definition.BlockPairName;
-    }
+		}
 
         #endregion
     }

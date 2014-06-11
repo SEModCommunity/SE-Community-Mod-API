@@ -18,179 +18,208 @@ namespace SEModAPI.API
 {
     public class ConfigFileSerializer
     {
-        #region "Attributes"
+		#region "Attributes"
 
-        //Basic Definitions
-        private MyObjectBuilder_Definitions _ammoMagazineDefinitions;
-        private MyObjectBuilder_Definitions _cubeBlockDefinitions;
-        private MyObjectBuilder_Definitions _componentDefinitions;
-        private MyObjectBuilder_Definitions _blueprintDefinitions;
+		//Basic Definitions
+		private MyObjectBuilder_Definitions m_ammoMagazineDefinitions;
+		private MyObjectBuilder_Definitions m_blueprintDefinitions;
+		private MyObjectBuilder_Definitions m_cubeBlockDefinitions;
+		private MyObjectBuilder_Definitions m_componentDefinitions;
 
-        //Item Definitions
-        private MyObjectBuilder_Definitions _handItemDefinitions;
-        private MyObjectBuilder_Definitions _physicalItemDefinitions;
+		//Item Definitions
+		private MyObjectBuilder_Definitions m_handItemDefinitions;
+		private MyObjectBuilder_Definitions m_physicalItemDefinitions;
 
-        //Material Definitions
-        private MyObjectBuilder_Definitions _transparentMaterialDefinitions;
-        private MyObjectBuilder_Definitions _voxelMaterialDefinitions;
+		//Material Definitions
+		private MyObjectBuilder_Definitions m_transparentMaterialDefinitions;
+		private MyObjectBuilder_Definitions m_voxelMaterialDefinitions;
 
-        //Advanced Definitions
-        private MyObjectBuilder_Definitions _containerTypeDefinitions;
-        private MyObjectBuilder_Definitions _globalEventDefinitions;
-        private MyObjectBuilder_Definitions _spawnGroupDefinitions;
+		//Advanced Definitions
+		private MyObjectBuilder_Definitions m_containerTypeDefinitions;
+		private MyObjectBuilder_Definitions m_globalEventDefinitions;
+		private MyObjectBuilder_Definitions m_spawnGroupDefinitions;
 
-        private Dictionary<string, byte> _materialIndex;
+		//Misc Definitions
+		private MyObjectBuilder_Definitions m_configurationDefinitions;
+		private MyObjectBuilder_Definitions m_environmentDefinitions;
+		private MyObjectBuilder_Definitions m_scenariosDefinitions;
 
-        private readonly GameInstallationInfo _gameInstallation;
+		private Dictionary<string, byte> m_materialIndex;
 
-        #region "CubeOrientations"
+		private readonly GameInstallationInfo m_gameInstallation;
 
-        public readonly Dictionary<CubeType, SerializableBlockOrientation> CubeOrientations = new Dictionary<CubeType, SerializableBlockOrientation>()
-        {
-            // TODO: Remove the Cube Armor orientation, as these appear to work fine with the Generic.
-            {CubeType.Cube, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},
+		#region "CubeOrientations"
 
-            // TODO: Remove the Slope Armor orientations, as these appear to work fine with the Generic.
-            {CubeType.SlopeCenterBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Forward)}, // -90 around X
-            {CubeType.SlopeRightBackCenter, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Left)},
-            {CubeType.SlopeLeftBackCenter, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.SlopeCenterBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)}, // no rotation
-            {CubeType.SlopeRightCenterTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Left)},
-            {CubeType.SlopeLeftCenterTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.SlopeRightCenterBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Left)}, // +90 around Z
-            {CubeType.SlopeLeftCenterBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Right)}, // -90 around Z
-            {CubeType.SlopeCenterFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Down)}, // 180 around X
-            {CubeType.SlopeRightFrontCenter, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Left)},
-            {CubeType.SlopeLeftFrontCenter, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.SlopeCenterFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Backward)},// +90 around X
+		public readonly Dictionary<CubeType, SerializableBlockOrientation> CubeOrientations = new Dictionary<CubeType, SerializableBlockOrientation>()
+		{
+			// TODO: Remove the Cube Armor orientation, as these appear to work fine with the Generic.
+			{CubeType.Cube, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},
 
-             // Probably got the names of these all messed up in relation to their actual orientation.
-            {CubeType.NormalCornerLeftFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.NormalCornerRightFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Down)}, // 180 around X
-            {CubeType.NormalCornerLeftBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.NormalCornerRightBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Forward)}, // -90 around X
-            {CubeType.NormalCornerLeftFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.NormalCornerRightFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Backward)},// +90 around X 
-            {CubeType.NormalCornerLeftBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Right)},// -90 around Z
-            {CubeType.NormalCornerRightBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},  // no rotation
+			// TODO: Remove the Slope Armor orientations, as these appear to work fine with the Generic.
+			{CubeType.SlopeCenterBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Forward)}, // -90 around X
+			{CubeType.SlopeRightBackCenter, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Left)},
+			{CubeType.SlopeLeftBackCenter, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.SlopeCenterBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)}, // no rotation
+			{CubeType.SlopeRightCenterTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Left)},
+			{CubeType.SlopeLeftCenterTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.SlopeRightCenterBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Left)}, // +90 around Z
+			{CubeType.SlopeLeftCenterBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Right)}, // -90 around Z
+			{CubeType.SlopeCenterFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Down)}, // 180 around X
+			{CubeType.SlopeRightFrontCenter, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Left)},
+			{CubeType.SlopeLeftFrontCenter, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.SlopeCenterFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Backward)},// +90 around X
 
-            {CubeType.InverseCornerLeftFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.InverseCornerRightFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Down)}, // 180 around X
-            {CubeType.InverseCornerLeftBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.InverseCornerRightBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Forward)},  // -90 around X
-            {CubeType.InverseCornerLeftFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.InverseCornerRightFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Backward)}, // +90 around X
-            {CubeType.InverseCornerLeftBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Right)}, // -90 around Z
-            {CubeType.InverseCornerRightBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},  // no rotation
+				// Probably got the names of these all messed up in relation to their actual orientation.
+			{CubeType.NormalCornerLeftFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.NormalCornerRightFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Down)}, // 180 around X
+			{CubeType.NormalCornerLeftBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.NormalCornerRightBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Forward)}, // -90 around X
+			{CubeType.NormalCornerLeftFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.NormalCornerRightFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Backward)},// +90 around X 
+			{CubeType.NormalCornerLeftBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Right)},// -90 around Z
+			{CubeType.NormalCornerRightBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},  // no rotation
 
-            // Generic, which seems to work for everything but Corner armor blocks.
-            {CubeType.Axis24_Backward_Down, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Down)},
-            {CubeType.Axis24_Backward_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Left)},
-            {CubeType.Axis24_Backward_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.Axis24_Backward_Up, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Up)},
-            {CubeType.Axis24_Down_Backward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Backward)},
-            {CubeType.Axis24_Down_Forward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Forward)},
-            {CubeType.Axis24_Down_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Left)},
-            {CubeType.Axis24_Down_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.Axis24_Forward_Down, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Down)},
-            {CubeType.Axis24_Forward_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Left)},
-            {CubeType.Axis24_Forward_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Right)},
-            {CubeType.Axis24_Forward_Up, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},
-            {CubeType.Axis24_Left_Backward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Left, VRageMath.Base6Directions.Direction.Backward)},
-            {CubeType.Axis24_Left_Down, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Left, VRageMath.Base6Directions.Direction.Down)},
-            {CubeType.Axis24_Left_Forward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Left, VRageMath.Base6Directions.Direction.Forward)},
-            {CubeType.Axis24_Left_Up, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Left, VRageMath.Base6Directions.Direction.Up)},
-            {CubeType.Axis24_Right_Backward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Right, VRageMath.Base6Directions.Direction.Backward)},
-            {CubeType.Axis24_Right_Down, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Right, VRageMath.Base6Directions.Direction.Down)},
-            {CubeType.Axis24_Right_Forward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Right, VRageMath.Base6Directions.Direction.Forward)},
-            {CubeType.Axis24_Right_Up, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Right, VRageMath.Base6Directions.Direction.Up)},
-            {CubeType.Axis24_Up_Backward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Backward)},
-            {CubeType.Axis24_Up_Forward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Forward)},
-            {CubeType.Axis24_Up_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Left)},
-            {CubeType.Axis24_Up_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
-        };
+			{CubeType.InverseCornerLeftFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.InverseCornerRightFrontTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Down)}, // 180 around X
+			{CubeType.InverseCornerLeftBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.InverseCornerRightBackTop, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Forward)},  // -90 around X
+			{CubeType.InverseCornerLeftFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.InverseCornerRightFrontBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Backward)}, // +90 around X
+			{CubeType.InverseCornerLeftBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Right)}, // -90 around Z
+			{CubeType.InverseCornerRightBackBottom, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},  // no rotation
 
-        #endregion
+			// Generic, which seems to work for everything but Corner armor blocks.
+			{CubeType.Axis24_Backward_Down, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Down)},
+			{CubeType.Axis24_Backward_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Left)},
+			{CubeType.Axis24_Backward_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.Axis24_Backward_Up, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Backward, VRageMath.Base6Directions.Direction.Up)},
+			{CubeType.Axis24_Down_Backward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Backward)},
+			{CubeType.Axis24_Down_Forward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Forward)},
+			{CubeType.Axis24_Down_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Left)},
+			{CubeType.Axis24_Down_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Down, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.Axis24_Forward_Down, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Down)},
+			{CubeType.Axis24_Forward_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Left)},
+			{CubeType.Axis24_Forward_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Right)},
+			{CubeType.Axis24_Forward_Up, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Forward, VRageMath.Base6Directions.Direction.Up)},
+			{CubeType.Axis24_Left_Backward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Left, VRageMath.Base6Directions.Direction.Backward)},
+			{CubeType.Axis24_Left_Down, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Left, VRageMath.Base6Directions.Direction.Down)},
+			{CubeType.Axis24_Left_Forward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Left, VRageMath.Base6Directions.Direction.Forward)},
+			{CubeType.Axis24_Left_Up, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Left, VRageMath.Base6Directions.Direction.Up)},
+			{CubeType.Axis24_Right_Backward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Right, VRageMath.Base6Directions.Direction.Backward)},
+			{CubeType.Axis24_Right_Down, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Right, VRageMath.Base6Directions.Direction.Down)},
+			{CubeType.Axis24_Right_Forward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Right, VRageMath.Base6Directions.Direction.Forward)},
+			{CubeType.Axis24_Right_Up, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Right, VRageMath.Base6Directions.Direction.Up)},
+			{CubeType.Axis24_Up_Backward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Backward)},
+			{CubeType.Axis24_Up_Forward, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Forward)},
+			{CubeType.Axis24_Up_Left, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Left)},
+			{CubeType.Axis24_Up_Right, new SerializableBlockOrientation(VRageMath.Base6Directions.Direction.Up, VRageMath.Base6Directions.Direction.Right)},
+		};
 
-        #endregion
+		#endregion
+
+		#endregion
 
         #region "Constructors & Initializers"
 
         public ConfigFileSerializer()
         {
             //Prepare game installation configuration
-            _gameInstallation = new GameInstallationInfo();
+            m_gameInstallation = new GameInstallationInfo();
             // Dynamically read all definitions as soon as the SpaceEngineersAPI class is first invoked.
-            ReadCubeBlockDefinitions();
+            ReadConfigDefinitions();
         }
 
         #endregion
 
         #region "Properties"
 
-        public MyObjectBuilder_CubeBlockDefinition[] CubeBlockDefinitions
+		public MyObjectBuilder_AmmoMagazineDefinition[] AmmoMagazineDefinitions
+		{
+			get { return m_ammoMagazineDefinitions.AmmoMagazines; }
+			set { m_ammoMagazineDefinitions.AmmoMagazines = value; }
+		}
+
+		public MyObjectBuilder_BlueprintDefinition[] BlueprintDefinitions
+		{
+			get { return m_blueprintDefinitions.Blueprints; }
+			set { m_blueprintDefinitions.Blueprints = value; }
+		}
+
+		public MyObjectBuilder_ComponentDefinition[] ComponentDefinitions
+		{
+			get { return m_componentDefinitions.Components; }
+			set { m_componentDefinitions.Components = value; }
+		}
+
+		public MyObjectBuilder_CubeBlockDefinition[] CubeBlockDefinitions
         {
-            get { return _cubeBlockDefinitions.CubeBlocks; }
-            set { _cubeBlockDefinitions.CubeBlocks = value; }
+            get { return m_cubeBlockDefinitions.CubeBlocks; }
+            set { m_cubeBlockDefinitions.CubeBlocks = value; }
         }
 
-        public MyObjectBuilder_AmmoMagazineDefinition[] AmmoMagazineDefinitions
-        {
-            get { return _ammoMagazineDefinitions.AmmoMagazines; }
-            set { _ammoMagazineDefinitions.AmmoMagazines = value; }
-        }
+		public MyObjectBuilder_HandItemDefinition[] HandItemDefinitions
+		{
+			get { return m_handItemDefinitions.HandItems; }
+			set { m_handItemDefinitions.HandItems = value; }
+		}
 
-        public MyObjectBuilder_ContainerTypeDefinition[] ContainerTypeDefinitions
+		public MyObjectBuilder_PhysicalItemDefinition[] PhysicalItemDefinitions
+		{
+			get { return m_physicalItemDefinitions.PhysicalItems; }
+			set { m_physicalItemDefinitions.PhysicalItems = value; }
+		}
+
+		public MyObjectBuilder_TransparentMaterial[] TransparentMaterialDefinitions
+		{
+			get { return m_transparentMaterialDefinitions.TransparentMaterials; }
+			set { m_transparentMaterialDefinitions.TransparentMaterials = value; }
+		}
+
+		public MyObjectBuilder_VoxelMaterialDefinition[] VoxelMaterialDefinitions
+		{
+			get { return m_voxelMaterialDefinitions.VoxelMaterials; }
+			set { m_voxelMaterialDefinitions.VoxelMaterials = value; }
+		}
+
+		public MyObjectBuilder_ContainerTypeDefinition[] ContainerTypeDefinitions
         {
-            get { return _containerTypeDefinitions.ContainerTypes; }
-            set { _containerTypeDefinitions.ContainerTypes = value; }
+            get { return m_containerTypeDefinitions.ContainerTypes; }
+            set { m_containerTypeDefinitions.ContainerTypes = value; }
         }
 
         public MyObjectBuilder_GlobalEventDefinition[] GlobalEventDefinitions
         {
-            get { return _globalEventDefinitions.GlobalEvents; }
-            set { _globalEventDefinitions.GlobalEvents = value; }
+            get { return m_globalEventDefinitions.GlobalEvents; }
+            set { m_globalEventDefinitions.GlobalEvents = value; }
         }
 
         public MyObjectBuilder_SpawnGroupDefinition[] SpawnGroupDefinitions
         {
-            get { return _spawnGroupDefinitions.SpawnGroups; }
-            set { _spawnGroupDefinitions.SpawnGroups = value; }
+            get { return m_spawnGroupDefinitions.SpawnGroups; }
+            set { m_spawnGroupDefinitions.SpawnGroups = value; }
         }
 
-        public MyBlockPosition[] CubeBlockPositions
-        {
-            get { return _cubeBlockDefinitions.BlockPositions; }
-        }
+		public MyObjectBuilder_Configuration ConfigurationDefinition
+		{
+			get { return m_configurationDefinitions.Configuration; }
+			set { m_configurationDefinitions.Configuration = value; }
+		}
 
-        public MyObjectBuilder_ComponentDefinition[] ComponentDefinitions
-        {
-            get { return _componentDefinitions.Components; }
-			set { _componentDefinitions.Components = value; }
-        }
+		public MyObjectBuilder_EnvironmentDefinition EnvironmentDefinition
+		{
+			get { return m_environmentDefinitions.Environment; }
+			set { m_environmentDefinitions.Environment = value; }
+		}
 
-        public MyObjectBuilder_PhysicalItemDefinition[] PhysicalItemDefinitions
-        {
-            get { return _physicalItemDefinitions.PhysicalItems; }
-			set { _physicalItemDefinitions.PhysicalItems = value; }
-        }
+		public MyObjectBuilder_ScenarioDefinition[] ScenarioDefinitions
+		{
+			get { return m_scenariosDefinitions.Scenarios; }
+			set { m_scenariosDefinitions.Scenarios = value; }
+		}
 
-        public MyObjectBuilder_VoxelMaterialDefinition[] VoxelMaterialDefinitions
+		public MyBlockPosition[] CubeBlockPositions
         {
-            get { return _voxelMaterialDefinitions.VoxelMaterials; }
-			set { _voxelMaterialDefinitions.VoxelMaterials = value; }
-        }
-
-        public MyObjectBuilder_BlueprintDefinition[] BlueprintDefinitions
-        {
-            get { return _blueprintDefinitions.Blueprints; }
-			set { _blueprintDefinitions.Blueprints = value; }
-        }
-
-        public MyObjectBuilder_HandItemDefinition[] HandItemDefinitions
-        {
-            get { return _handItemDefinitions.HandItems; }
-			set { _handItemDefinitions.HandItems = value; }
+            get { return m_cubeBlockDefinitions.BlockPositions; }
         }
 
         #endregion
@@ -349,7 +378,7 @@ namespace SEModAPI.API
             {
                 foreach (var component in cubeBlockDefinition.Components)
                 {
-                    mass += _componentDefinitions.Components.Where(c => c.Id.SubtypeId == component.Subtype).Sum(c => c.Mass) * component.Count;
+                    mass += m_componentDefinitions.Components.Where(c => c.Id.SubtypeId == component.Subtype).Sum(c => c.Mass) * component.Count;
                 }
             }
 
@@ -359,7 +388,7 @@ namespace SEModAPI.API
         public void AccumulateCubeBlueprintRequirements(string subType, MyObjectBuilderTypeEnum typeId, decimal amount, Dictionary<string, MyObjectBuilder_BlueprintDefinition.Item> requirements, out TimeSpan timeTaken)
         {
             TimeSpan time = new TimeSpan();
-            var bp = _blueprintDefinitions.Blueprints.FirstOrDefault(b => b.Result.SubtypeId == subType && b.Result.TypeId == typeId);
+            var bp = m_blueprintDefinitions.Blueprints.FirstOrDefault(b => b.Result.SubtypeId == subType && b.Result.TypeId == typeId);
             if (bp != null)
             {
                 foreach (var item in bp.Prerequisites)
@@ -392,25 +421,25 @@ namespace SEModAPI.API
 
         public MyObjectBuilder_DefinitionBase GetDefinition(MyObjectBuilderTypeEnum typeId, string subTypeId)
         {
-            var cube = _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
+            var cube = m_cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
             if (cube != null)
             {
                 return cube;
             }
 
-            var item = _physicalItemDefinitions.PhysicalItems.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
+            var item = m_physicalItemDefinitions.PhysicalItems.FirstOrDefault(d => d.Id.TypeId == typeId && d.Id.SubtypeId == subTypeId);
             if (item != null)
             {
                 return item;
             }
 
-            var component = _componentDefinitions.Components.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
+            var component = m_componentDefinitions.Components.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
             if (component != null)
             {
                 return component;
             }
 
-            var magazine = _ammoMagazineDefinitions.AmmoMagazines.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
+            var magazine = m_ammoMagazineDefinitions.AmmoMagazines.FirstOrDefault(c => c.Id.TypeId == typeId && c.Id.SubtypeId == subTypeId);
             if (magazine != null)
             {
                 return magazine;
@@ -446,43 +475,43 @@ namespace SEModAPI.API
 
         public IList<MyObjectBuilder_VoxelMaterialDefinition> GetMaterialList()
         {
-            return _voxelMaterialDefinitions.VoxelMaterials;
+            return m_voxelMaterialDefinitions.VoxelMaterials;
         }
 
         public byte GetMaterialIndex(string materialName)
         {
-            if (_materialIndex.ContainsKey(materialName))
-                return _materialIndex[materialName];
+            if (m_materialIndex.ContainsKey(materialName))
+                return m_materialIndex[materialName];
             else
             {
-                var material = _voxelMaterialDefinitions.VoxelMaterials.FirstOrDefault(m => m.Name == materialName);
-                var index = (byte)_voxelMaterialDefinitions.VoxelMaterials.ToList().IndexOf(material);
-                _materialIndex.Add(materialName, index);
+                var material = m_voxelMaterialDefinitions.VoxelMaterials.FirstOrDefault(m => m.Name == materialName);
+                var index = (byte)m_voxelMaterialDefinitions.VoxelMaterials.ToList().IndexOf(material);
+                m_materialIndex.Add(materialName, index);
                 return index;
             }
         }
 
         public string GetMaterialName(byte materialIndex, byte defaultMaterialIndex)
         {
-            if (materialIndex <= _voxelMaterialDefinitions.VoxelMaterials.Length)
-                return _voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
+            if (materialIndex <= m_voxelMaterialDefinitions.VoxelMaterials.Length)
+                return m_voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
             else
-                return _voxelMaterialDefinitions.VoxelMaterials[defaultMaterialIndex].Name;
+                return m_voxelMaterialDefinitions.VoxelMaterials[defaultMaterialIndex].Name;
         }
 
         public string GetMaterialName(byte materialIndex)
         {
-            return _voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
+            return m_voxelMaterialDefinitions.VoxelMaterials[materialIndex].Name;
         }
 
         public MyObjectBuilder_CubeBlockDefinition GetCubeDefinition(MyObjectBuilderTypeEnum typeId, MyCubeSize cubeSize, string subtypeId)
         {
             if (string.IsNullOrEmpty(subtypeId))
             {
-                return _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.CubeSize == cubeSize && d.Id.TypeId == typeId);
+                return m_cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.CubeSize == cubeSize && d.Id.TypeId == typeId);
             }
 
-            return _cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.SubtypeId == subtypeId || (d.Variants != null && d.Variants.Any(v => subtypeId == d.Id.SubtypeId + v.Color)));
+            return m_cubeBlockDefinitions.CubeBlocks.FirstOrDefault(d => d.Id.SubtypeId == subtypeId || (d.Variants != null && d.Variants.Any(v => subtypeId == d.Id.SubtypeId + v.Color)));
             // Returns null if it doesn't find the required SubtypeId.
         }
 
@@ -551,33 +580,37 @@ namespace SEModAPI.API
 
         #endregion
 
-        #region ReadCubeBlocksDefinitions
+		#region ReadConfigDefinitions
 
-        public void ReadCubeBlockDefinitions()
+		public void ReadConfigDefinitions()
         {
-            _ammoMagazineDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("AmmoMagazines.sbc");
-            _blueprintDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Blueprints.sbc");
-            _componentDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Components.sbc");
-            _cubeBlockDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("CubeBlocks.sbc");
+            m_ammoMagazineDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("AmmoMagazines.sbc");
+            m_blueprintDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Blueprints.sbc");
+            m_componentDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Components.sbc");
+            m_cubeBlockDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("CubeBlocks.sbc");
 
-            _handItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("HandItems.sbc");
-            _physicalItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("PhysicalItems.sbc");
+            m_handItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("HandItems.sbc");
+            m_physicalItemDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("PhysicalItems.sbc");
 
-            _transparentMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("TransparentMaterials.sbc");
-            _voxelMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("VoxelMaterials.sbc");
+            m_transparentMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("TransparentMaterials.sbc");
+            m_voxelMaterialDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("VoxelMaterials.sbc");
 
-            _containerTypeDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("ContainerTypes.sbc");
-            _globalEventDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("GlobalEvents.sbc");
-            _spawnGroupDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("SpawnGroups.sbc");
+            m_containerTypeDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("ContainerTypes.sbc");
+            m_globalEventDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("GlobalEvents.sbc");
+            m_spawnGroupDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("SpawnGroups.sbc");
 
-            _materialIndex = new Dictionary<string, byte>();
+			m_configurationDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Configuration.sbc");
+			m_environmentDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Environment.sbc");
+			m_scenariosDefinitions = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>("Scenarios.sbc");
+
+			m_materialIndex = new Dictionary<string, byte>();
         }
 
         private T LoadContentFile<T, TS>(string filename) where TS : XmlSerializer1
         {
             object fileContent = null;
 
-            string filePath = Path.Combine(Path.Combine(_gameInstallation.GamePath, @"Content\Data"), filename);
+            string filePath = Path.Combine(Path.Combine(m_gameInstallation.GamePath, @"Content\Data"), filename);
 
             if (!File.Exists(filePath))
             {
@@ -607,9 +640,9 @@ namespace SEModAPI.API
 
         #endregion
 
-        #region WriteCubeBlocksDefinitions
+		#region WriteConfigDefinitions
 
-        public void WriteCubeBlockDefinitions()
+		public void WriteConfigDefinitions()
         {
             SaveAmmoMagazinesContentFile();
             SaveBlueprintsContentFile();
@@ -625,60 +658,77 @@ namespace SEModAPI.API
             SaveContainerTypesContentFile();
             SaveGlobalEventsContentFile();
             SaveSpawnGroupsContentFile();
+
+			SaveConfigurationContentFile();
+			SaveEnvironmentContentFile();
+			SaveScenariosContentFile();
         }
 
         public void SaveAmmoMagazinesContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_ammoMagazineDefinitions, "AmmoMagazines.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_ammoMagazineDefinitions, "AmmoMagazines.sbc");
         }
         public void SaveBlueprintsContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_blueprintDefinitions, "Blueprints.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_blueprintDefinitions, "Blueprints.sbc");
         }
         public void SaveComponentsContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_componentDefinitions, "Components.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_componentDefinitions, "Components.sbc");
         }
         public void SaveCubeBlocksContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_cubeBlockDefinitions, "CubeBlocks.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_cubeBlockDefinitions, "CubeBlocks.sbc");
         }
 
         public void SaveHandItemsContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_handItemDefinitions, "HandItems.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_handItemDefinitions, "HandItems.sbc");
         }
         public void SavePhysicalItemsContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_physicalItemDefinitions, "PhysicalItems.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_physicalItemDefinitions, "PhysicalItems.sbc");
         }
 
         public void SaveTransparentMaterialsContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_transparentMaterialDefinitions, "TransparentMaterials.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_transparentMaterialDefinitions, "TransparentMaterials.sbc");
         }
         public void SaveVoxelMaterialsContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_voxelMaterialDefinitions, "VoxelMaterials.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_voxelMaterialDefinitions, "VoxelMaterials.sbc");
         }
 
         public void SaveContainerTypesContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_containerTypeDefinitions, "ContainerTypes.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_containerTypeDefinitions, "ContainerTypes.sbc");
         }
         public void SaveGlobalEventsContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_globalEventDefinitions, "GlobalEvents.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_globalEventDefinitions, "GlobalEvents.sbc");
         }
         public void SaveSpawnGroupsContentFile()
         {
-            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(_spawnGroupDefinitions, "SpawnGroups.sbc");
+            SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_spawnGroupDefinitions, "SpawnGroups.sbc");
         }
 
-        private void SaveContentFile<T, TS>(T fileContent, string filename) where TS : XmlSerializer1
+		public void SaveConfigurationContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_configurationDefinitions, "Configuration.sbc");
+		}
+		public void SaveEnvironmentContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_environmentDefinitions, "Environment.sbc");
+		}
+		public void SaveScenariosContentFile()
+		{
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_scenariosDefinitions, "Scenarios.sbc");
+		}
+
+		private void SaveContentFile<T, TS>(T fileContent, string filename) where TS : XmlSerializer1
         {
 
-            string filePath = Path.Combine(Path.Combine(_gameInstallation.GamePath, @"Content\Data"), filename);
+            string filePath = Path.Combine(Path.Combine(m_gameInstallation.GamePath, @"Content\Data"), filename);
 
             if (!File.Exists(filePath))
             {

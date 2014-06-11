@@ -58,9 +58,17 @@ namespace SEConfigTool
 
         private void LoadSaveFile(FileInfo saveFileInfo)
         {
-            SaveFile save = new SaveFile(saveFileInfo.FullName, m_configSerializer);
+            SaveFileSerializer save = new SaveFileSerializer(saveFileInfo.FullName, m_configSerializer);
 
-            foreach (MyObjectBuilder_EntityBase currentObject in save.Objects)
+			TBX_SavedGame_Properties_Position.Text = save.Position.ToString();
+			TBX_SavedGame_Properties_AppVersion.Text = save.AppVersion.ToString();
+
+			foreach (MyObjectBuilder_GlobalEventBase currentEvent in save.Events.Events)
+			{
+				LBX_SavedGame_Events.Items.Add(currentEvent.EventType.ToString());
+			}
+
+			foreach (MyObjectBuilder_EntityBase currentObject in save.Objects)
             {
                 float x = currentObject.PositionAndOrientation.Value.Position.x;
                 float y = currentObject.PositionAndOrientation.Value.Position.y;
@@ -68,7 +76,7 @@ namespace SEConfigTool
 
                 float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-                LBX_SaveGameBlockList.Items.Add(currentObject.TypeId.ToString() + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+                LBX_SavedGame_Objects.Items.Add(currentObject.TypeId.ToString() + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
             }
         }
 
@@ -518,6 +526,9 @@ namespace SEConfigTool
 			int index = LBX_GlobalEventConfiguration.SelectedIndex;
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
+
+			globalEvent.Name = TBX_ConfigGlobalEventName.Text;
+			globalEvent.Description = TBX_ConfigGlobalEventDescription.Text;
 
 			globalEvent.MinActivation = Convert.ToInt32(TBX_ConfigGlobalEventMinActivation.Text, m_numberFormatInfo);
 			globalEvent.MaxActivation = Convert.ToInt32(TBX_ConfigGlobalEventMaxActivation.Text, m_numberFormatInfo);
