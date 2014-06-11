@@ -30,12 +30,12 @@ namespace SEConfigTool
         private void InitializeComponent()
         {
 			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-			this.BTN_ConfigAmmoReload = new System.Windows.Forms.Button();
-			this.BTN_SaveAmmoConfig = new System.Windows.Forms.Button();
+			this.BTN_AmmoConfig_Reload = new System.Windows.Forms.Button();
+			this.BTN_AmmoConfig_Save = new System.Windows.Forms.Button();
 			this.GBX_AmmoConfig = new System.Windows.Forms.GroupBox();
 			this.splitContainer6 = new System.Windows.Forms.SplitContainer();
 			this.LBX_AmmoConfiguration = new System.Windows.Forms.ListBox();
-			this.GBX_AmmoConfig_SelectedInformation = new System.Windows.Forms.GroupBox();
+			this.GBX_AmmoConfig_Details = new System.Windows.Forms.GroupBox();
 			this.splitContainer7 = new System.Windows.Forms.SplitContainer();
 			this.label10 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
@@ -45,7 +45,7 @@ namespace SEConfigTool
 			this.label8 = new System.Windows.Forms.Label();
 			this.TBX_ConfigAmmoMass = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigAmmoVolume = new System.Windows.Forms.TextBox();
-			this.BTN_ConfigAmmoApply = new System.Windows.Forms.Button();
+			this.BTN_AmmoConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_ConfigAmmoId = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigAmmoCapacity = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigAmmoName = new System.Windows.Forms.TextBox();
@@ -58,7 +58,7 @@ namespace SEConfigTool
 			this.GBX_BlocksConfig = new System.Windows.Forms.GroupBox();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.LBX_BlocksConfiguration = new System.Windows.Forms.ListBox();
-			this.GBX_BlocksConfig_SelectedInfo = new System.Windows.Forms.GroupBox();
+			this.GBX_BlocksConfig_Details = new System.Windows.Forms.GroupBox();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
 			this.label24 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
@@ -79,12 +79,12 @@ namespace SEConfigTool
 			this.LayoutPages = new System.Windows.Forms.TabControl();
 			this.ContainerTypeConfiguration = new System.Windows.Forms.TabPage();
 			this.splitContainer8 = new System.Windows.Forms.SplitContainer();
-			this.BTN_ConfigContainerTypeReload = new System.Windows.Forms.Button();
-			this.BTN_SaveContainerTypeConfig = new System.Windows.Forms.Button();
+			this.BTN_ContainerTypeConfig_Reload = new System.Windows.Forms.Button();
+			this.BTN_ContainerTypeConfig_Save = new System.Windows.Forms.Button();
 			this.GBX_ContainerTypeConfig = new System.Windows.Forms.GroupBox();
 			this.splitContainer9 = new System.Windows.Forms.SplitContainer();
 			this.LBX_ContainerTypeConfiguration = new System.Windows.Forms.ListBox();
-			this.GBX_ContainerTypeConfig_SelectedInformation = new System.Windows.Forms.GroupBox();
+			this.GBX_ContainerTypeConfig_Details = new System.Windows.Forms.GroupBox();
 			this.TC_ContainerTypeConfig_Details = new System.Windows.Forms.TabControl();
 			this.TP_ContainerTypeConfig_Details_Information = new System.Windows.Forms.TabPage();
 			this.splitContainer10 = new System.Windows.Forms.SplitContainer();
@@ -94,7 +94,7 @@ namespace SEConfigTool
 			this.label15 = new System.Windows.Forms.Label();
 			this.label16 = new System.Windows.Forms.Label();
 			this.TBX_ConfigContainerTypeCountMin = new System.Windows.Forms.TextBox();
-			this.BTN_ConfigContainerTypeApply = new System.Windows.Forms.Button();
+			this.BTN_ContainerTypeConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_ConfigContainerTypeId = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigContainerTypeCountMax = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigContainerTypeName = new System.Windows.Forms.TextBox();
@@ -116,8 +116,8 @@ namespace SEConfigTool
 			this.TBX_ContainerTypeConfig_ItemFrequency = new System.Windows.Forms.TextBox();
 			this.GlobalEventConfiguration = new System.Windows.Forms.TabPage();
 			this.splitContainer11 = new System.Windows.Forms.SplitContainer();
-			this.BTN_ConfigGlobalEventReload = new System.Windows.Forms.Button();
-			this.BTN_SaveGlobalEventConfig = new System.Windows.Forms.Button();
+			this.BTN_GlobalEventConfig_Reload = new System.Windows.Forms.Button();
+			this.BTN_GlobalEventConfig_Save = new System.Windows.Forms.Button();
 			this.GBX_GlobalEventConfig = new System.Windows.Forms.GroupBox();
 			this.splitContainer12 = new System.Windows.Forms.SplitContainer();
 			this.LBX_GlobalEventConfiguration = new System.Windows.Forms.ListBox();
@@ -133,15 +133,15 @@ namespace SEConfigTool
 			this.TBX_ConfigGlobalEventFirstActivation = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigGlobalEventMinActivation = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigGlobalEventMaxActivation = new System.Windows.Forms.TextBox();
-			this.BTN_ConfigGlobalEventApply = new System.Windows.Forms.Button();
+			this.BTN_GlobalEventConfig_Apply = new System.Windows.Forms.Button();
 			this.TBX_ConfigGlobalEventName = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigGlobalEventType = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigGlobalEventId = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigGlobalEventDescription = new System.Windows.Forms.TextBox();
 			this.SpawnGroupConfiguration = new System.Windows.Forms.TabPage();
 			this.splitContainer14 = new System.Windows.Forms.SplitContainer();
-			this.BTN_ConfigSpawnGroupReload = new System.Windows.Forms.Button();
-			this.BTN_SaveSpawnGroupConfig = new System.Windows.Forms.Button();
+			this.BTN_SpawnGroupConfig_Reload = new System.Windows.Forms.Button();
+			this.BTN_SpawnGroupConfig_Save = new System.Windows.Forms.Button();
 			this.GBX_SpawnGroupConfig = new System.Windows.Forms.GroupBox();
 			this.splitContainer15 = new System.Windows.Forms.SplitContainer();
 			this.LBX_SpawnGroupConfiguration = new System.Windows.Forms.ListBox();
@@ -151,7 +151,7 @@ namespace SEConfigTool
 			this.splitContainer16 = new System.Windows.Forms.SplitContainer();
 			this.label25 = new System.Windows.Forms.Label();
 			this.label28 = new System.Windows.Forms.Label();
-			this.BTN_ConfigSpawnGroupApply = new System.Windows.Forms.Button();
+			this.BTN_SpawnGroupConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_ConfigSpawnGroupPrefabCount = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigSpawnGroupFrequency = new System.Windows.Forms.TextBox();
 			this.TP_SpawnGroupConfig_Details_Prefabs = new System.Windows.Forms.TabPage();
@@ -255,7 +255,6 @@ namespace SEConfigTool
 			this.label66 = new System.Windows.Forms.Label();
 			this.label65 = new System.Windows.Forms.Label();
 			this.label64 = new System.Windows.Forms.Label();
-			this.label61 = new System.Windows.Forms.Label();
 			this.label60 = new System.Windows.Forms.Label();
 			this.label59 = new System.Windows.Forms.Label();
 			this.label57 = new System.Windows.Forms.Label();
@@ -266,7 +265,6 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_AssetName = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_DamageRatio = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_IsRare = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio = new System.Windows.Forms.TextBox();
@@ -282,7 +280,7 @@ namespace SEConfigTool
 			this.splitContainer6.Panel1.SuspendLayout();
 			this.splitContainer6.Panel2.SuspendLayout();
 			this.splitContainer6.SuspendLayout();
-			this.GBX_AmmoConfig_SelectedInformation.SuspendLayout();
+			this.GBX_AmmoConfig_Details.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).BeginInit();
 			this.splitContainer7.Panel1.SuspendLayout();
 			this.splitContainer7.Panel2.SuspendLayout();
@@ -298,7 +296,7 @@ namespace SEConfigTool
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
-			this.GBX_BlocksConfig_SelectedInfo.SuspendLayout();
+			this.GBX_BlocksConfig_Details.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
 			this.splitContainer4.Panel1.SuspendLayout();
 			this.splitContainer4.Panel2.SuspendLayout();
@@ -320,7 +318,7 @@ namespace SEConfigTool
 			this.splitContainer9.Panel1.SuspendLayout();
 			this.splitContainer9.Panel2.SuspendLayout();
 			this.splitContainer9.SuspendLayout();
-			this.GBX_ContainerTypeConfig_SelectedInformation.SuspendLayout();
+			this.GBX_ContainerTypeConfig_Details.SuspendLayout();
 			this.TC_ContainerTypeConfig_Details.SuspendLayout();
 			this.TP_ContainerTypeConfig_Details_Information.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer10)).BeginInit();
@@ -449,8 +447,8 @@ namespace SEConfigTool
 			// 
 			// splitContainer5.Panel1
 			// 
-			this.splitContainer5.Panel1.Controls.Add(this.BTN_ConfigAmmoReload);
-			this.splitContainer5.Panel1.Controls.Add(this.BTN_SaveAmmoConfig);
+			this.splitContainer5.Panel1.Controls.Add(this.BTN_AmmoConfig_Reload);
+			this.splitContainer5.Panel1.Controls.Add(this.BTN_AmmoConfig_Save);
 			// 
 			// splitContainer5.Panel2
 			// 
@@ -459,25 +457,25 @@ namespace SEConfigTool
 			this.splitContainer5.SplitterDistance = 25;
 			this.splitContainer5.TabIndex = 1;
 			// 
-			// BTN_ConfigAmmoReload
+			// BTN_AmmoConfig_Reload
 			// 
-			this.BTN_ConfigAmmoReload.Location = new System.Drawing.Point(3, 0);
-			this.BTN_ConfigAmmoReload.Name = "BTN_ConfigAmmoReload";
-			this.BTN_ConfigAmmoReload.Size = new System.Drawing.Size(116, 23);
-			this.BTN_ConfigAmmoReload.TabIndex = 2;
-			this.BTN_ConfigAmmoReload.Text = "Reload Configuration";
-			this.BTN_ConfigAmmoReload.UseVisualStyleBackColor = true;
-			this.BTN_ConfigAmmoReload.Click += new System.EventHandler(this.BTN_ConfigAmmoReload_Click);
+			this.BTN_AmmoConfig_Reload.Location = new System.Drawing.Point(3, 0);
+			this.BTN_AmmoConfig_Reload.Name = "BTN_AmmoConfig_Reload";
+			this.BTN_AmmoConfig_Reload.Size = new System.Drawing.Size(116, 23);
+			this.BTN_AmmoConfig_Reload.TabIndex = 2;
+			this.BTN_AmmoConfig_Reload.Text = "Reload Configuration";
+			this.BTN_AmmoConfig_Reload.UseVisualStyleBackColor = true;
+			this.BTN_AmmoConfig_Reload.Click += new System.EventHandler(this.BTN_ConfigAmmoReload_Click);
 			// 
-			// BTN_SaveAmmoConfig
+			// BTN_AmmoConfig_Save
 			// 
-			this.BTN_SaveAmmoConfig.Location = new System.Drawing.Point(122, 0);
-			this.BTN_SaveAmmoConfig.Name = "BTN_SaveAmmoConfig";
-			this.BTN_SaveAmmoConfig.Size = new System.Drawing.Size(105, 23);
-			this.BTN_SaveAmmoConfig.TabIndex = 0;
-			this.BTN_SaveAmmoConfig.Text = "Save Configuration";
-			this.BTN_SaveAmmoConfig.UseVisualStyleBackColor = true;
-			this.BTN_SaveAmmoConfig.Click += new System.EventHandler(this.BTN_SaveAmmoConfig_Click);
+			this.BTN_AmmoConfig_Save.Location = new System.Drawing.Point(122, 0);
+			this.BTN_AmmoConfig_Save.Name = "BTN_AmmoConfig_Save";
+			this.BTN_AmmoConfig_Save.Size = new System.Drawing.Size(105, 23);
+			this.BTN_AmmoConfig_Save.TabIndex = 0;
+			this.BTN_AmmoConfig_Save.Text = "Save Configuration";
+			this.BTN_AmmoConfig_Save.UseVisualStyleBackColor = true;
+			this.BTN_AmmoConfig_Save.Click += new System.EventHandler(this.BTN_SaveAmmoConfig_Click);
 			// 
 			// GBX_AmmoConfig
 			// 
@@ -503,7 +501,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer6.Panel2
 			// 
-			this.splitContainer6.Panel2.Controls.Add(this.GBX_AmmoConfig_SelectedInformation);
+			this.splitContainer6.Panel2.Controls.Add(this.GBX_AmmoConfig_Details);
 			this.splitContainer6.Size = new System.Drawing.Size(790, 382);
 			this.splitContainer6.SplitterDistance = 200;
 			this.splitContainer6.TabIndex = 1;
@@ -518,16 +516,16 @@ namespace SEConfigTool
 			this.LBX_AmmoConfiguration.TabIndex = 0;
 			this.LBX_AmmoConfiguration.SelectedIndexChanged += new System.EventHandler(this.LBX_AmmoConfiguration_SelectedIndexChanged);
 			// 
-			// GBX_AmmoConfig_SelectedInformation
+			// GBX_AmmoConfig_Details
 			// 
-			this.GBX_AmmoConfig_SelectedInformation.Controls.Add(this.splitContainer7);
-			this.GBX_AmmoConfig_SelectedInformation.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.GBX_AmmoConfig_SelectedInformation.Location = new System.Drawing.Point(0, 0);
-			this.GBX_AmmoConfig_SelectedInformation.Name = "GBX_AmmoConfig_SelectedInformation";
-			this.GBX_AmmoConfig_SelectedInformation.Size = new System.Drawing.Size(586, 382);
-			this.GBX_AmmoConfig_SelectedInformation.TabIndex = 3;
-			this.GBX_AmmoConfig_SelectedInformation.TabStop = false;
-			this.GBX_AmmoConfig_SelectedInformation.Text = "Selected Ammo Information";
+			this.GBX_AmmoConfig_Details.Controls.Add(this.splitContainer7);
+			this.GBX_AmmoConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GBX_AmmoConfig_Details.Location = new System.Drawing.Point(0, 0);
+			this.GBX_AmmoConfig_Details.Name = "GBX_AmmoConfig_Details";
+			this.GBX_AmmoConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_AmmoConfig_Details.TabIndex = 3;
+			this.GBX_AmmoConfig_Details.TabStop = false;
+			this.GBX_AmmoConfig_Details.Text = "Selected Item Details";
 			// 
 			// splitContainer7
 			// 
@@ -551,7 +549,7 @@ namespace SEConfigTool
 			this.splitContainer7.Panel2.AutoScrollMinSize = new System.Drawing.Size(150, 0);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoMass);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoVolume);
-			this.splitContainer7.Panel2.Controls.Add(this.BTN_ConfigAmmoApply);
+			this.splitContainer7.Panel2.Controls.Add(this.BTN_AmmoConfig_Details_Apply);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoId);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoCapacity);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoName);
@@ -630,16 +628,16 @@ namespace SEConfigTool
 			this.TBX_ConfigAmmoVolume.TabIndex = 9;
 			this.TBX_ConfigAmmoVolume.TextChanged += new System.EventHandler(this.TBX_ConfigAmmo_TextChanged);
 			// 
-			// BTN_ConfigAmmoApply
+			// BTN_AmmoConfig_Details_Apply
 			// 
-			this.BTN_ConfigAmmoApply.Location = new System.Drawing.Point(28, 337);
-			this.BTN_ConfigAmmoApply.Name = "BTN_ConfigAmmoApply";
-			this.BTN_ConfigAmmoApply.Size = new System.Drawing.Size(100, 23);
-			this.BTN_ConfigAmmoApply.TabIndex = 8;
-			this.BTN_ConfigAmmoApply.Text = "Apply changes";
-			this.BTN_ConfigAmmoApply.UseVisualStyleBackColor = true;
-			this.BTN_ConfigAmmoApply.Visible = false;
-			this.BTN_ConfigAmmoApply.Click += new System.EventHandler(this.BTN_ConfigAmmoApply_Click);
+			this.BTN_AmmoConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
+			this.BTN_AmmoConfig_Details_Apply.Name = "BTN_AmmoConfig_Details_Apply";
+			this.BTN_AmmoConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_AmmoConfig_Details_Apply.TabIndex = 8;
+			this.BTN_AmmoConfig_Details_Apply.Text = "Apply changes";
+			this.BTN_AmmoConfig_Details_Apply.UseVisualStyleBackColor = true;
+			this.BTN_AmmoConfig_Details_Apply.Visible = false;
+			this.BTN_AmmoConfig_Details_Apply.Click += new System.EventHandler(this.BTN_ConfigAmmoApply_Click);
 			// 
 			// TBX_ConfigAmmoId
 			// 
@@ -759,7 +757,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer2.Panel2
 			// 
-			this.splitContainer2.Panel2.Controls.Add(this.GBX_BlocksConfig_SelectedInfo);
+			this.splitContainer2.Panel2.Controls.Add(this.GBX_BlocksConfig_Details);
 			this.splitContainer2.Size = new System.Drawing.Size(790, 382);
 			this.splitContainer2.SplitterDistance = 200;
 			this.splitContainer2.TabIndex = 1;
@@ -774,18 +772,18 @@ namespace SEConfigTool
 			this.LBX_BlocksConfiguration.TabIndex = 0;
 			this.LBX_BlocksConfiguration.SelectedIndexChanged += new System.EventHandler(this.LBX_BlocksConfiguration_SelectedIndexChanged);
 			// 
-			// GBX_BlocksConfig_SelectedInfo
+			// GBX_BlocksConfig_Details
 			// 
-			this.GBX_BlocksConfig_SelectedInfo.AutoSize = true;
-			this.GBX_BlocksConfig_SelectedInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.GBX_BlocksConfig_SelectedInfo.Controls.Add(this.splitContainer4);
-			this.GBX_BlocksConfig_SelectedInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.GBX_BlocksConfig_SelectedInfo.Location = new System.Drawing.Point(0, 0);
-			this.GBX_BlocksConfig_SelectedInfo.Name = "GBX_BlocksConfig_SelectedInfo";
-			this.GBX_BlocksConfig_SelectedInfo.Size = new System.Drawing.Size(586, 382);
-			this.GBX_BlocksConfig_SelectedInfo.TabIndex = 3;
-			this.GBX_BlocksConfig_SelectedInfo.TabStop = false;
-			this.GBX_BlocksConfig_SelectedInfo.Text = "Selected Block Information";
+			this.GBX_BlocksConfig_Details.AutoSize = true;
+			this.GBX_BlocksConfig_Details.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.GBX_BlocksConfig_Details.Controls.Add(this.splitContainer4);
+			this.GBX_BlocksConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GBX_BlocksConfig_Details.Location = new System.Drawing.Point(0, 0);
+			this.GBX_BlocksConfig_Details.Name = "GBX_BlocksConfig_Details";
+			this.GBX_BlocksConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_BlocksConfig_Details.TabIndex = 3;
+			this.GBX_BlocksConfig_Details.TabStop = false;
+			this.GBX_BlocksConfig_Details.Text = "Selected Item Details";
 			// 
 			// splitContainer4
 			// 
@@ -1016,8 +1014,8 @@ namespace SEConfigTool
 			// 
 			// splitContainer8.Panel1
 			// 
-			this.splitContainer8.Panel1.Controls.Add(this.BTN_ConfigContainerTypeReload);
-			this.splitContainer8.Panel1.Controls.Add(this.BTN_SaveContainerTypeConfig);
+			this.splitContainer8.Panel1.Controls.Add(this.BTN_ContainerTypeConfig_Reload);
+			this.splitContainer8.Panel1.Controls.Add(this.BTN_ContainerTypeConfig_Save);
 			// 
 			// splitContainer8.Panel2
 			// 
@@ -1026,25 +1024,25 @@ namespace SEConfigTool
 			this.splitContainer8.SplitterDistance = 25;
 			this.splitContainer8.TabIndex = 1;
 			// 
-			// BTN_ConfigContainerTypeReload
+			// BTN_ContainerTypeConfig_Reload
 			// 
-			this.BTN_ConfigContainerTypeReload.Location = new System.Drawing.Point(3, 0);
-			this.BTN_ConfigContainerTypeReload.Name = "BTN_ConfigContainerTypeReload";
-			this.BTN_ConfigContainerTypeReload.Size = new System.Drawing.Size(116, 23);
-			this.BTN_ConfigContainerTypeReload.TabIndex = 2;
-			this.BTN_ConfigContainerTypeReload.Text = "Reload Configuration";
-			this.BTN_ConfigContainerTypeReload.UseVisualStyleBackColor = true;
-			this.BTN_ConfigContainerTypeReload.Click += new System.EventHandler(this.BTN_ConfigContainerTypeReload_Click);
+			this.BTN_ContainerTypeConfig_Reload.Location = new System.Drawing.Point(3, 0);
+			this.BTN_ContainerTypeConfig_Reload.Name = "BTN_ContainerTypeConfig_Reload";
+			this.BTN_ContainerTypeConfig_Reload.Size = new System.Drawing.Size(116, 23);
+			this.BTN_ContainerTypeConfig_Reload.TabIndex = 2;
+			this.BTN_ContainerTypeConfig_Reload.Text = "Reload Configuration";
+			this.BTN_ContainerTypeConfig_Reload.UseVisualStyleBackColor = true;
+			this.BTN_ContainerTypeConfig_Reload.Click += new System.EventHandler(this.BTN_ConfigContainerTypeReload_Click);
 			// 
-			// BTN_SaveContainerTypeConfig
+			// BTN_ContainerTypeConfig_Save
 			// 
-			this.BTN_SaveContainerTypeConfig.Location = new System.Drawing.Point(122, 0);
-			this.BTN_SaveContainerTypeConfig.Name = "BTN_SaveContainerTypeConfig";
-			this.BTN_SaveContainerTypeConfig.Size = new System.Drawing.Size(105, 23);
-			this.BTN_SaveContainerTypeConfig.TabIndex = 0;
-			this.BTN_SaveContainerTypeConfig.Text = "Save Configuration";
-			this.BTN_SaveContainerTypeConfig.UseVisualStyleBackColor = true;
-			this.BTN_SaveContainerTypeConfig.Click += new System.EventHandler(this.BTN_SaveContainerTypeConfig_Click);
+			this.BTN_ContainerTypeConfig_Save.Location = new System.Drawing.Point(122, 0);
+			this.BTN_ContainerTypeConfig_Save.Name = "BTN_ContainerTypeConfig_Save";
+			this.BTN_ContainerTypeConfig_Save.Size = new System.Drawing.Size(105, 23);
+			this.BTN_ContainerTypeConfig_Save.TabIndex = 0;
+			this.BTN_ContainerTypeConfig_Save.Text = "Save Configuration";
+			this.BTN_ContainerTypeConfig_Save.UseVisualStyleBackColor = true;
+			this.BTN_ContainerTypeConfig_Save.Click += new System.EventHandler(this.BTN_SaveContainerTypeConfig_Click);
 			// 
 			// GBX_ContainerTypeConfig
 			// 
@@ -1071,7 +1069,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer9.Panel2
 			// 
-			this.splitContainer9.Panel2.Controls.Add(this.GBX_ContainerTypeConfig_SelectedInformation);
+			this.splitContainer9.Panel2.Controls.Add(this.GBX_ContainerTypeConfig_Details);
 			this.splitContainer9.Size = new System.Drawing.Size(790, 382);
 			this.splitContainer9.SplitterDistance = 200;
 			this.splitContainer9.TabIndex = 1;
@@ -1086,16 +1084,16 @@ namespace SEConfigTool
 			this.LBX_ContainerTypeConfiguration.TabIndex = 0;
 			this.LBX_ContainerTypeConfiguration.SelectedIndexChanged += new System.EventHandler(this.LBX_ContainerTypeConfiguration_SelectedIndexChanged);
 			// 
-			// GBX_ContainerTypeConfig_SelectedInformation
+			// GBX_ContainerTypeConfig_Details
 			// 
-			this.GBX_ContainerTypeConfig_SelectedInformation.Controls.Add(this.TC_ContainerTypeConfig_Details);
-			this.GBX_ContainerTypeConfig_SelectedInformation.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.GBX_ContainerTypeConfig_SelectedInformation.Location = new System.Drawing.Point(0, 0);
-			this.GBX_ContainerTypeConfig_SelectedInformation.Name = "GBX_ContainerTypeConfig_SelectedInformation";
-			this.GBX_ContainerTypeConfig_SelectedInformation.Size = new System.Drawing.Size(586, 382);
-			this.GBX_ContainerTypeConfig_SelectedInformation.TabIndex = 1;
-			this.GBX_ContainerTypeConfig_SelectedInformation.TabStop = false;
-			this.GBX_ContainerTypeConfig_SelectedInformation.Text = "Selected ContainerType Details";
+			this.GBX_ContainerTypeConfig_Details.Controls.Add(this.TC_ContainerTypeConfig_Details);
+			this.GBX_ContainerTypeConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GBX_ContainerTypeConfig_Details.Location = new System.Drawing.Point(0, 0);
+			this.GBX_ContainerTypeConfig_Details.Name = "GBX_ContainerTypeConfig_Details";
+			this.GBX_ContainerTypeConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_ContainerTypeConfig_Details.TabIndex = 1;
+			this.GBX_ContainerTypeConfig_Details.TabStop = false;
+			this.GBX_ContainerTypeConfig_Details.Text = "Selected Item Details";
 			// 
 			// TC_ContainerTypeConfig_Details
 			// 
@@ -1138,7 +1136,7 @@ namespace SEConfigTool
 			// splitContainer10.Panel2
 			// 
 			this.splitContainer10.Panel2.Controls.Add(this.TBX_ConfigContainerTypeCountMin);
-			this.splitContainer10.Panel2.Controls.Add(this.BTN_ConfigContainerTypeApply);
+			this.splitContainer10.Panel2.Controls.Add(this.BTN_ContainerTypeConfig_Details_Apply);
 			this.splitContainer10.Panel2.Controls.Add(this.TBX_ConfigContainerTypeId);
 			this.splitContainer10.Panel2.Controls.Add(this.TBX_ConfigContainerTypeCountMax);
 			this.splitContainer10.Panel2.Controls.Add(this.TBX_ConfigContainerTypeName);
@@ -1186,7 +1184,7 @@ namespace SEConfigTool
 			// label16
 			// 
 			this.label16.AutoSize = true;
-			this.label16.Location = new System.Drawing.Point(0, 58);
+			this.label16.Location = new System.Drawing.Point(3, 58);
 			this.label16.Name = "label16";
 			this.label16.Size = new System.Drawing.Size(61, 13);
 			this.label16.TabIndex = 2;
@@ -1200,15 +1198,15 @@ namespace SEConfigTool
 			this.TBX_ConfigContainerTypeCountMin.TabIndex = 9;
 			this.TBX_ConfigContainerTypeCountMin.TextChanged += new System.EventHandler(this.TBX_ConfigContainerType_TextChanged);
 			// 
-			// BTN_ConfigContainerTypeApply
+			// BTN_ContainerTypeConfig_Details_Apply
 			// 
-			this.BTN_ConfigContainerTypeApply.Location = new System.Drawing.Point(28, 305);
-			this.BTN_ConfigContainerTypeApply.Name = "BTN_ConfigContainerTypeApply";
-			this.BTN_ConfigContainerTypeApply.Size = new System.Drawing.Size(100, 23);
-			this.BTN_ConfigContainerTypeApply.TabIndex = 8;
-			this.BTN_ConfigContainerTypeApply.Text = "Apply changes";
-			this.BTN_ConfigContainerTypeApply.UseVisualStyleBackColor = true;
-			this.BTN_ConfigContainerTypeApply.Visible = false;
+			this.BTN_ContainerTypeConfig_Details_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_ContainerTypeConfig_Details_Apply.Name = "BTN_ContainerTypeConfig_Details_Apply";
+			this.BTN_ContainerTypeConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_ContainerTypeConfig_Details_Apply.TabIndex = 8;
+			this.BTN_ContainerTypeConfig_Details_Apply.Text = "Apply changes";
+			this.BTN_ContainerTypeConfig_Details_Apply.UseVisualStyleBackColor = true;
+			this.BTN_ContainerTypeConfig_Details_Apply.Visible = false;
 			// 
 			// TBX_ConfigContainerTypeId
 			// 
@@ -1427,8 +1425,8 @@ namespace SEConfigTool
 			// 
 			// splitContainer11.Panel1
 			// 
-			this.splitContainer11.Panel1.Controls.Add(this.BTN_ConfigGlobalEventReload);
-			this.splitContainer11.Panel1.Controls.Add(this.BTN_SaveGlobalEventConfig);
+			this.splitContainer11.Panel1.Controls.Add(this.BTN_GlobalEventConfig_Reload);
+			this.splitContainer11.Panel1.Controls.Add(this.BTN_GlobalEventConfig_Save);
 			// 
 			// splitContainer11.Panel2
 			// 
@@ -1437,25 +1435,25 @@ namespace SEConfigTool
 			this.splitContainer11.SplitterDistance = 25;
 			this.splitContainer11.TabIndex = 1;
 			// 
-			// BTN_ConfigGlobalEventReload
+			// BTN_GlobalEventConfig_Reload
 			// 
-			this.BTN_ConfigGlobalEventReload.Location = new System.Drawing.Point(3, 0);
-			this.BTN_ConfigGlobalEventReload.Name = "BTN_ConfigGlobalEventReload";
-			this.BTN_ConfigGlobalEventReload.Size = new System.Drawing.Size(116, 23);
-			this.BTN_ConfigGlobalEventReload.TabIndex = 2;
-			this.BTN_ConfigGlobalEventReload.Text = "Reload Configuration";
-			this.BTN_ConfigGlobalEventReload.UseVisualStyleBackColor = true;
-			this.BTN_ConfigGlobalEventReload.Click += new System.EventHandler(this.BTN_ConfigGlobalEventReload_Click);
+			this.BTN_GlobalEventConfig_Reload.Location = new System.Drawing.Point(3, 0);
+			this.BTN_GlobalEventConfig_Reload.Name = "BTN_GlobalEventConfig_Reload";
+			this.BTN_GlobalEventConfig_Reload.Size = new System.Drawing.Size(116, 23);
+			this.BTN_GlobalEventConfig_Reload.TabIndex = 2;
+			this.BTN_GlobalEventConfig_Reload.Text = "Reload Configuration";
+			this.BTN_GlobalEventConfig_Reload.UseVisualStyleBackColor = true;
+			this.BTN_GlobalEventConfig_Reload.Click += new System.EventHandler(this.BTN_ConfigGlobalEventReload_Click);
 			// 
-			// BTN_SaveGlobalEventConfig
+			// BTN_GlobalEventConfig_Save
 			// 
-			this.BTN_SaveGlobalEventConfig.Location = new System.Drawing.Point(122, 0);
-			this.BTN_SaveGlobalEventConfig.Name = "BTN_SaveGlobalEventConfig";
-			this.BTN_SaveGlobalEventConfig.Size = new System.Drawing.Size(105, 23);
-			this.BTN_SaveGlobalEventConfig.TabIndex = 0;
-			this.BTN_SaveGlobalEventConfig.Text = "Save Configuration";
-			this.BTN_SaveGlobalEventConfig.UseVisualStyleBackColor = true;
-			this.BTN_SaveGlobalEventConfig.Click += new System.EventHandler(this.BTN_SaveGlobalEventConfig_Click);
+			this.BTN_GlobalEventConfig_Save.Location = new System.Drawing.Point(122, 0);
+			this.BTN_GlobalEventConfig_Save.Name = "BTN_GlobalEventConfig_Save";
+			this.BTN_GlobalEventConfig_Save.Size = new System.Drawing.Size(105, 23);
+			this.BTN_GlobalEventConfig_Save.TabIndex = 0;
+			this.BTN_GlobalEventConfig_Save.Text = "Save Configuration";
+			this.BTN_GlobalEventConfig_Save.UseVisualStyleBackColor = true;
+			this.BTN_GlobalEventConfig_Save.Click += new System.EventHandler(this.BTN_SaveGlobalEventConfig_Click);
 			// 
 			// GBX_GlobalEventConfig
 			// 
@@ -1506,7 +1504,7 @@ namespace SEConfigTool
 			this.GBX_GlobalEventConfig_Details.Size = new System.Drawing.Size(586, 382);
 			this.GBX_GlobalEventConfig_Details.TabIndex = 1;
 			this.GBX_GlobalEventConfig_Details.TabStop = false;
-			this.GBX_GlobalEventConfig_Details.Text = "Selected Event Information";
+			this.GBX_GlobalEventConfig_Details.Text = "Selected Item Details";
 			// 
 			// splitContainer13
 			// 
@@ -1531,7 +1529,7 @@ namespace SEConfigTool
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventFirstActivation);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventMinActivation);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventMaxActivation);
-			this.splitContainer13.Panel2.Controls.Add(this.BTN_ConfigGlobalEventApply);
+			this.splitContainer13.Panel2.Controls.Add(this.BTN_GlobalEventConfig_Apply);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventName);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventType);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventId);
@@ -1627,16 +1625,16 @@ namespace SEConfigTool
 			this.TBX_ConfigGlobalEventMaxActivation.TabIndex = 9;
 			this.TBX_ConfigGlobalEventMaxActivation.TextChanged += new System.EventHandler(this.TBX_ConfigGlobalEvent_TextChanged);
 			// 
-			// BTN_ConfigGlobalEventApply
+			// BTN_GlobalEventConfig_Apply
 			// 
-			this.BTN_ConfigGlobalEventApply.Location = new System.Drawing.Point(28, 337);
-			this.BTN_ConfigGlobalEventApply.Name = "BTN_ConfigGlobalEventApply";
-			this.BTN_ConfigGlobalEventApply.Size = new System.Drawing.Size(100, 23);
-			this.BTN_ConfigGlobalEventApply.TabIndex = 8;
-			this.BTN_ConfigGlobalEventApply.Text = "Apply changes";
-			this.BTN_ConfigGlobalEventApply.UseVisualStyleBackColor = true;
-			this.BTN_ConfigGlobalEventApply.Visible = false;
-			this.BTN_ConfigGlobalEventApply.Click += new System.EventHandler(this.BTN_ConfigGlobalEventApply_Click);
+			this.BTN_GlobalEventConfig_Apply.Location = new System.Drawing.Point(28, 337);
+			this.BTN_GlobalEventConfig_Apply.Name = "BTN_GlobalEventConfig_Apply";
+			this.BTN_GlobalEventConfig_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_GlobalEventConfig_Apply.TabIndex = 8;
+			this.BTN_GlobalEventConfig_Apply.Text = "Apply changes";
+			this.BTN_GlobalEventConfig_Apply.UseVisualStyleBackColor = true;
+			this.BTN_GlobalEventConfig_Apply.Visible = false;
+			this.BTN_GlobalEventConfig_Apply.Click += new System.EventHandler(this.BTN_ConfigGlobalEventApply_Click);
 			// 
 			// TBX_ConfigGlobalEventName
 			// 
@@ -1691,8 +1689,8 @@ namespace SEConfigTool
 			// 
 			// splitContainer14.Panel1
 			// 
-			this.splitContainer14.Panel1.Controls.Add(this.BTN_ConfigSpawnGroupReload);
-			this.splitContainer14.Panel1.Controls.Add(this.BTN_SaveSpawnGroupConfig);
+			this.splitContainer14.Panel1.Controls.Add(this.BTN_SpawnGroupConfig_Reload);
+			this.splitContainer14.Panel1.Controls.Add(this.BTN_SpawnGroupConfig_Save);
 			// 
 			// splitContainer14.Panel2
 			// 
@@ -1701,25 +1699,25 @@ namespace SEConfigTool
 			this.splitContainer14.SplitterDistance = 25;
 			this.splitContainer14.TabIndex = 1;
 			// 
-			// BTN_ConfigSpawnGroupReload
+			// BTN_SpawnGroupConfig_Reload
 			// 
-			this.BTN_ConfigSpawnGroupReload.Location = new System.Drawing.Point(3, 0);
-			this.BTN_ConfigSpawnGroupReload.Name = "BTN_ConfigSpawnGroupReload";
-			this.BTN_ConfigSpawnGroupReload.Size = new System.Drawing.Size(116, 23);
-			this.BTN_ConfigSpawnGroupReload.TabIndex = 2;
-			this.BTN_ConfigSpawnGroupReload.Text = "Reload Configuration";
-			this.BTN_ConfigSpawnGroupReload.UseVisualStyleBackColor = true;
-			this.BTN_ConfigSpawnGroupReload.Click += new System.EventHandler(this.BTN_ConfigSpawnGroupReload_Click);
+			this.BTN_SpawnGroupConfig_Reload.Location = new System.Drawing.Point(3, 0);
+			this.BTN_SpawnGroupConfig_Reload.Name = "BTN_SpawnGroupConfig_Reload";
+			this.BTN_SpawnGroupConfig_Reload.Size = new System.Drawing.Size(116, 23);
+			this.BTN_SpawnGroupConfig_Reload.TabIndex = 2;
+			this.BTN_SpawnGroupConfig_Reload.Text = "Reload Configuration";
+			this.BTN_SpawnGroupConfig_Reload.UseVisualStyleBackColor = true;
+			this.BTN_SpawnGroupConfig_Reload.Click += new System.EventHandler(this.BTN_ConfigSpawnGroupReload_Click);
 			// 
-			// BTN_SaveSpawnGroupConfig
+			// BTN_SpawnGroupConfig_Save
 			// 
-			this.BTN_SaveSpawnGroupConfig.Location = new System.Drawing.Point(122, 0);
-			this.BTN_SaveSpawnGroupConfig.Name = "BTN_SaveSpawnGroupConfig";
-			this.BTN_SaveSpawnGroupConfig.Size = new System.Drawing.Size(105, 23);
-			this.BTN_SaveSpawnGroupConfig.TabIndex = 0;
-			this.BTN_SaveSpawnGroupConfig.Text = "Save Configuration";
-			this.BTN_SaveSpawnGroupConfig.UseVisualStyleBackColor = true;
-			this.BTN_SaveSpawnGroupConfig.Click += new System.EventHandler(this.BTN_SaveSpawnGroupConfig_Click);
+			this.BTN_SpawnGroupConfig_Save.Location = new System.Drawing.Point(122, 0);
+			this.BTN_SpawnGroupConfig_Save.Name = "BTN_SpawnGroupConfig_Save";
+			this.BTN_SpawnGroupConfig_Save.Size = new System.Drawing.Size(105, 23);
+			this.BTN_SpawnGroupConfig_Save.TabIndex = 0;
+			this.BTN_SpawnGroupConfig_Save.Text = "Save Configuration";
+			this.BTN_SpawnGroupConfig_Save.UseVisualStyleBackColor = true;
+			this.BTN_SpawnGroupConfig_Save.Click += new System.EventHandler(this.BTN_SaveSpawnGroupConfig_Click);
 			// 
 			// GBX_SpawnGroupConfig
 			// 
@@ -1770,7 +1768,7 @@ namespace SEConfigTool
 			this.GBX_SpawnGroupConfig_Details.Size = new System.Drawing.Size(586, 382);
 			this.GBX_SpawnGroupConfig_Details.TabIndex = 1;
 			this.GBX_SpawnGroupConfig_Details.TabStop = false;
-			this.GBX_SpawnGroupConfig_Details.Text = "Selected Group Information";
+			this.GBX_SpawnGroupConfig_Details.Text = "Selected Item Details";
 			// 
 			// TC_SpawnGroupConfig_Details
 			// 
@@ -1809,7 +1807,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer16.Panel2
 			// 
-			this.splitContainer16.Panel2.Controls.Add(this.BTN_ConfigSpawnGroupApply);
+			this.splitContainer16.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Apply);
 			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupPrefabCount);
 			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupFrequency);
 			this.splitContainer16.Size = new System.Drawing.Size(566, 331);
@@ -1834,16 +1832,16 @@ namespace SEConfigTool
 			this.label28.TabIndex = 2;
 			this.label28.Text = "Frequency:";
 			// 
-			// BTN_ConfigSpawnGroupApply
+			// BTN_SpawnGroupConfig_Details_Apply
 			// 
-			this.BTN_ConfigSpawnGroupApply.Location = new System.Drawing.Point(28, 305);
-			this.BTN_ConfigSpawnGroupApply.Name = "BTN_ConfigSpawnGroupApply";
-			this.BTN_ConfigSpawnGroupApply.Size = new System.Drawing.Size(100, 23);
-			this.BTN_ConfigSpawnGroupApply.TabIndex = 8;
-			this.BTN_ConfigSpawnGroupApply.Text = "Apply changes";
-			this.BTN_ConfigSpawnGroupApply.UseVisualStyleBackColor = true;
-			this.BTN_ConfigSpawnGroupApply.Visible = false;
-			this.BTN_ConfigSpawnGroupApply.Click += new System.EventHandler(this.BTN_ConfigSpawnGroupApply_Click);
+			this.BTN_SpawnGroupConfig_Details_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_SpawnGroupConfig_Details_Apply.Name = "BTN_SpawnGroupConfig_Details_Apply";
+			this.BTN_SpawnGroupConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_SpawnGroupConfig_Details_Apply.TabIndex = 8;
+			this.BTN_SpawnGroupConfig_Details_Apply.Text = "Apply changes";
+			this.BTN_SpawnGroupConfig_Details_Apply.UseVisualStyleBackColor = true;
+			this.BTN_SpawnGroupConfig_Details_Apply.Visible = false;
+			this.BTN_SpawnGroupConfig_Details_Apply.Click += new System.EventHandler(this.BTN_ConfigSpawnGroupApply_Click);
 			// 
 			// TBX_ConfigSpawnGroupPrefabCount
 			// 
@@ -2106,7 +2104,7 @@ namespace SEConfigTool
 			this.GBX_PhysicalItemConfig_Details.Size = new System.Drawing.Size(586, 382);
 			this.GBX_PhysicalItemConfig_Details.TabIndex = 1;
 			this.GBX_PhysicalItemConfig_Details.TabStop = false;
-			this.GBX_PhysicalItemConfig_Details.Text = "Selected Item Information";
+			this.GBX_PhysicalItemConfig_Details.Text = "Selected Item Details";
 			// 
 			// splitContainer23
 			// 
@@ -2408,7 +2406,7 @@ namespace SEConfigTool
 			this.GBX_ComponentsConfig_Details.Size = new System.Drawing.Size(586, 382);
 			this.GBX_ComponentsConfig_Details.TabIndex = 1;
 			this.GBX_ComponentsConfig_Details.TabStop = false;
-			this.GBX_ComponentsConfig_Details.Text = "Selected Item Information";
+			this.GBX_ComponentsConfig_Details.Text = "Selected Item Details";
 			// 
 			// splitContainer26
 			// 
@@ -2729,7 +2727,7 @@ namespace SEConfigTool
 			this.GBX_BlueprintsConfig_Details.Size = new System.Drawing.Size(586, 382);
 			this.GBX_BlueprintsConfig_Details.TabIndex = 1;
 			this.GBX_BlueprintsConfig_Details.TabStop = false;
-			this.GBX_BlueprintsConfig_Details.Text = "Selected Item Information";
+			this.GBX_BlueprintsConfig_Details.Text = "Selected Item Details";
 			// 
 			// splitContainer29
 			// 
@@ -2917,7 +2915,7 @@ namespace SEConfigTool
 			this.GBX_VoxelMaterialsConfig_Details.Size = new System.Drawing.Size(586, 382);
 			this.GBX_VoxelMaterialsConfig_Details.TabIndex = 1;
 			this.GBX_VoxelMaterialsConfig_Details.TabStop = false;
-			this.GBX_VoxelMaterialsConfig_Details.Text = "Selected Item Information";
+			this.GBX_VoxelMaterialsConfig_Details.Text = "Selected Item Details";
 			// 
 			// splitContainer32
 			// 
@@ -2933,7 +2931,6 @@ namespace SEConfigTool
 			this.splitContainer32.Panel1.Controls.Add(this.label66);
 			this.splitContainer32.Panel1.Controls.Add(this.label65);
 			this.splitContainer32.Panel1.Controls.Add(this.label64);
-			this.splitContainer32.Panel1.Controls.Add(this.label61);
 			this.splitContainer32.Panel1.Controls.Add(this.label60);
 			this.splitContainer32.Panel1.Controls.Add(this.label59);
 			this.splitContainer32.Panel1.Controls.Add(this.label57);
@@ -2948,7 +2945,6 @@ namespace SEConfigTool
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_AssetName);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_DamageRatio);
-			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_IsIndestructible);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_IsRare);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio);
@@ -2962,7 +2958,7 @@ namespace SEConfigTool
 			// label68
 			// 
 			this.label68.AutoSize = true;
-			this.label68.Location = new System.Drawing.Point(3, 266);
+			this.label68.Location = new System.Drawing.Point(3, 240);
 			this.label68.Name = "label68";
 			this.label68.Size = new System.Drawing.Size(100, 13);
 			this.label68.TabIndex = 16;
@@ -2971,7 +2967,7 @@ namespace SEConfigTool
 			// label67
 			// 
 			this.label67.AutoSize = true;
-			this.label67.Location = new System.Drawing.Point(3, 240);
+			this.label67.Location = new System.Drawing.Point(3, 214);
 			this.label67.Name = "label67";
 			this.label67.Size = new System.Drawing.Size(85, 13);
 			this.label67.TabIndex = 15;
@@ -2980,7 +2976,7 @@ namespace SEConfigTool
 			// label66
 			// 
 			this.label66.AutoSize = true;
-			this.label66.Location = new System.Drawing.Point(3, 214);
+			this.label66.Location = new System.Drawing.Point(3, 188);
 			this.label66.Name = "label66";
 			this.label66.Size = new System.Drawing.Size(97, 13);
 			this.label66.TabIndex = 14;
@@ -2989,7 +2985,7 @@ namespace SEConfigTool
 			// label65
 			// 
 			this.label65.AutoSize = true;
-			this.label65.Location = new System.Drawing.Point(3, 188);
+			this.label65.Location = new System.Drawing.Point(3, 32);
 			this.label65.Name = "label65";
 			this.label65.Size = new System.Drawing.Size(67, 13);
 			this.label65.TabIndex = 13;
@@ -2998,25 +2994,16 @@ namespace SEConfigTool
 			// label64
 			// 
 			this.label64.AutoSize = true;
-			this.label64.Location = new System.Drawing.Point(3, 162);
+			this.label64.Location = new System.Drawing.Point(3, 110);
 			this.label64.Name = "label64";
 			this.label64.Size = new System.Drawing.Size(78, 13);
 			this.label64.TabIndex = 12;
 			this.label64.Text = "Damage Ratio:";
 			// 
-			// label61
-			// 
-			this.label61.AutoSize = true;
-			this.label61.Location = new System.Drawing.Point(3, 136);
-			this.label61.Name = "label61";
-			this.label61.Size = new System.Drawing.Size(90, 13);
-			this.label61.TabIndex = 11;
-			this.label61.Text = "Is Indesctructible:";
-			// 
 			// label60
 			// 
 			this.label60.AutoSize = true;
-			this.label60.Location = new System.Drawing.Point(3, 110);
+			this.label60.Location = new System.Drawing.Point(3, 162);
 			this.label60.Name = "label60";
 			this.label60.Size = new System.Drawing.Size(44, 13);
 			this.label60.TabIndex = 10;
@@ -3025,7 +3012,7 @@ namespace SEConfigTool
 			// label59
 			// 
 			this.label59.AutoSize = true;
-			this.label59.Location = new System.Drawing.Point(3, 84);
+			this.label59.Location = new System.Drawing.Point(3, 136);
 			this.label59.Name = "label59";
 			this.label59.Size = new System.Drawing.Size(97, 13);
 			this.label59.TabIndex = 9;
@@ -3034,7 +3021,7 @@ namespace SEConfigTool
 			// label57
 			// 
 			this.label57.AutoSize = true;
-			this.label57.Location = new System.Drawing.Point(3, 58);
+			this.label57.Location = new System.Drawing.Point(3, 84);
 			this.label57.Name = "label57";
 			this.label57.Size = new System.Drawing.Size(87, 13);
 			this.label57.TabIndex = 8;
@@ -3052,7 +3039,7 @@ namespace SEConfigTool
 			// label58
 			// 
 			this.label58.AutoSize = true;
-			this.label58.Location = new System.Drawing.Point(3, 32);
+			this.label58.Location = new System.Drawing.Point(3, 58);
 			this.label58.Name = "label58";
 			this.label58.Size = new System.Drawing.Size(59, 13);
 			this.label58.TabIndex = 0;
@@ -3060,23 +3047,23 @@ namespace SEConfigTool
 			// 
 			// TBX_VoxelMaterialsConfig_Details_SpecularShininess
 			// 
-			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Location = new System.Drawing.Point(3, 263);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Location = new System.Drawing.Point(3, 237);
 			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Name = "TBX_VoxelMaterialsConfig_Details_SpecularShininess";
-			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.TabIndex = 19;
+			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
 			// TBX_VoxelMaterialsConfig_Details_SpecularPower
 			// 
-			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Location = new System.Drawing.Point(3, 237);
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Location = new System.Drawing.Point(3, 211);
 			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Name = "TBX_VoxelMaterialsConfig_Details_SpecularPower";
-			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.TabIndex = 18;
+			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
 			// TBX_VoxelMaterialsConfig_Details_UseTwoTextures
 			// 
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Location = new System.Drawing.Point(3, 211);
+			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Location = new System.Drawing.Point(3, 185);
 			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Name = "TBX_VoxelMaterialsConfig_Details_UseTwoTextures";
 			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Size = new System.Drawing.Size(150, 20);
@@ -3084,31 +3071,23 @@ namespace SEConfigTool
 			// 
 			// TBX_VoxelMaterialsConfig_Details_AssetName
 			// 
-			this.TBX_VoxelMaterialsConfig_Details_AssetName.Location = new System.Drawing.Point(3, 185);
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.Location = new System.Drawing.Point(3, 29);
 			this.TBX_VoxelMaterialsConfig_Details_AssetName.Name = "TBX_VoxelMaterialsConfig_Details_AssetName";
-			this.TBX_VoxelMaterialsConfig_Details_AssetName.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_AssetName.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_AssetName.TabIndex = 16;
+			this.TBX_VoxelMaterialsConfig_Details_AssetName.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
 			// TBX_VoxelMaterialsConfig_Details_DamageRatio
 			// 
-			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Location = new System.Drawing.Point(3, 159);
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Location = new System.Drawing.Point(3, 107);
 			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Name = "TBX_VoxelMaterialsConfig_Details_DamageRatio";
-			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.TabIndex = 15;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_IsIndestructible
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Location = new System.Drawing.Point(3, 133);
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Name = "TBX_VoxelMaterialsConfig_Details_IsIndestructible";
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_IsIndestructible.TabIndex = 14;
+			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
 			// TBX_VoxelMaterialsConfig_Details_IsRare
 			// 
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.Location = new System.Drawing.Point(3, 107);
+			this.TBX_VoxelMaterialsConfig_Details_IsRare.Location = new System.Drawing.Point(3, 159);
 			this.TBX_VoxelMaterialsConfig_Details_IsRare.Name = "TBX_VoxelMaterialsConfig_Details_IsRare";
 			this.TBX_VoxelMaterialsConfig_Details_IsRare.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_IsRare.Size = new System.Drawing.Size(150, 20);
@@ -3116,7 +3095,7 @@ namespace SEConfigTool
 			// 
 			// TBX_VoxelMaterialsConfig_Details_CanBeHarvested
 			// 
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Location = new System.Drawing.Point(3, 81);
+			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Location = new System.Drawing.Point(3, 133);
 			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Name = "TBX_VoxelMaterialsConfig_Details_CanBeHarvested";
 			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Size = new System.Drawing.Size(150, 20);
@@ -3124,19 +3103,19 @@ namespace SEConfigTool
 			// 
 			// TBX_VoxelMaterialsConfig_Details_MinedOreRatio
 			// 
-			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Location = new System.Drawing.Point(3, 55);
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Location = new System.Drawing.Point(3, 81);
 			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Name = "TBX_VoxelMaterialsConfig_Details_MinedOreRatio";
-			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.TabIndex = 11;
+			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
 			// TBX_VoxelMaterialsConfig_Details_Name
 			// 
 			this.TBX_VoxelMaterialsConfig_Details_Name.Location = new System.Drawing.Point(3, 3);
 			this.TBX_VoxelMaterialsConfig_Details_Name.Name = "TBX_VoxelMaterialsConfig_Details_Name";
-			this.TBX_VoxelMaterialsConfig_Details_Name.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_Name.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_Name.TabIndex = 10;
+			this.TBX_VoxelMaterialsConfig_Details_Name.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
 			// BTN_VoxelMaterialsConfig_Details_Apply
 			// 
@@ -3151,11 +3130,11 @@ namespace SEConfigTool
 			// 
 			// TBX_VoxelMaterialsConfig_Details_MinedOre
 			// 
-			this.TBX_VoxelMaterialsConfig_Details_MinedOre.Location = new System.Drawing.Point(3, 29);
+			this.TBX_VoxelMaterialsConfig_Details_MinedOre.Location = new System.Drawing.Point(3, 55);
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.Name = "TBX_VoxelMaterialsConfig_Details_MinedOre";
-			this.TBX_VoxelMaterialsConfig_Details_MinedOre.ReadOnly = true;
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TabIndex = 5;
+			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
 			// SEConfigTool
 			// 
@@ -3175,7 +3154,7 @@ namespace SEConfigTool
 			this.splitContainer6.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).EndInit();
 			this.splitContainer6.ResumeLayout(false);
-			this.GBX_AmmoConfig_SelectedInformation.ResumeLayout(false);
+			this.GBX_AmmoConfig_Details.ResumeLayout(false);
 			this.splitContainer7.Panel1.ResumeLayout(false);
 			this.splitContainer7.Panel1.PerformLayout();
 			this.splitContainer7.Panel2.ResumeLayout(false);
@@ -3194,7 +3173,7 @@ namespace SEConfigTool
 			this.splitContainer2.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 			this.splitContainer2.ResumeLayout(false);
-			this.GBX_BlocksConfig_SelectedInfo.ResumeLayout(false);
+			this.GBX_BlocksConfig_Details.ResumeLayout(false);
 			this.splitContainer4.Panel1.ResumeLayout(false);
 			this.splitContainer4.Panel1.PerformLayout();
 			this.splitContainer4.Panel2.ResumeLayout(false);
@@ -3218,7 +3197,7 @@ namespace SEConfigTool
 			this.splitContainer9.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer9)).EndInit();
 			this.splitContainer9.ResumeLayout(false);
-			this.GBX_ContainerTypeConfig_SelectedInformation.ResumeLayout(false);
+			this.GBX_ContainerTypeConfig_Details.ResumeLayout(false);
 			this.TC_ContainerTypeConfig_Details.ResumeLayout(false);
 			this.TP_ContainerTypeConfig_Details_Information.ResumeLayout(false);
 			this.splitContainer10.Panel1.ResumeLayout(false);
@@ -3361,8 +3340,8 @@ namespace SEConfigTool
 
 		private System.Windows.Forms.TabPage AmmoConfigurationPage;
         private System.Windows.Forms.SplitContainer splitContainer5;
-        private System.Windows.Forms.Button BTN_ConfigAmmoReload;
-        private System.Windows.Forms.Button BTN_SaveAmmoConfig;
+        private System.Windows.Forms.Button BTN_AmmoConfig_Reload;
+        private System.Windows.Forms.Button BTN_AmmoConfig_Save;
         private System.Windows.Forms.GroupBox GBX_AmmoConfig;
         private System.Windows.Forms.SplitContainer splitContainer6;
 		private System.Windows.Forms.ListBox LBX_AmmoConfiguration;
@@ -3381,15 +3360,15 @@ namespace SEConfigTool
 		private System.Windows.Forms.TabControl LayoutPages;
 		private System.Windows.Forms.TabPage ContainerTypeConfiguration;
 		private System.Windows.Forms.SplitContainer splitContainer8;
-		private System.Windows.Forms.Button BTN_ConfigContainerTypeReload;
-		private System.Windows.Forms.Button BTN_SaveContainerTypeConfig;
+		private System.Windows.Forms.Button BTN_ContainerTypeConfig_Reload;
+		private System.Windows.Forms.Button BTN_ContainerTypeConfig_Save;
 		private System.Windows.Forms.GroupBox GBX_ContainerTypeConfig;
 		private System.Windows.Forms.SplitContainer splitContainer9;
 		private System.Windows.Forms.ListBox LBX_ContainerTypeConfiguration;
 		private System.Windows.Forms.TabPage GlobalEventConfiguration;
 		private System.Windows.Forms.SplitContainer splitContainer11;
-		private System.Windows.Forms.Button BTN_ConfigGlobalEventReload;
-		private System.Windows.Forms.Button BTN_SaveGlobalEventConfig;
+		private System.Windows.Forms.Button BTN_GlobalEventConfig_Reload;
+		private System.Windows.Forms.Button BTN_GlobalEventConfig_Save;
 		private System.Windows.Forms.GroupBox GBX_GlobalEventConfig;
 		private System.Windows.Forms.SplitContainer splitContainer12;
 		private System.Windows.Forms.ListBox LBX_GlobalEventConfiguration;
@@ -3403,24 +3382,24 @@ namespace SEConfigTool
 		private System.Windows.Forms.Label label22;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventMinActivation;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventMaxActivation;
-		private System.Windows.Forms.Button BTN_ConfigGlobalEventApply;
+		private System.Windows.Forms.Button BTN_GlobalEventConfig_Apply;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventName;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventType;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventId;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventDescription;
 		private System.Windows.Forms.TabPage SpawnGroupConfiguration;
 		private System.Windows.Forms.SplitContainer splitContainer14;
-		private System.Windows.Forms.Button BTN_ConfigSpawnGroupReload;
-		private System.Windows.Forms.Button BTN_SaveSpawnGroupConfig;
+		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Reload;
+		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Save;
 		private System.Windows.Forms.GroupBox GBX_SpawnGroupConfig;
 		private System.Windows.Forms.SplitContainer splitContainer15;
 		private System.Windows.Forms.ListBox LBX_SpawnGroupConfiguration;
-		private System.Windows.Forms.Button BTN_ConfigSpawnGroupApply;
+		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Details_Apply;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventFirstActivation;
 		private System.Windows.Forms.Button BTN_ConfigApplyChanges;
-		private System.Windows.Forms.Button BTN_ConfigAmmoApply;
-		private System.Windows.Forms.GroupBox GBX_ContainerTypeConfig_SelectedInformation;
+		private System.Windows.Forms.Button BTN_AmmoConfig_Details_Apply;
+		private System.Windows.Forms.GroupBox GBX_ContainerTypeConfig_Details;
 		private System.Windows.Forms.TabControl TC_ContainerTypeConfig_Details;
 		private System.Windows.Forms.TabPage TP_ContainerTypeConfig_Details_Items;
 		private System.Windows.Forms.SplitContainer splitContainer20;
@@ -3444,12 +3423,12 @@ namespace SEConfigTool
 		private System.Windows.Forms.Label label15;
 		private System.Windows.Forms.Label label16;
 		private System.Windows.Forms.TextBox TBX_ConfigContainerTypeCountMin;
-		private System.Windows.Forms.Button BTN_ConfigContainerTypeApply;
+		private System.Windows.Forms.Button BTN_ContainerTypeConfig_Details_Apply;
 		private System.Windows.Forms.TextBox TBX_ConfigContainerTypeId;
 		private System.Windows.Forms.TextBox TBX_ConfigContainerTypeCountMax;
 		private System.Windows.Forms.TextBox TBX_ConfigContainerTypeName;
 		private System.Windows.Forms.TextBox TBX_ConfigContainerTypeItemCount;
-		private System.Windows.Forms.GroupBox GBX_AmmoConfig_SelectedInformation;
+		private System.Windows.Forms.GroupBox GBX_AmmoConfig_Details;
 		private System.Windows.Forms.SplitContainer splitContainer7;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.Label label9;
@@ -3463,7 +3442,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TBX_ConfigAmmoCapacity;
 		private System.Windows.Forms.TextBox TBX_ConfigAmmoName;
 		private System.Windows.Forms.TextBox TBX_ConfigAmmoCaliber;
-		private System.Windows.Forms.GroupBox GBX_BlocksConfig_SelectedInfo;
+		private System.Windows.Forms.GroupBox GBX_BlocksConfig_Details;
 		private System.Windows.Forms.SplitContainer splitContainer4;
 		private System.Windows.Forms.Label label24;
 		private System.Windows.Forms.Label label4;
@@ -3590,7 +3569,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.Label label66;
 		private System.Windows.Forms.Label label65;
 		private System.Windows.Forms.Label label64;
-		private System.Windows.Forms.Label label61;
 		private System.Windows.Forms.Label label60;
 		private System.Windows.Forms.Label label59;
 		private System.Windows.Forms.Label label57;
@@ -3599,7 +3577,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_UseTwoTextures;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_AssetName;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_DamageRatio;
-		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_IsIndestructible;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_IsRare;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_CanBeHarvested;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_MinedOreRatio;

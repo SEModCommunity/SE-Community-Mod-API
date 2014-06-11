@@ -337,7 +337,7 @@ namespace SEConfigTool
 
             m_currentlySelecting = false;
 
-			BTN_ConfigAmmoApply.Visible = false;
+			BTN_AmmoConfig_Details_Apply.Visible = false;
         }
 
         private void BTN_ConfigAmmoReload_Click(object sender, EventArgs e)
@@ -360,14 +360,14 @@ namespace SEConfigTool
 			ammoMagazine.Mass = Convert.ToSingle(TBX_ConfigAmmoMass.Text, m_numberFormatInfo);
 			ammoMagazine.Volume = Convert.ToSingle(TBX_ConfigAmmoVolume.Text, m_numberFormatInfo);
 
-            BTN_ConfigAmmoApply.Visible = false;
+            BTN_AmmoConfig_Details_Apply.Visible = false;
         }
 
         private void TBX_ConfigAmmo_TextChanged(object sender, EventArgs e)
         {
             if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
             {
-                BTN_ConfigAmmoApply.Visible = true;
+                BTN_AmmoConfig_Details_Apply.Visible = true;
             }
         }
 
@@ -401,7 +401,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_ConfigContainerTypeApply.Visible = false;
+			BTN_ContainerTypeConfig_Details_Apply.Visible = false;
 		}
 
 		private void BTN_ConfigContainerTypeReload_Click(object sender, EventArgs e)
@@ -423,14 +423,14 @@ namespace SEConfigTool
 			containerType.CountMax = Convert.ToInt32(TBX_ConfigContainerTypeCountMax.Text, m_numberFormatInfo);
 			containerType.CountMin = Convert.ToInt32(TBX_ConfigContainerTypeCountMin.Text, m_numberFormatInfo);
 
-			BTN_ConfigContainerTypeApply.Visible = false;
+			BTN_ContainerTypeConfig_Details_Apply.Visible = false;
 		}
 
 		private void TBX_ConfigContainerType_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ConfigContainerTypeApply.Visible = true;
+				BTN_ContainerTypeConfig_Details_Apply.Visible = true;
 			}
 		}
 
@@ -500,7 +500,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_ConfigGlobalEventApply.Visible = false;
+			BTN_GlobalEventConfig_Apply.Visible = false;
 		}
 
 		private void BTN_ConfigGlobalEventReload_Click(object sender, EventArgs e)
@@ -523,14 +523,14 @@ namespace SEConfigTool
 			globalEvent.MaxActivation = Convert.ToInt32(TBX_ConfigGlobalEventMaxActivation.Text, m_numberFormatInfo);
 			globalEvent.FirstActivation = Convert.ToInt32(TBX_ConfigGlobalEventFirstActivation.Text, m_numberFormatInfo);
 
-			BTN_ConfigGlobalEventApply.Visible = false;
+			BTN_GlobalEventConfig_Apply.Visible = false;
 		}
 
 		private void TBX_ConfigGlobalEvent_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ConfigGlobalEventApply.Visible = true;
+				BTN_GlobalEventConfig_Apply.Visible = true;
 			}
 		}
 
@@ -560,7 +560,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_ConfigSpawnGroupApply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Apply.Visible = false;
 		}
 
 		private void BTN_ConfigSpawnGroupReload_Click(object sender, EventArgs e)
@@ -581,14 +581,14 @@ namespace SEConfigTool
 
 			spawnGroup.Frequency = Convert.ToSingle(TBX_ConfigSpawnGroupFrequency.Text, m_numberFormatInfo);
 
-			BTN_ConfigSpawnGroupApply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Apply.Visible = false;
 		}
 
 		private void TBX_ConfigSpawnGroup_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ConfigSpawnGroupApply.Visible = true;
+				BTN_SpawnGroupConfig_Details_Apply.Visible = true;
 			}
 		}
 
@@ -815,16 +815,18 @@ namespace SEConfigTool
 			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsWrapper.DefinitionOf(index);
 
 			TBX_VoxelMaterialsConfig_Details_Name.Text = voxelMaterial.Name;
+			TBX_VoxelMaterialsConfig_Details_AssetName.Text = voxelMaterial.AssetName;
 			TBX_VoxelMaterialsConfig_Details_MinedOre.Text = voxelMaterial.MinedOre;
-			TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Text = "";
+
+			TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Text = voxelMaterial.MinedOreRatio.ToString();
+			TBX_VoxelMaterialsConfig_Details_DamageRatio.Text = voxelMaterial.DamageRatio.ToString();
+			TBX_VoxelMaterialsConfig_Details_SpecularPower.Text = voxelMaterial.SpecularPower.ToString();
+			TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text = voxelMaterial.SpecularShininess.ToString();
+
+			//TODO - Convert these text fields to checkboxes
 			TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Text = "";
 			TBX_VoxelMaterialsConfig_Details_IsRare.Text = "";
-			TBX_VoxelMaterialsConfig_Details_IsIndestructible.Text = "";
-			TBX_VoxelMaterialsConfig_Details_DamageRatio.Text = "";
-			TBX_VoxelMaterialsConfig_Details_AssetName.Text = "";
 			TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Text = "";
-			TBX_VoxelMaterialsConfig_Details_SpecularPower.Text = "";
-			TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text = "";
 
 			m_currentlySelecting = false;
 			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
@@ -842,7 +844,33 @@ namespace SEConfigTool
 
 		private void BTN_VoxelMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
 		{
+			int index = LBX_VoxelMaterialsConfig.SelectedIndex;
 
+			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsWrapper.DefinitionOf(index);
+
+			voxelMaterial.Name = TBX_VoxelMaterialsConfig_Details_Name.Text;
+			voxelMaterial.AssetName = TBX_VoxelMaterialsConfig_Details_AssetName.Text;
+			voxelMaterial.MinedOre = TBX_VoxelMaterialsConfig_Details_MinedOre.Text;
+
+			voxelMaterial.MinedOreRatio = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Text, m_numberFormatInfo);
+			voxelMaterial.DamageRatio = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_DamageRatio.Text, m_numberFormatInfo);
+			voxelMaterial.SpecularPower = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_SpecularPower.Text, m_numberFormatInfo);
+			voxelMaterial.SpecularShininess = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text, m_numberFormatInfo);
+
+			//TODO - Set these values once the fields are checkboxes
+			voxelMaterial.CanBeHarvested = voxelMaterial.CanBeHarvested;
+			voxelMaterial.IsRare = voxelMaterial.IsRare;
+			voxelMaterial.UseTwoTextures = voxelMaterial.UseTwoTextures;
+
+			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
+		}
+
+		private void TBX_VoxelMaterialsConfig_Details_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_VoxelMaterialsConfig_Details_Apply.Visible = true;
+			}
 		}
 
 		#endregion
