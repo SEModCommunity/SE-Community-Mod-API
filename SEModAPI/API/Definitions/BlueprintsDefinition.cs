@@ -95,7 +95,7 @@ namespace SEModAPI.API.Definitions
 		#region "Methods"
 
 		public void Save()
-		{
+	{
 			if (!this.Changed) return;
 
 			m_configSerializer.BlueprintDefinitions = this.RawDefinitions;

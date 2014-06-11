@@ -7,14 +7,12 @@ using SEModAPI.Support;
 
 namespace SEModAPI.API.Definitions
 {
-	public class PhysicalItemsDefinition<T> : ObjectBuilderDefinition<T> where T : MyObjectBuilder_PhysicalItemDefinition
+    public class PhysicalItemsDefinition : OverLayerDefinition<MyObjectBuilder_PhysicalItemDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public PhysicalItemsDefinition(T definition)
-			: base(definition)
-		{
-		}
+        public PhysicalItemsDefinition(MyObjectBuilder_PhysicalItemDefinition definition): base(definition)
+		{}
 
 		#endregion
 
@@ -22,70 +20,78 @@ namespace SEModAPI.API.Definitions
 
         public VRageMath.Vector3 Size
         {
-            get { return m_definition.Size; }
+            get { return m_baseDefinition.Size; }
             set
             {
-				if (m_definition.Size == value) return;
-				m_definition.Size = value;
+                if (m_baseDefinition.Size == value) return;
+                m_baseDefinition.Size = value;
                 Changed = true;
             }
         }
 
 		public float Mass
 		{
-			get { return m_definition.Mass; }
+            get { return m_baseDefinition.Mass; }
 			set
 			{
-				if (m_definition.Mass == value) return;
-				m_definition.Mass = value;
+                if (m_baseDefinition.Mass == value) return;
+                m_baseDefinition.Mass = value;
 				Changed = true;
 			}
 		}
 
 		public float Volume
 		{
-			get { return m_definition.Volume.Value; }
+            get { return m_baseDefinition.Volume.Value; }
 			set
 			{
-				if (m_definition.Volume == value) return;
-				m_definition.Volume = value;
+                if (m_baseDefinition.Volume == value) return;
+                m_baseDefinition.Volume = value;
 				Changed = true;
 			}
 		}
 
 		public string Model
 		{
-			get { return m_definition.Model; }
+            get { return m_baseDefinition.Model; }
 			set
 			{
-				if (m_definition.Model == value) return;
-				m_definition.Model = value;
+                if (m_baseDefinition.Model == value) return;
+                m_baseDefinition.Model = value;
 				Changed = true;
 			}
 		}
 
 		public string Icon
 		{
-			get { return m_definition.Icon; }
+            get { return m_baseDefinition.Icon; }
 			set
 			{
-				if (m_definition.Icon == value) return;
-				m_definition.Icon = value;
+                if (m_baseDefinition.Icon == value) return;
+                m_baseDefinition.Icon = value;
 				Changed = true;
 			}
 		}
 
 		public MyTextsWrapperEnum IconSymbol
 		{
-			get { return m_definition.IconSymbol.Value; }
+            get { return m_baseDefinition.IconSymbol.Value; }
 			set
 			{
-				if (m_definition.IconSymbol == value) return;
-				m_definition.IconSymbol = value;
+                if (m_baseDefinition.IconSymbol == value) return;
+                m_baseDefinition.IconSymbol = value;
 				Changed = true;
 			}
 		}
 
+		#endregion
+
+        #region "Methods"
+
+        protected override string GetNameFrom(MyObjectBuilder_PhysicalItemDefinition definition)
+        {
+            return definition.DisplayName;
+        }
 		#endregion
 	}
 
@@ -93,58 +99,30 @@ namespace SEModAPI.API.Definitions
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public class PhysicalItemDefinitionsWrapper<T> : NameIdIndexedWrapper<T, PhysicalItemsDefinition<T>> where T : MyObjectBuilder_PhysicalItemDefinition
+    public class PhysicalItemDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_PhysicalItemDefinition, PhysicalItemsDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public PhysicalItemDefinitionsWrapper(T[] definitions)
-			: base(definitions)
-		{
-			int index = 0;
-			foreach (var definition in definitions)
-			{
-				m_nameTypeIndexes.Add(new KeyValuePair<string, SerializableDefinitionId>(definition.DisplayName, definition.Id), index);
-
-				index++;
-			}
-		}
+        public PhysicalItemDefinitionsManager(MyObjectBuilder_PhysicalItemDefinition[] baseDefinitions): base(baseDefinitions)
+		{}
 
 		#endregion
 
-		#region "Properties"
+        #region "Methods"
 
-		new public bool Changed
+        protected override PhysicalItemsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_PhysicalItemDefinition definition)
 		{
-			get
-			{
-				foreach (var def in m_definitions)
-				{
-					if (def.Value.Changed)
-						return true;
+            return new PhysicalItemsDefinition(definition);
 				}
 
-				return false;
-			}
-			set
+        protected override MyObjectBuilder_PhysicalItemDefinition GetBaseTypeOf(PhysicalItemsDefinition overLayer)
 			{
-				base.Changed = value;
-			}
+            return overLayer.BaseDefinition;
 		}
 
-		public T[] RawDefinitions
-		{
-			get
-			{
-				T[] temp = new T[m_definitions.Count];
-				PhysicalItemsDefinition<T>[] definitionsArray = this.Definitions;
-
-				for (int i = 0; i < definitionsArray.Length; i++)
+        protected override bool GetChangedState(PhysicalItemsDefinition overLayer)
 				{
-					temp[i] = definitionsArray[i].Definition;
-				}
-
-				return temp;
-			}
+            return overLayer.Changed;
 		}
 
 		#endregion
@@ -157,7 +135,7 @@ namespace SEModAPI.API.Definitions
 
 			m_configSerializer.PhysicalItemDefinitions = this.RawDefinitions;
 			m_configSerializer.SavePhysicalItemsContentFile();
-		}
+	}
 
 		#endregion
 	}

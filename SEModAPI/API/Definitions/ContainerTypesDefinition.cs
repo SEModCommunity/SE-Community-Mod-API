@@ -1,332 +1,103 @@
-﻿using System;
-using System.Collections.Generic;
-using Sandbox.Common.ObjectBuilders;
+﻿using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
-using SEModAPI.Support;
+using SEModAPI.API.Definitions;
 
-namespace SEModAPI.API.Definitions
+namespace SEModAPI.API
 {
-	public class ContainerTypesDefinition : BaseDefinition<MyObjectBuilder_ContainerTypeDefinition>
+	public class ContainerTypesDefinition : OverLayerDefinition<MyObjectBuilder_ContainerTypeDefinition>
 	{
-		#region "Attributes"
-
-		private ContainerTypeItemsWrapper m_itemsWrapper;
-
-		#endregion
-
 		#region "Constructors and Initializers"
 
-		public ContainerTypesDefinition(MyObjectBuilder_ContainerTypeDefinition definition)
-			: base(definition)
-		{
-			m_itemsWrapper = new ContainerTypeItemsWrapper(m_definition.Items);
-		}
+		public ContainerTypesDefinition(MyObjectBuilder_ContainerTypeDefinition myObjectBuilderDefinitionSubType): base(myObjectBuilderDefinitionSubType)
+		{}
 
 		#endregion
 
 		#region "Properties"
 
-		new public bool Changed
-		{
-			get
-			{
-				foreach (var def in m_itemsWrapper.Definitions)
-				{
-					if (def.Changed)
-						return true;
-				}
-
-				return false;
-			}
-			set
-			{
-				base.Changed = value;
-			}
-		}
-
-		new public MyObjectBuilder_ContainerTypeDefinition Definition
-		{
-			get
-			{
-				m_definition.Items = m_itemsWrapper.RawDefinitions;
-				return m_definition;
-			}
-		}
-
 		public MyObjectBuilderTypeEnum TypeId
 		{
-			get { return m_definition.TypeId; }
+			get { return m_baseDefinition.TypeId; }
 		}
 
 		public int SubtypeId
 		{
-			get { return m_definition.SubtypeId; }
+			get { return m_baseDefinition.SubtypeId; }
 		}
 
-		public string Name
+	    public int ItemCount
 		{
-			get { return m_definition.Name; }
-			set
-			{
-				if (m_definition.Name == value) return;
-				m_definition.Name = value;
-				Changed = true;
-			}
-		}
-
-		public int ItemCount
-		{
-			get { return m_definition.Items.Length; }
+			get { return m_baseDefinition.Items.Length; }
 		}
 
 		public int CountMin
 		{
-			get { return m_definition.CountMin; }
+			get { return m_baseDefinition.CountMin; }
             set
             {
-				if (m_definition.CountMin == value) return;
-				m_definition.CountMin = value;
+				if (m_baseDefinition.CountMin == value) return;
+				m_baseDefinition.CountMin = value;
                 Changed = true;
             }
 		}
 
 		public int CountMax
 		{
-			get { return m_definition.CountMax; }
+			get { return m_baseDefinition.CountMax; }
             set
             {
-				if (m_definition.CountMax == value) return;
-				m_definition.CountMax = value;
+				if (m_baseDefinition.CountMax == value) return;
+				m_baseDefinition.CountMax = value;
                 Changed = true;
             }
 		}
 
-		public ContainerTypeItem[] Items
+		public MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] Items
 		{
-			get { return m_itemsWrapper.Definitions; }
-		}
-
-		#endregion
-	}
-
-	public class ContainerTypeItem : BaseDefinition<MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem>
-	{
-		#region "Constructors and Initializers"
-
-		public ContainerTypeItem(MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem definition)
-			: base(definition)
-		{
+			get { return m_baseDefinition.Items; }
 		}
 
 		#endregion
 
-		#region "Properties"
+        #region "Methods"
 
-		public SerializableDefinitionId Id
-		{
-			get { return m_definition.Id; }
-			set
-			{
-				if (m_definition.Id.ToString() == value.ToString()) return;
-				m_definition.Id = value;
-				Changed = true;
-			}
-		}
+         protected override string GetNameFrom(MyObjectBuilder_ContainerTypeDefinition definition)
+         {
+             return definition.Name;
+         }
 
-		public decimal AmountMin
-		{
-			get { return m_definition.AmountMin; }
-			set
-			{
-				if (m_definition.AmountMin == value) return;
-				m_definition.AmountMin = value;
-				Changed = true;
-			}
-		}
-
-		public decimal AmountMax
-		{
-			get { return m_definition.AmountMax; }
-			set
-			{
-				if (m_definition.AmountMax == value) return;
-				m_definition.AmountMax = value;
-				Changed = true;
-			}
-		}
-
-		public float Frequency
-		{
-			get { return m_definition.Frequency; }
-			set
-			{
-				if (m_definition.Frequency == value) return;
-				m_definition.Frequency = value;
-				Changed = true;
-			}
-		}
-
-		#endregion
+        #endregion
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public class ContainerTypesDefinitionsWrapper : BaseDefinitionsWrapper<MyObjectBuilder_ContainerTypeDefinition, ContainerTypesDefinition>
+    public class ContainerTypesDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition, ContainerTypesDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public ContainerTypesDefinitionsWrapper(MyObjectBuilder_ContainerTypeDefinition[] definitions)
-			: base(definitions)
-		{
-		}
-
-		#endregion
-
-		#region "Properties"
-
-		new public bool Changed
-		{
-			get
-			{
-				foreach (var def in m_definitions)
-				{
-					if (def.Value.Changed)
-						return true;
-				}
-
-				return false;
-			}
-			set
-			{
-				base.Changed = value;
-			}
-		}
-
-		public MyObjectBuilder_ContainerTypeDefinition[] RawDefinitions
-		{
-			get
-			{
-				MyObjectBuilder_ContainerTypeDefinition[] temp = new MyObjectBuilder_ContainerTypeDefinition[m_definitions.Count];
-				ContainerTypesDefinition[] definitionsArray = this.Definitions;
-
-				for (int i = 0; i < definitionsArray.Length; i++)
-				{
-					temp[i] = definitionsArray[i].Definition;
-				}
-
-				return temp;
-			}
-		}
+		public ContainerTypesDefinitionsManager(MyObjectBuilder_ContainerTypeDefinition[] baseDefinitions): base(baseDefinitions)
+		{}
 
 		#endregion
 
 		#region "Methods"
 
-		public int IndexOf(ContainerTypesDefinition item)
-		{
-			int index = 0;
-			bool foundMatch = false;
-			foreach (var def in m_definitions)
-			{
-				if (def.Value == item)
-				{
-					foundMatch = true;
-					break;
-				}
+        protected override ContainerTypesDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_ContainerTypeDefinition definition)
+        {
+            return new ContainerTypesDefinition(definition);
+        }
 
-				index++;
-			}
+        protected override MyObjectBuilder_ContainerTypeDefinition GetBaseTypeOf(ContainerTypesDefinition overLayer)
+        {
+            return overLayer.BaseDefinition;
+        }
 
-			if (foundMatch)
-				return index;
-			else
-				return -1;
-		}
-
-		public void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.ContainerTypeDefinitions = this.RawDefinitions;
-			m_configSerializer.SaveContainerTypesContentFile();
-		}
-
-		#endregion
-	}
-
-	public class ContainerTypeItemsWrapper : BaseDefinitionsWrapper<MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem, ContainerTypeItem>
-	{
-		#region "Constructors and Initializers"
-
-		public ContainerTypeItemsWrapper(MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] definitions)
-			: base(definitions)
-		{
-		}
-
-		#endregion
-
-		#region "Properties"
-
-		new public bool Changed
-		{
-			get
-			{
-				foreach (var def in m_definitions)
-				{
-					if (def.Value.Changed)
-						return true;
-				}
-
-				return false;
-			}
-			set
-			{
-				base.Changed = value;
-			}
-		}
-
-		public MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] RawDefinitions
-		{
-			get
-			{
-				MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] temp = new MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[m_definitions.Count];
-				ContainerTypeItem[] definitionsArray = this.Definitions;
-
-				for (int i = 0; i < definitionsArray.Length; i++)
-				{
-					temp[i] = definitionsArray[i].Definition;
-				}
-
-				return temp;
-			}
-		}
-
-		#endregion
-		
-		#region "Methods"
-
-		public int IndexOf(ContainerTypeItem item)
-		{
-			int index = 0;
-			bool foundMatch = false;
-			foreach (var def in m_definitions)
-			{
-				if (def.Value == item)
-				{
-					foundMatch = true;
-					break;
-				}
-
-				index++;
-			}
-
-			if (foundMatch)
-				return index;
-			else
-				return -1;
-		}
+        protected override bool GetChangedState(ContainerTypesDefinition overLayer)
+        {
+            return overLayer.Changed;
+        }
 
 		#endregion
 	}

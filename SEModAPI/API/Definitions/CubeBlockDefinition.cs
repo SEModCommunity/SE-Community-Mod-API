@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API.Definitions
 {
-	public class CubeBlockDefinition : ObjectBuilderDefinition<MyObjectBuilder_CubeBlockDefinition>
+    public class CubeBlockDefinition : OverLayerDefinition<MyObjectBuilder_CubeBlockDefinition>
     {
 		#region "Constructors and Initializers"
 
-		public CubeBlockDefinition(MyObjectBuilder_CubeBlockDefinition definition)
-			: base(definition)
-		{
-		}
+		public CubeBlockDefinition(MyObjectBuilder_CubeBlockDefinition definition): base(definition)
+		{}
 
 		#endregion
 
@@ -20,41 +18,49 @@ namespace SEModAPI.API.Definitions
 
 		new public string Name
 		{
-			get { return m_definition.BlockPairName; }
+			get { return m_baseDefinition.BlockPairName; }
 			set
 			{
-				if (m_definition.BlockPairName == value) return;
-				m_definition.BlockPairName = value;
+                if (m_baseDefinition.BlockPairName == value) return;
+                m_baseDefinition.BlockPairName = value;
 				Changed = true;
 			}
 		}
 
         public float BuildTime
         {
-            get { return m_definition.BuildTimeSeconds; }
+            get { return m_baseDefinition.BuildTimeSeconds; }
             set
             {
-				if (m_definition.BuildTimeSeconds == value) return;
-				m_definition.BuildTimeSeconds = value;
+                if (m_baseDefinition.BuildTimeSeconds == value) return;
+                m_baseDefinition.BuildTimeSeconds = value;
                 Changed = true;
             }
         }
 
         public float DisassembleRatio
         {
-			get { return m_definition.DisassembleRatio; }
+            get { return m_baseDefinition.DisassembleRatio; }
             set 
             {
-				if (m_definition.DisassembleRatio == value) return;
-				m_definition.DisassembleRatio = value;
+                if (m_baseDefinition.DisassembleRatio == value) return;
+                m_baseDefinition.DisassembleRatio = value;
                 Changed = true;
             }
         }
-
 		public MyObjectBuilder_CubeBlockDefinition.CubeBlockComponent[] Components
 		{
-			get { return m_definition.Components; }
+            get { return m_baseDefinition.Components; }
 		}
+
+        #endregion
+
+        #region "Methods"
+
+        protected override string GetNameFrom(MyObjectBuilder_CubeBlockDefinition definition)
+        {
+            return definition.BlockPairName;
+    }
 
         #endregion
     }
@@ -63,58 +69,30 @@ namespace SEModAPI.API.Definitions
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public class CubeBlockDefinitionsWrapper : NameIdIndexedWrapper<MyObjectBuilder_CubeBlockDefinition, CubeBlockDefinition>
+    public class CubeBlockDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_CubeBlockDefinition, CubeBlockDefinition>
     {
 		#region "Constructors and Initializers"
 
-		public CubeBlockDefinitionsWrapper(MyObjectBuilder_CubeBlockDefinition[] definitions)
-			: base(definitions)
-		{
-			int index = 0;
-			foreach (var definition in definitions)
-			{
-				m_nameTypeIndexes.Add(new KeyValuePair<string, SerializableDefinitionId>(definition.DisplayName, definition.Id), index);
-
-				index++;
-			}
-		}
+		public CubeBlockDefinitionsManager(MyObjectBuilder_CubeBlockDefinition[] definitions): base(definitions)
+		{}
 
 		#endregion
 
-		#region "Properties"
+        #region "Methods"
 
-		new public bool Changed
-		{
-			get
-			{
-				foreach (var def in m_definitions)
+        protected override CubeBlockDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_CubeBlockDefinition definition)
 				{
-					if (def.Value.Changed)
-						return true;
+            return new CubeBlockDefinition(definition);
 				}
 
-				return false;
-			}
-			set
+        protected override MyObjectBuilder_CubeBlockDefinition GetBaseTypeOf(CubeBlockDefinition overLayer)
 			{
-				base.Changed = value;
-			}
+            return overLayer.BaseDefinition;
 		}
 
-		public MyObjectBuilder_CubeBlockDefinition[] RawDefinitions
-		{
-			get
-			{
-				MyObjectBuilder_CubeBlockDefinition[] temp = new MyObjectBuilder_CubeBlockDefinition[m_definitions.Count];
-				CubeBlockDefinition[] definitionsArray = this.Definitions;
-
-				for (int i = 0; i < definitionsArray.Length; i++)
+        protected override bool GetChangedState(CubeBlockDefinition overLayer)
 				{
-					temp[i] = definitionsArray[i].Definition;
-				}
-
-				return temp;
-			}
+            return overLayer.Changed;
 		}
 
 		#endregion
