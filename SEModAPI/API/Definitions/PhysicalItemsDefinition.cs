@@ -148,6 +148,17 @@ namespace SEModAPI.API.Definitions
 		}
 
 		#endregion
-	}
+		
+		#region "Methods"
 
+		public void Save()
+		{
+			if (!this.Changed) return;
+
+			m_configSerializer.PhysicalItemDefinitions = this.RawDefinitions;
+			m_configSerializer.SavePhysicalItemsContentFile();
+		}
+
+		#endregion
+	}
 }

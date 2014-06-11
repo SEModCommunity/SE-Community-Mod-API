@@ -126,5 +126,17 @@ namespace SEModAPI.API.Definitions
 		}
 
 		#endregion
-    }
+
+		#region "Methods"
+
+		public void Save()
+		{
+			if (!this.Changed) return;
+
+			m_configSerializer.AmmoMagazineDefinitions = this.RawDefinitions;
+			m_configSerializer.SaveAmmoMagazinesContentFile();
+		}
+
+		#endregion
+	}
 }

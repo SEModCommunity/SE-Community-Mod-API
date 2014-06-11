@@ -117,6 +117,7 @@ namespace SEModAPI.API.Definitions
 
 		protected bool m_changed = false;
 		protected Dictionary<long, U> m_definitions = new Dictionary<long, U>();
+		protected ConfigFileSerializer m_configSerializer = new ConfigFileSerializer();
 
 		#endregion
 

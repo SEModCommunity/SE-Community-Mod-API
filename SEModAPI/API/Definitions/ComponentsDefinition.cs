@@ -104,5 +104,17 @@ namespace SEModAPI.API.Definitions
 		}
 
 		#endregion
+
+		#region "Methods"
+
+		public void Save()
+		{
+			if (!this.Changed) return;
+
+			m_configSerializer.ComponentDefinitions = this.RawDefinitions;
+			m_configSerializer.SaveComponentsContentFile();
+		}
+
+		#endregion
 	}
 }

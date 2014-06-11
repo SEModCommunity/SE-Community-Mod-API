@@ -563,6 +563,7 @@ namespace SEConfigTool
 			this.BTN_ConfigAmmoApply.Text = "Apply changes";
 			this.BTN_ConfigAmmoApply.UseVisualStyleBackColor = true;
 			this.BTN_ConfigAmmoApply.Visible = false;
+			this.BTN_ConfigAmmoApply.Click += new System.EventHandler(this.BTN_ConfigAmmoApply_Click);
 			// 
 			// TBX_ConfigAmmoId
 			// 
@@ -802,6 +803,7 @@ namespace SEConfigTool
 			this.BTN_ConfigApplyChanges.Text = "Apply changes";
 			this.BTN_ConfigApplyChanges.UseVisualStyleBackColor = true;
 			this.BTN_ConfigApplyChanges.Visible = false;
+			this.BTN_ConfigApplyChanges.Click += new System.EventHandler(this.BTN_ConfigApplyChanges_Click);
 			// 
 			// TBX_ConfigBlockId
 			// 

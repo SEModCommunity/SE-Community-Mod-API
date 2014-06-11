@@ -216,6 +216,14 @@ namespace SEModAPI.API.Definitions
 				return -1;
 		}
 
+		public void Save()
+		{
+			if (!this.Changed) return;
+
+			m_configSerializer.SpawnGroupDefinitions = this.RawDefinitions;
+			m_configSerializer.SaveSpawnGroupsContentFile();
+		}
+
 		#endregion
 	}
 

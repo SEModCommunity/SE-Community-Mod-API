@@ -135,7 +135,7 @@ namespace SEConfigTool
 
 			m_spawnGroupsDefinitionsWrapper = new SpawnGroupsDefinitionsWrapper(m_configSerializer.SpawnGroupDefinitions);
 
-			foreach (var definition in m_configSerializer.SpawnGroupDefinitions)
+			foreach (var definition in m_spawnGroupsDefinitionsWrapper.Definitions)
 			{
 				//TODO - Find a better way to uniquely label the spawn groups
 				LBX_SpawnGroupConfiguration.Items.Add("Spawn Group " + LBX_SpawnGroupConfiguration.Items.Count.ToString());
@@ -261,9 +261,7 @@ namespace SEConfigTool
 
         private void BTN_SaveBlocksConfiguration_Click(object sender, EventArgs e)
         {
-            if (!m_cubeBlockDefinitionsWrapper.Changed) return;
-            m_configSerializer.CubeBlockDefinitions = m_cubeBlockDefinitionsWrapper.RawDefinitions;
-            m_configSerializer.SaveCubeBlocksContentFile();
+			m_cubeBlockDefinitionsWrapper.Save();
         }
 
         private void TBX_ConfigBlocks_TextChanged(object sender, EventArgs e)
@@ -274,7 +272,7 @@ namespace SEConfigTool
             }
         }
 
-        private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
+		private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
         {
             int index = LBX_BlocksConfiguration.SelectedIndex;
 
@@ -316,9 +314,7 @@ namespace SEConfigTool
 
         private void BTN_SaveAmmoConfig_Click(object sender, EventArgs e)
         {
-            if (!m_ammoMagazinesDefinitionsWrapper.Changed) return;
-            m_configSerializer.AmmoMagazineDefinitions = m_ammoMagazinesDefinitionsWrapper.RawDefinitions;
-            m_configSerializer.SaveAmmoMagazinesContentFile();
+			m_ammoMagazinesDefinitionsWrapper.Save();
         }
 
         private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
@@ -382,10 +378,7 @@ namespace SEConfigTool
 
 		private void BTN_SaveContainerTypeConfig_Click(object sender, EventArgs e)
 		{
-			if (!m_containerTypesDefinitionsWrapper.Changed) return;
-
-			m_configSerializer.ContainerTypeDefinitions = m_containerTypesDefinitionsWrapper.RawDefinitions;
-			m_configSerializer.SaveContainerTypesContentFile();
+			m_containerTypesDefinitionsWrapper.Save();
 		}
 
 		private void BTN_ConfigContainerTypeApply_Click(object sender, EventArgs e)
@@ -484,10 +477,7 @@ namespace SEConfigTool
 
 		private void BTN_SaveGlobalEventConfig_Click(object sender, EventArgs e)
 		{
-			if (!m_globalEventsDefinitionsWrapper.Changed) return;
-
-			m_configSerializer.GlobalEventDefinitions = m_globalEventsDefinitionsWrapper.RawDefinitions;
-			m_configSerializer.SaveGlobalEventsContentFile();
+			m_globalEventsDefinitionsWrapper.Save();
 		}
 
 		private void BTN_ConfigGlobalEventApply_Click(object sender, EventArgs e)
@@ -548,9 +538,7 @@ namespace SEConfigTool
 
 		private void BTN_SaveSpawnGroupConfig_Click(object sender, EventArgs e)
 		{
-			if (!m_spawnGroupsDefinitionsWrapper.Changed) return;
-			m_configSerializer.SpawnGroupDefinitions = m_spawnGroupsDefinitionsWrapper.RawDefinitions;
-			m_configSerializer.SaveSpawnGroupsContentFile();
+			m_spawnGroupsDefinitionsWrapper.Save();
 		}
 
 		private void BTN_ConfigSpawnGroupApply_Click(object sender, EventArgs e)
@@ -646,10 +634,7 @@ namespace SEConfigTool
 
 		private void BTN_SavePhysicalItemConfig_Click(object sender, EventArgs e)
 		{
-			if (!m_physicalItemsDefinitionsWrapper.Changed) return;
-
-			m_configSerializer.PhysicalItemDefinitions = m_physicalItemsDefinitionsWrapper.RawDefinitions;
-			m_configSerializer.SavePhysicalItemsContentFile();
+			m_physicalItemsDefinitionsWrapper.Save();
 		}
 
 		private void BTN_ConfigPhysicalItemApply_Click(object sender, EventArgs e)
@@ -706,10 +691,7 @@ namespace SEConfigTool
 
 		private void BTN_ComponentConfig_Save_Click(object sender, EventArgs e)
 		{
-			if (!m_componentsDefinitionsWrapper.Changed) return;
-
-			m_configSerializer.ComponentDefinitions = m_componentsDefinitionsWrapper.RawDefinitions;
-			m_configSerializer.SaveComponentsContentFile();
+			m_componentsDefinitionsWrapper.Save();
 		}
 
 		private void BTN_ComponentConfig_Details_Apply_Click(object sender, EventArgs e)
