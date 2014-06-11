@@ -306,6 +306,18 @@ namespace SEConfigTool
 
         #region CubeBlock
 
+        private void CB_BlocksConfig_ModelIntersection_CheckedChanged(object sender, EventArgs e)
+        {
+            int index = LBX_BlocksConfiguration.SelectedIndex;
+            m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CB_BlocksConfig_ModelIntersection.Checked;
+        }
+
+        private void CB_BlocksConfig_Enabled_CheckedChanged(object sender, EventArgs e)
+        {
+            int index = LBX_BlocksConfiguration.SelectedIndex;
+            m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CB_BlocksConfig_Enabled.Checked;
+        }
+
         private void LBX_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_currentlySelecting = true;
@@ -317,6 +329,8 @@ namespace SEConfigTool
             TBX_ConfigBlockId.Text = cubeBlock.Id.ToString();
 			TBX_ConfigBuildTime.Text = cubeBlock.BuildTime.ToString(m_numberFormatInfo);
 			TBX_ConfigDisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(m_numberFormatInfo);
+            CB_BlocksConfig_Enabled.Checked = cubeBlock.Enabled;
+            CB_BlocksConfig_ModelIntersection.Checked = cubeBlock.UseModelIntersection;
 
 			LBX_BlocksConfig_Components.Items.Clear();
 			foreach (var def in cubeBlock.Components)
@@ -576,7 +590,6 @@ namespace SEConfigTool
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
-			globalEvent.Name = TBX_ConfigGlobalEventName.Text;
 			globalEvent.Description = TBX_ConfigGlobalEventDescription.Text;
 
 			globalEvent.MinActivation = Convert.ToInt32(TBX_ConfigGlobalEventMinActivation.Text, m_numberFormatInfo);
