@@ -81,29 +81,25 @@ namespace SEModAPI.API.Definitions
         #region "Methods"
 
         protected override CubeBlockDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_CubeBlockDefinition definition)
-				{
+		{
             return new CubeBlockDefinition(definition);
-				}
+		}
 
         protected override MyObjectBuilder_CubeBlockDefinition GetBaseTypeOf(CubeBlockDefinition overLayer)
-			{
+		{
             return overLayer.BaseDefinition;
 		}
 
         protected override bool GetChangedState(CubeBlockDefinition overLayer)
-				{
+		{
             return overLayer.Changed;
 		}
 
-		#endregion
-
-		#region "Methods"
-
-		public void Save()
+		public override void Save()
 		{
 			if (!this.Changed) return;
 
-			m_configSerializer.CubeBlockDefinitions = this.RawDefinitions;
+			m_configSerializer.CubeBlockDefinitions = this.ExtractBaseDefinitions().ToArray();
 			m_configSerializer.SaveCubeBlocksContentFile();
 		}
 

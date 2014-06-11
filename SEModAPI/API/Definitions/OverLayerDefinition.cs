@@ -62,6 +62,7 @@ namespace SEModAPI.API.Definitions
 
 		protected bool m_changed = false;
         protected long m_index = 0;
+		protected ConfigFileSerializer m_configSerializer;
 
         //Use Long (key) as Id and OverLayerDefinition sub type (value) as Name
         protected Dictionary<long, TOverLayerDefinition_SubType> m_definitions = new Dictionary<long, TOverLayerDefinition_SubType>();
@@ -73,6 +74,7 @@ namespace SEModAPI.API.Definitions
         protected OverLayerDefinitionsManager(TMyObjectBuilder_Definitions_SubType[] baseDefinitions)
 		{
 			m_changed = false;
+			m_configSerializer = new ConfigFileSerializer();
 
 			foreach (var definition in baseDefinitions)
 			{
@@ -170,6 +172,11 @@ namespace SEModAPI.API.Definitions
         /// <param name="overLayer">the overlayer from which to know if the base type has changed</param>
         /// <returns>if the underlying object has changed</returns>
         protected abstract bool GetChangedState(TOverLayerDefinition_SubType overLayer);
+
+		/// <summary>
+		/// This template method is used to save the definitions out to the file
+		/// </summary>
+		protected abstract void Save();
 
         #endregion
 	}

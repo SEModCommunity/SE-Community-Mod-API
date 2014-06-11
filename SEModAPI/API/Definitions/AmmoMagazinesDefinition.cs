@@ -87,29 +87,25 @@ namespace SEModAPI.API.Definitions
         #region "Methods"
 
         protected override AmmoMagazinesDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_AmmoMagazineDefinition definition)
-				{
+		{
             return new AmmoMagazinesDefinition(definition);
-				}
+		}
 
         protected override MyObjectBuilder_AmmoMagazineDefinition GetBaseTypeOf(AmmoMagazinesDefinition overLayer)
-			{
+		{
             return overLayer.BaseDefinition;
 		}
 
         protected override bool GetChangedState(AmmoMagazinesDefinition overLayer)
-				{
+		{
             return overLayer.Changed;
 		}
 
-		#endregion
-
-		#region "Methods"
-
-		public void Save()
+		public override void Save()
 		{
 			if (!this.Changed) return;
 
-			m_configSerializer.AmmoMagazineDefinitions = this.RawDefinitions;
+			m_configSerializer.AmmoMagazineDefinitions = this.ExtractBaseDefinitions().ToArray();
 			m_configSerializer.SaveAmmoMagazinesContentFile();
 		}
 
