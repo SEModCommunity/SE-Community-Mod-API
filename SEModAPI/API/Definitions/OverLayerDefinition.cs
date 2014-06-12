@@ -31,7 +31,10 @@ namespace SEModAPI.API.Definitions
 
 		public bool Changed { get; protected set; }
 
-        public string Name { get; protected set; }
+        public string Name
+        {
+            get { return m_name; }
+        }
 
         public TMyObjectBuilder_Definitions_SubType BaseDefinition
 		{
@@ -71,17 +74,6 @@ namespace SEModAPI.API.Definitions
 			{
 				if (m_baseDefinition.Id.ToString() == value.ToString()) return;
 				m_baseDefinition.Id = value;
-				Changed = true;
-			}
-		}
-
-		new public string Name
-		{
-			get { return m_baseDefinition.DisplayName; }
-			set
-			{
-				if (m_baseDefinition.DisplayName == value) return;
-				m_baseDefinition.DisplayName = value;
 				Changed = true;
 			}
 		}

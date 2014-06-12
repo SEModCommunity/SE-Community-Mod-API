@@ -58,7 +58,7 @@ namespace SEModAPI.API.Definitions
             }
 		}
 
-		#endregion
+	    #endregion
 
         #region "Methods"
 
