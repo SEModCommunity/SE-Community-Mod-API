@@ -62,12 +62,10 @@ namespace SEConfigTool
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
 			this.CB_BlocksConfig_ModelIntersection = new System.Windows.Forms.CheckBox();
 			this.CB_BlocksConfig_Enabled = new System.Windows.Forms.CheckBox();
-			this.label24 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.LBX_BlocksConfig_Components = new System.Windows.Forms.ListBox();
 			this.BTN_ConfigApplyChanges = new System.Windows.Forms.Button();
 			this.TBX_ConfigBlockId = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigDisassembleRatio = new System.Windows.Forms.TextBox();
@@ -92,6 +90,7 @@ namespace SEConfigTool
 			this.label71 = new System.Windows.Forms.Label();
 			this.label70 = new System.Windows.Forms.Label();
 			this.label69 = new System.Windows.Forms.Label();
+            this.CBX_SavedGame_Events_Enabled = new System.Windows.Forms.CheckBox();
 			this.BTN_SavedGame_Events_Apply = new System.Windows.Forms.Button();
 			this.TBX_SavedGame_Events_ActivationTime = new System.Windows.Forms.TextBox();
 			this.TBX_SavedGame_Events_Type = new System.Windows.Forms.TextBox();
@@ -293,7 +292,7 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_VoxelMaterialsConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre = new System.Windows.Forms.TextBox();
-			this.CBX_SavedGame_Events_Enabled = new System.Windows.Forms.CheckBox();
+            this.DGV_ConfigBlocks_Components = new System.Windows.Forms.DataGridView();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 			this.splitContainer5.Panel1.SuspendLayout();
 			this.splitContainer5.Panel2.SuspendLayout();
@@ -477,6 +476,7 @@ namespace SEConfigTool
 			this.splitContainer32.Panel1.SuspendLayout();
 			this.splitContainer32.Panel2.SuspendLayout();
 			this.splitContainer32.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigBlocks_Components)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// splitContainer5
@@ -839,7 +839,6 @@ namespace SEConfigTool
 			// 
 			this.splitContainer4.Panel1.Controls.Add(this.CB_BlocksConfig_ModelIntersection);
 			this.splitContainer4.Panel1.Controls.Add(this.CB_BlocksConfig_Enabled);
-			this.splitContainer4.Panel1.Controls.Add(this.label24);
 			this.splitContainer4.Panel1.Controls.Add(this.label4);
 			this.splitContainer4.Panel1.Controls.Add(this.label3);
 			this.splitContainer4.Panel1.Controls.Add(this.label1);
@@ -849,7 +848,7 @@ namespace SEConfigTool
 			// 
 			this.splitContainer4.Panel2.AutoScroll = true;
 			this.splitContainer4.Panel2.AutoScrollMinSize = new System.Drawing.Size(150, 0);
-			this.splitContainer4.Panel2.Controls.Add(this.LBX_BlocksConfig_Components);
+            this.splitContainer4.Panel2.Controls.Add(this.DGV_ConfigBlocks_Components);
 			this.splitContainer4.Panel2.Controls.Add(this.BTN_ConfigApplyChanges);
 			this.splitContainer4.Panel2.Controls.Add(this.TBX_ConfigBlockId);
 			this.splitContainer4.Panel2.Controls.Add(this.TBX_ConfigDisassembleRatio);
@@ -861,30 +860,22 @@ namespace SEConfigTool
 			// 
 			// CB_BlocksConfig_ModelIntersection
 			// 
-			this.CB_BlocksConfig_ModelIntersection.Location = new System.Drawing.Point(0, 0);
+            this.CB_BlocksConfig_ModelIntersection.Location = new System.Drawing.Point(6, 132);
 			this.CB_BlocksConfig_ModelIntersection.Name = "CB_BlocksConfig_ModelIntersection";
-			this.CB_BlocksConfig_ModelIntersection.Size = new System.Drawing.Size(104, 24);
+            this.CB_BlocksConfig_ModelIntersection.Size = new System.Drawing.Size(126, 24);
 			this.CB_BlocksConfig_ModelIntersection.TabIndex = 0;
+            this.CB_BlocksConfig_ModelIntersection.Text = "ModelIntersection";
 			// 
 			// CB_BlocksConfig_Enabled
 			// 
 			this.CB_BlocksConfig_Enabled.AutoSize = true;
-			this.CB_BlocksConfig_Enabled.Location = new System.Drawing.Point(7, 129);
+            this.CB_BlocksConfig_Enabled.Location = new System.Drawing.Point(6, 109);
 			this.CB_BlocksConfig_Enabled.Name = "CB_BlocksConfig_Enabled";
 			this.CB_BlocksConfig_Enabled.Size = new System.Drawing.Size(65, 17);
 			this.CB_BlocksConfig_Enabled.TabIndex = 9;
 			this.CB_BlocksConfig_Enabled.Text = "Enabled";
 			this.CB_BlocksConfig_Enabled.UseVisualStyleBackColor = true;
 			this.CB_BlocksConfig_Enabled.CheckedChanged += new System.EventHandler(this.CB_BlocksConfig_Enabled_CheckedChanged);
-			// 
-			// label24
-			// 
-			this.label24.AutoSize = true;
-			this.label24.Location = new System.Drawing.Point(3, 107);
-			this.label24.Name = "label24";
-			this.label24.Size = new System.Drawing.Size(69, 13);
-			this.label24.TabIndex = 1;
-			this.label24.Text = "Components:";
 			// 
 			// label4
 			// 
@@ -921,14 +912,6 @@ namespace SEConfigTool
 			this.label2.Size = new System.Drawing.Size(59, 13);
 			this.label2.TabIndex = 2;
 			this.label2.Text = "Build Time:";
-			// 
-			// LBX_BlocksConfig_Components
-			// 
-			this.LBX_BlocksConfig_Components.FormattingEnabled = true;
-			this.LBX_BlocksConfig_Components.Location = new System.Drawing.Point(3, 107);
-			this.LBX_BlocksConfig_Components.Name = "LBX_BlocksConfig_Components";
-			this.LBX_BlocksConfig_Components.Size = new System.Drawing.Size(150, 147);
-			this.LBX_BlocksConfig_Components.TabIndex = 0;
 			// 
 			// BTN_ConfigApplyChanges
 			// 
@@ -1204,6 +1187,15 @@ namespace SEConfigTool
 			this.label69.TabIndex = 0;
 			this.label69.Text = "Type:";
 			// 
+            // CBX_SavedGame_Events_Enabled
+            // 
+            this.CBX_SavedGame_Events_Enabled.AutoSize = true;
+            this.CBX_SavedGame_Events_Enabled.Location = new System.Drawing.Point(3, 31);
+            this.CBX_SavedGame_Events_Enabled.Name = "CBX_SavedGame_Events_Enabled";
+            this.CBX_SavedGame_Events_Enabled.Size = new System.Drawing.Size(15, 14);
+            this.CBX_SavedGame_Events_Enabled.TabIndex = 10;
+            this.CBX_SavedGame_Events_Enabled.UseVisualStyleBackColor = true;
+            // 
 			// BTN_SavedGame_Events_Apply
 			// 
 			this.BTN_SavedGame_Events_Apply.Location = new System.Drawing.Point(28, 323);
@@ -3428,14 +3420,13 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TabIndex = 5;
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
-			// CBX_SavedGame_Events_Enabled
+            // DGV_ConfigBlocks_Components
 			// 
-			this.CBX_SavedGame_Events_Enabled.AutoSize = true;
-			this.CBX_SavedGame_Events_Enabled.Location = new System.Drawing.Point(3, 31);
-			this.CBX_SavedGame_Events_Enabled.Name = "CBX_SavedGame_Events_Enabled";
-			this.CBX_SavedGame_Events_Enabled.Size = new System.Drawing.Size(15, 14);
-			this.CBX_SavedGame_Events_Enabled.TabIndex = 10;
-			this.CBX_SavedGame_Events_Enabled.UseVisualStyleBackColor = true;
+            this.DGV_ConfigBlocks_Components.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGV_ConfigBlocks_Components.Location = new System.Drawing.Point(159, 6);
+            this.DGV_ConfigBlocks_Components.Name = "DGV_ConfigBlocks_Components";
+            this.DGV_ConfigBlocks_Components.Size = new System.Drawing.Size(264, 150);
+            this.DGV_ConfigBlocks_Components.TabIndex = 9;
 			this.CBX_SavedGame_Events_Enabled.CheckedChanged += new System.EventHandler(this.CBX_SavedGame_Events_Enabled_CheckedChanged);
 			// 
 			// SEConfigTool
@@ -3657,6 +3648,7 @@ namespace SEConfigTool
 			this.splitContainer32.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer32)).EndInit();
 			this.splitContainer32.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigBlocks_Components)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -3768,12 +3760,10 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TBX_ConfigAmmoCaliber;
 		private System.Windows.Forms.GroupBox GBX_BlocksConfig_Details;
 		private System.Windows.Forms.SplitContainer splitContainer4;
-		private System.Windows.Forms.Label label24;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.ListBox LBX_BlocksConfig_Components;
 		private System.Windows.Forms.TextBox TBX_ConfigBlockId;
 		private System.Windows.Forms.TextBox TBX_ConfigDisassembleRatio;
 		private System.Windows.Forms.TextBox TBX_ConfigBlockName;
@@ -3928,6 +3918,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TBX_SavedGame_Events_Type;
 		private System.Windows.Forms.Button BTN_SavedGame_Events_Apply;
 		private System.Windows.Forms.CheckBox CBX_SavedGame_Events_Enabled;
+        private System.Windows.Forms.DataGridView DGV_ConfigBlocks_Components;
 
     }
 }

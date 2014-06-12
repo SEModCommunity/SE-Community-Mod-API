@@ -75,7 +75,10 @@ namespace SEModAPI.API.Definitions
 
 		public MyTextsWrapperEnum IconSymbol
 		{
-            get { return m_baseDefinition.IconSymbol.Value; }
+		    get
+            {
+                    return m_baseDefinition.IconSymbol.Value;
+            } 
 			set
 			{
                 if (m_baseDefinition.IconSymbol == value) return;

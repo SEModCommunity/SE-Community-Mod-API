@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using System.IO;
 
 using SEModAPI;
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
+using SEModAPI.API.Definitions.CubeBlocks;
 using SEModAPI.API.SaveData;
 
 using Sandbox.Common.ObjectBuilders;
@@ -294,7 +297,7 @@ namespace SEConfigTool
 		private void SEConfigTool_Load(object sender, EventArgs e)
 		{
 			m_configSerializer = new ConfigFileSerializer();
-			m_standardSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            m_standardSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineers", "Saves");
 
 			FillBlocksConfigurationListBox();
 			FillAmmoConfigurationListBox();
@@ -337,7 +340,7 @@ namespace SEConfigTool
 		private void BTN_SavedGame_Save_Click(object sender, EventArgs e)
 		{
 			m_saveFileSerializer.Sector.Save();
-		}
+            }
 
 		private void BTN_SavedGame_Events_Apply_Click(object sender, EventArgs e)
 		{
@@ -350,7 +353,7 @@ namespace SEConfigTool
 			sectorEvent.ActivationTimeMs = Convert.ToInt64(TBX_SavedGame_Events_ActivationTime.Text, m_numberFormatInfo);
 
 			BTN_SavedGame_Events_Apply.Visible = false;
-		}
+        }
 
 		private void LBX_SavedGame_Events_SelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -394,8 +397,8 @@ namespace SEConfigTool
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
 				BTN_SavedGame_Events_Apply.Visible = true;
-			}
-		}
+            }
+        }
 
 		private void CBX_SavedGame_Events_Enabled_CheckedChanged(object sender, EventArgs e)
 		{
@@ -435,11 +438,7 @@ namespace SEConfigTool
 			CB_BlocksConfig_Enabled.Checked = cubeBlock.Enabled;
 			CB_BlocksConfig_ModelIntersection.Checked = cubeBlock.UseModelIntersection;
 
-			LBX_BlocksConfig_Components.Items.Clear();
-			foreach (var def in cubeBlock.Components)
-			{
-				LBX_BlocksConfig_Components.Items.Add(def.Subtype + " x" + def.Count.ToString());
-			}
+            DGV_ConfigBlocks_Components.DataSource = cubeBlock.Components.ToArray().Select(x => new { x.Subtype, x.Count }).ToArray();
 
 			m_currentlySelecting = false;
 
@@ -830,7 +829,17 @@ namespace SEConfigTool
 			TBX_PhysicalItemConfig_Volume.Text = physicalItem.Volume.ToString();
 			TBX_PhysicalItemConfig_Model.Text = physicalItem.Model;
 			TBX_PhysicalItemConfig_Icon.Text = physicalItem.Icon;
+            try
+            {
 			TBX_PhysicalItemConfig_IconSymbol.Text = physicalItem.IconSymbol.ToString();
+            }
+            catch (InvalidOperationException NREx)
+            {
+                Console.WriteLine(NREx.ToString());
+                TBX_PhysicalItemConfig_IconSymbol.Text = "";
+            }
+            
+            
 
 			m_currentlySelecting = false;
 

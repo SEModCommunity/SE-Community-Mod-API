@@ -1,5 +1,4 @@
 ﻿using Sandbox.Common.ObjectBuilders.Definitions;
-using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API.Definitions
 {

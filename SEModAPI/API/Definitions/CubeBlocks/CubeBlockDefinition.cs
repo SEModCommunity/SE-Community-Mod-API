@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Sandbox.Common.ObjectBuilders.Definitions;
 
-using Sandbox.Common.ObjectBuilders.Definitions;
-
-using SEModAPI.API.Definitions;
-
-namespace SEModAPI.API.Definitions
+namespace SEModAPI.API.Definitions.CubeBlocks
 {
 	public class CubeBlockDefinition : ObjectOverLayerDefinition<MyObjectBuilder_CubeBlockDefinition>
     {
