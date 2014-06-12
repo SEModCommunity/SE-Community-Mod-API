@@ -20,6 +20,7 @@ namespace SEConfigTool
         private string m_standardSavePath;
 
         private ConfigFileSerializer m_configSerializer;
+		private SaveFileSerializer m_saveFileSerializer;
 
         private CubeBlockDefinitionsManager m_cubeBlockDefinitionsManager;
         private AmmoMagazinesDefinitionsManager m_ammoMagazinesDefinitionsManager;
@@ -59,8 +60,8 @@ namespace SEConfigTool
 
         private void LoadSaveFile(FileInfo saveFileInfo)
         {
-            SaveFileSerializer save = new SaveFileSerializer(saveFileInfo.FullName, m_configSerializer);
-			Sector sector = save.Sector;
+			m_saveFileSerializer = new SaveFileSerializer(saveFileInfo, m_configSerializer);
+			Sector sector = m_saveFileSerializer.Sector;
 
 			TBX_SavedGame_Properties_Position.Text = sector.Position.ToString();
 			TBX_SavedGame_Properties_AppVersion.Text = sector.AppVersion.ToString();
@@ -152,6 +153,8 @@ namespace SEConfigTool
 			}
 
 			TRV_SavedGame_Objects.EndUpdate();
+
+			BTN_SavedGame_Events_Apply.Visible = false;
 		}
 
         private void FillBlocksConfigurationListBox()
@@ -331,6 +334,40 @@ namespace SEConfigTool
             }
         }
 
+		private void BTN_SavedGame_Save_Click(object sender, EventArgs e)
+		{
+			m_saveFileSerializer.Sector.Save();
+		}
+
+		private void BTN_SavedGame_Events_Apply_Click(object sender, EventArgs e)
+		{
+			int index = LBX_SavedGame_Events.SelectedIndex;
+
+			Sector sector = m_saveFileSerializer.Sector;
+			Event sectorEvent = sector.Events[index];
+
+			sectorEvent.Enabled = CBX_SavedGame_Events_Enabled.Checked;
+			sectorEvent.ActivationTimeMs = Convert.ToInt64(TBX_SavedGame_Events_ActivationTime.Text, m_numberFormatInfo);
+
+			BTN_SavedGame_Events_Apply.Visible = false;
+		}
+
+		private void LBX_SavedGame_Events_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int index = LBX_SavedGame_Events.SelectedIndex;
+
+			Sector sector = m_saveFileSerializer.Sector;
+			Event sectorEvent = sector.Events[index];
+
+			TBX_SavedGame_Events_Type.Text = sectorEvent.DefinitionId.ToString();
+			CBX_SavedGame_Events_Enabled.Checked = sectorEvent.Enabled;
+			TBX_SavedGame_Events_ActivationTime.Text = sectorEvent.ActivationTimeMs.ToString();
+
+			m_currentlySelecting = false;
+			BTN_SavedGame_Events_Apply.Visible = false;
+		}
+
 		private void TRV_SavedGame_Objects_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			//Ignore top-level nodes
@@ -347,6 +384,14 @@ namespace SEConfigTool
 			{
             }
         }
+
+		private void TBX_SavedGame_Events_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_SavedGame_Events_Apply.Visible = true;
+			}
+		}
 
 		#endregion
 

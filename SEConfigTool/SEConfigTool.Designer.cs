@@ -60,6 +60,8 @@ namespace SEConfigTool
 			this.LBX_BlocksConfiguration = new System.Windows.Forms.ListBox();
 			this.GBX_BlocksConfig_Details = new System.Windows.Forms.GroupBox();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+			this.CB_BlocksConfig_ModelIntersection = new System.Windows.Forms.CheckBox();
+			this.CB_BlocksConfig_Enabled = new System.Windows.Forms.CheckBox();
 			this.label24 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -73,21 +75,29 @@ namespace SEConfigTool
 			this.TBX_ConfigBuildTime = new System.Windows.Forms.TextBox();
 			this.SaveGamePage = new System.Windows.Forms.TabPage();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.BTN_SavedGame_Save = new System.Windows.Forms.Button();
 			this.BTN_LoadSaveGame = new System.Windows.Forms.Button();
 			this.GBX_SavedGame = new System.Windows.Forms.GroupBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.TP_SavedGame_Properties = new System.Windows.Forms.TabPage();
-            this.splitContainer35 = new System.Windows.Forms.SplitContainer();
-            this.label61 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.TBX_SavedGame_Properties_AppVersion = new System.Windows.Forms.TextBox();
-            this.TBX_SavedGame_Properties_Position = new System.Windows.Forms.TextBox();
-            this.TP_SavedGame_Events = new System.Windows.Forms.TabPage();
-            this.splitContainer34 = new System.Windows.Forms.SplitContainer();
-            this.LBX_SavedGame_Events = new System.Windows.Forms.ListBox();
-            this.TP_SavedGame_Objects = new System.Windows.Forms.TabPage();
-            this.splitContainer33 = new System.Windows.Forms.SplitContainer();
-            this.TRV_SavedGame_Objects = new System.Windows.Forms.TreeView();
+			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.TP_SavedGame_Properties = new System.Windows.Forms.TabPage();
+			this.splitContainer35 = new System.Windows.Forms.SplitContainer();
+			this.label61 = new System.Windows.Forms.Label();
+			this.label27 = new System.Windows.Forms.Label();
+			this.TBX_SavedGame_Properties_AppVersion = new System.Windows.Forms.TextBox();
+			this.TBX_SavedGame_Properties_Position = new System.Windows.Forms.TextBox();
+			this.TP_SavedGame_Events = new System.Windows.Forms.TabPage();
+			this.splitContainer34 = new System.Windows.Forms.SplitContainer();
+			this.LBX_SavedGame_Events = new System.Windows.Forms.ListBox();
+			this.splitContainer36 = new System.Windows.Forms.SplitContainer();
+			this.label71 = new System.Windows.Forms.Label();
+			this.label70 = new System.Windows.Forms.Label();
+			this.label69 = new System.Windows.Forms.Label();
+			this.BTN_SavedGame_Events_Apply = new System.Windows.Forms.Button();
+			this.TBX_SavedGame_Events_ActivationTime = new System.Windows.Forms.TextBox();
+			this.TBX_SavedGame_Events_Type = new System.Windows.Forms.TextBox();
+			this.TP_SavedGame_Objects = new System.Windows.Forms.TabPage();
+			this.splitContainer33 = new System.Windows.Forms.SplitContainer();
+			this.TRV_SavedGame_Objects = new System.Windows.Forms.TreeView();
 			this.LayoutPages = new System.Windows.Forms.TabControl();
 			this.ContainerTypeConfiguration = new System.Windows.Forms.TabPage();
 			this.splitContainer8 = new System.Windows.Forms.SplitContainer();
@@ -283,8 +293,7 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_VoxelMaterialsConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre = new System.Windows.Forms.TextBox();
-            this.CB_BlocksConfig_Enabled = new System.Windows.Forms.CheckBox();
-            this.CB_BlocksConfig_ModelIntersection = new System.Windows.Forms.CheckBox();
+			this.CBX_SavedGame_Events_Enabled = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 			this.splitContainer5.Panel1.SuspendLayout();
 			this.splitContainer5.Panel2.SuspendLayout();
@@ -321,20 +330,25 @@ namespace SEConfigTool
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.GBX_SavedGame.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.TP_SavedGame_Properties.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer35)).BeginInit();
-            this.splitContainer35.Panel1.SuspendLayout();
-            this.splitContainer35.Panel2.SuspendLayout();
-            this.splitContainer35.SuspendLayout();
-            this.TP_SavedGame_Events.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer34)).BeginInit();
-            this.splitContainer34.Panel1.SuspendLayout();
-            this.splitContainer34.SuspendLayout();
-            this.TP_SavedGame_Objects.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer33)).BeginInit();
-            this.splitContainer33.Panel1.SuspendLayout();
-            this.splitContainer33.SuspendLayout();
+			this.tabControl1.SuspendLayout();
+			this.TP_SavedGame_Properties.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer35)).BeginInit();
+			this.splitContainer35.Panel1.SuspendLayout();
+			this.splitContainer35.Panel2.SuspendLayout();
+			this.splitContainer35.SuspendLayout();
+			this.TP_SavedGame_Events.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer34)).BeginInit();
+			this.splitContainer34.Panel1.SuspendLayout();
+			this.splitContainer34.Panel2.SuspendLayout();
+			this.splitContainer34.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer36)).BeginInit();
+			this.splitContainer36.Panel1.SuspendLayout();
+			this.splitContainer36.Panel2.SuspendLayout();
+			this.splitContainer36.SuspendLayout();
+			this.TP_SavedGame_Objects.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer33)).BeginInit();
+			this.splitContainer33.Panel1.SuspendLayout();
+			this.splitContainer33.SuspendLayout();
 			this.LayoutPages.SuspendLayout();
 			this.ContainerTypeConfiguration.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer8)).BeginInit();
@@ -823,8 +837,8 @@ namespace SEConfigTool
 			// 
 			// splitContainer4.Panel1
 			// 
-            this.splitContainer4.Panel1.Controls.Add(this.CB_BlocksConfig_ModelIntersection);
-            this.splitContainer4.Panel1.Controls.Add(this.CB_BlocksConfig_Enabled);
+			this.splitContainer4.Panel1.Controls.Add(this.CB_BlocksConfig_ModelIntersection);
+			this.splitContainer4.Panel1.Controls.Add(this.CB_BlocksConfig_Enabled);
 			this.splitContainer4.Panel1.Controls.Add(this.label24);
 			this.splitContainer4.Panel1.Controls.Add(this.label4);
 			this.splitContainer4.Panel1.Controls.Add(this.label3);
@@ -844,6 +858,24 @@ namespace SEConfigTool
 			this.splitContainer4.Size = new System.Drawing.Size(580, 363);
 			this.splitContainer4.SplitterDistance = 150;
 			this.splitContainer4.TabIndex = 4;
+			// 
+			// CB_BlocksConfig_ModelIntersection
+			// 
+			this.CB_BlocksConfig_ModelIntersection.Location = new System.Drawing.Point(0, 0);
+			this.CB_BlocksConfig_ModelIntersection.Name = "CB_BlocksConfig_ModelIntersection";
+			this.CB_BlocksConfig_ModelIntersection.Size = new System.Drawing.Size(104, 24);
+			this.CB_BlocksConfig_ModelIntersection.TabIndex = 0;
+			// 
+			// CB_BlocksConfig_Enabled
+			// 
+			this.CB_BlocksConfig_Enabled.AutoSize = true;
+			this.CB_BlocksConfig_Enabled.Location = new System.Drawing.Point(7, 129);
+			this.CB_BlocksConfig_Enabled.Name = "CB_BlocksConfig_Enabled";
+			this.CB_BlocksConfig_Enabled.Size = new System.Drawing.Size(65, 17);
+			this.CB_BlocksConfig_Enabled.TabIndex = 9;
+			this.CB_BlocksConfig_Enabled.Text = "Enabled";
+			this.CB_BlocksConfig_Enabled.UseVisualStyleBackColor = true;
+			this.CB_BlocksConfig_Enabled.CheckedChanged += new System.EventHandler(this.CB_BlocksConfig_Enabled_CheckedChanged);
 			// 
 			// label24
 			// 
@@ -962,6 +994,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer1.Panel1
 			// 
+			this.splitContainer1.Panel1.Controls.Add(this.BTN_SavedGame_Save);
 			this.splitContainer1.Panel1.Controls.Add(this.BTN_LoadSaveGame);
 			// 
 			// splitContainer1.Panel2
@@ -971,13 +1004,23 @@ namespace SEConfigTool
 			this.splitContainer1.SplitterDistance = 26;
 			this.splitContainer1.TabIndex = 1;
 			// 
+			// BTN_SavedGame_Save
+			// 
+			this.BTN_SavedGame_Save.Location = new System.Drawing.Point(110, 1);
+			this.BTN_SavedGame_Save.Name = "BTN_SavedGame_Save";
+			this.BTN_SavedGame_Save.Size = new System.Drawing.Size(105, 23);
+			this.BTN_SavedGame_Save.TabIndex = 1;
+			this.BTN_SavedGame_Save.Text = "Save Sector";
+			this.BTN_SavedGame_Save.UseVisualStyleBackColor = true;
+			this.BTN_SavedGame_Save.Click += new System.EventHandler(this.BTN_SavedGame_Save_Click);
+			// 
 			// BTN_LoadSaveGame
 			// 
 			this.BTN_LoadSaveGame.Location = new System.Drawing.Point(4, 1);
 			this.BTN_LoadSaveGame.Name = "BTN_LoadSaveGame";
 			this.BTN_LoadSaveGame.Size = new System.Drawing.Size(100, 23);
 			this.BTN_LoadSaveGame.TabIndex = 0;
-			this.BTN_LoadSaveGame.Text = "Load SaveGame";
+			this.BTN_LoadSaveGame.Text = "Load Sector";
 			this.BTN_LoadSaveGame.UseVisualStyleBackColor = true;
 			this.BTN_LoadSaveGame.Click += new System.EventHandler(this.BTN_LoadSaveGame_Click);
 			// 
@@ -990,155 +1033,239 @@ namespace SEConfigTool
 			this.GBX_SavedGame.Size = new System.Drawing.Size(796, 400);
 			this.GBX_SavedGame.TabIndex = 1;
 			this.GBX_SavedGame.TabStop = false;
-			this.GBX_SavedGame.Text = "Saved Game";
+			this.GBX_SavedGame.Text = "Sector";
 			// 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.TP_SavedGame_Properties);
-            this.tabControl1.Controls.Add(this.TP_SavedGame_Events);
-            this.tabControl1.Controls.Add(this.TP_SavedGame_Objects);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(3, 16);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(790, 381);
-            this.tabControl1.TabIndex = 1;
-            // 
-            // TP_SavedGame_Properties
-            // 
-            this.TP_SavedGame_Properties.Controls.Add(this.splitContainer35);
-            this.TP_SavedGame_Properties.Location = new System.Drawing.Point(4, 22);
-            this.TP_SavedGame_Properties.Name = "TP_SavedGame_Properties";
-            this.TP_SavedGame_Properties.Padding = new System.Windows.Forms.Padding(3);
-            this.TP_SavedGame_Properties.Size = new System.Drawing.Size(782, 355);
-            this.TP_SavedGame_Properties.TabIndex = 0;
-            this.TP_SavedGame_Properties.Text = "Properties";
-            this.TP_SavedGame_Properties.UseVisualStyleBackColor = true;
-            // 
-            // splitContainer35
-            // 
-            this.splitContainer35.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer35.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer35.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer35.Name = "splitContainer35";
-            // 
-            // splitContainer35.Panel1
-            // 
-            this.splitContainer35.Panel1.Controls.Add(this.label61);
-            this.splitContainer35.Panel1.Controls.Add(this.label27);
-            this.splitContainer35.Panel1MinSize = 150;
-            // 
-            // splitContainer35.Panel2
-            // 
-            this.splitContainer35.Panel2.Controls.Add(this.TBX_SavedGame_Properties_AppVersion);
-            this.splitContainer35.Panel2.Controls.Add(this.TBX_SavedGame_Properties_Position);
-            this.splitContainer35.Size = new System.Drawing.Size(776, 349);
-            this.splitContainer35.SplitterDistance = 150;
-            this.splitContainer35.TabIndex = 0;
-            // 
-            // label61
-            // 
-            this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(3, 32);
-            this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(67, 13);
-            this.label61.TabIndex = 1;
-            this.label61.Text = "App Version:";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(3, 6);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(47, 13);
-            this.label27.TabIndex = 0;
-            this.label27.Text = "Position:";
-            // 
-            // TBX_SavedGame_Properties_AppVersion
-            // 
-            this.TBX_SavedGame_Properties_AppVersion.Location = new System.Drawing.Point(3, 29);
-            this.TBX_SavedGame_Properties_AppVersion.Name = "TBX_SavedGame_Properties_AppVersion";
-            this.TBX_SavedGame_Properties_AppVersion.ReadOnly = true;
-            this.TBX_SavedGame_Properties_AppVersion.Size = new System.Drawing.Size(150, 20);
-            this.TBX_SavedGame_Properties_AppVersion.TabIndex = 1;
-            // 
-            // TBX_SavedGame_Properties_Position
-            // 
-            this.TBX_SavedGame_Properties_Position.Location = new System.Drawing.Point(3, 3);
-            this.TBX_SavedGame_Properties_Position.Name = "TBX_SavedGame_Properties_Position";
-            this.TBX_SavedGame_Properties_Position.ReadOnly = true;
-            this.TBX_SavedGame_Properties_Position.Size = new System.Drawing.Size(150, 20);
-            this.TBX_SavedGame_Properties_Position.TabIndex = 0;
-            // 
-            // TP_SavedGame_Events
-            // 
-            this.TP_SavedGame_Events.Controls.Add(this.splitContainer34);
-            this.TP_SavedGame_Events.Location = new System.Drawing.Point(4, 22);
-            this.TP_SavedGame_Events.Name = "TP_SavedGame_Events";
-            this.TP_SavedGame_Events.Padding = new System.Windows.Forms.Padding(3);
-            this.TP_SavedGame_Events.Size = new System.Drawing.Size(782, 355);
-            this.TP_SavedGame_Events.TabIndex = 1;
-            this.TP_SavedGame_Events.Text = "Events";
-            this.TP_SavedGame_Events.UseVisualStyleBackColor = true;
-            // 
-            // splitContainer34
-            // 
-            this.splitContainer34.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer34.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer34.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer34.Name = "splitContainer34";
-            // 
-            // splitContainer34.Panel1
-            // 
-            this.splitContainer34.Panel1.Controls.Add(this.LBX_SavedGame_Events);
-            this.splitContainer34.Panel1MinSize = 200;
-            this.splitContainer34.Size = new System.Drawing.Size(776, 349);
-            this.splitContainer34.SplitterDistance = 200;
-            this.splitContainer34.TabIndex = 2;
-            // 
-            // LBX_SavedGame_Events
-            // 
-            this.LBX_SavedGame_Events.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LBX_SavedGame_Events.FormattingEnabled = true;
-            this.LBX_SavedGame_Events.Location = new System.Drawing.Point(0, 0);
-            this.LBX_SavedGame_Events.Name = "LBX_SavedGame_Events";
-            this.LBX_SavedGame_Events.Size = new System.Drawing.Size(200, 349);
-            this.LBX_SavedGame_Events.TabIndex = 0;
-            // 
-            // TP_SavedGame_Objects
-            // 
-            this.TP_SavedGame_Objects.Controls.Add(this.splitContainer33);
-            this.TP_SavedGame_Objects.Location = new System.Drawing.Point(4, 22);
-            this.TP_SavedGame_Objects.Name = "TP_SavedGame_Objects";
-            this.TP_SavedGame_Objects.Padding = new System.Windows.Forms.Padding(3);
-            this.TP_SavedGame_Objects.Size = new System.Drawing.Size(782, 355);
-            this.TP_SavedGame_Objects.TabIndex = 2;
-            this.TP_SavedGame_Objects.Text = "Objects";
-            this.TP_SavedGame_Objects.UseVisualStyleBackColor = true;
-            // 
-            // splitContainer33
-            // 
-            this.splitContainer33.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer33.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer33.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer33.Name = "splitContainer33";
-            // 
-            // splitContainer33.Panel1
-            // 
-            this.splitContainer33.Panel1.Controls.Add(this.TRV_SavedGame_Objects);
-            this.splitContainer33.Panel1MinSize = 200;
-            this.splitContainer33.Size = new System.Drawing.Size(776, 349);
-            this.splitContainer33.SplitterDistance = 200;
-            this.splitContainer33.TabIndex = 1;
-            // 
-            // TRV_SavedGame_Objects
-            // 
-            this.TRV_SavedGame_Objects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TRV_SavedGame_Objects.Location = new System.Drawing.Point(0, 0);
-            this.TRV_SavedGame_Objects.Name = "TRV_SavedGame_Objects";
-            this.TRV_SavedGame_Objects.Size = new System.Drawing.Size(200, 349);
-            this.TRV_SavedGame_Objects.TabIndex = 0;
-            // 
+			// tabControl1
+			// 
+			this.tabControl1.Controls.Add(this.TP_SavedGame_Properties);
+			this.tabControl1.Controls.Add(this.TP_SavedGame_Events);
+			this.tabControl1.Controls.Add(this.TP_SavedGame_Objects);
+			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tabControl1.Location = new System.Drawing.Point(3, 16);
+			this.tabControl1.Name = "tabControl1";
+			this.tabControl1.SelectedIndex = 0;
+			this.tabControl1.Size = new System.Drawing.Size(790, 381);
+			this.tabControl1.TabIndex = 1;
+			// 
+			// TP_SavedGame_Properties
+			// 
+			this.TP_SavedGame_Properties.Controls.Add(this.splitContainer35);
+			this.TP_SavedGame_Properties.Location = new System.Drawing.Point(4, 22);
+			this.TP_SavedGame_Properties.Name = "TP_SavedGame_Properties";
+			this.TP_SavedGame_Properties.Padding = new System.Windows.Forms.Padding(3);
+			this.TP_SavedGame_Properties.Size = new System.Drawing.Size(782, 355);
+			this.TP_SavedGame_Properties.TabIndex = 0;
+			this.TP_SavedGame_Properties.Text = "Properties";
+			this.TP_SavedGame_Properties.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer35
+			// 
+			this.splitContainer35.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer35.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer35.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer35.Name = "splitContainer35";
+			// 
+			// splitContainer35.Panel1
+			// 
+			this.splitContainer35.Panel1.Controls.Add(this.label61);
+			this.splitContainer35.Panel1.Controls.Add(this.label27);
+			this.splitContainer35.Panel1MinSize = 150;
+			// 
+			// splitContainer35.Panel2
+			// 
+			this.splitContainer35.Panel2.Controls.Add(this.TBX_SavedGame_Properties_AppVersion);
+			this.splitContainer35.Panel2.Controls.Add(this.TBX_SavedGame_Properties_Position);
+			this.splitContainer35.Size = new System.Drawing.Size(776, 349);
+			this.splitContainer35.SplitterDistance = 150;
+			this.splitContainer35.TabIndex = 0;
+			// 
+			// label61
+			// 
+			this.label61.AutoSize = true;
+			this.label61.Location = new System.Drawing.Point(3, 32);
+			this.label61.Name = "label61";
+			this.label61.Size = new System.Drawing.Size(67, 13);
+			this.label61.TabIndex = 1;
+			this.label61.Text = "App Version:";
+			// 
+			// label27
+			// 
+			this.label27.AutoSize = true;
+			this.label27.Location = new System.Drawing.Point(3, 6);
+			this.label27.Name = "label27";
+			this.label27.Size = new System.Drawing.Size(47, 13);
+			this.label27.TabIndex = 0;
+			this.label27.Text = "Position:";
+			// 
+			// TBX_SavedGame_Properties_AppVersion
+			// 
+			this.TBX_SavedGame_Properties_AppVersion.Location = new System.Drawing.Point(3, 29);
+			this.TBX_SavedGame_Properties_AppVersion.Name = "TBX_SavedGame_Properties_AppVersion";
+			this.TBX_SavedGame_Properties_AppVersion.ReadOnly = true;
+			this.TBX_SavedGame_Properties_AppVersion.Size = new System.Drawing.Size(150, 20);
+			this.TBX_SavedGame_Properties_AppVersion.TabIndex = 1;
+			// 
+			// TBX_SavedGame_Properties_Position
+			// 
+			this.TBX_SavedGame_Properties_Position.Location = new System.Drawing.Point(3, 3);
+			this.TBX_SavedGame_Properties_Position.Name = "TBX_SavedGame_Properties_Position";
+			this.TBX_SavedGame_Properties_Position.ReadOnly = true;
+			this.TBX_SavedGame_Properties_Position.Size = new System.Drawing.Size(150, 20);
+			this.TBX_SavedGame_Properties_Position.TabIndex = 0;
+			// 
+			// TP_SavedGame_Events
+			// 
+			this.TP_SavedGame_Events.Controls.Add(this.splitContainer34);
+			this.TP_SavedGame_Events.Location = new System.Drawing.Point(4, 22);
+			this.TP_SavedGame_Events.Name = "TP_SavedGame_Events";
+			this.TP_SavedGame_Events.Padding = new System.Windows.Forms.Padding(3);
+			this.TP_SavedGame_Events.Size = new System.Drawing.Size(782, 355);
+			this.TP_SavedGame_Events.TabIndex = 1;
+			this.TP_SavedGame_Events.Text = "Events";
+			this.TP_SavedGame_Events.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer34
+			// 
+			this.splitContainer34.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer34.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer34.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer34.Name = "splitContainer34";
+			// 
+			// splitContainer34.Panel1
+			// 
+			this.splitContainer34.Panel1.Controls.Add(this.LBX_SavedGame_Events);
+			this.splitContainer34.Panel1MinSize = 200;
+			// 
+			// splitContainer34.Panel2
+			// 
+			this.splitContainer34.Panel2.Controls.Add(this.splitContainer36);
+			this.splitContainer34.Size = new System.Drawing.Size(776, 349);
+			this.splitContainer34.SplitterDistance = 200;
+			this.splitContainer34.TabIndex = 2;
+			// 
+			// LBX_SavedGame_Events
+			// 
+			this.LBX_SavedGame_Events.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LBX_SavedGame_Events.FormattingEnabled = true;
+			this.LBX_SavedGame_Events.Location = new System.Drawing.Point(0, 0);
+			this.LBX_SavedGame_Events.Name = "LBX_SavedGame_Events";
+			this.LBX_SavedGame_Events.Size = new System.Drawing.Size(200, 349);
+			this.LBX_SavedGame_Events.TabIndex = 0;
+			this.LBX_SavedGame_Events.SelectedIndexChanged += new System.EventHandler(this.LBX_SavedGame_Events_SelectedIndexChanged);
+			// 
+			// splitContainer36
+			// 
+			this.splitContainer36.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer36.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer36.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer36.Name = "splitContainer36";
+			// 
+			// splitContainer36.Panel1
+			// 
+			this.splitContainer36.Panel1.Controls.Add(this.label71);
+			this.splitContainer36.Panel1.Controls.Add(this.label70);
+			this.splitContainer36.Panel1.Controls.Add(this.label69);
+			this.splitContainer36.Panel1MinSize = 150;
+			// 
+			// splitContainer36.Panel2
+			// 
+			this.splitContainer36.Panel2.Controls.Add(this.CBX_SavedGame_Events_Enabled);
+			this.splitContainer36.Panel2.Controls.Add(this.BTN_SavedGame_Events_Apply);
+			this.splitContainer36.Panel2.Controls.Add(this.TBX_SavedGame_Events_ActivationTime);
+			this.splitContainer36.Panel2.Controls.Add(this.TBX_SavedGame_Events_Type);
+			this.splitContainer36.Size = new System.Drawing.Size(572, 349);
+			this.splitContainer36.SplitterDistance = 150;
+			this.splitContainer36.TabIndex = 0;
+			// 
+			// label71
+			// 
+			this.label71.AutoSize = true;
+			this.label71.Location = new System.Drawing.Point(3, 58);
+			this.label71.Name = "label71";
+			this.label71.Size = new System.Drawing.Size(105, 13);
+			this.label71.TabIndex = 2;
+			this.label71.Text = "Activation Time (ms):";
+			// 
+			// label70
+			// 
+			this.label70.AutoSize = true;
+			this.label70.Location = new System.Drawing.Point(3, 32);
+			this.label70.Name = "label70";
+			this.label70.Size = new System.Drawing.Size(49, 13);
+			this.label70.TabIndex = 1;
+			this.label70.Text = "Enabled:";
+			// 
+			// label69
+			// 
+			this.label69.AutoSize = true;
+			this.label69.Location = new System.Drawing.Point(3, 6);
+			this.label69.Name = "label69";
+			this.label69.Size = new System.Drawing.Size(34, 13);
+			this.label69.TabIndex = 0;
+			this.label69.Text = "Type:";
+			// 
+			// BTN_SavedGame_Events_Apply
+			// 
+			this.BTN_SavedGame_Events_Apply.Location = new System.Drawing.Point(28, 323);
+			this.BTN_SavedGame_Events_Apply.Name = "BTN_SavedGame_Events_Apply";
+			this.BTN_SavedGame_Events_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_SavedGame_Events_Apply.TabIndex = 9;
+			this.BTN_SavedGame_Events_Apply.Text = "Apply changes";
+			this.BTN_SavedGame_Events_Apply.UseVisualStyleBackColor = true;
+			this.BTN_SavedGame_Events_Apply.Visible = false;
+			this.BTN_SavedGame_Events_Apply.Click += new System.EventHandler(this.BTN_SavedGame_Events_Apply_Click);
+			// 
+			// TBX_SavedGame_Events_ActivationTime
+			// 
+			this.TBX_SavedGame_Events_ActivationTime.Location = new System.Drawing.Point(3, 55);
+			this.TBX_SavedGame_Events_ActivationTime.Name = "TBX_SavedGame_Events_ActivationTime";
+			this.TBX_SavedGame_Events_ActivationTime.Size = new System.Drawing.Size(150, 20);
+			this.TBX_SavedGame_Events_ActivationTime.TabIndex = 2;
+			this.TBX_SavedGame_Events_ActivationTime.TextChanged += new System.EventHandler(this.TBX_SavedGame_Events_TextChanged);
+			// 
+			// TBX_SavedGame_Events_Type
+			// 
+			this.TBX_SavedGame_Events_Type.Location = new System.Drawing.Point(3, 3);
+			this.TBX_SavedGame_Events_Type.Name = "TBX_SavedGame_Events_Type";
+			this.TBX_SavedGame_Events_Type.ReadOnly = true;
+			this.TBX_SavedGame_Events_Type.Size = new System.Drawing.Size(150, 20);
+			this.TBX_SavedGame_Events_Type.TabIndex = 0;
+			// 
+			// TP_SavedGame_Objects
+			// 
+			this.TP_SavedGame_Objects.Controls.Add(this.splitContainer33);
+			this.TP_SavedGame_Objects.Location = new System.Drawing.Point(4, 22);
+			this.TP_SavedGame_Objects.Name = "TP_SavedGame_Objects";
+			this.TP_SavedGame_Objects.Padding = new System.Windows.Forms.Padding(3);
+			this.TP_SavedGame_Objects.Size = new System.Drawing.Size(782, 355);
+			this.TP_SavedGame_Objects.TabIndex = 2;
+			this.TP_SavedGame_Objects.Text = "Objects";
+			this.TP_SavedGame_Objects.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer33
+			// 
+			this.splitContainer33.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer33.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer33.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer33.Name = "splitContainer33";
+			// 
+			// splitContainer33.Panel1
+			// 
+			this.splitContainer33.Panel1.Controls.Add(this.TRV_SavedGame_Objects);
+			this.splitContainer33.Panel1MinSize = 300;
+			this.splitContainer33.Size = new System.Drawing.Size(776, 349);
+			this.splitContainer33.SplitterDistance = 300;
+			this.splitContainer33.TabIndex = 1;
+			// 
+			// TRV_SavedGame_Objects
+			// 
+			this.TRV_SavedGame_Objects.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TRV_SavedGame_Objects.Location = new System.Drawing.Point(0, 0);
+			this.TRV_SavedGame_Objects.Name = "TRV_SavedGame_Objects";
+			this.TRV_SavedGame_Objects.Size = new System.Drawing.Size(300, 349);
+			this.TRV_SavedGame_Objects.TabIndex = 0;
+			this.TRV_SavedGame_Objects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_SavedGame_Objects_AfterSelect);
+			// 
 			// LayoutPages
 			// 
 			this.LayoutPages.Controls.Add(this.SaveGamePage);
@@ -3301,152 +3428,14 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TabIndex = 5;
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
-            // CB_BlocksConfig_Enabled
+			// CBX_SavedGame_Events_Enabled
 			// 
-            this.CB_BlocksConfig_Enabled.AutoSize = true;
-            this.CB_BlocksConfig_Enabled.Location = new System.Drawing.Point(7, 129);
-            this.CB_BlocksConfig_Enabled.Name = "CB_BlocksConfig_Enabled";
-            this.CB_BlocksConfig_Enabled.Size = new System.Drawing.Size(65, 17);
-            this.CB_BlocksConfig_Enabled.TabIndex = 9;
-            this.CB_BlocksConfig_Enabled.Text = "Enabled";
-            this.CB_BlocksConfig_Enabled.UseVisualStyleBackColor = true;
-            this.CB_BlocksConfig_Enabled.CheckedChanged += new System.EventHandler(this.CB_BlocksConfig_Enabled_CheckedChanged);
-			// 
-            // CB_BlocksConfig_ModelIntersection
-			// 
-			this.TP_SavedGame_Properties.Controls.Add(this.splitContainer35);
-			this.TP_SavedGame_Properties.Location = new System.Drawing.Point(4, 22);
-			this.TP_SavedGame_Properties.Name = "TP_SavedGame_Properties";
-			this.TP_SavedGame_Properties.Padding = new System.Windows.Forms.Padding(3);
-			this.TP_SavedGame_Properties.Size = new System.Drawing.Size(782, 355);
-			this.TP_SavedGame_Properties.TabIndex = 0;
-			this.TP_SavedGame_Properties.Text = "Properties";
-			this.TP_SavedGame_Properties.UseVisualStyleBackColor = true;
-			// 
-			// TP_SavedGame_Events
-			// 
-			this.TP_SavedGame_Events.Controls.Add(this.splitContainer34);
-			this.TP_SavedGame_Events.Location = new System.Drawing.Point(4, 22);
-			this.TP_SavedGame_Events.Name = "TP_SavedGame_Events";
-			this.TP_SavedGame_Events.Padding = new System.Windows.Forms.Padding(3);
-			this.TP_SavedGame_Events.Size = new System.Drawing.Size(782, 355);
-			this.TP_SavedGame_Events.TabIndex = 1;
-			this.TP_SavedGame_Events.Text = "Events";
-			this.TP_SavedGame_Events.UseVisualStyleBackColor = true;
-			// 
-			// TP_SavedGame_Objects
-			// 
-			this.TP_SavedGame_Objects.Controls.Add(this.splitContainer33);
-			this.TP_SavedGame_Objects.Location = new System.Drawing.Point(4, 22);
-			this.TP_SavedGame_Objects.Name = "TP_SavedGame_Objects";
-			this.TP_SavedGame_Objects.Padding = new System.Windows.Forms.Padding(3);
-			this.TP_SavedGame_Objects.Size = new System.Drawing.Size(782, 355);
-			this.TP_SavedGame_Objects.TabIndex = 2;
-			this.TP_SavedGame_Objects.Text = "Objects";
-			this.TP_SavedGame_Objects.UseVisualStyleBackColor = true;
-			// 
-			// splitContainer33
-			// 
-			this.splitContainer33.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer33.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer33.Location = new System.Drawing.Point(3, 3);
-			this.splitContainer33.Name = "splitContainer33";
-			// 
-			// splitContainer33.Panel1
-			// 
-			this.splitContainer33.Panel1.Controls.Add(this.TRV_SavedGame_Objects);
-			this.splitContainer33.Panel1MinSize = 300;
-			this.splitContainer33.Size = new System.Drawing.Size(776, 349);
-			this.splitContainer33.SplitterDistance = 300;
-			this.splitContainer33.TabIndex = 1;
-			// 
-			// splitContainer34
-			// 
-			this.splitContainer34.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer34.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer34.Location = new System.Drawing.Point(3, 3);
-			this.splitContainer34.Name = "splitContainer34";
-			// 
-			// splitContainer34.Panel1
-			// 
-			this.splitContainer34.Panel1.Controls.Add(this.LBX_SavedGame_Events);
-			this.splitContainer34.Panel1MinSize = 200;
-			this.splitContainer34.Size = new System.Drawing.Size(776, 349);
-			this.splitContainer34.SplitterDistance = 200;
-			this.splitContainer34.TabIndex = 2;
-			// 
-			// LBX_SavedGame_Events
-			// 
-			this.LBX_SavedGame_Events.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LBX_SavedGame_Events.FormattingEnabled = true;
-			this.LBX_SavedGame_Events.Location = new System.Drawing.Point(0, 0);
-			this.LBX_SavedGame_Events.Name = "LBX_SavedGame_Events";
-			this.LBX_SavedGame_Events.Size = new System.Drawing.Size(200, 349);
-			this.LBX_SavedGame_Events.TabIndex = 0;
-			// 
-			// splitContainer35
-			// 
-			this.splitContainer35.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer35.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer35.Location = new System.Drawing.Point(3, 3);
-			this.splitContainer35.Name = "splitContainer35";
-			// 
-			// splitContainer35.Panel1
-			// 
-			this.splitContainer35.Panel1.Controls.Add(this.label61);
-			this.splitContainer35.Panel1.Controls.Add(this.label27);
-			this.splitContainer35.Panel1MinSize = 150;
-			// 
-			// splitContainer35.Panel2
-			// 
-			this.splitContainer35.Panel2.Controls.Add(this.TBX_SavedGame_Properties_AppVersion);
-			this.splitContainer35.Panel2.Controls.Add(this.TBX_SavedGame_Properties_Position);
-			this.splitContainer35.Size = new System.Drawing.Size(776, 349);
-			this.splitContainer35.SplitterDistance = 150;
-			this.splitContainer35.TabIndex = 0;
-			// 
-			// label27
-			// 
-			this.label27.AutoSize = true;
-			this.label27.Location = new System.Drawing.Point(3, 6);
-			this.label27.Name = "label27";
-			this.label27.Size = new System.Drawing.Size(47, 13);
-			this.label27.TabIndex = 0;
-			this.label27.Text = "Position:";
-			// 
-			// label61
-			// 
-			this.label61.AutoSize = true;
-			this.label61.Location = new System.Drawing.Point(3, 32);
-			this.label61.Name = "label61";
-			this.label61.Size = new System.Drawing.Size(67, 13);
-			this.label61.TabIndex = 1;
-			this.label61.Text = "App Version:";
-			// 
-			// TBX_SavedGame_Properties_Position
-			// 
-			this.TBX_SavedGame_Properties_Position.Location = new System.Drawing.Point(3, 3);
-			this.TBX_SavedGame_Properties_Position.Name = "TBX_SavedGame_Properties_Position";
-			this.TBX_SavedGame_Properties_Position.ReadOnly = true;
-			this.TBX_SavedGame_Properties_Position.Size = new System.Drawing.Size(150, 20);
-			this.TBX_SavedGame_Properties_Position.TabIndex = 0;
-			// 
-			// TBX_SavedGame_Properties_AppVersion
-			// 
-			this.TBX_SavedGame_Properties_AppVersion.Location = new System.Drawing.Point(3, 29);
-			this.TBX_SavedGame_Properties_AppVersion.Name = "TBX_SavedGame_Properties_AppVersion";
-			this.TBX_SavedGame_Properties_AppVersion.ReadOnly = true;
-			this.TBX_SavedGame_Properties_AppVersion.Size = new System.Drawing.Size(150, 20);
-			this.TBX_SavedGame_Properties_AppVersion.TabIndex = 1;
-			// 
-			// TRV_SavedGame_Objects
-			// 
-			this.TRV_SavedGame_Objects.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TRV_SavedGame_Objects.Location = new System.Drawing.Point(0, 0);
-			this.TRV_SavedGame_Objects.Name = "TRV_SavedGame_Objects";
-			this.TRV_SavedGame_Objects.Size = new System.Drawing.Size(300, 349);
-			this.TRV_SavedGame_Objects.TabIndex = 0;
-			this.TRV_SavedGame_Objects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_SavedGame_Objects_AfterSelect);
+			this.CBX_SavedGame_Events_Enabled.AutoSize = true;
+			this.CBX_SavedGame_Events_Enabled.Location = new System.Drawing.Point(3, 31);
+			this.CBX_SavedGame_Events_Enabled.Name = "CBX_SavedGame_Events_Enabled";
+			this.CBX_SavedGame_Events_Enabled.Size = new System.Drawing.Size(15, 14);
+			this.CBX_SavedGame_Events_Enabled.TabIndex = 10;
+			this.CBX_SavedGame_Events_Enabled.UseVisualStyleBackColor = true;
 			// 
 			// SEConfigTool
 			// 
@@ -3498,22 +3487,29 @@ namespace SEConfigTool
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.GBX_SavedGame.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.TP_SavedGame_Properties.ResumeLayout(false);
-            this.splitContainer35.Panel1.ResumeLayout(false);
-            this.splitContainer35.Panel1.PerformLayout();
-            this.splitContainer35.Panel2.ResumeLayout(false);
-            this.splitContainer35.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer35)).EndInit();
-            this.splitContainer35.ResumeLayout(false);
-            this.TP_SavedGame_Events.ResumeLayout(false);
-            this.splitContainer34.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer34)).EndInit();
-            this.splitContainer34.ResumeLayout(false);
-            this.TP_SavedGame_Objects.ResumeLayout(false);
-            this.splitContainer33.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer33)).EndInit();
-            this.splitContainer33.ResumeLayout(false);
+			this.tabControl1.ResumeLayout(false);
+			this.TP_SavedGame_Properties.ResumeLayout(false);
+			this.splitContainer35.Panel1.ResumeLayout(false);
+			this.splitContainer35.Panel1.PerformLayout();
+			this.splitContainer35.Panel2.ResumeLayout(false);
+			this.splitContainer35.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer35)).EndInit();
+			this.splitContainer35.ResumeLayout(false);
+			this.TP_SavedGame_Events.ResumeLayout(false);
+			this.splitContainer34.Panel1.ResumeLayout(false);
+			this.splitContainer34.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer34)).EndInit();
+			this.splitContainer34.ResumeLayout(false);
+			this.splitContainer36.Panel1.ResumeLayout(false);
+			this.splitContainer36.Panel1.PerformLayout();
+			this.splitContainer36.Panel2.ResumeLayout(false);
+			this.splitContainer36.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer36)).EndInit();
+			this.splitContainer36.ResumeLayout(false);
+			this.TP_SavedGame_Objects.ResumeLayout(false);
+			this.splitContainer33.Panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer33)).EndInit();
+			this.splitContainer33.ResumeLayout(false);
 			this.LayoutPages.ResumeLayout(false);
 			this.ContainerTypeConfiguration.ResumeLayout(false);
 			this.splitContainer8.Panel1.ResumeLayout(false);
@@ -3922,6 +3918,15 @@ namespace SEConfigTool
 		private System.Windows.Forms.TreeView TRV_SavedGame_Objects;
         private System.Windows.Forms.CheckBox CB_BlocksConfig_Enabled;
         private System.Windows.Forms.CheckBox CB_BlocksConfig_ModelIntersection;
+		private System.Windows.Forms.SplitContainer splitContainer36;
+		private System.Windows.Forms.Button BTN_SavedGame_Save;
+		private System.Windows.Forms.Label label71;
+		private System.Windows.Forms.Label label70;
+		private System.Windows.Forms.Label label69;
+		private System.Windows.Forms.TextBox TBX_SavedGame_Events_ActivationTime;
+		private System.Windows.Forms.TextBox TBX_SavedGame_Events_Type;
+		private System.Windows.Forms.Button BTN_SavedGame_Events_Apply;
+		private System.Windows.Forms.CheckBox CBX_SavedGame_Events_Enabled;
 
     }
 }

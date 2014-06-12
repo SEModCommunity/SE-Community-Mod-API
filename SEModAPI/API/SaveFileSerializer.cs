@@ -17,20 +17,22 @@ namespace SEModAPI
     {
         #region "Attributes"
 
+		private ConfigFileSerializer m_configFileSerializer;
         private Sector m_Sector;
 
         #endregion Attributes
 
 		#region "Constructors and Initializers"
 
-		public SaveFileSerializer(string pFileLocation, ConfigFileSerializer pConfigFile)
+		public SaveFileSerializer(FileInfo fileInfo, ConfigFileSerializer pConfigFile)
 		{
-			if (!File.Exists(pFileLocation))
+			m_configFileSerializer = pConfigFile;
+			if (!File.Exists(fileInfo.FullName))
 			{
 				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.SteamPathNotFound));
 			}
 
-			m_Sector = new Sector(pConfigFile.ReadSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(pFileLocation));
+			m_Sector = new Sector(m_configFileSerializer.ReadSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(fileInfo.FullName), fileInfo);
 		}
 
 		#endregion
@@ -43,5 +45,5 @@ namespace SEModAPI
 		}
 
 		#endregion
-    }
+	}
 }
