@@ -64,7 +64,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Definitions\AmmoMagazinesDefinition.cs" />
-    <Compile Include="API\Definitions\CubeBlocks\ThrustersDefinitions.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\AssemblerDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\CargoContainerDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\CockpitDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\GravityGeneratorDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\GyroscopeDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\LightingBlockDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\MergeBlockDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\MotorStatorDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\OreDetectorDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\ReactorDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\RefineryDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\SolarPanelDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\ThrustersDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\VirtualMassDefinition.cs" />
     <Compile Include="API\SaveData\BlockGroups.cs" />
     <Compile Include="API\SaveData\ConveyorLines.cs" />
     <Compile Include="API\SaveData\CubeBlock.cs" />

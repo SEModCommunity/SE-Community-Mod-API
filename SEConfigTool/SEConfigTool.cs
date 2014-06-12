@@ -421,15 +421,23 @@ namespace SEConfigTool
 
 		private void CB_BlocksConfig_ModelIntersection_CheckedChanged(object sender, EventArgs e)
 		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_ConfigApplyChanges.Visible = true;
 			int index = LBX_BlocksConfiguration.SelectedIndex;
 			m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CB_BlocksConfig_ModelIntersection.Checked;
 		}
+        }
 
 		private void CB_BlocksConfig_Enabled_CheckedChanged(object sender, EventArgs e)
 		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_ConfigApplyChanges.Visible = true;
 			int index = LBX_BlocksConfiguration.SelectedIndex;
 			m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CB_BlocksConfig_Enabled.Checked;
 		}
+        }
 
 		private void LBX_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
