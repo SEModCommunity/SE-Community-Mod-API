@@ -60,11 +60,12 @@ namespace SEConfigTool
         private void LoadSaveFile(FileInfo saveFileInfo)
         {
             SaveFileSerializer save = new SaveFileSerializer(saveFileInfo.FullName, m_configSerializer);
+			Sector sector = save.Sector;
 
-			TBX_SavedGame_Properties_Position.Text = save.Position.ToString();
-			TBX_SavedGame_Properties_AppVersion.Text = save.AppVersion.ToString();
+			TBX_SavedGame_Properties_Position.Text = sector.Position.ToString();
+			TBX_SavedGame_Properties_AppVersion.Text = sector.AppVersion.ToString();
 
-			foreach (Event currentEvent in save.Events)
+			foreach (Event currentEvent in sector.Events)
 			{
 				LBX_SavedGame_Events.Items.Add(currentEvent.Name);
 			}
@@ -80,7 +81,7 @@ namespace SEConfigTool
 			TRV_SavedGame_Objects.Nodes.Add("Unknown");
 
 			//Add the cube grids
-			foreach (CubeGrid cubeGrid in save.CubeGrids)
+			foreach (CubeGrid cubeGrid in sector.CubeGrids)
             {
 				float x = cubeGrid.PositionAndOrientation.Position.x;
 				float y = cubeGrid.PositionAndOrientation.Position.y;
@@ -103,7 +104,7 @@ namespace SEConfigTool
             }
 
 			//Add the voxel maps
-			foreach (VoxelMap voxelMap in save.VoxelMaps)
+			foreach (VoxelMap voxelMap in sector.VoxelMaps)
 			{
 				float x = voxelMap.PositionAndOrientation.Position.x;
 				float y = voxelMap.PositionAndOrientation.Position.y;
@@ -115,7 +116,7 @@ namespace SEConfigTool
 			}
 
 			//Add the floating objects
-			foreach (FloatingObject floatingObject in save.FloatingObjects)
+			foreach (FloatingObject floatingObject in sector.FloatingObjects)
 			{
 				float x = floatingObject.PositionAndOrientation.Position.x;
 				float y = floatingObject.PositionAndOrientation.Position.y;
@@ -127,7 +128,7 @@ namespace SEConfigTool
 			}
 
 			//Add the meteors
-			foreach (Meteor meteor in save.Meteors)
+			foreach (Meteor meteor in sector.Meteors)
 			{
 				float x = meteor.PositionAndOrientation.Position.x;
 				float y = meteor.PositionAndOrientation.Position.y;
@@ -139,7 +140,7 @@ namespace SEConfigTool
 			}
 
 			//Add any unknown objects
-			foreach (SectorObject<MyObjectBuilder_EntityBase> unknown in save.UnknownObjects)
+			foreach (SectorObject<MyObjectBuilder_EntityBase> unknown in sector.UnknownObjects)
 			{
 				float x = unknown.PositionAndOrientation.Position.x;
 				float y = unknown.PositionAndOrientation.Position.y;

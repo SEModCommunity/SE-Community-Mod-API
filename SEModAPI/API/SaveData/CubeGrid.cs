@@ -12,7 +12,7 @@ namespace SEModAPI.API.SaveData
 	{
 		#region "Attributes"
 
-		private List<CubeBlock> m_cubeBlocks;
+		private CubeBlockManager m_cubeBlockManager;
 
 		#endregion
 
@@ -21,12 +21,7 @@ namespace SEModAPI.API.SaveData
 		public CubeGrid(MyObjectBuilder_CubeGrid definition)
 			: base(definition)
 		{
-			//TODO - Change this to use a manager rather than a flat list
-			m_cubeBlocks = new List<CubeBlock>();
-			foreach (MyObjectBuilder_CubeBlock cubeBlock in definition.CubeBlocks)
-			{
-				m_cubeBlocks.Add(new CubeBlock(cubeBlock));
-			}
+			m_cubeBlockManager = new CubeBlockManager(definition.CubeBlocks);
 		}
 
 		#endregion
@@ -79,7 +74,12 @@ namespace SEModAPI.API.SaveData
 
 		public List<CubeBlock> CubeBlocks
 		{
-			get { return m_cubeBlocks; }
+			get
+			{
+				//TODO - Look into changing manager base class to return a List so we don't have to do the array conversion
+				List<CubeBlock> newList = new List<CubeBlock>(m_cubeBlockManager.Definitions);
+				return newList;
+			}
 		}
 
 		public List<BoneInfo> Skeleton
@@ -122,6 +122,51 @@ namespace SEModAPI.API.SaveData
 				return definition.EntityId.ToString();
 			else
 				return name;
+		}
+
+		#endregion
+	}
+
+	public class CubeGridManager : OverLayerDefinitionsManager<MyObjectBuilder_CubeGrid, CubeGrid>
+	{
+		#region "Constructors and Initializers"
+
+		public CubeGridManager(List<MyObjectBuilder_CubeGrid> definitions)
+			: base(definitions.ToArray())
+		{}
+
+		public CubeGridManager(MyObjectBuilder_CubeGrid[] definitions)
+			: base(definitions)
+		{}
+
+		#endregion
+
+		#region "Methods"
+
+		protected override CubeGrid CreateOverLayerSubTypeInstance(MyObjectBuilder_CubeGrid definition)
+		{
+			return new CubeGrid(definition);
+		}
+
+		protected override MyObjectBuilder_CubeGrid GetBaseTypeOf(CubeGrid overLayer)
+		{
+			return overLayer.BaseDefinition;
+		}
+
+		protected override bool GetChangedState(CubeGrid overLayer)
+		{
+			foreach (var def in overLayer.CubeBlocks)
+			{
+				if (def.Changed)
+					return true;
+			}
+
+			return overLayer.Changed;
+		}
+
+		public override void Save()
+		{
+			//TODO - Implement save mechanism for cube grids
 		}
 
 		#endregion

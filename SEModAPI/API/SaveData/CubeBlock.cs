@@ -70,4 +70,43 @@ namespace SEModAPI.API.SaveData
 
 		#endregion
 	}
+
+	public class CubeBlockManager : OverLayerDefinitionsManager<MyObjectBuilder_CubeBlock, CubeBlock>
+	{
+		#region "Constructors and Initializers"
+
+		public CubeBlockManager(List<MyObjectBuilder_CubeBlock> definitions)
+			: base(definitions.ToArray())
+		{}
+
+		public CubeBlockManager(MyObjectBuilder_CubeBlock[] definitions)
+			: base(definitions)
+		{}
+
+		#endregion
+
+		#region "Methods"
+
+		protected override CubeBlock CreateOverLayerSubTypeInstance(MyObjectBuilder_CubeBlock definition)
+		{
+			return new CubeBlock(definition);
+		}
+
+		protected override MyObjectBuilder_CubeBlock GetBaseTypeOf(CubeBlock overLayer)
+		{
+			return overLayer.BaseDefinition;
+		}
+
+		protected override bool GetChangedState(CubeBlock overLayer)
+		{
+			return overLayer.Changed;
+		}
+
+		public override void Save()
+		{
+			//TODO - Implement save mechanism for cube blocks
+		}
+
+		#endregion
+	}
 }
