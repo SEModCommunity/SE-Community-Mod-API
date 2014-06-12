@@ -3436,6 +3436,7 @@ namespace SEConfigTool
 			this.CBX_SavedGame_Events_Enabled.Size = new System.Drawing.Size(15, 14);
 			this.CBX_SavedGame_Events_Enabled.TabIndex = 10;
 			this.CBX_SavedGame_Events_Enabled.UseVisualStyleBackColor = true;
+			this.CBX_SavedGame_Events_Enabled.CheckedChanged += new System.EventHandler(this.CBX_SavedGame_Events_Enabled_CheckedChanged);
 			// 
 			// SEConfigTool
 			// 
