@@ -49,7 +49,6 @@ namespace SEConfigTool
 			this.TBX_ConfigAmmoId = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigAmmoCapacity = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigAmmoName = new System.Windows.Forms.TextBox();
-			this.TBX_ConfigAmmoCaliber = new System.Windows.Forms.TextBox();
 			this.AmmoConfigurationPage = new System.Windows.Forms.TabPage();
 			this.BlocksConfigurationPage = new System.Windows.Forms.TabPage();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -129,6 +128,7 @@ namespace SEConfigTool
 			this.label31 = new System.Windows.Forms.Label();
 			this.label30 = new System.Windows.Forms.Label();
 			this.label29 = new System.Windows.Forms.Label();
+			this.CMB_ContainerTypesConfig_Items_Type = new System.Windows.Forms.ComboBox();
 			this.BTN_ContainerTypeConfig_Items_Apply = new System.Windows.Forms.Button();
 			this.TBX_ContainerTypeConfig_ItemAmountMax = new System.Windows.Forms.TextBox();
 			this.TBX_ContainerTypeConfig_ItemAmountMin = new System.Windows.Forms.TextBox();
@@ -149,12 +149,12 @@ namespace SEConfigTool
 			this.label20 = new System.Windows.Forms.Label();
 			this.label21 = new System.Windows.Forms.Label();
 			this.label22 = new System.Windows.Forms.Label();
+			this.CMB_GlobalEventsConfig_Details_EventType = new System.Windows.Forms.ComboBox();
 			this.TBX_ConfigGlobalEventFirstActivation = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigGlobalEventMinActivation = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigGlobalEventMaxActivation = new System.Windows.Forms.TextBox();
 			this.BTN_GlobalEventConfig_Apply = new System.Windows.Forms.Button();
 			this.TBX_ConfigGlobalEventName = new System.Windows.Forms.TextBox();
-			this.TBX_ConfigGlobalEventType = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigGlobalEventId = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigGlobalEventDescription = new System.Windows.Forms.TextBox();
 			this.SpawnGroupConfiguration = new System.Windows.Forms.TabPage();
@@ -290,7 +290,9 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_VoxelMaterialsConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre = new System.Windows.Forms.TextBox();
-			this.CMB_ContainerTypesConfig_Items_Type = new System.Windows.Forms.ComboBox();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.TLS_StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+			this.CMB_AmmoConfig_Details_Caliber = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 			this.splitContainer5.Panel1.SuspendLayout();
 			this.splitContainer5.Panel2.SuspendLayout();
@@ -475,6 +477,7 @@ namespace SEConfigTool
 			this.splitContainer32.Panel1.SuspendLayout();
 			this.splitContainer32.Panel2.SuspendLayout();
 			this.splitContainer32.SuspendLayout();
+			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer5
@@ -587,13 +590,13 @@ namespace SEConfigTool
 			// 
 			this.splitContainer7.Panel2.AutoScroll = true;
 			this.splitContainer7.Panel2.AutoScrollMinSize = new System.Drawing.Size(150, 0);
+			this.splitContainer7.Panel2.Controls.Add(this.CMB_AmmoConfig_Details_Caliber);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoMass);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoVolume);
 			this.splitContainer7.Panel2.Controls.Add(this.BTN_AmmoConfig_Details_Apply);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoId);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoCapacity);
 			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoName);
-			this.splitContainer7.Panel2.Controls.Add(this.TBX_ConfigAmmoCaliber);
 			this.splitContainer7.Size = new System.Drawing.Size(580, 363);
 			this.splitContainer7.SplitterDistance = 150;
 			this.splitContainer7.TabIndex = 4;
@@ -703,14 +706,6 @@ namespace SEConfigTool
 			this.TBX_ConfigAmmoName.Size = new System.Drawing.Size(150, 20);
 			this.TBX_ConfigAmmoName.TabIndex = 5;
 			// 
-			// TBX_ConfigAmmoCaliber
-			// 
-			this.TBX_ConfigAmmoCaliber.Location = new System.Drawing.Point(3, 55);
-			this.TBX_ConfigAmmoCaliber.Name = "TBX_ConfigAmmoCaliber";
-			this.TBX_ConfigAmmoCaliber.ReadOnly = true;
-			this.TBX_ConfigAmmoCaliber.Size = new System.Drawing.Size(150, 20);
-			this.TBX_ConfigAmmoCaliber.TabIndex = 4;
-			// 
 			// AmmoConfigurationPage
 			// 
 			this.AmmoConfigurationPage.Controls.Add(this.splitContainer5);
@@ -728,7 +723,7 @@ namespace SEConfigTool
 			this.BlocksConfigurationPage.Location = new System.Drawing.Point(4, 22);
 			this.BlocksConfigurationPage.Name = "BlocksConfigurationPage";
 			this.BlocksConfigurationPage.Padding = new System.Windows.Forms.Padding(3);
-			this.BlocksConfigurationPage.Size = new System.Drawing.Size(802, 436);
+			this.BlocksConfigurationPage.Size = new System.Drawing.Size(802, 411);
 			this.BlocksConfigurationPage.TabIndex = 1;
 			this.BlocksConfigurationPage.Text = "Blocks";
 			this.BlocksConfigurationPage.UseVisualStyleBackColor = true;
@@ -749,7 +744,7 @@ namespace SEConfigTool
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.GBX_BlocksConfig);
-			this.splitContainer3.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer3.Size = new System.Drawing.Size(796, 405);
 			this.splitContainer3.SplitterDistance = 25;
 			this.splitContainer3.TabIndex = 1;
 			// 
@@ -779,7 +774,7 @@ namespace SEConfigTool
 			this.GBX_BlocksConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_BlocksConfig.Location = new System.Drawing.Point(0, 0);
 			this.GBX_BlocksConfig.Name = "GBX_BlocksConfig";
-			this.GBX_BlocksConfig.Size = new System.Drawing.Size(796, 401);
+			this.GBX_BlocksConfig.Size = new System.Drawing.Size(796, 376);
 			this.GBX_BlocksConfig.TabIndex = 2;
 			this.GBX_BlocksConfig.TabStop = false;
 			this.GBX_BlocksConfig.Text = "Blocks";
@@ -798,7 +793,7 @@ namespace SEConfigTool
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.GBX_BlocksConfig_Details);
-			this.splitContainer2.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer2.Size = new System.Drawing.Size(790, 357);
 			this.splitContainer2.SplitterDistance = 200;
 			this.splitContainer2.TabIndex = 1;
 			// 
@@ -808,7 +803,7 @@ namespace SEConfigTool
 			this.LBX_BlocksConfiguration.FormattingEnabled = true;
 			this.LBX_BlocksConfiguration.Location = new System.Drawing.Point(0, 0);
 			this.LBX_BlocksConfiguration.Name = "LBX_BlocksConfiguration";
-			this.LBX_BlocksConfiguration.Size = new System.Drawing.Size(200, 382);
+			this.LBX_BlocksConfiguration.Size = new System.Drawing.Size(200, 357);
 			this.LBX_BlocksConfiguration.TabIndex = 0;
 			this.LBX_BlocksConfiguration.SelectedIndexChanged += new System.EventHandler(this.LBX_BlocksConfiguration_SelectedIndexChanged);
 			// 
@@ -820,7 +815,7 @@ namespace SEConfigTool
 			this.GBX_BlocksConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_BlocksConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GBX_BlocksConfig_Details.Name = "GBX_BlocksConfig_Details";
-			this.GBX_BlocksConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_BlocksConfig_Details.Size = new System.Drawing.Size(586, 357);
 			this.GBX_BlocksConfig_Details.TabIndex = 3;
 			this.GBX_BlocksConfig_Details.TabStop = false;
 			this.GBX_BlocksConfig_Details.Text = "Selected Item Details";
@@ -852,7 +847,7 @@ namespace SEConfigTool
 			this.splitContainer4.Panel2.Controls.Add(this.TBX_ConfigDisassembleRatio);
 			this.splitContainer4.Panel2.Controls.Add(this.TBX_ConfigBlockName);
 			this.splitContainer4.Panel2.Controls.Add(this.TBX_ConfigBuildTime);
-			this.splitContainer4.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer4.Size = new System.Drawing.Size(580, 338);
 			this.splitContainer4.SplitterDistance = 150;
 			this.splitContainer4.TabIndex = 4;
 			// 
@@ -968,7 +963,7 @@ namespace SEConfigTool
 			this.SaveGamePage.Location = new System.Drawing.Point(4, 22);
 			this.SaveGamePage.Name = "SaveGamePage";
 			this.SaveGamePage.Padding = new System.Windows.Forms.Padding(3);
-			this.SaveGamePage.Size = new System.Drawing.Size(802, 436);
+			this.SaveGamePage.Size = new System.Drawing.Size(802, 411);
 			this.SaveGamePage.TabIndex = 0;
 			this.SaveGamePage.Text = "Saved Game";
 			this.SaveGamePage.UseVisualStyleBackColor = true;
@@ -989,7 +984,7 @@ namespace SEConfigTool
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.GBX_SavedGame);
-			this.splitContainer1.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer1.Size = new System.Drawing.Size(796, 405);
 			this.splitContainer1.SplitterDistance = 26;
 			this.splitContainer1.TabIndex = 1;
 			// 
@@ -1019,7 +1014,7 @@ namespace SEConfigTool
 			this.GBX_SavedGame.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_SavedGame.Location = new System.Drawing.Point(0, 0);
 			this.GBX_SavedGame.Name = "GBX_SavedGame";
-			this.GBX_SavedGame.Size = new System.Drawing.Size(796, 400);
+			this.GBX_SavedGame.Size = new System.Drawing.Size(796, 375);
 			this.GBX_SavedGame.TabIndex = 1;
 			this.GBX_SavedGame.TabStop = false;
 			this.GBX_SavedGame.Text = "Sector";
@@ -1033,7 +1028,7 @@ namespace SEConfigTool
 			this.tabControl1.Location = new System.Drawing.Point(3, 16);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(790, 381);
+			this.tabControl1.Size = new System.Drawing.Size(790, 356);
 			this.tabControl1.TabIndex = 1;
 			// 
 			// TP_SavedGame_Properties
@@ -1042,7 +1037,7 @@ namespace SEConfigTool
 			this.TP_SavedGame_Properties.Location = new System.Drawing.Point(4, 22);
 			this.TP_SavedGame_Properties.Name = "TP_SavedGame_Properties";
 			this.TP_SavedGame_Properties.Padding = new System.Windows.Forms.Padding(3);
-			this.TP_SavedGame_Properties.Size = new System.Drawing.Size(782, 355);
+			this.TP_SavedGame_Properties.Size = new System.Drawing.Size(782, 330);
 			this.TP_SavedGame_Properties.TabIndex = 0;
 			this.TP_SavedGame_Properties.Text = "Properties";
 			this.TP_SavedGame_Properties.UseVisualStyleBackColor = true;
@@ -1064,7 +1059,7 @@ namespace SEConfigTool
 			// 
 			this.splitContainer35.Panel2.Controls.Add(this.TBX_SavedGame_Properties_AppVersion);
 			this.splitContainer35.Panel2.Controls.Add(this.TBX_SavedGame_Properties_Position);
-			this.splitContainer35.Size = new System.Drawing.Size(776, 349);
+			this.splitContainer35.Size = new System.Drawing.Size(776, 324);
 			this.splitContainer35.SplitterDistance = 150;
 			this.splitContainer35.TabIndex = 0;
 			// 
@@ -1267,6 +1262,9 @@ namespace SEConfigTool
 			// 
 			// LayoutPages
 			// 
+			this.LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.LayoutPages.Controls.Add(this.SaveGamePage);
 			this.LayoutPages.Controls.Add(this.BlocksConfigurationPage);
 			this.LayoutPages.Controls.Add(this.AmmoConfigurationPage);
@@ -1277,7 +1275,6 @@ namespace SEConfigTool
 			this.LayoutPages.Controls.Add(this.ComponentConfiguration);
 			this.LayoutPages.Controls.Add(this.BlueprintConfiguration);
 			this.LayoutPages.Controls.Add(this.VoxelMaterialConfiguration);
-			this.LayoutPages.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LayoutPages.Location = new System.Drawing.Point(0, 0);
 			this.LayoutPages.Name = "LayoutPages";
 			this.LayoutPages.SelectedIndex = 0;
@@ -1633,6 +1630,15 @@ namespace SEConfigTool
 			this.label29.TabIndex = 7;
 			this.label29.Text = "AmountMin";
 			// 
+			// CMB_ContainerTypesConfig_Items_Type
+			// 
+			this.CMB_ContainerTypesConfig_Items_Type.FormattingEnabled = true;
+			this.CMB_ContainerTypesConfig_Items_Type.Location = new System.Drawing.Point(4, 4);
+			this.CMB_ContainerTypesConfig_Items_Type.Name = "CMB_ContainerTypesConfig_Items_Type";
+			this.CMB_ContainerTypesConfig_Items_Type.Size = new System.Drawing.Size(150, 21);
+			this.CMB_ContainerTypesConfig_Items_Type.TabIndex = 10;
+			this.CMB_ContainerTypesConfig_Items_Type.SelectedIndexChanged += new System.EventHandler(this.CMB_ContainerTypesConfig_Items_SelectedIndexChanged);
+			// 
 			// BTN_ContainerTypeConfig_Items_Apply
 			// 
 			this.BTN_ContainerTypeConfig_Items_Apply.Location = new System.Drawing.Point(28, 305);
@@ -1790,12 +1796,12 @@ namespace SEConfigTool
 			// 
 			// splitContainer13.Panel2
 			// 
+			this.splitContainer13.Panel2.Controls.Add(this.CMB_GlobalEventsConfig_Details_EventType);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventFirstActivation);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventMinActivation);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventMaxActivation);
 			this.splitContainer13.Panel2.Controls.Add(this.BTN_GlobalEventConfig_Apply);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventName);
-			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventType);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventId);
 			this.splitContainer13.Panel2.Controls.Add(this.TBX_ConfigGlobalEventDescription);
 			this.splitContainer13.Size = new System.Drawing.Size(580, 363);
@@ -1865,6 +1871,15 @@ namespace SEConfigTool
 			this.label22.TabIndex = 2;
 			this.label22.Text = "Description:";
 			// 
+			// CMB_GlobalEventsConfig_Details_EventType
+			// 
+			this.CMB_GlobalEventsConfig_Details_EventType.FormattingEnabled = true;
+			this.CMB_GlobalEventsConfig_Details_EventType.Location = new System.Drawing.Point(4, 82);
+			this.CMB_GlobalEventsConfig_Details_EventType.Name = "CMB_GlobalEventsConfig_Details_EventType";
+			this.CMB_GlobalEventsConfig_Details_EventType.Size = new System.Drawing.Size(150, 21);
+			this.CMB_GlobalEventsConfig_Details_EventType.TabIndex = 12;
+			this.CMB_GlobalEventsConfig_Details_EventType.SelectedIndexChanged += new System.EventHandler(this.CMB_GlobalEventsConfig_Details_SelectedIndexChanged);
+			// 
 			// TBX_ConfigGlobalEventFirstActivation
 			// 
 			this.TBX_ConfigGlobalEventFirstActivation.Location = new System.Drawing.Point(3, 159);
@@ -1908,14 +1923,6 @@ namespace SEConfigTool
 			this.TBX_ConfigGlobalEventName.TabIndex = 7;
 			this.TBX_ConfigGlobalEventName.TextChanged += new System.EventHandler(this.TBX_ConfigGlobalEvent_TextChanged);
 			// 
-			// TBX_ConfigGlobalEventType
-			// 
-			this.TBX_ConfigGlobalEventType.Location = new System.Drawing.Point(3, 81);
-			this.TBX_ConfigGlobalEventType.Name = "TBX_ConfigGlobalEventType";
-			this.TBX_ConfigGlobalEventType.ReadOnly = true;
-			this.TBX_ConfigGlobalEventType.Size = new System.Drawing.Size(150, 20);
-			this.TBX_ConfigGlobalEventType.TabIndex = 6;
-			// 
 			// TBX_ConfigGlobalEventId
 			// 
 			this.TBX_ConfigGlobalEventId.Location = new System.Drawing.Point(3, 3);
@@ -1938,7 +1945,7 @@ namespace SEConfigTool
 			this.SpawnGroupConfiguration.Location = new System.Drawing.Point(4, 22);
 			this.SpawnGroupConfiguration.Name = "SpawnGroupConfiguration";
 			this.SpawnGroupConfiguration.Padding = new System.Windows.Forms.Padding(3);
-			this.SpawnGroupConfiguration.Size = new System.Drawing.Size(802, 436);
+			this.SpawnGroupConfiguration.Size = new System.Drawing.Size(802, 411);
 			this.SpawnGroupConfiguration.TabIndex = 7;
 			this.SpawnGroupConfiguration.Text = "Spawn Groups";
 			this.SpawnGroupConfiguration.UseVisualStyleBackColor = true;
@@ -1959,7 +1966,7 @@ namespace SEConfigTool
 			// splitContainer14.Panel2
 			// 
 			this.splitContainer14.Panel2.Controls.Add(this.GBX_SpawnGroupConfig);
-			this.splitContainer14.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer14.Size = new System.Drawing.Size(796, 405);
 			this.splitContainer14.SplitterDistance = 25;
 			this.splitContainer14.TabIndex = 1;
 			// 
@@ -1989,7 +1996,7 @@ namespace SEConfigTool
 			this.GBX_SpawnGroupConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_SpawnGroupConfig.Location = new System.Drawing.Point(0, 0);
 			this.GBX_SpawnGroupConfig.Name = "GBX_SpawnGroupConfig";
-			this.GBX_SpawnGroupConfig.Size = new System.Drawing.Size(796, 401);
+			this.GBX_SpawnGroupConfig.Size = new System.Drawing.Size(796, 376);
 			this.GBX_SpawnGroupConfig.TabIndex = 2;
 			this.GBX_SpawnGroupConfig.TabStop = false;
 			this.GBX_SpawnGroupConfig.Text = "Spawn Groups";
@@ -2009,7 +2016,7 @@ namespace SEConfigTool
 			// splitContainer15.Panel2
 			// 
 			this.splitContainer15.Panel2.Controls.Add(this.GBX_SpawnGroupConfig_Details);
-			this.splitContainer15.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer15.Size = new System.Drawing.Size(790, 357);
 			this.splitContainer15.SplitterDistance = 200;
 			this.splitContainer15.TabIndex = 1;
 			// 
@@ -2019,7 +2026,7 @@ namespace SEConfigTool
 			this.LBX_SpawnGroupConfiguration.FormattingEnabled = true;
 			this.LBX_SpawnGroupConfiguration.Location = new System.Drawing.Point(0, 0);
 			this.LBX_SpawnGroupConfiguration.Name = "LBX_SpawnGroupConfiguration";
-			this.LBX_SpawnGroupConfiguration.Size = new System.Drawing.Size(200, 382);
+			this.LBX_SpawnGroupConfiguration.Size = new System.Drawing.Size(200, 357);
 			this.LBX_SpawnGroupConfiguration.TabIndex = 0;
 			this.LBX_SpawnGroupConfiguration.SelectedIndexChanged += new System.EventHandler(this.LBX_SpawnGroupConfiguration_SelectedIndexChanged);
 			// 
@@ -2029,7 +2036,7 @@ namespace SEConfigTool
 			this.GBX_SpawnGroupConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_SpawnGroupConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GBX_SpawnGroupConfig_Details.Name = "GBX_SpawnGroupConfig_Details";
-			this.GBX_SpawnGroupConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_SpawnGroupConfig_Details.Size = new System.Drawing.Size(586, 357);
 			this.GBX_SpawnGroupConfig_Details.TabIndex = 1;
 			this.GBX_SpawnGroupConfig_Details.TabStop = false;
 			this.GBX_SpawnGroupConfig_Details.Text = "Selected Item Details";
@@ -2042,7 +2049,7 @@ namespace SEConfigTool
 			this.TC_SpawnGroupConfig_Details.Location = new System.Drawing.Point(3, 16);
 			this.TC_SpawnGroupConfig_Details.Name = "TC_SpawnGroupConfig_Details";
 			this.TC_SpawnGroupConfig_Details.SelectedIndex = 0;
-			this.TC_SpawnGroupConfig_Details.Size = new System.Drawing.Size(580, 363);
+			this.TC_SpawnGroupConfig_Details.Size = new System.Drawing.Size(580, 338);
 			this.TC_SpawnGroupConfig_Details.TabIndex = 0;
 			// 
 			// TP_SpawnGroupConfig_Details_Information
@@ -2051,7 +2058,7 @@ namespace SEConfigTool
 			this.TP_SpawnGroupConfig_Details_Information.Location = new System.Drawing.Point(4, 22);
 			this.TP_SpawnGroupConfig_Details_Information.Name = "TP_SpawnGroupConfig_Details_Information";
 			this.TP_SpawnGroupConfig_Details_Information.Padding = new System.Windows.Forms.Padding(3);
-			this.TP_SpawnGroupConfig_Details_Information.Size = new System.Drawing.Size(572, 337);
+			this.TP_SpawnGroupConfig_Details_Information.Size = new System.Drawing.Size(572, 312);
 			this.TP_SpawnGroupConfig_Details_Information.TabIndex = 0;
 			this.TP_SpawnGroupConfig_Details_Information.Text = "Information";
 			this.TP_SpawnGroupConfig_Details_Information.UseVisualStyleBackColor = true;
@@ -2074,7 +2081,7 @@ namespace SEConfigTool
 			this.splitContainer16.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Apply);
 			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupPrefabCount);
 			this.splitContainer16.Panel2.Controls.Add(this.TBX_ConfigSpawnGroupFrequency);
-			this.splitContainer16.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer16.Size = new System.Drawing.Size(566, 306);
 			this.splitContainer16.SplitterDistance = 150;
 			this.splitContainer16.TabIndex = 5;
 			// 
@@ -2576,7 +2583,7 @@ namespace SEConfigTool
 			this.ComponentConfiguration.Location = new System.Drawing.Point(4, 22);
 			this.ComponentConfiguration.Name = "ComponentConfiguration";
 			this.ComponentConfiguration.Padding = new System.Windows.Forms.Padding(3);
-			this.ComponentConfiguration.Size = new System.Drawing.Size(802, 436);
+			this.ComponentConfiguration.Size = new System.Drawing.Size(802, 411);
 			this.ComponentConfiguration.TabIndex = 9;
 			this.ComponentConfiguration.Text = "Components";
 			this.ComponentConfiguration.UseVisualStyleBackColor = true;
@@ -2597,7 +2604,7 @@ namespace SEConfigTool
 			// splitContainer24.Panel2
 			// 
 			this.splitContainer24.Panel2.Controls.Add(this.GBX_ComponentsConfig);
-			this.splitContainer24.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer24.Size = new System.Drawing.Size(796, 405);
 			this.splitContainer24.SplitterDistance = 25;
 			this.splitContainer24.TabIndex = 3;
 			// 
@@ -2627,7 +2634,7 @@ namespace SEConfigTool
 			this.GBX_ComponentsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_ComponentsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GBX_ComponentsConfig.Name = "GBX_ComponentsConfig";
-			this.GBX_ComponentsConfig.Size = new System.Drawing.Size(796, 401);
+			this.GBX_ComponentsConfig.Size = new System.Drawing.Size(796, 376);
 			this.GBX_ComponentsConfig.TabIndex = 2;
 			this.GBX_ComponentsConfig.TabStop = false;
 			this.GBX_ComponentsConfig.Text = "Components";
@@ -2647,7 +2654,7 @@ namespace SEConfigTool
 			// splitContainer25.Panel2
 			// 
 			this.splitContainer25.Panel2.Controls.Add(this.GBX_ComponentsConfig_Details);
-			this.splitContainer25.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer25.Size = new System.Drawing.Size(790, 357);
 			this.splitContainer25.SplitterDistance = 200;
 			this.splitContainer25.TabIndex = 1;
 			// 
@@ -2657,7 +2664,7 @@ namespace SEConfigTool
 			this.LBX_ComponentsConfig.FormattingEnabled = true;
 			this.LBX_ComponentsConfig.Location = new System.Drawing.Point(0, 0);
 			this.LBX_ComponentsConfig.Name = "LBX_ComponentsConfig";
-			this.LBX_ComponentsConfig.Size = new System.Drawing.Size(200, 382);
+			this.LBX_ComponentsConfig.Size = new System.Drawing.Size(200, 357);
 			this.LBX_ComponentsConfig.TabIndex = 0;
 			this.LBX_ComponentsConfig.SelectedIndexChanged += new System.EventHandler(this.LBX_ComponentsConfig_SelectedIndexChanged);
 			// 
@@ -2667,7 +2674,7 @@ namespace SEConfigTool
 			this.GBX_ComponentsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_ComponentsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GBX_ComponentsConfig_Details.Name = "GBX_ComponentsConfig_Details";
-			this.GBX_ComponentsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_ComponentsConfig_Details.Size = new System.Drawing.Size(586, 357);
 			this.GBX_ComponentsConfig_Details.TabIndex = 1;
 			this.GBX_ComponentsConfig_Details.TabStop = false;
 			this.GBX_ComponentsConfig_Details.Text = "Selected Item Details";
@@ -2706,7 +2713,7 @@ namespace SEConfigTool
 			this.splitContainer26.Panel2.Controls.Add(this.TBX_ComponentConfig_Name);
 			this.splitContainer26.Panel2.Controls.Add(this.TBX_ComponentConfig_Id);
 			this.splitContainer26.Panel2.Controls.Add(this.TBX_ComponentConfig_Description);
-			this.splitContainer26.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer26.Size = new System.Drawing.Size(580, 338);
 			this.splitContainer26.SplitterDistance = 150;
 			this.splitContainer26.TabIndex = 4;
 			// 
@@ -2897,7 +2904,7 @@ namespace SEConfigTool
 			this.BlueprintConfiguration.Location = new System.Drawing.Point(4, 22);
 			this.BlueprintConfiguration.Name = "BlueprintConfiguration";
 			this.BlueprintConfiguration.Padding = new System.Windows.Forms.Padding(3);
-			this.BlueprintConfiguration.Size = new System.Drawing.Size(802, 436);
+			this.BlueprintConfiguration.Size = new System.Drawing.Size(802, 411);
 			this.BlueprintConfiguration.TabIndex = 10;
 			this.BlueprintConfiguration.Text = "Blueprints";
 			this.BlueprintConfiguration.UseVisualStyleBackColor = true;
@@ -2918,7 +2925,7 @@ namespace SEConfigTool
 			// splitContainer27.Panel2
 			// 
 			this.splitContainer27.Panel2.Controls.Add(this.GBX_BlueprintConfig);
-			this.splitContainer27.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer27.Size = new System.Drawing.Size(796, 405);
 			this.splitContainer27.SplitterDistance = 25;
 			this.splitContainer27.TabIndex = 4;
 			// 
@@ -2948,7 +2955,7 @@ namespace SEConfigTool
 			this.GBX_BlueprintConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_BlueprintConfig.Location = new System.Drawing.Point(0, 0);
 			this.GBX_BlueprintConfig.Name = "GBX_BlueprintConfig";
-			this.GBX_BlueprintConfig.Size = new System.Drawing.Size(796, 401);
+			this.GBX_BlueprintConfig.Size = new System.Drawing.Size(796, 376);
 			this.GBX_BlueprintConfig.TabIndex = 2;
 			this.GBX_BlueprintConfig.TabStop = false;
 			this.GBX_BlueprintConfig.Text = "Blueprints";
@@ -2968,7 +2975,7 @@ namespace SEConfigTool
 			// splitContainer28.Panel2
 			// 
 			this.splitContainer28.Panel2.Controls.Add(this.GBX_BlueprintsConfig_Details);
-			this.splitContainer28.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer28.Size = new System.Drawing.Size(790, 357);
 			this.splitContainer28.SplitterDistance = 200;
 			this.splitContainer28.TabIndex = 1;
 			// 
@@ -2978,7 +2985,7 @@ namespace SEConfigTool
 			this.LBX_BlueprintConfig.FormattingEnabled = true;
 			this.LBX_BlueprintConfig.Location = new System.Drawing.Point(0, 0);
 			this.LBX_BlueprintConfig.Name = "LBX_BlueprintConfig";
-			this.LBX_BlueprintConfig.Size = new System.Drawing.Size(200, 382);
+			this.LBX_BlueprintConfig.Size = new System.Drawing.Size(200, 357);
 			this.LBX_BlueprintConfig.TabIndex = 0;
 			this.LBX_BlueprintConfig.SelectedIndexChanged += new System.EventHandler(this.LBX_BlueprintConfig_SelectedIndexChanged);
 			// 
@@ -2988,7 +2995,7 @@ namespace SEConfigTool
 			this.GBX_BlueprintsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_BlueprintsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GBX_BlueprintsConfig_Details.Name = "GBX_BlueprintsConfig_Details";
-			this.GBX_BlueprintsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_BlueprintsConfig_Details.Size = new System.Drawing.Size(586, 357);
 			this.GBX_BlueprintsConfig_Details.TabIndex = 1;
 			this.GBX_BlueprintsConfig_Details.TabStop = false;
 			this.GBX_BlueprintsConfig_Details.Text = "Selected Item Details";
@@ -3013,7 +3020,7 @@ namespace SEConfigTool
 			this.splitContainer29.Panel2.Controls.Add(this.LBX_BlueprintConfig_Details_Prerequisites);
 			this.splitContainer29.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Apply);
 			this.splitContainer29.Panel2.Controls.Add(this.TBX_BlueprintConfig_Details_BaseProductionTime);
-			this.splitContainer29.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer29.Size = new System.Drawing.Size(580, 338);
 			this.splitContainer29.SplitterDistance = 150;
 			this.splitContainer29.TabIndex = 4;
 			// 
@@ -3085,7 +3092,7 @@ namespace SEConfigTool
 			this.VoxelMaterialConfiguration.Location = new System.Drawing.Point(4, 22);
 			this.VoxelMaterialConfiguration.Name = "VoxelMaterialConfiguration";
 			this.VoxelMaterialConfiguration.Padding = new System.Windows.Forms.Padding(3);
-			this.VoxelMaterialConfiguration.Size = new System.Drawing.Size(802, 436);
+			this.VoxelMaterialConfiguration.Size = new System.Drawing.Size(802, 411);
 			this.VoxelMaterialConfiguration.TabIndex = 11;
 			this.VoxelMaterialConfiguration.Text = "Voxel Materials";
 			this.VoxelMaterialConfiguration.UseVisualStyleBackColor = true;
@@ -3106,7 +3113,7 @@ namespace SEConfigTool
 			// splitContainer30.Panel2
 			// 
 			this.splitContainer30.Panel2.Controls.Add(this.GBX_VoxelMaterialsConfig);
-			this.splitContainer30.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer30.Size = new System.Drawing.Size(796, 405);
 			this.splitContainer30.SplitterDistance = 25;
 			this.splitContainer30.TabIndex = 5;
 			// 
@@ -3136,7 +3143,7 @@ namespace SEConfigTool
 			this.GBX_VoxelMaterialsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_VoxelMaterialsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GBX_VoxelMaterialsConfig.Name = "GBX_VoxelMaterialsConfig";
-			this.GBX_VoxelMaterialsConfig.Size = new System.Drawing.Size(796, 401);
+			this.GBX_VoxelMaterialsConfig.Size = new System.Drawing.Size(796, 376);
 			this.GBX_VoxelMaterialsConfig.TabIndex = 2;
 			this.GBX_VoxelMaterialsConfig.TabStop = false;
 			this.GBX_VoxelMaterialsConfig.Text = "Voxel Materials";
@@ -3156,7 +3163,7 @@ namespace SEConfigTool
 			// splitContainer31.Panel2
 			// 
 			this.splitContainer31.Panel2.Controls.Add(this.GBX_VoxelMaterialsConfig_Details);
-			this.splitContainer31.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer31.Size = new System.Drawing.Size(790, 357);
 			this.splitContainer31.SplitterDistance = 200;
 			this.splitContainer31.TabIndex = 1;
 			// 
@@ -3166,7 +3173,7 @@ namespace SEConfigTool
 			this.LBX_VoxelMaterialsConfig.FormattingEnabled = true;
 			this.LBX_VoxelMaterialsConfig.Location = new System.Drawing.Point(0, 0);
 			this.LBX_VoxelMaterialsConfig.Name = "LBX_VoxelMaterialsConfig";
-			this.LBX_VoxelMaterialsConfig.Size = new System.Drawing.Size(200, 382);
+			this.LBX_VoxelMaterialsConfig.Size = new System.Drawing.Size(200, 357);
 			this.LBX_VoxelMaterialsConfig.TabIndex = 0;
 			this.LBX_VoxelMaterialsConfig.SelectedIndexChanged += new System.EventHandler(this.LBX_VoxelMaterialsConfig_SelectedIndexChanged);
 			// 
@@ -3176,7 +3183,7 @@ namespace SEConfigTool
 			this.GBX_VoxelMaterialsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GBX_VoxelMaterialsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GBX_VoxelMaterialsConfig_Details.Name = "GBX_VoxelMaterialsConfig_Details";
-			this.GBX_VoxelMaterialsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GBX_VoxelMaterialsConfig_Details.Size = new System.Drawing.Size(586, 357);
 			this.GBX_VoxelMaterialsConfig_Details.TabIndex = 1;
 			this.GBX_VoxelMaterialsConfig_Details.TabStop = false;
 			this.GBX_VoxelMaterialsConfig_Details.Text = "Selected Item Details";
@@ -3215,7 +3222,7 @@ namespace SEConfigTool
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_Name);
 			this.splitContainer32.Panel2.Controls.Add(this.BTN_VoxelMaterialsConfig_Details_Apply);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_MinedOre);
-			this.splitContainer32.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer32.Size = new System.Drawing.Size(580, 338);
 			this.splitContainer32.SplitterDistance = 150;
 			this.splitContainer32.TabIndex = 4;
 			// 
@@ -3406,20 +3413,37 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TabIndex = 5;
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
-			// CMB_ContainerTypesConfig_Items_Type
+			// statusStrip1
 			// 
-			this.CMB_ContainerTypesConfig_Items_Type.FormattingEnabled = true;
-			this.CMB_ContainerTypesConfig_Items_Type.Location = new System.Drawing.Point(4, 4);
-			this.CMB_ContainerTypesConfig_Items_Type.Name = "CMB_ContainerTypesConfig_Items_Type";
-			this.CMB_ContainerTypesConfig_Items_Type.Size = new System.Drawing.Size(150, 21);
-			this.CMB_ContainerTypesConfig_Items_Type.TabIndex = 10;
-			this.CMB_ContainerTypesConfig_Items_Type.SelectedIndexChanged += new System.EventHandler(this.CMB_ContainerTypesConfig_Items_SelectedIndexChanged);
+			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TLS_StatusLabel});
+			this.statusStrip1.Location = new System.Drawing.Point(0, 465);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(810, 22);
+			this.statusStrip1.TabIndex = 1;
+			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// TLS_StatusLabel
+			// 
+			this.TLS_StatusLabel.Name = "TLS_StatusLabel";
+			this.TLS_StatusLabel.Size = new System.Drawing.Size(35, 17);
+			this.TLS_StatusLabel.Text = "Done";
+			// 
+			// CMB_AmmoConfig_Details_Caliber
+			// 
+			this.CMB_AmmoConfig_Details_Caliber.FormattingEnabled = true;
+			this.CMB_AmmoConfig_Details_Caliber.Location = new System.Drawing.Point(3, 55);
+			this.CMB_AmmoConfig_Details_Caliber.Name = "CMB_AmmoConfig_Details_Caliber";
+			this.CMB_AmmoConfig_Details_Caliber.Size = new System.Drawing.Size(150, 21);
+			this.CMB_AmmoConfig_Details_Caliber.TabIndex = 11;
+			this.CMB_AmmoConfig_Details_Caliber.SelectedIndexChanged += new System.EventHandler(this.CMB_AmmoConfig_Details_Caliber_SelectedIndexChanged);
 			// 
 			// SEConfigTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(810, 462);
+			this.ClientSize = new System.Drawing.Size(810, 487);
+			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.LayoutPages);
 			this.Name = "SEConfigTool";
 			this.Text = "SEConfigTool";
@@ -3635,7 +3659,10 @@ namespace SEConfigTool
 			this.splitContainer32.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer32)).EndInit();
 			this.splitContainer32.ResumeLayout(false);
+			this.statusStrip1.ResumeLayout(false);
+			this.statusStrip1.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -3686,7 +3713,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventMaxActivation;
 		private System.Windows.Forms.Button BTN_GlobalEventConfig_Apply;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventName;
-		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventType;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventId;
 		private System.Windows.Forms.TextBox TBX_ConfigGlobalEventDescription;
 		private System.Windows.Forms.TabPage SpawnGroupConfiguration;
@@ -3740,7 +3766,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TBX_ConfigAmmoId;
 		private System.Windows.Forms.TextBox TBX_ConfigAmmoCapacity;
 		private System.Windows.Forms.TextBox TBX_ConfigAmmoName;
-		private System.Windows.Forms.TextBox TBX_ConfigAmmoCaliber;
 		private System.Windows.Forms.GroupBox GBX_BlocksConfig_Details;
 		private System.Windows.Forms.SplitContainer splitContainer4;
 		private System.Windows.Forms.Label label4;
@@ -3903,6 +3928,10 @@ namespace SEConfigTool
 		private System.Windows.Forms.CheckBox CBX_VoxelMaterialsConfig_Details_IsRare;
 		private System.Windows.Forms.CheckBox CBX_VoxelMaterialsConfig_Details_CanBeHarvested;
 		private System.Windows.Forms.ComboBox CMB_ContainerTypesConfig_Items_Type;
+		private System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.ToolStripStatusLabel TLS_StatusLabel;
+		private System.Windows.Forms.ComboBox CMB_GlobalEventsConfig_Details_EventType;
+		private System.Windows.Forms.ComboBox CMB_AmmoConfig_Details_Caliber;
 
     }
 }
