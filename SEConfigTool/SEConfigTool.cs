@@ -35,6 +35,7 @@ namespace SEConfigTool
 		private ComponentDefinitionsManager m_componentsDefinitionsManager;
 		private BlueprintDefinitionsManager m_blueprintsDefinitionsManager;
 		private VoxelMaterialDefinitionsManager m_voxelMaterialsDefinitionsWrapper;
+		private ScenariosDefinitionsManager m_scenariosDefinitionWrapper;
 
 		private bool m_currentlyFillingConfigurationListBox;
 		private bool m_currentlySelecting;
@@ -297,6 +298,20 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		private void FillScenariosConfigurationListBox()
+		{
+			m_currentlyFillingConfigurationListBox = true;
+
+			m_scenariosDefinitionWrapper = new ScenariosDefinitionsManager(m_configSerializer.ScenarioDefinitions);
+			LBX_ScenariosConfig.Items.Clear();
+			foreach (var definition in m_scenariosDefinitionWrapper.Definitions)
+			{
+				LBX_ScenariosConfig.Items.Add(definition.Name);
+			}
+
+			m_currentlyFillingConfigurationListBox = false;
+		}
+
 		#endregion
 
 		#region Form events
@@ -315,6 +330,7 @@ namespace SEConfigTool
 			FillComponentConfigurationListBox();
 			FillBlueprintConfigurationListBox();
 			FillVoxelMaterialConfigurationListBox();
+			FillScenariosConfigurationListBox();
 		}
 
 		#region SavedGame
@@ -1120,6 +1136,27 @@ namespace SEConfigTool
 			{
 				BTN_VoxelMaterialsConfig_Details_Apply.Visible = true;
 			}
+		}
+
+		#endregion
+
+		#region Scenarios
+
+		private void LBX_ScenariosConfig_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int index = LBX_ScenariosConfig.SelectedIndex;
+
+			ScenariosDefinition scenario = m_scenariosDefinitionWrapper.DefinitionOf(index);
+
+			TBX_ScenariosConfig_Details_Info_Id.Text = scenario.Id;
+			TBX_ScenariosConfig_Details_Info_Name.Text = scenario.Name;
+
+			CB_ScenariosConfig_Details_Asteroid_Enabled.Checked = scenario.AsteroidClusters.Enabled;
+			CB_ScenariosConfig_Details_Asteroid_CentralCluster.Checked = scenario.AsteroidClusters.CentralCluster;
+			TBX_ScenariosConfig_Details_Asteroid_Offset.Text = scenario.AsteroidClusters.Offset.ToString();
+
+			m_currentlySelecting = false;
 		}
 
 		#endregion
