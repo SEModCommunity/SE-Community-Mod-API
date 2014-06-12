@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Definitions\AmmoMagazinesDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\ThrustersDefinitions.cs" />
     <Compile Include="API\SaveData\BlockGroups.cs" />
     <Compile Include="API\SaveData\ConveyorLines.cs" />
     <Compile Include="API\SaveData\CubeBlock.cs" />
@@ -80,7 +81,7 @@
     <Compile Include="API\Definitions\ScenariosDefinition.cs" />
     <Compile Include="API\Definitions\SpawnGroupsDefinition.cs" />
     <Compile Include="API\Definitions\GlobalEventsDefinition.cs" />
-    <Compile Include="API\Definitions\CubeBlockDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\CubeBlockDefinition.cs" />
     <Compile Include="API\Definitions\TransparentMaterialsDefinition.cs" />
     <Compile Include="API\Definitions\VoxelMaterialsDefinition.cs" />
     <Compile Include="API\GameInstallation.cs" />
