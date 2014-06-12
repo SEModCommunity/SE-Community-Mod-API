@@ -13,6 +13,7 @@ using SEModAPI.API.SaveData;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using System.Diagnostics;
 
 namespace SEConfigTool
 {
@@ -63,6 +64,10 @@ namespace SEConfigTool
 
 		private void LoadSaveFile(FileInfo saveFileInfo)
 		{
+			TLS_StatusLabel.Text = "Loading sector ...";
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
 			m_saveFileSerializer = new SaveFileSerializer(saveFileInfo, m_configSerializer);
 			Sector sector = m_saveFileSerializer.Sector;
 
@@ -157,6 +162,8 @@ namespace SEConfigTool
 
 			TRV_SavedGame_Objects.EndUpdate();
 
+			stopWatch.Stop();
+			TLS_StatusLabel.Text = "Done in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 			BTN_SavedGame_Events_Apply.Visible = false;
 		}
 
@@ -501,9 +508,15 @@ namespace SEConfigTool
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
+			CMB_AmmoConfig_Details_Caliber.Items.Clear();
+			foreach (var caliber in Enum.GetValues(typeof(MyAmmoCategoryEnum)))
+			{
+				CMB_AmmoConfig_Details_Caliber.Items.Add(caliber);
+			}
+
 			TBX_ConfigAmmoName.Text = ammoMagazine.Name;
 			TBX_ConfigAmmoId.Text = ammoMagazine.Id.ToString();
-			TBX_ConfigAmmoCaliber.Text = ammoMagazine.Caliber.ToString();
+			CMB_AmmoConfig_Details_Caliber.SelectedItem = ammoMagazine.Caliber;
 			TBX_ConfigAmmoCapacity.Text = ammoMagazine.Capacity.ToString(m_numberFormatInfo);
 			TBX_ConfigAmmoVolume.Text = ammoMagazine.Volume.ToString(m_numberFormatInfo);
 			TBX_ConfigAmmoMass.Text = ammoMagazine.Mass.ToString(m_numberFormatInfo);
@@ -529,6 +542,7 @@ namespace SEConfigTool
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
+			ammoMagazine.Caliber = (MyAmmoCategoryEnum) CMB_AmmoConfig_Details_Caliber.SelectedItem;
 			ammoMagazine.Capacity = Convert.ToInt32(TBX_ConfigAmmoCapacity.Text, m_numberFormatInfo);
 			ammoMagazine.Mass = Convert.ToSingle(TBX_ConfigAmmoMass.Text, m_numberFormatInfo);
 			ammoMagazine.Volume = Convert.ToSingle(TBX_ConfigAmmoVolume.Text, m_numberFormatInfo);
@@ -537,6 +551,14 @@ namespace SEConfigTool
 		}
 
 		private void TBX_ConfigAmmo_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_AmmoConfig_Details_Apply.Visible = true;
+			}
+		}
+
+		private void CMB_AmmoConfig_Details_Caliber_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -677,10 +699,16 @@ namespace SEConfigTool
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
+			CMB_GlobalEventsConfig_Details_EventType.Items.Clear();
+			foreach (var eventType in Enum.GetValues(typeof(MyGlobalEventTypeEnum)))
+			{
+				CMB_GlobalEventsConfig_Details_EventType.Items.Add(eventType);
+			}
+
 			TBX_ConfigGlobalEventId.Text = globalEvent.Id.ToString();
 			TBX_ConfigGlobalEventName.Text = globalEvent.Name;
 			TBX_ConfigGlobalEventDescription.Text = globalEvent.Description;
-			TBX_ConfigGlobalEventType.Text = globalEvent.EventType.ToString();
+			CMB_GlobalEventsConfig_Details_EventType.SelectedItem = globalEvent.EventType;
 			TBX_ConfigGlobalEventMinActivation.Text = globalEvent.MinActivation.ToString();
 			TBX_ConfigGlobalEventMaxActivation.Text = globalEvent.MaxActivation.ToString();
 			TBX_ConfigGlobalEventFirstActivation.Text = globalEvent.FirstActivation.ToString();
@@ -707,7 +735,7 @@ namespace SEConfigTool
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
 			globalEvent.Description = TBX_ConfigGlobalEventDescription.Text;
-
+			globalEvent.EventType = (MyGlobalEventTypeEnum) CMB_GlobalEventsConfig_Details_EventType.SelectedItem;
 			globalEvent.MinActivation = Convert.ToInt32(TBX_ConfigGlobalEventMinActivation.Text, m_numberFormatInfo);
 			globalEvent.MaxActivation = Convert.ToInt32(TBX_ConfigGlobalEventMaxActivation.Text, m_numberFormatInfo);
 			globalEvent.FirstActivation = Convert.ToInt32(TBX_ConfigGlobalEventFirstActivation.Text, m_numberFormatInfo);
@@ -716,6 +744,14 @@ namespace SEConfigTool
 		}
 
 		private void TBX_ConfigGlobalEvent_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_GlobalEventConfig_Apply.Visible = true;
+			}
+		}
+
+		private void CMB_GlobalEventsConfig_Details_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
