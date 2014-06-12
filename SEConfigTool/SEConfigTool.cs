@@ -16,53 +16,53 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEConfigTool
 {
-    public partial class SEConfigTool : Form
-    {
-        #region Attributes
+	public partial class SEConfigTool : Form
+	{
+		#region Attributes
 
-        private string m_standardSavePath;
+		private string m_standardSavePath;
 
-        private ConfigFileSerializer m_configSerializer;
+		private ConfigFileSerializer m_configSerializer;
 		private SaveFileSerializer m_saveFileSerializer;
 
-        private CubeBlockDefinitionsManager m_cubeBlockDefinitionsManager;
-        private AmmoMagazinesDefinitionsManager m_ammoMagazinesDefinitionsManager;
-        private ContainerTypesDefinitionsManager m_containerTypesDefinitionsManager;
+		private CubeBlockDefinitionsManager m_cubeBlockDefinitionsManager;
+		private AmmoMagazinesDefinitionsManager m_ammoMagazinesDefinitionsManager;
+		private ContainerTypesDefinitionsManager m_containerTypesDefinitionsManager;
 		private GlobalEventsDefinitionsManager m_globalEventsDefinitionsManager;
-        private SpawnGroupsDefinitionsManager m_spawnGroupsDefinitionsManager;
-        private PhysicalItemDefinitionsManager m_physicalItemsDefinitionsManager;
+		private SpawnGroupsDefinitionsManager m_spawnGroupsDefinitionsManager;
+		private PhysicalItemDefinitionsManager m_physicalItemsDefinitionsManager;
 		private ComponentDefinitionsManager m_componentsDefinitionsManager;
-        private BlueprintDefinitionsManager m_blueprintsDefinitionsManager;
+		private BlueprintDefinitionsManager m_blueprintsDefinitionsManager;
 		private VoxelMaterialDefinitionsManager m_voxelMaterialsDefinitionsWrapper;
 
-        private bool m_currentlyFillingConfigurationListBox;
-        private bool m_currentlySelecting;
+		private bool m_currentlyFillingConfigurationListBox;
+		private bool m_currentlySelecting;
 
-        private NumberFormatInfo m_numberFormatInfo;
-        private string m_decimalSeparator;
-        private string m_groupSeparator;
-        private string m_negativeSign;
-
-        #endregion
-
-		#region Constructors and Initializers
-
-        public SEConfigTool()
-        {
-            InitializeComponent();
-
-            m_numberFormatInfo = CultureInfo.GetCultureInfo("EN-US").NumberFormat;
-            m_decimalSeparator = m_numberFormatInfo.CurrencyDecimalSeparator;
-            m_groupSeparator = m_numberFormatInfo.NumberGroupSeparator;
-            m_negativeSign = m_numberFormatInfo.NegativeSign;
-        }
+		private NumberFormatInfo m_numberFormatInfo;
+		private string m_decimalSeparator;
+		private string m_groupSeparator;
+		private string m_negativeSign;
 
 		#endregion
 
-        #region Form methods
+		#region Constructors and Initializers
 
-        private void LoadSaveFile(FileInfo saveFileInfo)
-        {
+		public SEConfigTool()
+		{
+			InitializeComponent();
+
+			m_numberFormatInfo = CultureInfo.GetCultureInfo("EN-US").NumberFormat;
+			m_decimalSeparator = m_numberFormatInfo.CurrencyDecimalSeparator;
+			m_groupSeparator = m_numberFormatInfo.NumberGroupSeparator;
+			m_negativeSign = m_numberFormatInfo.NegativeSign;
+		}
+
+		#endregion
+
+		#region Form methods
+
+		private void LoadSaveFile(FileInfo saveFileInfo)
+		{
 			m_saveFileSerializer = new SaveFileSerializer(saveFileInfo, m_configSerializer);
 			Sector sector = m_saveFileSerializer.Sector;
 
@@ -86,12 +86,12 @@ namespace SEConfigTool
 
 			//Add the cube grids
 			foreach (CubeGrid cubeGrid in sector.CubeGrids)
-            {
+			{
 				float x = cubeGrid.PositionAndOrientation.Position.x;
 				float y = cubeGrid.PositionAndOrientation.Position.y;
 				float z = cubeGrid.PositionAndOrientation.Position.z;
 
-                float dist = (float)Math.Sqrt(x * x + y * y + z * z);
+				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
 				TreeNode newNode = TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
 
@@ -104,8 +104,8 @@ namespace SEConfigTool
 				foreach (CubeBlock cubeBlock in cubeGrid.CubeBlocks)
 				{
 					newNode.Nodes[0].Nodes.Add(cubeBlock.Name);
-            }
-            }
+			}
+			}
 
 			//Add the voxel maps
 			foreach (VoxelMap voxelMap in sector.VoxelMaps)
@@ -160,33 +160,33 @@ namespace SEConfigTool
 			BTN_SavedGame_Events_Apply.Visible = false;
 		}
 
-        private void FillBlocksConfigurationListBox()
-        {
-            m_currentlyFillingConfigurationListBox = true;
+		private void FillBlocksConfigurationListBox()
+		{
+			m_currentlyFillingConfigurationListBox = true;
 
-            LBX_BlocksConfiguration.Items.Clear();
-            m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager(m_configSerializer.CubeBlockDefinitions);
+			LBX_BlocksConfiguration.Items.Clear();
+			m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager(m_configSerializer.CubeBlockDefinitions);
 			foreach (var definition in m_cubeBlockDefinitionsManager.Definitions)
-            {
-                LBX_BlocksConfiguration.Items.Add(definition.Name);
-            }
+			{
+				LBX_BlocksConfiguration.Items.Add(definition.Name);
+			}
 
-            m_currentlyFillingConfigurationListBox = false;
-        }
+			m_currentlyFillingConfigurationListBox = false;
+		}
 
-        private void FillAmmoConfigurationListBox()
-        {
-            m_currentlyFillingConfigurationListBox = true;
+		private void FillAmmoConfigurationListBox()
+		{
+			m_currentlyFillingConfigurationListBox = true;
 
-            LBX_AmmoConfiguration.Items.Clear();
-            m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager(m_configSerializer.AmmoMagazineDefinitions);
+			LBX_AmmoConfiguration.Items.Clear();
+			m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager(m_configSerializer.AmmoMagazineDefinitions);
 			foreach (var definition in m_ammoMagazinesDefinitionsManager.Definitions)
-            {
-                LBX_AmmoConfiguration.Items.Add(definition.Name);
-            }
+			{
+				LBX_AmmoConfiguration.Items.Add(definition.Name);
+			}
 
-            m_currentlyFillingConfigurationListBox = false;
-        }
+			m_currentlyFillingConfigurationListBox = false;
+		}
 
 		private void FillContainerTypeConfigurationListBox()
 		{
@@ -292,15 +292,15 @@ namespace SEConfigTool
 
 		#endregion
 
-        #region Form events
+		#region Form events
 
-        private void SEConfigTool_Load(object sender, EventArgs e)
-        {
-            m_configSerializer = new ConfigFileSerializer();
-            m_standardSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineers", "Saves");
+		private void SEConfigTool_Load(object sender, EventArgs e)
+		{
+			m_configSerializer = new ConfigFileSerializer();
+			m_standardSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineers", "Saves");
 
-            FillBlocksConfigurationListBox();
-            FillAmmoConfigurationListBox();
+			FillBlocksConfigurationListBox();
+			FillAmmoConfigurationListBox();
 			FillContainerTypeConfigurationListBox();
 			FillGlobalEventConfigurationListBox();
 			FillSpawnGroupConfigurationListBox();
@@ -308,39 +308,39 @@ namespace SEConfigTool
 			FillComponentConfigurationListBox();
 			FillBlueprintConfigurationListBox();
 			FillVoxelMaterialConfigurationListBox();
-        }
+		}
 
 		#region SavedGame
 
-        private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                InitialDirectory = m_standardSavePath,
-                DefaultExt = "sbs file (*.sbs)"
-            };
+		private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog openFileDialog = new OpenFileDialog
+			{
+				InitialDirectory = m_standardSavePath,
+				DefaultExt = "sbs file (*.sbs)"
+			};
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                FileInfo saveFileInfo = new FileInfo(openFileDialog.FileName);
-                if (saveFileInfo.Exists)
-                {
-                    try
-                    {
-                        LoadSaveFile(saveFileInfo);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(this, ex.Message);
-                    }  
-                }
-            }
-        }
+			if (openFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				FileInfo saveFileInfo = new FileInfo(openFileDialog.FileName);
+				if (saveFileInfo.Exists)
+				{
+					try
+					{
+						LoadSaveFile(saveFileInfo);
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(this, ex.Message);
+					}  
+				}
+			}
+		}
 
 		private void BTN_SavedGame_Save_Click(object sender, EventArgs e)
 		{
 			m_saveFileSerializer.Sector.Save();
-            }
+			}
 
 		private void BTN_SavedGame_Events_Apply_Click(object sender, EventArgs e)
 		{
@@ -353,7 +353,7 @@ namespace SEConfigTool
 			sectorEvent.ActivationTimeMs = Convert.ToInt64(TBX_SavedGame_Events_ActivationTime.Text, m_numberFormatInfo);
 
 			BTN_SavedGame_Events_Apply.Visible = false;
-        }
+		}
 
 		private void LBX_SavedGame_Events_SelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -380,7 +380,7 @@ namespace SEConfigTool
 			//Sector object nodes
 			if (e.Node.Level == 1)
 			{
-                }
+				}
 
 			//Ignore sector object parts category nodes
 			if (e.Node.Level == 2)
@@ -389,16 +389,16 @@ namespace SEConfigTool
 			//Sector object parts items nodes
 			if (e.Node.Level == 3)
 			{
-            }
-        }
+			}
+		}
 
 		private void TBX_SavedGame_Events_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
 				BTN_SavedGame_Events_Apply.Visible = true;
-            }
-        }
+			}
+		}
 
 		private void CBX_SavedGame_Events_Enabled_CheckedChanged(object sender, EventArgs e)
 		{
@@ -410,94 +410,94 @@ namespace SEConfigTool
 
 		#endregion
 
-        #region CubeBlock
+		#region CubeBlock
 
-        private void CB_BlocksConfig_ModelIntersection_CheckedChanged(object sender, EventArgs e)
-        {
-            int index = LBX_BlocksConfiguration.SelectedIndex;
-            m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CB_BlocksConfig_ModelIntersection.Checked;
-        }
+		private void CB_BlocksConfig_ModelIntersection_CheckedChanged(object sender, EventArgs e)
+		{
+			int index = LBX_BlocksConfiguration.SelectedIndex;
+			m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CB_BlocksConfig_ModelIntersection.Checked;
+		}
 
-        private void CB_BlocksConfig_Enabled_CheckedChanged(object sender, EventArgs e)
-        {
-            int index = LBX_BlocksConfiguration.SelectedIndex;
-            m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CB_BlocksConfig_Enabled.Checked;
-        }
+		private void CB_BlocksConfig_Enabled_CheckedChanged(object sender, EventArgs e)
+		{
+			int index = LBX_BlocksConfiguration.SelectedIndex;
+			m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CB_BlocksConfig_Enabled.Checked;
+		}
 
-        private void LBX_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            m_currentlySelecting = true;
-            int index = LBX_BlocksConfiguration.SelectedIndex;
+		private void LBX_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int index = LBX_BlocksConfiguration.SelectedIndex;
 
 			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
 
 			TBX_ConfigBlockName.Text = cubeBlock.Name;
-            TBX_ConfigBlockId.Text = cubeBlock.Id.ToString();
+			TBX_ConfigBlockId.Text = cubeBlock.Id.ToString();
 			TBX_ConfigBuildTime.Text = cubeBlock.BuildTime.ToString(m_numberFormatInfo);
 			TBX_ConfigDisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(m_numberFormatInfo);
-            CB_BlocksConfig_Enabled.Checked = cubeBlock.Enabled;
-            CB_BlocksConfig_ModelIntersection.Checked = cubeBlock.UseModelIntersection;
+			CB_BlocksConfig_Enabled.Checked = cubeBlock.Enabled;
+			CB_BlocksConfig_ModelIntersection.Checked = cubeBlock.UseModelIntersection;
 
-            DGV_ConfigBlocks_Components.DataSource = cubeBlock.Components.ToArray().Select(x => new { x.Subtype, x.Count }).ToArray();
+			DGV_ConfigBlocks_Components.DataSource = cubeBlock.Components.ToArray().Select(x => new { x.Subtype, x.Count }).ToArray();
 
-            m_currentlySelecting = false;
+			m_currentlySelecting = false;
 
 			BTN_ConfigApplyChanges.Visible = false;
-        }
+		}
 
-        private void TBX_ConfigBuildTime_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            char ch = e.KeyChar;
+		private void TBX_ConfigBuildTime_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			char ch = e.KeyChar;
 
-            if (ch == '.' && TBX_ConfigBuildTime.Text.IndexOf('.') != -1)
-            {
-                e.Handled = true;
-            }
+			if (ch == '.' && TBX_ConfigBuildTime.Text.IndexOf('.') != -1)
+			{
+				e.Handled = true;
+			}
 
-            if (!Char.IsDigit(ch) && ch != m_decimalSeparator[0] && ch != 8) //8 for ASCII (backspace)
-            {
-                e.Handled = true;
-            }
-        }
+			if (!Char.IsDigit(ch) && ch != m_decimalSeparator[0] && ch != 8) //8 for ASCII (backspace)
+			{
+				e.Handled = true;
+			}
+		}
 
-        private void BTN_ConfigReload_Click(object sender, EventArgs e)
-        {
-            FillBlocksConfigurationListBox();
-        }
+		private void BTN_ConfigReload_Click(object sender, EventArgs e)
+		{
+			FillBlocksConfigurationListBox();
+		}
 
-        private void BTN_SaveBlocksConfiguration_Click(object sender, EventArgs e)
-        {
+		private void BTN_SaveBlocksConfiguration_Click(object sender, EventArgs e)
+		{
 			m_cubeBlockDefinitionsManager.Save();
-        }
+		}
 
-        private void TBX_ConfigBlocks_TextChanged(object sender, EventArgs e)
-        {
-            if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-            {
-                BTN_ConfigApplyChanges.Visible = true;
-            }
-        }
+		private void TBX_ConfigBlocks_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_ConfigApplyChanges.Visible = true;
+			}
+		}
 
-        private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
-        {
-            int index = LBX_BlocksConfiguration.SelectedIndex;
+		private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
+		{
+			int index = LBX_BlocksConfiguration.SelectedIndex;
 
 			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
 
 			cubeBlock.BuildTime = Convert.ToSingle(TBX_ConfigBuildTime.Text, m_numberFormatInfo);
-            cubeBlock.DisassembleRatio = Convert.ToSingle(TBX_ConfigDisassembleRatio.Text, m_numberFormatInfo);
+			cubeBlock.DisassembleRatio = Convert.ToSingle(TBX_ConfigDisassembleRatio.Text, m_numberFormatInfo);
 
-            BTN_ConfigApplyChanges.Visible = false;
-        }
+			BTN_ConfigApplyChanges.Visible = false;
+		}
 
-        #endregion
+		#endregion
 
-        #region AmmoMagazines
+		#region AmmoMagazines
 
-        private void LBX_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            m_currentlySelecting = true;
-            int index = LBX_AmmoConfiguration.SelectedIndex;
+		private void LBX_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int index = LBX_AmmoConfiguration.SelectedIndex;
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
@@ -508,24 +508,24 @@ namespace SEConfigTool
 			TBX_ConfigAmmoVolume.Text = ammoMagazine.Volume.ToString(m_numberFormatInfo);
 			TBX_ConfigAmmoMass.Text = ammoMagazine.Mass.ToString(m_numberFormatInfo);
 
-            m_currentlySelecting = false;
+			m_currentlySelecting = false;
 
 			BTN_AmmoConfig_Details_Apply.Visible = false;
-        }
+		}
 
-        private void BTN_ConfigAmmoReload_Click(object sender, EventArgs e)
-        {
-            FillAmmoConfigurationListBox();
-        }
+		private void BTN_ConfigAmmoReload_Click(object sender, EventArgs e)
+		{
+			FillAmmoConfigurationListBox();
+		}
 
-        private void BTN_SaveAmmoConfig_Click(object sender, EventArgs e)
-        {
+		private void BTN_SaveAmmoConfig_Click(object sender, EventArgs e)
+		{
 			m_ammoMagazinesDefinitionsManager.Save();
-        }
+		}
 
-        private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
-        {
-            int index = LBX_AmmoConfiguration.SelectedIndex;
+		private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
+		{
+			int index = LBX_AmmoConfiguration.SelectedIndex;
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
@@ -533,18 +533,18 @@ namespace SEConfigTool
 			ammoMagazine.Mass = Convert.ToSingle(TBX_ConfigAmmoMass.Text, m_numberFormatInfo);
 			ammoMagazine.Volume = Convert.ToSingle(TBX_ConfigAmmoVolume.Text, m_numberFormatInfo);
 
-            BTN_AmmoConfig_Details_Apply.Visible = false;
-        }
+			BTN_AmmoConfig_Details_Apply.Visible = false;
+		}
 
-        private void TBX_ConfigAmmo_TextChanged(object sender, EventArgs e)
-        {
-            if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-            {
-                BTN_AmmoConfig_Details_Apply.Visible = true;
-            }
-        }
+		private void TBX_ConfigAmmo_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_AmmoConfig_Details_Apply.Visible = true;
+			}
+		}
 
-        #endregion
+		#endregion
 
 		#region ContainerTypes
 
@@ -829,15 +829,15 @@ namespace SEConfigTool
 			TBX_PhysicalItemConfig_Volume.Text = physicalItem.Volume.ToString();
 			TBX_PhysicalItemConfig_Model.Text = physicalItem.Model;
 			TBX_PhysicalItemConfig_Icon.Text = physicalItem.Icon;
-            try
-            {
+			try
+			{
 			TBX_PhysicalItemConfig_IconSymbol.Text = physicalItem.IconSymbol.ToString();
-            }
-            catch (InvalidOperationException NREx)
-            {
-                Console.WriteLine(NREx.ToString());
-                TBX_PhysicalItemConfig_IconSymbol.Text = "";
-            }
+			}
+			catch (InvalidOperationException NREx)
+			{
+				Console.WriteLine(NREx.ToString());
+				TBX_PhysicalItemConfig_IconSymbol.Text = "";
+			}
             
             
 
