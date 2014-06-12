@@ -1008,10 +1008,9 @@ namespace SEConfigTool
 			TBX_VoxelMaterialsConfig_Details_SpecularPower.Text = voxelMaterial.SpecularPower.ToString();
 			TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text = voxelMaterial.SpecularShininess.ToString();
 
-			//TODO - Convert these text fields to checkboxes
-			TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Text = "";
-			TBX_VoxelMaterialsConfig_Details_IsRare.Text = "";
-			TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Text = "";
+			CBX_VoxelMaterialsConfig_Details_CanBeHarvested.Checked = voxelMaterial.CanBeHarvested;
+			CBX_VoxelMaterialsConfig_Details_IsRare.Checked = voxelMaterial.IsRare;
+			CBX_VoxelMaterialsConfig_Details_UseTwoTextures.Checked = voxelMaterial.UseTwoTextures;
 
 			m_currentlySelecting = false;
 			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
@@ -1042,15 +1041,22 @@ namespace SEConfigTool
 			voxelMaterial.SpecularPower = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_SpecularPower.Text, m_numberFormatInfo);
 			voxelMaterial.SpecularShininess = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text, m_numberFormatInfo);
 
-			//TODO - Set these values once the fields are checkboxes
-			voxelMaterial.CanBeHarvested = voxelMaterial.CanBeHarvested;
-			voxelMaterial.IsRare = voxelMaterial.IsRare;
-			voxelMaterial.UseTwoTextures = voxelMaterial.UseTwoTextures;
+			voxelMaterial.CanBeHarvested = CBX_VoxelMaterialsConfig_Details_CanBeHarvested.CheckState == CheckState.Checked;
+			voxelMaterial.IsRare = CBX_VoxelMaterialsConfig_Details_IsRare.CheckState == CheckState.Checked;
+			voxelMaterial.UseTwoTextures = CBX_VoxelMaterialsConfig_Details_UseTwoTextures.CheckState == CheckState.Checked;
 
 			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
 		}
 
 		private void TBX_VoxelMaterialsConfig_Details_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_VoxelMaterialsConfig_Details_Apply.Visible = true;
+			}
+		}
+
+		private void CBX_VoxelMaterialsConfig_Details_CheckedChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{

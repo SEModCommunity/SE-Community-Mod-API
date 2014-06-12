@@ -66,6 +66,7 @@ namespace SEConfigTool
 			this.label3 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
+			this.DGV_ConfigBlocks_Components = new System.Windows.Forms.DataGridView();
 			this.BTN_ConfigApplyChanges = new System.Windows.Forms.Button();
 			this.TBX_ConfigBlockId = new System.Windows.Forms.TextBox();
 			this.TBX_ConfigDisassembleRatio = new System.Windows.Forms.TextBox();
@@ -90,7 +91,7 @@ namespace SEConfigTool
 			this.label71 = new System.Windows.Forms.Label();
 			this.label70 = new System.Windows.Forms.Label();
 			this.label69 = new System.Windows.Forms.Label();
-            this.CBX_SavedGame_Events_Enabled = new System.Windows.Forms.CheckBox();
+			this.CBX_SavedGame_Events_Enabled = new System.Windows.Forms.CheckBox();
 			this.BTN_SavedGame_Events_Apply = new System.Windows.Forms.Button();
 			this.TBX_SavedGame_Events_ActivationTime = new System.Windows.Forms.TextBox();
 			this.TBX_SavedGame_Events_Type = new System.Windows.Forms.TextBox();
@@ -283,16 +284,15 @@ namespace SEConfigTool
 			this.label58 = new System.Windows.Forms.Label();
 			this.TBX_VoxelMaterialsConfig_Details_SpecularShininess = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_SpecularPower = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_AssetName = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_DamageRatio = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_IsRare = new System.Windows.Forms.TextBox();
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio = new System.Windows.Forms.TextBox();
 			this.TBX_VoxelMaterialsConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_VoxelMaterialsConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre = new System.Windows.Forms.TextBox();
-            this.DGV_ConfigBlocks_Components = new System.Windows.Forms.DataGridView();
+			this.CBX_VoxelMaterialsConfig_Details_CanBeHarvested = new System.Windows.Forms.CheckBox();
+			this.CBX_VoxelMaterialsConfig_Details_IsRare = new System.Windows.Forms.CheckBox();
+			this.CBX_VoxelMaterialsConfig_Details_UseTwoTextures = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 			this.splitContainer5.Panel1.SuspendLayout();
 			this.splitContainer5.Panel2.SuspendLayout();
@@ -323,6 +323,7 @@ namespace SEConfigTool
 			this.splitContainer4.Panel1.SuspendLayout();
 			this.splitContainer4.Panel2.SuspendLayout();
 			this.splitContainer4.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigBlocks_Components)).BeginInit();
 			this.SaveGamePage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -476,7 +477,6 @@ namespace SEConfigTool
 			this.splitContainer32.Panel1.SuspendLayout();
 			this.splitContainer32.Panel2.SuspendLayout();
 			this.splitContainer32.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigBlocks_Components)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// splitContainer5
@@ -848,7 +848,7 @@ namespace SEConfigTool
 			// 
 			this.splitContainer4.Panel2.AutoScroll = true;
 			this.splitContainer4.Panel2.AutoScrollMinSize = new System.Drawing.Size(150, 0);
-            this.splitContainer4.Panel2.Controls.Add(this.DGV_ConfigBlocks_Components);
+			this.splitContainer4.Panel2.Controls.Add(this.DGV_ConfigBlocks_Components);
 			this.splitContainer4.Panel2.Controls.Add(this.BTN_ConfigApplyChanges);
 			this.splitContainer4.Panel2.Controls.Add(this.TBX_ConfigBlockId);
 			this.splitContainer4.Panel2.Controls.Add(this.TBX_ConfigDisassembleRatio);
@@ -860,16 +860,16 @@ namespace SEConfigTool
 			// 
 			// CB_BlocksConfig_ModelIntersection
 			// 
-            this.CB_BlocksConfig_ModelIntersection.Location = new System.Drawing.Point(6, 132);
+			this.CB_BlocksConfig_ModelIntersection.Location = new System.Drawing.Point(6, 132);
 			this.CB_BlocksConfig_ModelIntersection.Name = "CB_BlocksConfig_ModelIntersection";
-            this.CB_BlocksConfig_ModelIntersection.Size = new System.Drawing.Size(126, 24);
+			this.CB_BlocksConfig_ModelIntersection.Size = new System.Drawing.Size(126, 24);
 			this.CB_BlocksConfig_ModelIntersection.TabIndex = 0;
-            this.CB_BlocksConfig_ModelIntersection.Text = "ModelIntersection";
+			this.CB_BlocksConfig_ModelIntersection.Text = "ModelIntersection";
 			// 
 			// CB_BlocksConfig_Enabled
 			// 
 			this.CB_BlocksConfig_Enabled.AutoSize = true;
-            this.CB_BlocksConfig_Enabled.Location = new System.Drawing.Point(6, 109);
+			this.CB_BlocksConfig_Enabled.Location = new System.Drawing.Point(6, 109);
 			this.CB_BlocksConfig_Enabled.Name = "CB_BlocksConfig_Enabled";
 			this.CB_BlocksConfig_Enabled.Size = new System.Drawing.Size(65, 17);
 			this.CB_BlocksConfig_Enabled.TabIndex = 9;
@@ -912,6 +912,14 @@ namespace SEConfigTool
 			this.label2.Size = new System.Drawing.Size(59, 13);
 			this.label2.TabIndex = 2;
 			this.label2.Text = "Build Time:";
+			// 
+			// DGV_ConfigBlocks_Components
+			// 
+			this.DGV_ConfigBlocks_Components.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.DGV_ConfigBlocks_Components.Location = new System.Drawing.Point(159, 6);
+			this.DGV_ConfigBlocks_Components.Name = "DGV_ConfigBlocks_Components";
+			this.DGV_ConfigBlocks_Components.Size = new System.Drawing.Size(264, 150);
+			this.DGV_ConfigBlocks_Components.TabIndex = 9;
 			// 
 			// BTN_ConfigApplyChanges
 			// 
@@ -1187,15 +1195,16 @@ namespace SEConfigTool
 			this.label69.TabIndex = 0;
 			this.label69.Text = "Type:";
 			// 
-            // CBX_SavedGame_Events_Enabled
-            // 
-            this.CBX_SavedGame_Events_Enabled.AutoSize = true;
-            this.CBX_SavedGame_Events_Enabled.Location = new System.Drawing.Point(3, 31);
-            this.CBX_SavedGame_Events_Enabled.Name = "CBX_SavedGame_Events_Enabled";
-            this.CBX_SavedGame_Events_Enabled.Size = new System.Drawing.Size(15, 14);
-            this.CBX_SavedGame_Events_Enabled.TabIndex = 10;
-            this.CBX_SavedGame_Events_Enabled.UseVisualStyleBackColor = true;
-            // 
+			// CBX_SavedGame_Events_Enabled
+			// 
+			this.CBX_SavedGame_Events_Enabled.AutoSize = true;
+			this.CBX_SavedGame_Events_Enabled.Location = new System.Drawing.Point(3, 31);
+			this.CBX_SavedGame_Events_Enabled.Name = "CBX_SavedGame_Events_Enabled";
+			this.CBX_SavedGame_Events_Enabled.Size = new System.Drawing.Size(15, 14);
+			this.CBX_SavedGame_Events_Enabled.TabIndex = 10;
+			this.CBX_SavedGame_Events_Enabled.UseVisualStyleBackColor = true;
+			this.CBX_SavedGame_Events_Enabled.CheckedChanged += new System.EventHandler(this.CBX_SavedGame_Events_Enabled_CheckedChanged);
+			// 
 			// BTN_SavedGame_Events_Apply
 			// 
 			this.BTN_SavedGame_Events_Apply.Location = new System.Drawing.Point(28, 323);
@@ -3224,13 +3233,13 @@ namespace SEConfigTool
 			// 
 			// splitContainer32.Panel2
 			// 
+			this.splitContainer32.Panel2.Controls.Add(this.CBX_VoxelMaterialsConfig_Details_UseTwoTextures);
+			this.splitContainer32.Panel2.Controls.Add(this.CBX_VoxelMaterialsConfig_Details_IsRare);
+			this.splitContainer32.Panel2.Controls.Add(this.CBX_VoxelMaterialsConfig_Details_CanBeHarvested);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_SpecularShininess);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_SpecularPower);
-			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_AssetName);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_DamageRatio);
-			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_IsRare);
-			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_MinedOreRatio);
 			this.splitContainer32.Panel2.Controls.Add(this.TBX_VoxelMaterialsConfig_Details_Name);
 			this.splitContainer32.Panel2.Controls.Add(this.BTN_VoxelMaterialsConfig_Details_Apply);
@@ -3345,14 +3354,6 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.TabIndex = 18;
 			this.TBX_VoxelMaterialsConfig_Details_SpecularPower.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
-			// TBX_VoxelMaterialsConfig_Details_UseTwoTextures
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Location = new System.Drawing.Point(3, 185);
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Name = "TBX_VoxelMaterialsConfig_Details_UseTwoTextures";
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_UseTwoTextures.TabIndex = 17;
-			// 
 			// TBX_VoxelMaterialsConfig_Details_AssetName
 			// 
 			this.TBX_VoxelMaterialsConfig_Details_AssetName.Location = new System.Drawing.Point(3, 29);
@@ -3368,22 +3369,6 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.Size = new System.Drawing.Size(150, 20);
 			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.TabIndex = 15;
 			this.TBX_VoxelMaterialsConfig_Details_DamageRatio.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
-			// 
-			// TBX_VoxelMaterialsConfig_Details_IsRare
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.Location = new System.Drawing.Point(3, 159);
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.Name = "TBX_VoxelMaterialsConfig_Details_IsRare";
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_IsRare.TabIndex = 13;
-			// 
-			// TBX_VoxelMaterialsConfig_Details_CanBeHarvested
-			// 
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Location = new System.Drawing.Point(3, 133);
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Name = "TBX_VoxelMaterialsConfig_Details_CanBeHarvested";
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.ReadOnly = true;
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Size = new System.Drawing.Size(150, 20);
-			this.TBX_VoxelMaterialsConfig_Details_CanBeHarvested.TabIndex = 12;
 			// 
 			// TBX_VoxelMaterialsConfig_Details_MinedOreRatio
 			// 
@@ -3420,14 +3405,35 @@ namespace SEConfigTool
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TabIndex = 5;
 			this.TBX_VoxelMaterialsConfig_Details_MinedOre.TextChanged += new System.EventHandler(this.TBX_VoxelMaterialsConfig_Details_TextChanged);
 			// 
-            // DGV_ConfigBlocks_Components
+			// CBX_VoxelMaterialsConfig_Details_CanBeHarvested
 			// 
-            this.DGV_ConfigBlocks_Components.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGV_ConfigBlocks_Components.Location = new System.Drawing.Point(159, 6);
-            this.DGV_ConfigBlocks_Components.Name = "DGV_ConfigBlocks_Components";
-            this.DGV_ConfigBlocks_Components.Size = new System.Drawing.Size(264, 150);
-            this.DGV_ConfigBlocks_Components.TabIndex = 9;
-			this.CBX_SavedGame_Events_Enabled.CheckedChanged += new System.EventHandler(this.CBX_SavedGame_Events_Enabled_CheckedChanged);
+			this.CBX_VoxelMaterialsConfig_Details_CanBeHarvested.AutoSize = true;
+			this.CBX_VoxelMaterialsConfig_Details_CanBeHarvested.Location = new System.Drawing.Point(4, 136);
+			this.CBX_VoxelMaterialsConfig_Details_CanBeHarvested.Name = "CBX_VoxelMaterialsConfig_Details_CanBeHarvested";
+			this.CBX_VoxelMaterialsConfig_Details_CanBeHarvested.Size = new System.Drawing.Size(15, 14);
+			this.CBX_VoxelMaterialsConfig_Details_CanBeHarvested.TabIndex = 20;
+			this.CBX_VoxelMaterialsConfig_Details_CanBeHarvested.UseVisualStyleBackColor = true;
+			this.CBX_VoxelMaterialsConfig_Details_CanBeHarvested.CheckedChanged += new System.EventHandler(this.CBX_VoxelMaterialsConfig_Details_CheckedChanged);
+			// 
+			// CBX_VoxelMaterialsConfig_Details_IsRare
+			// 
+			this.CBX_VoxelMaterialsConfig_Details_IsRare.AutoSize = true;
+			this.CBX_VoxelMaterialsConfig_Details_IsRare.Location = new System.Drawing.Point(4, 162);
+			this.CBX_VoxelMaterialsConfig_Details_IsRare.Name = "CBX_VoxelMaterialsConfig_Details_IsRare";
+			this.CBX_VoxelMaterialsConfig_Details_IsRare.Size = new System.Drawing.Size(15, 14);
+			this.CBX_VoxelMaterialsConfig_Details_IsRare.TabIndex = 21;
+			this.CBX_VoxelMaterialsConfig_Details_IsRare.UseVisualStyleBackColor = true;
+			this.CBX_VoxelMaterialsConfig_Details_IsRare.CheckedChanged += new System.EventHandler(this.CBX_VoxelMaterialsConfig_Details_CheckedChanged);
+			// 
+			// CBX_VoxelMaterialsConfig_Details_UseTwoTextures
+			// 
+			this.CBX_VoxelMaterialsConfig_Details_UseTwoTextures.AutoSize = true;
+			this.CBX_VoxelMaterialsConfig_Details_UseTwoTextures.Location = new System.Drawing.Point(4, 188);
+			this.CBX_VoxelMaterialsConfig_Details_UseTwoTextures.Name = "CBX_VoxelMaterialsConfig_Details_UseTwoTextures";
+			this.CBX_VoxelMaterialsConfig_Details_UseTwoTextures.Size = new System.Drawing.Size(15, 14);
+			this.CBX_VoxelMaterialsConfig_Details_UseTwoTextures.TabIndex = 22;
+			this.CBX_VoxelMaterialsConfig_Details_UseTwoTextures.UseVisualStyleBackColor = true;
+			this.CBX_VoxelMaterialsConfig_Details_UseTwoTextures.CheckedChanged += new System.EventHandler(this.CBX_VoxelMaterialsConfig_Details_CheckedChanged);
 			// 
 			// SEConfigTool
 			// 
@@ -3473,6 +3479,7 @@ namespace SEConfigTool
 			this.splitContainer4.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
 			this.splitContainer4.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigBlocks_Components)).EndInit();
 			this.SaveGamePage.ResumeLayout(false);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
@@ -3648,7 +3655,6 @@ namespace SEConfigTool
 			this.splitContainer32.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer32)).EndInit();
 			this.splitContainer32.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigBlocks_Components)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -3888,11 +3894,8 @@ namespace SEConfigTool
 		private System.Windows.Forms.Label label57;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_SpecularShininess;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_SpecularPower;
-		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_UseTwoTextures;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_AssetName;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_DamageRatio;
-		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_IsRare;
-		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_CanBeHarvested;
 		private System.Windows.Forms.TextBox TBX_VoxelMaterialsConfig_Details_MinedOreRatio;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage TP_SavedGame_Properties;
@@ -3919,6 +3922,9 @@ namespace SEConfigTool
 		private System.Windows.Forms.Button BTN_SavedGame_Events_Apply;
 		private System.Windows.Forms.CheckBox CBX_SavedGame_Events_Enabled;
         private System.Windows.Forms.DataGridView DGV_ConfigBlocks_Components;
+		private System.Windows.Forms.CheckBox CBX_VoxelMaterialsConfig_Details_UseTwoTextures;
+		private System.Windows.Forms.CheckBox CBX_VoxelMaterialsConfig_Details_IsRare;
+		private System.Windows.Forms.CheckBox CBX_VoxelMaterialsConfig_Details_CanBeHarvested;
 
     }
 }
