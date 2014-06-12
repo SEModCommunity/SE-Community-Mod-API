@@ -125,7 +125,7 @@ namespace SEModAPI.API.Definitions
             get { return m_baseDefinition.Id; }
             set
             {
-                if (m_baseDefinition.Id.ToString() == value.ToString()) return;
+                if (m_baseDefinition.Id.Equals(value)) return;
                 m_baseDefinition.Id = value;
                 Changed = true;
             }

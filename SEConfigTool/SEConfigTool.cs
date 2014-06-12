@@ -417,9 +417,9 @@ namespace SEConfigTool
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
 				BTN_ConfigApplyChanges.Visible = true;
-				int index = LBX_BlocksConfiguration.SelectedIndex;
-				m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CB_BlocksConfig_ModelIntersection.Checked;
-			}
+            int index = LBX_BlocksConfiguration.SelectedIndex;
+            m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CB_BlocksConfig_ModelIntersection.Checked;
+        }
         }
 
         private void CB_BlocksConfig_Enabled_CheckedChanged(object sender, EventArgs e)
@@ -427,9 +427,9 @@ namespace SEConfigTool
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
 				BTN_ConfigApplyChanges.Visible = true;
-				int index = LBX_BlocksConfiguration.SelectedIndex;
-				m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CB_BlocksConfig_Enabled.Checked;
-			}
+            int index = LBX_BlocksConfiguration.SelectedIndex;
+            m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CB_BlocksConfig_Enabled.Checked;
+        }
         }
 
         private void LBX_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
@@ -574,8 +574,13 @@ namespace SEConfigTool
 			{
 				LBX_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
 			}
-			TBX_ContainerTypeConfig_ItemType.Text = "";
-			TBX_ContainerTypeConfig_ItemSubType.Text = "";
+
+			CMB_ContainerTypesConfig_Items_Type.Items.Clear();
+			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypesConfig_Items_Type.Items.Add(itemType.Id);
+			}
+
 			TBX_ContainerTypeConfig_ItemAmountMin.Text = "";
 			TBX_ContainerTypeConfig_ItemAmountMax.Text = "";
 			TBX_ContainerTypeConfig_ItemFrequency.Text = "";
@@ -625,8 +630,8 @@ namespace SEConfigTool
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
-			TBX_ContainerTypeConfig_ItemType.Text = containerItem.Id.TypeId.ToString();
-			TBX_ContainerTypeConfig_ItemSubType.Text = containerItem.Id.SubtypeId.ToString();
+			CMB_ContainerTypesConfig_Items_Type.SelectedItem = containerItem.Id;
+
 			TBX_ContainerTypeConfig_ItemAmountMin.Text = containerItem.AmountMin.ToString();
 			TBX_ContainerTypeConfig_ItemAmountMax.Text = containerItem.AmountMax.ToString();
 			TBX_ContainerTypeConfig_ItemFrequency.Text = containerItem.Frequency.ToString();
@@ -643,6 +648,7 @@ namespace SEConfigTool
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
+			containerItem.Id = (SerializableDefinitionId) CMB_ContainerTypesConfig_Items_Type.SelectedItem;
 			containerItem.AmountMin = Convert.ToInt32(TBX_ContainerTypeConfig_ItemAmountMin.Text, m_numberFormatInfo);
 			containerItem.AmountMax = Convert.ToInt32(TBX_ContainerTypeConfig_ItemAmountMax.Text, m_numberFormatInfo);
 			containerItem.Frequency = Convert.ToSingle(TBX_ContainerTypeConfig_ItemFrequency.Text, m_numberFormatInfo);
@@ -651,6 +657,14 @@ namespace SEConfigTool
 		}
 
 		private void TBX_ContainerTypeConfig_Item_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_ContainerTypeConfig_Items_Apply.Visible = true;
+			}
+		}
+
+		private void CMB_ContainerTypesConfig_Items_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -1016,10 +1030,9 @@ namespace SEConfigTool
 			TBX_VoxelMaterialsConfig_Details_SpecularPower.Text = voxelMaterial.SpecularPower.ToString();
 			TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text = voxelMaterial.SpecularShininess.ToString();
 
-			//TODO - Convert these text fields to checkboxes
-			TBX_VoxelMaterialsConfig_Details_CanBeHarvested.Text = "";
-			TBX_VoxelMaterialsConfig_Details_IsRare.Text = "";
-			TBX_VoxelMaterialsConfig_Details_UseTwoTextures.Text = "";
+			CBX_VoxelMaterialsConfig_Details_CanBeHarvested.Checked = voxelMaterial.CanBeHarvested;
+			CBX_VoxelMaterialsConfig_Details_IsRare.Checked = voxelMaterial.IsRare;
+			CBX_VoxelMaterialsConfig_Details_UseTwoTextures.Checked = voxelMaterial.UseTwoTextures;
 
 			m_currentlySelecting = false;
 			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
@@ -1050,15 +1063,22 @@ namespace SEConfigTool
 			voxelMaterial.SpecularPower = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_SpecularPower.Text, m_numberFormatInfo);
 			voxelMaterial.SpecularShininess = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text, m_numberFormatInfo);
 
-			//TODO - Set these values once the fields are checkboxes
-			voxelMaterial.CanBeHarvested = voxelMaterial.CanBeHarvested;
-			voxelMaterial.IsRare = voxelMaterial.IsRare;
-			voxelMaterial.UseTwoTextures = voxelMaterial.UseTwoTextures;
+			voxelMaterial.CanBeHarvested = CBX_VoxelMaterialsConfig_Details_CanBeHarvested.CheckState == CheckState.Checked;
+			voxelMaterial.IsRare = CBX_VoxelMaterialsConfig_Details_IsRare.CheckState == CheckState.Checked;
+			voxelMaterial.UseTwoTextures = CBX_VoxelMaterialsConfig_Details_UseTwoTextures.CheckState == CheckState.Checked;
 
 			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
 		}
 
 		private void TBX_VoxelMaterialsConfig_Details_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_VoxelMaterialsConfig_Details_Apply.Visible = true;
+			}
+		}
+
+		private void CBX_VoxelMaterialsConfig_Details_CheckedChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
