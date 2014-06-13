@@ -139,42 +139,7 @@ namespace SEModAPI.API.Definitions
 		#endregion
 	}
 
-	public class VoxelMaterialDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_VoxelMaterialDefinition, VoxelMaterialsDefinition>
+	public class VoxelMaterialDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_VoxelMaterialDefinition, VoxelMaterialsDefinition>
 	{
-		#region "Constructors and Initializers"
-
-		public VoxelMaterialDefinitionsManager(MyObjectBuilder_VoxelMaterialDefinition[] definitions)
-			: base(definitions)
-		{
-		}
-
-		#endregion
-
-		#region "Methods"
-
-		protected override VoxelMaterialsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_VoxelMaterialDefinition definition)
-		{
-			return new VoxelMaterialsDefinition(definition);
-		}
-
-		protected override MyObjectBuilder_VoxelMaterialDefinition GetBaseTypeOf(VoxelMaterialsDefinition overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
-
-		protected override bool GetChangedState(VoxelMaterialsDefinition overLayer)
-		{
-			return overLayer.Changed;
-		}
-
-		public override void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.VoxelMaterialDefinitions = this.ExtractBaseDefinitions().ToArray();
-			m_configSerializer.SaveVoxelMaterialsContentFile();
-		}
-
-		#endregion
 	}
 }

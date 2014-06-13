@@ -70,44 +70,7 @@ namespace SEModAPI.API.Definitions
         #endregion
     }
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public class GlobalEventsDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_GlobalEventDefinition, GlobalEventsDefinition>
+	public class GlobalEventsDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_GlobalEventDefinition, GlobalEventsDefinition>
 	{
-		#region "Constructors and Initializers"
-
-        public GlobalEventsDefinitionsManager(MyObjectBuilder_GlobalEventDefinition[] definitions): base(definitions)
-		{}
-
-		#endregion
-
-		#region "Methods"
-
-        protected override GlobalEventsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_GlobalEventDefinition definition)
-        {
-            return new GlobalEventsDefinition(definition);
-        }
-
-        protected override MyObjectBuilder_GlobalEventDefinition GetBaseTypeOf(GlobalEventsDefinition overLayer)
-        {
-            return overLayer.BaseDefinition;
-        }
-
-        protected override bool GetChangedState(GlobalEventsDefinition overLayer)
-        {
-            return overLayer.Changed;
-        }
-
-		public override void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.GlobalEventDefinitions = this.ExtractBaseDefinitions().ToArray();
-			m_configSerializer.SaveGlobalEventsContentFile();
-		}
-
-		#endregion
 	}
 }

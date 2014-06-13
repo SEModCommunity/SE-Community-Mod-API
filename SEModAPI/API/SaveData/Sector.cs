@@ -17,8 +17,6 @@ namespace SEModAPI.API.SaveData
 	{
 		#region "Attributes"
 
-		private FileInfo m_fileInfo;
-
 		private EventManager m_eventManager;
 		private CubeGridManager m_cubeGridManager;
 
@@ -32,11 +30,9 @@ namespace SEModAPI.API.SaveData
 
 		#region "Constructors and Initializers"
 
-		public Sector(MyObjectBuilder_Sector definition, FileInfo fileInfo)
+		public Sector(MyObjectBuilder_Sector definition)
 			: base(definition)
 		{
-			m_fileInfo = fileInfo;
-
 			m_voxelMaps = new List<VoxelMap>();
 			m_floatingObjects = new List<FloatingObject>();
 			m_meteors = new List<Meteor>();
@@ -145,12 +141,30 @@ namespace SEModAPI.API.SaveData
 			return "SANDBOX_" + this.Position.X + "_" + this.Position.Y + "_" + this.Position.Z + "_";
 		}
 
-		public void Save()
+		#endregion
+	}
+
+	public class SectorManager : SerializableDefinitionsManager<MyObjectBuilder_Sector, Sector>
+	{
+		private Sector m_Sector;
+
+		public SectorManager()
 		{
-			ConfigFileSerializer configFileSerializer = new ConfigFileSerializer();
-			configFileSerializer.WriteSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(this.m_baseDefinition, this.m_fileInfo.FullName);
 		}
 
-		#endregion
+		public void Load(FileInfo fileInfo)
+		{
+			m_Sector = new Sector(ReadSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(this.FileInfo.FullName));
+		}
+
+		public void Save()
+		{
+			WriteSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(m_Sector.BaseDefinition, this.FileInfo.FullName);
+		}
+
+		public Sector Sector
+		{
+			get { return m_Sector; }
+		}
 	}
 }

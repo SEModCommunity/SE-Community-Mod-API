@@ -46,40 +46,7 @@ namespace SEModAPI.API.Definitions
         #endregion
 	}
 
-    public class BlueprintDefinitionsManager :OverLayerDefinitionsManager<MyObjectBuilder_BlueprintDefinition, BlueprintsDefinition>
+    public class BlueprintDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_BlueprintDefinition, BlueprintsDefinition>
     {
-        #region "Constructors and Initializers"
-
-        public BlueprintDefinitionsManager(MyObjectBuilder_BlueprintDefinition[] definitions): base(definitions)
-        {}
-
-        #endregion
-
-        #region "Methods"
-
-        protected override BlueprintsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_BlueprintDefinition definition)
-        {
-            return new BlueprintsDefinition(definition);
-        }
-
-        protected override MyObjectBuilder_BlueprintDefinition GetBaseTypeOf(BlueprintsDefinition overLayer)
-        {
-            return overLayer.BaseDefinition;
-        }
-
-        protected override bool GetChangedState(BlueprintsDefinition overLayer)
-        {
-            return overLayer.Changed;
-        }
-
-        public override void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.BlueprintDefinitions = this.ExtractBaseDefinitions().ToArray();
-			m_configSerializer.SaveBlueprintsContentFile();
-		}
-		
-		#endregion  
     }
 }

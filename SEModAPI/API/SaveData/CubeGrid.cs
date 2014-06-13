@@ -164,11 +164,6 @@ namespace SEModAPI.API.SaveData
 			return overLayer.Changed;
 		}
 
-		public override void Save()
-		{
-			//TODO - Implement save mechanism for cube grids
-		}
-
 		#endregion
 	}
 }

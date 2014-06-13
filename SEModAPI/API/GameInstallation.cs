@@ -73,7 +73,7 @@ namespace SEModAPI.API
         /// "C:\Program Files (x86)\Steam\steamapps\common\SpaceEngineers"
         /// </summary>
         /// <returns>The absolute path to the game installation</returns>
-        public string GetGameRegistryPath()
+        public static string GetGameRegistryPath()
         {
             RegistryKey key;
             if (Environment.Is64BitProcess)
@@ -97,7 +97,7 @@ namespace SEModAPI.API
             return null;
         }
 
-        public void GetSettings()
+        public static void GetSettings()
         {
         }
 
@@ -106,7 +106,7 @@ namespace SEModAPI.API
         /// "C:\Program Files (x86)\Steam"
         /// </summary>
         /// <returns></returns>
-        public string GetSteamPath()
+        public static string GetSteamPath()
         {
             RegistryKey key;
 

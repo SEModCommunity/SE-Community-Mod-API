@@ -107,45 +107,7 @@ namespace SEModAPI.API.Definitions
         #endregion
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public class ComponentDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_ComponentDefinition, ComponentsDefinition>
+	public class ComponentDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_ComponentDefinition, ComponentsDefinition>
 	{
-		#region "Constructors and Initializers"
-
-		public ComponentDefinitionsManager(MyObjectBuilder_ComponentDefinition[] definitions)
-			: base(definitions)
-		{}
-
-		#endregion
-
-		#region "Methods"
-
-		public override void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.ComponentDefinitions = this.ExtractBaseDefinitions().ToArray();
-			m_configSerializer.SaveComponentsContentFile();
-		}
-
-        protected override ComponentsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_ComponentDefinition definition)
-        {
-            return new ComponentsDefinition(definition);
-        }
-
-        protected override MyObjectBuilder_ComponentDefinition GetBaseTypeOf(ComponentsDefinition overLayer)
-        {
-            return overLayer.BaseDefinition;
-        }
-
-        protected override bool GetChangedState(ComponentsDefinition overLayer)
-        {
-            return overLayer.Changed;
-        }
-
-		#endregion    
 	}
 }

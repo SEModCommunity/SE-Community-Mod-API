@@ -98,44 +98,7 @@ namespace SEModAPI.API.Definitions
 		#endregion
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public class PhysicalItemDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_PhysicalItemDefinition, PhysicalItemsDefinition>
+	public class PhysicalItemDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_PhysicalItemDefinition, PhysicalItemsDefinition>
 	{
-		#region "Constructors and Initializers"
-
-        public PhysicalItemDefinitionsManager(MyObjectBuilder_PhysicalItemDefinition[] baseDefinitions): base(baseDefinitions)
-		{}
-
-		#endregion
-
-        #region "Methods"
-
-        protected override PhysicalItemsDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_PhysicalItemDefinition definition)
-		{
-            return new PhysicalItemsDefinition(definition);
-		}
-
-        protected override MyObjectBuilder_PhysicalItemDefinition GetBaseTypeOf(PhysicalItemsDefinition overLayer)
-		{
-            return overLayer.BaseDefinition;
-		}
-
-        protected override bool GetChangedState(PhysicalItemsDefinition overLayer)
-		{
-            return overLayer.Changed;
-		}
-
-		public override void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.PhysicalItemDefinitions = this.ExtractBaseDefinitions().ToArray();
-			m_configSerializer.SavePhysicalItemsContentFile();
-		}
-
-		#endregion
 	}
 }

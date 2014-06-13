@@ -180,30 +180,12 @@ namespace SEModAPI.API.Definitions
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public class ContainerTypesDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition, ContainerTypesDefinition>
+	public class ContainerTypesDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition, ContainerTypesDefinition>
     {
-        #region "Constructors and Initializers"
+		#region "Methods"
 
-        public ContainerTypesDefinitionsManager(MyObjectBuilder_ContainerTypeDefinition[] baseDefinitions)
-            : base(baseDefinitions)
-        { }
-
-        #endregion
-
-        #region "Methods"
-
-        protected override ContainerTypesDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_ContainerTypeDefinition definition)
-        {
-            return new ContainerTypesDefinition(definition);
-        }
-
-        protected override MyObjectBuilder_ContainerTypeDefinition GetBaseTypeOf(ContainerTypesDefinition overLayer)
-        {
-            return overLayer.BaseDefinition;
-        }
-
-        protected override bool GetChangedState(ContainerTypesDefinition overLayer)
-        {
+		protected override bool GetChangedState(ContainerTypesDefinition overLayer)
+		{
 			foreach (var def in overLayer.Items)
 			{
 				if (def.Changed)
@@ -211,18 +193,10 @@ namespace SEModAPI.API.Definitions
 			}
 
 			return overLayer.Changed;
-        }
+		}
 
-		public override void Save()
-        {
-            if (!this.Changed) return;
-
-			m_configSerializer.ContainerTypeDefinitions = this.ExtractBaseDefinitions().ToArray();
-            m_configSerializer.SaveContainerTypesContentFile();
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 
     public class ContainerTypeItemsManager : OverLayerDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem, ContainerTypeItem>
     {
@@ -251,11 +225,6 @@ namespace SEModAPI.API.Definitions
         {
             return overLayer.Changed;
         }
-
-		public override void Save()
-		{
-			throw new System.NotImplementedException();
-		}
 
 		#endregion
     }

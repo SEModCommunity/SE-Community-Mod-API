@@ -93,42 +93,8 @@ namespace SEModAPI.API.Definitions
 		#endregion
 	}
 
-	public class ScenariosDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_ScenarioDefinition, ScenariosDefinition>
+	public class ScenariosDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_ScenarioDefinition, ScenariosDefinition>
 	{
-		#region "Constructors and Initializers"
-
-		public ScenariosDefinitionsManager(MyObjectBuilder_ScenarioDefinition[] definitions)
-			: base(definitions)
-		{ }
-
-		#endregion
-
-		#region "Methods"
-
-		protected override ScenariosDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_ScenarioDefinition definition)
-		{
-			return new ScenariosDefinition(definition);
-		}
-
-		protected override MyObjectBuilder_ScenarioDefinition GetBaseTypeOf(ScenariosDefinition overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
-
-		protected override bool GetChangedState(ScenariosDefinition overLayer)
-		{
-			return overLayer.Changed;
-		}
-
-		public override void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.ScenarioDefinitions = this.ExtractBaseDefinitions().ToArray();
-			m_configSerializer.SaveGlobalEventsContentFile();
-		}
-
-		#endregion
 	}
 
 

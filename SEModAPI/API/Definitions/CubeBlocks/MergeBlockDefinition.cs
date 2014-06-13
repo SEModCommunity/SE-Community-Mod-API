@@ -106,11 +106,11 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public class BergeBlockDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_MergeBlockDefinition, MergeBlockDefinition>
+	public class MergeBlockDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_MergeBlockDefinition, MergeBlockDefinition>
 	{
 		#region "Constructors and Initializers"
 
-		public BergeBlockDefinitionsManager(MyObjectBuilder_MergeBlockDefinition[] definitions)
+		public MergeBlockDefinitionsManager(MyObjectBuilder_MergeBlockDefinition[] definitions)
 			: base(definitions)
 		{ }
 
@@ -131,14 +131,6 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		protected override bool GetChangedState(MergeBlockDefinition overLayer)
 		{
 			return overLayer.Changed;
-		}
-
-		public override void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.CubeBlockDefinitions = this.ExtractBaseDefinitions().ToArray();
-			m_configSerializer.SaveCubeBlocksContentFile();
 		}
 
 		#endregion

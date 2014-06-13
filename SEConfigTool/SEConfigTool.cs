@@ -23,8 +23,7 @@ namespace SEConfigTool
 
 		private string m_standardSavePath;
 
-		private ConfigFileSerializer m_configSerializer;
-		private SaveFileSerializer m_saveFileSerializer;
+		private SectorManager m_sectorManager;
 
 		private CubeBlockDefinitionsManager m_cubeBlockDefinitionsManager;
 		private AmmoMagazinesDefinitionsManager m_ammoMagazinesDefinitionsManager;
@@ -34,8 +33,8 @@ namespace SEConfigTool
 		private PhysicalItemDefinitionsManager m_physicalItemsDefinitionsManager;
 		private ComponentDefinitionsManager m_componentsDefinitionsManager;
 		private BlueprintDefinitionsManager m_blueprintsDefinitionsManager;
-		private VoxelMaterialDefinitionsManager m_voxelMaterialsDefinitionsWrapper;
-		private ScenariosDefinitionsManager m_scenariosDefinitionWrapper;
+		private VoxelMaterialDefinitionsManager m_voxelMaterialsDefinitionsManager;
+		private ScenariosDefinitionsManager m_scenariosDefinitionManager;
 
 		private bool m_currentlyFillingConfigurationListBox;
 		private bool m_currentlySelecting;
@@ -57,11 +56,28 @@ namespace SEConfigTool
 			m_decimalSeparator = m_numberFormatInfo.CurrencyDecimalSeparator;
 			m_groupSeparator = m_numberFormatInfo.NumberGroupSeparator;
 			m_negativeSign = m_numberFormatInfo.NegativeSign;
+
+			m_sectorManager = new SectorManager();
+			m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager();
+			m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager();
+			m_containerTypesDefinitionsManager = new ContainerTypesDefinitionsManager();
+			m_globalEventsDefinitionsManager = new GlobalEventsDefinitionsManager();
+			m_spawnGroupsDefinitionsManager = new SpawnGroupsDefinitionsManager();
+			m_physicalItemsDefinitionsManager = new PhysicalItemDefinitionsManager();
+			m_componentsDefinitionsManager = new ComponentDefinitionsManager();
+			m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager();
+			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
+			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
 		}
 
 		#endregion
 
 		#region Form methods
+
+		private FileInfo GetContentDataFile(string configFileName)
+		{
+			return SerializableDefinitionsManager<MyObjectBuilder_Base, OverLayerDefinition<MyObjectBuilder_Base>>.GetContentDataFile(configFileName);
+		}
 
 		private void LoadSaveFile(FileInfo saveFileInfo)
 		{
@@ -69,8 +85,8 @@ namespace SEConfigTool
 			Stopwatch stopWatch = new Stopwatch();
 			stopWatch.Start();
 
-			m_saveFileSerializer = new SaveFileSerializer(saveFileInfo, m_configSerializer);
-			Sector sector = m_saveFileSerializer.Sector;
+			m_sectorManager.Load(saveFileInfo);
+			Sector sector = m_sectorManager.Sector;
 
 			TBX_SavedGame_Properties_Position.Text = sector.Position.ToString();
 			TBX_SavedGame_Properties_AppVersion.Text = sector.AppVersion.ToString();
@@ -172,8 +188,9 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
+			m_cubeBlockDefinitionsManager.Load(GetContentDataFile("CubeBlocks.sbc"));
+
 			LBX_BlocksConfiguration.Items.Clear();
-			m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager(m_configSerializer.CubeBlockDefinitions);
 			foreach (var definition in m_cubeBlockDefinitionsManager.Definitions)
 			{
 				LBX_BlocksConfiguration.Items.Add(definition.Name);
@@ -186,8 +203,9 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
+			m_ammoMagazinesDefinitionsManager.Load(GetContentDataFile("AmmoMagazines.sbc"));
+
 			LBX_AmmoConfiguration.Items.Clear();
-			m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager(m_configSerializer.AmmoMagazineDefinitions);
 			foreach (var definition in m_ammoMagazinesDefinitionsManager.Definitions)
 			{
 				LBX_AmmoConfiguration.Items.Add(definition.Name);
@@ -200,9 +218,10 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
+			m_containerTypesDefinitionsManager.Load(GetContentDataFile("ContainerTypes.sbc"));
+
 			LBX_ContainerTypeConfiguration.Items.Clear();
 			LBX_ContainerTypeConfig_Details_Items.Items.Clear();
-			m_containerTypesDefinitionsManager = new ContainerTypesDefinitionsManager(m_configSerializer.ContainerTypeDefinitions);
 			foreach (var definition in m_containerTypesDefinitionsManager.Definitions)
 			{
 				LBX_ContainerTypeConfiguration.Items.Add(definition.Name);
@@ -215,8 +234,9 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
+			m_globalEventsDefinitionsManager.Load(GetContentDataFile("GlobalEvents.sbc"));
+
 			LBX_GlobalEventConfiguration.Items.Clear();
-			m_globalEventsDefinitionsManager = new GlobalEventsDefinitionsManager(m_configSerializer.GlobalEventDefinitions);
 			foreach (var definition in m_globalEventsDefinitionsManager.Definitions)
 			{
 				LBX_GlobalEventConfiguration.Items.Add(definition.Name);
@@ -228,11 +248,11 @@ namespace SEConfigTool
 		private void FillSpawnGroupConfigurationListBox()
 		{
 			m_currentlyFillingConfigurationListBox = true;
+
+			m_spawnGroupsDefinitionsManager.Load(GetContentDataFile("SpawnGroups.sbc"));
+
 			LBX_SpawnGroupConfiguration.Items.Clear();
 			LBX_SpawnGroupConfig_Details_Prefabs.Items.Clear();
-
-			m_spawnGroupsDefinitionsManager = new SpawnGroupsDefinitionsManager(m_configSerializer.SpawnGroupDefinitions);
-
 			foreach (var definition in m_spawnGroupsDefinitionsManager.Definitions)
 			{
 				//TODO - Find a better way to uniquely label the spawn groups
@@ -245,7 +265,8 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_physicalItemsDefinitionsManager = new PhysicalItemDefinitionsManager(m_configSerializer.PhysicalItemDefinitions);
+			m_physicalItemsDefinitionsManager.Load(GetContentDataFile("PhysicalItems.sbc"));
+
 			LBX_PhysicalItemConfiguration.Items.Clear();
 			foreach (var definition in m_physicalItemsDefinitionsManager.Definitions)
 			{
@@ -259,7 +280,8 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_componentsDefinitionsManager = new ComponentDefinitionsManager(m_configSerializer.ComponentDefinitions);
+			m_componentsDefinitionsManager.Load(GetContentDataFile("Components.sbc"));
+
 			LBX_ComponentsConfig.Items.Clear();
 			foreach (var definition in m_componentsDefinitionsManager.Definitions)
 			{
@@ -273,7 +295,8 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager(m_configSerializer.BlueprintDefinitions);
+			m_blueprintsDefinitionsManager.Load(GetContentDataFile("Blueprints.sbc"));
+
 			LBX_BlueprintConfig.Items.Clear();
 			foreach (var definition in m_blueprintsDefinitionsManager.Definitions)
 			{
@@ -288,9 +311,10 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_voxelMaterialsDefinitionsWrapper = new VoxelMaterialDefinitionsManager(m_configSerializer.VoxelMaterialDefinitions);
+			m_voxelMaterialsDefinitionsManager.Load(GetContentDataFile("VoxelMaterials.sbc"));
+
 			LBX_VoxelMaterialsConfig.Items.Clear();
-			foreach (var definition in m_voxelMaterialsDefinitionsWrapper.Definitions)
+			foreach (var definition in m_voxelMaterialsDefinitionsManager.Definitions)
 			{
 				LBX_VoxelMaterialsConfig.Items.Add(definition.Name);
 			}
@@ -302,9 +326,10 @@ namespace SEConfigTool
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_scenariosDefinitionWrapper = new ScenariosDefinitionsManager(m_configSerializer.ScenarioDefinitions);
+			m_scenariosDefinitionManager.Load(GetContentDataFile("Scenarios.sbc"));
+
 			LBX_ScenariosConfig.Items.Clear();
-			foreach (var definition in m_scenariosDefinitionWrapper.Definitions)
+			foreach (var definition in m_scenariosDefinitionManager.Definitions)
 			{
 				LBX_ScenariosConfig.Items.Add(definition.Name);
 			}
@@ -318,7 +343,6 @@ namespace SEConfigTool
 
 		private void SEConfigTool_Load(object sender, EventArgs e)
 		{
-			m_configSerializer = new ConfigFileSerializer();
 			m_standardSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineers", "Saves");
 
 			FillBlocksConfigurationListBox();
@@ -362,14 +386,14 @@ namespace SEConfigTool
 
 		private void BTN_SavedGame_Save_Click(object sender, EventArgs e)
 		{
-			m_saveFileSerializer.Sector.Save();
-			}
+			m_sectorManager.Save();
+		}
 
 		private void BTN_SavedGame_Events_Apply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_SavedGame_Events.SelectedIndex;
 
-			Sector sector = m_saveFileSerializer.Sector;
+			Sector sector = m_sectorManager.Sector;
 			Event sectorEvent = sector.Events[index];
 
 			sectorEvent.Enabled = CBX_SavedGame_Events_Enabled.CheckState == CheckState.Checked;
@@ -383,7 +407,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_SavedGame_Events.SelectedIndex;
 
-			Sector sector = m_saveFileSerializer.Sector;
+			Sector sector = m_sectorManager.Sector;
 			Event sectorEvent = sector.Events[index];
 
 			TBX_SavedGame_Events_Type.Text = sectorEvent.DefinitionId.ToString();
@@ -1071,7 +1095,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_VoxelMaterialsConfig.SelectedIndex;
 
-			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsWrapper.DefinitionOf(index);
+			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(index);
 
 			TBX_VoxelMaterialsConfig_Details_Name.Text = voxelMaterial.Name;
 			TBX_VoxelMaterialsConfig_Details_AssetName.Text = voxelMaterial.AssetName;
@@ -1097,14 +1121,14 @@ namespace SEConfigTool
 
 		private void BTN_VoxelMaterialsConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_voxelMaterialsDefinitionsWrapper.Save();
+			m_voxelMaterialsDefinitionsManager.Save();
 		}
 
 		private void BTN_VoxelMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
 		{
 			int index = LBX_VoxelMaterialsConfig.SelectedIndex;
 
-			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsWrapper.DefinitionOf(index);
+			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(index);
 
 			voxelMaterial.Name = TBX_VoxelMaterialsConfig_Details_Name.Text;
 			voxelMaterial.AssetName = TBX_VoxelMaterialsConfig_Details_AssetName.Text;
@@ -1147,7 +1171,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LBX_ScenariosConfig.SelectedIndex;
 
-			ScenariosDefinition scenario = m_scenariosDefinitionWrapper.DefinitionOf(index);
+			ScenariosDefinition scenario = m_scenariosDefinitionManager.DefinitionOf(index);
 
 			TBX_ScenariosConfig_Details_Info_Id.Text = scenario.Id;
 			TBX_ScenariosConfig_Details_Info_Name.Text = scenario.Name;

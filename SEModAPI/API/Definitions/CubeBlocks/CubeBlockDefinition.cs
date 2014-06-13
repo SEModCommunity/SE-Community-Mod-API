@@ -1,4 +1,5 @@
 ﻿using Sandbox.Common.ObjectBuilders.Definitions;
+using System.IO;
 
 namespace SEModAPI.API.Definitions.CubeBlocks
 {
@@ -87,44 +88,7 @@ namespace SEModAPI.API.Definitions.CubeBlocks
         #endregion
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public class CubeBlockDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_CubeBlockDefinition, CubeBlockDefinition>
+    public class CubeBlockDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_CubeBlockDefinition, CubeBlockDefinition>
     {
-		#region "Constructors and Initializers"
-
-		public CubeBlockDefinitionsManager(MyObjectBuilder_CubeBlockDefinition[] definitions): base(definitions)
-		{}
-
-		#endregion
-
-        #region "Methods"
-
-        protected override CubeBlockDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_CubeBlockDefinition definition)
-		{
-            return new CubeBlockDefinition(definition);
-		}
-
-        protected override MyObjectBuilder_CubeBlockDefinition GetBaseTypeOf(CubeBlockDefinition overLayer)
-		{
-            return overLayer.BaseDefinition;
-		}
-
-        protected override bool GetChangedState(CubeBlockDefinition overLayer)
-		{
-            return overLayer.Changed;
-		}
-
-		public override void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.CubeBlockDefinitions = this.ExtractBaseDefinitions().ToArray();
-			m_configSerializer.SaveCubeBlocksContentFile();
-		}
-
-		#endregion
 	}
 }

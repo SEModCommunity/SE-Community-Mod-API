@@ -104,7 +104,6 @@
     <Compile Include="API\SaveData\Sector.cs" />
     <Compile Include="API\SaveData\SectorObject.cs" />
     <Compile Include="API\SaveData\VoxelMap.cs" />
-    <Compile Include="API\SaveFileSerializer.cs" />
     <Compile Include="API\SEModAPIExceptions.cs" />
     <Compile Include="Interop\ClassType.cs" />
     <Compile Include="Interop\CubeType.cs" />

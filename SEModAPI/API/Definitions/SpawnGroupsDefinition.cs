@@ -127,26 +127,9 @@ namespace SEModAPI.API.Definitions
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public class SpawnGroupsDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_SpawnGroupDefinition, SpawnGroupDefinition>
+	public class SpawnGroupsDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_SpawnGroupDefinition, SpawnGroupDefinition>
     {
-        #region "Constructors and Initializers"
-
-        public SpawnGroupsDefinitionsManager(MyObjectBuilder_SpawnGroupDefinition[] definitions): base(definitions)
-        {}
-
-        #endregion
-
         #region "Methods"
-
-        protected override SpawnGroupDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_SpawnGroupDefinition definition)
-        {
-            return new SpawnGroupDefinition(definition);
-        }
-
-        protected override MyObjectBuilder_SpawnGroupDefinition GetBaseTypeOf(SpawnGroupDefinition overLayer)
-        {
-            return overLayer.BaseDefinition;
-        }
 
         protected override bool GetChangedState(SpawnGroupDefinition overLayer)
         {
@@ -159,15 +142,7 @@ namespace SEModAPI.API.Definitions
 			return overLayer.Changed;
         }
 
-		public override void Save()
-        {
-            if (!this.Changed) return;
-
-			m_configSerializer.SpawnGroupDefinitions = this.ExtractBaseDefinitions().ToArray();
-            m_configSerializer.SaveSpawnGroupsContentFile();
-        }
-
-        #endregion
+		#endregion
     }
 
     public class SpawnGroupPrefabsManager : OverLayerDefinitionsManager<MyObjectBuilder_SpawnGroupDefinition.SpawnGroupPrefab, SpawnGroupPrefab>
@@ -196,11 +171,6 @@ namespace SEModAPI.API.Definitions
         {
 			return overLayer.Changed;
         }
-
-		public override void Save()
-		{
-			throw new System.NotImplementedException();
-		}
 
         #endregion
     }

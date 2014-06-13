@@ -176,14 +176,6 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 			return overLayer.Changed;
 		}
 
-		public override void Save()
-		{
-			if (!this.Changed) return;
-
-			m_configSerializer.CubeBlockDefinitions = ExtractBaseDefinitions().ToArray();
-			m_configSerializer.SaveCubeBlocksContentFile();
-		}
-
 		#endregion
 	}	
 }
