@@ -195,10 +195,10 @@ namespace SEConfigTool
 
 			m_cubeBlockDefinitionsManager.Load(GetContentDataFile("CubeBlocks.sbc"));
 
-			LST_BlocksConfiguration.Items.Clear();
+			LST_BlocksConfig.Items.Clear();
 			foreach (var definition in m_cubeBlockDefinitionsManager.Definitions)
 			{
-				LST_BlocksConfiguration.Items.Add(definition.Name);
+				LST_BlocksConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -210,10 +210,10 @@ namespace SEConfigTool
 
 			m_ammoMagazinesDefinitionsManager.Load(GetContentDataFile("AmmoMagazines.sbc"));
 
-			LST_AmmoConfiguration.Items.Clear();
+			LST_AmmoConfig.Items.Clear();
 			foreach (var definition in m_ammoMagazinesDefinitionsManager.Definitions)
 			{
-				LST_AmmoConfiguration.Items.Add(definition.Name);
+				LST_AmmoConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -225,11 +225,11 @@ namespace SEConfigTool
 
 			m_containerTypesDefinitionsManager.Load(GetContentDataFile("ContainerTypes.sbc"));
 
-			LST_ContainerTypeConfiguration.Items.Clear();
-			LST_ContainerTypeConfig_Details_Items.Items.Clear();
+			LST_ContainerTypesConfig.Items.Clear();
+			LST_ContainerTypesConfig_Details_Items.Items.Clear();
 			foreach (var definition in m_containerTypesDefinitionsManager.Definitions)
 			{
-				LST_ContainerTypeConfiguration.Items.Add(definition.Name);
+				LST_ContainerTypesConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -486,8 +486,8 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ConfigApplyChanges.Visible = true;
-			int index = LST_BlocksConfiguration.SelectedIndex;
+				BTN_BlocksConfig_Details_Apply.Visible = true;
+			int index = LST_BlocksConfig.SelectedIndex;
 			m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CHK_BlocksConfig_ModelIntersection.Checked;
 		}
         }
@@ -496,8 +496,8 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ConfigApplyChanges.Visible = true;
-			int index = LST_BlocksConfiguration.SelectedIndex;
+				BTN_BlocksConfig_Details_Apply.Visible = true;
+			int index = LST_BlocksConfig.SelectedIndex;
 			m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CHK_BlocksConfig_Enabled.Checked;
 		}
         }
@@ -505,29 +505,29 @@ namespace SEConfigTool
 		private void LST_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_BlocksConfiguration.SelectedIndex;
+			int index = LST_BlocksConfig.SelectedIndex;
 
 			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
 
-			TXT_ConfigBlockName.Text = cubeBlock.Name;
-			TXT_ConfigBlockId.Text = cubeBlock.Id.ToString();
-			TXT_ConfigBuildTime.Text = cubeBlock.BuildTime.ToString(m_numberFormatInfo);
-			TXT_ConfigDisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(m_numberFormatInfo);
+			TXT_BlocksConfig_Details_Name.Text = cubeBlock.Name;
+			TXT_BlocksConfig_Details_Id.Text = cubeBlock.Id.ToString();
+			TXT_BlocksConfig_Details_BuildTime.Text = cubeBlock.BuildTime.ToString(m_numberFormatInfo);
+			TXT_BlocksConfig_Details_DisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(m_numberFormatInfo);
 			CHK_BlocksConfig_Enabled.Checked = cubeBlock.Enabled;
 			CHK_BlocksConfig_ModelIntersection.Checked = cubeBlock.UseModelIntersection;
 
-			DGV_ConfigBlocks_Components.DataSource = cubeBlock.Components.ToArray().Select(x => new { x.Subtype, x.Count }).ToArray();
+			DGV_BlocksConfig_Details_Components.DataSource = cubeBlock.Components.ToArray().Select(x => new { x.Subtype, x.Count }).ToArray();
 
 			m_currentlySelecting = false;
 
-			BTN_ConfigApplyChanges.Visible = false;
+			BTN_BlocksConfig_Details_Apply.Visible = false;
 		}
 
 		private void TXT_ConfigBuildTime_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			char ch = e.KeyChar;
 
-			if (ch == '.' && TXT_ConfigBuildTime.Text.IndexOf('.') != -1)
+			if (ch == '.' && TXT_BlocksConfig_Details_BuildTime.Text.IndexOf('.') != -1)
 			{
 				e.Handled = true;
 			}
@@ -552,20 +552,20 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ConfigApplyChanges.Visible = true;
+				BTN_BlocksConfig_Details_Apply.Visible = true;
 			}
 		}
 
 		private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
 		{
-			int index = LST_BlocksConfiguration.SelectedIndex;
+			int index = LST_BlocksConfig.SelectedIndex;
 
 			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
 
-			cubeBlock.BuildTime = Convert.ToSingle(TXT_ConfigBuildTime.Text, m_numberFormatInfo);
-			cubeBlock.DisassembleRatio = Convert.ToSingle(TXT_ConfigDisassembleRatio.Text, m_numberFormatInfo);
+			cubeBlock.BuildTime = Convert.ToSingle(TXT_BlocksConfig_Details_BuildTime.Text, m_numberFormatInfo);
+			cubeBlock.DisassembleRatio = Convert.ToSingle(TXT_BlocksConfig_Details_DisassembleRatio.Text, m_numberFormatInfo);
 
-			BTN_ConfigApplyChanges.Visible = false;
+			BTN_BlocksConfig_Details_Apply.Visible = false;
 		}
 
 		#endregion
@@ -575,7 +575,7 @@ namespace SEConfigTool
 		private void LST_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_AmmoConfiguration.SelectedIndex;
+			int index = LST_AmmoConfig.SelectedIndex;
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
@@ -585,12 +585,12 @@ namespace SEConfigTool
 				CMB_AmmoConfig_Details_Caliber.Items.Add(caliber);
 			}
 
-			TXT_ConfigAmmoName.Text = ammoMagazine.Name;
-			TXT_ConfigAmmoId.Text = ammoMagazine.Id.ToString();
+			TXT_AmmoConfig_Details_Name.Text = ammoMagazine.Name;
+			TXT_AmmoConfig_Details_Id.Text = ammoMagazine.Id.ToString();
 			CMB_AmmoConfig_Details_Caliber.SelectedItem = ammoMagazine.Caliber;
-			TXT_ConfigAmmoCapacity.Text = ammoMagazine.Capacity.ToString(m_numberFormatInfo);
-			TXT_ConfigAmmoVolume.Text = ammoMagazine.Volume.ToString(m_numberFormatInfo);
-			TXT_ConfigAmmoMass.Text = ammoMagazine.Mass.ToString(m_numberFormatInfo);
+			TXT_AmmoConfig_Details_Capacity.Text = ammoMagazine.Capacity.ToString(m_numberFormatInfo);
+			TXT_AmmoConfig_Details_Volume.Text = ammoMagazine.Volume.ToString(m_numberFormatInfo);
+			TXT_AmmoConfig_Details_Mass.Text = ammoMagazine.Mass.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
@@ -609,14 +609,14 @@ namespace SEConfigTool
 
 		private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
 		{
-			int index = LST_AmmoConfiguration.SelectedIndex;
+			int index = LST_AmmoConfig.SelectedIndex;
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
 			ammoMagazine.Caliber = (MyAmmoCategoryEnum) CMB_AmmoConfig_Details_Caliber.SelectedItem;
-			ammoMagazine.Capacity = Convert.ToInt32(TXT_ConfigAmmoCapacity.Text, m_numberFormatInfo);
-			ammoMagazine.Mass = Convert.ToSingle(TXT_ConfigAmmoMass.Text, m_numberFormatInfo);
-			ammoMagazine.Volume = Convert.ToSingle(TXT_ConfigAmmoVolume.Text, m_numberFormatInfo);
+			ammoMagazine.Capacity = Convert.ToInt32(TXT_AmmoConfig_Details_Capacity.Text, m_numberFormatInfo);
+			ammoMagazine.Mass = Convert.ToSingle(TXT_AmmoConfig_Details_Mass.Text, m_numberFormatInfo);
+			ammoMagazine.Volume = Convert.ToSingle(TXT_AmmoConfig_Details_Volume.Text, m_numberFormatInfo);
 
 			BTN_AmmoConfig_Details_Apply.Visible = false;
 		}
@@ -644,20 +644,20 @@ namespace SEConfigTool
 		private void LST_ContainerTypeConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_ContainerTypeConfiguration.SelectedIndex;
+			int index = LST_ContainerTypesConfig.SelectedIndex;
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
 
-			TXT_ConfigContainerTypeName.Text = containerType.Name;
-			TXT_ConfigContainerTypeId.Text = containerType.TypeId.ToString();
-			TXT_ConfigContainerTypeItemCount.Text = containerType.ItemCount.ToString();
-			TXT_ConfigContainerTypeCountMax.Text = containerType.CountMax.ToString();
-			TXT_ConfigContainerTypeCountMin.Text = containerType.CountMin.ToString();
+			TXT_ContainerTypesConfig_Details_Information_Name.Text = containerType.Name;
+			TXT_ContainerTypesConfig_Details_Information_Id.Text = containerType.TypeId.ToString();
+			TXT_ContainerTypesConfig_Details_Information_ItemCount.Text = containerType.ItemCount.ToString();
+			TXT_ContainerTypesConfig_Details_Information_CountMax.Text = containerType.CountMax.ToString();
+			TXT_ContainerTypesConfig_Details_Information_CountMin.Text = containerType.CountMin.ToString();
 
-			LST_ContainerTypeConfig_Details_Items.Items.Clear();
+			LST_ContainerTypesConfig_Details_Items.Items.Clear();
 			foreach (var def in containerType.Items)
 			{
-				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
+				LST_ContainerTypesConfig_Details_Items.Items.Add(def.Id.ToString());
 			}
 
 			CMB_ContainerTypesConfig_Items_Type.Items.Clear();
@@ -666,13 +666,13 @@ namespace SEConfigTool
 				CMB_ContainerTypesConfig_Items_Type.Items.Add(itemType.Id);
 			}
 
-			TXT_ContainerTypeConfig_ItemAmountMin.Text = "";
-			TXT_ContainerTypeConfig_ItemAmountMax.Text = "";
-			TXT_ContainerTypeConfig_ItemFrequency.Text = "";
+			TXT_ContainerTypesConfig_Item_AmountMin.Text = "";
+			TXT_ContainerTypesConfig_Item_AmountMax.Text = "";
+			TXT_ContainerTypesConfig_Item_Frequency.Text = "";
 
 			m_currentlySelecting = false;
 
-			BTN_ContainerTypeConfig_Details_Apply.Visible = false;
+			BTN_ContainerTypesConfig_Details_Apply.Visible = false;
 		}
 
 		private void BTN_ConfigContainerTypeReload_Click(object sender, EventArgs e)
@@ -687,21 +687,21 @@ namespace SEConfigTool
 
 		private void BTN_ConfigContainerTypeApply_Click(object sender, EventArgs e)
 		{
-			int index = LST_ContainerTypeConfiguration.SelectedIndex;
+			int index = LST_ContainerTypesConfig.SelectedIndex;
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
 
-			containerType.CountMax = Convert.ToInt32(TXT_ConfigContainerTypeCountMax.Text, m_numberFormatInfo);
-			containerType.CountMin = Convert.ToInt32(TXT_ConfigContainerTypeCountMin.Text, m_numberFormatInfo);
+			containerType.CountMax = Convert.ToInt32(TXT_ContainerTypesConfig_Details_Information_CountMax.Text, m_numberFormatInfo);
+			containerType.CountMin = Convert.ToInt32(TXT_ContainerTypesConfig_Details_Information_CountMin.Text, m_numberFormatInfo);
 
-			BTN_ContainerTypeConfig_Details_Apply.Visible = false;
+			BTN_ContainerTypesConfig_Details_Apply.Visible = false;
 		}
 
 		private void TXT_ConfigContainerType_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ContainerTypeConfig_Details_Apply.Visible = true;
+				BTN_ContainerTypesConfig_Details_Apply.Visible = true;
 			}
 		}
 
@@ -710,42 +710,42 @@ namespace SEConfigTool
 		private void LST_ContainerTypeConfiguration_Items_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_ContainerTypeConfig_Details_Items.SelectedIndex;
+			int index = LST_ContainerTypesConfig_Details_Items.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
 			CMB_ContainerTypesConfig_Items_Type.SelectedItem = containerItem.Id;
 
-			TXT_ContainerTypeConfig_ItemAmountMin.Text = containerItem.AmountMin.ToString();
-			TXT_ContainerTypeConfig_ItemAmountMax.Text = containerItem.AmountMax.ToString();
-			TXT_ContainerTypeConfig_ItemFrequency.Text = containerItem.Frequency.ToString();
+			TXT_ContainerTypesConfig_Item_AmountMin.Text = containerItem.AmountMin.ToString();
+			TXT_ContainerTypesConfig_Item_AmountMax.Text = containerItem.AmountMax.ToString();
+			TXT_ContainerTypesConfig_Item_Frequency.Text = containerItem.Frequency.ToString();
 
 			m_currentlySelecting = false;
 
-			BTN_ContainerTypeConfig_Items_Apply.Visible = false;
+			BTN_ContainerTypesConfig_Items_Apply.Visible = false;
 		}
 
 		private void BTN_ContainerTypeConfig_Items_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LST_ContainerTypeConfiguration.SelectedIndex;
+			int index = LST_ContainerTypesConfig.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
 			containerItem.Id = (SerializableDefinitionId) CMB_ContainerTypesConfig_Items_Type.SelectedItem;
-			containerItem.AmountMin = Convert.ToInt32(TXT_ContainerTypeConfig_ItemAmountMin.Text, m_numberFormatInfo);
-			containerItem.AmountMax = Convert.ToInt32(TXT_ContainerTypeConfig_ItemAmountMax.Text, m_numberFormatInfo);
-			containerItem.Frequency = Convert.ToSingle(TXT_ContainerTypeConfig_ItemFrequency.Text, m_numberFormatInfo);
+			containerItem.AmountMin = Convert.ToInt32(TXT_ContainerTypesConfig_Item_AmountMin.Text, m_numberFormatInfo);
+			containerItem.AmountMax = Convert.ToInt32(TXT_ContainerTypesConfig_Item_AmountMax.Text, m_numberFormatInfo);
+			containerItem.Frequency = Convert.ToSingle(TXT_ContainerTypesConfig_Item_Frequency.Text, m_numberFormatInfo);
 
-			BTN_ContainerTypeConfig_Items_Apply.Visible = false;
+			BTN_ContainerTypesConfig_Items_Apply.Visible = false;
 		}
 
 		private void TXT_ContainerTypeConfig_Item_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ContainerTypeConfig_Items_Apply.Visible = true;
+				BTN_ContainerTypesConfig_Items_Apply.Visible = true;
 			}
 		}
 
@@ -753,7 +753,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ContainerTypeConfig_Items_Apply.Visible = true;
+				BTN_ContainerTypesConfig_Items_Apply.Visible = true;
 			}
 		}
 
