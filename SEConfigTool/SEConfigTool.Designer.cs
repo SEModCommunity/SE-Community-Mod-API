@@ -84,17 +84,11 @@ namespace SEConfigTool
 			this.splitContainer32 = new System.Windows.Forms.SplitContainer();
 			this.label68 = new System.Windows.Forms.Label();
 			this.label67 = new System.Windows.Forms.Label();
-			this.label66 = new System.Windows.Forms.Label();
 			this.label65 = new System.Windows.Forms.Label();
 			this.label64 = new System.Windows.Forms.Label();
-			this.label60 = new System.Windows.Forms.Label();
-			this.label59 = new System.Windows.Forms.Label();
 			this.label57 = new System.Windows.Forms.Label();
 			this.label56 = new System.Windows.Forms.Label();
 			this.label58 = new System.Windows.Forms.Label();
-			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures = new System.Windows.Forms.CheckBox();
-			this.CHK_VoxelMaterialsConfig_Details_IsRare = new System.Windows.Forms.CheckBox();
-			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested = new System.Windows.Forms.CheckBox();
 			this.TXT_VoxelMaterialsConfig_Details_SpecularShininess = new System.Windows.Forms.TextBox();
 			this.TXT_VoxelMaterialsConfig_Details_SpecularPower = new System.Windows.Forms.TextBox();
 			this.TXT_VoxelMaterialsConfig_Details_AssetName = new System.Windows.Forms.TextBox();
@@ -325,9 +319,7 @@ namespace SEConfigTool
 			this.LST_SavedGame_Events = new System.Windows.Forms.ListBox();
 			this.splitContainer36 = new System.Windows.Forms.SplitContainer();
 			this.label71 = new System.Windows.Forms.Label();
-			this.label70 = new System.Windows.Forms.Label();
 			this.label69 = new System.Windows.Forms.Label();
-			this.CHK_SavedGame_Events_Enabled = new System.Windows.Forms.CheckBox();
 			this.BTN_SavedGame_Events_Apply = new System.Windows.Forms.Button();
 			this.TXT_SavedGame_Events_ActivationTime = new System.Windows.Forms.TextBox();
 			this.TXT_SavedGame_Events_Type = new System.Windows.Forms.TextBox();
@@ -335,6 +327,10 @@ namespace SEConfigTool
 			this.splitContainer33 = new System.Windows.Forms.SplitContainer();
 			this.TRV_SavedGame_Objects = new System.Windows.Forms.TreeView();
 			this.LayoutPages = new System.Windows.Forms.TabControl();
+			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested = new System.Windows.Forms.CheckBox();
+			this.CHK_VoxelMaterialsConfig_Details_IsRare = new System.Windows.Forms.CheckBox();
+			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures = new System.Windows.Forms.CheckBox();
+			this.CHK_SavedGame_Events_Enabled = new System.Windows.Forms.CheckBox();
 			this.STS_Status.SuspendLayout();
 			this.ScenarionsPage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -1181,13 +1177,13 @@ namespace SEConfigTool
 			// 
 			// splitContainer32.Panel1
 			// 
+			this.splitContainer32.Panel1.Controls.Add(this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures);
+			this.splitContainer32.Panel1.Controls.Add(this.CHK_VoxelMaterialsConfig_Details_IsRare);
+			this.splitContainer32.Panel1.Controls.Add(this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested);
 			this.splitContainer32.Panel1.Controls.Add(this.label68);
 			this.splitContainer32.Panel1.Controls.Add(this.label67);
-			this.splitContainer32.Panel1.Controls.Add(this.label66);
 			this.splitContainer32.Panel1.Controls.Add(this.label65);
 			this.splitContainer32.Panel1.Controls.Add(this.label64);
-			this.splitContainer32.Panel1.Controls.Add(this.label60);
-			this.splitContainer32.Panel1.Controls.Add(this.label59);
 			this.splitContainer32.Panel1.Controls.Add(this.label57);
 			this.splitContainer32.Panel1.Controls.Add(this.label56);
 			this.splitContainer32.Panel1.Controls.Add(this.label58);
@@ -1195,9 +1191,6 @@ namespace SEConfigTool
 			// 
 			// splitContainer32.Panel2
 			// 
-			this.splitContainer32.Panel2.Controls.Add(this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures);
-			this.splitContainer32.Panel2.Controls.Add(this.CHK_VoxelMaterialsConfig_Details_IsRare);
-			this.splitContainer32.Panel2.Controls.Add(this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested);
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialsConfig_Details_SpecularShininess);
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialsConfig_Details_SpecularPower);
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialsConfig_Details_AssetName);
@@ -1228,15 +1221,6 @@ namespace SEConfigTool
 			this.label67.TabIndex = 15;
 			this.label67.Text = "Specular Power:";
 			// 
-			// label66
-			// 
-			this.label66.AutoSize = true;
-			this.label66.Location = new System.Drawing.Point(3, 188);
-			this.label66.Name = "label66";
-			this.label66.Size = new System.Drawing.Size(97, 13);
-			this.label66.TabIndex = 14;
-			this.label66.Text = "Use Two Textures:";
-			// 
 			// label65
 			// 
 			this.label65.AutoSize = true;
@@ -1254,24 +1238,6 @@ namespace SEConfigTool
 			this.label64.Size = new System.Drawing.Size(78, 13);
 			this.label64.TabIndex = 12;
 			this.label64.Text = "Damage Ratio:";
-			// 
-			// label60
-			// 
-			this.label60.AutoSize = true;
-			this.label60.Location = new System.Drawing.Point(3, 162);
-			this.label60.Name = "label60";
-			this.label60.Size = new System.Drawing.Size(44, 13);
-			this.label60.TabIndex = 10;
-			this.label60.Text = "Is Rare:";
-			// 
-			// label59
-			// 
-			this.label59.AutoSize = true;
-			this.label59.Location = new System.Drawing.Point(3, 136);
-			this.label59.Name = "label59";
-			this.label59.Size = new System.Drawing.Size(97, 13);
-			this.label59.TabIndex = 9;
-			this.label59.Text = "Can Be Harvested:";
 			// 
 			// label57
 			// 
@@ -1299,36 +1265,6 @@ namespace SEConfigTool
 			this.label58.Size = new System.Drawing.Size(59, 13);
 			this.label58.TabIndex = 0;
 			this.label58.Text = "Mined Ore:";
-			// 
-			// CHK_VoxelMaterialsConfig_Details_UseTwoTextures
-			// 
-			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.AutoSize = true;
-			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.Location = new System.Drawing.Point(4, 188);
-			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.Name = "CHK_VoxelMaterialsConfig_Details_UseTwoTextures";
-			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.Size = new System.Drawing.Size(15, 14);
-			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.TabIndex = 22;
-			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.UseVisualStyleBackColor = true;
-			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.CheckedChanged += new System.EventHandler(this.CHK_VoxelMaterialsConfig_Details_CheckedChanged);
-			// 
-			// CHK_VoxelMaterialsConfig_Details_IsRare
-			// 
-			this.CHK_VoxelMaterialsConfig_Details_IsRare.AutoSize = true;
-			this.CHK_VoxelMaterialsConfig_Details_IsRare.Location = new System.Drawing.Point(4, 162);
-			this.CHK_VoxelMaterialsConfig_Details_IsRare.Name = "CHK_VoxelMaterialsConfig_Details_IsRare";
-			this.CHK_VoxelMaterialsConfig_Details_IsRare.Size = new System.Drawing.Size(15, 14);
-			this.CHK_VoxelMaterialsConfig_Details_IsRare.TabIndex = 21;
-			this.CHK_VoxelMaterialsConfig_Details_IsRare.UseVisualStyleBackColor = true;
-			this.CHK_VoxelMaterialsConfig_Details_IsRare.CheckedChanged += new System.EventHandler(this.CHK_VoxelMaterialsConfig_Details_CheckedChanged);
-			// 
-			// CHK_VoxelMaterialsConfig_Details_CanBeHarvested
-			// 
-			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.AutoSize = true;
-			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.Location = new System.Drawing.Point(4, 136);
-			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.Name = "CHK_VoxelMaterialsConfig_Details_CanBeHarvested";
-			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.Size = new System.Drawing.Size(15, 14);
-			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.TabIndex = 20;
-			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.UseVisualStyleBackColor = true;
-			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.CheckedChanged += new System.EventHandler(this.CHK_VoxelMaterialsConfig_Details_CheckedChanged);
 			// 
 			// TXT_VoxelMaterialsConfig_Details_SpecularShininess
 			// 
@@ -3589,6 +3525,7 @@ namespace SEConfigTool
 			this.CHK_BlocksConfig_ModelIntersection.Size = new System.Drawing.Size(126, 24);
 			this.CHK_BlocksConfig_ModelIntersection.TabIndex = 0;
 			this.CHK_BlocksConfig_ModelIntersection.Text = "ModelIntersection";
+			this.CHK_BlocksConfig_ModelIntersection.CheckedChanged += new System.EventHandler(this.CHK_BlocksConfig_ModelIntersection_CheckedChanged);
 			// 
 			// CHK_BlocksConfig_Enabled
 			// 
@@ -3877,14 +3814,13 @@ namespace SEConfigTool
 			// 
 			// splitContainer36.Panel1
 			// 
+			this.splitContainer36.Panel1.Controls.Add(this.CHK_SavedGame_Events_Enabled);
 			this.splitContainer36.Panel1.Controls.Add(this.label71);
-			this.splitContainer36.Panel1.Controls.Add(this.label70);
 			this.splitContainer36.Panel1.Controls.Add(this.label69);
 			this.splitContainer36.Panel1MinSize = 150;
 			// 
 			// splitContainer36.Panel2
 			// 
-			this.splitContainer36.Panel2.Controls.Add(this.CHK_SavedGame_Events_Enabled);
 			this.splitContainer36.Panel2.Controls.Add(this.BTN_SavedGame_Events_Apply);
 			this.splitContainer36.Panel2.Controls.Add(this.TXT_SavedGame_Events_ActivationTime);
 			this.splitContainer36.Panel2.Controls.Add(this.TXT_SavedGame_Events_Type);
@@ -3901,15 +3837,6 @@ namespace SEConfigTool
 			this.label71.TabIndex = 2;
 			this.label71.Text = "Activation Time (ms):";
 			// 
-			// label70
-			// 
-			this.label70.AutoSize = true;
-			this.label70.Location = new System.Drawing.Point(3, 32);
-			this.label70.Name = "label70";
-			this.label70.Size = new System.Drawing.Size(49, 13);
-			this.label70.TabIndex = 1;
-			this.label70.Text = "Enabled:";
-			// 
 			// label69
 			// 
 			this.label69.AutoSize = true;
@@ -3918,16 +3845,6 @@ namespace SEConfigTool
 			this.label69.Size = new System.Drawing.Size(34, 13);
 			this.label69.TabIndex = 0;
 			this.label69.Text = "Type:";
-			// 
-			// CHK_SavedGame_Events_Enabled
-			// 
-			this.CHK_SavedGame_Events_Enabled.AutoSize = true;
-			this.CHK_SavedGame_Events_Enabled.Location = new System.Drawing.Point(3, 31);
-			this.CHK_SavedGame_Events_Enabled.Name = "CHK_SavedGame_Events_Enabled";
-			this.CHK_SavedGame_Events_Enabled.Size = new System.Drawing.Size(15, 14);
-			this.CHK_SavedGame_Events_Enabled.TabIndex = 10;
-			this.CHK_SavedGame_Events_Enabled.UseVisualStyleBackColor = true;
-			this.CHK_SavedGame_Events_Enabled.CheckedChanged += new System.EventHandler(this.CHK_SavedGame_Events_Enabled_CheckedChanged);
 			// 
 			// BTN_SavedGame_Events_Apply
 			// 
@@ -4012,6 +3929,50 @@ namespace SEConfigTool
 			this.LayoutPages.SelectedIndex = 0;
 			this.LayoutPages.Size = new System.Drawing.Size(810, 462);
 			this.LayoutPages.TabIndex = 0;
+			// 
+			// CHK_VoxelMaterialsConfig_Details_CanBeHarvested
+			// 
+			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.AutoSize = true;
+			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.Location = new System.Drawing.Point(6, 135);
+			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.Name = "CHK_VoxelMaterialsConfig_Details_CanBeHarvested";
+			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.Size = new System.Drawing.Size(112, 17);
+			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.TabIndex = 17;
+			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.Text = "Can be Harvested";
+			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.UseVisualStyleBackColor = true;
+			this.CHK_VoxelMaterialsConfig_Details_CanBeHarvested.CheckedChanged += new System.EventHandler(this.CHK_VoxelMaterialsConfig_Details_CheckedChanged);
+			// 
+			// CHK_VoxelMaterialsConfig_Details_IsRare
+			// 
+			this.CHK_VoxelMaterialsConfig_Details_IsRare.AutoSize = true;
+			this.CHK_VoxelMaterialsConfig_Details_IsRare.Location = new System.Drawing.Point(6, 161);
+			this.CHK_VoxelMaterialsConfig_Details_IsRare.Name = "CHK_VoxelMaterialsConfig_Details_IsRare";
+			this.CHK_VoxelMaterialsConfig_Details_IsRare.Size = new System.Drawing.Size(60, 17);
+			this.CHK_VoxelMaterialsConfig_Details_IsRare.TabIndex = 18;
+			this.CHK_VoxelMaterialsConfig_Details_IsRare.Text = "Is Rare";
+			this.CHK_VoxelMaterialsConfig_Details_IsRare.UseVisualStyleBackColor = true;
+			this.CHK_VoxelMaterialsConfig_Details_IsRare.CheckedChanged += new System.EventHandler(this.CHK_VoxelMaterialsConfig_Details_CheckedChanged);
+			// 
+			// CHK_VoxelMaterialsConfig_Details_UseTwoTextures
+			// 
+			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.AutoSize = true;
+			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.Location = new System.Drawing.Point(6, 187);
+			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.Name = "CHK_VoxelMaterialsConfig_Details_UseTwoTextures";
+			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.Size = new System.Drawing.Size(113, 17);
+			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.TabIndex = 19;
+			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.Text = "Use Two Textures";
+			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.UseVisualStyleBackColor = true;
+			this.CHK_VoxelMaterialsConfig_Details_UseTwoTextures.CheckedChanged += new System.EventHandler(this.CHK_VoxelMaterialsConfig_Details_CheckedChanged);
+			// 
+			// CHK_SavedGame_Events_Enabled
+			// 
+			this.CHK_SavedGame_Events_Enabled.AutoSize = true;
+			this.CHK_SavedGame_Events_Enabled.Location = new System.Drawing.Point(6, 30);
+			this.CHK_SavedGame_Events_Enabled.Name = "CHK_SavedGame_Events_Enabled";
+			this.CHK_SavedGame_Events_Enabled.Size = new System.Drawing.Size(65, 17);
+			this.CHK_SavedGame_Events_Enabled.TabIndex = 20;
+			this.CHK_SavedGame_Events_Enabled.Text = "Enabled";
+			this.CHK_SavedGame_Events_Enabled.UseVisualStyleBackColor = true;
+			this.CHK_SavedGame_Events_Enabled.CheckedChanged += new System.EventHandler(this.CHK_SavedGame_Events_Enabled_CheckedChanged);
 			// 
 			// SEConfigTool
 			// 
@@ -4345,17 +4306,11 @@ namespace SEConfigTool
 		private System.Windows.Forms.SplitContainer splitContainer32;
 		private System.Windows.Forms.Label label68;
 		private System.Windows.Forms.Label label67;
-		private System.Windows.Forms.Label label66;
 		private System.Windows.Forms.Label label65;
 		private System.Windows.Forms.Label label64;
-		private System.Windows.Forms.Label label60;
-		private System.Windows.Forms.Label label59;
 		private System.Windows.Forms.Label label57;
 		private System.Windows.Forms.Label label56;
 		private System.Windows.Forms.Label label58;
-		private System.Windows.Forms.CheckBox CHK_VoxelMaterialsConfig_Details_UseTwoTextures;
-		private System.Windows.Forms.CheckBox CHK_VoxelMaterialsConfig_Details_IsRare;
-		private System.Windows.Forms.CheckBox CHK_VoxelMaterialsConfig_Details_CanBeHarvested;
 		private System.Windows.Forms.TextBox TXT_VoxelMaterialsConfig_Details_SpecularShininess;
 		private System.Windows.Forms.TextBox TXT_VoxelMaterialsConfig_Details_SpecularPower;
 		private System.Windows.Forms.TextBox TXT_VoxelMaterialsConfig_Details_AssetName;
@@ -4586,9 +4541,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.ListBox LST_SavedGame_Events;
 		private System.Windows.Forms.SplitContainer splitContainer36;
 		private System.Windows.Forms.Label label71;
-		private System.Windows.Forms.Label label70;
 		private System.Windows.Forms.Label label69;
-		private System.Windows.Forms.CheckBox CHK_SavedGame_Events_Enabled;
 		private System.Windows.Forms.Button BTN_SavedGame_Events_Apply;
 		private System.Windows.Forms.TextBox TXT_SavedGame_Events_ActivationTime;
 		private System.Windows.Forms.TextBox TXT_SavedGame_Events_Type;
@@ -4596,6 +4549,10 @@ namespace SEConfigTool
 		private System.Windows.Forms.SplitContainer splitContainer33;
 		private System.Windows.Forms.TreeView TRV_SavedGame_Objects;
 		private System.Windows.Forms.TabControl LayoutPages;
+		private System.Windows.Forms.CheckBox CHK_VoxelMaterialsConfig_Details_CanBeHarvested;
+		private System.Windows.Forms.CheckBox CHK_VoxelMaterialsConfig_Details_UseTwoTextures;
+		private System.Windows.Forms.CheckBox CHK_VoxelMaterialsConfig_Details_IsRare;
+		private System.Windows.Forms.CheckBox CHK_SavedGame_Events_Enabled;
 
     }
 }
