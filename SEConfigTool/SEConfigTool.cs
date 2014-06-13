@@ -68,6 +68,8 @@ namespace SEConfigTool
 			m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager();
 			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
 			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
+
+			m_globalEventsDefinitionsManager.IsMutable = true;
 		}
 
 		#endregion
@@ -230,11 +232,12 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillGlobalEventConfigurationListBox()
+		private void FillGlobalEventConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_globalEventsDefinitionsManager.Load(GetContentDataFile("GlobalEvents.sbc"));
+			if(loadFromFile)
+				m_globalEventsDefinitionsManager.Load(GetContentDataFile("GlobalEvents.sbc"));
 
 			LST_GlobalEventConfiguration.Items.Clear();
 			foreach (var definition in m_globalEventsDefinitionsManager.Definitions)
@@ -782,6 +785,8 @@ namespace SEConfigTool
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
+			globalEvent.Name = TXT_ConfigGlobalEventName.Text;
+			globalEvent.DisplayName = globalEvent.Name;
 			globalEvent.Description = TXT_ConfigGlobalEventDescription.Text;
 			globalEvent.EventType = (MyGlobalEventTypeEnum) CMB_GlobalEventsConfig_Details_EventType.SelectedItem;
 			globalEvent.MinActivation = Convert.ToInt32(TXT_ConfigGlobalEventMinActivation.Text, m_numberFormatInfo);
@@ -805,6 +810,23 @@ namespace SEConfigTool
 			{
 				BTN_GlobalEventConfig_Apply.Visible = true;
 			}
+		}
+
+		private void BTN_GlobalEventsConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			GlobalEventsDefinition newGlobalEventDef = m_globalEventsDefinitionsManager.NewEntry();
+			if (newGlobalEventDef == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			newGlobalEventDef.Name = "(New)";
+			newGlobalEventDef.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.EventDefinition, MyGlobalEventTypeEnum.InvalidEventType.ToString());
+
+			FillGlobalEventConfigurationListBox(false);
+
+			LST_GlobalEventConfiguration.SelectedIndex = LST_GlobalEventConfiguration.Items.Count - 1;
 		}
 
 		#endregion

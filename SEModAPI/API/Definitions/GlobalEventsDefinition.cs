@@ -25,6 +25,17 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		public string DisplayName
+		{
+			get { return m_baseDefinition.DisplayName; }
+			set
+			{
+				if (m_baseDefinition.DisplayName == value) return;
+				m_baseDefinition.DisplayName = value;
+				Changed = true;
+			}
+		}
+
 		public long MinActivation
 		{
 			get { return m_baseDefinition.MinActivationTimeMs.GetValueOrDefault(0); }

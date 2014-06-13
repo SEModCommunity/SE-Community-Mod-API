@@ -43,6 +43,12 @@ namespace SEModAPI.API.Definitions
 		public string Name
 		{
 			get { return m_name; }
+			set
+			{
+				if (m_name == value.ToString()) return;
+				m_name = value;
+				Changed = true;
+			}
 		}
 
 		public TMyObjectBuilder_Definitions_SubType BaseDefinition
@@ -134,10 +140,13 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
-		public void AddChildrenFrom(TMyObjectBuilder_Definitions_SubType definition)
+		public TOverLayerDefinition_SubType AddChildrenFrom(TMyObjectBuilder_Definitions_SubType definition)
 		{
-			m_definitions.Add(m_index, CreateOverLayerSubTypeInstance(definition));
+			var newEntry = CreateOverLayerSubTypeInstance(definition);
+			m_definitions.Add(m_index, newEntry);
 			++m_index;
+
+			return newEntry;
 		}
 
 		#endregion
@@ -239,6 +248,7 @@ namespace SEModAPI.API.Definitions
 		private FileInfo m_fileInfo;
 		private readonly GameInstallationInfo m_gameInstallation;
 		private MyObjectBuilder_Definitions m_definitionsContainer;
+		private bool m_isMutable;
 
 		#endregion
 
@@ -247,6 +257,7 @@ namespace SEModAPI.API.Definitions
 		protected SerializableDefinitionsManager()
 		{
 			m_changed = false;
+			m_isMutable = false;
 			m_gameInstallation = new GameInstallationInfo();
 		}
 
@@ -263,6 +274,12 @@ namespace SEModAPI.API.Definitions
 		public MyObjectBuilder_Definitions DefinitionsContainer
 		{
 			get { return m_definitionsContainer; }
+		}
+
+		public bool IsMutable
+		{
+			get { return m_isMutable; }
+			set { m_isMutable = value; }
 		}
 
 		#endregion
@@ -483,13 +500,8 @@ namespace SEModAPI.API.Definitions
 			return overLayer.Changed;
 		}
 
-		public void Load(FileInfo sourceFile)
+		private FieldInfo GetMatchingDefinitionsContainerField()
 		{
-			m_fileInfo = sourceFile;
-
-			//Get the definitions content from the file
-			m_definitionsContainer = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_fileInfo);
-
 			//Find the the matching field in the container
 			Type thisType = typeof(T[]);
 			Type defType = m_definitionsContainer.GetType();
@@ -503,11 +515,23 @@ namespace SEModAPI.API.Definitions
 					break;
 				}
 			}
-			if (matchingField == null)
+
+			return matchingField;
+		}
+
+		public void Load(FileInfo sourceFile)
+		{
+			m_fileInfo = sourceFile;
+
+			//Get the definitions content from the file
+			m_definitionsContainer = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_fileInfo);
+
+			FieldInfo field = GetMatchingDefinitionsContainerField();
+			if (field == null)
 				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.Invalid), "Failed to find matching definitions field");
 
 			//Get the data from the definitions container
-			T[] baseDefinitions = (T[])matchingField.GetValue(m_definitionsContainer);
+			T[] baseDefinitions = (T[])field.GetValue(m_definitionsContainer);
 
 			//Copy the data into the manager
 			m_definitions.Clear();
@@ -522,6 +546,50 @@ namespace SEModAPI.API.Definitions
 			if (!this.Changed) return;
 
 			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_definitionsContainer, m_fileInfo);
+		}
+
+		public U NewEntry()
+		{
+			if (!IsMutable) return null;
+
+			var newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { });
+
+			return NewEntry(newEntry);
+		}
+
+		public U NewEntry(T source)
+		{
+			if (!IsMutable) return null;
+
+			var newEntry = AddChildrenFrom(source);
+
+			FieldInfo field = GetMatchingDefinitionsContainerField();
+			if (field == null)
+				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.Invalid), "Failed to find matching definitions field");
+
+			//Update the definitions container
+			field.SetValue(m_definitionsContainer, ExtractBaseDefinitions().ToArray());
+
+			return newEntry;
+		}
+
+		public U CopyEntry(U source)
+		{
+			if (!IsMutable) return null;
+
+			//Create the new object
+			Type entryType = typeof(T);
+			var newEntry = (T)Activator.CreateInstance(entryType, new object[] { });
+
+			//Copy the field data
+			//TODO - Find a way to fully copy complex data structures in fields instead of just copying reference
+			foreach (FieldInfo field in entryType.GetFields())
+			{
+				field.SetValue(newEntry, field.GetValue(source.BaseDefinition));
+			}
+
+			//Add the new object to the manager as a new entry
+			return NewEntry(newEntry);
 		}
 
 		#endregion

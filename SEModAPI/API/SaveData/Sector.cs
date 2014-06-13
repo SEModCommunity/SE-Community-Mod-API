@@ -152,7 +152,7 @@ namespace SEModAPI.API.SaveData
 		{
 		}
 
-		public void Load(FileInfo fileInfo)
+		new public void Load(FileInfo fileInfo)
 		{
 			//Save the file info to the property
 			FileInfo = fileInfo;
@@ -164,7 +164,7 @@ namespace SEModAPI.API.SaveData
 			m_Sector = new Sector(data);
 		}
 
-		public void Save()
+		new public void Save()
 		{
 			WriteSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(m_Sector.BaseDefinition, this.FileInfo.FullName);
 		}
