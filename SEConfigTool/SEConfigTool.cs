@@ -13,6 +13,7 @@ using SEModAPI.API.SaveData;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using VRageMath;
 using System.Diagnostics;
 
 namespace SEConfigTool
@@ -35,6 +36,7 @@ namespace SEConfigTool
 		private BlueprintDefinitionsManager m_blueprintsDefinitionsManager;
 		private VoxelMaterialDefinitionsManager m_voxelMaterialsDefinitionsManager;
 		private ScenariosDefinitionsManager m_scenariosDefinitionManager;
+		private TransparentMaterialsDefinitionManager m_transparentMaterialsDefinitionManager;
 
 		private bool m_currentlyFillingConfigurationListBox;
 		private bool m_currentlySelecting;
@@ -68,6 +70,7 @@ namespace SEConfigTool
 			m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager();
 			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
 			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
+			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
 
 			m_globalEventsDefinitionsManager.IsMutable = true;
 		}
@@ -340,6 +343,22 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		private void FillTransparentMaterialsConfigurationListBox()
+		{
+			m_currentlyFillingConfigurationListBox = true;
+
+			m_transparentMaterialsDefinitionManager.Load(GetContentDataFile("TransparentMaterials.sbc"));
+
+			LST_TransparentMaterialsConfig.Items.Clear();
+			foreach (var definition in m_transparentMaterialsDefinitionManager.Definitions)
+			{
+				LST_TransparentMaterialsConfig.Items.Add(definition.Name);
+			}
+
+			m_currentlyFillingConfigurationListBox = false;
+		}
+
+
 		#endregion
 
 		#region Form events
@@ -358,6 +377,7 @@ namespace SEConfigTool
 			FillBlueprintConfigurationListBox();
 			FillVoxelMaterialConfigurationListBox();
 			FillScenariosConfigurationListBox();
+			FillTransparentMaterialsConfigurationListBox();
 		}
 
 		#region SavedGame
@@ -1203,6 +1223,91 @@ namespace SEConfigTool
 			TXT_ScenariosConfig_Details_Asteroid_Offset.Text = scenario.AsteroidClusters.Offset.ToString();
 
 			m_currentlySelecting = false;
+		}
+
+		#endregion
+
+		#region TransparentMaterials
+
+		private void LST_TransparentMaterialsConfig_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int index = LST_TransparentMaterialsConfig.SelectedIndex;
+
+			TransparentMaterialsDefinition transparentMaterials = m_transparentMaterialsDefinitionManager.DefinitionOf(index);
+
+			TXT_TransparentMaterialsConfig_Details_Name.Text = transparentMaterials.Name;
+			TXT_TransparentMaterialsConfig_Details_Emissivity.Text = transparentMaterials.Emissivity.ToString();
+			TXT_TransparentMaterialsConfig_Details_SoftParticleDistanceScale.Text = transparentMaterials.SoftParticleDistanceScale.ToString();
+			TXT_TransparentMaterialsConfig_Details_Texture.Text = transparentMaterials.Texture;
+
+			TXT_TransparentMaterialsConfig_Details_UVOffset_X.Text = transparentMaterials.UVOffset.X.ToString();
+			TXT_TransparentMaterialsConfig_Details_UVOffset_Y.Text = transparentMaterials.UVOffset.Y.ToString();
+			TXT_TransparentMaterialsConfig_Details_UVSize_X.Text = transparentMaterials.UVSize.X.ToString();
+			TXT_TransparentMaterialsConfig_Details_UVSize_Y.Text = transparentMaterials.UVSize.Y.ToString();
+
+			CHK_TransparentMaterialsConfig_Details_AlphaMistingEnable.Checked = transparentMaterials.AlphaMistingEnable;
+			CHK_TransparentMaterialsConfig_Details_CanBeAffectedByLight.Checked = transparentMaterials.CanBeAffectedByOtherLights;
+			CHK_TransparentMaterialsConfig_Details_IgnoreDepth.Checked = transparentMaterials.IgnoreDepth;
+			CHK_TransparentMaterialsConfig_Details_UseAtlas.Checked = transparentMaterials.UseAtlas;
+
+			BTN_TransparentMaterialsConfig_Details_Apply.Enabled = false;
+			m_currentlySelecting = false;
+		}
+
+		private void BTN_TransparentMaterialsConfig_Reload_Click(object sender, EventArgs e)
+		{
+			FillTransparentMaterialsConfigurationListBox();
+		}
+
+		private void BTN_TransparentMaterialsConfig_Save_Click(object sender, EventArgs e)
+		{
+			m_transparentMaterialsDefinitionManager.Save();
+		}
+
+		private void BTN_TransparentMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
+		{
+			int index = LST_TransparentMaterialsConfig.SelectedIndex;
+
+			TransparentMaterialsDefinition transparentMaterial = m_transparentMaterialsDefinitionManager.DefinitionOf(index);
+
+			transparentMaterial.Name = TXT_TransparentMaterialsConfig_Details_Name.Text;
+			transparentMaterial.Emissivity = Convert.ToSingle(TXT_TransparentMaterialsConfig_Details_Emissivity.Text, m_numberFormatInfo);
+			transparentMaterial.SoftParticleDistanceScale = Convert.ToSingle(TXT_TransparentMaterialsConfig_Details_SoftParticleDistanceScale.Text, m_numberFormatInfo);
+			transparentMaterial.Texture = TXT_TransparentMaterialsConfig_Details_Texture.Text;
+
+			transparentMaterial.AlphaMistingEnable = CHK_TransparentMaterialsConfig_Details_AlphaMistingEnable.Checked;
+			transparentMaterial.CanBeAffectedByOtherLights = CHK_TransparentMaterialsConfig_Details_CanBeAffectedByLight.Checked;
+			transparentMaterial.IgnoreDepth = CHK_TransparentMaterialsConfig_Details_IgnoreDepth.Checked;
+			transparentMaterial.UseAtlas = CHK_TransparentMaterialsConfig_Details_UseAtlas.Checked;
+
+			float uvOffsetX = Convert.ToSingle(TXT_TransparentMaterialsConfig_Details_UVOffset_X.Text, m_numberFormatInfo);
+			float uvOffsetY = Convert.ToSingle(TXT_TransparentMaterialsConfig_Details_UVOffset_Y.Text, m_numberFormatInfo);
+
+			transparentMaterial.UVOffset = new Vector2(uvOffsetX, uvOffsetY);
+
+			float uvSizeX = Convert.ToSingle(TXT_TransparentMaterialsConfig_Details_UVSize_X.Text, m_numberFormatInfo);
+			float uvSizeY = Convert.ToSingle(TXT_TransparentMaterialsConfig_Details_UVSize_Y.Text, m_numberFormatInfo);
+
+			transparentMaterial.UVSize = new Vector2(uvSizeX, uvSizeY);
+
+			BTN_TransparentMaterialsConfig_Details_Apply.Enabled = false;
+		}
+
+		private void TXT_TransparentMaterialsConfig_Details_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_TransparentMaterialsConfig_Details_Apply.Enabled = true;
+			}
+		}
+
+		private void CHK_TransparentMaterialsConfig_Details_CheckedChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_TransparentMaterialsConfig_Details_Apply.Enabled = true;
+			}
 		}
 
 		#endregion
