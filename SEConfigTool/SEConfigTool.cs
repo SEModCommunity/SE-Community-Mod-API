@@ -88,12 +88,12 @@ namespace SEConfigTool
 			m_sectorManager.Load(saveFileInfo);
 			Sector sector = m_sectorManager.Sector;
 
-			TBX_SavedGame_Properties_Position.Text = sector.Position.ToString();
-			TBX_SavedGame_Properties_AppVersion.Text = sector.AppVersion.ToString();
+			TXT_SavedGame_Properties_Position.Text = sector.Position.ToString();
+			TXT_SavedGame_Properties_AppVersion.Text = sector.AppVersion.ToString();
 
 			foreach (Event currentEvent in sector.Events)
 			{
-				LBX_SavedGame_Events.Items.Add(currentEvent.Name);
+				LST_SavedGame_Events.Items.Add(currentEvent.Name);
 			}
 
 			TRV_SavedGame_Objects.BeginUpdate();
@@ -190,10 +190,10 @@ namespace SEConfigTool
 
 			m_cubeBlockDefinitionsManager.Load(GetContentDataFile("CubeBlocks.sbc"));
 
-			LBX_BlocksConfiguration.Items.Clear();
+			LST_BlocksConfiguration.Items.Clear();
 			foreach (var definition in m_cubeBlockDefinitionsManager.Definitions)
 			{
-				LBX_BlocksConfiguration.Items.Add(definition.Name);
+				LST_BlocksConfiguration.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -205,10 +205,10 @@ namespace SEConfigTool
 
 			m_ammoMagazinesDefinitionsManager.Load(GetContentDataFile("AmmoMagazines.sbc"));
 
-			LBX_AmmoConfiguration.Items.Clear();
+			LST_AmmoConfiguration.Items.Clear();
 			foreach (var definition in m_ammoMagazinesDefinitionsManager.Definitions)
 			{
-				LBX_AmmoConfiguration.Items.Add(definition.Name);
+				LST_AmmoConfiguration.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -220,11 +220,11 @@ namespace SEConfigTool
 
 			m_containerTypesDefinitionsManager.Load(GetContentDataFile("ContainerTypes.sbc"));
 
-			LBX_ContainerTypeConfiguration.Items.Clear();
-			LBX_ContainerTypeConfig_Details_Items.Items.Clear();
+			LST_ContainerTypeConfiguration.Items.Clear();
+			LST_ContainerTypeConfig_Details_Items.Items.Clear();
 			foreach (var definition in m_containerTypesDefinitionsManager.Definitions)
 			{
-				LBX_ContainerTypeConfiguration.Items.Add(definition.Name);
+				LST_ContainerTypeConfiguration.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -236,10 +236,10 @@ namespace SEConfigTool
 
 			m_globalEventsDefinitionsManager.Load(GetContentDataFile("GlobalEvents.sbc"));
 
-			LBX_GlobalEventConfiguration.Items.Clear();
+			LST_GlobalEventConfiguration.Items.Clear();
 			foreach (var definition in m_globalEventsDefinitionsManager.Definitions)
 			{
-				LBX_GlobalEventConfiguration.Items.Add(definition.Name);
+				LST_GlobalEventConfiguration.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -251,12 +251,12 @@ namespace SEConfigTool
 
 			m_spawnGroupsDefinitionsManager.Load(GetContentDataFile("SpawnGroups.sbc"));
 
-			LBX_SpawnGroupConfiguration.Items.Clear();
-			LBX_SpawnGroupConfig_Details_Prefabs.Items.Clear();
+			LST_SpawnGroupConfiguration.Items.Clear();
+			LST_SpawnGroupConfig_Details_Prefabs.Items.Clear();
 			foreach (var definition in m_spawnGroupsDefinitionsManager.Definitions)
 			{
 				//TODO - Find a better way to uniquely label the spawn groups
-				LBX_SpawnGroupConfiguration.Items.Add("Spawn Group " + LBX_SpawnGroupConfiguration.Items.Count.ToString());
+				LST_SpawnGroupConfiguration.Items.Add("Spawn Group " + LST_SpawnGroupConfiguration.Items.Count.ToString());
 			}
 			m_currentlyFillingConfigurationListBox = false;
 		}
@@ -267,10 +267,10 @@ namespace SEConfigTool
 
 			m_physicalItemsDefinitionsManager.Load(GetContentDataFile("PhysicalItems.sbc"));
 
-			LBX_PhysicalItemConfiguration.Items.Clear();
+			LST_PhysicalItemConfiguration.Items.Clear();
 			foreach (var definition in m_physicalItemsDefinitionsManager.Definitions)
 			{
-				LBX_PhysicalItemConfiguration.Items.Add(definition.Name);
+				LST_PhysicalItemConfiguration.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -282,10 +282,10 @@ namespace SEConfigTool
 
 			m_componentsDefinitionsManager.Load(GetContentDataFile("Components.sbc"));
 
-			LBX_ComponentsConfig.Items.Clear();
+			LST_ComponentsConfig.Items.Clear();
 			foreach (var definition in m_componentsDefinitionsManager.Definitions)
 			{
-				LBX_ComponentsConfig.Items.Add(definition.Name);
+				LST_ComponentsConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -297,11 +297,11 @@ namespace SEConfigTool
 
 			m_blueprintsDefinitionsManager.Load(GetContentDataFile("Blueprints.sbc"));
 
-			LBX_BlueprintConfig.Items.Clear();
+			LST_BlueprintConfig.Items.Clear();
 			foreach (var definition in m_blueprintsDefinitionsManager.Definitions)
 			{
 				//TODO - Find a better way to uniquely label the spawn groups
-				LBX_BlueprintConfig.Items.Add("Blueprint " + LBX_BlueprintConfig.Items.Count.ToString());
+				LST_BlueprintConfig.Items.Add("Blueprint " + LST_BlueprintConfig.Items.Count.ToString());
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -313,10 +313,10 @@ namespace SEConfigTool
 
 			m_voxelMaterialsDefinitionsManager.Load(GetContentDataFile("VoxelMaterials.sbc"));
 
-			LBX_VoxelMaterialsConfig.Items.Clear();
+			LST_VoxelMaterialsConfig.Items.Clear();
 			foreach (var definition in m_voxelMaterialsDefinitionsManager.Definitions)
 			{
-				LBX_VoxelMaterialsConfig.Items.Add(definition.Name);
+				LST_VoxelMaterialsConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -328,10 +328,10 @@ namespace SEConfigTool
 
 			m_scenariosDefinitionManager.Load(GetContentDataFile("Scenarios.sbc"));
 
-			LBX_ScenariosConfig.Items.Clear();
+			LST_ScenariosConfig.Items.Clear();
 			foreach (var definition in m_scenariosDefinitionManager.Definitions)
 			{
-				LBX_ScenariosConfig.Items.Add(definition.Name);
+				LST_ScenariosConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -391,28 +391,28 @@ namespace SEConfigTool
 
 		private void BTN_SavedGame_Events_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_SavedGame_Events.SelectedIndex;
+			int index = LST_SavedGame_Events.SelectedIndex;
 
 			Sector sector = m_sectorManager.Sector;
 			Event sectorEvent = sector.Events[index];
 
-			sectorEvent.Enabled = CBX_SavedGame_Events_Enabled.CheckState == CheckState.Checked;
-			sectorEvent.ActivationTimeMs = Convert.ToInt64(TBX_SavedGame_Events_ActivationTime.Text, m_numberFormatInfo);
+			sectorEvent.Enabled = CHK_SavedGame_Events_Enabled.CheckState == CheckState.Checked;
+			sectorEvent.ActivationTimeMs = Convert.ToInt64(TXT_SavedGame_Events_ActivationTime.Text, m_numberFormatInfo);
 
 			BTN_SavedGame_Events_Apply.Visible = false;
 		}
 
-		private void LBX_SavedGame_Events_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_SavedGame_Events_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_SavedGame_Events.SelectedIndex;
+			int index = LST_SavedGame_Events.SelectedIndex;
 
 			Sector sector = m_sectorManager.Sector;
 			Event sectorEvent = sector.Events[index];
 
-			TBX_SavedGame_Events_Type.Text = sectorEvent.DefinitionId.ToString();
-			CBX_SavedGame_Events_Enabled.Checked = sectorEvent.Enabled;
-			TBX_SavedGame_Events_ActivationTime.Text = sectorEvent.ActivationTimeMs.ToString();
+			TXT_SavedGame_Events_Type.Text = sectorEvent.DefinitionId.ToString();
+			CHK_SavedGame_Events_Enabled.Checked = sectorEvent.Enabled;
+			TXT_SavedGame_Events_ActivationTime.Text = sectorEvent.ActivationTimeMs.ToString();
 
 			m_currentlySelecting = false;
 			BTN_SavedGame_Events_Apply.Visible = false;
@@ -439,7 +439,7 @@ namespace SEConfigTool
 			}
 		}
 
-		private void TBX_SavedGame_Events_TextChanged(object sender, EventArgs e)
+		private void TXT_SavedGame_Events_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -447,7 +447,7 @@ namespace SEConfigTool
 			}
 		}
 
-		private void CBX_SavedGame_Events_Enabled_CheckedChanged(object sender, EventArgs e)
+		private void CHK_SavedGame_Events_Enabled_CheckedChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -459,39 +459,39 @@ namespace SEConfigTool
 
 		#region CubeBlock
 
-		private void CB_BlocksConfig_ModelIntersection_CheckedChanged(object sender, EventArgs e)
+		private void CHK_BlocksConfig_ModelIntersection_CheckedChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
 				BTN_ConfigApplyChanges.Visible = true;
-			int index = LBX_BlocksConfiguration.SelectedIndex;
-			m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CB_BlocksConfig_ModelIntersection.Checked;
+			int index = LST_BlocksConfiguration.SelectedIndex;
+			m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CHK_BlocksConfig_ModelIntersection.Checked;
 		}
         }
 
-		private void CB_BlocksConfig_Enabled_CheckedChanged(object sender, EventArgs e)
+		private void CHK_BlocksConfig_Enabled_CheckedChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
 				BTN_ConfigApplyChanges.Visible = true;
-			int index = LBX_BlocksConfiguration.SelectedIndex;
-			m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CB_BlocksConfig_Enabled.Checked;
+			int index = LST_BlocksConfiguration.SelectedIndex;
+			m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CHK_BlocksConfig_Enabled.Checked;
 		}
         }
 
-		private void LBX_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_BlocksConfiguration.SelectedIndex;
+			int index = LST_BlocksConfiguration.SelectedIndex;
 
 			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
 
-			TBX_ConfigBlockName.Text = cubeBlock.Name;
-			TBX_ConfigBlockId.Text = cubeBlock.Id.ToString();
-			TBX_ConfigBuildTime.Text = cubeBlock.BuildTime.ToString(m_numberFormatInfo);
-			TBX_ConfigDisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(m_numberFormatInfo);
-			CB_BlocksConfig_Enabled.Checked = cubeBlock.Enabled;
-			CB_BlocksConfig_ModelIntersection.Checked = cubeBlock.UseModelIntersection;
+			TXT_ConfigBlockName.Text = cubeBlock.Name;
+			TXT_ConfigBlockId.Text = cubeBlock.Id.ToString();
+			TXT_ConfigBuildTime.Text = cubeBlock.BuildTime.ToString(m_numberFormatInfo);
+			TXT_ConfigDisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(m_numberFormatInfo);
+			CHK_BlocksConfig_Enabled.Checked = cubeBlock.Enabled;
+			CHK_BlocksConfig_ModelIntersection.Checked = cubeBlock.UseModelIntersection;
 
 			DGV_ConfigBlocks_Components.DataSource = cubeBlock.Components.ToArray().Select(x => new { x.Subtype, x.Count }).ToArray();
 
@@ -500,11 +500,11 @@ namespace SEConfigTool
 			BTN_ConfigApplyChanges.Visible = false;
 		}
 
-		private void TBX_ConfigBuildTime_KeyPress(object sender, KeyPressEventArgs e)
+		private void TXT_ConfigBuildTime_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			char ch = e.KeyChar;
 
-			if (ch == '.' && TBX_ConfigBuildTime.Text.IndexOf('.') != -1)
+			if (ch == '.' && TXT_ConfigBuildTime.Text.IndexOf('.') != -1)
 			{
 				e.Handled = true;
 			}
@@ -525,7 +525,7 @@ namespace SEConfigTool
 			m_cubeBlockDefinitionsManager.Save();
 		}
 
-		private void TBX_ConfigBlocks_TextChanged(object sender, EventArgs e)
+		private void TXT_ConfigBlocks_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -535,12 +535,12 @@ namespace SEConfigTool
 
 		private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
 		{
-			int index = LBX_BlocksConfiguration.SelectedIndex;
+			int index = LST_BlocksConfiguration.SelectedIndex;
 
 			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
 
-			cubeBlock.BuildTime = Convert.ToSingle(TBX_ConfigBuildTime.Text, m_numberFormatInfo);
-			cubeBlock.DisassembleRatio = Convert.ToSingle(TBX_ConfigDisassembleRatio.Text, m_numberFormatInfo);
+			cubeBlock.BuildTime = Convert.ToSingle(TXT_ConfigBuildTime.Text, m_numberFormatInfo);
+			cubeBlock.DisassembleRatio = Convert.ToSingle(TXT_ConfigDisassembleRatio.Text, m_numberFormatInfo);
 
 			BTN_ConfigApplyChanges.Visible = false;
 		}
@@ -549,10 +549,10 @@ namespace SEConfigTool
 
 		#region AmmoMagazines
 
-		private void LBX_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_AmmoConfiguration.SelectedIndex;
+			int index = LST_AmmoConfiguration.SelectedIndex;
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
@@ -562,12 +562,12 @@ namespace SEConfigTool
 				CMB_AmmoConfig_Details_Caliber.Items.Add(caliber);
 			}
 
-			TBX_ConfigAmmoName.Text = ammoMagazine.Name;
-			TBX_ConfigAmmoId.Text = ammoMagazine.Id.ToString();
+			TXT_ConfigAmmoName.Text = ammoMagazine.Name;
+			TXT_ConfigAmmoId.Text = ammoMagazine.Id.ToString();
 			CMB_AmmoConfig_Details_Caliber.SelectedItem = ammoMagazine.Caliber;
-			TBX_ConfigAmmoCapacity.Text = ammoMagazine.Capacity.ToString(m_numberFormatInfo);
-			TBX_ConfigAmmoVolume.Text = ammoMagazine.Volume.ToString(m_numberFormatInfo);
-			TBX_ConfigAmmoMass.Text = ammoMagazine.Mass.ToString(m_numberFormatInfo);
+			TXT_ConfigAmmoCapacity.Text = ammoMagazine.Capacity.ToString(m_numberFormatInfo);
+			TXT_ConfigAmmoVolume.Text = ammoMagazine.Volume.ToString(m_numberFormatInfo);
+			TXT_ConfigAmmoMass.Text = ammoMagazine.Mass.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
@@ -586,19 +586,19 @@ namespace SEConfigTool
 
 		private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_AmmoConfiguration.SelectedIndex;
+			int index = LST_AmmoConfiguration.SelectedIndex;
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
 			ammoMagazine.Caliber = (MyAmmoCategoryEnum) CMB_AmmoConfig_Details_Caliber.SelectedItem;
-			ammoMagazine.Capacity = Convert.ToInt32(TBX_ConfigAmmoCapacity.Text, m_numberFormatInfo);
-			ammoMagazine.Mass = Convert.ToSingle(TBX_ConfigAmmoMass.Text, m_numberFormatInfo);
-			ammoMagazine.Volume = Convert.ToSingle(TBX_ConfigAmmoVolume.Text, m_numberFormatInfo);
+			ammoMagazine.Capacity = Convert.ToInt32(TXT_ConfigAmmoCapacity.Text, m_numberFormatInfo);
+			ammoMagazine.Mass = Convert.ToSingle(TXT_ConfigAmmoMass.Text, m_numberFormatInfo);
+			ammoMagazine.Volume = Convert.ToSingle(TXT_ConfigAmmoVolume.Text, m_numberFormatInfo);
 
 			BTN_AmmoConfig_Details_Apply.Visible = false;
 		}
 
-		private void TBX_ConfigAmmo_TextChanged(object sender, EventArgs e)
+		private void TXT_ConfigAmmo_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -618,23 +618,23 @@ namespace SEConfigTool
 
 		#region ContainerTypes
 
-		private void LBX_ContainerTypeConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_ContainerTypeConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
+			int index = LST_ContainerTypeConfiguration.SelectedIndex;
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
 
-			TBX_ConfigContainerTypeName.Text = containerType.Name;
-			TBX_ConfigContainerTypeId.Text = containerType.TypeId.ToString();
-			TBX_ConfigContainerTypeItemCount.Text = containerType.ItemCount.ToString();
-			TBX_ConfigContainerTypeCountMax.Text = containerType.CountMax.ToString();
-			TBX_ConfigContainerTypeCountMin.Text = containerType.CountMin.ToString();
+			TXT_ConfigContainerTypeName.Text = containerType.Name;
+			TXT_ConfigContainerTypeId.Text = containerType.TypeId.ToString();
+			TXT_ConfigContainerTypeItemCount.Text = containerType.ItemCount.ToString();
+			TXT_ConfigContainerTypeCountMax.Text = containerType.CountMax.ToString();
+			TXT_ConfigContainerTypeCountMin.Text = containerType.CountMin.ToString();
 
-			LBX_ContainerTypeConfig_Details_Items.Items.Clear();
+			LST_ContainerTypeConfig_Details_Items.Items.Clear();
 			foreach (var def in containerType.Items)
 			{
-				LBX_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
+				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
 			}
 
 			CMB_ContainerTypesConfig_Items_Type.Items.Clear();
@@ -643,9 +643,9 @@ namespace SEConfigTool
 				CMB_ContainerTypesConfig_Items_Type.Items.Add(itemType.Id);
 			}
 
-			TBX_ContainerTypeConfig_ItemAmountMin.Text = "";
-			TBX_ContainerTypeConfig_ItemAmountMax.Text = "";
-			TBX_ContainerTypeConfig_ItemFrequency.Text = "";
+			TXT_ContainerTypeConfig_ItemAmountMin.Text = "";
+			TXT_ContainerTypeConfig_ItemAmountMax.Text = "";
+			TXT_ContainerTypeConfig_ItemFrequency.Text = "";
 
 			m_currentlySelecting = false;
 
@@ -664,17 +664,17 @@ namespace SEConfigTool
 
 		private void BTN_ConfigContainerTypeApply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
+			int index = LST_ContainerTypeConfiguration.SelectedIndex;
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
 
-			containerType.CountMax = Convert.ToInt32(TBX_ConfigContainerTypeCountMax.Text, m_numberFormatInfo);
-			containerType.CountMin = Convert.ToInt32(TBX_ConfigContainerTypeCountMin.Text, m_numberFormatInfo);
+			containerType.CountMax = Convert.ToInt32(TXT_ConfigContainerTypeCountMax.Text, m_numberFormatInfo);
+			containerType.CountMin = Convert.ToInt32(TXT_ConfigContainerTypeCountMin.Text, m_numberFormatInfo);
 
 			BTN_ContainerTypeConfig_Details_Apply.Visible = false;
 		}
 
-		private void TBX_ConfigContainerType_TextChanged(object sender, EventArgs e)
+		private void TXT_ConfigContainerType_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -684,19 +684,19 @@ namespace SEConfigTool
 
 		#region Items
 
-		private void LBX_ContainerTypeConfiguration_Items_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_ContainerTypeConfiguration_Items_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_ContainerTypeConfig_Details_Items.SelectedIndex;
+			int index = LST_ContainerTypeConfig_Details_Items.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypeConfiguration.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
 			CMB_ContainerTypesConfig_Items_Type.SelectedItem = containerItem.Id;
 
-			TBX_ContainerTypeConfig_ItemAmountMin.Text = containerItem.AmountMin.ToString();
-			TBX_ContainerTypeConfig_ItemAmountMax.Text = containerItem.AmountMax.ToString();
-			TBX_ContainerTypeConfig_ItemFrequency.Text = containerItem.Frequency.ToString();
+			TXT_ContainerTypeConfig_ItemAmountMin.Text = containerItem.AmountMin.ToString();
+			TXT_ContainerTypeConfig_ItemAmountMax.Text = containerItem.AmountMax.ToString();
+			TXT_ContainerTypeConfig_ItemFrequency.Text = containerItem.Frequency.ToString();
 
 			m_currentlySelecting = false;
 
@@ -705,20 +705,20 @@ namespace SEConfigTool
 
 		private void BTN_ContainerTypeConfig_Items_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_ContainerTypeConfiguration.SelectedIndex;
+			int index = LST_ContainerTypeConfiguration.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LBX_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypeConfiguration.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
 			containerItem.Id = (SerializableDefinitionId) CMB_ContainerTypesConfig_Items_Type.SelectedItem;
-			containerItem.AmountMin = Convert.ToInt32(TBX_ContainerTypeConfig_ItemAmountMin.Text, m_numberFormatInfo);
-			containerItem.AmountMax = Convert.ToInt32(TBX_ContainerTypeConfig_ItemAmountMax.Text, m_numberFormatInfo);
-			containerItem.Frequency = Convert.ToSingle(TBX_ContainerTypeConfig_ItemFrequency.Text, m_numberFormatInfo);
+			containerItem.AmountMin = Convert.ToInt32(TXT_ContainerTypeConfig_ItemAmountMin.Text, m_numberFormatInfo);
+			containerItem.AmountMax = Convert.ToInt32(TXT_ContainerTypeConfig_ItemAmountMax.Text, m_numberFormatInfo);
+			containerItem.Frequency = Convert.ToSingle(TXT_ContainerTypeConfig_ItemFrequency.Text, m_numberFormatInfo);
 
 			BTN_ContainerTypeConfig_Items_Apply.Visible = false;
 		}
 
-		private void TBX_ContainerTypeConfig_Item_TextChanged(object sender, EventArgs e)
+		private void TXT_ContainerTypeConfig_Item_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -740,10 +740,10 @@ namespace SEConfigTool
 
 		#region GlobalEvents
 
-		private void LBX_GlobalEventConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_GlobalEventConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_GlobalEventConfiguration.SelectedIndex;
+			int index = LST_GlobalEventConfiguration.SelectedIndex;
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
@@ -753,13 +753,13 @@ namespace SEConfigTool
 				CMB_GlobalEventsConfig_Details_EventType.Items.Add(eventType);
 			}
 
-			TBX_ConfigGlobalEventId.Text = globalEvent.Id.ToString();
-			TBX_ConfigGlobalEventName.Text = globalEvent.Name;
-			TBX_ConfigGlobalEventDescription.Text = globalEvent.Description;
+			TXT_ConfigGlobalEventId.Text = globalEvent.Id.ToString();
+			TXT_ConfigGlobalEventName.Text = globalEvent.Name;
+			TXT_ConfigGlobalEventDescription.Text = globalEvent.Description;
 			CMB_GlobalEventsConfig_Details_EventType.SelectedItem = globalEvent.EventType;
-			TBX_ConfigGlobalEventMinActivation.Text = globalEvent.MinActivation.ToString();
-			TBX_ConfigGlobalEventMaxActivation.Text = globalEvent.MaxActivation.ToString();
-			TBX_ConfigGlobalEventFirstActivation.Text = globalEvent.FirstActivation.ToString();
+			TXT_ConfigGlobalEventMinActivation.Text = globalEvent.MinActivation.ToString();
+			TXT_ConfigGlobalEventMaxActivation.Text = globalEvent.MaxActivation.ToString();
+			TXT_ConfigGlobalEventFirstActivation.Text = globalEvent.FirstActivation.ToString();
 
 			m_currentlySelecting = false;
 
@@ -778,20 +778,20 @@ namespace SEConfigTool
 
 		private void BTN_ConfigGlobalEventApply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_GlobalEventConfiguration.SelectedIndex;
+			int index = LST_GlobalEventConfiguration.SelectedIndex;
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
-			globalEvent.Description = TBX_ConfigGlobalEventDescription.Text;
+			globalEvent.Description = TXT_ConfigGlobalEventDescription.Text;
 			globalEvent.EventType = (MyGlobalEventTypeEnum) CMB_GlobalEventsConfig_Details_EventType.SelectedItem;
-			globalEvent.MinActivation = Convert.ToInt32(TBX_ConfigGlobalEventMinActivation.Text, m_numberFormatInfo);
-			globalEvent.MaxActivation = Convert.ToInt32(TBX_ConfigGlobalEventMaxActivation.Text, m_numberFormatInfo);
-			globalEvent.FirstActivation = Convert.ToInt32(TBX_ConfigGlobalEventFirstActivation.Text, m_numberFormatInfo);
+			globalEvent.MinActivation = Convert.ToInt32(TXT_ConfigGlobalEventMinActivation.Text, m_numberFormatInfo);
+			globalEvent.MaxActivation = Convert.ToInt32(TXT_ConfigGlobalEventMaxActivation.Text, m_numberFormatInfo);
+			globalEvent.FirstActivation = Convert.ToInt32(TXT_ConfigGlobalEventFirstActivation.Text, m_numberFormatInfo);
 
 			BTN_GlobalEventConfig_Apply.Visible = false;
 		}
 
-		private void TBX_ConfigGlobalEvent_TextChanged(object sender, EventArgs e)
+		private void TXT_ConfigGlobalEvent_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -811,25 +811,25 @@ namespace SEConfigTool
 
 		#region SpawnGroups
 
-		private void LBX_SpawnGroupConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_SpawnGroupConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_SpawnGroupConfiguration.SelectedIndex;
+			int index = LST_SpawnGroupConfiguration.SelectedIndex;
 
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(index);
 
-			TBX_ConfigSpawnGroupPrefabCount.Text = spawnGroup.PrefabCount.ToString();
-			TBX_ConfigSpawnGroupFrequency.Text = spawnGroup.Frequency.ToString();
+			TXT_ConfigSpawnGroupPrefabCount.Text = spawnGroup.PrefabCount.ToString();
+			TXT_ConfigSpawnGroupFrequency.Text = spawnGroup.Frequency.ToString();
 
-			LBX_SpawnGroupConfig_Details_Prefabs.Items.Clear();
+			LST_SpawnGroupConfig_Details_Prefabs.Items.Clear();
 			foreach (var def in spawnGroup.Prefabs)
 			{
-				LBX_SpawnGroupConfig_Details_Prefabs.Items.Add(def.BeaconText);
+				LST_SpawnGroupConfig_Details_Prefabs.Items.Add(def.BeaconText);
 			}
-			TBX_SpawnGroupConfig_Details_PrefabFile.Text = "";
-			TBX_SpawnGroupConfig_Details_PrefabPosition.Text = "";
-			TBX_SpawnGroupConfig_Details_PrefabBeaconText.Text = "";
-			TBX_SpawnGroupConfig_Details_PrefabSpeed.Text = "";
+			TXT_SpawnGroupConfig_Details_PrefabFile.Text = "";
+			TXT_SpawnGroupConfig_Details_PrefabPosition.Text = "";
+			TXT_SpawnGroupConfig_Details_PrefabBeaconText.Text = "";
+			TXT_SpawnGroupConfig_Details_PrefabSpeed.Text = "";
 
 			m_currentlySelecting = false;
 
@@ -848,16 +848,16 @@ namespace SEConfigTool
 
 		private void BTN_ConfigSpawnGroupApply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_SpawnGroupConfiguration.SelectedIndex;
+			int index = LST_SpawnGroupConfiguration.SelectedIndex;
 
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(index);
 
-			spawnGroup.Frequency = Convert.ToSingle(TBX_ConfigSpawnGroupFrequency.Text, m_numberFormatInfo);
+			spawnGroup.Frequency = Convert.ToSingle(TXT_ConfigSpawnGroupFrequency.Text, m_numberFormatInfo);
 
 			BTN_SpawnGroupConfig_Details_Apply.Visible = false;
 		}
 
-		private void TBX_ConfigSpawnGroup_TextChanged(object sender, EventArgs e)
+		private void TXT_ConfigSpawnGroup_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -867,18 +867,18 @@ namespace SEConfigTool
 
 		#region Prefabs
 
-		private void LBX_SpawnGroupConfig_Details_Prefabs_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_SpawnGroupConfig_Details_Prefabs_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
+			int index = LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
 
-			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LBX_SpawnGroupConfiguration.SelectedIndex);
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfiguration.SelectedIndex);
 			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
 
-			TBX_SpawnGroupConfig_Details_PrefabFile.Text = spawnGroupPrefab.File;
-			TBX_SpawnGroupConfig_Details_PrefabPosition.Text = spawnGroupPrefab.Position.ToString();
-			TBX_SpawnGroupConfig_Details_PrefabBeaconText.Text = spawnGroupPrefab.BeaconText;
-			TBX_SpawnGroupConfig_Details_PrefabSpeed.Text = spawnGroupPrefab.Speed.ToString();
+			TXT_SpawnGroupConfig_Details_PrefabFile.Text = spawnGroupPrefab.File;
+			TXT_SpawnGroupConfig_Details_PrefabPosition.Text = spawnGroupPrefab.Position.ToString();
+			TXT_SpawnGroupConfig_Details_PrefabBeaconText.Text = spawnGroupPrefab.BeaconText;
+			TXT_SpawnGroupConfig_Details_PrefabSpeed.Text = spawnGroupPrefab.Speed.ToString();
 
 			m_currentlySelecting = false;
 
@@ -887,18 +887,18 @@ namespace SEConfigTool
 
 		private void BTN_SpawnGroupConfig_Prefabs_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
+			int index = LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
 
-			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LBX_SpawnGroupConfiguration.SelectedIndex);
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfiguration.SelectedIndex);
 			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
 
-			spawnGroupPrefab.BeaconText = TBX_SpawnGroupConfig_Details_PrefabBeaconText.Text;
-			spawnGroupPrefab.Speed = Convert.ToSingle(TBX_SpawnGroupConfig_Details_PrefabSpeed.Text, m_numberFormatInfo);
+			spawnGroupPrefab.BeaconText = TXT_SpawnGroupConfig_Details_PrefabBeaconText.Text;
+			spawnGroupPrefab.Speed = Convert.ToSingle(TXT_SpawnGroupConfig_Details_PrefabSpeed.Text, m_numberFormatInfo);
 
 			BTN_SpawnGroupConfig_Prefabs_Apply.Visible = false;
 		}
 
-		private void TBX_SpawnGroupConfig_Details_PrefabText_TextChanged(object sender, EventArgs e)
+		private void TXT_SpawnGroupConfig_Details_PrefabText_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -912,29 +912,29 @@ namespace SEConfigTool
 
 		#region PhysicalItems
 
-		private void LBX_PhysicalItemConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_PhysicalItemConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_PhysicalItemConfiguration.SelectedIndex;
+			int index = LST_PhysicalItemConfiguration.SelectedIndex;
 
 			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
 
-			TBX_PhysicalItemConfig_Id.Text = physicalItem.Id.ToString();
-			TBX_PhysicalItemConfig_Name.Text = physicalItem.Name;
-			TBX_PhysicalItemConfig_Description.Text = physicalItem.Description;
-			TBX_PhysicalItemConfig_Size.Text = physicalItem.Size.ToString();
-			TBX_PhysicalItemConfig_Mass.Text = physicalItem.Mass.ToString();
-			TBX_PhysicalItemConfig_Volume.Text = physicalItem.Volume.ToString();
-			TBX_PhysicalItemConfig_Model.Text = physicalItem.Model;
-			TBX_PhysicalItemConfig_Icon.Text = physicalItem.Icon;
+			TXT_PhysicalItemConfig_Id.Text = physicalItem.Id.ToString();
+			TXT_PhysicalItemConfig_Name.Text = physicalItem.Name;
+			TXT_PhysicalItemConfig_Description.Text = physicalItem.Description;
+			TXT_PhysicalItemConfig_Size.Text = physicalItem.Size.ToString();
+			TXT_PhysicalItemConfig_Mass.Text = physicalItem.Mass.ToString();
+			TXT_PhysicalItemConfig_Volume.Text = physicalItem.Volume.ToString();
+			TXT_PhysicalItemConfig_Model.Text = physicalItem.Model;
+			TXT_PhysicalItemConfig_Icon.Text = physicalItem.Icon;
 			try
 			{
-			TBX_PhysicalItemConfig_IconSymbol.Text = physicalItem.IconSymbol.ToString();
+			TXT_PhysicalItemConfig_IconSymbol.Text = physicalItem.IconSymbol.ToString();
 			}
 			catch (InvalidOperationException NREx)
 			{
 				Console.WriteLine(NREx.ToString());
-				TBX_PhysicalItemConfig_IconSymbol.Text = "";
+				TXT_PhysicalItemConfig_IconSymbol.Text = "";
 			}
             
             
@@ -956,17 +956,17 @@ namespace SEConfigTool
 
 		private void BTN_ConfigPhysicalItemApply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_PhysicalItemConfiguration.SelectedIndex;
+			int index = LST_PhysicalItemConfiguration.SelectedIndex;
 
 			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
 
-			physicalItem.Mass = Convert.ToSingle(TBX_PhysicalItemConfig_Mass.Text, m_numberFormatInfo);
-			physicalItem.Volume = Convert.ToSingle(TBX_PhysicalItemConfig_Volume.Text, m_numberFormatInfo);
+			physicalItem.Mass = Convert.ToSingle(TXT_PhysicalItemConfig_Mass.Text, m_numberFormatInfo);
+			physicalItem.Volume = Convert.ToSingle(TXT_PhysicalItemConfig_Volume.Text, m_numberFormatInfo);
 
 			BTN_PhysicalItemConfig_Details_Apply.Visible = false;
 		}
 
-		private void TBX_PhysicalItemConfig_TextChanged(object sender, EventArgs e)
+		private void TXT_PhysicalItemConfig_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -978,23 +978,23 @@ namespace SEConfigTool
 
 		#region Components
 
-		private void LBX_ComponentsConfig_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_ComponentsConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_ComponentsConfig.SelectedIndex;
+			int index = LST_ComponentsConfig.SelectedIndex;
 
 			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
 
-			TBX_ComponentConfig_Id.Text = component.Id.ToString();
-			TBX_ComponentConfig_Name.Text = component.Name;
-			TBX_ComponentConfig_Description.Text = component.Description;
-			TBX_ComponentConfig_Size.Text = component.Size.ToString();
-			TBX_ComponentConfig_Mass.Text = component.Mass.ToString();
-			TBX_ComponentConfig_Volume.Text = component.Volume.ToString();
-			TBX_ComponentConfig_Model.Text = component.Model;
-			TBX_ComponentConfig_Icon.Text = component.Icon;
-			TBX_ComponentConfig_MaxIntegrity.Text = component.MaxIntegrity.ToString();
-			TBX_ComponentConfig_DropProbability.Text = component.DropProbability.ToString();
+			TXT_ComponentConfig_Id.Text = component.Id.ToString();
+			TXT_ComponentConfig_Name.Text = component.Name;
+			TXT_ComponentConfig_Description.Text = component.Description;
+			TXT_ComponentConfig_Size.Text = component.Size.ToString();
+			TXT_ComponentConfig_Mass.Text = component.Mass.ToString();
+			TXT_ComponentConfig_Volume.Text = component.Volume.ToString();
+			TXT_ComponentConfig_Model.Text = component.Model;
+			TXT_ComponentConfig_Icon.Text = component.Icon;
+			TXT_ComponentConfig_MaxIntegrity.Text = component.MaxIntegrity.ToString();
+			TXT_ComponentConfig_DropProbability.Text = component.DropProbability.ToString();
 
 			m_currentlySelecting = false;
 
@@ -1013,19 +1013,19 @@ namespace SEConfigTool
 
 		private void BTN_ComponentConfig_Details_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_ComponentsConfig.SelectedIndex;
+			int index = LST_ComponentsConfig.SelectedIndex;
 
 			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
 
-			component.Mass = Convert.ToSingle(TBX_ComponentConfig_Mass.Text, m_numberFormatInfo);
-			component.Volume = Convert.ToSingle(TBX_ComponentConfig_Volume.Text, m_numberFormatInfo);
-			component.MaxIntegrity = Convert.ToInt32(TBX_ComponentConfig_MaxIntegrity.Text, m_numberFormatInfo);
-			component.DropProbability = Convert.ToSingle(TBX_ComponentConfig_DropProbability.Text, m_numberFormatInfo);
+			component.Mass = Convert.ToSingle(TXT_ComponentConfig_Mass.Text, m_numberFormatInfo);
+			component.Volume = Convert.ToSingle(TXT_ComponentConfig_Volume.Text, m_numberFormatInfo);
+			component.MaxIntegrity = Convert.ToInt32(TXT_ComponentConfig_MaxIntegrity.Text, m_numberFormatInfo);
+			component.DropProbability = Convert.ToSingle(TXT_ComponentConfig_DropProbability.Text, m_numberFormatInfo);
 
 			BTN_ComponentConfig_Details_Apply.Visible = false;
 		}
 
-		private void TBX_ComponentConfig_TextChanged(object sender, EventArgs e)
+		private void TXT_ComponentConfig_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -1037,20 +1037,20 @@ namespace SEConfigTool
 
 		#region Blueprints
 
-		private void LBX_BlueprintConfig_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_BlueprintConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_BlueprintConfig.SelectedIndex;
+			int index = LST_BlueprintConfig.SelectedIndex;
 
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(index);
 
-			TBX_BlueprintConfig_Details_Result.Text = blueprint.Result.TypeId.ToString() + "/" + blueprint.Result.SubtypeId + " x" + blueprint.Result.Amount.ToString();
-			TBX_BlueprintConfig_Details_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString();
+			TXT_BlueprintConfig_Details_Result.Text = blueprint.Result.TypeId.ToString() + "/" + blueprint.Result.SubtypeId + " x" + blueprint.Result.Amount.ToString();
+			TXT_BlueprintConfig_Details_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString();
 
-			LBX_BlueprintConfig_Details_Prerequisites.Items.Clear();
+			LST_BlueprintConfig_Details_Prerequisites.Items.Clear();
 			foreach (var prereq in blueprint.Prerequisites)
 			{
-				LBX_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.TypeId.ToString() + "/" + prereq.SubtypeId + " x" + prereq.Amount.ToString());
+				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.TypeId.ToString() + "/" + prereq.SubtypeId + " x" + prereq.Amount.ToString());
 			}
 
 			m_currentlySelecting = false;
@@ -1069,16 +1069,16 @@ namespace SEConfigTool
 
 		private void BTN_BlueprintConfig_Details_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_BlueprintConfig.SelectedIndex;
+			int index = LST_BlueprintConfig.SelectedIndex;
 
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(index);
 
-			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TBX_BlueprintConfig_Details_BaseProductionTime.Text, m_numberFormatInfo);
+			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TXT_BlueprintConfig_Details_BaseProductionTime.Text, m_numberFormatInfo);
 
 			BTN_BlueprintConfig_Details_Apply.Visible = false;
 		}
 
-		private void TBX_BlueprintConfig_Details_TextChanged(object sender, EventArgs e)
+		private void TXT_BlueprintConfig_Details_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -1090,25 +1090,25 @@ namespace SEConfigTool
 
 		#region VoxelMaterials
 
-		private void LBX_VoxelMaterialsConfig_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_VoxelMaterialsConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_VoxelMaterialsConfig.SelectedIndex;
+			int index = LST_VoxelMaterialsConfig.SelectedIndex;
 
 			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(index);
 
-			TBX_VoxelMaterialsConfig_Details_Name.Text = voxelMaterial.Name;
-			TBX_VoxelMaterialsConfig_Details_AssetName.Text = voxelMaterial.AssetName;
-			TBX_VoxelMaterialsConfig_Details_MinedOre.Text = voxelMaterial.MinedOre;
+			TXT_VoxelMaterialsConfig_Details_Name.Text = voxelMaterial.Name;
+			TXT_VoxelMaterialsConfig_Details_AssetName.Text = voxelMaterial.AssetName;
+			TXT_VoxelMaterialsConfig_Details_MinedOre.Text = voxelMaterial.MinedOre;
 
-			TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Text = voxelMaterial.MinedOreRatio.ToString();
-			TBX_VoxelMaterialsConfig_Details_DamageRatio.Text = voxelMaterial.DamageRatio.ToString();
-			TBX_VoxelMaterialsConfig_Details_SpecularPower.Text = voxelMaterial.SpecularPower.ToString();
-			TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text = voxelMaterial.SpecularShininess.ToString();
+			TXT_VoxelMaterialsConfig_Details_MinedOreRatio.Text = voxelMaterial.MinedOreRatio.ToString();
+			TXT_VoxelMaterialsConfig_Details_DamageRatio.Text = voxelMaterial.DamageRatio.ToString();
+			TXT_VoxelMaterialsConfig_Details_SpecularPower.Text = voxelMaterial.SpecularPower.ToString();
+			TXT_VoxelMaterialsConfig_Details_SpecularShininess.Text = voxelMaterial.SpecularShininess.ToString();
 
-			CBX_VoxelMaterialsConfig_Details_CanBeHarvested.Checked = voxelMaterial.CanBeHarvested;
-			CBX_VoxelMaterialsConfig_Details_IsRare.Checked = voxelMaterial.IsRare;
-			CBX_VoxelMaterialsConfig_Details_UseTwoTextures.Checked = voxelMaterial.UseTwoTextures;
+			CHK_VoxelMaterialsConfig_Details_CanBeHarvested.Checked = voxelMaterial.CanBeHarvested;
+			CHK_VoxelMaterialsConfig_Details_IsRare.Checked = voxelMaterial.IsRare;
+			CHK_VoxelMaterialsConfig_Details_UseTwoTextures.Checked = voxelMaterial.UseTwoTextures;
 
 			m_currentlySelecting = false;
 			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
@@ -1126,27 +1126,27 @@ namespace SEConfigTool
 
 		private void BTN_VoxelMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LBX_VoxelMaterialsConfig.SelectedIndex;
+			int index = LST_VoxelMaterialsConfig.SelectedIndex;
 
 			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(index);
 
-			voxelMaterial.Name = TBX_VoxelMaterialsConfig_Details_Name.Text;
-			voxelMaterial.AssetName = TBX_VoxelMaterialsConfig_Details_AssetName.Text;
-			voxelMaterial.MinedOre = TBX_VoxelMaterialsConfig_Details_MinedOre.Text;
+			voxelMaterial.Name = TXT_VoxelMaterialsConfig_Details_Name.Text;
+			voxelMaterial.AssetName = TXT_VoxelMaterialsConfig_Details_AssetName.Text;
+			voxelMaterial.MinedOre = TXT_VoxelMaterialsConfig_Details_MinedOre.Text;
 
-			voxelMaterial.MinedOreRatio = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_MinedOreRatio.Text, m_numberFormatInfo);
-			voxelMaterial.DamageRatio = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_DamageRatio.Text, m_numberFormatInfo);
-			voxelMaterial.SpecularPower = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_SpecularPower.Text, m_numberFormatInfo);
-			voxelMaterial.SpecularShininess = Convert.ToSingle(TBX_VoxelMaterialsConfig_Details_SpecularShininess.Text, m_numberFormatInfo);
+			voxelMaterial.MinedOreRatio = Convert.ToSingle(TXT_VoxelMaterialsConfig_Details_MinedOreRatio.Text, m_numberFormatInfo);
+			voxelMaterial.DamageRatio = Convert.ToSingle(TXT_VoxelMaterialsConfig_Details_DamageRatio.Text, m_numberFormatInfo);
+			voxelMaterial.SpecularPower = Convert.ToSingle(TXT_VoxelMaterialsConfig_Details_SpecularPower.Text, m_numberFormatInfo);
+			voxelMaterial.SpecularShininess = Convert.ToSingle(TXT_VoxelMaterialsConfig_Details_SpecularShininess.Text, m_numberFormatInfo);
 
-			voxelMaterial.CanBeHarvested = CBX_VoxelMaterialsConfig_Details_CanBeHarvested.CheckState == CheckState.Checked;
-			voxelMaterial.IsRare = CBX_VoxelMaterialsConfig_Details_IsRare.CheckState == CheckState.Checked;
-			voxelMaterial.UseTwoTextures = CBX_VoxelMaterialsConfig_Details_UseTwoTextures.CheckState == CheckState.Checked;
+			voxelMaterial.CanBeHarvested = CHK_VoxelMaterialsConfig_Details_CanBeHarvested.CheckState == CheckState.Checked;
+			voxelMaterial.IsRare = CHK_VoxelMaterialsConfig_Details_IsRare.CheckState == CheckState.Checked;
+			voxelMaterial.UseTwoTextures = CHK_VoxelMaterialsConfig_Details_UseTwoTextures.CheckState == CheckState.Checked;
 
 			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
 		}
 
-		private void TBX_VoxelMaterialsConfig_Details_TextChanged(object sender, EventArgs e)
+		private void TXT_VoxelMaterialsConfig_Details_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -1154,7 +1154,7 @@ namespace SEConfigTool
 			}
 		}
 
-		private void CBX_VoxelMaterialsConfig_Details_CheckedChanged(object sender, EventArgs e)
+		private void CHK_VoxelMaterialsConfig_Details_CheckedChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -1166,19 +1166,19 @@ namespace SEConfigTool
 
 		#region Scenarios
 
-		private void LBX_ScenariosConfig_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_ScenariosConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LBX_ScenariosConfig.SelectedIndex;
+			int index = LST_ScenariosConfig.SelectedIndex;
 
 			ScenariosDefinition scenario = m_scenariosDefinitionManager.DefinitionOf(index);
 
-			TBX_ScenariosConfig_Details_Info_Id.Text = scenario.Id;
-			TBX_ScenariosConfig_Details_Info_Name.Text = scenario.Name;
+			TXT_ScenariosConfig_Details_Info_Id.Text = scenario.Id;
+			TXT_ScenariosConfig_Details_Info_Name.Text = scenario.Name;
 
-			CB_ScenariosConfig_Details_Asteroid_Enabled.Checked = scenario.AsteroidClusters.Enabled;
-			CB_ScenariosConfig_Details_Asteroid_CentralCluster.Checked = scenario.AsteroidClusters.CentralCluster;
-			TBX_ScenariosConfig_Details_Asteroid_Offset.Text = scenario.AsteroidClusters.Offset.ToString();
+			CHK_ScenariosConfig_Details_Asteroid_Enabled.Checked = scenario.AsteroidClusters.Enabled;
+			CHK_ScenariosConfig_Details_Asteroid_CentralCluster.Checked = scenario.AsteroidClusters.CentralCluster;
+			TXT_ScenariosConfig_Details_Asteroid_Offset.Text = scenario.AsteroidClusters.Offset.ToString();
 
 			m_currentlySelecting = false;
 		}
