@@ -257,6 +257,7 @@ namespace SEModAPI.API.Definitions
 		public FileInfo FileInfo
 		{
 			get { return m_fileInfo; }
+			set { m_fileInfo = value; }
 		}
 
 		public MyObjectBuilder_Definitions DefinitionsContainer

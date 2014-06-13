@@ -154,7 +154,14 @@ namespace SEModAPI.API.SaveData
 
 		public void Load(FileInfo fileInfo)
 		{
-			m_Sector = new Sector(ReadSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(this.FileInfo.FullName));
+			//Save the file info to the property
+			FileInfo = fileInfo;
+
+			//Read in the sector data
+			MyObjectBuilder_Sector data = ReadSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(this.FileInfo.FullName);
+
+			//And instantiate the sector with the data
+			m_Sector = new Sector(data);
 		}
 
 		public void Save()
