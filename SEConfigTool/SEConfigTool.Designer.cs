@@ -360,6 +360,12 @@ namespace SEConfigTool
 			this.TXT_TransparentMaterialConfig_Details_Emissivity = new System.Windows.Forms.TextBox();
 			this.TXT_TransparentMaterialConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_TransparentMaterialConfig_Details_Apply = new System.Windows.Forms.Button();
+			this.LBL_AmmoConfig_Details_Description = new System.Windows.Forms.Label();
+			this.LBL_AmmoConfig_Details_Icon = new System.Windows.Forms.Label();
+			this.LBL_AmmoConfig_Details_Model = new System.Windows.Forms.Label();
+			this.TXT_AmmoConfig_Details_Description = new System.Windows.Forms.TextBox();
+			this.TXT_AmmoConfig_Details_Icon = new System.Windows.Forms.TextBox();
+			this.TXT_AmmoConfig_Details_Model = new System.Windows.Forms.TextBox();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -3333,6 +3339,9 @@ namespace SEConfigTool
 			// 
 			// splitContainer7.Panel1
 			// 
+			this.splitContainer7.Panel1.Controls.Add(this.LBL_AmmoConfig_Details_Model);
+			this.splitContainer7.Panel1.Controls.Add(this.LBL_AmmoConfig_Details_Icon);
+			this.splitContainer7.Panel1.Controls.Add(this.LBL_AmmoConfig_Details_Description);
 			this.splitContainer7.Panel1.Controls.Add(this.LBL_AmmoConfig_Details_Mass);
 			this.splitContainer7.Panel1.Controls.Add(this.LBL_AmmoConfig_Details_Volume);
 			this.splitContainer7.Panel1.Controls.Add(this.LBL_AmmoConfig_Details_Id);
@@ -3344,6 +3353,9 @@ namespace SEConfigTool
 			// 
 			this.splitContainer7.Panel2.AutoScroll = true;
 			this.splitContainer7.Panel2.AutoScrollMinSize = new System.Drawing.Size(150, 0);
+			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Model);
+			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Icon);
+			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Description);
 			this.splitContainer7.Panel2.Controls.Add(this.CMB_AmmoConfig_Details_Caliber);
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Mass);
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Volume);
@@ -3358,7 +3370,7 @@ namespace SEConfigTool
 			// LBL_AmmoConfig_Details_Mass
 			// 
 			this.LBL_AmmoConfig_Details_Mass.AutoSize = true;
-			this.LBL_AmmoConfig_Details_Mass.Location = new System.Drawing.Point(3, 110);
+			this.LBL_AmmoConfig_Details_Mass.Location = new System.Drawing.Point(3, 188);
 			this.LBL_AmmoConfig_Details_Mass.Name = "LBL_AmmoConfig_Details_Mass";
 			this.LBL_AmmoConfig_Details_Mass.Size = new System.Drawing.Size(35, 13);
 			this.LBL_AmmoConfig_Details_Mass.TabIndex = 8;
@@ -3367,7 +3379,7 @@ namespace SEConfigTool
 			// LBL_AmmoConfig_Details_Volume
 			// 
 			this.LBL_AmmoConfig_Details_Volume.AutoSize = true;
-			this.LBL_AmmoConfig_Details_Volume.Location = new System.Drawing.Point(3, 136);
+			this.LBL_AmmoConfig_Details_Volume.Location = new System.Drawing.Point(3, 214);
 			this.LBL_AmmoConfig_Details_Volume.Name = "LBL_AmmoConfig_Details_Volume";
 			this.LBL_AmmoConfig_Details_Volume.Size = new System.Drawing.Size(45, 13);
 			this.LBL_AmmoConfig_Details_Volume.TabIndex = 7;
@@ -3378,14 +3390,14 @@ namespace SEConfigTool
 			this.LBL_AmmoConfig_Details_Id.AutoSize = true;
 			this.LBL_AmmoConfig_Details_Id.Location = new System.Drawing.Point(3, 6);
 			this.LBL_AmmoConfig_Details_Id.Name = "LBL_AmmoConfig_Details_Id";
-			this.LBL_AmmoConfig_Details_Id.Size = new System.Drawing.Size(19, 13);
+			this.LBL_AmmoConfig_Details_Id.Size = new System.Drawing.Size(61, 13);
 			this.LBL_AmmoConfig_Details_Id.TabIndex = 6;
-			this.LBL_AmmoConfig_Details_Id.Text = "Id:";
+			this.LBL_AmmoConfig_Details_Id.Text = "Subtype Id:";
 			// 
 			// LBL_AmmoConfig_Details_Capacity
 			// 
 			this.LBL_AmmoConfig_Details_Capacity.AutoSize = true;
-			this.LBL_AmmoConfig_Details_Capacity.Location = new System.Drawing.Point(3, 84);
+			this.LBL_AmmoConfig_Details_Capacity.Location = new System.Drawing.Point(3, 162);
 			this.LBL_AmmoConfig_Details_Capacity.Name = "LBL_AmmoConfig_Details_Capacity";
 			this.LBL_AmmoConfig_Details_Capacity.Size = new System.Drawing.Size(51, 13);
 			this.LBL_AmmoConfig_Details_Capacity.TabIndex = 3;
@@ -3403,7 +3415,7 @@ namespace SEConfigTool
 			// LBL_AmmoConfig_Details_Caliber
 			// 
 			this.LBL_AmmoConfig_Details_Caliber.AutoSize = true;
-			this.LBL_AmmoConfig_Details_Caliber.Location = new System.Drawing.Point(3, 58);
+			this.LBL_AmmoConfig_Details_Caliber.Location = new System.Drawing.Point(3, 136);
 			this.LBL_AmmoConfig_Details_Caliber.Name = "LBL_AmmoConfig_Details_Caliber";
 			this.LBL_AmmoConfig_Details_Caliber.Size = new System.Drawing.Size(42, 13);
 			this.LBL_AmmoConfig_Details_Caliber.TabIndex = 2;
@@ -3412,7 +3424,7 @@ namespace SEConfigTool
 			// CMB_AmmoConfig_Details_Caliber
 			// 
 			this.CMB_AmmoConfig_Details_Caliber.FormattingEnabled = true;
-			this.CMB_AmmoConfig_Details_Caliber.Location = new System.Drawing.Point(3, 55);
+			this.CMB_AmmoConfig_Details_Caliber.Location = new System.Drawing.Point(3, 133);
 			this.CMB_AmmoConfig_Details_Caliber.Name = "CMB_AmmoConfig_Details_Caliber";
 			this.CMB_AmmoConfig_Details_Caliber.Size = new System.Drawing.Size(150, 21);
 			this.CMB_AmmoConfig_Details_Caliber.TabIndex = 11;
@@ -3420,7 +3432,7 @@ namespace SEConfigTool
 			// 
 			// TXT_AmmoConfig_Details_Mass
 			// 
-			this.TXT_AmmoConfig_Details_Mass.Location = new System.Drawing.Point(3, 107);
+			this.TXT_AmmoConfig_Details_Mass.Location = new System.Drawing.Point(3, 185);
 			this.TXT_AmmoConfig_Details_Mass.Name = "TXT_AmmoConfig_Details_Mass";
 			this.TXT_AmmoConfig_Details_Mass.Size = new System.Drawing.Size(150, 20);
 			this.TXT_AmmoConfig_Details_Mass.TabIndex = 10;
@@ -3428,7 +3440,7 @@ namespace SEConfigTool
 			// 
 			// TXT_AmmoConfig_Details_Volume
 			// 
-			this.TXT_AmmoConfig_Details_Volume.Location = new System.Drawing.Point(3, 133);
+			this.TXT_AmmoConfig_Details_Volume.Location = new System.Drawing.Point(3, 211);
 			this.TXT_AmmoConfig_Details_Volume.Name = "TXT_AmmoConfig_Details_Volume";
 			this.TXT_AmmoConfig_Details_Volume.Size = new System.Drawing.Size(150, 20);
 			this.TXT_AmmoConfig_Details_Volume.TabIndex = 9;
@@ -3449,13 +3461,13 @@ namespace SEConfigTool
 			// 
 			this.TXT_AmmoConfig_Details_Id.Location = new System.Drawing.Point(3, 3);
 			this.TXT_AmmoConfig_Details_Id.Name = "TXT_AmmoConfig_Details_Id";
-			this.TXT_AmmoConfig_Details_Id.ReadOnly = true;
 			this.TXT_AmmoConfig_Details_Id.Size = new System.Drawing.Size(150, 20);
 			this.TXT_AmmoConfig_Details_Id.TabIndex = 7;
+			this.TXT_AmmoConfig_Details_Id.TextChanged += new System.EventHandler(this.TXT_ConfigAmmo_TextChanged);
 			// 
 			// TXT_AmmoConfig_Details_Capacity
 			// 
-			this.TXT_AmmoConfig_Details_Capacity.Location = new System.Drawing.Point(3, 81);
+			this.TXT_AmmoConfig_Details_Capacity.Location = new System.Drawing.Point(3, 159);
 			this.TXT_AmmoConfig_Details_Capacity.Name = "TXT_AmmoConfig_Details_Capacity";
 			this.TXT_AmmoConfig_Details_Capacity.Size = new System.Drawing.Size(150, 20);
 			this.TXT_AmmoConfig_Details_Capacity.TabIndex = 6;
@@ -3465,9 +3477,9 @@ namespace SEConfigTool
 			// 
 			this.TXT_AmmoConfig_Details_Name.Location = new System.Drawing.Point(3, 29);
 			this.TXT_AmmoConfig_Details_Name.Name = "TXT_AmmoConfig_Details_Name";
-			this.TXT_AmmoConfig_Details_Name.ReadOnly = true;
 			this.TXT_AmmoConfig_Details_Name.Size = new System.Drawing.Size(150, 20);
 			this.TXT_AmmoConfig_Details_Name.TabIndex = 5;
+			this.TXT_AmmoConfig_Details_Name.TextChanged += new System.EventHandler(this.TXT_ConfigAmmo_TextChanged);
 			// 
 			// TAB_BlocksConfig_Page
 			// 
@@ -4006,9 +4018,9 @@ namespace SEConfigTool
 			// 
 			// LayoutPages
 			// 
-			this.LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.LayoutPages.Controls.Add(this.TAB_SaveGamePage_Page);
 			this.LayoutPages.Controls.Add(this.TAB_BlocksConfig_Page);
 			this.LayoutPages.Controls.Add(this.TAB_AmmoConfig_Page);
@@ -4337,6 +4349,57 @@ namespace SEConfigTool
 			this.BTN_TransparentMaterialConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_TransparentMaterialConfig_Details_Apply.UseVisualStyleBackColor = true;
 			this.BTN_TransparentMaterialConfig_Details_Apply.Click += new System.EventHandler(this.BTN_TransparentMaterialsConfig_Details_Apply_Click);
+			// 
+			// LBL_AmmoConfig_Details_Description
+			// 
+			this.LBL_AmmoConfig_Details_Description.AutoSize = true;
+			this.LBL_AmmoConfig_Details_Description.Location = new System.Drawing.Point(3, 58);
+			this.LBL_AmmoConfig_Details_Description.Name = "LBL_AmmoConfig_Details_Description";
+			this.LBL_AmmoConfig_Details_Description.Size = new System.Drawing.Size(63, 13);
+			this.LBL_AmmoConfig_Details_Description.TabIndex = 9;
+			this.LBL_AmmoConfig_Details_Description.Text = "Description:";
+			// 
+			// LBL_AmmoConfig_Details_Icon
+			// 
+			this.LBL_AmmoConfig_Details_Icon.AutoSize = true;
+			this.LBL_AmmoConfig_Details_Icon.Location = new System.Drawing.Point(3, 84);
+			this.LBL_AmmoConfig_Details_Icon.Name = "LBL_AmmoConfig_Details_Icon";
+			this.LBL_AmmoConfig_Details_Icon.Size = new System.Drawing.Size(31, 13);
+			this.LBL_AmmoConfig_Details_Icon.TabIndex = 10;
+			this.LBL_AmmoConfig_Details_Icon.Text = "Icon:";
+			// 
+			// LBL_AmmoConfig_Details_Model
+			// 
+			this.LBL_AmmoConfig_Details_Model.AutoSize = true;
+			this.LBL_AmmoConfig_Details_Model.Location = new System.Drawing.Point(3, 110);
+			this.LBL_AmmoConfig_Details_Model.Name = "LBL_AmmoConfig_Details_Model";
+			this.LBL_AmmoConfig_Details_Model.Size = new System.Drawing.Size(39, 13);
+			this.LBL_AmmoConfig_Details_Model.TabIndex = 11;
+			this.LBL_AmmoConfig_Details_Model.Text = "Model:";
+			// 
+			// TXT_AmmoConfig_Details_Description
+			// 
+			this.TXT_AmmoConfig_Details_Description.Location = new System.Drawing.Point(3, 55);
+			this.TXT_AmmoConfig_Details_Description.Name = "TXT_AmmoConfig_Details_Description";
+			this.TXT_AmmoConfig_Details_Description.Size = new System.Drawing.Size(150, 20);
+			this.TXT_AmmoConfig_Details_Description.TabIndex = 12;
+			this.TXT_AmmoConfig_Details_Description.TextChanged += new System.EventHandler(this.TXT_ConfigAmmo_TextChanged);
+			// 
+			// TXT_AmmoConfig_Details_Icon
+			// 
+			this.TXT_AmmoConfig_Details_Icon.Location = new System.Drawing.Point(3, 81);
+			this.TXT_AmmoConfig_Details_Icon.Name = "TXT_AmmoConfig_Details_Icon";
+			this.TXT_AmmoConfig_Details_Icon.Size = new System.Drawing.Size(150, 20);
+			this.TXT_AmmoConfig_Details_Icon.TabIndex = 13;
+			this.TXT_AmmoConfig_Details_Icon.TextChanged += new System.EventHandler(this.TXT_ConfigAmmo_TextChanged);
+			// 
+			// TXT_AmmoConfig_Details_Model
+			// 
+			this.TXT_AmmoConfig_Details_Model.Location = new System.Drawing.Point(3, 107);
+			this.TXT_AmmoConfig_Details_Model.Name = "TXT_AmmoConfig_Details_Model";
+			this.TXT_AmmoConfig_Details_Model.Size = new System.Drawing.Size(150, 20);
+			this.TXT_AmmoConfig_Details_Model.TabIndex = 14;
+			this.TXT_AmmoConfig_Details_Model.TextChanged += new System.EventHandler(this.TXT_ConfigAmmo_TextChanged);
 			// 
 			// SEConfigTool
 			// 
@@ -4963,6 +5026,12 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TXT_TransparentMaterialConfig_Details_Emissivity;
 		private System.Windows.Forms.TextBox TXT_TransparentMaterialConfig_Details_Name;
 		private System.Windows.Forms.Button BTN_TransparentMaterialConfig_Details_Apply;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Model;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Icon;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Description;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Description;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Model;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Icon;
 
     }
 }

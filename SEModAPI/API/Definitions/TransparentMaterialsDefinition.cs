@@ -20,7 +20,7 @@ namespace SEModAPI.API.Definitions
 
 		#endregion
 
-		#region "Attributes"
+		#region "Properties"
 
 		public bool AlphaMistingEnable
 		{

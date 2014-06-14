@@ -213,7 +213,7 @@ namespace SEConfigTool
 			LST_AmmoConfig.Items.Clear();
 			foreach (var definition in m_ammoMagazinesDefinitionsManager.Definitions)
 			{
-				LST_AmmoConfig.Items.Add(definition.Name);
+				LST_AmmoConfig.Items.Add(definition.Id.SubtypeId);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -585,8 +585,11 @@ namespace SEConfigTool
 				CMB_AmmoConfig_Details_Caliber.Items.Add(caliber);
 			}
 
+			TXT_AmmoConfig_Details_Id.Text = ammoMagazine.Id.SubtypeId;
 			TXT_AmmoConfig_Details_Name.Text = ammoMagazine.Name;
-			TXT_AmmoConfig_Details_Id.Text = ammoMagazine.Id.ToString();
+			TXT_AmmoConfig_Details_Description.Text = ammoMagazine.Description;
+			TXT_AmmoConfig_Details_Icon.Text = ammoMagazine.Icon;
+			TXT_AmmoConfig_Details_Model.Text = ammoMagazine.Model;
 			CMB_AmmoConfig_Details_Caliber.SelectedItem = ammoMagazine.Caliber;
 			TXT_AmmoConfig_Details_Capacity.Text = ammoMagazine.Capacity.ToString(m_numberFormatInfo);
 			TXT_AmmoConfig_Details_Volume.Text = ammoMagazine.Volume.ToString(m_numberFormatInfo);
@@ -613,6 +616,12 @@ namespace SEConfigTool
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
+			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, TXT_AmmoConfig_Details_Id.Text);
+			ammoMagazine.Name = TXT_AmmoConfig_Details_Name.Text;
+			ammoMagazine.DisplayName = TXT_AmmoConfig_Details_Name.Text;
+			ammoMagazine.Description = TXT_AmmoConfig_Details_Description.Text;
+			ammoMagazine.Icon = TXT_AmmoConfig_Details_Icon.Text;
+			ammoMagazine.Model = TXT_AmmoConfig_Details_Model.Text;
 			ammoMagazine.Caliber = (MyAmmoCategoryEnum) CMB_AmmoConfig_Details_Caliber.SelectedItem;
 			ammoMagazine.Capacity = Convert.ToInt32(TXT_AmmoConfig_Details_Capacity.Text, m_numberFormatInfo);
 			ammoMagazine.Mass = Convert.ToSingle(TXT_AmmoConfig_Details_Mass.Text, m_numberFormatInfo);
