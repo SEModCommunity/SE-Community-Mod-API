@@ -11,6 +11,7 @@ using SEModAPI.API.Definitions;
 using SEModAPI.API.Definitions.CubeBlocks;
 using SEModAPI.API.SaveData;
 
+using Sandbox.Common.Localization;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using VRageMath;
@@ -75,6 +76,7 @@ namespace SEConfigTool
 			m_globalEventsDefinitionsManager.IsMutable = true;
 			m_ammoMagazinesDefinitionsManager.IsMutable = true;
 			m_componentsDefinitionsManager.IsMutable = true;
+			m_physicalItemsDefinitionsManager.IsMutable = true;
 		}
 
 		#endregion
@@ -251,6 +253,12 @@ namespace SEConfigTool
 				LST_GlobalEventConfig.Items.Add(definition.Name);
 			}
 
+			CMB_GlobalEventsConfig_Details_EventType.Items.Clear();
+			foreach (var eventType in Enum.GetValues(typeof(MyGlobalEventTypeEnum)))
+			{
+				CMB_GlobalEventsConfig_Details_EventType.Items.Add(eventType);
+			}
+
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
@@ -270,16 +278,23 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillPhysicalItemConfigurationListBox()
+		private void FillPhysicalItemConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_physicalItemsDefinitionsManager.Load(GetContentDataFile("PhysicalItems.sbc"));
+			if(loadFromFile)
+				m_physicalItemsDefinitionsManager.Load(GetContentDataFile("PhysicalItems.sbc"));
 
 			LST_PhysicalItemConfig.Items.Clear();
 			foreach (var definition in m_physicalItemsDefinitionsManager.Definitions)
 			{
 				LST_PhysicalItemConfig.Items.Add(definition.Name);
+			}
+
+			CMB_PhysicalItemConfig_Details_Type.Items.Clear();
+			foreach (var type in Enum.GetValues(typeof(MyObjectBuilderTypeEnum)))
+			{
+				CMB_PhysicalItemConfig_Details_Type.Items.Add(type);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -799,12 +814,6 @@ namespace SEConfigTool
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
-			CMB_GlobalEventsConfig_Details_EventType.Items.Clear();
-			foreach (var eventType in Enum.GetValues(typeof(MyGlobalEventTypeEnum)))
-			{
-				CMB_GlobalEventsConfig_Details_EventType.Items.Add(eventType);
-			}
-
 			TXT_ConfigGlobalEvent_Details_Id.Text = globalEvent.Id.ToString();
 			TXT_ConfigGlobalEvent_Details_Name.Text = globalEvent.Name;
 			TXT_ConfigGlobalEvent_Details_Description.Text = globalEvent.Description;
@@ -990,25 +999,18 @@ namespace SEConfigTool
 
 			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
 
-			TXT_PhysicalItemConfig_Details_Id.Text = physicalItem.Id.ToString();
+			CMB_PhysicalItemConfig_Details_Type.SelectedItem = physicalItem.Id.TypeId;
+			TXT_PhysicalItemConfig_Details_Id.Text = physicalItem.Id.SubtypeId;
 			TXT_PhysicalItemConfig_Details_Name.Text = physicalItem.Name;
 			TXT_PhysicalItemConfig_Details_Description.Text = physicalItem.Description;
-			TXT_PhysicalItemConfig_Details_Size.Text = physicalItem.Size.ToString();
+			TXT_PhysicalItemConfig_Details_Icon.Text = physicalItem.Icon;
+			TXT_PhysicalItemConfig_Details_Model.Text = physicalItem.Model;
+			TXT_PhysicalItemConfig_Details_IconSymbol.Text = physicalItem.IconSymbol.ToString();
+			TXT_PhysicalItemConfig_Details_Size_X.Text = physicalItem.Size.X.ToString();
+			TXT_PhysicalItemConfig_Details_Size_Y.Text = physicalItem.Size.Y.ToString();
+			TXT_PhysicalItemConfig_Details_Size_Z.Text = physicalItem.Size.Z.ToString();
 			TXT_PhysicalItemConfig_Details_Mass.Text = physicalItem.Mass.ToString();
 			TXT_PhysicalItemConfig_Details_Volume.Text = physicalItem.Volume.ToString();
-			TXT_PhysicalItemConfig_Details_Model.Text = physicalItem.Model;
-			TXT_PhysicalItemConfig_Details_Icon.Text = physicalItem.Icon;
-			try
-			{
-			TXT_PhysicalItemConfig_Details_IconSymbol.Text = physicalItem.IconSymbol.ToString();
-			}
-			catch (InvalidOperationException NREx)
-			{
-				Console.WriteLine(NREx.ToString());
-				TXT_PhysicalItemConfig_Details_IconSymbol.Text = "";
-			}
-            
-            
 
 			m_currentlySelecting = false;
 
@@ -1031,6 +1033,16 @@ namespace SEConfigTool
 
 			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
 
+			physicalItem.Id = new SerializableDefinitionId((MyObjectBuilderTypeEnum) CMB_PhysicalItemConfig_Details_Type.SelectedItem, TXT_PhysicalItemConfig_Details_Id.Text);
+			physicalItem.Name = TXT_PhysicalItemConfig_Details_Name.Text;
+			physicalItem.DisplayName = TXT_PhysicalItemConfig_Details_Name.Text;
+			physicalItem.Description = TXT_PhysicalItemConfig_Details_Description.Text;
+			physicalItem.Icon = TXT_PhysicalItemConfig_Details_Icon.Text;
+			physicalItem.Model = TXT_PhysicalItemConfig_Details_Model.Text;
+			MyTextsWrapperEnum iconSymbol;
+			Enum.TryParse<MyTextsWrapperEnum>(TXT_PhysicalItemConfig_Details_IconSymbol.Text, true, out iconSymbol);
+			physicalItem.IconSymbol = iconSymbol;
+			physicalItem.Size = new Vector3(Convert.ToSingle(TXT_PhysicalItemConfig_Details_Size_X.Text, m_numberFormatInfo), Convert.ToSingle(TXT_PhysicalItemConfig_Details_Size_Y.Text, m_numberFormatInfo), Convert.ToSingle(TXT_PhysicalItemConfig_Details_Size_Z.Text, m_numberFormatInfo));
 			physicalItem.Mass = Convert.ToSingle(TXT_PhysicalItemConfig_Details_Mass.Text, m_numberFormatInfo);
 			physicalItem.Volume = Convert.ToSingle(TXT_PhysicalItemConfig_Details_Volume.Text, m_numberFormatInfo);
 
@@ -1043,6 +1055,23 @@ namespace SEConfigTool
 			{
 				BTN_PhysicalItemConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_PhysicalItemConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.NewEntry();
+			if (physicalItem == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			physicalItem.Name = "(New)";
+			physicalItem.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "NewSubtype");
+
+			FillPhysicalItemConfigurationListBox(false);
+
+			LST_PhysicalItemConfig.SelectedIndex = LST_PhysicalItemConfig.Items.Count - 1;
 		}
 
 		#endregion
