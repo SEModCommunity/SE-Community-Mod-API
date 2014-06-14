@@ -73,6 +73,8 @@ namespace SEConfigTool
 			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
 
 			m_globalEventsDefinitionsManager.IsMutable = true;
+			m_ammoMagazinesDefinitionsManager.IsMutable = true;
+			m_componentsDefinitionsManager.IsMutable = true;
 		}
 
 		#endregion
@@ -204,11 +206,12 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillAmmoConfigurationListBox()
+		private void FillAmmoConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_ammoMagazinesDefinitionsManager.Load(GetContentDataFile("AmmoMagazines.sbc"));
+			if (loadFromFile)
+				m_ammoMagazinesDefinitionsManager.Load(GetContentDataFile("AmmoMagazines.sbc"));
 
 			LST_AmmoConfig.Items.Clear();
 			foreach (var definition in m_ammoMagazinesDefinitionsManager.Definitions)
@@ -282,11 +285,12 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillComponentConfigurationListBox()
+		private void FillComponentConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_componentsDefinitionsManager.Load(GetContentDataFile("Components.sbc"));
+			if(loadFromFile)
+				m_componentsDefinitionsManager.Load(GetContentDataFile("Components.sbc"));
 
 			LST_ComponentsConfig.Items.Clear();
 			foreach (var definition in m_componentsDefinitionsManager.Definitions)
@@ -357,7 +361,6 @@ namespace SEConfigTool
 
 			m_currentlyFillingConfigurationListBox = false;
 		}
-
 
 		#endregion
 
@@ -644,6 +647,23 @@ namespace SEConfigTool
 			{
 				BTN_AmmoConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_AmmoConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.NewEntry();
+			if (ammoMagazine == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			ammoMagazine.Name = "(New)";
+			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, "NewSubtype");
+
+			FillAmmoConfigurationListBox(false);
+
+			LST_AmmoConfig.SelectedIndex = LST_AmmoConfig.Items.Count - 1;
 		}
 
 		#endregion
@@ -1036,14 +1056,16 @@ namespace SEConfigTool
 
 			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
 
-			TXT_ComponentConfig_Details_Id.Text = component.Id.ToString();
+			TXT_ComponentConfig_Details_Id.Text = component.Id.SubtypeId;
 			TXT_ComponentConfig_Details_Name.Text = component.Name;
 			TXT_ComponentConfig_Details_Description.Text = component.Description;
-			TXT_ComponentConfig_Details_Size.Text = component.Size.ToString();
+			TXT_ComponentConfig_Details_Icon.Text = component.Icon;
+			TXT_ComponentConfig_Details_Model.Text = component.Model;
+			TXT_ComponentConfig_Details_Size_X.Text = component.Size.X.ToString();
+			TXT_ComponentConfig_Details_Size_Y.Text = component.Size.Y.ToString();
+			TXT_ComponentConfig_Details_Size_Z.Text = component.Size.Z.ToString();
 			TXT_ComponentConfig_Details_Mass.Text = component.Mass.ToString();
 			TXT_ComponentConfig_Details_Volume.Text = component.Volume.ToString();
-			TXT_ComponentConfig_Details_Model.Text = component.Model;
-			TXT_ComponentConfig_Details_Icon.Text = component.Icon;
 			TXT_ComponentConfig_Details_MaxIntegrity.Text = component.MaxIntegrity.ToString();
 			TXT_ComponentConfig_Details_DropProbability.Text = component.DropProbability.ToString();
 
@@ -1068,6 +1090,13 @@ namespace SEConfigTool
 
 			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
 
+			component.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, TXT_ComponentConfig_Details_Id.Text);
+			component.Name = TXT_ComponentConfig_Details_Name.Text;
+			component.DisplayName = TXT_ComponentConfig_Details_Name.Text;
+			component.Description = TXT_ComponentConfig_Details_Description.Text;
+			component.Icon = TXT_ComponentConfig_Details_Icon.Text;
+			component.Model = TXT_ComponentConfig_Details_Model.Text;
+			component.Size = new Vector3(Convert.ToSingle(TXT_ComponentConfig_Details_Size_X.Text, m_numberFormatInfo), Convert.ToSingle(TXT_ComponentConfig_Details_Size_Y.Text, m_numberFormatInfo), Convert.ToSingle(TXT_ComponentConfig_Details_Size_Z.Text, m_numberFormatInfo));
 			component.Mass = Convert.ToSingle(TXT_ComponentConfig_Details_Mass.Text, m_numberFormatInfo);
 			component.Volume = Convert.ToSingle(TXT_ComponentConfig_Details_Volume.Text, m_numberFormatInfo);
 			component.MaxIntegrity = Convert.ToInt32(TXT_ComponentConfig_Details_MaxIntegrity.Text, m_numberFormatInfo);
@@ -1082,6 +1111,23 @@ namespace SEConfigTool
 			{
 				BTN_ComponentConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_ComponentConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			ComponentsDefinition component = m_componentsDefinitionsManager.NewEntry();
+			if (component == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			component.Name = "(New)";
+			component.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, "NewSubtype");
+
+			FillComponentConfigurationListBox(false);
+
+			LST_ComponentsConfig.SelectedIndex = LST_ComponentsConfig.Items.Count - 1;
 		}
 
 		#endregion
