@@ -326,7 +326,7 @@ namespace SEConfigTool
 			foreach (var definition in m_blueprintsDefinitionsManager.Definitions)
 			{
 				//TODO - Find a better way to uniquely label the spawn groups
-				LST_BlueprintConfig.Items.Add("Blueprint " + LST_BlueprintConfig.Items.Count.ToString());
+				LST_BlueprintConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -761,9 +761,9 @@ namespace SEConfigTool
 
 			CMB_ContainerTypeConfig_Items_Type.SelectedItem = containerItem.Id;
 
-			TXT_ContainerTypeConfig_Item_AmountMin.Text = containerItem.AmountMin.ToString();
-			TXT_ContainerTypeConfig_Item_AmountMax.Text = containerItem.AmountMax.ToString();
-			TXT_ContainerTypeConfig_Item_Frequency.Text = containerItem.Frequency.ToString();
+			TXT_ContainerTypeConfig_Item_AmountMin.Text = containerItem.AmountMin.ToString(m_numberFormatInfo);
+			TXT_ContainerTypeConfig_Item_AmountMax.Text = containerItem.AmountMax.ToString(m_numberFormatInfo);
+			TXT_ContainerTypeConfig_Item_Frequency.Text = containerItem.Frequency.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
@@ -818,9 +818,9 @@ namespace SEConfigTool
 			TXT_ConfigGlobalEvent_Details_Name.Text = globalEvent.Name;
 			TXT_ConfigGlobalEvent_Details_Description.Text = globalEvent.Description;
 			CMB_GlobalEventsConfig_Details_EventType.SelectedItem = globalEvent.EventType;
-			TXT_ConfigGlobalEvent_Details_MinActivation.Text = globalEvent.MinActivation.ToString();
-			TXT_ConfigGlobalEvent_Details_MaxActivation.Text = globalEvent.MaxActivation.ToString();
-			TXT_ConfigGlobalEvent_Details_FirstActivation.Text = globalEvent.FirstActivation.ToString();
+			TXT_ConfigGlobalEvent_Details_MinActivation.Text = globalEvent.MinActivation.ToString(m_numberFormatInfo);
+			TXT_ConfigGlobalEvent_Details_MaxActivation.Text = globalEvent.MaxActivation.ToString(m_numberFormatInfo);
+			TXT_ConfigGlobalEvent_Details_FirstActivation.Text = globalEvent.FirstActivation.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
@@ -899,7 +899,7 @@ namespace SEConfigTool
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(index);
 
 			TXT_SpawnGroupConfig_Details_Info_Count.Text = spawnGroup.PrefabCount.ToString();
-			TXT_SpawnGroupConfig_Details_Info_Frequency.Text = spawnGroup.Frequency.ToString();
+			TXT_SpawnGroupConfig_Details_Info_Frequency.Text = spawnGroup.Frequency.ToString(m_numberFormatInfo);
 
 			LST_SpawnGroupConfig_Details_Prefabs.Items.Clear();
 			foreach (var def in spawnGroup.Prefabs)
@@ -958,7 +958,7 @@ namespace SEConfigTool
 			TXT_SpawnGroupConfig_Details_Prefabs_File.Text = spawnGroupPrefab.File;
 			TXT_SpawnGroupConfig_Details_Prefabs_Position.Text = spawnGroupPrefab.Position.ToString();
 			TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text = spawnGroupPrefab.BeaconText;
-			TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text = spawnGroupPrefab.Speed.ToString();
+			TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text = spawnGroupPrefab.Speed.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
@@ -1006,11 +1006,11 @@ namespace SEConfigTool
 			TXT_PhysicalItemConfig_Details_Icon.Text = physicalItem.Icon;
 			TXT_PhysicalItemConfig_Details_Model.Text = physicalItem.Model;
 			TXT_PhysicalItemConfig_Details_IconSymbol.Text = physicalItem.IconSymbol.ToString();
-			TXT_PhysicalItemConfig_Details_Size_X.Text = physicalItem.Size.X.ToString();
-			TXT_PhysicalItemConfig_Details_Size_Y.Text = physicalItem.Size.Y.ToString();
-			TXT_PhysicalItemConfig_Details_Size_Z.Text = physicalItem.Size.Z.ToString();
-			TXT_PhysicalItemConfig_Details_Mass.Text = physicalItem.Mass.ToString();
-			TXT_PhysicalItemConfig_Details_Volume.Text = physicalItem.Volume.ToString();
+			TXT_PhysicalItemConfig_Details_Size_X.Text = physicalItem.Size.X.ToString(m_numberFormatInfo);
+			TXT_PhysicalItemConfig_Details_Size_Y.Text = physicalItem.Size.Y.ToString(m_numberFormatInfo);
+			TXT_PhysicalItemConfig_Details_Size_Z.Text = physicalItem.Size.Z.ToString(m_numberFormatInfo);
+			TXT_PhysicalItemConfig_Details_Mass.Text = physicalItem.Mass.ToString(m_numberFormatInfo);
+			TXT_PhysicalItemConfig_Details_Volume.Text = physicalItem.Volume.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
@@ -1090,13 +1090,13 @@ namespace SEConfigTool
 			TXT_ComponentConfig_Details_Description.Text = component.Description;
 			TXT_ComponentConfig_Details_Icon.Text = component.Icon;
 			TXT_ComponentConfig_Details_Model.Text = component.Model;
-			TXT_ComponentConfig_Details_Size_X.Text = component.Size.X.ToString();
-			TXT_ComponentConfig_Details_Size_Y.Text = component.Size.Y.ToString();
-			TXT_ComponentConfig_Details_Size_Z.Text = component.Size.Z.ToString();
-			TXT_ComponentConfig_Details_Mass.Text = component.Mass.ToString();
-			TXT_ComponentConfig_Details_Volume.Text = component.Volume.ToString();
+			TXT_ComponentConfig_Details_Size_X.Text = component.Size.X.ToString(m_numberFormatInfo);
+			TXT_ComponentConfig_Details_Size_Y.Text = component.Size.Y.ToString(m_numberFormatInfo);
+			TXT_ComponentConfig_Details_Size_Z.Text = component.Size.Z.ToString(m_numberFormatInfo);
+			TXT_ComponentConfig_Details_Mass.Text = component.Mass.ToString(m_numberFormatInfo);
+			TXT_ComponentConfig_Details_Volume.Text = component.Volume.ToString(m_numberFormatInfo);
 			TXT_ComponentConfig_Details_MaxIntegrity.Text = component.MaxIntegrity.ToString();
-			TXT_ComponentConfig_Details_DropProbability.Text = component.DropProbability.ToString();
+			TXT_ComponentConfig_Details_DropProbability.Text = component.DropProbability.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
@@ -1170,17 +1170,26 @@ namespace SEConfigTool
 
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(index);
 
-			TXT_BlueprintConfig_Details_Result.Text = blueprint.Result.TypeId.ToString() + "/" + blueprint.Result.SubtypeId + " x" + blueprint.Result.Amount.ToString();
-			TXT_BlueprintConfig_Details_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString();
+			TXT_BlueprintConfig_Details_Result_SubtypeId.Text = blueprint.Result.SubTypeId;
+			TXT_BlueprintConfig_Details_Result_Amount.Text = blueprint.Result.Amount.ToString(m_numberFormatInfo);
+			TXT_BlueprintConfig_Details_Result_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString(m_numberFormatInfo);
 
 			LST_BlueprintConfig_Details_Prerequisites.Items.Clear();
 			foreach (var prereq in blueprint.Prerequisites)
 			{
-				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.TypeId.ToString() + "/" + prereq.SubtypeId + " x" + prereq.Amount.ToString());
+				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.Name);
 			}
 
+			CMB_BlueprintConfig_Details_Result_TypeId.DataSource = Enum.GetValues(typeof(MyObjectBuilderTypeEnum));
+			CMB_BlueprintConfig_Details_Prerequisites_TypeId.DataSource = Enum.GetValues(typeof(MyObjectBuilderTypeEnum));
+
+			CMB_BlueprintConfig_Details_Result_TypeId.SelectedItem = blueprint.Result.TypeId;
+			CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedIndex = -1;
+
 			m_currentlySelecting = false;
-			BTN_BlueprintConfig_Details_Apply.Enabled = false;
+
+			BTN_BlueprintConfig_Details_Result_Apply.Enabled = false;
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
 		}
 
 		private void BTN_BlueprintConfig_Reload_Click(object sender, EventArgs e)
@@ -1193,24 +1202,75 @@ namespace SEConfigTool
 			m_blueprintsDefinitionsManager.Save();
 		}
 
-		private void BTN_BlueprintConfig_Details_Apply_Click(object sender, EventArgs e)
+		private void BTN_BlueprintConfig_Details_Result_Apply_Click(object sender, EventArgs e)
 		{
 			int index = LST_BlueprintConfig.SelectedIndex;
-
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(index);
 
-			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TXT_BlueprintConfig_Details_BaseProductionTime.Text, m_numberFormatInfo);
+			blueprint.Result.TypeId = (MyObjectBuilderTypeEnum)CMB_BlueprintConfig_Details_Result_TypeId.SelectedValue;
+			blueprint.Result.SubTypeId = TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Text;
+			blueprint.Result.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Result_Amount.Text, m_numberFormatInfo);
+			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TXT_BlueprintConfig_Details_Result_BaseProductionTime.Text, m_numberFormatInfo);
 
-			BTN_BlueprintConfig_Details_Apply.Enabled = false;
+			BTN_BlueprintConfig_Details_Result_Apply.Enabled = false;
 		}
 
-		private void TXT_BlueprintConfig_Details_TextChanged(object sender, EventArgs e)
+		private void TXT_BlueprintConfig_Details_Result_TextChanged(object sender, EventArgs e)
 		{
-			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-			{
-				BTN_BlueprintConfig_Details_Apply.Enabled = true;
-			}
+			BTN_BlueprintConfig_Details_Result_Apply.Enabled = true;
 		}
+
+		private void CMB_BlueprintConfig_Details_Result_TypeId_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			BTN_BlueprintConfig_Details_Result_Apply.Enabled = true;
+		}
+
+		#region Prerequisites
+
+		private void LST_BlueprintConfig_Details_Prerequisites_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int blueprintIndex = LST_BlueprintConfig.SelectedIndex;
+			int prereqIndex = LST_BlueprintConfig_Details_Prerequisites.SelectedIndex;
+
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(blueprintIndex);
+			BlueprintItemDefinition prereq = blueprint.Prerequisites[prereqIndex];
+
+			CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedItem = prereq.TypeId;
+			TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Text = prereq.SubTypeId;
+			TXT_BlueprintConfig_Details_Prerequisites_Amount.Text = prereq.Amount.ToString(m_numberFormatInfo);
+
+			m_currentlySelecting = false;
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
+		}
+
+		private void BTN_BlueprintConfig_Details_Prerequisites_Apply_Click(object sender, EventArgs e)
+		{
+			int blueprintIndex = LST_BlueprintConfig.SelectedIndex;
+			int prereqIndex = LST_BlueprintConfig_Details_Prerequisites.SelectedIndex;
+
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(blueprintIndex);
+			BlueprintItemDefinition prereq = blueprint.Prerequisites[prereqIndex];
+
+			prereq.TypeId = (MyObjectBuilderTypeEnum)CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedValue;
+			prereq.SubTypeId = TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Text;
+			prereq.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Prerequisites_Amount.Text, m_numberFormatInfo);
+
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
+		}
+
+
+		private void TXT_BlueprintConfig_Details_Prerequisites_TextChanged(object sender, EventArgs e)
+		{
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = true;
+		}
+
+		private void CMB_BlueprintConfig_Details_Prerequisites_TypeId_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = true;
+		}
+
+		#endregion
 
 		#endregion
 
@@ -1227,10 +1287,10 @@ namespace SEConfigTool
 			TXT_VoxelMaterialConfig_Details_AssetName.Text = voxelMaterial.AssetName;
 			TXT_VoxelMaterialConfig_Details_MinedOre.Text = voxelMaterial.MinedOre;
 
-			TXT_VoxelMaterialConfig_Details_MinedOreRatio.Text = voxelMaterial.MinedOreRatio.ToString();
-			TXT_VoxelMaterialConfig_Details_DamageRatio.Text = voxelMaterial.DamageRatio.ToString();
-			TXT_VoxelMaterialConfig_Details_SpecularPower.Text = voxelMaterial.SpecularPower.ToString();
-			TXT_VoxelMaterialConfig_Details_SpecularShininess.Text = voxelMaterial.SpecularShininess.ToString();
+			TXT_VoxelMaterialConfig_Details_MinedOreRatio.Text = voxelMaterial.MinedOreRatio.ToString(m_numberFormatInfo);
+			TXT_VoxelMaterialConfig_Details_DamageRatio.Text = voxelMaterial.DamageRatio.ToString(m_numberFormatInfo);
+			TXT_VoxelMaterialConfig_Details_SpecularPower.Text = voxelMaterial.SpecularPower.ToString(m_numberFormatInfo);
+			TXT_VoxelMaterialConfig_Details_SpecularShininess.Text = voxelMaterial.SpecularShininess.ToString(m_numberFormatInfo);
 
 			CHK_VoxelMaterialConfig_Details_CanBeHarvested.Checked = voxelMaterial.CanBeHarvested;
 			CHK_VoxelMaterialConfig_Details_IsRare.Checked = voxelMaterial.IsRare;
@@ -1304,7 +1364,7 @@ namespace SEConfigTool
 
 			CHK_ScenarioConfig_Details_Asteroid_Enabled.Checked = scenario.AsteroidClusters.Enabled;
 			CHK_ScenarioConfig_Details_Asteroid_CentralCluster.Checked = scenario.AsteroidClusters.CentralCluster;
-			TXT_ScenariosConfig_Details_Asteroid_Offset.Text = scenario.AsteroidClusters.Offset.ToString();
+			TXT_ScenariosConfig_Details_Asteroid_Offset.Text = scenario.AsteroidClusters.Offset.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 		}
@@ -1321,14 +1381,14 @@ namespace SEConfigTool
 			TransparentMaterialsDefinition transparentMaterials = m_transparentMaterialsDefinitionManager.DefinitionOf(index);
 
 			TXT_TransparentMaterialConfig_Details_Name.Text = transparentMaterials.Name;
-			TXT_TransparentMaterialConfig_Details_Emissivity.Text = transparentMaterials.Emissivity.ToString();
-			TXT_TransparentMaterialConfig_Details_SoftParticleDistanceScale.Text = transparentMaterials.SoftParticleDistanceScale.ToString();
+			TXT_TransparentMaterialConfig_Details_Emissivity.Text = transparentMaterials.Emissivity.ToString(m_numberFormatInfo);
+			TXT_TransparentMaterialConfig_Details_SoftParticleDistanceScale.Text = transparentMaterials.SoftParticleDistanceScale.ToString(m_numberFormatInfo);
 			TXT_TransparentMaterialConfig_Details_Texture.Text = transparentMaterials.Texture;
 
-			TXT_TransparentMaterialConfig_Details_UVOffset_X.Text = transparentMaterials.UVOffset.X.ToString();
-			TXT_TransparentMaterialConfig_Details_UVOffset_Y.Text = transparentMaterials.UVOffset.Y.ToString();
-			TXT_TransparentMaterialConfig_Details_UVSize_X.Text = transparentMaterials.UVSize.X.ToString();
-			TXT_TransparentMaterialConfig_Details_UVSize_Y.Text = transparentMaterials.UVSize.Y.ToString();
+			TXT_TransparentMaterialConfig_Details_UVOffset_X.Text = transparentMaterials.UVOffset.X.ToString(m_numberFormatInfo);
+			TXT_TransparentMaterialConfig_Details_UVOffset_Y.Text = transparentMaterials.UVOffset.Y.ToString(m_numberFormatInfo);
+			TXT_TransparentMaterialConfig_Details_UVSize_X.Text = transparentMaterials.UVSize.X.ToString(m_numberFormatInfo);
+			TXT_TransparentMaterialConfig_Details_UVSize_Y.Text = transparentMaterials.UVSize.Y.ToString(m_numberFormatInfo);
 
 			CHK_TransparentMaterialConfig_Details_AlphaMistingEnable.Checked = transparentMaterials.AlphaMistingEnable;
 			CHK_TransparentMaterialConfig_Details_CanBeAffectedByLight.Checked = transparentMaterials.CanBeAffectedByOtherLights;
