@@ -186,7 +186,7 @@ namespace SEConfigTool
 
 			stopWatch.Stop();
 			TLS_StatusLabel.Text = "Done in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
-			BTN_SavedGame_Events_Apply.Visible = false;
+			BTN_SavedGame_Events_Apply.Enabled = false;
 		}
 
 		private void FillBlocksConfigurationListBox()
@@ -422,7 +422,7 @@ namespace SEConfigTool
 			sectorEvent.Enabled = CHK_SavedGame_Events_Enabled.CheckState == CheckState.Checked;
 			sectorEvent.ActivationTimeMs = Convert.ToInt64(TXT_SavedGame_Events_ActivationTime.Text, m_numberFormatInfo);
 
-			BTN_SavedGame_Events_Apply.Visible = false;
+			BTN_SavedGame_Events_Apply.Enabled = false;
 		}
 
 		private void LST_SavedGame_Events_SelectedIndexChanged(object sender, EventArgs e)
@@ -438,7 +438,7 @@ namespace SEConfigTool
 			TXT_SavedGame_Events_ActivationTime.Text = sectorEvent.ActivationTimeMs.ToString();
 
 			m_currentlySelecting = false;
-			BTN_SavedGame_Events_Apply.Visible = false;
+			BTN_SavedGame_Events_Apply.Enabled = false;
 		}
 
 		private void TRV_SavedGame_Objects_AfterSelect(object sender, TreeViewEventArgs e)
@@ -466,7 +466,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_SavedGame_Events_Apply.Visible = true;
+				BTN_SavedGame_Events_Apply.Enabled = true;
 			}
 		}
 
@@ -474,7 +474,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_SavedGame_Events_Apply.Visible = true;
+				BTN_SavedGame_Events_Apply.Enabled = true;
 			}
 		}
 
@@ -486,7 +486,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_BlocksConfig_Details_Apply.Visible = true;
+				BTN_BlocksConfig_Details_Apply.Enabled = true;
 			int index = LST_BlocksConfig.SelectedIndex;
 			m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CHK_BlocksConfig_ModelIntersection.Checked;
 		}
@@ -496,7 +496,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_BlocksConfig_Details_Apply.Visible = true;
+				BTN_BlocksConfig_Details_Apply.Enabled = true;
 			int index = LST_BlocksConfig.SelectedIndex;
 			m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CHK_BlocksConfig_Enabled.Checked;
 		}
@@ -520,7 +520,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_BlocksConfig_Details_Apply.Visible = false;
+			BTN_BlocksConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigBuildTime_KeyPress(object sender, KeyPressEventArgs e)
@@ -552,7 +552,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_BlocksConfig_Details_Apply.Visible = true;
+				BTN_BlocksConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -565,7 +565,7 @@ namespace SEConfigTool
 			cubeBlock.BuildTime = Convert.ToSingle(TXT_BlocksConfig_Details_BuildTime.Text, m_numberFormatInfo);
 			cubeBlock.DisassembleRatio = Convert.ToSingle(TXT_BlocksConfig_Details_DisassembleRatio.Text, m_numberFormatInfo);
 
-			BTN_BlocksConfig_Details_Apply.Visible = false;
+			BTN_BlocksConfig_Details_Apply.Enabled = false;
 		}
 
 		#endregion
@@ -594,7 +594,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_AmmoConfig_Details_Apply.Visible = false;
+			BTN_AmmoConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigAmmoReload_Click(object sender, EventArgs e)
@@ -618,14 +618,14 @@ namespace SEConfigTool
 			ammoMagazine.Mass = Convert.ToSingle(TXT_AmmoConfig_Details_Mass.Text, m_numberFormatInfo);
 			ammoMagazine.Volume = Convert.ToSingle(TXT_AmmoConfig_Details_Volume.Text, m_numberFormatInfo);
 
-			BTN_AmmoConfig_Details_Apply.Visible = false;
+			BTN_AmmoConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigAmmo_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_AmmoConfig_Details_Apply.Visible = true;
+				BTN_AmmoConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -633,7 +633,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_AmmoConfig_Details_Apply.Visible = true;
+				BTN_AmmoConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -672,7 +672,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_ContainerTypesConfig_Details_Apply.Visible = false;
+			BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigContainerTypeReload_Click(object sender, EventArgs e)
@@ -694,14 +694,14 @@ namespace SEConfigTool
 			containerType.CountMax = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMax.Text, m_numberFormatInfo);
 			containerType.CountMin = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMin.Text, m_numberFormatInfo);
 
-			BTN_ContainerTypesConfig_Details_Apply.Visible = false;
+			BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigContainerType_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ContainerTypesConfig_Details_Apply.Visible = true;
+				BTN_ContainerTypesConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -723,7 +723,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_ContainerTypeConfig_Items_Apply.Visible = false;
+			BTN_ContainerTypeConfig_Items_Apply.Enabled = false;
 		}
 
 		private void BTN_ContainerTypeConfig_Items_Apply_Click(object sender, EventArgs e)
@@ -738,14 +738,14 @@ namespace SEConfigTool
 			containerItem.AmountMax = Convert.ToInt32(TXT_ContainerTypeConfig_Item_AmountMax.Text, m_numberFormatInfo);
 			containerItem.Frequency = Convert.ToSingle(TXT_ContainerTypeConfig_Item_Frequency.Text, m_numberFormatInfo);
 
-			BTN_ContainerTypeConfig_Items_Apply.Visible = false;
+			BTN_ContainerTypeConfig_Items_Apply.Enabled = false;
 		}
 
 		private void TXT_ContainerTypeConfig_Item_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ContainerTypeConfig_Items_Apply.Visible = true;
+				BTN_ContainerTypeConfig_Items_Apply.Enabled = true;
 			}
 		}
 
@@ -753,7 +753,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ContainerTypeConfig_Items_Apply.Visible = true;
+				BTN_ContainerTypeConfig_Items_Apply.Enabled = true;
 			}
 		}
 
@@ -786,7 +786,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_GlobalEventConfig_Details_Apply.Visible = false;
+			BTN_GlobalEventConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigGlobalEventReload_Click(object sender, EventArgs e)
@@ -813,14 +813,14 @@ namespace SEConfigTool
 			globalEvent.MaxActivation = Convert.ToInt32(TXT_ConfigGlobalEvent_Details_MaxActivation.Text, m_numberFormatInfo);
 			globalEvent.FirstActivation = Convert.ToInt32(TXT_ConfigGlobalEvent_Details_FirstActivation.Text, m_numberFormatInfo);
 
-			BTN_GlobalEventConfig_Details_Apply.Visible = false;
+			BTN_GlobalEventConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigGlobalEvent_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_GlobalEventConfig_Details_Apply.Visible = true;
+				BTN_GlobalEventConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -828,7 +828,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_GlobalEventConfig_Details_Apply.Visible = true;
+				BTN_GlobalEventConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -875,7 +875,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_SpawnGroupConfig_Details_Info_Apply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Info_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigSpawnGroupReload_Click(object sender, EventArgs e)
@@ -896,14 +896,14 @@ namespace SEConfigTool
 
 			spawnGroup.Frequency = Convert.ToSingle(TXT_SpawnGroupConfig_Details_Info_Frequency.Text, m_numberFormatInfo);
 
-			BTN_SpawnGroupConfig_Details_Info_Apply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Info_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigSpawnGroup_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_SpawnGroupConfig_Details_Info_Apply.Visible = true;
+				BTN_SpawnGroupConfig_Details_Info_Apply.Enabled = true;
 			}
 		}
 
@@ -924,7 +924,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_SpawnGroupConfig_Details_Prefabs_Apply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Prefabs_Apply.Enabled = false;
 		}
 
 		private void BTN_SpawnGroupConfig_Prefabs_Apply_Click(object sender, EventArgs e)
@@ -937,14 +937,14 @@ namespace SEConfigTool
 			spawnGroupPrefab.BeaconText = TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text;
 			spawnGroupPrefab.Speed = Convert.ToSingle(TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text, m_numberFormatInfo);
 
-			BTN_SpawnGroupConfig_Details_Prefabs_Apply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Prefabs_Apply.Enabled = false;
 		}
 
 		private void TXT_SpawnGroupConfig_Details_PrefabText_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_SpawnGroupConfig_Details_Prefabs_Apply.Visible = true;
+				BTN_SpawnGroupConfig_Details_Prefabs_Apply.Enabled = true;
 			}
 		}
 
@@ -983,7 +983,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_PhysicalItemConfig_Details_Apply.Visible = false;
+			BTN_PhysicalItemConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigPhysicalItemReload_Click(object sender, EventArgs e)
@@ -1005,14 +1005,14 @@ namespace SEConfigTool
 			physicalItem.Mass = Convert.ToSingle(TXT_PhysicalItemConfig_Details_Mass.Text, m_numberFormatInfo);
 			physicalItem.Volume = Convert.ToSingle(TXT_PhysicalItemConfig_Details_Volume.Text, m_numberFormatInfo);
 
-			BTN_PhysicalItemConfig_Details_Apply.Visible = false;
+			BTN_PhysicalItemConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_PhysicalItemConfig_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_PhysicalItemConfig_Details_Apply.Visible = true;
+				BTN_PhysicalItemConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -1040,7 +1040,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 
-			BTN_ComponentConfig_Details_Apply.Visible = false;
+			BTN_ComponentConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ComponentConfig_Reload_Click(object sender, EventArgs e)
@@ -1064,14 +1064,14 @@ namespace SEConfigTool
 			component.MaxIntegrity = Convert.ToInt32(TXT_ComponentConfig_Details_MaxIntegrity.Text, m_numberFormatInfo);
 			component.DropProbability = Convert.ToSingle(TXT_ComponentConfig_Details_DropProbability.Text, m_numberFormatInfo);
 
-			BTN_ComponentConfig_Details_Apply.Visible = false;
+			BTN_ComponentConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ComponentConfig_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ComponentConfig_Details_Apply.Visible = true;
+				BTN_ComponentConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -1096,7 +1096,7 @@ namespace SEConfigTool
 			}
 
 			m_currentlySelecting = false;
-			BTN_BlueprintConfig_Details_Apply.Visible = false;
+			BTN_BlueprintConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_BlueprintConfig_Reload_Click(object sender, EventArgs e)
@@ -1117,14 +1117,14 @@ namespace SEConfigTool
 
 			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TXT_BlueprintConfig_Details_BaseProductionTime.Text, m_numberFormatInfo);
 
-			BTN_BlueprintConfig_Details_Apply.Visible = false;
+			BTN_BlueprintConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_BlueprintConfig_Details_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_BlueprintConfig_Details_Apply.Visible = true;
+				BTN_BlueprintConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -1153,7 +1153,7 @@ namespace SEConfigTool
 			CHK_VoxelMaterialConfig_Details_UseTwoTextures.Checked = voxelMaterial.UseTwoTextures;
 
 			m_currentlySelecting = false;
-			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
+			BTN_VoxelMaterialsConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_VoxelMaterialsConfig_Reload_Click(object sender, EventArgs e)
@@ -1185,14 +1185,14 @@ namespace SEConfigTool
 			voxelMaterial.IsRare = CHK_VoxelMaterialConfig_Details_IsRare.CheckState == CheckState.Checked;
 			voxelMaterial.UseTwoTextures = CHK_VoxelMaterialConfig_Details_UseTwoTextures.CheckState == CheckState.Checked;
 
-			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
+			BTN_VoxelMaterialsConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_VoxelMaterialsConfig_Details_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_VoxelMaterialsConfig_Details_Apply.Visible = true;
+				BTN_VoxelMaterialsConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -1200,7 +1200,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_VoxelMaterialsConfig_Details_Apply.Visible = true;
+				BTN_VoxelMaterialsConfig_Details_Apply.Enabled = true;
 			}
 		}
 

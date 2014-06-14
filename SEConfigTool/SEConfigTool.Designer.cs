@@ -875,7 +875,6 @@ namespace SEConfigTool
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.TabIndex = 8;
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.Text = "Apply changes";
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.UseVisualStyleBackColor = true;
-			this.BTN_ScenarioConfig_Details_Asteroid_Apply.Visible = false;
 			// 
 			// TAB_ScenariosConfig_Details_StartingStates_Page
 			// 
@@ -965,7 +964,6 @@ namespace SEConfigTool
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.TabIndex = 10;
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Text = "Apply changes";
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.UseVisualStyleBackColor = true;
-			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Visible = false;
 			// 
 			// TAB_ScenariosConfig_Details_GeneratorOperations_Page
 			// 
@@ -1077,7 +1075,6 @@ namespace SEConfigTool
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.TabIndex = 10;
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Text = "Apply changes";
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.UseVisualStyleBackColor = true;
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Visible = false;
 			// 
 			// TXT_ScenarioConfig_Details_GeneratorOperations_RandomRadius
 			// 
@@ -1393,13 +1390,13 @@ namespace SEConfigTool
 			// 
 			// BTN_VoxelMaterialsConfig_Details_Apply
 			// 
+			this.BTN_VoxelMaterialsConfig_Details_Apply.Enabled = false;
 			this.BTN_VoxelMaterialsConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
 			this.BTN_VoxelMaterialsConfig_Details_Apply.Name = "BTN_VoxelMaterialsConfig_Details_Apply";
 			this.BTN_VoxelMaterialsConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_VoxelMaterialsConfig_Details_Apply.TabIndex = 8;
 			this.BTN_VoxelMaterialsConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_VoxelMaterialsConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
 			this.BTN_VoxelMaterialsConfig_Details_Apply.Click += new System.EventHandler(this.BTN_VoxelMaterialsConfig_Details_Apply_Click);
 			// 
 			// TXT_VoxelMaterialConfig_Details_MinedOre
@@ -1581,13 +1578,13 @@ namespace SEConfigTool
 			// 
 			// BTN_BlueprintConfig_Details_Apply
 			// 
+			this.BTN_BlueprintConfig_Details_Apply.Enabled = false;
 			this.BTN_BlueprintConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
 			this.BTN_BlueprintConfig_Details_Apply.Name = "BTN_BlueprintConfig_Details_Apply";
 			this.BTN_BlueprintConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_BlueprintConfig_Details_Apply.TabIndex = 8;
 			this.BTN_BlueprintConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_BlueprintConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_BlueprintConfig_Details_Apply.Visible = false;
 			this.BTN_BlueprintConfig_Details_Apply.Click += new System.EventHandler(this.BTN_BlueprintConfig_Details_Apply_Click);
 			// 
 			// TXT_BlueprintConfig_Details_BaseProductionTime
@@ -1886,13 +1883,13 @@ namespace SEConfigTool
 			// 
 			// BTN_ComponentConfig_Details_Apply
 			// 
+			this.BTN_ComponentConfig_Details_Apply.Enabled = false;
 			this.BTN_ComponentConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
 			this.BTN_ComponentConfig_Details_Apply.Name = "BTN_ComponentConfig_Details_Apply";
 			this.BTN_ComponentConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_ComponentConfig_Details_Apply.TabIndex = 8;
 			this.BTN_ComponentConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_ComponentConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_ComponentConfig_Details_Apply.Visible = false;
 			this.BTN_ComponentConfig_Details_Apply.Click += new System.EventHandler(this.BTN_ComponentConfig_Details_Apply_Click);
 			// 
 			// TXT_ComponentConfig_Details_Name
@@ -2188,13 +2185,13 @@ namespace SEConfigTool
 			// 
 			// BTN_PhysicalItemConfig_Details_Apply
 			// 
+			this.BTN_PhysicalItemConfig_Details_Apply.Enabled = false;
 			this.BTN_PhysicalItemConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
 			this.BTN_PhysicalItemConfig_Details_Apply.Name = "BTN_PhysicalItemConfig_Details_Apply";
 			this.BTN_PhysicalItemConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_PhysicalItemConfig_Details_Apply.TabIndex = 8;
 			this.BTN_PhysicalItemConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_PhysicalItemConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_PhysicalItemConfig_Details_Apply.Visible = false;
 			this.BTN_PhysicalItemConfig_Details_Apply.Click += new System.EventHandler(this.BTN_ConfigPhysicalItemApply_Click);
 			// 
 			// TXT_PhysicalItemConfig_Details_Name
@@ -2387,13 +2384,13 @@ namespace SEConfigTool
 			// 
 			// BTN_SpawnGroupConfig_Details_Info_Apply
 			// 
+			this.BTN_SpawnGroupConfig_Details_Info_Apply.Enabled = false;
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.Location = new System.Drawing.Point(28, 305);
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.Name = "BTN_SpawnGroupConfig_Details_Info_Apply";
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.TabIndex = 8;
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.Text = "Apply changes";
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.UseVisualStyleBackColor = true;
-			this.BTN_SpawnGroupConfig_Details_Info_Apply.Visible = false;
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.Click += new System.EventHandler(this.BTN_ConfigSpawnGroupApply_Click);
 			// 
 			// TXT_SpawnGroupConfig_Details_Info_Count
@@ -2516,13 +2513,13 @@ namespace SEConfigTool
 			// 
 			// BTN_SpawnGroupConfig_Details_Prefabs_Apply
 			// 
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Enabled = false;
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Location = new System.Drawing.Point(28, 305);
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Name = "BTN_SpawnGroupConfig_Details_Prefabs_Apply";
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.TabIndex = 10;
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Text = "Apply changes";
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.UseVisualStyleBackColor = true;
-			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Visible = false;
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Click += new System.EventHandler(this.BTN_SpawnGroupConfig_Prefabs_Apply_Click);
 			// 
 			// TXT_SpawnGroupConfig_Details_Prefabs_Speed
@@ -2800,13 +2797,13 @@ namespace SEConfigTool
 			// 
 			// BTN_GlobalEventConfig_Details_Apply
 			// 
+			this.BTN_GlobalEventConfig_Details_Apply.Enabled = false;
 			this.BTN_GlobalEventConfig_Details_Apply.Location = new System.Drawing.Point(54, 337);
 			this.BTN_GlobalEventConfig_Details_Apply.Name = "BTN_GlobalEventConfig_Details_Apply";
 			this.BTN_GlobalEventConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_GlobalEventConfig_Details_Apply.TabIndex = 8;
 			this.BTN_GlobalEventConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_GlobalEventConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_GlobalEventConfig_Details_Apply.Visible = false;
 			this.BTN_GlobalEventConfig_Details_Apply.Click += new System.EventHandler(this.BTN_ConfigGlobalEventApply_Click);
 			// 
 			// TXT_ConfigGlobalEvent_Details_Name
@@ -3040,13 +3037,13 @@ namespace SEConfigTool
 			// 
 			// BTN_ContainerTypesConfig_Details_Apply
 			// 
+			this.BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
 			this.BTN_ContainerTypesConfig_Details_Apply.Location = new System.Drawing.Point(28, 305);
 			this.BTN_ContainerTypesConfig_Details_Apply.Name = "BTN_ContainerTypesConfig_Details_Apply";
 			this.BTN_ContainerTypesConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_ContainerTypesConfig_Details_Apply.TabIndex = 8;
 			this.BTN_ContainerTypesConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_ContainerTypesConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_ContainerTypesConfig_Details_Apply.Visible = false;
 			// 
 			// TXT_ContainerTypeConfig_Details_Information_Id
 			// 
@@ -3193,13 +3190,13 @@ namespace SEConfigTool
 			// 
 			// BTN_ContainerTypeConfig_Items_Apply
 			// 
+			this.BTN_ContainerTypeConfig_Items_Apply.Enabled = false;
 			this.BTN_ContainerTypeConfig_Items_Apply.Location = new System.Drawing.Point(28, 305);
 			this.BTN_ContainerTypeConfig_Items_Apply.Name = "BTN_ContainerTypeConfig_Items_Apply";
 			this.BTN_ContainerTypeConfig_Items_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_ContainerTypeConfig_Items_Apply.TabIndex = 9;
 			this.BTN_ContainerTypeConfig_Items_Apply.Text = "Apply changes";
 			this.BTN_ContainerTypeConfig_Items_Apply.UseVisualStyleBackColor = true;
-			this.BTN_ContainerTypeConfig_Items_Apply.Visible = false;
 			this.BTN_ContainerTypeConfig_Items_Apply.Click += new System.EventHandler(this.BTN_ContainerTypeConfig_Items_Apply_Click);
 			// 
 			// TXT_ContainerTypeConfig_Item_AmountMax
@@ -3439,13 +3436,13 @@ namespace SEConfigTool
 			// 
 			// BTN_AmmoConfig_Details_Apply
 			// 
+			this.BTN_AmmoConfig_Details_Apply.Enabled = false;
 			this.BTN_AmmoConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
 			this.BTN_AmmoConfig_Details_Apply.Name = "BTN_AmmoConfig_Details_Apply";
 			this.BTN_AmmoConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_AmmoConfig_Details_Apply.TabIndex = 8;
 			this.BTN_AmmoConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_AmmoConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_AmmoConfig_Details_Apply.Visible = false;
 			this.BTN_AmmoConfig_Details_Apply.Click += new System.EventHandler(this.BTN_ConfigAmmoApply_Click);
 			// 
 			// TXT_AmmoConfig_Details_Id
@@ -3672,13 +3669,13 @@ namespace SEConfigTool
 			// 
 			// BTN_BlocksConfig_Details_Apply
 			// 
+			this.BTN_BlocksConfig_Details_Apply.Enabled = false;
 			this.BTN_BlocksConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
 			this.BTN_BlocksConfig_Details_Apply.Name = "BTN_BlocksConfig_Details_Apply";
 			this.BTN_BlocksConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_BlocksConfig_Details_Apply.TabIndex = 8;
 			this.BTN_BlocksConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_BlocksConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_BlocksConfig_Details_Apply.Visible = false;
 			this.BTN_BlocksConfig_Details_Apply.Click += new System.EventHandler(this.BTN_ConfigApplyChanges_Click);
 			// 
 			// TXT_BlocksConfig_Details_Id
@@ -3947,13 +3944,13 @@ namespace SEConfigTool
 			// 
 			// BTN_SavedGame_Events_Apply
 			// 
+			this.BTN_SavedGame_Events_Apply.Enabled = false;
 			this.BTN_SavedGame_Events_Apply.Location = new System.Drawing.Point(28, 323);
 			this.BTN_SavedGame_Events_Apply.Name = "BTN_SavedGame_Events_Apply";
 			this.BTN_SavedGame_Events_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_SavedGame_Events_Apply.TabIndex = 9;
 			this.BTN_SavedGame_Events_Apply.Text = "Apply changes";
 			this.BTN_SavedGame_Events_Apply.UseVisualStyleBackColor = true;
-			this.BTN_SavedGame_Events_Apply.Visible = false;
 			this.BTN_SavedGame_Events_Apply.Click += new System.EventHandler(this.BTN_SavedGame_Events_Apply_Click);
 			// 
 			// TXT_SavedGame_Events_ActivationTime
