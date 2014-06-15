@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI.Support;
+using VRageMath;
 
 namespace SEModAPI.API.Definitions
 {
@@ -15,14 +16,56 @@ namespace SEModAPI.API.Definitions
 
 		#endregion
 
+		#region "Properties"
 
-        #region "Methods"
+		public Vector3 SunDirection
+		{
+			get { return m_baseDefinition.SunDirection; }
+			set
+			{
+				if (m_baseDefinition.SunDirection == value) return;
+				m_baseDefinition.SunDirection = value;
+				Changed = true;
+			}
+		}
 
-        protected override string GetNameFrom(MyObjectBuilder_EnvironmentDefinition definition)
+		public string EnvironmentTexture
+		{
+			get { return m_baseDefinition.EnvironmentTexture; }
+			set
+			{
+				if (m_baseDefinition.EnvironmentTexture == value) return;
+				m_baseDefinition.EnvironmentTexture = value;
+				Changed = true;
+			}
+		}
+
+		public MyOrientation EnvironmentOrientation
+		{
+			get { return m_baseDefinition.EnvironmentOrientation; }
+			set
+			{
+				if (m_baseDefinition.EnvironmentOrientation.Pitch == value.Pitch &&
+					m_baseDefinition.EnvironmentOrientation.Roll == value.Roll &&
+					m_baseDefinition.EnvironmentOrientation.Yaw == value.Yaw) 
+					return;
+				m_baseDefinition.EnvironmentOrientation = value;
+				Changed = true;
+			}
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		protected override string GetNameFrom(MyObjectBuilder_EnvironmentDefinition definition)
         {
             return null;
         }
 
         #endregion
     }
+
+	public class EnvironmentDefinitionManager : SerializableDefinitionsManager<MyObjectBuilder_EnvironmentDefinition, EnvironmentDefinition>
+	{ }
 }
