@@ -158,6 +158,7 @@ namespace SEConfigTool
 			this.LST_PhysicalItemConfig = new System.Windows.Forms.ListBox();
 			this.GRP_PhysicalItemConfig_Details = new System.Windows.Forms.GroupBox();
 			this.splitContainer23 = new System.Windows.Forms.SplitContainer();
+			this.LBL_PhysicalItemConfig_Details_Type = new System.Windows.Forms.Label();
 			this.LBL_PhysicalItemConfig_Details_IconSymbol = new System.Windows.Forms.Label();
 			this.LBL_PhysicalItemConfig_Details_Icon = new System.Windows.Forms.Label();
 			this.LBL_PhysicalItemConfig_Details_Model = new System.Windows.Forms.Label();
@@ -167,6 +168,7 @@ namespace SEConfigTool
 			this.LBL_PhysicalItemConfig_Details_Name = new System.Windows.Forms.Label();
 			this.LBL_PhysicalItemConfig_Details_Id = new System.Windows.Forms.Label();
 			this.LBL_PhysicalItemConfig_Details_Description = new System.Windows.Forms.Label();
+			this.CMB_PhysicalItemConfig_Details_Type = new System.Windows.Forms.ComboBox();
 			this.TXT_PhysicalItemConfig_Details_Size_Z = new System.Windows.Forms.TextBox();
 			this.TXT_PhysicalItemConfig_Details_Size_Y = new System.Windows.Forms.TextBox();
 			this.BTN_PhysicalItemConfig_Details_New = new System.Windows.Forms.Button();
@@ -223,7 +225,6 @@ namespace SEConfigTool
 			this.LBL_GlobalEventConfig_Details_MaxActivationType = new System.Windows.Forms.Label();
 			this.LBL_GlobalEventConfig_Details_Name = new System.Windows.Forms.Label();
 			this.LBL_GlobalEventConfig_Details_EventType = new System.Windows.Forms.Label();
-			this.LBL_GlobalEventConfig_Details_Id = new System.Windows.Forms.Label();
 			this.LBL_GlobalEventConfig_Details_Description = new System.Windows.Forms.Label();
 			this.BTN_GlobalEventsConfig_Details_New = new System.Windows.Forms.Button();
 			this.CMB_GlobalEventsConfig_Details_EventType = new System.Windows.Forms.ComboBox();
@@ -232,7 +233,6 @@ namespace SEConfigTool
 			this.TXT_ConfigGlobalEvent_Details_MaxActivation = new System.Windows.Forms.TextBox();
 			this.BTN_GlobalEventConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TXT_ConfigGlobalEvent_Details_Name = new System.Windows.Forms.TextBox();
-			this.TXT_ConfigGlobalEvent_Details_Id = new System.Windows.Forms.TextBox();
 			this.TXT_ConfigGlobalEvent_Details_Description = new System.Windows.Forms.TextBox();
 			this.TAB_ContainerTypeConfig_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer8 = new System.Windows.Forms.SplitContainer();
@@ -246,16 +246,13 @@ namespace SEConfigTool
 			this.TAB_ContainerTypesConfig_Details_Information_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer10 = new System.Windows.Forms.SplitContainer();
 			this.LBL_ContainerTypeConfig_Details_Information_CountMin = new System.Windows.Forms.Label();
-			this.LBL_ContainerTypeConfig_Details_Information_Id = new System.Windows.Forms.Label();
 			this.LBL_ContainerTypeConfig_Details_Information_CountMax = new System.Windows.Forms.Label();
 			this.LBL_ContainerTypeConfig_Details_Information_Name = new System.Windows.Forms.Label();
-			this.LBL_ContainerTypeConfig_Details_Information_ItemCount = new System.Windows.Forms.Label();
+			this.BTN_ContainerTypesConfig_Details_New = new System.Windows.Forms.Button();
 			this.TXT_ContainerTypeConfig_Details_Information_CountMin = new System.Windows.Forms.TextBox();
 			this.BTN_ContainerTypesConfig_Details_Apply = new System.Windows.Forms.Button();
-			this.TXT_ContainerTypeConfig_Details_Information_Id = new System.Windows.Forms.TextBox();
 			this.TXT_ContainerTypeConfig_Details_Information_CountMax = new System.Windows.Forms.TextBox();
 			this.TXT_ContainerTypeConfig_Details_Information_Name = new System.Windows.Forms.TextBox();
-			this.TXT_ContainerTypeConfig_Details_Information_ItemCount = new System.Windows.Forms.TextBox();
 			this.TAB_ContainerTypesConfig_Details_Items_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer20 = new System.Windows.Forms.SplitContainer();
 			this.LST_ContainerTypeConfig_Details_Items = new System.Windows.Forms.ListBox();
@@ -324,14 +321,14 @@ namespace SEConfigTool
 			this.BTN_SavedGame_Save = new System.Windows.Forms.Button();
 			this.BTN_LoadSaveGame = new System.Windows.Forms.Button();
 			this.GRP_SavedGame = new System.Windows.Forms.GroupBox();
-			this.tabControl1 = new System.Windows.Forms.TabControl();
-			this.TP_SavedGame_Properties = new System.Windows.Forms.TabPage();
+			this.TAB_SavedGame_Details = new System.Windows.Forms.TabControl();
+			this.TAB_SavedGame_Properties_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer35 = new System.Windows.Forms.SplitContainer();
 			this.LBL_SavedGame_Properties_AppVersion = new System.Windows.Forms.Label();
 			this.LBL_SavedGame_Properties_Position = new System.Windows.Forms.Label();
 			this.TXT_SavedGame_Properties_AppVersion = new System.Windows.Forms.TextBox();
 			this.TXT_SavedGame_Properties_Position = new System.Windows.Forms.TextBox();
-			this.TP_SavedGame_Events = new System.Windows.Forms.TabPage();
+			this.TAB_SavedGame_Events_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer34 = new System.Windows.Forms.SplitContainer();
 			this.LST_SavedGame_Events = new System.Windows.Forms.ListBox();
 			this.splitContainer36 = new System.Windows.Forms.SplitContainer();
@@ -341,10 +338,10 @@ namespace SEConfigTool
 			this.BTN_SavedGame_Events_Apply = new System.Windows.Forms.Button();
 			this.TXT_SavedGame_Events_ActivationTime = new System.Windows.Forms.TextBox();
 			this.TXT_SavedGame_Events_Type = new System.Windows.Forms.TextBox();
-			this.TP_SavedGame_Objects = new System.Windows.Forms.TabPage();
+			this.TAB_SavedGame_Objects_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer33 = new System.Windows.Forms.SplitContainer();
 			this.TRV_SavedGame_Objects = new System.Windows.Forms.TreeView();
-			this.LayoutPages = new System.Windows.Forms.TabControl();
+			this.TAB_LayoutPages = new System.Windows.Forms.TabControl();
 			this.TAB_TransparentMaterialsConfig_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer41 = new System.Windows.Forms.SplitContainer();
 			this.BTN_TransparentMaterialsConfig_Reload = new System.Windows.Forms.Button();
@@ -373,8 +370,18 @@ namespace SEConfigTool
 			this.TXT_TransparentMaterialConfig_Details_Emissivity = new System.Windows.Forms.TextBox();
 			this.TXT_TransparentMaterialConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_TransparentMaterialConfig_Details_Apply = new System.Windows.Forms.Button();
-			this.CMB_PhysicalItemConfig_Details_Type = new System.Windows.Forms.ComboBox();
-			this.LBL_PhysicalItemConfig_Details_Type = new System.Windows.Forms.Label();
+			this.splitContainer48 = new System.Windows.Forms.SplitContainer();
+			this.TXT_Sector_Objects_Field1 = new System.Windows.Forms.TextBox();
+			this.TXT_Sector_Objects_Field2 = new System.Windows.Forms.TextBox();
+			this.TXT_Sector_Objects_Field3 = new System.Windows.Forms.TextBox();
+			this.LBL_Sector_Objects_Field1 = new System.Windows.Forms.Label();
+			this.LBL_Sector_Objects_Field2 = new System.Windows.Forms.Label();
+			this.LBL_Sector_Objects_Field3 = new System.Windows.Forms.Label();
+			this.TXT_Sector_Objects_Field4 = new System.Windows.Forms.TextBox();
+			this.TXT_Sector_Objects_Field5 = new System.Windows.Forms.TextBox();
+			this.LBL_Sector_Objects_Field4 = new System.Windows.Forms.Label();
+			this.LBL_Sector_Objects_Field5 = new System.Windows.Forms.Label();
+			this.BTN_ContainerTypeConfig_Items_New = new System.Windows.Forms.Button();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -580,13 +587,13 @@ namespace SEConfigTool
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.GRP_SavedGame.SuspendLayout();
-			this.tabControl1.SuspendLayout();
-			this.TP_SavedGame_Properties.SuspendLayout();
+			this.TAB_SavedGame_Details.SuspendLayout();
+			this.TAB_SavedGame_Properties_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer35)).BeginInit();
 			this.splitContainer35.Panel1.SuspendLayout();
 			this.splitContainer35.Panel2.SuspendLayout();
 			this.splitContainer35.SuspendLayout();
-			this.TP_SavedGame_Events.SuspendLayout();
+			this.TAB_SavedGame_Events_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer34)).BeginInit();
 			this.splitContainer34.Panel1.SuspendLayout();
 			this.splitContainer34.Panel2.SuspendLayout();
@@ -595,11 +602,12 @@ namespace SEConfigTool
 			this.splitContainer36.Panel1.SuspendLayout();
 			this.splitContainer36.Panel2.SuspendLayout();
 			this.splitContainer36.SuspendLayout();
-			this.TP_SavedGame_Objects.SuspendLayout();
+			this.TAB_SavedGame_Objects_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer33)).BeginInit();
 			this.splitContainer33.Panel1.SuspendLayout();
+			this.splitContainer33.Panel2.SuspendLayout();
 			this.splitContainer33.SuspendLayout();
-			this.LayoutPages.SuspendLayout();
+			this.TAB_LayoutPages.SuspendLayout();
 			this.TAB_TransparentMaterialsConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer41)).BeginInit();
 			this.splitContainer41.Panel1.SuspendLayout();
@@ -615,6 +623,10 @@ namespace SEConfigTool
 			this.splitContainer47.Panel1.SuspendLayout();
 			this.splitContainer47.Panel2.SuspendLayout();
 			this.splitContainer47.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer48)).BeginInit();
+			this.splitContainer48.Panel1.SuspendLayout();
+			this.splitContainer48.Panel2.SuspendLayout();
+			this.splitContainer48.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// STS_Status
@@ -2103,6 +2115,15 @@ namespace SEConfigTool
 			this.splitContainer23.SplitterDistance = 150;
 			this.splitContainer23.TabIndex = 4;
 			// 
+			// LBL_PhysicalItemConfig_Details_Type
+			// 
+			this.LBL_PhysicalItemConfig_Details_Type.AutoSize = true;
+			this.LBL_PhysicalItemConfig_Details_Type.Location = new System.Drawing.Point(3, 6);
+			this.LBL_PhysicalItemConfig_Details_Type.Name = "LBL_PhysicalItemConfig_Details_Type";
+			this.LBL_PhysicalItemConfig_Details_Type.Size = new System.Drawing.Size(46, 13);
+			this.LBL_PhysicalItemConfig_Details_Type.TabIndex = 13;
+			this.LBL_PhysicalItemConfig_Details_Type.Text = "Type Id:";
+			// 
 			// LBL_PhysicalItemConfig_Details_IconSymbol
 			// 
 			this.LBL_PhysicalItemConfig_Details_IconSymbol.AutoSize = true;
@@ -2183,6 +2204,14 @@ namespace SEConfigTool
 			this.LBL_PhysicalItemConfig_Details_Description.Size = new System.Drawing.Size(63, 13);
 			this.LBL_PhysicalItemConfig_Details_Description.TabIndex = 2;
 			this.LBL_PhysicalItemConfig_Details_Description.Text = "Description:";
+			// 
+			// CMB_PhysicalItemConfig_Details_Type
+			// 
+			this.CMB_PhysicalItemConfig_Details_Type.FormattingEnabled = true;
+			this.CMB_PhysicalItemConfig_Details_Type.Location = new System.Drawing.Point(3, 3);
+			this.CMB_PhysicalItemConfig_Details_Type.Name = "CMB_PhysicalItemConfig_Details_Type";
+			this.CMB_PhysicalItemConfig_Details_Type.Size = new System.Drawing.Size(150, 21);
+			this.CMB_PhysicalItemConfig_Details_Type.TabIndex = 22;
 			// 
 			// TXT_PhysicalItemConfig_Details_Size_Z
 			// 
@@ -2745,7 +2774,6 @@ namespace SEConfigTool
 			this.splitContainer13.Panel1.Controls.Add(this.LBL_GlobalEventConfig_Details_MaxActivationType);
 			this.splitContainer13.Panel1.Controls.Add(this.LBL_GlobalEventConfig_Details_Name);
 			this.splitContainer13.Panel1.Controls.Add(this.LBL_GlobalEventConfig_Details_EventType);
-			this.splitContainer13.Panel1.Controls.Add(this.LBL_GlobalEventConfig_Details_Id);
 			this.splitContainer13.Panel1.Controls.Add(this.LBL_GlobalEventConfig_Details_Description);
 			this.splitContainer13.Panel1MinSize = 150;
 			// 
@@ -2758,7 +2786,6 @@ namespace SEConfigTool
 			this.splitContainer13.Panel2.Controls.Add(this.TXT_ConfigGlobalEvent_Details_MaxActivation);
 			this.splitContainer13.Panel2.Controls.Add(this.BTN_GlobalEventConfig_Details_Apply);
 			this.splitContainer13.Panel2.Controls.Add(this.TXT_ConfigGlobalEvent_Details_Name);
-			this.splitContainer13.Panel2.Controls.Add(this.TXT_ConfigGlobalEvent_Details_Id);
 			this.splitContainer13.Panel2.Controls.Add(this.TXT_ConfigGlobalEvent_Details_Description);
 			this.splitContainer13.Size = new System.Drawing.Size(580, 363);
 			this.splitContainer13.SplitterDistance = 150;
@@ -2767,7 +2794,7 @@ namespace SEConfigTool
 			// LBL_GlobalEventConfig_Details_FirstActivationTime
 			// 
 			this.LBL_GlobalEventConfig_Details_FirstActivationTime.AutoSize = true;
-			this.LBL_GlobalEventConfig_Details_FirstActivationTime.Location = new System.Drawing.Point(3, 162);
+			this.LBL_GlobalEventConfig_Details_FirstActivationTime.Location = new System.Drawing.Point(3, 136);
 			this.LBL_GlobalEventConfig_Details_FirstActivationTime.Name = "LBL_GlobalEventConfig_Details_FirstActivationTime";
 			this.LBL_GlobalEventConfig_Details_FirstActivationTime.Size = new System.Drawing.Size(105, 13);
 			this.LBL_GlobalEventConfig_Details_FirstActivationTime.TabIndex = 9;
@@ -2776,7 +2803,7 @@ namespace SEConfigTool
 			// LBL_GlobalEventConfig_Details_MinActivationTime
 			// 
 			this.LBL_GlobalEventConfig_Details_MinActivationTime.AutoSize = true;
-			this.LBL_GlobalEventConfig_Details_MinActivationTime.Location = new System.Drawing.Point(3, 110);
+			this.LBL_GlobalEventConfig_Details_MinActivationTime.Location = new System.Drawing.Point(3, 84);
 			this.LBL_GlobalEventConfig_Details_MinActivationTime.Name = "LBL_GlobalEventConfig_Details_MinActivationTime";
 			this.LBL_GlobalEventConfig_Details_MinActivationTime.Size = new System.Drawing.Size(103, 13);
 			this.LBL_GlobalEventConfig_Details_MinActivationTime.TabIndex = 8;
@@ -2785,7 +2812,7 @@ namespace SEConfigTool
 			// LBL_GlobalEventConfig_Details_MaxActivationType
 			// 
 			this.LBL_GlobalEventConfig_Details_MaxActivationType.AutoSize = true;
-			this.LBL_GlobalEventConfig_Details_MaxActivationType.Location = new System.Drawing.Point(3, 136);
+			this.LBL_GlobalEventConfig_Details_MaxActivationType.Location = new System.Drawing.Point(3, 110);
 			this.LBL_GlobalEventConfig_Details_MaxActivationType.Name = "LBL_GlobalEventConfig_Details_MaxActivationType";
 			this.LBL_GlobalEventConfig_Details_MaxActivationType.Size = new System.Drawing.Size(106, 13);
 			this.LBL_GlobalEventConfig_Details_MaxActivationType.TabIndex = 7;
@@ -2794,7 +2821,7 @@ namespace SEConfigTool
 			// LBL_GlobalEventConfig_Details_Name
 			// 
 			this.LBL_GlobalEventConfig_Details_Name.AutoSize = true;
-			this.LBL_GlobalEventConfig_Details_Name.Location = new System.Drawing.Point(3, 32);
+			this.LBL_GlobalEventConfig_Details_Name.Location = new System.Drawing.Point(3, 6);
 			this.LBL_GlobalEventConfig_Details_Name.Name = "LBL_GlobalEventConfig_Details_Name";
 			this.LBL_GlobalEventConfig_Details_Name.Size = new System.Drawing.Size(38, 13);
 			this.LBL_GlobalEventConfig_Details_Name.TabIndex = 6;
@@ -2803,25 +2830,16 @@ namespace SEConfigTool
 			// LBL_GlobalEventConfig_Details_EventType
 			// 
 			this.LBL_GlobalEventConfig_Details_EventType.AutoSize = true;
-			this.LBL_GlobalEventConfig_Details_EventType.Location = new System.Drawing.Point(3, 84);
+			this.LBL_GlobalEventConfig_Details_EventType.Location = new System.Drawing.Point(3, 58);
 			this.LBL_GlobalEventConfig_Details_EventType.Name = "LBL_GlobalEventConfig_Details_EventType";
 			this.LBL_GlobalEventConfig_Details_EventType.Size = new System.Drawing.Size(65, 13);
 			this.LBL_GlobalEventConfig_Details_EventType.TabIndex = 3;
 			this.LBL_GlobalEventConfig_Details_EventType.Text = "Event Type:";
 			// 
-			// LBL_GlobalEventConfig_Details_Id
-			// 
-			this.LBL_GlobalEventConfig_Details_Id.AutoSize = true;
-			this.LBL_GlobalEventConfig_Details_Id.Location = new System.Drawing.Point(3, 6);
-			this.LBL_GlobalEventConfig_Details_Id.Name = "LBL_GlobalEventConfig_Details_Id";
-			this.LBL_GlobalEventConfig_Details_Id.Size = new System.Drawing.Size(19, 13);
-			this.LBL_GlobalEventConfig_Details_Id.TabIndex = 0;
-			this.LBL_GlobalEventConfig_Details_Id.Text = "Id:";
-			// 
 			// LBL_GlobalEventConfig_Details_Description
 			// 
 			this.LBL_GlobalEventConfig_Details_Description.AutoSize = true;
-			this.LBL_GlobalEventConfig_Details_Description.Location = new System.Drawing.Point(3, 58);
+			this.LBL_GlobalEventConfig_Details_Description.Location = new System.Drawing.Point(3, 32);
 			this.LBL_GlobalEventConfig_Details_Description.Name = "LBL_GlobalEventConfig_Details_Description";
 			this.LBL_GlobalEventConfig_Details_Description.Size = new System.Drawing.Size(63, 13);
 			this.LBL_GlobalEventConfig_Details_Description.TabIndex = 2;
@@ -2840,7 +2858,7 @@ namespace SEConfigTool
 			// CMB_GlobalEventsConfig_Details_EventType
 			// 
 			this.CMB_GlobalEventsConfig_Details_EventType.FormattingEnabled = true;
-			this.CMB_GlobalEventsConfig_Details_EventType.Location = new System.Drawing.Point(4, 82);
+			this.CMB_GlobalEventsConfig_Details_EventType.Location = new System.Drawing.Point(4, 56);
 			this.CMB_GlobalEventsConfig_Details_EventType.Name = "CMB_GlobalEventsConfig_Details_EventType";
 			this.CMB_GlobalEventsConfig_Details_EventType.Size = new System.Drawing.Size(150, 21);
 			this.CMB_GlobalEventsConfig_Details_EventType.TabIndex = 12;
@@ -2848,7 +2866,7 @@ namespace SEConfigTool
 			// 
 			// TXT_ConfigGlobalEvent_Details_FirstActivation
 			// 
-			this.TXT_ConfigGlobalEvent_Details_FirstActivation.Location = new System.Drawing.Point(3, 159);
+			this.TXT_ConfigGlobalEvent_Details_FirstActivation.Location = new System.Drawing.Point(3, 133);
 			this.TXT_ConfigGlobalEvent_Details_FirstActivation.Name = "TXT_ConfigGlobalEvent_Details_FirstActivation";
 			this.TXT_ConfigGlobalEvent_Details_FirstActivation.Size = new System.Drawing.Size(150, 20);
 			this.TXT_ConfigGlobalEvent_Details_FirstActivation.TabIndex = 11;
@@ -2856,7 +2874,7 @@ namespace SEConfigTool
 			// 
 			// TXT_ConfigGlobalEvent_Details_MinActivation
 			// 
-			this.TXT_ConfigGlobalEvent_Details_MinActivation.Location = new System.Drawing.Point(3, 107);
+			this.TXT_ConfigGlobalEvent_Details_MinActivation.Location = new System.Drawing.Point(3, 81);
 			this.TXT_ConfigGlobalEvent_Details_MinActivation.Name = "TXT_ConfigGlobalEvent_Details_MinActivation";
 			this.TXT_ConfigGlobalEvent_Details_MinActivation.Size = new System.Drawing.Size(150, 20);
 			this.TXT_ConfigGlobalEvent_Details_MinActivation.TabIndex = 10;
@@ -2864,7 +2882,7 @@ namespace SEConfigTool
 			// 
 			// TXT_ConfigGlobalEvent_Details_MaxActivation
 			// 
-			this.TXT_ConfigGlobalEvent_Details_MaxActivation.Location = new System.Drawing.Point(3, 133);
+			this.TXT_ConfigGlobalEvent_Details_MaxActivation.Location = new System.Drawing.Point(3, 107);
 			this.TXT_ConfigGlobalEvent_Details_MaxActivation.Name = "TXT_ConfigGlobalEvent_Details_MaxActivation";
 			this.TXT_ConfigGlobalEvent_Details_MaxActivation.Size = new System.Drawing.Size(150, 20);
 			this.TXT_ConfigGlobalEvent_Details_MaxActivation.TabIndex = 9;
@@ -2883,23 +2901,15 @@ namespace SEConfigTool
 			// 
 			// TXT_ConfigGlobalEvent_Details_Name
 			// 
-			this.TXT_ConfigGlobalEvent_Details_Name.Location = new System.Drawing.Point(3, 29);
+			this.TXT_ConfigGlobalEvent_Details_Name.Location = new System.Drawing.Point(3, 3);
 			this.TXT_ConfigGlobalEvent_Details_Name.Name = "TXT_ConfigGlobalEvent_Details_Name";
 			this.TXT_ConfigGlobalEvent_Details_Name.Size = new System.Drawing.Size(150, 20);
 			this.TXT_ConfigGlobalEvent_Details_Name.TabIndex = 7;
 			this.TXT_ConfigGlobalEvent_Details_Name.TextChanged += new System.EventHandler(this.TXT_ConfigGlobalEvent_TextChanged);
 			// 
-			// TXT_ConfigGlobalEvent_Details_Id
-			// 
-			this.TXT_ConfigGlobalEvent_Details_Id.Location = new System.Drawing.Point(3, 3);
-			this.TXT_ConfigGlobalEvent_Details_Id.Name = "TXT_ConfigGlobalEvent_Details_Id";
-			this.TXT_ConfigGlobalEvent_Details_Id.ReadOnly = true;
-			this.TXT_ConfigGlobalEvent_Details_Id.Size = new System.Drawing.Size(150, 20);
-			this.TXT_ConfigGlobalEvent_Details_Id.TabIndex = 5;
-			// 
 			// TXT_ConfigGlobalEvent_Details_Description
 			// 
-			this.TXT_ConfigGlobalEvent_Details_Description.Location = new System.Drawing.Point(3, 55);
+			this.TXT_ConfigGlobalEvent_Details_Description.Location = new System.Drawing.Point(3, 29);
 			this.TXT_ConfigGlobalEvent_Details_Description.Name = "TXT_ConfigGlobalEvent_Details_Description";
 			this.TXT_ConfigGlobalEvent_Details_Description.Size = new System.Drawing.Size(150, 20);
 			this.TXT_ConfigGlobalEvent_Details_Description.TabIndex = 4;
@@ -3039,20 +3049,17 @@ namespace SEConfigTool
 			// splitContainer10.Panel1
 			// 
 			this.splitContainer10.Panel1.Controls.Add(this.LBL_ContainerTypeConfig_Details_Information_CountMin);
-			this.splitContainer10.Panel1.Controls.Add(this.LBL_ContainerTypeConfig_Details_Information_Id);
 			this.splitContainer10.Panel1.Controls.Add(this.LBL_ContainerTypeConfig_Details_Information_CountMax);
 			this.splitContainer10.Panel1.Controls.Add(this.LBL_ContainerTypeConfig_Details_Information_Name);
-			this.splitContainer10.Panel1.Controls.Add(this.LBL_ContainerTypeConfig_Details_Information_ItemCount);
 			this.splitContainer10.Panel1MinSize = 150;
 			// 
 			// splitContainer10.Panel2
 			// 
+			this.splitContainer10.Panel2.Controls.Add(this.BTN_ContainerTypesConfig_Details_New);
 			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_CountMin);
 			this.splitContainer10.Panel2.Controls.Add(this.BTN_ContainerTypesConfig_Details_Apply);
-			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_Id);
 			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_CountMax);
 			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_Name);
-			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_ItemCount);
 			this.splitContainer10.Size = new System.Drawing.Size(566, 331);
 			this.splitContainer10.SplitterDistance = 150;
 			this.splitContainer10.TabIndex = 5;
@@ -3060,25 +3067,16 @@ namespace SEConfigTool
 			// LBL_ContainerTypeConfig_Details_Information_CountMin
 			// 
 			this.LBL_ContainerTypeConfig_Details_Information_CountMin.AutoSize = true;
-			this.LBL_ContainerTypeConfig_Details_Information_CountMin.Location = new System.Drawing.Point(3, 110);
+			this.LBL_ContainerTypeConfig_Details_Information_CountMin.Location = new System.Drawing.Point(3, 32);
 			this.LBL_ContainerTypeConfig_Details_Information_CountMin.Name = "LBL_ContainerTypeConfig_Details_Information_CountMin";
 			this.LBL_ContainerTypeConfig_Details_Information_CountMin.Size = new System.Drawing.Size(58, 13);
 			this.LBL_ContainerTypeConfig_Details_Information_CountMin.TabIndex = 9;
 			this.LBL_ContainerTypeConfig_Details_Information_CountMin.Text = "Count Min:";
 			// 
-			// LBL_ContainerTypeConfig_Details_Information_Id
-			// 
-			this.LBL_ContainerTypeConfig_Details_Information_Id.AutoSize = true;
-			this.LBL_ContainerTypeConfig_Details_Information_Id.Location = new System.Drawing.Point(3, 6);
-			this.LBL_ContainerTypeConfig_Details_Information_Id.Name = "LBL_ContainerTypeConfig_Details_Information_Id";
-			this.LBL_ContainerTypeConfig_Details_Information_Id.Size = new System.Drawing.Size(19, 13);
-			this.LBL_ContainerTypeConfig_Details_Information_Id.TabIndex = 6;
-			this.LBL_ContainerTypeConfig_Details_Information_Id.Text = "Id:";
-			// 
 			// LBL_ContainerTypeConfig_Details_Information_CountMax
 			// 
 			this.LBL_ContainerTypeConfig_Details_Information_CountMax.AutoSize = true;
-			this.LBL_ContainerTypeConfig_Details_Information_CountMax.Location = new System.Drawing.Point(3, 84);
+			this.LBL_ContainerTypeConfig_Details_Information_CountMax.Location = new System.Drawing.Point(3, 58);
 			this.LBL_ContainerTypeConfig_Details_Information_CountMax.Name = "LBL_ContainerTypeConfig_Details_Information_CountMax";
 			this.LBL_ContainerTypeConfig_Details_Information_CountMax.Size = new System.Drawing.Size(61, 13);
 			this.LBL_ContainerTypeConfig_Details_Information_CountMax.TabIndex = 3;
@@ -3087,24 +3085,25 @@ namespace SEConfigTool
 			// LBL_ContainerTypeConfig_Details_Information_Name
 			// 
 			this.LBL_ContainerTypeConfig_Details_Information_Name.AutoSize = true;
-			this.LBL_ContainerTypeConfig_Details_Information_Name.Location = new System.Drawing.Point(3, 32);
+			this.LBL_ContainerTypeConfig_Details_Information_Name.Location = new System.Drawing.Point(3, 6);
 			this.LBL_ContainerTypeConfig_Details_Information_Name.Name = "LBL_ContainerTypeConfig_Details_Information_Name";
 			this.LBL_ContainerTypeConfig_Details_Information_Name.Size = new System.Drawing.Size(38, 13);
 			this.LBL_ContainerTypeConfig_Details_Information_Name.TabIndex = 0;
 			this.LBL_ContainerTypeConfig_Details_Information_Name.Text = "Name:";
 			// 
-			// LBL_ContainerTypeConfig_Details_Information_ItemCount
+			// BTN_ContainerTypesConfig_Details_New
 			// 
-			this.LBL_ContainerTypeConfig_Details_Information_ItemCount.AutoSize = true;
-			this.LBL_ContainerTypeConfig_Details_Information_ItemCount.Location = new System.Drawing.Point(3, 58);
-			this.LBL_ContainerTypeConfig_Details_Information_ItemCount.Name = "LBL_ContainerTypeConfig_Details_Information_ItemCount";
-			this.LBL_ContainerTypeConfig_Details_Information_ItemCount.Size = new System.Drawing.Size(61, 13);
-			this.LBL_ContainerTypeConfig_Details_Information_ItemCount.TabIndex = 2;
-			this.LBL_ContainerTypeConfig_Details_Information_ItemCount.Text = "Item Count:";
+			this.BTN_ContainerTypesConfig_Details_New.Location = new System.Drawing.Point(3, 305);
+			this.BTN_ContainerTypesConfig_Details_New.Name = "BTN_ContainerTypesConfig_Details_New";
+			this.BTN_ContainerTypesConfig_Details_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_ContainerTypesConfig_Details_New.TabIndex = 16;
+			this.BTN_ContainerTypesConfig_Details_New.Text = "New";
+			this.BTN_ContainerTypesConfig_Details_New.UseVisualStyleBackColor = true;
+			this.BTN_ContainerTypesConfig_Details_New.Click += new System.EventHandler(this.BTN_ContainerTypesConfig_Details_New_Click);
 			// 
 			// TXT_ContainerTypeConfig_Details_Information_CountMin
 			// 
-			this.TXT_ContainerTypeConfig_Details_Information_CountMin.Location = new System.Drawing.Point(3, 107);
+			this.TXT_ContainerTypeConfig_Details_Information_CountMin.Location = new System.Drawing.Point(3, 29);
 			this.TXT_ContainerTypeConfig_Details_Information_CountMin.Name = "TXT_ContainerTypeConfig_Details_Information_CountMin";
 			this.TXT_ContainerTypeConfig_Details_Information_CountMin.Size = new System.Drawing.Size(150, 20);
 			this.TXT_ContainerTypeConfig_Details_Information_CountMin.TabIndex = 9;
@@ -3113,24 +3112,16 @@ namespace SEConfigTool
 			// BTN_ContainerTypesConfig_Details_Apply
 			// 
 			this.BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
-			this.BTN_ContainerTypesConfig_Details_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_ContainerTypesConfig_Details_Apply.Location = new System.Drawing.Point(53, 305);
 			this.BTN_ContainerTypesConfig_Details_Apply.Name = "BTN_ContainerTypesConfig_Details_Apply";
 			this.BTN_ContainerTypesConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_ContainerTypesConfig_Details_Apply.TabIndex = 8;
 			this.BTN_ContainerTypesConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_ContainerTypesConfig_Details_Apply.UseVisualStyleBackColor = true;
 			// 
-			// TXT_ContainerTypeConfig_Details_Information_Id
-			// 
-			this.TXT_ContainerTypeConfig_Details_Information_Id.Location = new System.Drawing.Point(3, 3);
-			this.TXT_ContainerTypeConfig_Details_Information_Id.Name = "TXT_ContainerTypeConfig_Details_Information_Id";
-			this.TXT_ContainerTypeConfig_Details_Information_Id.ReadOnly = true;
-			this.TXT_ContainerTypeConfig_Details_Information_Id.Size = new System.Drawing.Size(150, 20);
-			this.TXT_ContainerTypeConfig_Details_Information_Id.TabIndex = 7;
-			// 
 			// TXT_ContainerTypeConfig_Details_Information_CountMax
 			// 
-			this.TXT_ContainerTypeConfig_Details_Information_CountMax.Location = new System.Drawing.Point(3, 81);
+			this.TXT_ContainerTypeConfig_Details_Information_CountMax.Location = new System.Drawing.Point(3, 55);
 			this.TXT_ContainerTypeConfig_Details_Information_CountMax.Name = "TXT_ContainerTypeConfig_Details_Information_CountMax";
 			this.TXT_ContainerTypeConfig_Details_Information_CountMax.Size = new System.Drawing.Size(150, 20);
 			this.TXT_ContainerTypeConfig_Details_Information_CountMax.TabIndex = 6;
@@ -3138,19 +3129,11 @@ namespace SEConfigTool
 			// 
 			// TXT_ContainerTypeConfig_Details_Information_Name
 			// 
-			this.TXT_ContainerTypeConfig_Details_Information_Name.Location = new System.Drawing.Point(3, 29);
+			this.TXT_ContainerTypeConfig_Details_Information_Name.Location = new System.Drawing.Point(3, 3);
 			this.TXT_ContainerTypeConfig_Details_Information_Name.Name = "TXT_ContainerTypeConfig_Details_Information_Name";
-			this.TXT_ContainerTypeConfig_Details_Information_Name.ReadOnly = true;
 			this.TXT_ContainerTypeConfig_Details_Information_Name.Size = new System.Drawing.Size(150, 20);
 			this.TXT_ContainerTypeConfig_Details_Information_Name.TabIndex = 5;
-			// 
-			// TXT_ContainerTypeConfig_Details_Information_ItemCount
-			// 
-			this.TXT_ContainerTypeConfig_Details_Information_ItemCount.Location = new System.Drawing.Point(3, 55);
-			this.TXT_ContainerTypeConfig_Details_Information_ItemCount.Name = "TXT_ContainerTypeConfig_Details_Information_ItemCount";
-			this.TXT_ContainerTypeConfig_Details_Information_ItemCount.ReadOnly = true;
-			this.TXT_ContainerTypeConfig_Details_Information_ItemCount.Size = new System.Drawing.Size(150, 20);
-			this.TXT_ContainerTypeConfig_Details_Information_ItemCount.TabIndex = 4;
+			this.TXT_ContainerTypeConfig_Details_Information_Name.TextChanged += new System.EventHandler(this.TXT_ConfigContainerType_TextChanged);
 			// 
 			// TAB_ContainerTypesConfig_Details_Items_Page
 			// 
@@ -3209,6 +3192,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer21.Panel2
 			// 
+			this.splitContainer21.Panel2.Controls.Add(this.BTN_ContainerTypeConfig_Items_New);
 			this.splitContainer21.Panel2.Controls.Add(this.CMB_ContainerTypeConfig_Items_Type);
 			this.splitContainer21.Panel2.Controls.Add(this.BTN_ContainerTypeConfig_Items_Apply);
 			this.splitContainer21.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Item_AmountMax);
@@ -3266,7 +3250,7 @@ namespace SEConfigTool
 			// BTN_ContainerTypeConfig_Items_Apply
 			// 
 			this.BTN_ContainerTypeConfig_Items_Apply.Enabled = false;
-			this.BTN_ContainerTypeConfig_Items_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_ContainerTypeConfig_Items_Apply.Location = new System.Drawing.Point(54, 308);
 			this.BTN_ContainerTypeConfig_Items_Apply.Name = "BTN_ContainerTypeConfig_Items_Apply";
 			this.BTN_ContainerTypeConfig_Items_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_ContainerTypeConfig_Items_Apply.TabIndex = 9;
@@ -3906,7 +3890,7 @@ namespace SEConfigTool
 			// 
 			// GRP_SavedGame
 			// 
-			this.GRP_SavedGame.Controls.Add(this.tabControl1);
+			this.GRP_SavedGame.Controls.Add(this.TAB_SavedGame_Details);
 			this.GRP_SavedGame.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_SavedGame.Location = new System.Drawing.Point(0, 0);
 			this.GRP_SavedGame.Name = "GRP_SavedGame";
@@ -3915,28 +3899,28 @@ namespace SEConfigTool
 			this.GRP_SavedGame.TabStop = false;
 			this.GRP_SavedGame.Text = "Sector";
 			// 
-			// tabControl1
+			// TAB_SavedGame_Details
 			// 
-			this.tabControl1.Controls.Add(this.TP_SavedGame_Properties);
-			this.tabControl1.Controls.Add(this.TP_SavedGame_Events);
-			this.tabControl1.Controls.Add(this.TP_SavedGame_Objects);
-			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tabControl1.Location = new System.Drawing.Point(3, 16);
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(790, 381);
-			this.tabControl1.TabIndex = 1;
+			this.TAB_SavedGame_Details.Controls.Add(this.TAB_SavedGame_Properties_Page);
+			this.TAB_SavedGame_Details.Controls.Add(this.TAB_SavedGame_Events_Page);
+			this.TAB_SavedGame_Details.Controls.Add(this.TAB_SavedGame_Objects_Page);
+			this.TAB_SavedGame_Details.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TAB_SavedGame_Details.Location = new System.Drawing.Point(3, 16);
+			this.TAB_SavedGame_Details.Name = "TAB_SavedGame_Details";
+			this.TAB_SavedGame_Details.SelectedIndex = 0;
+			this.TAB_SavedGame_Details.Size = new System.Drawing.Size(790, 381);
+			this.TAB_SavedGame_Details.TabIndex = 1;
 			// 
-			// TP_SavedGame_Properties
+			// TAB_SavedGame_Properties_Page
 			// 
-			this.TP_SavedGame_Properties.Controls.Add(this.splitContainer35);
-			this.TP_SavedGame_Properties.Location = new System.Drawing.Point(4, 22);
-			this.TP_SavedGame_Properties.Name = "TP_SavedGame_Properties";
-			this.TP_SavedGame_Properties.Padding = new System.Windows.Forms.Padding(3);
-			this.TP_SavedGame_Properties.Size = new System.Drawing.Size(782, 355);
-			this.TP_SavedGame_Properties.TabIndex = 0;
-			this.TP_SavedGame_Properties.Text = "Properties";
-			this.TP_SavedGame_Properties.UseVisualStyleBackColor = true;
+			this.TAB_SavedGame_Properties_Page.Controls.Add(this.splitContainer35);
+			this.TAB_SavedGame_Properties_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_SavedGame_Properties_Page.Name = "TAB_SavedGame_Properties_Page";
+			this.TAB_SavedGame_Properties_Page.Padding = new System.Windows.Forms.Padding(3);
+			this.TAB_SavedGame_Properties_Page.Size = new System.Drawing.Size(782, 355);
+			this.TAB_SavedGame_Properties_Page.TabIndex = 0;
+			this.TAB_SavedGame_Properties_Page.Text = "Properties";
+			this.TAB_SavedGame_Properties_Page.UseVisualStyleBackColor = true;
 			// 
 			// splitContainer35
 			// 
@@ -3993,16 +3977,16 @@ namespace SEConfigTool
 			this.TXT_SavedGame_Properties_Position.Size = new System.Drawing.Size(150, 20);
 			this.TXT_SavedGame_Properties_Position.TabIndex = 0;
 			// 
-			// TP_SavedGame_Events
+			// TAB_SavedGame_Events_Page
 			// 
-			this.TP_SavedGame_Events.Controls.Add(this.splitContainer34);
-			this.TP_SavedGame_Events.Location = new System.Drawing.Point(4, 22);
-			this.TP_SavedGame_Events.Name = "TP_SavedGame_Events";
-			this.TP_SavedGame_Events.Padding = new System.Windows.Forms.Padding(3);
-			this.TP_SavedGame_Events.Size = new System.Drawing.Size(782, 355);
-			this.TP_SavedGame_Events.TabIndex = 1;
-			this.TP_SavedGame_Events.Text = "Events";
-			this.TP_SavedGame_Events.UseVisualStyleBackColor = true;
+			this.TAB_SavedGame_Events_Page.Controls.Add(this.splitContainer34);
+			this.TAB_SavedGame_Events_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_SavedGame_Events_Page.Name = "TAB_SavedGame_Events_Page";
+			this.TAB_SavedGame_Events_Page.Padding = new System.Windows.Forms.Padding(3);
+			this.TAB_SavedGame_Events_Page.Size = new System.Drawing.Size(782, 355);
+			this.TAB_SavedGame_Events_Page.TabIndex = 1;
+			this.TAB_SavedGame_Events_Page.Text = "Events";
+			this.TAB_SavedGame_Events_Page.UseVisualStyleBackColor = true;
 			// 
 			// splitContainer34
 			// 
@@ -4112,16 +4096,16 @@ namespace SEConfigTool
 			this.TXT_SavedGame_Events_Type.Size = new System.Drawing.Size(150, 20);
 			this.TXT_SavedGame_Events_Type.TabIndex = 0;
 			// 
-			// TP_SavedGame_Objects
+			// TAB_SavedGame_Objects_Page
 			// 
-			this.TP_SavedGame_Objects.Controls.Add(this.splitContainer33);
-			this.TP_SavedGame_Objects.Location = new System.Drawing.Point(4, 22);
-			this.TP_SavedGame_Objects.Name = "TP_SavedGame_Objects";
-			this.TP_SavedGame_Objects.Padding = new System.Windows.Forms.Padding(3);
-			this.TP_SavedGame_Objects.Size = new System.Drawing.Size(782, 355);
-			this.TP_SavedGame_Objects.TabIndex = 2;
-			this.TP_SavedGame_Objects.Text = "Objects";
-			this.TP_SavedGame_Objects.UseVisualStyleBackColor = true;
+			this.TAB_SavedGame_Objects_Page.Controls.Add(this.splitContainer33);
+			this.TAB_SavedGame_Objects_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_SavedGame_Objects_Page.Name = "TAB_SavedGame_Objects_Page";
+			this.TAB_SavedGame_Objects_Page.Padding = new System.Windows.Forms.Padding(3);
+			this.TAB_SavedGame_Objects_Page.Size = new System.Drawing.Size(782, 355);
+			this.TAB_SavedGame_Objects_Page.TabIndex = 2;
+			this.TAB_SavedGame_Objects_Page.Text = "Objects";
+			this.TAB_SavedGame_Objects_Page.UseVisualStyleBackColor = true;
 			// 
 			// splitContainer33
 			// 
@@ -4134,6 +4118,10 @@ namespace SEConfigTool
 			// 
 			this.splitContainer33.Panel1.Controls.Add(this.TRV_SavedGame_Objects);
 			this.splitContainer33.Panel1MinSize = 300;
+			// 
+			// splitContainer33.Panel2
+			// 
+			this.splitContainer33.Panel2.Controls.Add(this.splitContainer48);
 			this.splitContainer33.Size = new System.Drawing.Size(776, 349);
 			this.splitContainer33.SplitterDistance = 300;
 			this.splitContainer33.TabIndex = 1;
@@ -4147,28 +4135,28 @@ namespace SEConfigTool
 			this.TRV_SavedGame_Objects.TabIndex = 0;
 			this.TRV_SavedGame_Objects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_SavedGame_Objects_AfterSelect);
 			// 
-			// LayoutPages
+			// TAB_LayoutPages
 			// 
-			this.LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			this.TAB_LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.LayoutPages.Controls.Add(this.TAB_SaveGamePage_Page);
-			this.LayoutPages.Controls.Add(this.TAB_BlocksConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_AmmoConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_ContainerTypeConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_GlobalEventConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_SpawnGroupConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_PhysicalItemsConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_ComponentConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_BlueprintConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_VoxelMaterialConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_ScenariosConfig_Page);
-			this.LayoutPages.Controls.Add(this.TAB_TransparentMaterialsConfig_Page);
-			this.LayoutPages.Location = new System.Drawing.Point(0, 0);
-			this.LayoutPages.Name = "LayoutPages";
-			this.LayoutPages.SelectedIndex = 0;
-			this.LayoutPages.Size = new System.Drawing.Size(810, 462);
-			this.LayoutPages.TabIndex = 0;
+			this.TAB_LayoutPages.Controls.Add(this.TAB_SaveGamePage_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_BlocksConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_AmmoConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_ContainerTypeConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_GlobalEventConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_SpawnGroupConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_PhysicalItemsConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_ComponentConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_BlueprintConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_VoxelMaterialConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_ScenariosConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_TransparentMaterialsConfig_Page);
+			this.TAB_LayoutPages.Location = new System.Drawing.Point(0, 0);
+			this.TAB_LayoutPages.Name = "TAB_LayoutPages";
+			this.TAB_LayoutPages.SelectedIndex = 0;
+			this.TAB_LayoutPages.Size = new System.Drawing.Size(810, 462);
+			this.TAB_LayoutPages.TabIndex = 0;
 			// 
 			// TAB_TransparentMaterialsConfig_Page
 			// 
@@ -4481,22 +4469,137 @@ namespace SEConfigTool
 			this.BTN_TransparentMaterialConfig_Details_Apply.UseVisualStyleBackColor = true;
 			this.BTN_TransparentMaterialConfig_Details_Apply.Click += new System.EventHandler(this.BTN_TransparentMaterialsConfig_Details_Apply_Click);
 			// 
-			// CMB_PhysicalItemConfig_Details_Type
+			// splitContainer48
 			// 
-			this.CMB_PhysicalItemConfig_Details_Type.FormattingEnabled = true;
-			this.CMB_PhysicalItemConfig_Details_Type.Location = new System.Drawing.Point(3, 3);
-			this.CMB_PhysicalItemConfig_Details_Type.Name = "CMB_PhysicalItemConfig_Details_Type";
-			this.CMB_PhysicalItemConfig_Details_Type.Size = new System.Drawing.Size(150, 21);
-			this.CMB_PhysicalItemConfig_Details_Type.TabIndex = 22;
+			this.splitContainer48.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer48.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer48.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer48.Name = "splitContainer48";
 			// 
-			// LBL_PhysicalItemConfig_Details_Type
+			// splitContainer48.Panel1
 			// 
-			this.LBL_PhysicalItemConfig_Details_Type.AutoSize = true;
-			this.LBL_PhysicalItemConfig_Details_Type.Location = new System.Drawing.Point(3, 6);
-			this.LBL_PhysicalItemConfig_Details_Type.Name = "LBL_PhysicalItemConfig_Details_Type";
-			this.LBL_PhysicalItemConfig_Details_Type.Size = new System.Drawing.Size(46, 13);
-			this.LBL_PhysicalItemConfig_Details_Type.TabIndex = 13;
-			this.LBL_PhysicalItemConfig_Details_Type.Text = "Type Id:";
+			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field5);
+			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field4);
+			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field3);
+			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field2);
+			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field1);
+			this.splitContainer48.Panel1MinSize = 150;
+			// 
+			// splitContainer48.Panel2
+			// 
+			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field5);
+			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field4);
+			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field3);
+			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field2);
+			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field1);
+			this.splitContainer48.Size = new System.Drawing.Size(472, 349);
+			this.splitContainer48.SplitterDistance = 150;
+			this.splitContainer48.TabIndex = 0;
+			// 
+			// TXT_Sector_Objects_Field1
+			// 
+			this.TXT_Sector_Objects_Field1.Location = new System.Drawing.Point(3, 3);
+			this.TXT_Sector_Objects_Field1.Name = "TXT_Sector_Objects_Field1";
+			this.TXT_Sector_Objects_Field1.ReadOnly = true;
+			this.TXT_Sector_Objects_Field1.Size = new System.Drawing.Size(150, 20);
+			this.TXT_Sector_Objects_Field1.TabIndex = 0;
+			this.TXT_Sector_Objects_Field1.Visible = false;
+			// 
+			// TXT_Sector_Objects_Field2
+			// 
+			this.TXT_Sector_Objects_Field2.Location = new System.Drawing.Point(3, 29);
+			this.TXT_Sector_Objects_Field2.Name = "TXT_Sector_Objects_Field2";
+			this.TXT_Sector_Objects_Field2.ReadOnly = true;
+			this.TXT_Sector_Objects_Field2.Size = new System.Drawing.Size(150, 20);
+			this.TXT_Sector_Objects_Field2.TabIndex = 1;
+			this.TXT_Sector_Objects_Field2.Visible = false;
+			// 
+			// TXT_Sector_Objects_Field3
+			// 
+			this.TXT_Sector_Objects_Field3.Location = new System.Drawing.Point(3, 55);
+			this.TXT_Sector_Objects_Field3.Name = "TXT_Sector_Objects_Field3";
+			this.TXT_Sector_Objects_Field3.ReadOnly = true;
+			this.TXT_Sector_Objects_Field3.Size = new System.Drawing.Size(150, 20);
+			this.TXT_Sector_Objects_Field3.TabIndex = 2;
+			this.TXT_Sector_Objects_Field3.Visible = false;
+			// 
+			// LBL_Sector_Objects_Field1
+			// 
+			this.LBL_Sector_Objects_Field1.AutoSize = true;
+			this.LBL_Sector_Objects_Field1.Location = new System.Drawing.Point(3, 6);
+			this.LBL_Sector_Objects_Field1.Name = "LBL_Sector_Objects_Field1";
+			this.LBL_Sector_Objects_Field1.Size = new System.Drawing.Size(85, 13);
+			this.LBL_Sector_Objects_Field1.TabIndex = 0;
+			this.LBL_Sector_Objects_Field1.Text = "Dynamic Field 1:";
+			this.LBL_Sector_Objects_Field1.Visible = false;
+			// 
+			// LBL_Sector_Objects_Field2
+			// 
+			this.LBL_Sector_Objects_Field2.AutoSize = true;
+			this.LBL_Sector_Objects_Field2.Location = new System.Drawing.Point(3, 32);
+			this.LBL_Sector_Objects_Field2.Name = "LBL_Sector_Objects_Field2";
+			this.LBL_Sector_Objects_Field2.Size = new System.Drawing.Size(85, 13);
+			this.LBL_Sector_Objects_Field2.TabIndex = 1;
+			this.LBL_Sector_Objects_Field2.Text = "Dynamic Field 2:";
+			this.LBL_Sector_Objects_Field2.Visible = false;
+			// 
+			// LBL_Sector_Objects_Field3
+			// 
+			this.LBL_Sector_Objects_Field3.AutoSize = true;
+			this.LBL_Sector_Objects_Field3.Location = new System.Drawing.Point(3, 58);
+			this.LBL_Sector_Objects_Field3.Name = "LBL_Sector_Objects_Field3";
+			this.LBL_Sector_Objects_Field3.Size = new System.Drawing.Size(85, 13);
+			this.LBL_Sector_Objects_Field3.TabIndex = 2;
+			this.LBL_Sector_Objects_Field3.Text = "Dynamic Field 3:";
+			this.LBL_Sector_Objects_Field3.Visible = false;
+			// 
+			// TXT_Sector_Objects_Field4
+			// 
+			this.TXT_Sector_Objects_Field4.Location = new System.Drawing.Point(3, 81);
+			this.TXT_Sector_Objects_Field4.Name = "TXT_Sector_Objects_Field4";
+			this.TXT_Sector_Objects_Field4.ReadOnly = true;
+			this.TXT_Sector_Objects_Field4.Size = new System.Drawing.Size(150, 20);
+			this.TXT_Sector_Objects_Field4.TabIndex = 3;
+			this.TXT_Sector_Objects_Field4.Visible = false;
+			// 
+			// TXT_Sector_Objects_Field5
+			// 
+			this.TXT_Sector_Objects_Field5.Location = new System.Drawing.Point(3, 107);
+			this.TXT_Sector_Objects_Field5.Name = "TXT_Sector_Objects_Field5";
+			this.TXT_Sector_Objects_Field5.ReadOnly = true;
+			this.TXT_Sector_Objects_Field5.Size = new System.Drawing.Size(150, 20);
+			this.TXT_Sector_Objects_Field5.TabIndex = 4;
+			this.TXT_Sector_Objects_Field5.Visible = false;
+			// 
+			// LBL_Sector_Objects_Field4
+			// 
+			this.LBL_Sector_Objects_Field4.AutoSize = true;
+			this.LBL_Sector_Objects_Field4.Location = new System.Drawing.Point(3, 84);
+			this.LBL_Sector_Objects_Field4.Name = "LBL_Sector_Objects_Field4";
+			this.LBL_Sector_Objects_Field4.Size = new System.Drawing.Size(85, 13);
+			this.LBL_Sector_Objects_Field4.TabIndex = 3;
+			this.LBL_Sector_Objects_Field4.Text = "Dynamic Field 4:";
+			this.LBL_Sector_Objects_Field4.Visible = false;
+			// 
+			// LBL_Sector_Objects_Field5
+			// 
+			this.LBL_Sector_Objects_Field5.AutoSize = true;
+			this.LBL_Sector_Objects_Field5.Location = new System.Drawing.Point(3, 110);
+			this.LBL_Sector_Objects_Field5.Name = "LBL_Sector_Objects_Field5";
+			this.LBL_Sector_Objects_Field5.Size = new System.Drawing.Size(85, 13);
+			this.LBL_Sector_Objects_Field5.TabIndex = 4;
+			this.LBL_Sector_Objects_Field5.Text = "Dynamic Field 5:";
+			this.LBL_Sector_Objects_Field5.Visible = false;
+			// 
+			// BTN_ContainerTypeConfig_Items_New
+			// 
+			this.BTN_ContainerTypeConfig_Items_New.Location = new System.Drawing.Point(3, 308);
+			this.BTN_ContainerTypeConfig_Items_New.Name = "BTN_ContainerTypeConfig_Items_New";
+			this.BTN_ContainerTypeConfig_Items_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_ContainerTypeConfig_Items_New.TabIndex = 17;
+			this.BTN_ContainerTypeConfig_Items_New.Text = "New";
+			this.BTN_ContainerTypeConfig_Items_New.UseVisualStyleBackColor = true;
+			this.BTN_ContainerTypeConfig_Items_New.Click += new System.EventHandler(this.BTN_ContainerTypeConfig_Items_New_Click);
 			// 
 			// SEConfigTool
 			// 
@@ -4504,7 +4607,7 @@ namespace SEConfigTool
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(810, 487);
 			this.Controls.Add(this.STS_Status);
-			this.Controls.Add(this.LayoutPages);
+			this.Controls.Add(this.TAB_LayoutPages);
 			this.Name = "SEConfigTool";
 			this.Text = "SEConfigTool";
 			this.Load += new System.EventHandler(this.SEConfigTool_Load);
@@ -4744,15 +4847,15 @@ namespace SEConfigTool
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.GRP_SavedGame.ResumeLayout(false);
-			this.tabControl1.ResumeLayout(false);
-			this.TP_SavedGame_Properties.ResumeLayout(false);
+			this.TAB_SavedGame_Details.ResumeLayout(false);
+			this.TAB_SavedGame_Properties_Page.ResumeLayout(false);
 			this.splitContainer35.Panel1.ResumeLayout(false);
 			this.splitContainer35.Panel1.PerformLayout();
 			this.splitContainer35.Panel2.ResumeLayout(false);
 			this.splitContainer35.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer35)).EndInit();
 			this.splitContainer35.ResumeLayout(false);
-			this.TP_SavedGame_Events.ResumeLayout(false);
+			this.TAB_SavedGame_Events_Page.ResumeLayout(false);
 			this.splitContainer34.Panel1.ResumeLayout(false);
 			this.splitContainer34.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer34)).EndInit();
@@ -4763,11 +4866,12 @@ namespace SEConfigTool
 			this.splitContainer36.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer36)).EndInit();
 			this.splitContainer36.ResumeLayout(false);
-			this.TP_SavedGame_Objects.ResumeLayout(false);
+			this.TAB_SavedGame_Objects_Page.ResumeLayout(false);
 			this.splitContainer33.Panel1.ResumeLayout(false);
+			this.splitContainer33.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer33)).EndInit();
 			this.splitContainer33.ResumeLayout(false);
-			this.LayoutPages.ResumeLayout(false);
+			this.TAB_LayoutPages.ResumeLayout(false);
 			this.TAB_TransparentMaterialsConfig_Page.ResumeLayout(false);
 			this.splitContainer41.Panel1.ResumeLayout(false);
 			this.splitContainer41.Panel2.ResumeLayout(false);
@@ -4785,6 +4889,12 @@ namespace SEConfigTool
 			this.splitContainer47.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer47)).EndInit();
 			this.splitContainer47.ResumeLayout(false);
+			this.splitContainer48.Panel1.ResumeLayout(false);
+			this.splitContainer48.Panel1.PerformLayout();
+			this.splitContainer48.Panel2.ResumeLayout(false);
+			this.splitContainer48.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer48)).EndInit();
+			this.splitContainer48.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -4977,7 +5087,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.Label LBL_GlobalEventConfig_Details_MaxActivationType;
 		private System.Windows.Forms.Label LBL_GlobalEventConfig_Details_Name;
 		private System.Windows.Forms.Label LBL_GlobalEventConfig_Details_EventType;
-		private System.Windows.Forms.Label LBL_GlobalEventConfig_Details_Id;
 		private System.Windows.Forms.Label LBL_GlobalEventConfig_Details_Description;
 		private System.Windows.Forms.ComboBox CMB_GlobalEventsConfig_Details_EventType;
 		private System.Windows.Forms.TextBox TXT_ConfigGlobalEvent_Details_FirstActivation;
@@ -4985,7 +5094,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TXT_ConfigGlobalEvent_Details_MaxActivation;
 		private System.Windows.Forms.Button BTN_GlobalEventConfig_Details_Apply;
 		private System.Windows.Forms.TextBox TXT_ConfigGlobalEvent_Details_Name;
-		private System.Windows.Forms.TextBox TXT_ConfigGlobalEvent_Details_Id;
 		private System.Windows.Forms.TextBox TXT_ConfigGlobalEvent_Details_Description;
 		private System.Windows.Forms.TabPage TAB_ContainerTypeConfig_Page;
 		private System.Windows.Forms.SplitContainer splitContainer8;
@@ -4999,16 +5107,12 @@ namespace SEConfigTool
 		private System.Windows.Forms.TabPage TAB_ContainerTypesConfig_Details_Information_Page;
 		private System.Windows.Forms.SplitContainer splitContainer10;
 		private System.Windows.Forms.Label LBL_ContainerTypeConfig_Details_Information_CountMin;
-		private System.Windows.Forms.Label LBL_ContainerTypeConfig_Details_Information_Id;
 		private System.Windows.Forms.Label LBL_ContainerTypeConfig_Details_Information_CountMax;
 		private System.Windows.Forms.Label LBL_ContainerTypeConfig_Details_Information_Name;
-		private System.Windows.Forms.Label LBL_ContainerTypeConfig_Details_Information_ItemCount;
 		private System.Windows.Forms.TextBox TXT_ContainerTypeConfig_Details_Information_CountMin;
 		private System.Windows.Forms.Button BTN_ContainerTypesConfig_Details_Apply;
-		private System.Windows.Forms.TextBox TXT_ContainerTypeConfig_Details_Information_Id;
 		private System.Windows.Forms.TextBox TXT_ContainerTypeConfig_Details_Information_CountMax;
 		private System.Windows.Forms.TextBox TXT_ContainerTypeConfig_Details_Information_Name;
-		private System.Windows.Forms.TextBox TXT_ContainerTypeConfig_Details_Information_ItemCount;
 		private System.Windows.Forms.TabPage TAB_ContainerTypesConfig_Details_Items_Page;
 		private System.Windows.Forms.SplitContainer splitContainer20;
 		private System.Windows.Forms.ListBox LST_ContainerTypeConfig_Details_Items;
@@ -5070,14 +5174,14 @@ namespace SEConfigTool
 		private System.Windows.Forms.Button BTN_SavedGame_Save;
 		private System.Windows.Forms.Button BTN_LoadSaveGame;
 		private System.Windows.Forms.GroupBox GRP_SavedGame;
-		private System.Windows.Forms.TabControl tabControl1;
-		private System.Windows.Forms.TabPage TP_SavedGame_Properties;
+		private System.Windows.Forms.TabControl TAB_SavedGame_Details;
+		private System.Windows.Forms.TabPage TAB_SavedGame_Properties_Page;
 		private System.Windows.Forms.SplitContainer splitContainer35;
 		private System.Windows.Forms.Label LBL_SavedGame_Properties_AppVersion;
 		private System.Windows.Forms.Label LBL_SavedGame_Properties_Position;
 		private System.Windows.Forms.TextBox TXT_SavedGame_Properties_AppVersion;
 		private System.Windows.Forms.TextBox TXT_SavedGame_Properties_Position;
-		private System.Windows.Forms.TabPage TP_SavedGame_Events;
+		private System.Windows.Forms.TabPage TAB_SavedGame_Events_Page;
 		private System.Windows.Forms.SplitContainer splitContainer34;
 		private System.Windows.Forms.ListBox LST_SavedGame_Events;
 		private System.Windows.Forms.SplitContainer splitContainer36;
@@ -5086,10 +5190,10 @@ namespace SEConfigTool
 		private System.Windows.Forms.Button BTN_SavedGame_Events_Apply;
 		private System.Windows.Forms.TextBox TXT_SavedGame_Events_ActivationTime;
 		private System.Windows.Forms.TextBox TXT_SavedGame_Events_Type;
-		private System.Windows.Forms.TabPage TP_SavedGame_Objects;
+		private System.Windows.Forms.TabPage TAB_SavedGame_Objects_Page;
 		private System.Windows.Forms.SplitContainer splitContainer33;
 		private System.Windows.Forms.TreeView TRV_SavedGame_Objects;
-		private System.Windows.Forms.TabControl LayoutPages;
+		private System.Windows.Forms.TabControl TAB_LayoutPages;
 		private System.Windows.Forms.CheckBox CHK_VoxelMaterialConfig_Details_CanBeHarvested;
 		private System.Windows.Forms.CheckBox CHK_VoxelMaterialConfig_Details_UseTwoTextures;
 		private System.Windows.Forms.CheckBox CHK_VoxelMaterialConfig_Details_IsRare;
@@ -5138,6 +5242,19 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TXT_PhysicalItemConfig_Details_Size_Y;
 		private System.Windows.Forms.Label LBL_PhysicalItemConfig_Details_Type;
 		private System.Windows.Forms.ComboBox CMB_PhysicalItemConfig_Details_Type;
+		private System.Windows.Forms.Button BTN_ContainerTypesConfig_Details_New;
+		private System.Windows.Forms.SplitContainer splitContainer48;
+		private System.Windows.Forms.Label LBL_Sector_Objects_Field3;
+		private System.Windows.Forms.Label LBL_Sector_Objects_Field2;
+		private System.Windows.Forms.Label LBL_Sector_Objects_Field1;
+		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field3;
+		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field2;
+		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field1;
+		private System.Windows.Forms.Label LBL_Sector_Objects_Field5;
+		private System.Windows.Forms.Label LBL_Sector_Objects_Field4;
+		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field5;
+		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field4;
+		private System.Windows.Forms.Button BTN_ContainerTypeConfig_Items_New;
 
     }
 }

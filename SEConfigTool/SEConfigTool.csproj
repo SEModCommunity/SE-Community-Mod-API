@@ -87,6 +87,7 @@
     <EmbeddedResource Include="SEConfigTool.resx">
       <DependentUpon>SEConfigTool.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="ClassDiagram.cd" />
     <None Include="Properties\DataSources\SEModAPI.API.Definitions.CubeBlocks.CubeBlockDefinitionsManager.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

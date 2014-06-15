@@ -77,6 +77,7 @@ namespace SEConfigTool
 			m_ammoMagazinesDefinitionsManager.IsMutable = true;
 			m_componentsDefinitionsManager.IsMutable = true;
 			m_physicalItemsDefinitionsManager.IsMutable = true;
+			m_containerTypesDefinitionsManager.IsMutable = true;
 		}
 
 		#endregion
@@ -124,18 +125,86 @@ namespace SEConfigTool
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-				TreeNode newNode = TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				TreeNode newNode = TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.EntityId.ToString(), cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				newNode.Tag = cubeGrid;
 
 				//Create the cube grid sub-item categories
-				newNode.Nodes.Add("Cube Blocks");
-				newNode.Nodes.Add("Conveyor Lines");
-				newNode.Nodes.Add("Block Groups");
+				TreeNode blocksNode = newNode.Nodes.Add("Cube Blocks (" + cubeGrid.CubeBlocks.Count.ToString() + ")");
+				newNode.Nodes.Add("Conveyor Lines (" + cubeGrid.ConveyorLines.Count.ToString() + ")");
+				newNode.Nodes.Add("Block Groups (" + cubeGrid.BlockGroups.Count.ToString() + ")");
+
+				TreeNode structuralBlocksNode = blocksNode.Nodes.Add("Structural");
+				TreeNode containerBlocksNode = blocksNode.Nodes.Add("Containers");
+				TreeNode productionBlocksNode = blocksNode.Nodes.Add("Refinement and Production");
+				TreeNode energyBlocksNode = blocksNode.Nodes.Add("Energy");
+				TreeNode conveyorBlocksNode = blocksNode.Nodes.Add("Conveyor");
+				TreeNode utilityBlocksNode = blocksNode.Nodes.Add("Utility");
+				TreeNode miscBlocksNode = blocksNode.Nodes.Add("Misc");
 
 				//Add the cube blocks
 				foreach (CubeBlock cubeBlock in cubeGrid.CubeBlocks)
 				{
-					newNode.Nodes[0].Nodes.Add(cubeBlock.Name);
-			}
+					TreeNode blockNode = null;
+					MyObjectBuilder_Inventory blockInventory = null;
+					switch (cubeBlock.BaseDefinition.TypeId)
+					{
+						case MyObjectBuilderTypeEnum.CubeBlock:
+							blockNode = structuralBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.CargoContainer:
+							blockNode = containerBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							MyObjectBuilder_CargoContainer containerBlock = (MyObjectBuilder_CargoContainer) cubeBlock.BaseDefinition;
+							blockInventory = containerBlock.Inventory;
+							break;
+						case MyObjectBuilderTypeEnum.Refinery:
+							blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Assembler:
+							blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Reactor:
+							MyObjectBuilder_Reactor reactorBlock = (MyObjectBuilder_Reactor)cubeBlock.BaseDefinition;
+							blockInventory = reactorBlock.Inventory;
+							blockNode = energyBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.SolarPanel:
+							blockNode = energyBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.ShipConnector:
+							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Collector:
+							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Conveyor:
+							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.ConveyorConnector:
+							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Cockpit:
+							blockNode = utilityBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.MedicalRoom:
+							blockNode = utilityBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						default:
+							blockNode = miscBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+					}
+					if (blockNode == null)
+						continue;
+
+					blockNode.Tag = cubeBlock;
+
+					if (blockInventory != null)
+					{
+						foreach (var item in blockInventory.Items)
+						{
+							blockNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.AmountDecimal.ToString());
+						}
+					}
+				}
 			}
 
 			//Add the voxel maps
@@ -224,11 +293,12 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillContainerTypeConfigurationListBox()
+		private void FillContainerTypeConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_containerTypesDefinitionsManager.Load(GetContentDataFile("ContainerTypes.sbc"));
+			if(loadFromFile)
+				m_containerTypesDefinitionsManager.Load(GetContentDataFile("ContainerTypes.sbc"));
 
 			LST_ContainerTypesConfig.Items.Clear();
 			LST_ContainerTypeConfig_Details_Items.Items.Clear();
@@ -461,22 +531,119 @@ namespace SEConfigTool
 
 		private void TRV_SavedGame_Objects_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			//Ignore top-level category nodes
-			if (e.Node.Level == 0)
+			LBL_Sector_Objects_Field1.Visible = false;
+			LBL_Sector_Objects_Field2.Visible = false;
+			LBL_Sector_Objects_Field3.Visible = false;
+			LBL_Sector_Objects_Field4.Visible = false;
+			LBL_Sector_Objects_Field5.Visible = false;
+
+			TXT_Sector_Objects_Field1.Visible = false;
+			TXT_Sector_Objects_Field2.Visible = false;
+			TXT_Sector_Objects_Field3.Visible = false;
+			TXT_Sector_Objects_Field4.Visible = false;
+			TXT_Sector_Objects_Field5.Visible = false;
+
+			var linkedObject = e.Node.Tag;
+			if (linkedObject == null)
 				return;
 
-			//Sector object nodes
-			if (e.Node.Level == 1)
+			if (linkedObject.GetType() == typeof(CubeBlock))
 			{
+				CubeBlock cubeBlock = (CubeBlock)linkedObject;
+
+				LBL_Sector_Objects_Field1.Visible = true;
+				LBL_Sector_Objects_Field2.Visible = true;
+				TXT_Sector_Objects_Field1.Visible = true;
+				TXT_Sector_Objects_Field2.Visible = true;
+
+				LBL_Sector_Objects_Field1.Text = "Type:";
+				LBL_Sector_Objects_Field2.Text = "Entity Id:";
+				TXT_Sector_Objects_Field1.Text = cubeBlock.SubtypeName;
+				TXT_Sector_Objects_Field2.Text = cubeBlock.EntityId.ToString();
+
+				if (cubeBlock.BaseDefinition.GetType() == typeof(MyObjectBuilder_CubeBlock))
+				{
+					//TODO - Maybe display something like integrity percent or build percent for structural blocks?
 				}
+				else if (cubeBlock.BaseDefinition.GetType() == typeof(MyObjectBuilder_CargoContainer))
+				{
+					MyObjectBuilder_CargoContainer containerBlock = (MyObjectBuilder_CargoContainer)cubeBlock.BaseDefinition;
 
-			//Ignore sector object parts category nodes
-			if (e.Node.Level == 2)
-				return;
+					LBL_Sector_Objects_Field3.Visible = true;
+					LBL_Sector_Objects_Field4.Visible = true;
+					LBL_Sector_Objects_Field5.Visible = true;
+					TXT_Sector_Objects_Field3.Visible = true;
+					TXT_Sector_Objects_Field4.Visible = true;
+					TXT_Sector_Objects_Field5.Visible = true;
 
-			//Sector object parts items nodes
-			if (e.Node.Level == 3)
-			{
+					LBL_Sector_Objects_Field3.Text = "Item Count:";
+					LBL_Sector_Objects_Field4.Text = "Item Volume (L):";
+					LBL_Sector_Objects_Field5.Text = "Item Mass (kg):";
+
+					float itemCount = 0;
+					float itemVolume = 0;
+					float itemMass = 0;
+					foreach (var item in containerBlock.Inventory.Items)
+					{
+						itemCount += item.Amount;
+
+						if (item.PhysicalContent.TypeId == MyObjectBuilderTypeEnum.PhysicalGunObject)
+						{
+							foreach (var physicalItem in m_physicalItemsDefinitionsManager.Definitions)
+							{
+								if (physicalItem.Id.SubtypeId == item.PhysicalContent.SubtypeName)
+								{
+									itemVolume += physicalItem.Volume * item.Amount;
+									itemMass += physicalItem.Mass * item.Amount;
+									break;
+								}
+							}
+						}
+						if (item.PhysicalContent.TypeId == MyObjectBuilderTypeEnum.Component)
+						{
+							foreach (var component in m_componentsDefinitionsManager.Definitions)
+							{
+								if (component.Id.SubtypeId == item.PhysicalContent.SubtypeName)
+								{
+									itemVolume += component.Volume * item.Amount;
+									itemMass += component.Mass * item.Amount;
+									break;
+								}
+							}
+						}
+						if (item.PhysicalContent.TypeId == MyObjectBuilderTypeEnum.AmmoMagazine)
+						{
+							foreach (var ammo in m_ammoMagazinesDefinitionsManager.Definitions)
+							{
+								if (ammo.Id.SubtypeId == item.PhysicalContent.SubtypeName)
+								{
+									itemVolume += ammo.Volume * item.Amount;
+									itemMass += ammo.Mass * item.Amount;
+									break;
+								}
+							}
+						}
+					}
+					TXT_Sector_Objects_Field3.Text = itemCount.ToString();
+					TXT_Sector_Objects_Field4.Text = itemVolume.ToString();
+					TXT_Sector_Objects_Field5.Text = itemMass.ToString();
+				}
+				else
+				{
+					MyObjectBuilder_Reactor containerBlock = (MyObjectBuilder_Reactor)cubeBlock.BaseDefinition;
+
+					LBL_Sector_Objects_Field3.Visible = true;
+					TXT_Sector_Objects_Field3.Visible = true;
+
+					LBL_Sector_Objects_Field3.Text = "Fuel (kg):";
+
+					float fuelMass = 0;
+					foreach (var item in containerBlock.Inventory.Items)
+					{
+						fuelMass += item.Amount;
+					}
+					TXT_Sector_Objects_Field3.Text = fuelMass.ToString();
+				}
 			}
 		}
 
@@ -693,10 +860,8 @@ namespace SEConfigTool
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
 
 			TXT_ContainerTypeConfig_Details_Information_Name.Text = containerType.Name;
-			TXT_ContainerTypeConfig_Details_Information_Id.Text = containerType.TypeId.ToString();
-			TXT_ContainerTypeConfig_Details_Information_ItemCount.Text = containerType.ItemCount.ToString();
-			TXT_ContainerTypeConfig_Details_Information_CountMax.Text = containerType.CountMax.ToString();
 			TXT_ContainerTypeConfig_Details_Information_CountMin.Text = containerType.CountMin.ToString();
+			TXT_ContainerTypeConfig_Details_Information_CountMax.Text = containerType.CountMax.ToString();
 
 			LST_ContainerTypeConfig_Details_Items.Items.Clear();
 			foreach (var def in containerType.Items)
@@ -704,8 +869,17 @@ namespace SEConfigTool
 				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
 			}
 
+			//Add all physical items, components, and ammo to the combo box
 			CMB_ContainerTypeConfig_Items_Type.Items.Clear();
 			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
 			{
 				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
 			}
@@ -735,8 +909,9 @@ namespace SEConfigTool
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
 
-			containerType.CountMax = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMax.Text, m_numberFormatInfo);
+			containerType.Name = TXT_ContainerTypeConfig_Details_Information_Name.Text;
 			containerType.CountMin = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMin.Text, m_numberFormatInfo);
+			containerType.CountMax = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMax.Text, m_numberFormatInfo);
 
 			BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
 		}
@@ -747,6 +922,24 @@ namespace SEConfigTool
 			{
 				BTN_ContainerTypesConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_ContainerTypesConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.NewEntry();
+			if (containerType == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			containerType.Name = "(New)";
+			containerType.CountMin = 1;
+			containerType.CountMax = 1;
+
+			FillContainerTypeConfigurationListBox(false);
+
+			LST_ContainerTypesConfig.SelectedIndex = LST_ContainerTypesConfig.Items.Count - 1;
 		}
 
 		#region Items
@@ -772,7 +965,7 @@ namespace SEConfigTool
 
 		private void BTN_ContainerTypeConfig_Items_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LST_ContainerTypesConfig.SelectedIndex;
+			int index = LST_ContainerTypeConfig_Details_Items.SelectedIndex;
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
@@ -783,6 +976,14 @@ namespace SEConfigTool
 			containerItem.Frequency = Convert.ToSingle(TXT_ContainerTypeConfig_Item_Frequency.Text, m_numberFormatInfo);
 
 			BTN_ContainerTypeConfig_Items_Apply.Enabled = false;
+
+			int currentIndex = LST_ContainerTypeConfig_Details_Items.SelectedIndex;
+			LST_ContainerTypeConfig_Details_Items.Items.Clear();
+			foreach (var def in containerType.Items)
+			{
+				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
+			}
+			LST_ContainerTypeConfig_Details_Items.SelectedIndex = currentIndex;
 		}
 
 		private void TXT_ContainerTypeConfig_Item_TextChanged(object sender, EventArgs e)
@@ -801,6 +1002,31 @@ namespace SEConfigTool
 			}
 		}
 
+		private void BTN_ContainerTypeConfig_Items_New_Click(object sender, EventArgs e)
+		{
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
+			ContainerTypeItem containerItem = containerType.ItemsManager.NewEntry();
+			if (containerItem == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			//Set some default values for the new entry
+			containerItem.Name = "(New)";
+			containerItem.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "Stone");
+			containerItem.AmountMin = 1;
+			containerItem.AmountMax = 1;
+
+			LST_ContainerTypeConfig_Details_Items.Items.Clear();
+			foreach (var def in containerType.Items)
+			{
+				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
+			}
+
+			LST_ContainerTypeConfig_Details_Items.SelectedIndex = LST_ContainerTypeConfig_Details_Items.Items.Count - 1;
+		}
+
 		#endregion
 
 		#endregion
@@ -814,7 +1040,6 @@ namespace SEConfigTool
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
-			TXT_ConfigGlobalEvent_Details_Id.Text = globalEvent.Id.ToString();
 			TXT_ConfigGlobalEvent_Details_Name.Text = globalEvent.Name;
 			TXT_ConfigGlobalEvent_Details_Description.Text = globalEvent.Description;
 			CMB_GlobalEventsConfig_Details_EventType.SelectedItem = globalEvent.EventType;
@@ -843,6 +1068,7 @@ namespace SEConfigTool
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
+			globalEvent.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.EventDefinition, ((MyGlobalEventTypeEnum)CMB_GlobalEventsConfig_Details_EventType.SelectedItem).ToString());
 			globalEvent.Name = TXT_ConfigGlobalEvent_Details_Name.Text;
 			globalEvent.DisplayName = globalEvent.Name;
 			globalEvent.Description = TXT_ConfigGlobalEvent_Details_Description.Text;

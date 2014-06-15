@@ -17,7 +17,9 @@ namespace SEModAPI.API.Definitions
         public ContainerTypesDefinition(MyObjectBuilder_ContainerTypeDefinition myObjectBuilderDefinitionSubType)
             : base(myObjectBuilderDefinitionSubType)
         {
-			m_itemsManager = new ContainerTypeItemsManager(myObjectBuilderDefinitionSubType.Items);
+			m_itemsManager = new ContainerTypeItemsManager();
+			m_itemsManager.Load(myObjectBuilderDefinitionSubType.Items);
+			m_itemsManager.IsMutable = true;
 		}
 
         #endregion
@@ -90,10 +92,20 @@ namespace SEModAPI.API.Definitions
             }
         }
 
+		public MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] BaseItems
+		{
+			get { return m_itemsManager.ExtractBaseDefinitions().ToArray(); }
+		}
+
         public ContainerTypeItem[] Items
         {
             get { return m_itemsManager.Definitions; }
         }
+
+		public ContainerTypeItemsManager ItemsManager
+		{
+			get { return m_itemsManager; }
+		}
 
         #endregion
 
@@ -195,37 +207,18 @@ namespace SEModAPI.API.Definitions
 			return overLayer.Changed;
 		}
 
+		protected override MyObjectBuilder_ContainerTypeDefinition GetBaseTypeOf(ContainerTypesDefinition overLayer)
+		{
+			MyObjectBuilder_ContainerTypeDefinition baseDef = overLayer.BaseDefinition;
+			baseDef.Items = overLayer.BaseItems;
+
+			return baseDef;
+		}
+
 		#endregion
 	}
 
-    public class ContainerTypeItemsManager : OverLayerDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem, ContainerTypeItem>
+	public class ContainerTypeItemsManager : SerializableDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem, ContainerTypeItem>
     {
-        #region "Constructors and Initializers"
-
-        public ContainerTypeItemsManager(MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] definitions)
-            : base(definitions)
-        {
-        }
-
-        #endregion
-
-        #region "Methods"
-
-        protected override ContainerTypeItem CreateOverLayerSubTypeInstance(MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem definition)
-        {
-            return new ContainerTypeItem(definition);
-        }
-
-        protected override MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem GetBaseTypeOf(ContainerTypeItem overLayer)
-        {
-            return overLayer.BaseDefinition;
-        }
-
-        protected override bool GetChangedState(ContainerTypeItem overLayer)
-        {
-            return overLayer.Changed;
-        }
-
-		#endregion
     }
 }

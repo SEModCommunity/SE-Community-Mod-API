@@ -116,9 +116,9 @@ namespace SEModAPI.API.Definitions
 		#region "Attributes"
 
 		protected bool m_changed = false;
-		protected long m_index = 0;
 
 		//Use Long (key) as Id and OverLayerDefinition sub type (value) as Name
+		//For entity objects (saved game data) we use EnityId as the long key
 		protected Dictionary<long, TOverLayerDefinition_SubType> m_definitions = new Dictionary<long, TOverLayerDefinition_SubType>();
 
 		#endregion
@@ -143,8 +143,7 @@ namespace SEModAPI.API.Definitions
 		public TOverLayerDefinition_SubType AddChildrenFrom(TMyObjectBuilder_Definitions_SubType definition)
 		{
 			var newEntry = CreateOverLayerSubTypeInstance(definition);
-			m_definitions.Add(m_index, newEntry);
-			++m_index;
+			m_definitions.Add(m_definitions.Count, newEntry);
 
 			return newEntry;
 		}
@@ -193,19 +192,23 @@ namespace SEModAPI.API.Definitions
 			return list;
 		}
 
-		/// <summary>
-		/// This method is to find the index of a specific Id
-		/// </summary>
-		/// <param name="id">The Id to search for</param>
-		/// <returns>The index where to find the definition</returns>
-		public long IndexOf(long id)
+		private bool IsIdValid(long id)
 		{
-			return m_definitions.ContainsKey(id) ? id : -1;
+			return m_definitions.ContainsKey(id);
 		}
 
 		private bool IsIndexValid(int index)
 		{
 			return (index < m_definitions.Keys.Count && index >= 0);
+		}
+
+		public TOverLayerDefinition_SubType DefinitionOf(long id)
+		{
+			TOverLayerDefinition_SubType result = default(TOverLayerDefinition_SubType);
+			if (IsIdValid(id))
+				m_definitions.TryGetValue(id, out result);
+
+			return result;
 		}
 
 		public TOverLayerDefinition_SubType DefinitionOf(int index)
@@ -247,8 +250,8 @@ namespace SEModAPI.API.Definitions
 
 		private FileInfo m_fileInfo;
 		private readonly GameInstallationInfo m_gameInstallation;
-		private MyObjectBuilder_Definitions m_definitionsContainer;
 		private bool m_isMutable;
+		private readonly FieldInfo m_definitionsContainerField;
 
 		#endregion
 
@@ -258,7 +261,10 @@ namespace SEModAPI.API.Definitions
 		{
 			m_changed = false;
 			m_isMutable = false;
+			m_fileInfo = null;
 			m_gameInstallation = new GameInstallationInfo();
+
+			m_definitionsContainerField = GetMatchingDefinitionsContainerField();
 		}
 
 		#endregion
@@ -269,11 +275,6 @@ namespace SEModAPI.API.Definitions
 		{
 			get { return m_fileInfo; }
 			set { m_fileInfo = value; }
-		}
-
-		public MyObjectBuilder_Definitions DefinitionsContainer
-		{
-			get { return m_definitionsContainer; }
 		}
 
 		public bool IsMutable
@@ -504,7 +505,7 @@ namespace SEModAPI.API.Definitions
 		{
 			//Find the the matching field in the container
 			Type thisType = typeof(T[]);
-			Type defType = m_definitionsContainer.GetType();
+			Type defType = typeof(MyObjectBuilder_Definitions);
 			FieldInfo matchingField = null;
 			foreach (FieldInfo field in defType.GetFields())
 			{
@@ -524,14 +525,13 @@ namespace SEModAPI.API.Definitions
 			m_fileInfo = sourceFile;
 
 			//Get the definitions content from the file
-			m_definitionsContainer = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_fileInfo);
+			MyObjectBuilder_Definitions definitionsContainer = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_fileInfo);
 
-			FieldInfo field = GetMatchingDefinitionsContainerField();
-			if (field == null)
+			if (m_definitionsContainerField == null)
 				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.Invalid), "Failed to find matching definitions field");
 
 			//Get the data from the definitions container
-			T[] baseDefinitions = (T[])field.GetValue(m_definitionsContainer);
+			T[] baseDefinitions = (T[])m_definitionsContainerField.GetValue(definitionsContainer);
 
 			//Copy the data into the manager
 			m_definitions.Clear();
@@ -541,39 +541,59 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		public void Load(T[] source)
+		{
+			//Copy the data into the manager
+			m_definitions.Clear();
+			foreach (var definition in source)
+			{
+				AddChildrenFrom(definition);
+			}
+		}
+
+		public void Load(U[] source)
+		{
+			//Copy the data into the manager
+			m_definitions.Clear();
+			foreach (var definition in source)
+			{
+				AddChildrenFrom(definition.BaseDefinition);
+			}
+		}
+
 		public void Save()
 		{
 			if (!this.Changed) return;
+			if (!this.IsMutable) return;
+			if (this.FileInfo == null) return;
 
-			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_definitionsContainer, m_fileInfo);
+			MyObjectBuilder_Definitions definitionsContainer = new MyObjectBuilder_Definitions();
+
+			if (m_definitionsContainerField == null)
+				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.Invalid), "Failed to find matching definitions field");
+
+			//Save the source data into the definitions container
+			m_definitionsContainerField.SetValue(definitionsContainer, ExtractBaseDefinitions().ToArray());
+
+			//Save the definitions container out to the file
+			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(definitionsContainer, m_fileInfo);
 		}
 
 		public U NewEntry()
 		{
 			if (!IsMutable) return null;
 
-			var newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { });
-
-			return NewEntry(newEntry);
+			return NewEntry((T)Activator.CreateInstance(typeof(T), new object[] { }));
 		}
 
 		public U NewEntry(T source)
 		{
 			if (!IsMutable) return null;
 
-			var newEntry = AddChildrenFrom(source);
-
-			FieldInfo field = GetMatchingDefinitionsContainerField();
-			if (field == null)
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.Invalid), "Failed to find matching definitions field");
-
-			//Update the definitions container
-			field.SetValue(m_definitionsContainer, ExtractBaseDefinitions().ToArray());
-
-			return newEntry;
+			return AddChildrenFrom(source);
 		}
 
-		public U CopyEntry(U source)
+		public U NewEntry(U source)
 		{
 			if (!IsMutable) return null;
 
@@ -590,6 +610,38 @@ namespace SEModAPI.API.Definitions
 
 			//Add the new object to the manager as a new entry
 			return NewEntry(newEntry);
+		}
+
+		public bool DeleteEntry(T entry)
+		{
+			if (!IsMutable) return false;
+
+			foreach (var def in m_definitions)
+			{
+				if (def.Value.BaseDefinition.Equals(entry))
+				{
+					m_definitions.Remove(def.Key);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public bool DeleteEntry(U entry)
+		{
+			if (!IsMutable) return false;
+
+			foreach (var def in m_definitions)
+			{
+				if (def.Value.Equals(entry))
+				{
+					m_definitions.Remove(def.Key);
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		#endregion
