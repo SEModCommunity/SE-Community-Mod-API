@@ -8,7 +8,7 @@ using SEModAPI.API.Definitions;
 
 namespace SEModAPI.API.SaveData
 {
-	public class SectorObject<T> : OverLayerDefinition<T> where T : MyObjectBuilder_EntityBase
+	public class SectorObject<T> : SerializableEntity<T> where T : MyObjectBuilder_EntityBase
 	{
 		#region "Constructors and Initializers"
 
@@ -20,12 +20,7 @@ namespace SEModAPI.API.SaveData
 
 		#region "Properties"
 
-		new public string Name
-		{
-			get { return this.GetNameFrom(m_baseDefinition); }
-		}
-
-		public long EntityId
+		new public long EntityId
 		{
 			get { return m_baseDefinition.EntityId; }
 			set

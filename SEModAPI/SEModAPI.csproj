@@ -81,6 +81,10 @@
     <Compile Include="API\SaveData\BlockGroups.cs" />
     <Compile Include="API\SaveData\ConveyorLines.cs" />
     <Compile Include="API\SaveData\CubeBlock.cs" />
+    <Compile Include="API\SaveData\Entity\CargoContainerEntity.cs" />
+    <Compile Include="API\SaveData\Entity\InventoryEntity.cs" />
+    <Compile Include="API\SaveData\Entity\MedicalRoomEntity.cs" />
+    <Compile Include="API\SaveData\Entity\ReactorEntity.cs" />
     <Compile Include="API\SaveData\CubeGrid.cs" />
     <Compile Include="API\Definitions\OverLayerDefinition.cs" />
     <Compile Include="API\Definitions\BlueprintsDefinition.cs" />
@@ -102,6 +106,7 @@
     <Compile Include="API\SaveData\Meteor.cs" />
     <Compile Include="API\SaveData\Sector.cs" />
     <Compile Include="API\SaveData\SectorObject.cs" />
+    <Compile Include="API\SaveData\SerializableEntity.cs" />
     <Compile Include="API\SaveData\VoxelMap.cs" />
     <Compile Include="API\SEModAPIExceptions.cs" />
     <Compile Include="Interop\ClassType.cs" />

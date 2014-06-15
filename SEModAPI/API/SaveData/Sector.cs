@@ -33,6 +33,8 @@ namespace SEModAPI.API.SaveData
 		public Sector(MyObjectBuilder_Sector definition)
 			: base(definition)
 		{
+			m_cubeGridManager = new CubeGridManager();
+
 			m_voxelMaps = new List<VoxelMap>();
 			m_floatingObjects = new List<FloatingObject>();
 			m_meteors = new List<Meteor>();
@@ -75,7 +77,7 @@ namespace SEModAPI.API.SaveData
 
 			//Build the managers from the lists
 			m_eventManager = new EventManager(events);
-			m_cubeGridManager = new CubeGridManager(cubeGrids);
+			m_cubeGridManager.Load(cubeGrids.ToArray());
 		}
 
 		#endregion
@@ -146,11 +148,30 @@ namespace SEModAPI.API.SaveData
 
 	public class SectorManager : SerializableDefinitionsManager<MyObjectBuilder_Sector, Sector>
 	{
+		#region "Attributes"
+
 		private Sector m_Sector;
+
+		#endregion
+
+		#region "Constructors and Initializers"
 
 		public SectorManager()
 		{
 		}
+
+		#endregion
+
+		#region "Properties"
+
+		public Sector Sector
+		{
+			get { return m_Sector; }
+		}
+
+		#endregion
+
+		#region "Methods"
 
 		new public void Load(FileInfo fileInfo)
 		{
@@ -169,9 +190,6 @@ namespace SEModAPI.API.SaveData
 			WriteSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(m_Sector.BaseDefinition, this.FileInfo.FullName);
 		}
 
-		public Sector Sector
-		{
-			get { return m_Sector; }
-		}
+		#endregion
 	}
 }

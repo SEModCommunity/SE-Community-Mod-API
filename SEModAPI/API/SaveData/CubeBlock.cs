@@ -6,52 +6,23 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API.Definitions;
+using SEModAPI.API.SaveData.Entity;
 
 namespace SEModAPI.API.SaveData
 {
-	public class CubeBlock : OverLayerDefinition<MyObjectBuilder_CubeBlock>
+	public class CubeBlock<T> : SerializableEntity<T> where T : MyObjectBuilder_CubeBlock
 	{
 		#region "Constructors and Initializers"
 
-		public CubeBlock(MyObjectBuilder_CubeBlock definition)
+		public CubeBlock(T definition)
 			: base(definition)
-		{}
+		{
+			EntityId = definition.EntityId;
+		}
 
 		#endregion
 
 		#region "Properties"
-
-		new public string Name
-		{
-			get { return this.GetNameFrom(m_baseDefinition); }
-		}
-
-		public long EntityId
-		{
-			get {
-				if (m_baseDefinition.EntityId == null)
-					return -1;
-				else
-					return m_baseDefinition.EntityId;
-			}
-			set
-			{
-				if (m_baseDefinition.EntityId == value) return;
-				m_baseDefinition.EntityId = value;
-				Changed = true;
-			}
-		}
-
-		public string SubtypeName
-		{
-			get { return m_baseDefinition.SubtypeName; }
-			set
-			{
-				if (m_baseDefinition.SubtypeName == value) return;
-				m_baseDefinition.SubtypeName = value;
-				Changed = true;
-			}
-		}
 
 		public SerializableVector3I Min
 		{
@@ -87,54 +58,76 @@ namespace SEModAPI.API.SaveData
 		}
 
 		#endregion
+	}
+
+	public class CubeBlockManager : SerializableEntityManager<MyObjectBuilder_CubeBlock, CubeBlock<MyObjectBuilder_CubeBlock>>
+	{
+		protected Dictionary<long, Object> m_definitions = new Dictionary<long, Object>();
+
+		new public Object[] Definitions
+		{
+			get
+			{
+				Object[] tempList = new Object[m_definitions.Values.Count];
+				m_definitions.Values.CopyTo(tempList, 0);
+				return tempList;
+			}
+		}
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_CubeBlock definition)
+		new public void Load(MyObjectBuilder_CubeBlock[] source)
 		{
-			return m_baseDefinition.SubtypeName;
+			//Copy the data into the manager
+			m_definitions.Clear();
+			foreach (var definition in source)
+			{
+				switch (definition.TypeId)
+				{
+					case MyObjectBuilderTypeEnum.CargoContainer:
+						NewEntry<MyObjectBuilder_CargoContainer, CargoContainerEntity>((MyObjectBuilder_CargoContainer)definition);
+						break;
+					case MyObjectBuilderTypeEnum.Reactor:
+						NewEntry<MyObjectBuilder_Reactor, ReactorEntity>((MyObjectBuilder_Reactor)definition);
+						break;
+					case MyObjectBuilderTypeEnum.MedicalRoom:
+						NewEntry<MyObjectBuilder_MedicalRoom, MedicalRoomEntity>((MyObjectBuilder_MedicalRoom)definition);
+						break;
+					default:
+						NewEntry(definition);
+						break;
+				}
+			}
 		}
 
-		#endregion
-	}
-
-	public class CubeBlockManager : OverLayerDefinitionsManager<MyObjectBuilder_CubeBlock, CubeBlock>
-	{
-		#region "Constructors and Initializers"
-
-		public CubeBlockManager(List<MyObjectBuilder_CubeBlock> definitions)
-			: base(definitions.ToArray())
-		{}
-
-		public CubeBlockManager(MyObjectBuilder_CubeBlock[] definitions)
-			: base(definitions)
-		{}
-
-		new public CubeBlock AddChildrenFrom(MyObjectBuilder_CubeBlock definition)
+		new public CubeBlock<MyObjectBuilder_CubeBlock> NewEntry(MyObjectBuilder_CubeBlock source)
 		{
-			var newEntry = CreateOverLayerSubTypeInstance(definition);
-			m_definitions.Add(definition.EntityId, newEntry);
+			if (!IsMutable) return default(CubeBlock<MyObjectBuilder_CubeBlock>);
+
+			CubeBlock<MyObjectBuilder_CubeBlock> newEntry = (CubeBlock<MyObjectBuilder_CubeBlock>)Activator.CreateInstance(typeof(CubeBlock<MyObjectBuilder_CubeBlock>), new object[] { source });
+
+			long entityId = newEntry.EntityId;
+			if (entityId == 0)
+				entityId = newEntry.GenerateEntityId();
+			m_definitions.Add(entityId, newEntry);
 
 			return newEntry;
 		}
 
-		#endregion
-
-		#region "Methods"
-
-		protected override CubeBlock CreateOverLayerSubTypeInstance(MyObjectBuilder_CubeBlock definition)
+		public CubeBlock<T> NewEntry<T, V>(T source)
+			where T : MyObjectBuilder_CubeBlock
+			where V : CubeBlock<T>
 		{
-			return new CubeBlock(definition);
-		}
+			if (!IsMutable) return default(CubeBlock<T>);
 
-		protected override MyObjectBuilder_CubeBlock GetBaseTypeOf(CubeBlock overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
+			var newEntry = (V)Activator.CreateInstance(typeof(V), new object[] { source });
 
-		protected override bool GetChangedState(CubeBlock overLayer)
-		{
-			return overLayer.Changed;
+			long entityId = newEntry.EntityId;
+			if (entityId == 0)
+				entityId = newEntry.GenerateEntityId();
+			m_definitions.Add(entityId, newEntry);
+
+			return newEntry;
 		}
 
 		#endregion

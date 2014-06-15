@@ -21,22 +21,17 @@ namespace SEModAPI.API.SaveData
 		public CubeGrid(MyObjectBuilder_CubeGrid definition)
 			: base(definition)
 		{
-			m_cubeBlockManager = new CubeBlockManager(definition.CubeBlocks);
+			m_cubeBlockManager = new CubeBlockManager();
+			m_cubeBlockManager.Load(definition.CubeBlocks.ToArray());
 		}
 
 		#endregion
 
 		#region "Properties"
 
-		public long EntityId
+		new public long EntityId
 		{
-			get
-			{
-				if (m_baseDefinition.EntityId == null)
-					return -1;
-				else
-					return m_baseDefinition.EntityId;
-			}
+			get { return m_baseDefinition.EntityId; }
 			set
 			{
 				if (m_baseDefinition.EntityId == value) return;
@@ -89,12 +84,19 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
-		public List<CubeBlock> CubeBlocks
+		public List<MyObjectBuilder_CubeBlock> BaseCubeBlocks
 		{
 			get
 			{
-				//TODO - Look into changing manager base class to return a List so we don't have to do the array conversion
-				List<CubeBlock> newList = new List<CubeBlock>(m_cubeBlockManager.Definitions);
+				return m_cubeBlockManager.ExtractBaseDefinitions();
+			}
+		}
+
+		public List<Object> CubeBlocks
+		{
+			get
+			{
+				List<Object> newList = new List<Object>(m_cubeBlockManager.Definitions);
 				return newList;
 			}
 		}
@@ -144,49 +146,29 @@ namespace SEModAPI.API.SaveData
 		#endregion
 	}
 
-	public class CubeGridManager : OverLayerDefinitionsManager<MyObjectBuilder_CubeGrid, CubeGrid>
+	public class CubeGridManager : SerializableEntityManager<MyObjectBuilder_CubeGrid, CubeGrid>
 	{
-		#region "Constructors and Initializers"
-
-		public CubeGridManager(List<MyObjectBuilder_CubeGrid> definitions)
-			: base(definitions.ToArray())
-		{}
-
-		public CubeGridManager(MyObjectBuilder_CubeGrid[] definitions)
-			: base(definitions)
-		{}
-
-		new public CubeGrid AddChildrenFrom(MyObjectBuilder_CubeGrid definition)
-		{
-			var newEntry = CreateOverLayerSubTypeInstance(definition);
-			m_definitions.Add(definition.EntityId, newEntry);
-
-			return newEntry;
-		}
-
-		#endregion
-
 		#region "Methods"
-
-		protected override CubeGrid CreateOverLayerSubTypeInstance(MyObjectBuilder_CubeGrid definition)
-		{
-			return new CubeGrid(definition);
-		}
-
-		protected override MyObjectBuilder_CubeGrid GetBaseTypeOf(CubeGrid overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
 
 		protected override bool GetChangedState(CubeGrid overLayer)
 		{
 			foreach (var def in overLayer.CubeBlocks)
 			{
-				if (def.Changed)
+				CubeBlock<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlock<MyObjectBuilder_CubeBlock>)def;
+				if (cubeBlock.Changed)
 					return true;
 			}
 
 			return overLayer.Changed;
+		}
+
+		protected override MyObjectBuilder_CubeGrid GetBaseTypeOf(CubeGrid overLayer)
+		{
+			MyObjectBuilder_CubeGrid baseDef = overLayer.BaseDefinition;
+
+			baseDef.CubeBlocks = overLayer.BaseCubeBlocks;
+
+			return baseDef;
 		}
 
 		#endregion

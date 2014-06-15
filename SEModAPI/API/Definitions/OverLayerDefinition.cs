@@ -7,6 +7,7 @@ using System.Linq;
 using System.Xml;
 using System.Reflection;
 
+using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 
 using SEModAPI.Support;
@@ -107,19 +108,21 @@ namespace SEModAPI.API.Definitions
 		#endregion
 	}
 
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public abstract class OverLayerDefinitionsManager<TMyObjectBuilder_Definitions_SubType, TOverLayerDefinition_SubType>
+	public abstract class OverLayerDefinitionsManager<T, U> where U : OverLayerDefinition<T>
 	{
 		#region "Attributes"
 
-		protected bool m_changed = false;
+		private bool m_isMutable;
+		private bool m_changed = false;
 
 		//Use Long (key) as Id and OverLayerDefinition sub type (value) as Name
 		//For entity objects (saved game data) we use EnityId as the long key
-		protected Dictionary<long, TOverLayerDefinition_SubType> m_definitions = new Dictionary<long, TOverLayerDefinition_SubType>();
+		protected Dictionary<long, U> m_definitions = new Dictionary<long, U>();
 
 		#endregion
 
@@ -128,29 +131,29 @@ namespace SEModAPI.API.Definitions
 		protected OverLayerDefinitionsManager()
 		{
 			m_changed = false;
+			m_isMutable = true;
 		}
 
-		protected OverLayerDefinitionsManager(TMyObjectBuilder_Definitions_SubType[] baseDefinitions)
+		protected OverLayerDefinitionsManager(T[] baseDefinitions)
 		{
 			m_changed = false;
+			m_isMutable = true;
 
 			foreach (var definition in baseDefinitions)
 			{
-				AddChildrenFrom(definition);
+				NewEntry(definition);
 			}
-		}
-
-		public TOverLayerDefinition_SubType AddChildrenFrom(TMyObjectBuilder_Definitions_SubType definition)
-		{
-			var newEntry = CreateOverLayerSubTypeInstance(definition);
-			m_definitions.Add(m_definitions.Count, newEntry);
-
-			return newEntry;
 		}
 
 		#endregion
 
 		#region "Properties"
+
+		public bool IsMutable
+		{
+			get { return m_isMutable; }
+			set { m_isMutable = value; }
+		}
 
 		protected bool Changed
 		{
@@ -165,7 +168,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
-		public TOverLayerDefinition_SubType[] Definitions
+		public U[] Definitions
 		{
 			get
 			{
@@ -182,9 +185,9 @@ namespace SEModAPI.API.Definitions
 		/// This method is slow and should only be used to extract the underlying type
 		/// </summary>
 		/// <returns>All instances of the MyObjectBuilder_Definitions sub type sub type in the manager</returns>
-		public List<TMyObjectBuilder_Definitions_SubType> ExtractBaseDefinitions()
+		public List<T> ExtractBaseDefinitions()
 		{
-			List<TMyObjectBuilder_Definitions_SubType> list = new List<TMyObjectBuilder_Definitions_SubType>();
+			List<T> list = new List<T>();
 			foreach (var def in m_definitions.Values)
 			{
 				list.Add(GetBaseTypeOf(def));
@@ -202,18 +205,18 @@ namespace SEModAPI.API.Definitions
 			return (index < m_definitions.Keys.Count && index >= 0);
 		}
 
-		public TOverLayerDefinition_SubType DefinitionOf(long id)
+		public U DefinitionOf(long id)
 		{
-			TOverLayerDefinition_SubType result = default(TOverLayerDefinition_SubType);
+			U result = default(U);
 			if (IsIdValid(id))
 				m_definitions.TryGetValue(id, out result);
 
 			return result;
 		}
 
-		public TOverLayerDefinition_SubType DefinitionOf(int index)
+		public U DefinitionOf(int index)
 		{
-			return IsIndexValid(index) ? m_definitions.Values.ToArray()[index] : default(TOverLayerDefinition_SubType);
+			return IsIndexValid(index) ? m_definitions.Values.ToArray()[index] : default(U);
 		}
 
 		#region "Abstract Methods"
@@ -223,23 +226,91 @@ namespace SEModAPI.API.Definitions
 		/// </summary>
 		/// <param name="definition">MyObjectBuilder_Definitions object</param>
 		/// <returns>An instance representing OverLayerDefinition sub type</returns>
-		protected abstract TOverLayerDefinition_SubType CreateOverLayerSubTypeInstance(TMyObjectBuilder_Definitions_SubType definition);
+		protected abstract U CreateOverLayerSubTypeInstance(T definition);
 
 		/// <summary>
 		/// This template method is intended to extact the BaseObject inside the overlayer
 		/// </summary>
 		/// <param name="overLayer">the over layer from which to extract the base object</param>
 		/// <returns>MyObjectBuilder_Definitions Sub Type</returns>
-		protected abstract TMyObjectBuilder_Definitions_SubType GetBaseTypeOf(TOverLayerDefinition_SubType overLayer);
+		protected abstract T GetBaseTypeOf(U overLayer);
 
 		/// <summary>
 		/// This template method is intended to know if the state of the object insate the overlayer has changed
 		/// </summary>
 		/// <param name="overLayer">the overlayer from which to know if the base type has changed</param>
 		/// <returns>if the underlying object has changed</returns>
-		protected abstract bool GetChangedState(TOverLayerDefinition_SubType overLayer);
+		protected abstract bool GetChangedState(U overLayer);
 
 		#endregion
+
+		public U NewEntry()
+		{
+			if (!IsMutable) return default(U);
+
+			return NewEntry((T)Activator.CreateInstance(typeof(T), new object[] { }));
+		}
+
+		public U NewEntry(T source)
+		{
+			if (!IsMutable) return default(U);
+
+			var newEntry = CreateOverLayerSubTypeInstance(source);
+			m_definitions.Add(m_definitions.Count, newEntry);
+
+			return newEntry;
+		}
+
+		public U NewEntry(U source)
+		{
+			if (!IsMutable) return default(U);
+
+			//Create the new object
+			Type entryType = typeof(T);
+			var newEntry = (T)Activator.CreateInstance(entryType, new object[] { });
+
+			//Copy the field data
+			//TODO - Find a way to fully copy complex data structures in fields instead of just copying reference
+			foreach (FieldInfo field in entryType.GetFields())
+			{
+				field.SetValue(newEntry, field.GetValue(source.BaseDefinition));
+			}
+
+			//Add the new object to the manager as a new entry
+			return NewEntry(newEntry);
+		}
+
+		public bool DeleteEntry(T entry)
+		{
+			if (!IsMutable) return false;
+
+			foreach (var def in m_definitions)
+			{
+				if (def.Value.BaseDefinition.Equals(entry))
+				{
+					m_definitions.Remove(def.Key);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public bool DeleteEntry(U entry)
+		{
+			if (!IsMutable) return false;
+
+			foreach (var def in m_definitions)
+			{
+				if (def.Value.Equals(entry))
+				{
+					m_definitions.Remove(def.Key);
+					return true;
+				}
+			}
+
+			return false;
+		}
 
 		#endregion
 	}
@@ -250,7 +321,6 @@ namespace SEModAPI.API.Definitions
 
 		private FileInfo m_fileInfo;
 		private readonly GameInstallationInfo m_gameInstallation;
-		private bool m_isMutable;
 		private readonly FieldInfo m_definitionsContainerField;
 
 		#endregion
@@ -259,8 +329,6 @@ namespace SEModAPI.API.Definitions
 
 		protected SerializableDefinitionsManager()
 		{
-			m_changed = false;
-			m_isMutable = false;
 			m_fileInfo = null;
 			m_gameInstallation = new GameInstallationInfo();
 
@@ -275,12 +343,6 @@ namespace SEModAPI.API.Definitions
 		{
 			get { return m_fileInfo; }
 			set { m_fileInfo = value; }
-		}
-
-		public bool IsMutable
-		{
-			get { return m_isMutable; }
-			set { m_isMutable = value; }
 		}
 
 		#endregion
@@ -537,7 +599,7 @@ namespace SEModAPI.API.Definitions
 			m_definitions.Clear();
 			foreach (var definition in baseDefinitions)
 			{
-				AddChildrenFrom(definition);
+				NewEntry(definition);
 			}
 		}
 
@@ -547,7 +609,7 @@ namespace SEModAPI.API.Definitions
 			m_definitions.Clear();
 			foreach (var definition in source)
 			{
-				AddChildrenFrom(definition);
+				NewEntry(definition);
 			}
 		}
 
@@ -557,7 +619,7 @@ namespace SEModAPI.API.Definitions
 			m_definitions.Clear();
 			foreach (var definition in source)
 			{
-				AddChildrenFrom(definition.BaseDefinition);
+				NewEntry(definition.BaseDefinition);
 			}
 		}
 
@@ -577,71 +639,6 @@ namespace SEModAPI.API.Definitions
 
 			//Save the definitions container out to the file
 			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(definitionsContainer, m_fileInfo);
-		}
-
-		public U NewEntry()
-		{
-			if (!IsMutable) return null;
-
-			return NewEntry((T)Activator.CreateInstance(typeof(T), new object[] { }));
-		}
-
-		public U NewEntry(T source)
-		{
-			if (!IsMutable) return null;
-
-			return AddChildrenFrom(source);
-		}
-
-		public U NewEntry(U source)
-		{
-			if (!IsMutable) return null;
-
-			//Create the new object
-			Type entryType = typeof(T);
-			var newEntry = (T)Activator.CreateInstance(entryType, new object[] { });
-
-			//Copy the field data
-			//TODO - Find a way to fully copy complex data structures in fields instead of just copying reference
-			foreach (FieldInfo field in entryType.GetFields())
-			{
-				field.SetValue(newEntry, field.GetValue(source.BaseDefinition));
-			}
-
-			//Add the new object to the manager as a new entry
-			return NewEntry(newEntry);
-		}
-
-		public bool DeleteEntry(T entry)
-		{
-			if (!IsMutable) return false;
-
-			foreach (var def in m_definitions)
-			{
-				if (def.Value.BaseDefinition.Equals(entry))
-				{
-					m_definitions.Remove(def.Key);
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		public bool DeleteEntry(U entry)
-		{
-			if (!IsMutable) return false;
-
-			foreach (var def in m_definitions)
-			{
-				if (def.Value.Equals(entry))
-				{
-					m_definitions.Remove(def.Key);
-					return true;
-				}
-			}
-
-			return false;
 		}
 
 		#endregion

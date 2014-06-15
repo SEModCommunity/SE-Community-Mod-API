@@ -158,13 +158,6 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 
 		#endregion
 
-		public long GenerateEntityId()
-		{
-			// Not the offical SE way of generating IDs, but its fast and we don't have to worry about a random seed.
-			var buffer = Guid.NewGuid().ToByteArray();
-			return BitConverter.ToInt64(buffer, 0);
-		}
-
 		public SerializableBlockOrientation GetCubeOrientation(CubeType type)
 		{
 			if (CubeOrientations.ContainsKey(type))

@@ -10,6 +10,7 @@ using SEModAPI.API;
 using SEModAPI.API.Definitions;
 using SEModAPI.API.Definitions.CubeBlocks;
 using SEModAPI.API.SaveData;
+using SEModAPI.API.SaveData.Entity;
 
 using Sandbox.Common.Localization;
 using Sandbox.Common.ObjectBuilders;
@@ -143,66 +144,84 @@ namespace SEConfigTool
 				TreeNode miscBlocksNode = blocksNode.Nodes.Add("Misc");
 
 				//Add the cube blocks
-				foreach (CubeBlock cubeBlock in cubeGrid.CubeBlocks)
+				foreach (var cubeBlockObject in cubeGrid.CubeBlocks)
 				{
 					TreeNode blockNode = null;
-					MyObjectBuilder_Inventory blockInventory = null;
-					switch (cubeBlock.BaseDefinition.TypeId)
+					InventoryEntity blockInventory = null;
+
+					Type cubeType = cubeBlockObject.GetType();
+
+					if (cubeType.IsAssignableFrom(typeof(CubeBlock<MyObjectBuilder_CubeBlock>)))
 					{
-						case MyObjectBuilderTypeEnum.CubeBlock:
-							blockNode = structuralBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.CargoContainer:
-							blockNode = containerBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							MyObjectBuilder_CargoContainer containerBlock = (MyObjectBuilder_CargoContainer) cubeBlock.BaseDefinition;
-							blockInventory = containerBlock.Inventory;
-							break;
-						case MyObjectBuilderTypeEnum.Refinery:
-							blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.Assembler:
-							blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.Reactor:
-							MyObjectBuilder_Reactor reactorBlock = (MyObjectBuilder_Reactor)cubeBlock.BaseDefinition;
-							blockInventory = reactorBlock.Inventory;
-							blockNode = energyBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.SolarPanel:
-							blockNode = energyBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.ShipConnector:
-							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.Collector:
-							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.Conveyor:
-							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.ConveyorConnector:
-							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.Cockpit:
-							blockNode = utilityBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						case MyObjectBuilderTypeEnum.MedicalRoom:
-							blockNode = utilityBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
-						default:
-							blockNode = miscBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
-							break;
+						CubeBlock<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlock<MyObjectBuilder_CubeBlock>)cubeBlockObject;
+						switch (cubeBlock.TypeId)
+						{
+							case MyObjectBuilderTypeEnum.CubeBlock:
+								blockNode = structuralBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+							case MyObjectBuilderTypeEnum.Refinery:
+								blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+							case MyObjectBuilderTypeEnum.Assembler:
+								blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+							case MyObjectBuilderTypeEnum.SolarPanel:
+								blockNode = energyBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+							case MyObjectBuilderTypeEnum.ShipConnector:
+								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+							case MyObjectBuilderTypeEnum.Collector:
+								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+							case MyObjectBuilderTypeEnum.Conveyor:
+								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+							case MyObjectBuilderTypeEnum.ConveyorConnector:
+								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+							case MyObjectBuilderTypeEnum.Cockpit:
+								blockNode = utilityBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+							default:
+								blockNode = miscBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								break;
+						}
 					}
+					
+					if (cubeType.IsAssignableFrom(typeof(CargoContainerEntity)))
+					{
+						CargoContainerEntity cargoContainer = (CargoContainerEntity)cubeBlockObject;
+						blockInventory = cargoContainer.Inventory;
+
+						blockNode = containerBlocksNode.Nodes.Add(cargoContainer.EntityId.ToString(), cargoContainer.Name);
+					}
+					
+					if (cubeType.IsAssignableFrom(typeof(ReactorEntity)))
+					{
+						ReactorEntity reactorBlock = (ReactorEntity)cubeBlockObject;
+						blockInventory = reactorBlock.Inventory;
+
+						blockNode = energyBlocksNode.Nodes.Add(reactorBlock.EntityId.ToString(), reactorBlock.Name);
+					}
+
+					if (cubeType.IsAssignableFrom(typeof(MedicalRoomEntity)))
+					{
+						MedicalRoomEntity medicalBlock = (MedicalRoomEntity)cubeBlockObject;
+
+						blockNode = utilityBlocksNode.Nodes.Add(medicalBlock.EntityId.ToString(), medicalBlock.Name);
+					}
+
 					if (blockNode == null)
 						continue;
 
-					blockNode.Tag = cubeBlock;
+					blockNode.Tag = cubeBlockObject;
 
 					if (blockInventory != null)
 					{
 						foreach (var item in blockInventory.Items)
 						{
-							blockNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.AmountDecimal.ToString());
+							blockNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.Amount.ToString());
 						}
 					}
 				}
@@ -549,9 +568,11 @@ namespace SEConfigTool
 			if (linkedObject == null)
 				return;
 
-			if (linkedObject.GetType() == typeof(CubeBlock))
+			Type linkedType = linkedObject.GetType();
+
+			if (linkedType.IsAssignableFrom(typeof(CubeBlock<MyObjectBuilder_CubeBlock>)))
 			{
-				CubeBlock cubeBlock = (CubeBlock)linkedObject;
+				CubeBlock<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlock<MyObjectBuilder_CubeBlock>)linkedObject;
 
 				LBL_Sector_Objects_Field1.Visible = true;
 				LBL_Sector_Objects_Field2.Visible = true;
@@ -562,90 +583,110 @@ namespace SEConfigTool
 				LBL_Sector_Objects_Field2.Text = "Entity Id:";
 				TXT_Sector_Objects_Field1.Text = cubeBlock.SubtypeName;
 				TXT_Sector_Objects_Field2.Text = cubeBlock.EntityId.ToString();
+			}
+			
+			if (linkedType.IsAssignableFrom(typeof(CargoContainerEntity)))
+			{
+				CargoContainerEntity containerBlock = (CargoContainerEntity)linkedObject;
 
-				if (cubeBlock.BaseDefinition.GetType() == typeof(MyObjectBuilder_CubeBlock))
+				LBL_Sector_Objects_Field1.Visible = true;
+				LBL_Sector_Objects_Field2.Visible = true;
+				LBL_Sector_Objects_Field3.Visible = true;
+				LBL_Sector_Objects_Field4.Visible = true;
+				LBL_Sector_Objects_Field5.Visible = true;
+
+				TXT_Sector_Objects_Field1.Visible = true;
+				TXT_Sector_Objects_Field2.Visible = true;
+				TXT_Sector_Objects_Field3.Visible = true;
+				TXT_Sector_Objects_Field4.Visible = true;
+				TXT_Sector_Objects_Field5.Visible = true;
+
+				LBL_Sector_Objects_Field1.Text = "Type:";
+				LBL_Sector_Objects_Field2.Text = "Entity Id:";
+				LBL_Sector_Objects_Field3.Text = "Item Count:";
+				LBL_Sector_Objects_Field4.Text = "Item Volume (L):";
+				LBL_Sector_Objects_Field5.Text = "Item Mass (kg):";
+
+				float itemCount = 0;
+				float itemVolume = 0;
+				float itemMass = 0;
+				foreach (var item in containerBlock.Inventory.Items)
 				{
-					//TODO - Maybe display something like integrity percent or build percent for structural blocks?
+					itemCount += item.Amount;
+					itemVolume += item.Volume;
+					itemMass += item.Mass;
 				}
-				else if (cubeBlock.BaseDefinition.GetType() == typeof(MyObjectBuilder_CargoContainer))
+
+				TXT_Sector_Objects_Field1.Text = containerBlock.SubtypeName;
+				TXT_Sector_Objects_Field2.Text = containerBlock.EntityId.ToString();
+				TXT_Sector_Objects_Field3.Text = itemCount.ToString();
+				TXT_Sector_Objects_Field4.Text = itemVolume.ToString();
+				TXT_Sector_Objects_Field5.Text = itemMass.ToString();
+			}
+
+			if (linkedType.IsAssignableFrom(typeof(ReactorEntity)))
+			{
+				ReactorEntity reactorBlock = (ReactorEntity)linkedObject;
+
+				LBL_Sector_Objects_Field1.Visible = true;
+				LBL_Sector_Objects_Field2.Visible = true;
+				LBL_Sector_Objects_Field3.Visible = true;
+
+				TXT_Sector_Objects_Field1.Visible = true;
+				TXT_Sector_Objects_Field2.Visible = true;
+				TXT_Sector_Objects_Field3.Visible = true;
+
+				LBL_Sector_Objects_Field1.Text = "Type:";
+				LBL_Sector_Objects_Field2.Text = "Entity Id:";
+				LBL_Sector_Objects_Field3.Text = "Fuel (kg):";
+
+				float fuelMass = 0;
+				foreach (var item in reactorBlock.Inventory.Items)
 				{
-					MyObjectBuilder_CargoContainer containerBlock = (MyObjectBuilder_CargoContainer)cubeBlock.BaseDefinition;
-
-					LBL_Sector_Objects_Field3.Visible = true;
-					LBL_Sector_Objects_Field4.Visible = true;
-					LBL_Sector_Objects_Field5.Visible = true;
-					TXT_Sector_Objects_Field3.Visible = true;
-					TXT_Sector_Objects_Field4.Visible = true;
-					TXT_Sector_Objects_Field5.Visible = true;
-
-					LBL_Sector_Objects_Field3.Text = "Item Count:";
-					LBL_Sector_Objects_Field4.Text = "Item Volume (L):";
-					LBL_Sector_Objects_Field5.Text = "Item Mass (kg):";
-
-					float itemCount = 0;
-					float itemVolume = 0;
-					float itemMass = 0;
-					foreach (var item in containerBlock.Inventory.Items)
-					{
-						itemCount += item.Amount;
-
-						if (item.PhysicalContent.TypeId == MyObjectBuilderTypeEnum.PhysicalGunObject)
-						{
-							foreach (var physicalItem in m_physicalItemsDefinitionsManager.Definitions)
-							{
-								if (physicalItem.Id.SubtypeId == item.PhysicalContent.SubtypeName)
-								{
-									itemVolume += physicalItem.Volume * item.Amount;
-									itemMass += physicalItem.Mass * item.Amount;
-									break;
-								}
-							}
-						}
-						if (item.PhysicalContent.TypeId == MyObjectBuilderTypeEnum.Component)
-						{
-							foreach (var component in m_componentsDefinitionsManager.Definitions)
-							{
-								if (component.Id.SubtypeId == item.PhysicalContent.SubtypeName)
-								{
-									itemVolume += component.Volume * item.Amount;
-									itemMass += component.Mass * item.Amount;
-									break;
-								}
-							}
-						}
-						if (item.PhysicalContent.TypeId == MyObjectBuilderTypeEnum.AmmoMagazine)
-						{
-							foreach (var ammo in m_ammoMagazinesDefinitionsManager.Definitions)
-							{
-								if (ammo.Id.SubtypeId == item.PhysicalContent.SubtypeName)
-								{
-									itemVolume += ammo.Volume * item.Amount;
-									itemMass += ammo.Mass * item.Amount;
-									break;
-								}
-							}
-						}
-					}
-					TXT_Sector_Objects_Field3.Text = itemCount.ToString();
-					TXT_Sector_Objects_Field4.Text = itemVolume.ToString();
-					TXT_Sector_Objects_Field5.Text = itemMass.ToString();
+					fuelMass += item.Amount;
 				}
-				else
-				{
-					MyObjectBuilder_Reactor containerBlock = (MyObjectBuilder_Reactor)cubeBlock.BaseDefinition;
 
-					LBL_Sector_Objects_Field3.Visible = true;
-					TXT_Sector_Objects_Field3.Visible = true;
+				TXT_Sector_Objects_Field1.Text = reactorBlock.SubtypeName;
+				TXT_Sector_Objects_Field2.Text = reactorBlock.EntityId.ToString();
+				TXT_Sector_Objects_Field3.Text = fuelMass.ToString();
+			}
 
-					LBL_Sector_Objects_Field3.Text = "Fuel (kg):";
+			if (linkedType.IsAssignableFrom(typeof(MedicalRoomEntity)))
+			{
+				MedicalRoomEntity medicalBlock = (MedicalRoomEntity)linkedObject;
 
-					float fuelMass = 0;
-					foreach (var item in containerBlock.Inventory.Items)
-					{
-						fuelMass += item.Amount;
-					}
-					TXT_Sector_Objects_Field3.Text = fuelMass.ToString();
-				}
+				LBL_Sector_Objects_Field1.Visible = true;
+				LBL_Sector_Objects_Field2.Visible = true;
+				LBL_Sector_Objects_Field3.Visible = true;
+
+				TXT_Sector_Objects_Field1.Visible = true;
+				TXT_Sector_Objects_Field2.Visible = true;
+				TXT_Sector_Objects_Field3.Visible = true;
+
+				LBL_Sector_Objects_Field1.Text = "Type:";
+				LBL_Sector_Objects_Field2.Text = "Entity Id:";
+				LBL_Sector_Objects_Field3.Text = "Steam User Id:";
+
+				TXT_Sector_Objects_Field1.Text = medicalBlock.SubtypeName;
+				TXT_Sector_Objects_Field2.Text = medicalBlock.EntityId.ToString();
+				TXT_Sector_Objects_Field3.Text = medicalBlock.SteamUserId.ToString();
+			}
+
+			if (linkedType.IsAssignableFrom(typeof(CubeGrid)))
+			{
+				CubeGrid cubeGrid = (CubeGrid)linkedObject;
+
+				LBL_Sector_Objects_Field1.Visible = true;
+				LBL_Sector_Objects_Field2.Visible = true;
+
+				TXT_Sector_Objects_Field1.Visible = true;
+				TXT_Sector_Objects_Field2.Visible = true;
+
+				LBL_Sector_Objects_Field1.Text = "Position:";
+				LBL_Sector_Objects_Field2.Text = "Entity Id:";
+
+				TXT_Sector_Objects_Field1.Text = cubeGrid.PositionAndOrientation.Position.x.ToString(m_numberFormatInfo) + ", " + cubeGrid.PositionAndOrientation.Position.y.ToString(m_numberFormatInfo) + ", " + cubeGrid.PositionAndOrientation.Position.z.ToString(m_numberFormatInfo);
+				TXT_Sector_Objects_Field2.Text = cubeGrid.EntityId.ToString();
 			}
 		}
 
