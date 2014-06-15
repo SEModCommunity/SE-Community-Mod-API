@@ -108,14 +108,19 @@ namespace SEConfigTool
 			this.splitContainer28 = new System.Windows.Forms.SplitContainer();
 			this.LST_BlueprintConfig = new System.Windows.Forms.ListBox();
 			this.GRP_BlueprintsConfig_Details = new System.Windows.Forms.GroupBox();
+			this.TAB_BlueprintConfig_Details = new System.Windows.Forms.TabControl();
+			this.TAB_BlueprintConfig_Details_Result_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer29 = new System.Windows.Forms.SplitContainer();
-			this.LBL_BlueprintConfig_Details_Result = new System.Windows.Forms.Label();
-			this.LBL_BlueprintConfig_Details_Prerequistes = new System.Windows.Forms.Label();
-			this.LBL_BlueprintConfig_Details_BaseProductionTime = new System.Windows.Forms.Label();
-			this.TXT_BlueprintConfig_Details_Result = new System.Windows.Forms.TextBox();
-			this.LST_BlueprintConfig_Details_Prerequisites = new System.Windows.Forms.ListBox();
-			this.BTN_BlueprintConfig_Details_Apply = new System.Windows.Forms.Button();
-			this.TXT_BlueprintConfig_Details_BaseProductionTime = new System.Windows.Forms.TextBox();
+			this.LBL_BlueprintConfig_Details_Result_TypeId = new System.Windows.Forms.Label();
+			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime = new System.Windows.Forms.Label();
+			this.LBL_BlueprintConfig_Details_Result_SubtypeId = new System.Windows.Forms.Label();
+			this.LBL_BlueprintConfig_Details_Result_Amount = new System.Windows.Forms.Label();
+			this.CMB_BlueprintConfig_Details_Result_TypeId = new System.Windows.Forms.ComboBox();
+			this.BTN_BlueprintConfig_Details_Result_Apply = new System.Windows.Forms.Button();
+			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime = new System.Windows.Forms.TextBox();
+			this.TXT_BlueprintConfig_Details_Result_SubtypeId = new System.Windows.Forms.TextBox();
+			this.TXT_BlueprintConfig_Details_Result_Amount = new System.Windows.Forms.TextBox();
+			this.TAB_BlueprintConfig_Details_Prerequisites = new System.Windows.Forms.TabPage();
 			this.TAB_ComponentConfig_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer24 = new System.Windows.Forms.SplitContainer();
 			this.BTN_ComponentConfig_Reload = new System.Windows.Forms.Button();
@@ -261,6 +266,7 @@ namespace SEConfigTool
 			this.LBL_ContainerTypeConfig_Details_Items_Frequency = new System.Windows.Forms.Label();
 			this.LBL_ContainerTypeConfig_Details_Items_AmountMax = new System.Windows.Forms.Label();
 			this.LBL_ContainerTypeConfig_Details_Items_AmountMin = new System.Windows.Forms.Label();
+			this.BTN_ContainerTypeConfig_Items_New = new System.Windows.Forms.Button();
 			this.CMB_ContainerTypeConfig_Items_Type = new System.Windows.Forms.ComboBox();
 			this.BTN_ContainerTypeConfig_Items_Apply = new System.Windows.Forms.Button();
 			this.TXT_ContainerTypeConfig_Item_AmountMax = new System.Windows.Forms.TextBox();
@@ -370,18 +376,43 @@ namespace SEConfigTool
 			this.TXT_TransparentMaterialConfig_Details_Emissivity = new System.Windows.Forms.TextBox();
 			this.TXT_TransparentMaterialConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_TransparentMaterialConfig_Details_Apply = new System.Windows.Forms.Button();
+			this.TAB_ConfigurationConfig_Page = new System.Windows.Forms.TabPage();
+			this.BTN_ConfigurationConfig_Reload = new System.Windows.Forms.Button();
+			this.BTN_ConfigurationConfig_Save = new System.Windows.Forms.Button();
+			this.GRP_ConfigurationConfig = new System.Windows.Forms.GroupBox();
+			this.splitContainer50 = new System.Windows.Forms.SplitContainer();
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab = new System.Windows.Forms.Label();
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab = new System.Windows.Forms.Label();
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab = new System.Windows.Forms.Label();
+			this.LBL_ConfigurationConfig_LargeBlockSize = new System.Windows.Forms.Label();
+			this.LBL_ConfigurationConfig_SmallBlockSize = new System.Windows.Forms.Label();
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab = new System.Windows.Forms.TextBox();
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab = new System.Windows.Forms.TextBox();
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab = new System.Windows.Forms.TextBox();
+			this.TXT_ConfigurationConfig_LargeBlockSize = new System.Windows.Forms.TextBox();
+			this.TXT_ConfigurationConfig_SmallBlockSize = new System.Windows.Forms.TextBox();
+			this.BTN_ConfigurationConfig_Apply = new System.Windows.Forms.Button();
 			this.splitContainer48 = new System.Windows.Forms.SplitContainer();
-			this.TXT_Sector_Objects_Field1 = new System.Windows.Forms.TextBox();
-			this.TXT_Sector_Objects_Field2 = new System.Windows.Forms.TextBox();
-			this.TXT_Sector_Objects_Field3 = new System.Windows.Forms.TextBox();
-			this.LBL_Sector_Objects_Field1 = new System.Windows.Forms.Label();
-			this.LBL_Sector_Objects_Field2 = new System.Windows.Forms.Label();
-			this.LBL_Sector_Objects_Field3 = new System.Windows.Forms.Label();
-			this.TXT_Sector_Objects_Field4 = new System.Windows.Forms.TextBox();
-			this.TXT_Sector_Objects_Field5 = new System.Windows.Forms.TextBox();
-			this.LBL_Sector_Objects_Field4 = new System.Windows.Forms.Label();
+			this.LST_BlueprintConfig_Details_Prerequisites = new System.Windows.Forms.ListBox();
+			this.splitContainer49 = new System.Windows.Forms.SplitContainer();
+			this.label1 = new System.Windows.Forms.Label();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label7 = new System.Windows.Forms.Label();
+			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId = new System.Windows.Forms.ComboBox();
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply = new System.Windows.Forms.Button();
+			this.TXT_BlueprintConfig_Details_Prerequisites_Amount = new System.Windows.Forms.TextBox();
+			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId = new System.Windows.Forms.TextBox();
+			this.splitContainer51 = new System.Windows.Forms.SplitContainer();
 			this.LBL_Sector_Objects_Field5 = new System.Windows.Forms.Label();
-			this.BTN_ContainerTypeConfig_Items_New = new System.Windows.Forms.Button();
+			this.LBL_Sector_Objects_Field4 = new System.Windows.Forms.Label();
+			this.LBL_Sector_Objects_Field3 = new System.Windows.Forms.Label();
+			this.LBL_Sector_Objects_Field2 = new System.Windows.Forms.Label();
+			this.LBL_Sector_Objects_Field1 = new System.Windows.Forms.Label();
+			this.TXT_Sector_Objects_Field5 = new System.Windows.Forms.TextBox();
+			this.TXT_Sector_Objects_Field4 = new System.Windows.Forms.TextBox();
+			this.TXT_Sector_Objects_Field3 = new System.Windows.Forms.TextBox();
+			this.TXT_Sector_Objects_Field2 = new System.Windows.Forms.TextBox();
+			this.TXT_Sector_Objects_Field1 = new System.Windows.Forms.TextBox();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -449,10 +480,13 @@ namespace SEConfigTool
 			this.splitContainer28.Panel2.SuspendLayout();
 			this.splitContainer28.SuspendLayout();
 			this.GRP_BlueprintsConfig_Details.SuspendLayout();
+			this.TAB_BlueprintConfig_Details.SuspendLayout();
+			this.TAB_BlueprintConfig_Details_Result_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer29)).BeginInit();
 			this.splitContainer29.Panel1.SuspendLayout();
 			this.splitContainer29.Panel2.SuspendLayout();
 			this.splitContainer29.SuspendLayout();
+			this.TAB_BlueprintConfig_Details_Prerequisites.SuspendLayout();
 			this.TAB_ComponentConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer24)).BeginInit();
 			this.splitContainer24.Panel1.SuspendLayout();
@@ -623,10 +657,24 @@ namespace SEConfigTool
 			this.splitContainer47.Panel1.SuspendLayout();
 			this.splitContainer47.Panel2.SuspendLayout();
 			this.splitContainer47.SuspendLayout();
+			this.TAB_ConfigurationConfig_Page.SuspendLayout();
+			this.GRP_ConfigurationConfig.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer50)).BeginInit();
+			this.splitContainer50.Panel1.SuspendLayout();
+			this.splitContainer50.Panel2.SuspendLayout();
+			this.splitContainer50.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer48)).BeginInit();
 			this.splitContainer48.Panel1.SuspendLayout();
 			this.splitContainer48.Panel2.SuspendLayout();
 			this.splitContainer48.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer49)).BeginInit();
+			this.splitContainer49.Panel1.SuspendLayout();
+			this.splitContainer49.Panel2.SuspendLayout();
+			this.splitContainer49.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer51)).BeginInit();
+			this.splitContainer51.Panel1.SuspendLayout();
+			this.splitContainer51.Panel2.SuspendLayout();
+			this.splitContainer51.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// STS_Status
@@ -1527,7 +1575,7 @@ namespace SEConfigTool
 			// 
 			// GRP_BlueprintsConfig_Details
 			// 
-			this.GRP_BlueprintsConfig_Details.Controls.Add(this.splitContainer29);
+			this.GRP_BlueprintsConfig_Details.Controls.Add(this.TAB_BlueprintConfig_Details);
 			this.GRP_BlueprintsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_BlueprintsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_BlueprintsConfig_Details.Name = "GRP_BlueprintsConfig_Details";
@@ -1536,91 +1584,144 @@ namespace SEConfigTool
 			this.GRP_BlueprintsConfig_Details.TabStop = false;
 			this.GRP_BlueprintsConfig_Details.Text = "Selected Item Details";
 			// 
+			// TAB_BlueprintConfig_Details
+			// 
+			this.TAB_BlueprintConfig_Details.Controls.Add(this.TAB_BlueprintConfig_Details_Result_Page);
+			this.TAB_BlueprintConfig_Details.Controls.Add(this.TAB_BlueprintConfig_Details_Prerequisites);
+			this.TAB_BlueprintConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TAB_BlueprintConfig_Details.Location = new System.Drawing.Point(3, 16);
+			this.TAB_BlueprintConfig_Details.Name = "TAB_BlueprintConfig_Details";
+			this.TAB_BlueprintConfig_Details.SelectedIndex = 0;
+			this.TAB_BlueprintConfig_Details.Size = new System.Drawing.Size(580, 363);
+			this.TAB_BlueprintConfig_Details.TabIndex = 1;
+			// 
+			// TAB_BlueprintConfig_Details_Result_Page
+			// 
+			this.TAB_BlueprintConfig_Details_Result_Page.Controls.Add(this.splitContainer29);
+			this.TAB_BlueprintConfig_Details_Result_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_BlueprintConfig_Details_Result_Page.Name = "TAB_BlueprintConfig_Details_Result_Page";
+			this.TAB_BlueprintConfig_Details_Result_Page.Padding = new System.Windows.Forms.Padding(3);
+			this.TAB_BlueprintConfig_Details_Result_Page.Size = new System.Drawing.Size(572, 337);
+			this.TAB_BlueprintConfig_Details_Result_Page.TabIndex = 1;
+			this.TAB_BlueprintConfig_Details_Result_Page.Text = "Result";
+			this.TAB_BlueprintConfig_Details_Result_Page.UseVisualStyleBackColor = true;
+			// 
 			// splitContainer29
 			// 
 			this.splitContainer29.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer29.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer29.Location = new System.Drawing.Point(3, 16);
+			this.splitContainer29.Location = new System.Drawing.Point(3, 3);
 			this.splitContainer29.Name = "splitContainer29";
 			// 
 			// splitContainer29.Panel1
 			// 
-			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Result);
-			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Prerequistes);
-			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_BaseProductionTime);
+			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Result_TypeId);
+			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Result_BaseProductionTime);
+			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Result_SubtypeId);
+			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Result_Amount);
 			this.splitContainer29.Panel1MinSize = 150;
 			// 
 			// splitContainer29.Panel2
 			// 
-			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result);
-			this.splitContainer29.Panel2.Controls.Add(this.LST_BlueprintConfig_Details_Prerequisites);
-			this.splitContainer29.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Apply);
-			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_BaseProductionTime);
-			this.splitContainer29.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer29.Panel2.Controls.Add(this.CMB_BlueprintConfig_Details_Result_TypeId);
+			this.splitContainer29.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Result_Apply);
+			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_BaseProductionTime);
+			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_SubtypeId);
+			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_Amount);
+			this.splitContainer29.Size = new System.Drawing.Size(566, 331);
 			this.splitContainer29.SplitterDistance = 150;
-			this.splitContainer29.TabIndex = 4;
+			this.splitContainer29.TabIndex = 5;
 			// 
-			// LBL_BlueprintConfig_Details_Result
+			// LBL_BlueprintConfig_Details_Result_TypeId
 			// 
-			this.LBL_BlueprintConfig_Details_Result.AutoSize = true;
-			this.LBL_BlueprintConfig_Details_Result.Location = new System.Drawing.Point(3, 6);
-			this.LBL_BlueprintConfig_Details_Result.Name = "LBL_BlueprintConfig_Details_Result";
-			this.LBL_BlueprintConfig_Details_Result.Size = new System.Drawing.Size(40, 13);
-			this.LBL_BlueprintConfig_Details_Result.TabIndex = 7;
-			this.LBL_BlueprintConfig_Details_Result.Text = "Result:";
+			this.LBL_BlueprintConfig_Details_Result_TypeId.AutoSize = true;
+			this.LBL_BlueprintConfig_Details_Result_TypeId.Location = new System.Drawing.Point(3, 6);
+			this.LBL_BlueprintConfig_Details_Result_TypeId.Name = "LBL_BlueprintConfig_Details_Result_TypeId";
+			this.LBL_BlueprintConfig_Details_Result_TypeId.Size = new System.Drawing.Size(46, 13);
+			this.LBL_BlueprintConfig_Details_Result_TypeId.TabIndex = 6;
+			this.LBL_BlueprintConfig_Details_Result_TypeId.Text = "Type Id:";
 			// 
-			// LBL_BlueprintConfig_Details_Prerequistes
+			// LBL_BlueprintConfig_Details_Result_BaseProductionTime
 			// 
-			this.LBL_BlueprintConfig_Details_Prerequistes.AutoSize = true;
-			this.LBL_BlueprintConfig_Details_Prerequistes.Location = new System.Drawing.Point(3, 55);
-			this.LBL_BlueprintConfig_Details_Prerequistes.Name = "LBL_BlueprintConfig_Details_Prerequistes";
-			this.LBL_BlueprintConfig_Details_Prerequistes.Size = new System.Drawing.Size(70, 13);
-			this.LBL_BlueprintConfig_Details_Prerequistes.TabIndex = 6;
-			this.LBL_BlueprintConfig_Details_Prerequistes.Text = "Prerequisites:";
+			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.AutoSize = true;
+			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.Location = new System.Drawing.Point(3, 84);
+			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.Name = "LBL_BlueprintConfig_Details_Result_BaseProductionTime";
+			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.Size = new System.Drawing.Size(114, 13);
+			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.TabIndex = 3;
+			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.Text = "Base Production Time:";
 			// 
-			// LBL_BlueprintConfig_Details_BaseProductionTime
+			// LBL_BlueprintConfig_Details_Result_SubtypeId
 			// 
-			this.LBL_BlueprintConfig_Details_BaseProductionTime.AutoSize = true;
-			this.LBL_BlueprintConfig_Details_BaseProductionTime.Location = new System.Drawing.Point(3, 32);
-			this.LBL_BlueprintConfig_Details_BaseProductionTime.Name = "LBL_BlueprintConfig_Details_BaseProductionTime";
-			this.LBL_BlueprintConfig_Details_BaseProductionTime.Size = new System.Drawing.Size(114, 13);
-			this.LBL_BlueprintConfig_Details_BaseProductionTime.TabIndex = 0;
-			this.LBL_BlueprintConfig_Details_BaseProductionTime.Text = "Base Production Time:";
+			this.LBL_BlueprintConfig_Details_Result_SubtypeId.AutoSize = true;
+			this.LBL_BlueprintConfig_Details_Result_SubtypeId.Location = new System.Drawing.Point(3, 32);
+			this.LBL_BlueprintConfig_Details_Result_SubtypeId.Name = "LBL_BlueprintConfig_Details_Result_SubtypeId";
+			this.LBL_BlueprintConfig_Details_Result_SubtypeId.Size = new System.Drawing.Size(61, 13);
+			this.LBL_BlueprintConfig_Details_Result_SubtypeId.TabIndex = 0;
+			this.LBL_BlueprintConfig_Details_Result_SubtypeId.Text = "Subtype Id:";
 			// 
-			// TXT_BlueprintConfig_Details_Result
+			// LBL_BlueprintConfig_Details_Result_Amount
 			// 
-			this.TXT_BlueprintConfig_Details_Result.Location = new System.Drawing.Point(3, 3);
-			this.TXT_BlueprintConfig_Details_Result.Name = "TXT_BlueprintConfig_Details_Result";
-			this.TXT_BlueprintConfig_Details_Result.ReadOnly = true;
-			this.TXT_BlueprintConfig_Details_Result.Size = new System.Drawing.Size(150, 20);
-			this.TXT_BlueprintConfig_Details_Result.TabIndex = 10;
+			this.LBL_BlueprintConfig_Details_Result_Amount.AutoSize = true;
+			this.LBL_BlueprintConfig_Details_Result_Amount.Location = new System.Drawing.Point(3, 58);
+			this.LBL_BlueprintConfig_Details_Result_Amount.Name = "LBL_BlueprintConfig_Details_Result_Amount";
+			this.LBL_BlueprintConfig_Details_Result_Amount.Size = new System.Drawing.Size(46, 13);
+			this.LBL_BlueprintConfig_Details_Result_Amount.TabIndex = 2;
+			this.LBL_BlueprintConfig_Details_Result_Amount.Text = "Amount:";
 			// 
-			// LST_BlueprintConfig_Details_Prerequisites
+			// CMB_BlueprintConfig_Details_Result_TypeId
 			// 
-			this.LST_BlueprintConfig_Details_Prerequisites.FormattingEnabled = true;
-			this.LST_BlueprintConfig_Details_Prerequisites.Location = new System.Drawing.Point(3, 55);
-			this.LST_BlueprintConfig_Details_Prerequisites.Name = "LST_BlueprintConfig_Details_Prerequisites";
-			this.LST_BlueprintConfig_Details_Prerequisites.Size = new System.Drawing.Size(150, 147);
-			this.LST_BlueprintConfig_Details_Prerequisites.TabIndex = 9;
+			this.CMB_BlueprintConfig_Details_Result_TypeId.FormattingEnabled = true;
+			this.CMB_BlueprintConfig_Details_Result_TypeId.Location = new System.Drawing.Point(3, 3);
+			this.CMB_BlueprintConfig_Details_Result_TypeId.Name = "CMB_BlueprintConfig_Details_Result_TypeId";
+			this.CMB_BlueprintConfig_Details_Result_TypeId.Size = new System.Drawing.Size(150, 21);
+			this.CMB_BlueprintConfig_Details_Result_TypeId.TabIndex = 11;
+			this.CMB_BlueprintConfig_Details_Result_TypeId.SelectedIndexChanged += new System.EventHandler(this.CMB_BlueprintConfig_Details_Result_TypeId_SelectedIndexChanged);
 			// 
-			// BTN_BlueprintConfig_Details_Apply
+			// BTN_BlueprintConfig_Details_Result_Apply
 			// 
-			this.BTN_BlueprintConfig_Details_Apply.Enabled = false;
-			this.BTN_BlueprintConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
-			this.BTN_BlueprintConfig_Details_Apply.Name = "BTN_BlueprintConfig_Details_Apply";
-			this.BTN_BlueprintConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
-			this.BTN_BlueprintConfig_Details_Apply.TabIndex = 8;
-			this.BTN_BlueprintConfig_Details_Apply.Text = "Apply changes";
-			this.BTN_BlueprintConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_BlueprintConfig_Details_Apply.Click += new System.EventHandler(this.BTN_BlueprintConfig_Details_Apply_Click);
+			this.BTN_BlueprintConfig_Details_Result_Apply.Enabled = false;
+			this.BTN_BlueprintConfig_Details_Result_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_BlueprintConfig_Details_Result_Apply.Name = "BTN_BlueprintConfig_Details_Result_Apply";
+			this.BTN_BlueprintConfig_Details_Result_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_BlueprintConfig_Details_Result_Apply.TabIndex = 8;
+			this.BTN_BlueprintConfig_Details_Result_Apply.Text = "Apply changes";
+			this.BTN_BlueprintConfig_Details_Result_Apply.UseVisualStyleBackColor = true;
+			this.BTN_BlueprintConfig_Details_Result_Apply.Click += new System.EventHandler(this.BTN_BlueprintConfig_Details_Result_Apply_Click);
 			// 
-			// TXT_BlueprintConfig_Details_BaseProductionTime
+			// TXT_BlueprintConfig_Details_Result_BaseProductionTime
 			// 
-			this.TXT_BlueprintConfig_Details_BaseProductionTime.Location = new System.Drawing.Point(3, 29);
-			this.TXT_BlueprintConfig_Details_BaseProductionTime.Name = "TXT_BlueprintConfig_Details_BaseProductionTime";
-			this.TXT_BlueprintConfig_Details_BaseProductionTime.Size = new System.Drawing.Size(150, 20);
-			this.TXT_BlueprintConfig_Details_BaseProductionTime.TabIndex = 5;
-			this.TXT_BlueprintConfig_Details_BaseProductionTime.TextChanged += new System.EventHandler(this.TXT_BlueprintConfig_Details_TextChanged);
+			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.Location = new System.Drawing.Point(3, 81);
+			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.Name = "TXT_BlueprintConfig_Details_Result_BaseProductionTime";
+			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.Size = new System.Drawing.Size(150, 20);
+			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.TabIndex = 6;
+			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.TextChanged += new System.EventHandler(this.TXT_BlueprintConfig_Details_Result_TextChanged);
+			// 
+			// TXT_BlueprintConfig_Details_Result_SubtypeId
+			// 
+			this.TXT_BlueprintConfig_Details_Result_SubtypeId.Location = new System.Drawing.Point(3, 29);
+			this.TXT_BlueprintConfig_Details_Result_SubtypeId.Name = "TXT_BlueprintConfig_Details_Result_SubtypeId";
+			this.TXT_BlueprintConfig_Details_Result_SubtypeId.Size = new System.Drawing.Size(150, 20);
+			this.TXT_BlueprintConfig_Details_Result_SubtypeId.TabIndex = 5;
+			this.TXT_BlueprintConfig_Details_Result_SubtypeId.TextChanged += new System.EventHandler(this.TXT_BlueprintConfig_Details_Result_TextChanged);
+			// 
+			// TXT_BlueprintConfig_Details_Result_Amount
+			// 
+			this.TXT_BlueprintConfig_Details_Result_Amount.Location = new System.Drawing.Point(3, 55);
+			this.TXT_BlueprintConfig_Details_Result_Amount.Name = "TXT_BlueprintConfig_Details_Result_Amount";
+			this.TXT_BlueprintConfig_Details_Result_Amount.Size = new System.Drawing.Size(150, 20);
+			this.TXT_BlueprintConfig_Details_Result_Amount.TabIndex = 4;
+			this.TXT_BlueprintConfig_Details_Result_Amount.TextChanged += new System.EventHandler(this.TXT_BlueprintConfig_Details_Result_TextChanged);
+			// 
+			// TAB_BlueprintConfig_Details_Prerequisites
+			// 
+			this.TAB_BlueprintConfig_Details_Prerequisites.Controls.Add(this.splitContainer48);
+			this.TAB_BlueprintConfig_Details_Prerequisites.Location = new System.Drawing.Point(4, 22);
+			this.TAB_BlueprintConfig_Details_Prerequisites.Name = "TAB_BlueprintConfig_Details_Prerequisites";
+			this.TAB_BlueprintConfig_Details_Prerequisites.Padding = new System.Windows.Forms.Padding(3);
+			this.TAB_BlueprintConfig_Details_Prerequisites.Size = new System.Drawing.Size(572, 337);
+			this.TAB_BlueprintConfig_Details_Prerequisites.TabIndex = 0;
+			this.TAB_BlueprintConfig_Details_Prerequisites.Text = "Prerequisites";
+			this.TAB_BlueprintConfig_Details_Prerequisites.UseVisualStyleBackColor = true;
 			// 
 			// TAB_ComponentConfig_Page
 			// 
@@ -3238,6 +3339,16 @@ namespace SEConfigTool
 			this.LBL_ContainerTypeConfig_Details_Items_AmountMin.TabIndex = 7;
 			this.LBL_ContainerTypeConfig_Details_Items_AmountMin.Text = "AmountMin";
 			// 
+			// BTN_ContainerTypeConfig_Items_New
+			// 
+			this.BTN_ContainerTypeConfig_Items_New.Location = new System.Drawing.Point(3, 308);
+			this.BTN_ContainerTypeConfig_Items_New.Name = "BTN_ContainerTypeConfig_Items_New";
+			this.BTN_ContainerTypeConfig_Items_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_ContainerTypeConfig_Items_New.TabIndex = 17;
+			this.BTN_ContainerTypeConfig_Items_New.Text = "New";
+			this.BTN_ContainerTypeConfig_Items_New.UseVisualStyleBackColor = true;
+			this.BTN_ContainerTypeConfig_Items_New.Click += new System.EventHandler(this.BTN_ContainerTypeConfig_Items_New_Click);
+			// 
 			// CMB_ContainerTypeConfig_Items_Type
 			// 
 			this.CMB_ContainerTypeConfig_Items_Type.FormattingEnabled = true;
@@ -4121,7 +4232,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer33.Panel2
 			// 
-			this.splitContainer33.Panel2.Controls.Add(this.splitContainer48);
+			this.splitContainer33.Panel2.Controls.Add(this.splitContainer51);
 			this.splitContainer33.Size = new System.Drawing.Size(776, 349);
 			this.splitContainer33.SplitterDistance = 300;
 			this.splitContainer33.TabIndex = 1;
@@ -4152,6 +4263,7 @@ namespace SEConfigTool
 			this.TAB_LayoutPages.Controls.Add(this.TAB_VoxelMaterialConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_ScenariosConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_TransparentMaterialsConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_ConfigurationConfig_Page);
 			this.TAB_LayoutPages.Location = new System.Drawing.Point(0, 0);
 			this.TAB_LayoutPages.Name = "TAB_LayoutPages";
 			this.TAB_LayoutPages.SelectedIndex = 0;
@@ -4469,98 +4581,351 @@ namespace SEConfigTool
 			this.BTN_TransparentMaterialConfig_Details_Apply.UseVisualStyleBackColor = true;
 			this.BTN_TransparentMaterialConfig_Details_Apply.Click += new System.EventHandler(this.BTN_TransparentMaterialsConfig_Details_Apply_Click);
 			// 
+			// TAB_ConfigurationConfig_Page
+			// 
+			this.TAB_ConfigurationConfig_Page.Controls.Add(this.BTN_ConfigurationConfig_Reload);
+			this.TAB_ConfigurationConfig_Page.Controls.Add(this.BTN_ConfigurationConfig_Save);
+			this.TAB_ConfigurationConfig_Page.Controls.Add(this.GRP_ConfigurationConfig);
+			this.TAB_ConfigurationConfig_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_ConfigurationConfig_Page.Name = "TAB_ConfigurationConfig_Page";
+			this.TAB_ConfigurationConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_ConfigurationConfig_Page.TabIndex = 15;
+			this.TAB_ConfigurationConfig_Page.Text = "Configuration";
+			this.TAB_ConfigurationConfig_Page.UseVisualStyleBackColor = true;
+			// 
+			// BTN_ConfigurationConfig_Reload
+			// 
+			this.BTN_ConfigurationConfig_Reload.Location = new System.Drawing.Point(3, 3);
+			this.BTN_ConfigurationConfig_Reload.Name = "BTN_ConfigurationConfig_Reload";
+			this.BTN_ConfigurationConfig_Reload.Size = new System.Drawing.Size(116, 23);
+			this.BTN_ConfigurationConfig_Reload.TabIndex = 4;
+			this.BTN_ConfigurationConfig_Reload.Text = "Reload Configuration";
+			this.BTN_ConfigurationConfig_Reload.UseVisualStyleBackColor = true;
+			// 
+			// BTN_ConfigurationConfig_Save
+			// 
+			this.BTN_ConfigurationConfig_Save.Location = new System.Drawing.Point(122, 3);
+			this.BTN_ConfigurationConfig_Save.Name = "BTN_ConfigurationConfig_Save";
+			this.BTN_ConfigurationConfig_Save.Size = new System.Drawing.Size(105, 23);
+			this.BTN_ConfigurationConfig_Save.TabIndex = 3;
+			this.BTN_ConfigurationConfig_Save.Text = "Save Configuration";
+			this.BTN_ConfigurationConfig_Save.UseVisualStyleBackColor = true;
+			// 
+			// GRP_ConfigurationConfig
+			// 
+			this.GRP_ConfigurationConfig.Controls.Add(this.splitContainer50);
+			this.GRP_ConfigurationConfig.Location = new System.Drawing.Point(3, 32);
+			this.GRP_ConfigurationConfig.Name = "GRP_ConfigurationConfig";
+			this.GRP_ConfigurationConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_ConfigurationConfig.TabIndex = 2;
+			this.GRP_ConfigurationConfig.TabStop = false;
+			this.GRP_ConfigurationConfig.Text = "Selected Item Details";
+			// 
+			// splitContainer50
+			// 
+			this.splitContainer50.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer50.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer50.Location = new System.Drawing.Point(3, 16);
+			this.splitContainer50.Name = "splitContainer50";
+			// 
+			// splitContainer50.Panel1
+			// 
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_BaseStationBlockPrefab);
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_BaseLargeBlockPrefab);
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_BaseSmallBlockPrefab);
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_LargeBlockSize);
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_SmallBlockSize);
+			this.splitContainer50.Panel1MinSize = 190;
+			// 
+			// splitContainer50.Panel2
+			// 
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_BaseStationBlockPrefab);
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_BaseLargeBlockPrefab);
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_BaseSmallBlockPrefab);
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_LargeBlockSize);
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_SmallBlockSize);
+			this.splitContainer50.Panel2.Controls.Add(this.BTN_ConfigurationConfig_Apply);
+			this.splitContainer50.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer50.SplitterDistance = 190;
+			this.splitContainer50.TabIndex = 4;
+			// 
+			// LBL_ConfigurationConfig_BaseStationBlockPrefab
+			// 
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.AutoSize = true;
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.Location = new System.Drawing.Point(3, 110);
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.Name = "LBL_ConfigurationConfig_BaseStationBlockPrefab";
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.Size = new System.Drawing.Size(134, 13);
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.TabIndex = 24;
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.Text = "Base Station Block Prefab:";
+			// 
+			// LBL_ConfigurationConfig_BaseLargeBlockPrefab
+			// 
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.AutoSize = true;
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.Location = new System.Drawing.Point(3, 84);
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.Name = "LBL_ConfigurationConfig_BaseLargeBlockPrefab";
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.Size = new System.Drawing.Size(128, 13);
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.TabIndex = 23;
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.Text = "Base Large Block Prefab:";
+			// 
+			// LBL_ConfigurationConfig_BaseSmallBlockPrefab
+			// 
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.AutoSize = true;
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.Location = new System.Drawing.Point(3, 58);
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.Name = "LBL_ConfigurationConfig_BaseSmallBlockPrefab";
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.Size = new System.Drawing.Size(126, 13);
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.TabIndex = 22;
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.Text = "Base Small Block Prefab:";
+			// 
+			// LBL_ConfigurationConfig_LargeBlockSize
+			// 
+			this.LBL_ConfigurationConfig_LargeBlockSize.AutoSize = true;
+			this.LBL_ConfigurationConfig_LargeBlockSize.Location = new System.Drawing.Point(3, 32);
+			this.LBL_ConfigurationConfig_LargeBlockSize.Name = "LBL_ConfigurationConfig_LargeBlockSize";
+			this.LBL_ConfigurationConfig_LargeBlockSize.Size = new System.Drawing.Size(90, 13);
+			this.LBL_ConfigurationConfig_LargeBlockSize.TabIndex = 8;
+			this.LBL_ConfigurationConfig_LargeBlockSize.Text = "Large Block Size:";
+			// 
+			// LBL_ConfigurationConfig_SmallBlockSize
+			// 
+			this.LBL_ConfigurationConfig_SmallBlockSize.AutoSize = true;
+			this.LBL_ConfigurationConfig_SmallBlockSize.Location = new System.Drawing.Point(3, 6);
+			this.LBL_ConfigurationConfig_SmallBlockSize.Name = "LBL_ConfigurationConfig_SmallBlockSize";
+			this.LBL_ConfigurationConfig_SmallBlockSize.Size = new System.Drawing.Size(88, 13);
+			this.LBL_ConfigurationConfig_SmallBlockSize.TabIndex = 7;
+			this.LBL_ConfigurationConfig_SmallBlockSize.Text = "Small Block Size:";
+			// 
+			// TXT_ConfigurationConfig_BaseStationBlockPrefab
+			// 
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab.Location = new System.Drawing.Point(3, 107);
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab.Name = "TXT_ConfigurationConfig_BaseStationBlockPrefab";
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab.TabIndex = 22;
+			// 
+			// TXT_ConfigurationConfig_BaseLargeBlockPrefab
+			// 
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab.Location = new System.Drawing.Point(3, 81);
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab.Name = "TXT_ConfigurationConfig_BaseLargeBlockPrefab";
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab.TabIndex = 21;
+			// 
+			// TXT_ConfigurationConfig_BaseSmallBlockPrefab
+			// 
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab.Location = new System.Drawing.Point(3, 55);
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab.Name = "TXT_ConfigurationConfig_BaseSmallBlockPrefab";
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab.TabIndex = 20;
+			// 
+			// TXT_ConfigurationConfig_LargeBlockSize
+			// 
+			this.TXT_ConfigurationConfig_LargeBlockSize.Location = new System.Drawing.Point(3, 29);
+			this.TXT_ConfigurationConfig_LargeBlockSize.Name = "TXT_ConfigurationConfig_LargeBlockSize";
+			this.TXT_ConfigurationConfig_LargeBlockSize.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_LargeBlockSize.TabIndex = 11;
+			// 
+			// TXT_ConfigurationConfig_SmallBlockSize
+			// 
+			this.TXT_ConfigurationConfig_SmallBlockSize.Location = new System.Drawing.Point(3, 3);
+			this.TXT_ConfigurationConfig_SmallBlockSize.Name = "TXT_ConfigurationConfig_SmallBlockSize";
+			this.TXT_ConfigurationConfig_SmallBlockSize.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_SmallBlockSize.TabIndex = 10;
+			// 
+			// BTN_ConfigurationConfig_Apply
+			// 
+			this.BTN_ConfigurationConfig_Apply.Enabled = false;
+			this.BTN_ConfigurationConfig_Apply.Location = new System.Drawing.Point(24, 391);
+			this.BTN_ConfigurationConfig_Apply.Name = "BTN_ConfigurationConfig_Apply";
+			this.BTN_ConfigurationConfig_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_ConfigurationConfig_Apply.TabIndex = 8;
+			this.BTN_ConfigurationConfig_Apply.Text = "Apply changes";
+			this.BTN_ConfigurationConfig_Apply.UseVisualStyleBackColor = true;
+			// 
 			// splitContainer48
 			// 
 			this.splitContainer48.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer48.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer48.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer48.Location = new System.Drawing.Point(3, 3);
 			this.splitContainer48.Name = "splitContainer48";
 			// 
 			// splitContainer48.Panel1
 			// 
-			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field5);
-			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field4);
-			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field3);
-			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field2);
-			this.splitContainer48.Panel1.Controls.Add(this.LBL_Sector_Objects_Field1);
+			this.splitContainer48.Panel1.Controls.Add(this.LST_BlueprintConfig_Details_Prerequisites);
 			this.splitContainer48.Panel1MinSize = 150;
 			// 
 			// splitContainer48.Panel2
 			// 
-			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field5);
-			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field4);
-			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field3);
-			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field2);
-			this.splitContainer48.Panel2.Controls.Add(this.TXT_Sector_Objects_Field1);
-			this.splitContainer48.Size = new System.Drawing.Size(472, 349);
+			this.splitContainer48.Panel2.Controls.Add(this.splitContainer49);
+			this.splitContainer48.Size = new System.Drawing.Size(566, 331);
 			this.splitContainer48.SplitterDistance = 150;
-			this.splitContainer48.TabIndex = 0;
+			this.splitContainer48.TabIndex = 1;
 			// 
-			// TXT_Sector_Objects_Field1
+			// LST_BlueprintConfig_Details_Prerequisites
 			// 
-			this.TXT_Sector_Objects_Field1.Location = new System.Drawing.Point(3, 3);
-			this.TXT_Sector_Objects_Field1.Name = "TXT_Sector_Objects_Field1";
-			this.TXT_Sector_Objects_Field1.ReadOnly = true;
-			this.TXT_Sector_Objects_Field1.Size = new System.Drawing.Size(150, 20);
-			this.TXT_Sector_Objects_Field1.TabIndex = 0;
-			this.TXT_Sector_Objects_Field1.Visible = false;
+			this.LST_BlueprintConfig_Details_Prerequisites.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_BlueprintConfig_Details_Prerequisites.FormattingEnabled = true;
+			this.LST_BlueprintConfig_Details_Prerequisites.Location = new System.Drawing.Point(0, 0);
+			this.LST_BlueprintConfig_Details_Prerequisites.Name = "LST_BlueprintConfig_Details_Prerequisites";
+			this.LST_BlueprintConfig_Details_Prerequisites.Size = new System.Drawing.Size(150, 331);
+			this.LST_BlueprintConfig_Details_Prerequisites.TabIndex = 10;
 			// 
-			// TXT_Sector_Objects_Field2
+			// splitContainer49
 			// 
-			this.TXT_Sector_Objects_Field2.Location = new System.Drawing.Point(3, 29);
-			this.TXT_Sector_Objects_Field2.Name = "TXT_Sector_Objects_Field2";
-			this.TXT_Sector_Objects_Field2.ReadOnly = true;
-			this.TXT_Sector_Objects_Field2.Size = new System.Drawing.Size(150, 20);
-			this.TXT_Sector_Objects_Field2.TabIndex = 1;
-			this.TXT_Sector_Objects_Field2.Visible = false;
+			this.splitContainer49.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer49.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer49.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer49.Name = "splitContainer49";
 			// 
-			// TXT_Sector_Objects_Field3
+			// splitContainer49.Panel1
 			// 
-			this.TXT_Sector_Objects_Field3.Location = new System.Drawing.Point(3, 55);
-			this.TXT_Sector_Objects_Field3.Name = "TXT_Sector_Objects_Field3";
-			this.TXT_Sector_Objects_Field3.ReadOnly = true;
-			this.TXT_Sector_Objects_Field3.Size = new System.Drawing.Size(150, 20);
-			this.TXT_Sector_Objects_Field3.TabIndex = 2;
-			this.TXT_Sector_Objects_Field3.Visible = false;
+			this.splitContainer49.Panel1.Controls.Add(this.label1);
+			this.splitContainer49.Panel1.Controls.Add(this.label6);
+			this.splitContainer49.Panel1.Controls.Add(this.label7);
+			this.splitContainer49.Panel1MinSize = 150;
 			// 
-			// LBL_Sector_Objects_Field1
+			// splitContainer49.Panel2
 			// 
-			this.LBL_Sector_Objects_Field1.AutoSize = true;
-			this.LBL_Sector_Objects_Field1.Location = new System.Drawing.Point(3, 6);
-			this.LBL_Sector_Objects_Field1.Name = "LBL_Sector_Objects_Field1";
-			this.LBL_Sector_Objects_Field1.Size = new System.Drawing.Size(85, 13);
-			this.LBL_Sector_Objects_Field1.TabIndex = 0;
-			this.LBL_Sector_Objects_Field1.Text = "Dynamic Field 1:";
-			this.LBL_Sector_Objects_Field1.Visible = false;
+			this.splitContainer49.Panel2.Controls.Add(this.CMB_BlueprintConfig_Details_Prerequisites_TypeId);
+			this.splitContainer49.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Prerequisites_Apply);
+			this.splitContainer49.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Prerequisites_Amount);
+			this.splitContainer49.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId);
+			this.splitContainer49.Size = new System.Drawing.Size(412, 331);
+			this.splitContainer49.SplitterDistance = 150;
+			this.splitContainer49.TabIndex = 10;
 			// 
-			// LBL_Sector_Objects_Field2
+			// label1
 			// 
-			this.LBL_Sector_Objects_Field2.AutoSize = true;
-			this.LBL_Sector_Objects_Field2.Location = new System.Drawing.Point(3, 32);
-			this.LBL_Sector_Objects_Field2.Name = "LBL_Sector_Objects_Field2";
-			this.LBL_Sector_Objects_Field2.Size = new System.Drawing.Size(85, 13);
-			this.LBL_Sector_Objects_Field2.TabIndex = 1;
-			this.LBL_Sector_Objects_Field2.Text = "Dynamic Field 2:";
-			this.LBL_Sector_Objects_Field2.Visible = false;
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(3, 7);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(46, 13);
+			this.label1.TabIndex = 12;
+			this.label1.Text = "Type Id:";
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(2, 34);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(61, 13);
+			this.label6.TabIndex = 10;
+			this.label6.Text = "Subtype Id:";
+			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(2, 60);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(46, 13);
+			this.label7.TabIndex = 11;
+			this.label7.Text = "Amount:";
+			// 
+			// CMB_BlueprintConfig_Details_Prerequisites_TypeId
+			// 
+			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.FormattingEnabled = true;
+			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.Location = new System.Drawing.Point(4, 4);
+			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.Name = "CMB_BlueprintConfig_Details_Prerequisites_TypeId";
+			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.Size = new System.Drawing.Size(150, 21);
+			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.TabIndex = 10;
+			// 
+			// BTN_BlueprintConfig_Details_Prerequisites_Apply
+			// 
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Name = "BTN_BlueprintConfig_Details_Prerequisites_Apply";
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.TabIndex = 9;
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Text = "Apply changes";
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.UseVisualStyleBackColor = true;
+			// 
+			// TXT_BlueprintConfig_Details_Prerequisites_Amount
+			// 
+			this.TXT_BlueprintConfig_Details_Prerequisites_Amount.Location = new System.Drawing.Point(4, 57);
+			this.TXT_BlueprintConfig_Details_Prerequisites_Amount.Name = "TXT_BlueprintConfig_Details_Prerequisites_Amount";
+			this.TXT_BlueprintConfig_Details_Prerequisites_Amount.Size = new System.Drawing.Size(150, 20);
+			this.TXT_BlueprintConfig_Details_Prerequisites_Amount.TabIndex = 6;
+			// 
+			// TXT_BlueprintConfig_Details_Prerequisites_SubtypeId
+			// 
+			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Location = new System.Drawing.Point(4, 31);
+			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Name = "TXT_BlueprintConfig_Details_Prerequisites_SubtypeId";
+			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Size = new System.Drawing.Size(150, 20);
+			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.TabIndex = 3;
+			// 
+			// splitContainer51
+			// 
+			this.splitContainer51.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer51.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer51.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer51.Name = "splitContainer51";
+			// 
+			// splitContainer51.Panel1
+			// 
+			this.splitContainer51.Panel1.Controls.Add(this.LBL_Sector_Objects_Field5);
+			this.splitContainer51.Panel1.Controls.Add(this.LBL_Sector_Objects_Field4);
+			this.splitContainer51.Panel1.Controls.Add(this.LBL_Sector_Objects_Field3);
+			this.splitContainer51.Panel1.Controls.Add(this.LBL_Sector_Objects_Field2);
+			this.splitContainer51.Panel1.Controls.Add(this.LBL_Sector_Objects_Field1);
+			this.splitContainer51.Panel1MinSize = 150;
+			// 
+			// splitContainer51.Panel2
+			// 
+			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field5);
+			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field4);
+			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field3);
+			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field2);
+			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field1);
+			this.splitContainer51.Size = new System.Drawing.Size(472, 349);
+			this.splitContainer51.SplitterDistance = 150;
+			this.splitContainer51.TabIndex = 2;
+			// 
+			// LBL_Sector_Objects_Field5
+			// 
+			this.LBL_Sector_Objects_Field5.AutoSize = true;
+			this.LBL_Sector_Objects_Field5.Location = new System.Drawing.Point(2, 110);
+			this.LBL_Sector_Objects_Field5.Name = "LBL_Sector_Objects_Field5";
+			this.LBL_Sector_Objects_Field5.Size = new System.Drawing.Size(85, 13);
+			this.LBL_Sector_Objects_Field5.TabIndex = 9;
+			this.LBL_Sector_Objects_Field5.Text = "Dynamic Field 5:";
+			this.LBL_Sector_Objects_Field5.Visible = false;
+			// 
+			// LBL_Sector_Objects_Field4
+			// 
+			this.LBL_Sector_Objects_Field4.AutoSize = true;
+			this.LBL_Sector_Objects_Field4.Location = new System.Drawing.Point(2, 84);
+			this.LBL_Sector_Objects_Field4.Name = "LBL_Sector_Objects_Field4";
+			this.LBL_Sector_Objects_Field4.Size = new System.Drawing.Size(85, 13);
+			this.LBL_Sector_Objects_Field4.TabIndex = 8;
+			this.LBL_Sector_Objects_Field4.Text = "Dynamic Field 4:";
+			this.LBL_Sector_Objects_Field4.Visible = false;
 			// 
 			// LBL_Sector_Objects_Field3
 			// 
 			this.LBL_Sector_Objects_Field3.AutoSize = true;
-			this.LBL_Sector_Objects_Field3.Location = new System.Drawing.Point(3, 58);
+			this.LBL_Sector_Objects_Field3.Location = new System.Drawing.Point(2, 58);
 			this.LBL_Sector_Objects_Field3.Name = "LBL_Sector_Objects_Field3";
 			this.LBL_Sector_Objects_Field3.Size = new System.Drawing.Size(85, 13);
-			this.LBL_Sector_Objects_Field3.TabIndex = 2;
+			this.LBL_Sector_Objects_Field3.TabIndex = 7;
 			this.LBL_Sector_Objects_Field3.Text = "Dynamic Field 3:";
 			this.LBL_Sector_Objects_Field3.Visible = false;
 			// 
-			// TXT_Sector_Objects_Field4
+			// LBL_Sector_Objects_Field2
 			// 
-			this.TXT_Sector_Objects_Field4.Location = new System.Drawing.Point(3, 81);
-			this.TXT_Sector_Objects_Field4.Name = "TXT_Sector_Objects_Field4";
-			this.TXT_Sector_Objects_Field4.ReadOnly = true;
-			this.TXT_Sector_Objects_Field4.Size = new System.Drawing.Size(150, 20);
-			this.TXT_Sector_Objects_Field4.TabIndex = 3;
-			this.TXT_Sector_Objects_Field4.Visible = false;
+			this.LBL_Sector_Objects_Field2.AutoSize = true;
+			this.LBL_Sector_Objects_Field2.Location = new System.Drawing.Point(2, 32);
+			this.LBL_Sector_Objects_Field2.Name = "LBL_Sector_Objects_Field2";
+			this.LBL_Sector_Objects_Field2.Size = new System.Drawing.Size(85, 13);
+			this.LBL_Sector_Objects_Field2.TabIndex = 6;
+			this.LBL_Sector_Objects_Field2.Text = "Dynamic Field 2:";
+			this.LBL_Sector_Objects_Field2.Visible = false;
+			// 
+			// LBL_Sector_Objects_Field1
+			// 
+			this.LBL_Sector_Objects_Field1.AutoSize = true;
+			this.LBL_Sector_Objects_Field1.Location = new System.Drawing.Point(2, 6);
+			this.LBL_Sector_Objects_Field1.Name = "LBL_Sector_Objects_Field1";
+			this.LBL_Sector_Objects_Field1.Size = new System.Drawing.Size(85, 13);
+			this.LBL_Sector_Objects_Field1.TabIndex = 5;
+			this.LBL_Sector_Objects_Field1.Text = "Dynamic Field 1:";
+			this.LBL_Sector_Objects_Field1.Visible = false;
 			// 
 			// TXT_Sector_Objects_Field5
 			// 
@@ -4568,38 +4933,44 @@ namespace SEConfigTool
 			this.TXT_Sector_Objects_Field5.Name = "TXT_Sector_Objects_Field5";
 			this.TXT_Sector_Objects_Field5.ReadOnly = true;
 			this.TXT_Sector_Objects_Field5.Size = new System.Drawing.Size(150, 20);
-			this.TXT_Sector_Objects_Field5.TabIndex = 4;
+			this.TXT_Sector_Objects_Field5.TabIndex = 9;
 			this.TXT_Sector_Objects_Field5.Visible = false;
 			// 
-			// LBL_Sector_Objects_Field4
+			// TXT_Sector_Objects_Field4
 			// 
-			this.LBL_Sector_Objects_Field4.AutoSize = true;
-			this.LBL_Sector_Objects_Field4.Location = new System.Drawing.Point(3, 84);
-			this.LBL_Sector_Objects_Field4.Name = "LBL_Sector_Objects_Field4";
-			this.LBL_Sector_Objects_Field4.Size = new System.Drawing.Size(85, 13);
-			this.LBL_Sector_Objects_Field4.TabIndex = 3;
-			this.LBL_Sector_Objects_Field4.Text = "Dynamic Field 4:";
-			this.LBL_Sector_Objects_Field4.Visible = false;
+			this.TXT_Sector_Objects_Field4.Location = new System.Drawing.Point(3, 81);
+			this.TXT_Sector_Objects_Field4.Name = "TXT_Sector_Objects_Field4";
+			this.TXT_Sector_Objects_Field4.ReadOnly = true;
+			this.TXT_Sector_Objects_Field4.Size = new System.Drawing.Size(150, 20);
+			this.TXT_Sector_Objects_Field4.TabIndex = 8;
+			this.TXT_Sector_Objects_Field4.Visible = false;
 			// 
-			// LBL_Sector_Objects_Field5
+			// TXT_Sector_Objects_Field3
 			// 
-			this.LBL_Sector_Objects_Field5.AutoSize = true;
-			this.LBL_Sector_Objects_Field5.Location = new System.Drawing.Point(3, 110);
-			this.LBL_Sector_Objects_Field5.Name = "LBL_Sector_Objects_Field5";
-			this.LBL_Sector_Objects_Field5.Size = new System.Drawing.Size(85, 13);
-			this.LBL_Sector_Objects_Field5.TabIndex = 4;
-			this.LBL_Sector_Objects_Field5.Text = "Dynamic Field 5:";
-			this.LBL_Sector_Objects_Field5.Visible = false;
+			this.TXT_Sector_Objects_Field3.Location = new System.Drawing.Point(3, 55);
+			this.TXT_Sector_Objects_Field3.Name = "TXT_Sector_Objects_Field3";
+			this.TXT_Sector_Objects_Field3.ReadOnly = true;
+			this.TXT_Sector_Objects_Field3.Size = new System.Drawing.Size(150, 20);
+			this.TXT_Sector_Objects_Field3.TabIndex = 7;
+			this.TXT_Sector_Objects_Field3.Visible = false;
 			// 
-			// BTN_ContainerTypeConfig_Items_New
+			// TXT_Sector_Objects_Field2
 			// 
-			this.BTN_ContainerTypeConfig_Items_New.Location = new System.Drawing.Point(3, 308);
-			this.BTN_ContainerTypeConfig_Items_New.Name = "BTN_ContainerTypeConfig_Items_New";
-			this.BTN_ContainerTypeConfig_Items_New.Size = new System.Drawing.Size(50, 23);
-			this.BTN_ContainerTypeConfig_Items_New.TabIndex = 17;
-			this.BTN_ContainerTypeConfig_Items_New.Text = "New";
-			this.BTN_ContainerTypeConfig_Items_New.UseVisualStyleBackColor = true;
-			this.BTN_ContainerTypeConfig_Items_New.Click += new System.EventHandler(this.BTN_ContainerTypeConfig_Items_New_Click);
+			this.TXT_Sector_Objects_Field2.Location = new System.Drawing.Point(3, 29);
+			this.TXT_Sector_Objects_Field2.Name = "TXT_Sector_Objects_Field2";
+			this.TXT_Sector_Objects_Field2.ReadOnly = true;
+			this.TXT_Sector_Objects_Field2.Size = new System.Drawing.Size(150, 20);
+			this.TXT_Sector_Objects_Field2.TabIndex = 6;
+			this.TXT_Sector_Objects_Field2.Visible = false;
+			// 
+			// TXT_Sector_Objects_Field1
+			// 
+			this.TXT_Sector_Objects_Field1.Location = new System.Drawing.Point(3, 3);
+			this.TXT_Sector_Objects_Field1.Name = "TXT_Sector_Objects_Field1";
+			this.TXT_Sector_Objects_Field1.ReadOnly = true;
+			this.TXT_Sector_Objects_Field1.Size = new System.Drawing.Size(150, 20);
+			this.TXT_Sector_Objects_Field1.TabIndex = 5;
+			this.TXT_Sector_Objects_Field1.Visible = false;
 			// 
 			// SEConfigTool
 			// 
@@ -4688,12 +5059,15 @@ namespace SEConfigTool
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer28)).EndInit();
 			this.splitContainer28.ResumeLayout(false);
 			this.GRP_BlueprintsConfig_Details.ResumeLayout(false);
+			this.TAB_BlueprintConfig_Details.ResumeLayout(false);
+			this.TAB_BlueprintConfig_Details_Result_Page.ResumeLayout(false);
 			this.splitContainer29.Panel1.ResumeLayout(false);
 			this.splitContainer29.Panel1.PerformLayout();
 			this.splitContainer29.Panel2.ResumeLayout(false);
 			this.splitContainer29.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer29)).EndInit();
 			this.splitContainer29.ResumeLayout(false);
+			this.TAB_BlueprintConfig_Details_Prerequisites.ResumeLayout(false);
 			this.TAB_ComponentConfig_Page.ResumeLayout(false);
 			this.splitContainer24.Panel1.ResumeLayout(false);
 			this.splitContainer24.Panel2.ResumeLayout(false);
@@ -4889,12 +5263,30 @@ namespace SEConfigTool
 			this.splitContainer47.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer47)).EndInit();
 			this.splitContainer47.ResumeLayout(false);
+			this.TAB_ConfigurationConfig_Page.ResumeLayout(false);
+			this.GRP_ConfigurationConfig.ResumeLayout(false);
+			this.splitContainer50.Panel1.ResumeLayout(false);
+			this.splitContainer50.Panel1.PerformLayout();
+			this.splitContainer50.Panel2.ResumeLayout(false);
+			this.splitContainer50.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer50)).EndInit();
+			this.splitContainer50.ResumeLayout(false);
 			this.splitContainer48.Panel1.ResumeLayout(false);
-			this.splitContainer48.Panel1.PerformLayout();
 			this.splitContainer48.Panel2.ResumeLayout(false);
-			this.splitContainer48.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer48)).EndInit();
 			this.splitContainer48.ResumeLayout(false);
+			this.splitContainer49.Panel1.ResumeLayout(false);
+			this.splitContainer49.Panel1.PerformLayout();
+			this.splitContainer49.Panel2.ResumeLayout(false);
+			this.splitContainer49.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer49)).EndInit();
+			this.splitContainer49.ResumeLayout(false);
+			this.splitContainer51.Panel1.ResumeLayout(false);
+			this.splitContainer51.Panel1.PerformLayout();
+			this.splitContainer51.Panel2.ResumeLayout(false);
+			this.splitContainer51.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer51)).EndInit();
+			this.splitContainer51.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -4978,14 +5370,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.SplitContainer splitContainer28;
 		private System.Windows.Forms.ListBox LST_BlueprintConfig;
 		private System.Windows.Forms.GroupBox GRP_BlueprintsConfig_Details;
-		private System.Windows.Forms.SplitContainer splitContainer29;
-		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Result;
-		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Prerequistes;
-		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_BaseProductionTime;
-		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Result;
-		private System.Windows.Forms.ListBox LST_BlueprintConfig_Details_Prerequisites;
-		private System.Windows.Forms.Button BTN_BlueprintConfig_Details_Apply;
-		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_BaseProductionTime;
 		private System.Windows.Forms.TabPage TAB_ComponentConfig_Page;
 		private System.Windows.Forms.SplitContainer splitContainer24;
 		private System.Windows.Forms.Button BTN_ComponentConfig_Reload;
@@ -5134,20 +5518,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.SplitContainer splitContainer6;
 		private System.Windows.Forms.ListBox LST_AmmoConfig;
 		private System.Windows.Forms.GroupBox GRP_AmmoConfig_Details;
-		private System.Windows.Forms.SplitContainer splitContainer7;
-		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Mass;
-		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Volume;
-		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Id;
-		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Capacity;
-		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Name;
-		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Caliber;
-		private System.Windows.Forms.ComboBox CMB_AmmoConfig_Details_Caliber;
-		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Mass;
-		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Volume;
-		private System.Windows.Forms.Button BTN_AmmoConfig_Details_Apply;
-		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Id;
-		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Capacity;
-		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Name;
 		private System.Windows.Forms.TabPage TAB_BlocksConfig_Page;
 		private System.Windows.Forms.SplitContainer splitContainer3;
 		private System.Windows.Forms.Button BTN_BlocksConfig_Reload;
@@ -5227,15 +5597,8 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TXT_TransparentMaterialConfig_Details_Emissivity;
 		private System.Windows.Forms.TextBox TXT_TransparentMaterialConfig_Details_Name;
 		private System.Windows.Forms.Button BTN_TransparentMaterialConfig_Details_Apply;
-		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Model;
-		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Icon;
-		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Description;
-		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Description;
-		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Model;
-		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Icon;
 		private System.Windows.Forms.TextBox TXT_ComponentConfig_Details_Size_Z;
 		private System.Windows.Forms.TextBox TXT_ComponentConfig_Details_Size_Y;
-		private System.Windows.Forms.Button BTN_AmmoConfig_Details_New;
 		private System.Windows.Forms.Button BTN_ComponentConfig_Details_New;
 		private System.Windows.Forms.Button BTN_PhysicalItemConfig_Details_New;
 		private System.Windows.Forms.TextBox TXT_PhysicalItemConfig_Details_Size_Z;
@@ -5243,18 +5606,78 @@ namespace SEConfigTool
 		private System.Windows.Forms.Label LBL_PhysicalItemConfig_Details_Type;
 		private System.Windows.Forms.ComboBox CMB_PhysicalItemConfig_Details_Type;
 		private System.Windows.Forms.Button BTN_ContainerTypesConfig_Details_New;
+		private System.Windows.Forms.Button BTN_ContainerTypeConfig_Items_New;
+		private System.Windows.Forms.TabControl TAB_BlueprintConfig_Details;
+		private System.Windows.Forms.TabPage TAB_BlueprintConfig_Details_Result_Page;
+		private System.Windows.Forms.SplitContainer splitContainer29;
+		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Result_TypeId;
+		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Result_BaseProductionTime;
+		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Result_SubtypeId;
+		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Result_Amount;
+		private System.Windows.Forms.Button BTN_BlueprintConfig_Details_Result_Apply;
+		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Result_BaseProductionTime;
+		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Result_SubtypeId;
+		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Result_Amount;
+		private System.Windows.Forms.TabPage TAB_BlueprintConfig_Details_Prerequisites;
+		private System.Windows.Forms.SplitContainer splitContainer7;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Model;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Icon;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Description;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Mass;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Volume;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Id;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Capacity;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Name;
+		private System.Windows.Forms.Label LBL_AmmoConfig_Details_Caliber;
+		private System.Windows.Forms.Button BTN_AmmoConfig_Details_New;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Model;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Icon;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Description;
+		private System.Windows.Forms.ComboBox CMB_AmmoConfig_Details_Caliber;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Mass;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Volume;
+		private System.Windows.Forms.Button BTN_AmmoConfig_Details_Apply;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Id;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Capacity;
+		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Name;
+		private System.Windows.Forms.ComboBox CMB_BlueprintConfig_Details_Result_TypeId;
+		private System.Windows.Forms.TabPage TAB_ConfigurationConfig_Page;
+		private System.Windows.Forms.GroupBox GRP_ConfigurationConfig;
+		private System.Windows.Forms.SplitContainer splitContainer50;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_BaseLargeBlockPrefab;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_BaseSmallBlockPrefab;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_LargeBlockSize;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_SmallBlockSize;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_BaseLargeBlockPrefab;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_BaseSmallBlockPrefab;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_LargeBlockSize;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_SmallBlockSize;
+		private System.Windows.Forms.Button BTN_ConfigurationConfig_Apply;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_BaseStationBlockPrefab;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_BaseStationBlockPrefab;
+		private System.Windows.Forms.Button BTN_ConfigurationConfig_Reload;
+		private System.Windows.Forms.Button BTN_ConfigurationConfig_Save;
 		private System.Windows.Forms.SplitContainer splitContainer48;
+		private System.Windows.Forms.ListBox LST_BlueprintConfig_Details_Prerequisites;
+		private System.Windows.Forms.SplitContainer splitContainer49;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.ComboBox CMB_BlueprintConfig_Details_Prerequisites_TypeId;
+		private System.Windows.Forms.Button BTN_BlueprintConfig_Details_Prerequisites_Apply;
+		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Prerequisites_Amount;
+		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Prerequisites_SubtypeId;
+		private System.Windows.Forms.SplitContainer splitContainer51;
+		private System.Windows.Forms.Label LBL_Sector_Objects_Field5;
+		private System.Windows.Forms.Label LBL_Sector_Objects_Field4;
 		private System.Windows.Forms.Label LBL_Sector_Objects_Field3;
 		private System.Windows.Forms.Label LBL_Sector_Objects_Field2;
 		private System.Windows.Forms.Label LBL_Sector_Objects_Field1;
+		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field5;
+		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field4;
 		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field3;
 		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field2;
 		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field1;
-		private System.Windows.Forms.Label LBL_Sector_Objects_Field5;
-		private System.Windows.Forms.Label LBL_Sector_Objects_Field4;
-		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field5;
-		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field4;
-		private System.Windows.Forms.Button BTN_ContainerTypeConfig_Items_New;
 
     }
 }
