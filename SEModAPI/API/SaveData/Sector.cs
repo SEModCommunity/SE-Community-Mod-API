@@ -17,9 +17,11 @@ namespace SEModAPI.API.SaveData
 	{
 		#region "Attributes"
 
+		//Sector Events
 		private EventManager m_eventManager;
-		private CubeGridManager m_cubeGridManager;
 
+		//Sector Objects
+		private CubeGridManager m_cubeGridManager;
 		//TODO - Build managers for these so that we aren't using lists
 		private List<VoxelMap> m_voxelMaps;
 		private List<FloatingObject> m_floatingObjects;
@@ -83,6 +85,44 @@ namespace SEModAPI.API.SaveData
 		#endregion
 
 		#region "Properties"
+
+		new public MyObjectBuilder_Sector BaseDefinition
+		{
+			get
+			{
+				//Update the events in the base definition
+				m_baseDefinition.SectorEvents.Events = new List<MyObjectBuilder_GlobalEventBase>();
+				foreach (var item in m_eventManager.Definitions)
+				{
+					m_baseDefinition.SectorEvents.Events.Add(item.BaseDefinition);
+				}
+
+				//Update the sector objects in the base definition
+				m_baseDefinition.SectorObjects = new List<MyObjectBuilder_EntityBase>();
+				foreach (var item in m_cubeGridManager.Definitions)
+				{
+					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
+				}
+				foreach (var item in m_voxelMaps)
+				{
+					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
+				}
+				foreach (var item in m_floatingObjects)
+				{
+					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
+				}
+				foreach (var item in m_meteors)
+				{
+					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
+				}
+				foreach (var item in m_unknownObjects)
+				{
+					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
+				}
+
+				return m_baseDefinition;
+			}
+		}
 
 		public VRageMath.Vector3I Position
 		{

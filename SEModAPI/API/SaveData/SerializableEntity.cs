@@ -100,7 +100,7 @@ namespace SEModAPI.API.SaveData
 			long entityId = newEntry.EntityId;
 			if (entityId == 0)
 				entityId = newEntry.GenerateEntityId();
-			m_definitions.Add(entityId, newEntry);
+			GetInternalData().Add(entityId, newEntry);
 
 			return newEntry;
 		}

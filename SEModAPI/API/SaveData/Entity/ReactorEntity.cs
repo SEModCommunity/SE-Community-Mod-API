@@ -30,6 +30,15 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		new public MyObjectBuilder_Reactor BaseDefinition
+		{
+			get
+			{
+				m_baseDefinition.Inventory = m_Inventory.BaseDefinition;
+				return m_baseDefinition;
+			}
+		}
+
 		public InventoryEntity Inventory
 		{
 			get { return m_Inventory; }

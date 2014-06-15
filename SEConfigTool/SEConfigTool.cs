@@ -552,6 +552,8 @@ namespace SEConfigTool
 
 		private void TRV_SavedGame_Objects_AfterSelect(object sender, TreeViewEventArgs e)
 		{
+			m_currentlySelecting = true;
+
 			LBL_Sector_Objects_Field1.Visible = false;
 			LBL_Sector_Objects_Field2.Visible = false;
 			LBL_Sector_Objects_Field3.Visible = false;
@@ -563,6 +565,24 @@ namespace SEConfigTool
 			TXT_Sector_Objects_Field3.Visible = false;
 			TXT_Sector_Objects_Field4.Visible = false;
 			TXT_Sector_Objects_Field5.Visible = false;
+
+			TXT_Sector_Objects_Field1.Enabled = false;
+			TXT_Sector_Objects_Field2.Enabled = false;
+			TXT_Sector_Objects_Field3.Enabled = false;
+			TXT_Sector_Objects_Field4.Enabled = false;
+			TXT_Sector_Objects_Field5.Enabled = false;
+
+			TXT_Sector_Objects_Field1.ReadOnly = true;
+			TXT_Sector_Objects_Field2.ReadOnly = true;
+			TXT_Sector_Objects_Field3.ReadOnly = true;
+			TXT_Sector_Objects_Field4.ReadOnly = true;
+			TXT_Sector_Objects_Field5.ReadOnly = true;
+
+			BTN_Sector_Objects_New.Visible = false;
+			BTN_Sector_Objects_Apply.Visible = false;
+
+			BTN_Sector_Objects_New.Enabled = false;
+			BTN_Sector_Objects_Apply.Enabled = false;
 
 			var linkedObject = e.Node.Tag;
 			if (linkedObject == null)
@@ -663,6 +683,11 @@ namespace SEConfigTool
 				TXT_Sector_Objects_Field2.Visible = true;
 				TXT_Sector_Objects_Field3.Visible = true;
 
+				BTN_Sector_Objects_Apply.Visible = true;
+
+				TXT_Sector_Objects_Field3.Enabled = true;
+				TXT_Sector_Objects_Field3.ReadOnly = false;
+
 				LBL_Sector_Objects_Field1.Text = "Type:";
 				LBL_Sector_Objects_Field2.Text = "Entity Id:";
 				LBL_Sector_Objects_Field3.Text = "Steam User Id:";
@@ -688,6 +713,41 @@ namespace SEConfigTool
 				TXT_Sector_Objects_Field1.Text = cubeGrid.PositionAndOrientation.Position.x.ToString(m_numberFormatInfo) + ", " + cubeGrid.PositionAndOrientation.Position.y.ToString(m_numberFormatInfo) + ", " + cubeGrid.PositionAndOrientation.Position.z.ToString(m_numberFormatInfo);
 				TXT_Sector_Objects_Field2.Text = cubeGrid.EntityId.ToString();
 			}
+
+			m_currentlySelecting = false;
+		}
+
+		private void TXT_Sector_Objects_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_Sector_Objects_Apply.Enabled = true;
+			}
+		}
+
+		private void BTN_Sector_Objects_Apply_Click(object sender, EventArgs e)
+		{
+			TreeNode selectedNode = TRV_SavedGame_Objects.SelectedNode;
+
+			var linkedObject = selectedNode.Tag;
+			if (linkedObject == null)
+				return;
+
+			Type linkedType = linkedObject.GetType();
+
+			if (linkedType.IsAssignableFrom(typeof(MedicalRoomEntity)))
+			{
+				MedicalRoomEntity medicalBlock = (MedicalRoomEntity)linkedObject;
+
+				medicalBlock.SteamUserId = Convert.ToUInt64(TXT_Sector_Objects_Field3.Text, m_numberFormatInfo);
+			}
+
+			BTN_Sector_Objects_Apply.Enabled = false;
+		}
+
+		private void BTN_Sector_Objects_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
 		}
 
 		private void TXT_SavedGame_Events_TextChanged(object sender, EventArgs e)

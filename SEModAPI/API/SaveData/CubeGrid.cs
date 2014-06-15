@@ -22,12 +22,22 @@ namespace SEModAPI.API.SaveData
 			: base(definition)
 		{
 			m_cubeBlockManager = new CubeBlockManager();
-			m_cubeBlockManager.Load(definition.CubeBlocks.ToArray());
+			m_cubeBlockManager.Load(definition.CubeBlocks);
 		}
 
 		#endregion
 
 		#region "Properties"
+
+		new public MyObjectBuilder_CubeGrid BaseDefinition
+		{
+			get
+			{
+				m_baseDefinition.CubeBlocks = m_cubeBlockManager.ExtractBaseDefinitions();
+
+				return m_baseDefinition;
+			}
+		}
 
 		new public long EntityId
 		{
@@ -81,14 +91,6 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.AngularVelocity == value) return;
 				m_baseDefinition.AngularVelocity = value;
 				Changed = true;
-			}
-		}
-
-		public List<MyObjectBuilder_CubeBlock> BaseCubeBlocks
-		{
-			get
-			{
-				return m_cubeBlockManager.ExtractBaseDefinitions();
 			}
 		}
 
@@ -165,8 +167,6 @@ namespace SEModAPI.API.SaveData
 		protected override MyObjectBuilder_CubeGrid GetBaseTypeOf(CubeGrid overLayer)
 		{
 			MyObjectBuilder_CubeGrid baseDef = overLayer.BaseDefinition;
-
-			baseDef.CubeBlocks = overLayer.BaseCubeBlocks;
 
 			return baseDef;
 		}

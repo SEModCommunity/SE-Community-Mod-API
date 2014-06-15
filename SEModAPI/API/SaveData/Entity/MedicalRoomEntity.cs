@@ -23,9 +23,20 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		new public MyObjectBuilder_MedicalRoom BaseDefinition
+		{
+			get { return m_baseDefinition; }
+		}
+
 		public ulong SteamUserId
 		{
 			get { return m_baseDefinition.SteamUserId; }
+			set
+			{
+				if (m_baseDefinition.SteamUserId == value) return;
+				m_baseDefinition.SteamUserId = value;
+				Changed = true;
+			}
 		}
 
 		#endregion

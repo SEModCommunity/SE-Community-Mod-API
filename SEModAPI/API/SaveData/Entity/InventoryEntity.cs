@@ -32,12 +32,32 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		new public MyObjectBuilder_Inventory BaseDefinition
+		{
+			get
+			{
+				m_baseDefinition.Items = m_itemManager.ExtractBaseDefinitions();
+				return m_baseDefinition;
+			}
+		}
+
 		public List<InventoryItemEntity> Items
 		{
-			get {
+			get
+			{
 				List<InventoryItemEntity> newList = new List<InventoryItemEntity>(m_itemManager.Definitions);
 				return newList;
 			}
+		}
+
+		public InventoryItemEntity NewEntry(MyObjectBuilder_InventoryItem source)
+		{
+			return m_itemManager.NewEntry(source);
+		}
+
+		public InventoryItemEntity NewEntry(InventoryItemEntity source)
+		{
+			return m_itemManager.NewEntry(source);
 		}
 
 		#endregion

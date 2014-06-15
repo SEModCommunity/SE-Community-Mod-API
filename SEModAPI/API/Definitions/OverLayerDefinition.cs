@@ -122,7 +122,7 @@ namespace SEModAPI.API.Definitions
 
 		//Use Long (key) as Id and OverLayerDefinition sub type (value) as Name
 		//For entity objects (saved game data) we use EnityId as the long key
-		protected Dictionary<long, U> m_definitions = new Dictionary<long, U>();
+		private Dictionary<long, U> m_definitions = new Dictionary<long, U>();
 
 		#endregion
 
@@ -159,7 +159,7 @@ namespace SEModAPI.API.Definitions
 		{
 			get
 			{
-				foreach (var def in m_definitions)
+				foreach (var def in GetInternalData())
 				{
 					if (GetChangedState(def.Value))
 						return true;
@@ -172,13 +172,18 @@ namespace SEModAPI.API.Definitions
 		{
 			get
 			{
-				return m_definitions.Values.ToArray();
+				return GetInternalData().Values.ToArray();
 			}
 		}
 
 		#endregion
 
 		#region "Methods"
+
+		protected virtual Dictionary<long, U> GetInternalData()
+		{
+			return m_definitions;
+		}
 
 		/// <summary>
 		/// This method is used to extract all instances of MyObjectBuilder_Definitions sub type encapsulated in the manager
@@ -188,7 +193,7 @@ namespace SEModAPI.API.Definitions
 		public List<T> ExtractBaseDefinitions()
 		{
 			List<T> list = new List<T>();
-			foreach (var def in m_definitions.Values)
+			foreach (var def in GetInternalData().Values)
 			{
 				list.Add(GetBaseTypeOf(def));
 			}
@@ -197,26 +202,26 @@ namespace SEModAPI.API.Definitions
 
 		private bool IsIdValid(long id)
 		{
-			return m_definitions.ContainsKey(id);
+			return GetInternalData().ContainsKey(id);
 		}
 
 		private bool IsIndexValid(int index)
 		{
-			return (index < m_definitions.Keys.Count && index >= 0);
+			return (index < GetInternalData().Keys.Count && index >= 0);
 		}
 
 		public U DefinitionOf(long id)
 		{
 			U result = default(U);
 			if (IsIdValid(id))
-				m_definitions.TryGetValue(id, out result);
+				GetInternalData().TryGetValue(id, out result);
 
 			return result;
 		}
 
 		public U DefinitionOf(int index)
 		{
-			return IsIndexValid(index) ? m_definitions.Values.ToArray()[index] : default(U);
+			return IsIndexValid(index) ? GetInternalData().Values.ToArray()[index] : default(U);
 		}
 
 		#region "Abstract Methods"
@@ -251,12 +256,22 @@ namespace SEModAPI.API.Definitions
 			return NewEntry((T)Activator.CreateInstance(typeof(T), new object[] { }));
 		}
 
+		public U NewEntry(long id)
+		{
+			if (!IsMutable) return default(U);
+
+			var newEntry = CreateOverLayerSubTypeInstance((T)Activator.CreateInstance(typeof(T), new object[] { }));
+			GetInternalData().Add(id, newEntry);
+
+			return newEntry;
+		}
+
 		public U NewEntry(T source)
 		{
 			if (!IsMutable) return default(U);
 
 			var newEntry = CreateOverLayerSubTypeInstance(source);
-			m_definitions.Add(m_definitions.Count, newEntry);
+			GetInternalData().Add(m_definitions.Count, newEntry);
 
 			return newEntry;
 		}
@@ -280,6 +295,19 @@ namespace SEModAPI.API.Definitions
 			return NewEntry(newEntry);
 		}
 
+		public bool DeleteEntry(long id)
+		{
+			if (!IsMutable) return false;
+
+			if (GetInternalData().ContainsKey(id))
+			{
+				GetInternalData().Remove(id);
+				return true;
+			}
+
+			return false;
+		}
+
 		public bool DeleteEntry(T entry)
 		{
 			if (!IsMutable) return false;
@@ -288,7 +316,7 @@ namespace SEModAPI.API.Definitions
 			{
 				if (def.Value.BaseDefinition.Equals(entry))
 				{
-					m_definitions.Remove(def.Key);
+					GetInternalData().Remove(def.Key);
 					return true;
 				}
 			}
@@ -304,7 +332,7 @@ namespace SEModAPI.API.Definitions
 			{
 				if (def.Value.Equals(entry))
 				{
-					m_definitions.Remove(def.Key);
+					GetInternalData().Remove(def.Key);
 					return true;
 				}
 			}
@@ -596,7 +624,7 @@ namespace SEModAPI.API.Definitions
 			T[] baseDefinitions = (T[])m_definitionsContainerField.GetValue(definitionsContainer);
 
 			//Copy the data into the manager
-			m_definitions.Clear();
+			GetInternalData().Clear();
 			foreach (var definition in baseDefinitions)
 			{
 				NewEntry(definition);
@@ -606,7 +634,7 @@ namespace SEModAPI.API.Definitions
 		public void Load(T[] source)
 		{
 			//Copy the data into the manager
-			m_definitions.Clear();
+			GetInternalData().Clear();
 			foreach (var definition in source)
 			{
 				NewEntry(definition);
@@ -616,7 +644,7 @@ namespace SEModAPI.API.Definitions
 		public void Load(U[] source)
 		{
 			//Copy the data into the manager
-			m_definitions.Clear();
+			GetInternalData().Clear();
 			foreach (var definition in source)
 			{
 				NewEntry(definition.BaseDefinition);

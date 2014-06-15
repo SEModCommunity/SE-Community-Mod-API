@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -23,6 +24,11 @@ namespace SEModAPI.API.SaveData
 		#endregion
 
 		#region "Properties"
+
+		new public T BaseDefinition
+		{
+			get { return m_baseDefinition; }
+		}
 
 		public SerializableVector3I Min
 		{
@@ -62,24 +68,41 @@ namespace SEModAPI.API.SaveData
 
 	public class CubeBlockManager : SerializableEntityManager<MyObjectBuilder_CubeBlock, CubeBlock<MyObjectBuilder_CubeBlock>>
 	{
-		protected Dictionary<long, Object> m_definitions = new Dictionary<long, Object>();
+		private Dictionary<long, Object> m_rawDefinitions = new Dictionary<long, Object>();
+
+		#region "Properties"
 
 		new public Object[] Definitions
 		{
 			get
 			{
-				Object[] tempList = new Object[m_definitions.Values.Count];
-				m_definitions.Values.CopyTo(tempList, 0);
+				Object[] tempList = new Object[m_rawDefinitions.Values.Count];
+				m_rawDefinitions.Values.CopyTo(tempList, 0);
 				return tempList;
 			}
 		}
 
+		#endregion
+
 		#region "Methods"
 
-		new public void Load(MyObjectBuilder_CubeBlock[] source)
+		new public List<MyObjectBuilder_CubeBlock> ExtractBaseDefinitions()
+		{
+			List<MyObjectBuilder_CubeBlock> list = new List<MyObjectBuilder_CubeBlock>();
+			foreach (var def in m_rawDefinitions.Values)
+			{
+				Type defType = def.GetType();
+				PropertyInfo defProp = defType.GetProperty("BaseDefinition", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+				var baseDef = (MyObjectBuilder_CubeBlock) defProp.GetGetMethod().Invoke(def, new object[] { });
+				list.Add(baseDef);
+			}
+			return list;
+		}
+
+		public void Load(List<MyObjectBuilder_CubeBlock> source)
 		{
 			//Copy the data into the manager
-			m_definitions.Clear();
+			m_rawDefinitions.Clear();
 			foreach (var definition in source)
 			{
 				switch (definition.TypeId)
@@ -94,24 +117,10 @@ namespace SEModAPI.API.SaveData
 						NewEntry<MyObjectBuilder_MedicalRoom, MedicalRoomEntity>((MyObjectBuilder_MedicalRoom)definition);
 						break;
 					default:
-						NewEntry(definition);
+						NewEntry<MyObjectBuilder_CubeBlock, CubeBlock<MyObjectBuilder_CubeBlock>>((MyObjectBuilder_CubeBlock)definition);
 						break;
 				}
 			}
-		}
-
-		new public CubeBlock<MyObjectBuilder_CubeBlock> NewEntry(MyObjectBuilder_CubeBlock source)
-		{
-			if (!IsMutable) return default(CubeBlock<MyObjectBuilder_CubeBlock>);
-
-			CubeBlock<MyObjectBuilder_CubeBlock> newEntry = (CubeBlock<MyObjectBuilder_CubeBlock>)Activator.CreateInstance(typeof(CubeBlock<MyObjectBuilder_CubeBlock>), new object[] { source });
-
-			long entityId = newEntry.EntityId;
-			if (entityId == 0)
-				entityId = newEntry.GenerateEntityId();
-			m_definitions.Add(entityId, newEntry);
-
-			return newEntry;
 		}
 
 		public CubeBlock<T> NewEntry<T, V>(T source)
@@ -120,12 +129,14 @@ namespace SEModAPI.API.SaveData
 		{
 			if (!IsMutable) return default(CubeBlock<T>);
 
-			var newEntry = (V)Activator.CreateInstance(typeof(V), new object[] { source });
+			var newEntryType = typeof(V);
+
+			var newEntry = (V)Activator.CreateInstance(newEntryType, new object[] { source });
 
 			long entityId = newEntry.EntityId;
 			if (entityId == 0)
 				entityId = newEntry.GenerateEntityId();
-			m_definitions.Add(entityId, newEntry);
+			m_rawDefinitions.Add(entityId, newEntry);
 
 			return newEntry;
 		}
