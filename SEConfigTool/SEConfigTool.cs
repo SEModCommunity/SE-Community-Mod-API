@@ -1967,5 +1967,150 @@ namespace SEConfigTool
 		#endregion
 
 		#endregion
+
+		private void BTN_BlocksConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_BlocksConfig_Details_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_AmmoConfig_Details_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ContainerTypesConfig_Details_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_GlobalEventConfig_Details_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_SpawnGroupConfig_Details_Info_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_SpawnGroupConfig_Details_Info_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_PhysicalItemConfig_Details_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ComponentConfig_Details_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ContainerTypeConfig_Items_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_SpawnGroupConfig_Details_Prefabs_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_SpawnGroupConfig_Details_Prefabs_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_BlueprintConfig_Details_Result_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_BlueprintConfig_Details_Result_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_BlueprintConfig_Details_Prerequisites_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_BlueprintConfig_Details_Prerequisites_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_VoxelMaterialsConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_VoxelMaterialsConfig_Details_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_TransparentMaterialConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_TransparentMaterialConfig_Details_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ScenarioConfig_Details_Info_Apply_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ScenarioConfig_Details_Info_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ScenarioConfig_Details_Info_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ScenarioConfig_Details_Asteroid_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ScenarioConfig_Details_Asteroid_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ScenariosConfig_Details_GeneratorOperations_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ScenariosConfig_Details_GeneratorOperations_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ScenarioConfig_Details_StartingStates_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
+
+		private void BTN_ScenarioConfig_Details_StartingStates_Delete_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(this, "This feature is not yet implemented");
+		}
 	}
 }

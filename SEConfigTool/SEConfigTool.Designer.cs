@@ -92,6 +92,8 @@ namespace SEConfigTool
 			this.LBL_VoxelMaterialConfig_Details_MinedOreRatio = new System.Windows.Forms.Label();
 			this.LBL_VoxelMaterialConfig_Details_Name = new System.Windows.Forms.Label();
 			this.LBL_VoxelMaterialConfig_Details_MinedOre = new System.Windows.Forms.Label();
+			this.BTN_VoxelMaterialsConfig_Details_Delete = new System.Windows.Forms.Button();
+			this.BTN_VoxelMaterialsConfig_Details_New = new System.Windows.Forms.Button();
 			this.TXT_VoxelMaterialConfig_Details_SpecularShininess = new System.Windows.Forms.TextBox();
 			this.TXT_VoxelMaterialConfig_Details_SpecularPower = new System.Windows.Forms.TextBox();
 			this.TXT_VoxelMaterialConfig_Details_AssetName = new System.Windows.Forms.TextBox();
@@ -115,6 +117,8 @@ namespace SEConfigTool
 			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime = new System.Windows.Forms.Label();
 			this.LBL_BlueprintConfig_Details_Result_SubtypeId = new System.Windows.Forms.Label();
 			this.LBL_BlueprintConfig_Details_Result_Amount = new System.Windows.Forms.Label();
+			this.BTN_BlueprintConfig_Details_Result_Delete = new System.Windows.Forms.Button();
+			this.BTN_BlueprintConfig_Details_Result_New = new System.Windows.Forms.Button();
 			this.CMB_BlueprintConfig_Details_Result_TypeId = new System.Windows.Forms.ComboBox();
 			this.BTN_BlueprintConfig_Details_Result_Apply = new System.Windows.Forms.Button();
 			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime = new System.Windows.Forms.TextBox();
@@ -127,6 +131,8 @@ namespace SEConfigTool
 			this.label1 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete = new System.Windows.Forms.Button();
+			this.BTN_BlueprintConfig_Details_Prerequisites_New = new System.Windows.Forms.Button();
 			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId = new System.Windows.Forms.ComboBox();
 			this.BTN_BlueprintConfig_Details_Prerequisites_Apply = new System.Windows.Forms.Button();
 			this.TXT_BlueprintConfig_Details_Prerequisites_Amount = new System.Windows.Forms.TextBox();
@@ -150,6 +156,7 @@ namespace SEConfigTool
 			this.LBL_ComponentConfig_Details_Name = new System.Windows.Forms.Label();
 			this.LBL_ComponentConfig_Details_Id = new System.Windows.Forms.Label();
 			this.LBL_ComponentConfig_Details_Description = new System.Windows.Forms.Label();
+			this.BTN_ComponentConfig_Details_Delete = new System.Windows.Forms.Button();
 			this.BTN_ComponentConfig_Details_New = new System.Windows.Forms.Button();
 			this.TXT_ComponentConfig_Details_Size_Z = new System.Windows.Forms.TextBox();
 			this.TXT_ComponentConfig_Details_Size_Y = new System.Windows.Forms.TextBox();
@@ -183,6 +190,7 @@ namespace SEConfigTool
 			this.LBL_PhysicalItemConfig_Details_Name = new System.Windows.Forms.Label();
 			this.LBL_PhysicalItemConfig_Details_Id = new System.Windows.Forms.Label();
 			this.LBL_PhysicalItemConfig_Details_Description = new System.Windows.Forms.Label();
+			this.BTN_PhysicalItemConfig_Details_Delete = new System.Windows.Forms.Button();
 			this.CMB_PhysicalItemConfig_Details_Type = new System.Windows.Forms.ComboBox();
 			this.TXT_PhysicalItemConfig_Details_Size_Z = new System.Windows.Forms.TextBox();
 			this.TXT_PhysicalItemConfig_Details_Size_Y = new System.Windows.Forms.TextBox();
@@ -210,6 +218,8 @@ namespace SEConfigTool
 			this.splitContainer16 = new System.Windows.Forms.SplitContainer();
 			this.LBL_SpawnGroupConfig_Details_Info_PrefabCount = new System.Windows.Forms.Label();
 			this.LBL_SpawnGroupConfig_Details_Info_Frequency = new System.Windows.Forms.Label();
+			this.BTN_SpawnGroupConfig_Details_Info_Delete = new System.Windows.Forms.Button();
+			this.BTN_SpawnGroupConfig_Details_Info_New = new System.Windows.Forms.Button();
 			this.BTN_SpawnGroupConfig_Details_Info_Apply = new System.Windows.Forms.Button();
 			this.TXT_SpawnGroupConfig_Details_Info_Count = new System.Windows.Forms.TextBox();
 			this.TXT_SpawnGroupConfig_Details_Info_Frequency = new System.Windows.Forms.TextBox();
@@ -221,6 +231,8 @@ namespace SEConfigTool
 			this.LBL_SpawnGroupConfig_Details_Prefabs_BeaconText = new System.Windows.Forms.Label();
 			this.LBL_SpawnGroupConfig_Details_Prefabs_Position = new System.Windows.Forms.Label();
 			this.LBL_SpawnGroupConfig_Details_Prefabs_File = new System.Windows.Forms.Label();
+			this.BTN_SpawnGroupConfig_Details_Prefabs_New = new System.Windows.Forms.Button();
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete = new System.Windows.Forms.Button();
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply = new System.Windows.Forms.Button();
 			this.TXT_SpawnGroupConfig_Details_Prefabs_Speed = new System.Windows.Forms.TextBox();
 			this.TXT_SpawnGroupConfig_Details_Prefabs_BeaconText = new System.Windows.Forms.TextBox();
@@ -241,6 +253,7 @@ namespace SEConfigTool
 			this.LBL_GlobalEventConfig_Details_Name = new System.Windows.Forms.Label();
 			this.LBL_GlobalEventConfig_Details_EventType = new System.Windows.Forms.Label();
 			this.LBL_GlobalEventConfig_Details_Description = new System.Windows.Forms.Label();
+			this.BTN_GlobalEventConfig_Details_Delete = new System.Windows.Forms.Button();
 			this.BTN_GlobalEventsConfig_Details_New = new System.Windows.Forms.Button();
 			this.CMB_GlobalEventsConfig_Details_EventType = new System.Windows.Forms.ComboBox();
 			this.TXT_ConfigGlobalEvent_Details_FirstActivation = new System.Windows.Forms.TextBox();
@@ -263,6 +276,7 @@ namespace SEConfigTool
 			this.LBL_ContainerTypeConfig_Details_Information_CountMin = new System.Windows.Forms.Label();
 			this.LBL_ContainerTypeConfig_Details_Information_CountMax = new System.Windows.Forms.Label();
 			this.LBL_ContainerTypeConfig_Details_Information_Name = new System.Windows.Forms.Label();
+			this.BTN_ContainerTypesConfig_Details_Delete = new System.Windows.Forms.Button();
 			this.BTN_ContainerTypesConfig_Details_New = new System.Windows.Forms.Button();
 			this.TXT_ContainerTypeConfig_Details_Information_CountMin = new System.Windows.Forms.TextBox();
 			this.BTN_ContainerTypesConfig_Details_Apply = new System.Windows.Forms.Button();
@@ -276,6 +290,7 @@ namespace SEConfigTool
 			this.LBL_ContainerTypeConfig_Details_Items_Frequency = new System.Windows.Forms.Label();
 			this.LBL_ContainerTypeConfig_Details_Items_AmountMax = new System.Windows.Forms.Label();
 			this.LBL_ContainerTypeConfig_Details_Items_AmountMin = new System.Windows.Forms.Label();
+			this.BTN_ContainerTypeConfig_Items_Delete = new System.Windows.Forms.Button();
 			this.BTN_ContainerTypeConfig_Items_New = new System.Windows.Forms.Button();
 			this.CMB_ContainerTypeConfig_Items_Type = new System.Windows.Forms.ComboBox();
 			this.BTN_ContainerTypeConfig_Items_Apply = new System.Windows.Forms.Button();
@@ -300,6 +315,7 @@ namespace SEConfigTool
 			this.LBL_AmmoConfig_Details_Capacity = new System.Windows.Forms.Label();
 			this.LBL_AmmoConfig_Details_Name = new System.Windows.Forms.Label();
 			this.LBL_AmmoConfig_Details_Caliber = new System.Windows.Forms.Label();
+			this.BTN_AmmoConfig_Details_Delete = new System.Windows.Forms.Button();
 			this.BTN_AmmoConfig_Details_New = new System.Windows.Forms.Button();
 			this.TXT_AmmoConfig_Details_Model = new System.Windows.Forms.TextBox();
 			this.TXT_AmmoConfig_Details_Icon = new System.Windows.Forms.TextBox();
@@ -326,6 +342,8 @@ namespace SEConfigTool
 			this.LBL_BlocksConfig_Details_DisassembleRatio = new System.Windows.Forms.Label();
 			this.LBL_BlocksConfig_Details_Name = new System.Windows.Forms.Label();
 			this.LBL_BlocksConfig_Details_BuildTime = new System.Windows.Forms.Label();
+			this.BTN_BlocksConfig_Details_New = new System.Windows.Forms.Button();
+			this.BTN_BlocksConfig_Details_Delete = new System.Windows.Forms.Button();
 			this.DGV_BlocksConfig_Details_Components = new System.Windows.Forms.DataGridView();
 			this.BTN_BlocksConfig_Details_Apply = new System.Windows.Forms.Button();
 			this.TXT_BlocksConfig_Details_Id = new System.Windows.Forms.TextBox();
@@ -363,6 +381,7 @@ namespace SEConfigTool
 			this.LBL_Sector_Objects_Field3 = new System.Windows.Forms.Label();
 			this.LBL_Sector_Objects_Field2 = new System.Windows.Forms.Label();
 			this.LBL_Sector_Objects_Field1 = new System.Windows.Forms.Label();
+			this.BTN_Sector_Objects_Delete = new System.Windows.Forms.Button();
 			this.CMB_Sector_Objects_Field1 = new System.Windows.Forms.ComboBox();
 			this.BTN_Sector_Objects_New = new System.Windows.Forms.Button();
 			this.BTN_Sector_Objects_Apply = new System.Windows.Forms.Button();
@@ -391,6 +410,7 @@ namespace SEConfigTool
 			this.LBL_TransparentMaterialConfig_Details_UVOffset = new System.Windows.Forms.Label();
 			this.LBL_TransparentMaterialConfig_Details_Emissivity = new System.Windows.Forms.Label();
 			this.LBL_TransparentMaterialConfig_Name = new System.Windows.Forms.Label();
+			this.BTN_TransparentMaterialConfig_Details_New = new System.Windows.Forms.Button();
 			this.TXT_TransparentMaterialConfig_Details_UVSize_Y = new System.Windows.Forms.TextBox();
 			this.TXT_TransparentMaterialConfig_Details_UVSize_X = new System.Windows.Forms.TextBox();
 			this.TXT_TransparentMaterialConfig_Details_UVOffset_Y = new System.Windows.Forms.TextBox();
@@ -416,7 +436,14 @@ namespace SEConfigTool
 			this.TXT_ConfigurationConfig_LargeBlockSize = new System.Windows.Forms.TextBox();
 			this.TXT_ConfigurationConfig_SmallBlockSize = new System.Windows.Forms.TextBox();
 			this.BTN_ConfigurationConfig_Apply = new System.Windows.Forms.Button();
-			this.BTN_Sector_Objects_Delete = new System.Windows.Forms.Button();
+			this.BTN_TransparentMaterialConfig_Details_Delete = new System.Windows.Forms.Button();
+			this.BTN_ScenarioConfig_Details_Info_New = new System.Windows.Forms.Button();
+			this.BTN_ScenarioConfig_Details_Info_Apply = new System.Windows.Forms.Button();
+			this.BTN_ScenarioConfig_Details_Info_Delete = new System.Windows.Forms.Button();
+			this.BTN_ScenarioConfig_Details_StartingStates_New = new System.Windows.Forms.Button();
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete = new System.Windows.Forms.Button();
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New = new System.Windows.Forms.Button();
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete = new System.Windows.Forms.Button();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -687,7 +714,7 @@ namespace SEConfigTool
             this.TLS_StatusLabel});
 			this.STS_Status.Location = new System.Drawing.Point(0, 465);
 			this.STS_Status.Name = "STS_Status";
-			this.STS_Status.Size = new System.Drawing.Size(810, 22);
+			this.STS_Status.Size = new System.Drawing.Size(952, 22);
 			this.STS_Status.TabIndex = 1;
 			this.STS_Status.Text = "statusStrip1";
 			// 
@@ -703,7 +730,7 @@ namespace SEConfigTool
 			this.TAB_ScenariosConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ScenariosConfig_Page.Name = "TAB_ScenariosConfig_Page";
 			this.TAB_ScenariosConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ScenariosConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_ScenariosConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_ScenariosConfig_Page.TabIndex = 13;
 			this.TAB_ScenariosConfig_Page.Text = "Scenarios";
 			this.TAB_ScenariosConfig_Page.UseVisualStyleBackColor = true;
@@ -724,7 +751,7 @@ namespace SEConfigTool
 			// splitContainer37.Panel2
 			// 
 			this.splitContainer37.Panel2.Controls.Add(this.GRP_ScenariosConfig);
-			this.splitContainer37.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer37.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer37.SplitterDistance = 25;
 			this.splitContainer37.TabIndex = 1;
 			// 
@@ -752,7 +779,7 @@ namespace SEConfigTool
 			this.GRP_ScenariosConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ScenariosConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ScenariosConfig.Name = "GRP_ScenariosConfig";
-			this.GRP_ScenariosConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_ScenariosConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_ScenariosConfig.TabIndex = 2;
 			this.GRP_ScenariosConfig.TabStop = false;
 			this.GRP_ScenariosConfig.Text = "Scenarios";
@@ -772,7 +799,7 @@ namespace SEConfigTool
 			// splitContainer38.Panel2
 			// 
 			this.splitContainer38.Panel2.Controls.Add(this.GRP_ScenariosConfig_Details);
-			this.splitContainer38.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer38.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer38.SplitterDistance = 200;
 			this.splitContainer38.TabIndex = 1;
 			// 
@@ -792,7 +819,7 @@ namespace SEConfigTool
 			this.GRP_ScenariosConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ScenariosConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ScenariosConfig_Details.Name = "GRP_ScenariosConfig_Details";
-			this.GRP_ScenariosConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_ScenariosConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_ScenariosConfig_Details.TabIndex = 1;
 			this.GRP_ScenariosConfig_Details.TabStop = false;
 			this.GRP_ScenariosConfig_Details.Text = "Selected Item Details";
@@ -807,7 +834,7 @@ namespace SEConfigTool
 			this.TAB_ScenariosConfig_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_ScenariosConfig_Details.Name = "TAB_ScenariosConfig_Details";
 			this.TAB_ScenariosConfig_Details.SelectedIndex = 0;
-			this.TAB_ScenariosConfig_Details.Size = new System.Drawing.Size(580, 363);
+			this.TAB_ScenariosConfig_Details.Size = new System.Drawing.Size(722, 363);
 			this.TAB_ScenariosConfig_Details.TabIndex = 0;
 			// 
 			// TAB_ScenariosConfig_Details_Information_Page
@@ -816,7 +843,7 @@ namespace SEConfigTool
 			this.TAB_ScenariosConfig_Details_Information_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ScenariosConfig_Details_Information_Page.Name = "TAB_ScenariosConfig_Details_Information_Page";
 			this.TAB_ScenariosConfig_Details_Information_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ScenariosConfig_Details_Information_Page.Size = new System.Drawing.Size(572, 337);
+			this.TAB_ScenariosConfig_Details_Information_Page.Size = new System.Drawing.Size(714, 337);
 			this.TAB_ScenariosConfig_Details_Information_Page.TabIndex = 0;
 			this.TAB_ScenariosConfig_Details_Information_Page.Text = "Information";
 			this.TAB_ScenariosConfig_Details_Information_Page.UseVisualStyleBackColor = true;
@@ -836,9 +863,12 @@ namespace SEConfigTool
 			// 
 			// splitContainer39.Panel2
 			// 
+			this.splitContainer39.Panel2.Controls.Add(this.BTN_ScenarioConfig_Details_Info_Delete);
+			this.splitContainer39.Panel2.Controls.Add(this.BTN_ScenarioConfig_Details_Info_Apply);
+			this.splitContainer39.Panel2.Controls.Add(this.BTN_ScenarioConfig_Details_Info_New);
 			this.splitContainer39.Panel2.Controls.Add(this.TXT_ScenarioConfig_Details_Information_Id);
 			this.splitContainer39.Panel2.Controls.Add(this.TXT_ScenarioConfig_Details_Information_Name);
-			this.splitContainer39.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer39.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer39.SplitterDistance = 150;
 			this.splitContainer39.TabIndex = 5;
 			// 
@@ -882,7 +912,7 @@ namespace SEConfigTool
 			this.TAB_ScenariosConfig_Details_AsteroidClusters_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ScenariosConfig_Details_AsteroidClusters_Page.Name = "TAB_ScenariosConfig_Details_AsteroidClusters_Page";
 			this.TAB_ScenariosConfig_Details_AsteroidClusters_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ScenariosConfig_Details_AsteroidClusters_Page.Size = new System.Drawing.Size(572, 337);
+			this.TAB_ScenariosConfig_Details_AsteroidClusters_Page.Size = new System.Drawing.Size(714, 337);
 			this.TAB_ScenariosConfig_Details_AsteroidClusters_Page.TabIndex = 6;
 			this.TAB_ScenariosConfig_Details_AsteroidClusters_Page.Text = "Asteroid Clusters";
 			this.TAB_ScenariosConfig_Details_AsteroidClusters_Page.UseVisualStyleBackColor = true;
@@ -905,7 +935,7 @@ namespace SEConfigTool
 			// 
 			this.splitContainer40.Panel2.Controls.Add(this.TXT_ScenariosConfig_Details_Asteroid_Offset);
 			this.splitContainer40.Panel2.Controls.Add(this.BTN_ScenarioConfig_Details_Asteroid_Apply);
-			this.splitContainer40.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer40.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer40.SplitterDistance = 150;
 			this.splitContainer40.TabIndex = 5;
 			// 
@@ -948,7 +978,7 @@ namespace SEConfigTool
 			// BTN_ScenarioConfig_Details_Asteroid_Apply
 			// 
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.Enabled = false;
-			this.BTN_ScenarioConfig_Details_Asteroid_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_ScenarioConfig_Details_Asteroid_Apply.Location = new System.Drawing.Point(53, 305);
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.Name = "BTN_ScenarioConfig_Details_Asteroid_Apply";
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.TabIndex = 8;
@@ -961,7 +991,7 @@ namespace SEConfigTool
 			this.TAB_ScenariosConfig_Details_StartingStates_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ScenariosConfig_Details_StartingStates_Page.Name = "TAB_ScenariosConfig_Details_StartingStates_Page";
 			this.TAB_ScenariosConfig_Details_StartingStates_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ScenariosConfig_Details_StartingStates_Page.Size = new System.Drawing.Size(572, 337);
+			this.TAB_ScenariosConfig_Details_StartingStates_Page.Size = new System.Drawing.Size(714, 337);
 			this.TAB_ScenariosConfig_Details_StartingStates_Page.TabIndex = 4;
 			this.TAB_ScenariosConfig_Details_StartingStates_Page.Text = "Starting States";
 			this.TAB_ScenariosConfig_Details_StartingStates_Page.UseVisualStyleBackColor = true;
@@ -981,7 +1011,7 @@ namespace SEConfigTool
 			// splitContainer42.Panel2
 			// 
 			this.splitContainer42.Panel2.Controls.Add(this.splitContainer43);
-			this.splitContainer42.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer42.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer42.SplitterDistance = 150;
 			this.splitContainer42.TabIndex = 0;
 			// 
@@ -1009,8 +1039,10 @@ namespace SEConfigTool
 			// 
 			// splitContainer43.Panel2
 			// 
+			this.splitContainer43.Panel2.Controls.Add(this.BTN_ScenarioConfig_Details_StartingStates_Delete);
+			this.splitContainer43.Panel2.Controls.Add(this.BTN_ScenarioConfig_Details_StartingStates_New);
 			this.splitContainer43.Panel2.Controls.Add(this.BTN_ScenarioConfig_Details_StartingStates_Apply);
-			this.splitContainer43.Size = new System.Drawing.Size(412, 331);
+			this.splitContainer43.Size = new System.Drawing.Size(554, 331);
 			this.splitContainer43.SplitterDistance = 150;
 			this.splitContainer43.TabIndex = 0;
 			// 
@@ -1037,7 +1069,7 @@ namespace SEConfigTool
 			// BTN_ScenarioConfig_Details_StartingStates_Apply
 			// 
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Enabled = false;
-			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Location = new System.Drawing.Point(53, 305);
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Name = "BTN_ScenarioConfig_Details_StartingStates_Apply";
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.TabIndex = 10;
@@ -1050,7 +1082,7 @@ namespace SEConfigTool
 			this.TAB_ScenariosConfig_Details_GeneratorOperations_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ScenariosConfig_Details_GeneratorOperations_Page.Name = "TAB_ScenariosConfig_Details_GeneratorOperations_Page";
 			this.TAB_ScenariosConfig_Details_GeneratorOperations_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ScenariosConfig_Details_GeneratorOperations_Page.Size = new System.Drawing.Size(572, 337);
+			this.TAB_ScenariosConfig_Details_GeneratorOperations_Page.Size = new System.Drawing.Size(714, 337);
 			this.TAB_ScenariosConfig_Details_GeneratorOperations_Page.TabIndex = 5;
 			this.TAB_ScenariosConfig_Details_GeneratorOperations_Page.Text = "Generator Operations";
 			this.TAB_ScenariosConfig_Details_GeneratorOperations_Page.UseVisualStyleBackColor = true;
@@ -1070,7 +1102,7 @@ namespace SEConfigTool
 			// splitContainer44.Panel2
 			// 
 			this.splitContainer44.Panel2.Controls.Add(this.splitContainer45);
-			this.splitContainer44.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer44.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer44.SplitterDistance = 150;
 			this.splitContainer44.TabIndex = 0;
 			// 
@@ -1100,12 +1132,14 @@ namespace SEConfigTool
 			// 
 			// splitContainer45.Panel2
 			// 
+			this.splitContainer45.Panel2.Controls.Add(this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete);
+			this.splitContainer45.Panel2.Controls.Add(this.BTN_ScenariosConfig_Details_GeneratorOperations_New);
 			this.splitContainer45.Panel2.Controls.Add(this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply);
 			this.splitContainer45.Panel2.Controls.Add(this.TXT_ScenarioConfig_Details_GeneratorOperations_RandomRadius);
 			this.splitContainer45.Panel2.Controls.Add(this.TXT_ScenarioConfig_Details_GeneratorOperations_AsteroidName);
 			this.splitContainer45.Panel2.Controls.Add(this.TXT_ScenarioConfig_Details_GeneratorOperations_PrefabFile);
 			this.splitContainer45.Panel2.Controls.Add(this.TXT_ScenarioConfig_Details_GeneratorOperations_Type);
-			this.splitContainer45.Size = new System.Drawing.Size(412, 331);
+			this.splitContainer45.Size = new System.Drawing.Size(554, 331);
 			this.splitContainer45.SplitterDistance = 150;
 			this.splitContainer45.TabIndex = 0;
 			// 
@@ -1148,7 +1182,7 @@ namespace SEConfigTool
 			// BTN_ScenariosConfig_Details_GeneratorOperations_Apply
 			// 
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Enabled = false;
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Location = new System.Drawing.Point(53, 308);
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Name = "BTN_ScenariosConfig_Details_GeneratorOperations_Apply";
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.TabIndex = 10;
@@ -1192,7 +1226,7 @@ namespace SEConfigTool
 			this.TAB_VoxelMaterialConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_VoxelMaterialConfig_Page.Name = "TAB_VoxelMaterialConfig_Page";
 			this.TAB_VoxelMaterialConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_VoxelMaterialConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_VoxelMaterialConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_VoxelMaterialConfig_Page.TabIndex = 11;
 			this.TAB_VoxelMaterialConfig_Page.Text = "Voxel Materials";
 			this.TAB_VoxelMaterialConfig_Page.UseVisualStyleBackColor = true;
@@ -1213,7 +1247,7 @@ namespace SEConfigTool
 			// splitContainer30.Panel2
 			// 
 			this.splitContainer30.Panel2.Controls.Add(this.GRP_VoxelMaterialsConfig);
-			this.splitContainer30.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer30.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer30.SplitterDistance = 25;
 			this.splitContainer30.TabIndex = 5;
 			// 
@@ -1243,7 +1277,7 @@ namespace SEConfigTool
 			this.GRP_VoxelMaterialsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_VoxelMaterialsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_VoxelMaterialsConfig.Name = "GRP_VoxelMaterialsConfig";
-			this.GRP_VoxelMaterialsConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_VoxelMaterialsConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_VoxelMaterialsConfig.TabIndex = 2;
 			this.GRP_VoxelMaterialsConfig.TabStop = false;
 			this.GRP_VoxelMaterialsConfig.Text = "Voxel Materials";
@@ -1263,7 +1297,7 @@ namespace SEConfigTool
 			// splitContainer31.Panel2
 			// 
 			this.splitContainer31.Panel2.Controls.Add(this.GRP_VoxelMaterialsConfig_Details);
-			this.splitContainer31.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer31.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer31.SplitterDistance = 200;
 			this.splitContainer31.TabIndex = 1;
 			// 
@@ -1283,7 +1317,7 @@ namespace SEConfigTool
 			this.GRP_VoxelMaterialsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_VoxelMaterialsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_VoxelMaterialsConfig_Details.Name = "GRP_VoxelMaterialsConfig_Details";
-			this.GRP_VoxelMaterialsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_VoxelMaterialsConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_VoxelMaterialsConfig_Details.TabIndex = 1;
 			this.GRP_VoxelMaterialsConfig_Details.TabStop = false;
 			this.GRP_VoxelMaterialsConfig_Details.Text = "Selected Item Details";
@@ -1311,6 +1345,8 @@ namespace SEConfigTool
 			// 
 			// splitContainer32.Panel2
 			// 
+			this.splitContainer32.Panel2.Controls.Add(this.BTN_VoxelMaterialsConfig_Details_Delete);
+			this.splitContainer32.Panel2.Controls.Add(this.BTN_VoxelMaterialsConfig_Details_New);
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialConfig_Details_SpecularShininess);
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialConfig_Details_SpecularPower);
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialConfig_Details_AssetName);
@@ -1319,7 +1355,7 @@ namespace SEConfigTool
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialConfig_Details_Name);
 			this.splitContainer32.Panel2.Controls.Add(this.BTN_VoxelMaterialsConfig_Details_Apply);
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialConfig_Details_MinedOre);
-			this.splitContainer32.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer32.Size = new System.Drawing.Size(722, 363);
 			this.splitContainer32.SplitterDistance = 150;
 			this.splitContainer32.TabIndex = 4;
 			// 
@@ -1419,6 +1455,28 @@ namespace SEConfigTool
 			this.LBL_VoxelMaterialConfig_Details_MinedOre.TabIndex = 0;
 			this.LBL_VoxelMaterialConfig_Details_MinedOre.Text = "Mined Ore:";
 			// 
+			// BTN_VoxelMaterialsConfig_Details_Delete
+			// 
+			this.BTN_VoxelMaterialsConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_VoxelMaterialsConfig_Details_Delete.Enabled = false;
+			this.BTN_VoxelMaterialsConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
+			this.BTN_VoxelMaterialsConfig_Details_Delete.Name = "BTN_VoxelMaterialsConfig_Details_Delete";
+			this.BTN_VoxelMaterialsConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_VoxelMaterialsConfig_Details_Delete.TabIndex = 27;
+			this.BTN_VoxelMaterialsConfig_Details_Delete.Text = "Delete Item";
+			this.BTN_VoxelMaterialsConfig_Details_Delete.UseVisualStyleBackColor = false;
+			this.BTN_VoxelMaterialsConfig_Details_Delete.Click += new System.EventHandler(this.BTN_VoxelMaterialsConfig_Details_Delete_Click);
+			// 
+			// BTN_VoxelMaterialsConfig_Details_New
+			// 
+			this.BTN_VoxelMaterialsConfig_Details_New.Location = new System.Drawing.Point(3, 337);
+			this.BTN_VoxelMaterialsConfig_Details_New.Name = "BTN_VoxelMaterialsConfig_Details_New";
+			this.BTN_VoxelMaterialsConfig_Details_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_VoxelMaterialsConfig_Details_New.TabIndex = 21;
+			this.BTN_VoxelMaterialsConfig_Details_New.Text = "New";
+			this.BTN_VoxelMaterialsConfig_Details_New.UseVisualStyleBackColor = true;
+			this.BTN_VoxelMaterialsConfig_Details_New.Click += new System.EventHandler(this.BTN_VoxelMaterialsConfig_Details_New_Click);
+			// 
 			// TXT_VoxelMaterialConfig_Details_SpecularShininess
 			// 
 			this.TXT_VoxelMaterialConfig_Details_SpecularShininess.Location = new System.Drawing.Point(3, 237);
@@ -1470,7 +1528,7 @@ namespace SEConfigTool
 			// BTN_VoxelMaterialsConfig_Details_Apply
 			// 
 			this.BTN_VoxelMaterialsConfig_Details_Apply.Enabled = false;
-			this.BTN_VoxelMaterialsConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
+			this.BTN_VoxelMaterialsConfig_Details_Apply.Location = new System.Drawing.Point(53, 337);
 			this.BTN_VoxelMaterialsConfig_Details_Apply.Name = "BTN_VoxelMaterialsConfig_Details_Apply";
 			this.BTN_VoxelMaterialsConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_VoxelMaterialsConfig_Details_Apply.TabIndex = 8;
@@ -1492,7 +1550,7 @@ namespace SEConfigTool
 			this.TAB_BlueprintConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_BlueprintConfig_Page.Name = "TAB_BlueprintConfig_Page";
 			this.TAB_BlueprintConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_BlueprintConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_BlueprintConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_BlueprintConfig_Page.TabIndex = 10;
 			this.TAB_BlueprintConfig_Page.Text = "Blueprints";
 			this.TAB_BlueprintConfig_Page.UseVisualStyleBackColor = true;
@@ -1513,7 +1571,7 @@ namespace SEConfigTool
 			// splitContainer27.Panel2
 			// 
 			this.splitContainer27.Panel2.Controls.Add(this.GRP_BlueprintConfig);
-			this.splitContainer27.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer27.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer27.SplitterDistance = 25;
 			this.splitContainer27.TabIndex = 4;
 			// 
@@ -1543,7 +1601,7 @@ namespace SEConfigTool
 			this.GRP_BlueprintConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_BlueprintConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_BlueprintConfig.Name = "GRP_BlueprintConfig";
-			this.GRP_BlueprintConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_BlueprintConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_BlueprintConfig.TabIndex = 2;
 			this.GRP_BlueprintConfig.TabStop = false;
 			this.GRP_BlueprintConfig.Text = "Blueprints";
@@ -1563,7 +1621,7 @@ namespace SEConfigTool
 			// splitContainer28.Panel2
 			// 
 			this.splitContainer28.Panel2.Controls.Add(this.GRP_BlueprintsConfig_Details);
-			this.splitContainer28.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer28.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer28.SplitterDistance = 200;
 			this.splitContainer28.TabIndex = 1;
 			// 
@@ -1583,7 +1641,7 @@ namespace SEConfigTool
 			this.GRP_BlueprintsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_BlueprintsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_BlueprintsConfig_Details.Name = "GRP_BlueprintsConfig_Details";
-			this.GRP_BlueprintsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_BlueprintsConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_BlueprintsConfig_Details.TabIndex = 1;
 			this.GRP_BlueprintsConfig_Details.TabStop = false;
 			this.GRP_BlueprintsConfig_Details.Text = "Selected Item Details";
@@ -1596,7 +1654,7 @@ namespace SEConfigTool
 			this.TAB_BlueprintConfig_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_BlueprintConfig_Details.Name = "TAB_BlueprintConfig_Details";
 			this.TAB_BlueprintConfig_Details.SelectedIndex = 0;
-			this.TAB_BlueprintConfig_Details.Size = new System.Drawing.Size(580, 363);
+			this.TAB_BlueprintConfig_Details.Size = new System.Drawing.Size(722, 363);
 			this.TAB_BlueprintConfig_Details.TabIndex = 1;
 			// 
 			// TAB_BlueprintConfig_Details_Result_Page
@@ -1605,7 +1663,7 @@ namespace SEConfigTool
 			this.TAB_BlueprintConfig_Details_Result_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_BlueprintConfig_Details_Result_Page.Name = "TAB_BlueprintConfig_Details_Result_Page";
 			this.TAB_BlueprintConfig_Details_Result_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_BlueprintConfig_Details_Result_Page.Size = new System.Drawing.Size(572, 337);
+			this.TAB_BlueprintConfig_Details_Result_Page.Size = new System.Drawing.Size(714, 337);
 			this.TAB_BlueprintConfig_Details_Result_Page.TabIndex = 1;
 			this.TAB_BlueprintConfig_Details_Result_Page.Text = "Result";
 			this.TAB_BlueprintConfig_Details_Result_Page.UseVisualStyleBackColor = true;
@@ -1627,12 +1685,14 @@ namespace SEConfigTool
 			// 
 			// splitContainer29.Panel2
 			// 
+			this.splitContainer29.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Result_Delete);
+			this.splitContainer29.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Result_New);
 			this.splitContainer29.Panel2.Controls.Add(this.CMB_BlueprintConfig_Details_Result_TypeId);
 			this.splitContainer29.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Result_Apply);
 			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_BaseProductionTime);
 			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_SubtypeId);
 			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_Amount);
-			this.splitContainer29.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer29.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer29.SplitterDistance = 150;
 			this.splitContainer29.TabIndex = 5;
 			// 
@@ -1672,6 +1732,28 @@ namespace SEConfigTool
 			this.LBL_BlueprintConfig_Details_Result_Amount.TabIndex = 2;
 			this.LBL_BlueprintConfig_Details_Result_Amount.Text = "Amount:";
 			// 
+			// BTN_BlueprintConfig_Details_Result_Delete
+			// 
+			this.BTN_BlueprintConfig_Details_Result_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_BlueprintConfig_Details_Result_Delete.Enabled = false;
+			this.BTN_BlueprintConfig_Details_Result_Delete.Location = new System.Drawing.Point(3, 276);
+			this.BTN_BlueprintConfig_Details_Result_Delete.Name = "BTN_BlueprintConfig_Details_Result_Delete";
+			this.BTN_BlueprintConfig_Details_Result_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_BlueprintConfig_Details_Result_Delete.TabIndex = 25;
+			this.BTN_BlueprintConfig_Details_Result_Delete.Text = "Delete Item";
+			this.BTN_BlueprintConfig_Details_Result_Delete.UseVisualStyleBackColor = false;
+			this.BTN_BlueprintConfig_Details_Result_Delete.Click += new System.EventHandler(this.BTN_BlueprintConfig_Details_Result_Delete_Click);
+			// 
+			// BTN_BlueprintConfig_Details_Result_New
+			// 
+			this.BTN_BlueprintConfig_Details_Result_New.Location = new System.Drawing.Point(3, 305);
+			this.BTN_BlueprintConfig_Details_Result_New.Name = "BTN_BlueprintConfig_Details_Result_New";
+			this.BTN_BlueprintConfig_Details_Result_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_BlueprintConfig_Details_Result_New.TabIndex = 19;
+			this.BTN_BlueprintConfig_Details_Result_New.Text = "New";
+			this.BTN_BlueprintConfig_Details_Result_New.UseVisualStyleBackColor = true;
+			this.BTN_BlueprintConfig_Details_Result_New.Click += new System.EventHandler(this.BTN_BlueprintConfig_Details_Result_New_Click);
+			// 
 			// CMB_BlueprintConfig_Details_Result_TypeId
 			// 
 			this.CMB_BlueprintConfig_Details_Result_TypeId.FormattingEnabled = true;
@@ -1684,7 +1766,7 @@ namespace SEConfigTool
 			// BTN_BlueprintConfig_Details_Result_Apply
 			// 
 			this.BTN_BlueprintConfig_Details_Result_Apply.Enabled = false;
-			this.BTN_BlueprintConfig_Details_Result_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_BlueprintConfig_Details_Result_Apply.Location = new System.Drawing.Point(53, 305);
 			this.BTN_BlueprintConfig_Details_Result_Apply.Name = "BTN_BlueprintConfig_Details_Result_Apply";
 			this.BTN_BlueprintConfig_Details_Result_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_BlueprintConfig_Details_Result_Apply.TabIndex = 8;
@@ -1722,7 +1804,7 @@ namespace SEConfigTool
 			this.TAB_BlueprintConfig_Details_Prerequisites.Location = new System.Drawing.Point(4, 22);
 			this.TAB_BlueprintConfig_Details_Prerequisites.Name = "TAB_BlueprintConfig_Details_Prerequisites";
 			this.TAB_BlueprintConfig_Details_Prerequisites.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_BlueprintConfig_Details_Prerequisites.Size = new System.Drawing.Size(572, 337);
+			this.TAB_BlueprintConfig_Details_Prerequisites.Size = new System.Drawing.Size(714, 337);
 			this.TAB_BlueprintConfig_Details_Prerequisites.TabIndex = 0;
 			this.TAB_BlueprintConfig_Details_Prerequisites.Text = "Prerequisites";
 			this.TAB_BlueprintConfig_Details_Prerequisites.UseVisualStyleBackColor = true;
@@ -1742,7 +1824,7 @@ namespace SEConfigTool
 			// splitContainer48.Panel2
 			// 
 			this.splitContainer48.Panel2.Controls.Add(this.splitContainer49);
-			this.splitContainer48.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer48.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer48.SplitterDistance = 150;
 			this.splitContainer48.TabIndex = 1;
 			// 
@@ -1771,11 +1853,13 @@ namespace SEConfigTool
 			// 
 			// splitContainer49.Panel2
 			// 
+			this.splitContainer49.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Prerequisites_Delete);
+			this.splitContainer49.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Prerequisites_New);
 			this.splitContainer49.Panel2.Controls.Add(this.CMB_BlueprintConfig_Details_Prerequisites_TypeId);
 			this.splitContainer49.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Prerequisites_Apply);
 			this.splitContainer49.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Prerequisites_Amount);
 			this.splitContainer49.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId);
-			this.splitContainer49.Size = new System.Drawing.Size(412, 331);
+			this.splitContainer49.Size = new System.Drawing.Size(554, 331);
 			this.splitContainer49.SplitterDistance = 150;
 			this.splitContainer49.TabIndex = 10;
 			// 
@@ -1806,6 +1890,28 @@ namespace SEConfigTool
 			this.label7.TabIndex = 11;
 			this.label7.Text = "Amount:";
 			// 
+			// BTN_BlueprintConfig_Details_Prerequisites_Delete
+			// 
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete.Enabled = false;
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete.Location = new System.Drawing.Point(4, 276);
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete.Name = "BTN_BlueprintConfig_Details_Prerequisites_Delete";
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete.TabIndex = 26;
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete.Text = "Delete Item";
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete.UseVisualStyleBackColor = false;
+			this.BTN_BlueprintConfig_Details_Prerequisites_Delete.Click += new System.EventHandler(this.BTN_BlueprintConfig_Details_Prerequisites_Delete_Click);
+			// 
+			// BTN_BlueprintConfig_Details_Prerequisites_New
+			// 
+			this.BTN_BlueprintConfig_Details_Prerequisites_New.Location = new System.Drawing.Point(4, 305);
+			this.BTN_BlueprintConfig_Details_Prerequisites_New.Name = "BTN_BlueprintConfig_Details_Prerequisites_New";
+			this.BTN_BlueprintConfig_Details_Prerequisites_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_BlueprintConfig_Details_Prerequisites_New.TabIndex = 20;
+			this.BTN_BlueprintConfig_Details_Prerequisites_New.Text = "New";
+			this.BTN_BlueprintConfig_Details_Prerequisites_New.UseVisualStyleBackColor = true;
+			this.BTN_BlueprintConfig_Details_Prerequisites_New.Click += new System.EventHandler(this.BTN_BlueprintConfig_Details_Prerequisites_New_Click);
+			// 
 			// CMB_BlueprintConfig_Details_Prerequisites_TypeId
 			// 
 			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.FormattingEnabled = true;
@@ -1817,7 +1923,7 @@ namespace SEConfigTool
 			// BTN_BlueprintConfig_Details_Prerequisites_Apply
 			// 
 			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
-			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Location = new System.Drawing.Point(54, 305);
 			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Name = "BTN_BlueprintConfig_Details_Prerequisites_Apply";
 			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.TabIndex = 9;
@@ -1844,7 +1950,7 @@ namespace SEConfigTool
 			this.TAB_ComponentConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ComponentConfig_Page.Name = "TAB_ComponentConfig_Page";
 			this.TAB_ComponentConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ComponentConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_ComponentConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_ComponentConfig_Page.TabIndex = 9;
 			this.TAB_ComponentConfig_Page.Text = "Components";
 			this.TAB_ComponentConfig_Page.UseVisualStyleBackColor = true;
@@ -1865,7 +1971,7 @@ namespace SEConfigTool
 			// splitContainer24.Panel2
 			// 
 			this.splitContainer24.Panel2.Controls.Add(this.GRP_ComponentsConfig);
-			this.splitContainer24.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer24.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer24.SplitterDistance = 25;
 			this.splitContainer24.TabIndex = 3;
 			// 
@@ -1895,7 +2001,7 @@ namespace SEConfigTool
 			this.GRP_ComponentsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ComponentsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ComponentsConfig.Name = "GRP_ComponentsConfig";
-			this.GRP_ComponentsConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_ComponentsConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_ComponentsConfig.TabIndex = 2;
 			this.GRP_ComponentsConfig.TabStop = false;
 			this.GRP_ComponentsConfig.Text = "Components";
@@ -1915,7 +2021,7 @@ namespace SEConfigTool
 			// splitContainer25.Panel2
 			// 
 			this.splitContainer25.Panel2.Controls.Add(this.GRP_ComponentsConfig_Details);
-			this.splitContainer25.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer25.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer25.SplitterDistance = 200;
 			this.splitContainer25.TabIndex = 1;
 			// 
@@ -1935,7 +2041,7 @@ namespace SEConfigTool
 			this.GRP_ComponentsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ComponentsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ComponentsConfig_Details.Name = "GRP_ComponentsConfig_Details";
-			this.GRP_ComponentsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_ComponentsConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_ComponentsConfig_Details.TabIndex = 1;
 			this.GRP_ComponentsConfig_Details.TabStop = false;
 			this.GRP_ComponentsConfig_Details.Text = "Selected Item Details";
@@ -1963,6 +2069,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer26.Panel2
 			// 
+			this.splitContainer26.Panel2.Controls.Add(this.BTN_ComponentConfig_Details_Delete);
 			this.splitContainer26.Panel2.Controls.Add(this.BTN_ComponentConfig_Details_New);
 			this.splitContainer26.Panel2.Controls.Add(this.TXT_ComponentConfig_Details_Size_Z);
 			this.splitContainer26.Panel2.Controls.Add(this.TXT_ComponentConfig_Details_Size_Y);
@@ -1977,7 +2084,7 @@ namespace SEConfigTool
 			this.splitContainer26.Panel2.Controls.Add(this.TXT_ComponentConfig_Details_Name);
 			this.splitContainer26.Panel2.Controls.Add(this.TXT_ComponentConfig_Details_Id);
 			this.splitContainer26.Panel2.Controls.Add(this.TXT_ComponentConfig_Details_Description);
-			this.splitContainer26.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer26.Size = new System.Drawing.Size(722, 363);
 			this.splitContainer26.SplitterDistance = 150;
 			this.splitContainer26.TabIndex = 4;
 			// 
@@ -2070,6 +2177,18 @@ namespace SEConfigTool
 			this.LBL_ComponentConfig_Details_Description.Size = new System.Drawing.Size(63, 13);
 			this.LBL_ComponentConfig_Details_Description.TabIndex = 2;
 			this.LBL_ComponentConfig_Details_Description.Text = "Description:";
+			// 
+			// BTN_ComponentConfig_Details_Delete
+			// 
+			this.BTN_ComponentConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_ComponentConfig_Details_Delete.Enabled = false;
+			this.BTN_ComponentConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
+			this.BTN_ComponentConfig_Details_Delete.Name = "BTN_ComponentConfig_Details_Delete";
+			this.BTN_ComponentConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_ComponentConfig_Details_Delete.TabIndex = 24;
+			this.BTN_ComponentConfig_Details_Delete.Text = "Delete Item";
+			this.BTN_ComponentConfig_Details_Delete.UseVisualStyleBackColor = false;
+			this.BTN_ComponentConfig_Details_Delete.Click += new System.EventHandler(this.BTN_ComponentConfig_Details_Delete_Click);
 			// 
 			// BTN_ComponentConfig_Details_New
 			// 
@@ -2194,7 +2313,7 @@ namespace SEConfigTool
 			this.TAB_PhysicalItemsConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_PhysicalItemsConfig_Page.Name = "TAB_PhysicalItemsConfig_Page";
 			this.TAB_PhysicalItemsConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_PhysicalItemsConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_PhysicalItemsConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_PhysicalItemsConfig_Page.TabIndex = 8;
 			this.TAB_PhysicalItemsConfig_Page.Text = "Physical Items";
 			this.TAB_PhysicalItemsConfig_Page.UseVisualStyleBackColor = true;
@@ -2215,7 +2334,7 @@ namespace SEConfigTool
 			// splitContainer19.Panel2
 			// 
 			this.splitContainer19.Panel2.Controls.Add(this.GRP_PhysicalItemsConfig);
-			this.splitContainer19.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer19.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer19.SplitterDistance = 25;
 			this.splitContainer19.TabIndex = 2;
 			// 
@@ -2245,7 +2364,7 @@ namespace SEConfigTool
 			this.GRP_PhysicalItemsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_PhysicalItemsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_PhysicalItemsConfig.Name = "GRP_PhysicalItemsConfig";
-			this.GRP_PhysicalItemsConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_PhysicalItemsConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_PhysicalItemsConfig.TabIndex = 2;
 			this.GRP_PhysicalItemsConfig.TabStop = false;
 			this.GRP_PhysicalItemsConfig.Text = "Physical Items";
@@ -2265,7 +2384,7 @@ namespace SEConfigTool
 			// splitContainer22.Panel2
 			// 
 			this.splitContainer22.Panel2.Controls.Add(this.GRP_PhysicalItemConfig_Details);
-			this.splitContainer22.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer22.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer22.SplitterDistance = 200;
 			this.splitContainer22.TabIndex = 1;
 			// 
@@ -2285,7 +2404,7 @@ namespace SEConfigTool
 			this.GRP_PhysicalItemConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_PhysicalItemConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_PhysicalItemConfig_Details.Name = "GRP_PhysicalItemConfig_Details";
-			this.GRP_PhysicalItemConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_PhysicalItemConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_PhysicalItemConfig_Details.TabIndex = 1;
 			this.GRP_PhysicalItemConfig_Details.TabStop = false;
 			this.GRP_PhysicalItemConfig_Details.Text = "Selected Item Details";
@@ -2313,6 +2432,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer23.Panel2
 			// 
+			this.splitContainer23.Panel2.Controls.Add(this.BTN_PhysicalItemConfig_Details_Delete);
 			this.splitContainer23.Panel2.Controls.Add(this.CMB_PhysicalItemConfig_Details_Type);
 			this.splitContainer23.Panel2.Controls.Add(this.TXT_PhysicalItemConfig_Details_Size_Z);
 			this.splitContainer23.Panel2.Controls.Add(this.TXT_PhysicalItemConfig_Details_Size_Y);
@@ -2327,7 +2447,7 @@ namespace SEConfigTool
 			this.splitContainer23.Panel2.Controls.Add(this.TXT_PhysicalItemConfig_Details_Name);
 			this.splitContainer23.Panel2.Controls.Add(this.TXT_PhysicalItemConfig_Details_Id);
 			this.splitContainer23.Panel2.Controls.Add(this.TXT_PhysicalItemConfig_Details_Description);
-			this.splitContainer23.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer23.Size = new System.Drawing.Size(722, 363);
 			this.splitContainer23.SplitterDistance = 150;
 			this.splitContainer23.TabIndex = 4;
 			// 
@@ -2420,6 +2540,18 @@ namespace SEConfigTool
 			this.LBL_PhysicalItemConfig_Details_Description.Size = new System.Drawing.Size(63, 13);
 			this.LBL_PhysicalItemConfig_Details_Description.TabIndex = 2;
 			this.LBL_PhysicalItemConfig_Details_Description.Text = "Description:";
+			// 
+			// BTN_PhysicalItemConfig_Details_Delete
+			// 
+			this.BTN_PhysicalItemConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_PhysicalItemConfig_Details_Delete.Enabled = false;
+			this.BTN_PhysicalItemConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
+			this.BTN_PhysicalItemConfig_Details_Delete.Name = "BTN_PhysicalItemConfig_Details_Delete";
+			this.BTN_PhysicalItemConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_PhysicalItemConfig_Details_Delete.TabIndex = 23;
+			this.BTN_PhysicalItemConfig_Details_Delete.Text = "Delete Item";
+			this.BTN_PhysicalItemConfig_Details_Delete.UseVisualStyleBackColor = false;
+			this.BTN_PhysicalItemConfig_Details_Delete.Click += new System.EventHandler(this.BTN_PhysicalItemConfig_Details_Delete_Click);
 			// 
 			// CMB_PhysicalItemConfig_Details_Type
 			// 
@@ -2544,7 +2676,7 @@ namespace SEConfigTool
 			this.TAB_SpawnGroupConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SpawnGroupConfig_Page.Name = "TAB_SpawnGroupConfig_Page";
 			this.TAB_SpawnGroupConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SpawnGroupConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_SpawnGroupConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_SpawnGroupConfig_Page.TabIndex = 7;
 			this.TAB_SpawnGroupConfig_Page.Text = "Spawn Groups";
 			this.TAB_SpawnGroupConfig_Page.UseVisualStyleBackColor = true;
@@ -2565,7 +2697,7 @@ namespace SEConfigTool
 			// splitContainer14.Panel2
 			// 
 			this.splitContainer14.Panel2.Controls.Add(this.GRP_SpawnGroupConfig);
-			this.splitContainer14.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer14.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer14.SplitterDistance = 25;
 			this.splitContainer14.TabIndex = 1;
 			// 
@@ -2595,7 +2727,7 @@ namespace SEConfigTool
 			this.GRP_SpawnGroupConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_SpawnGroupConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_SpawnGroupConfig.Name = "GRP_SpawnGroupConfig";
-			this.GRP_SpawnGroupConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_SpawnGroupConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_SpawnGroupConfig.TabIndex = 2;
 			this.GRP_SpawnGroupConfig.TabStop = false;
 			this.GRP_SpawnGroupConfig.Text = "Spawn Groups";
@@ -2615,7 +2747,7 @@ namespace SEConfigTool
 			// splitContainer15.Panel2
 			// 
 			this.splitContainer15.Panel2.Controls.Add(this.GRP_SpawnGroupConfig_Details);
-			this.splitContainer15.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer15.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer15.SplitterDistance = 200;
 			this.splitContainer15.TabIndex = 1;
 			// 
@@ -2635,7 +2767,7 @@ namespace SEConfigTool
 			this.GRP_SpawnGroupConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_SpawnGroupConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_SpawnGroupConfig_Details.Name = "GRP_SpawnGroupConfig_Details";
-			this.GRP_SpawnGroupConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_SpawnGroupConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_SpawnGroupConfig_Details.TabIndex = 1;
 			this.GRP_SpawnGroupConfig_Details.TabStop = false;
 			this.GRP_SpawnGroupConfig_Details.Text = "Selected Item Details";
@@ -2648,7 +2780,7 @@ namespace SEConfigTool
 			this.TAB_SpawnGroupConfig_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_SpawnGroupConfig_Details.Name = "TAB_SpawnGroupConfig_Details";
 			this.TAB_SpawnGroupConfig_Details.SelectedIndex = 0;
-			this.TAB_SpawnGroupConfig_Details.Size = new System.Drawing.Size(580, 363);
+			this.TAB_SpawnGroupConfig_Details.Size = new System.Drawing.Size(722, 363);
 			this.TAB_SpawnGroupConfig_Details.TabIndex = 0;
 			// 
 			// TAB_SpawnGroupConfig_Details_Information_Page
@@ -2657,7 +2789,7 @@ namespace SEConfigTool
 			this.TAB_SpawnGroupConfig_Details_Information_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SpawnGroupConfig_Details_Information_Page.Name = "TAB_SpawnGroupConfig_Details_Information_Page";
 			this.TAB_SpawnGroupConfig_Details_Information_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SpawnGroupConfig_Details_Information_Page.Size = new System.Drawing.Size(572, 337);
+			this.TAB_SpawnGroupConfig_Details_Information_Page.Size = new System.Drawing.Size(714, 337);
 			this.TAB_SpawnGroupConfig_Details_Information_Page.TabIndex = 0;
 			this.TAB_SpawnGroupConfig_Details_Information_Page.Text = "Information";
 			this.TAB_SpawnGroupConfig_Details_Information_Page.UseVisualStyleBackColor = true;
@@ -2677,10 +2809,12 @@ namespace SEConfigTool
 			// 
 			// splitContainer16.Panel2
 			// 
+			this.splitContainer16.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Info_Delete);
+			this.splitContainer16.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Info_New);
 			this.splitContainer16.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Info_Apply);
 			this.splitContainer16.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Info_Count);
 			this.splitContainer16.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Info_Frequency);
-			this.splitContainer16.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer16.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer16.SplitterDistance = 150;
 			this.splitContainer16.TabIndex = 5;
 			// 
@@ -2702,10 +2836,32 @@ namespace SEConfigTool
 			this.LBL_SpawnGroupConfig_Details_Info_Frequency.TabIndex = 2;
 			this.LBL_SpawnGroupConfig_Details_Info_Frequency.Text = "Frequency:";
 			// 
+			// BTN_SpawnGroupConfig_Details_Info_Delete
+			// 
+			this.BTN_SpawnGroupConfig_Details_Info_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_SpawnGroupConfig_Details_Info_Delete.Enabled = false;
+			this.BTN_SpawnGroupConfig_Details_Info_Delete.Location = new System.Drawing.Point(3, 276);
+			this.BTN_SpawnGroupConfig_Details_Info_Delete.Name = "BTN_SpawnGroupConfig_Details_Info_Delete";
+			this.BTN_SpawnGroupConfig_Details_Info_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_SpawnGroupConfig_Details_Info_Delete.TabIndex = 19;
+			this.BTN_SpawnGroupConfig_Details_Info_Delete.Text = "Delete Item";
+			this.BTN_SpawnGroupConfig_Details_Info_Delete.UseVisualStyleBackColor = false;
+			this.BTN_SpawnGroupConfig_Details_Info_Delete.Click += new System.EventHandler(this.BTN_SpawnGroupConfig_Details_Info_Delete_Click);
+			// 
+			// BTN_SpawnGroupConfig_Details_Info_New
+			// 
+			this.BTN_SpawnGroupConfig_Details_Info_New.Location = new System.Drawing.Point(3, 305);
+			this.BTN_SpawnGroupConfig_Details_Info_New.Name = "BTN_SpawnGroupConfig_Details_Info_New";
+			this.BTN_SpawnGroupConfig_Details_Info_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_SpawnGroupConfig_Details_Info_New.TabIndex = 11;
+			this.BTN_SpawnGroupConfig_Details_Info_New.Text = "New";
+			this.BTN_SpawnGroupConfig_Details_Info_New.UseVisualStyleBackColor = true;
+			this.BTN_SpawnGroupConfig_Details_Info_New.Click += new System.EventHandler(this.BTN_SpawnGroupConfig_Details_Info_New_Click);
+			// 
 			// BTN_SpawnGroupConfig_Details_Info_Apply
 			// 
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.Enabled = false;
-			this.BTN_SpawnGroupConfig_Details_Info_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_SpawnGroupConfig_Details_Info_Apply.Location = new System.Drawing.Point(53, 305);
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.Name = "BTN_SpawnGroupConfig_Details_Info_Apply";
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.TabIndex = 8;
@@ -2735,7 +2891,7 @@ namespace SEConfigTool
 			this.TAB_SpawnGroupConfig_Details_Prefabs_Tab.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SpawnGroupConfig_Details_Prefabs_Tab.Name = "TAB_SpawnGroupConfig_Details_Prefabs_Tab";
 			this.TAB_SpawnGroupConfig_Details_Prefabs_Tab.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SpawnGroupConfig_Details_Prefabs_Tab.Size = new System.Drawing.Size(572, 337);
+			this.TAB_SpawnGroupConfig_Details_Prefabs_Tab.Size = new System.Drawing.Size(714, 337);
 			this.TAB_SpawnGroupConfig_Details_Prefabs_Tab.TabIndex = 1;
 			this.TAB_SpawnGroupConfig_Details_Prefabs_Tab.Text = "Prefabs";
 			this.TAB_SpawnGroupConfig_Details_Prefabs_Tab.UseVisualStyleBackColor = true;
@@ -2755,7 +2911,7 @@ namespace SEConfigTool
 			// splitContainer17.Panel2
 			// 
 			this.splitContainer17.Panel2.Controls.Add(this.splitContainer18);
-			this.splitContainer17.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer17.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer17.SplitterDistance = 150;
 			this.splitContainer17.TabIndex = 0;
 			// 
@@ -2786,12 +2942,14 @@ namespace SEConfigTool
 			// 
 			// splitContainer18.Panel2
 			// 
+			this.splitContainer18.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Prefabs_New);
+			this.splitContainer18.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Prefabs_Delete);
 			this.splitContainer18.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Prefabs_Apply);
 			this.splitContainer18.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Prefabs_Speed);
 			this.splitContainer18.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Prefabs_BeaconText);
 			this.splitContainer18.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Prefabs_Position);
 			this.splitContainer18.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Prefabs_File);
-			this.splitContainer18.Size = new System.Drawing.Size(412, 331);
+			this.splitContainer18.Size = new System.Drawing.Size(554, 331);
 			this.splitContainer18.SplitterDistance = 150;
 			this.splitContainer18.TabIndex = 0;
 			// 
@@ -2831,10 +2989,32 @@ namespace SEConfigTool
 			this.LBL_SpawnGroupConfig_Details_Prefabs_File.TabIndex = 1;
 			this.LBL_SpawnGroupConfig_Details_Prefabs_File.Text = "File:";
 			// 
+			// BTN_SpawnGroupConfig_Details_Prefabs_New
+			// 
+			this.BTN_SpawnGroupConfig_Details_Prefabs_New.Location = new System.Drawing.Point(3, 305);
+			this.BTN_SpawnGroupConfig_Details_Prefabs_New.Name = "BTN_SpawnGroupConfig_Details_Prefabs_New";
+			this.BTN_SpawnGroupConfig_Details_Prefabs_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_SpawnGroupConfig_Details_Prefabs_New.TabIndex = 21;
+			this.BTN_SpawnGroupConfig_Details_Prefabs_New.Text = "New";
+			this.BTN_SpawnGroupConfig_Details_Prefabs_New.UseVisualStyleBackColor = true;
+			this.BTN_SpawnGroupConfig_Details_Prefabs_New.Click += new System.EventHandler(this.BTN_SpawnGroupConfig_Details_Prefabs_New_Click);
+			// 
+			// BTN_SpawnGroupConfig_Details_Prefabs_Delete
+			// 
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete.Enabled = false;
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete.Location = new System.Drawing.Point(3, 276);
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete.Name = "BTN_SpawnGroupConfig_Details_Prefabs_Delete";
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete.TabIndex = 20;
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete.Text = "Delete Item";
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete.UseVisualStyleBackColor = false;
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Delete.Click += new System.EventHandler(this.BTN_SpawnGroupConfig_Details_Prefabs_Delete_Click);
+			// 
 			// BTN_SpawnGroupConfig_Details_Prefabs_Apply
 			// 
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Enabled = false;
-			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Location = new System.Drawing.Point(28, 305);
+			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Location = new System.Drawing.Point(53, 305);
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Name = "BTN_SpawnGroupConfig_Details_Prefabs_Apply";
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_SpawnGroupConfig_Details_Prefabs_Apply.TabIndex = 10;
@@ -2880,7 +3060,7 @@ namespace SEConfigTool
 			this.TAB_GlobalEventConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_GlobalEventConfig_Page.Name = "TAB_GlobalEventConfig_Page";
 			this.TAB_GlobalEventConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_GlobalEventConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_GlobalEventConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_GlobalEventConfig_Page.TabIndex = 6;
 			this.TAB_GlobalEventConfig_Page.Text = "Global Events";
 			this.TAB_GlobalEventConfig_Page.UseVisualStyleBackColor = true;
@@ -2901,7 +3081,7 @@ namespace SEConfigTool
 			// splitContainer11.Panel2
 			// 
 			this.splitContainer11.Panel2.Controls.Add(this.GRP_GlobalEventConfig);
-			this.splitContainer11.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer11.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer11.SplitterDistance = 25;
 			this.splitContainer11.TabIndex = 1;
 			// 
@@ -2931,7 +3111,7 @@ namespace SEConfigTool
 			this.GRP_GlobalEventConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_GlobalEventConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_GlobalEventConfig.Name = "GRP_GlobalEventConfig";
-			this.GRP_GlobalEventConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_GlobalEventConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_GlobalEventConfig.TabIndex = 2;
 			this.GRP_GlobalEventConfig.TabStop = false;
 			this.GRP_GlobalEventConfig.Text = "Global Events";
@@ -2951,7 +3131,7 @@ namespace SEConfigTool
 			// splitContainer12.Panel2
 			// 
 			this.splitContainer12.Panel2.Controls.Add(this.GRP_GlobalEventConfig_Details);
-			this.splitContainer12.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer12.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer12.SplitterDistance = 200;
 			this.splitContainer12.TabIndex = 1;
 			// 
@@ -2971,7 +3151,7 @@ namespace SEConfigTool
 			this.GRP_GlobalEventConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_GlobalEventConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_GlobalEventConfig_Details.Name = "GRP_GlobalEventConfig_Details";
-			this.GRP_GlobalEventConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_GlobalEventConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_GlobalEventConfig_Details.TabIndex = 1;
 			this.GRP_GlobalEventConfig_Details.TabStop = false;
 			this.GRP_GlobalEventConfig_Details.Text = "Selected Item Details";
@@ -2995,6 +3175,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer13.Panel2
 			// 
+			this.splitContainer13.Panel2.Controls.Add(this.BTN_GlobalEventConfig_Details_Delete);
 			this.splitContainer13.Panel2.Controls.Add(this.BTN_GlobalEventsConfig_Details_New);
 			this.splitContainer13.Panel2.Controls.Add(this.CMB_GlobalEventsConfig_Details_EventType);
 			this.splitContainer13.Panel2.Controls.Add(this.TXT_ConfigGlobalEvent_Details_FirstActivation);
@@ -3003,7 +3184,7 @@ namespace SEConfigTool
 			this.splitContainer13.Panel2.Controls.Add(this.BTN_GlobalEventConfig_Details_Apply);
 			this.splitContainer13.Panel2.Controls.Add(this.TXT_ConfigGlobalEvent_Details_Name);
 			this.splitContainer13.Panel2.Controls.Add(this.TXT_ConfigGlobalEvent_Details_Description);
-			this.splitContainer13.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer13.Size = new System.Drawing.Size(722, 363);
 			this.splitContainer13.SplitterDistance = 150;
 			this.splitContainer13.TabIndex = 4;
 			// 
@@ -3060,6 +3241,18 @@ namespace SEConfigTool
 			this.LBL_GlobalEventConfig_Details_Description.Size = new System.Drawing.Size(63, 13);
 			this.LBL_GlobalEventConfig_Details_Description.TabIndex = 2;
 			this.LBL_GlobalEventConfig_Details_Description.Text = "Description:";
+			// 
+			// BTN_GlobalEventConfig_Details_Delete
+			// 
+			this.BTN_GlobalEventConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_GlobalEventConfig_Details_Delete.Enabled = false;
+			this.BTN_GlobalEventConfig_Details_Delete.Location = new System.Drawing.Point(4, 308);
+			this.BTN_GlobalEventConfig_Details_Delete.Name = "BTN_GlobalEventConfig_Details_Delete";
+			this.BTN_GlobalEventConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_GlobalEventConfig_Details_Delete.TabIndex = 18;
+			this.BTN_GlobalEventConfig_Details_Delete.Text = "Delete Item";
+			this.BTN_GlobalEventConfig_Details_Delete.UseVisualStyleBackColor = false;
+			this.BTN_GlobalEventConfig_Details_Delete.Click += new System.EventHandler(this.BTN_GlobalEventConfig_Details_Delete_Click);
 			// 
 			// BTN_GlobalEventsConfig_Details_New
 			// 
@@ -3137,7 +3330,7 @@ namespace SEConfigTool
 			this.TAB_ContainerTypeConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ContainerTypeConfig_Page.Name = "TAB_ContainerTypeConfig_Page";
 			this.TAB_ContainerTypeConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ContainerTypeConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_ContainerTypeConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_ContainerTypeConfig_Page.TabIndex = 5;
 			this.TAB_ContainerTypeConfig_Page.Text = "Container Types";
 			this.TAB_ContainerTypeConfig_Page.UseVisualStyleBackColor = true;
@@ -3158,7 +3351,7 @@ namespace SEConfigTool
 			// splitContainer8.Panel2
 			// 
 			this.splitContainer8.Panel2.Controls.Add(this.GRP_ContainerTypesConfig);
-			this.splitContainer8.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer8.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer8.SplitterDistance = 25;
 			this.splitContainer8.TabIndex = 1;
 			// 
@@ -3188,7 +3381,7 @@ namespace SEConfigTool
 			this.GRP_ContainerTypesConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ContainerTypesConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ContainerTypesConfig.Name = "GRP_ContainerTypesConfig";
-			this.GRP_ContainerTypesConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_ContainerTypesConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_ContainerTypesConfig.TabIndex = 2;
 			this.GRP_ContainerTypesConfig.TabStop = false;
 			this.GRP_ContainerTypesConfig.Text = "Container Types";
@@ -3208,7 +3401,7 @@ namespace SEConfigTool
 			// splitContainer9.Panel2
 			// 
 			this.splitContainer9.Panel2.Controls.Add(this.GRP_ContainerTypesConfig_Details);
-			this.splitContainer9.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer9.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer9.SplitterDistance = 200;
 			this.splitContainer9.TabIndex = 1;
 			// 
@@ -3228,7 +3421,7 @@ namespace SEConfigTool
 			this.GRP_ContainerTypesConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ContainerTypesConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ContainerTypesConfig_Details.Name = "GRP_ContainerTypesConfig_Details";
-			this.GRP_ContainerTypesConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_ContainerTypesConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_ContainerTypesConfig_Details.TabIndex = 1;
 			this.GRP_ContainerTypesConfig_Details.TabStop = false;
 			this.GRP_ContainerTypesConfig_Details.Text = "Selected Item Details";
@@ -3241,7 +3434,7 @@ namespace SEConfigTool
 			this.TAB_ContainerTypesConfig_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_ContainerTypesConfig_Details.Name = "TAB_ContainerTypesConfig_Details";
 			this.TAB_ContainerTypesConfig_Details.SelectedIndex = 0;
-			this.TAB_ContainerTypesConfig_Details.Size = new System.Drawing.Size(580, 363);
+			this.TAB_ContainerTypesConfig_Details.Size = new System.Drawing.Size(722, 363);
 			this.TAB_ContainerTypesConfig_Details.TabIndex = 0;
 			// 
 			// TAB_ContainerTypesConfig_Details_Information_Page
@@ -3250,7 +3443,7 @@ namespace SEConfigTool
 			this.TAB_ContainerTypesConfig_Details_Information_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ContainerTypesConfig_Details_Information_Page.Name = "TAB_ContainerTypesConfig_Details_Information_Page";
 			this.TAB_ContainerTypesConfig_Details_Information_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ContainerTypesConfig_Details_Information_Page.Size = new System.Drawing.Size(572, 337);
+			this.TAB_ContainerTypesConfig_Details_Information_Page.Size = new System.Drawing.Size(714, 337);
 			this.TAB_ContainerTypesConfig_Details_Information_Page.TabIndex = 1;
 			this.TAB_ContainerTypesConfig_Details_Information_Page.Text = "Information";
 			this.TAB_ContainerTypesConfig_Details_Information_Page.UseVisualStyleBackColor = true;
@@ -3271,12 +3464,13 @@ namespace SEConfigTool
 			// 
 			// splitContainer10.Panel2
 			// 
+			this.splitContainer10.Panel2.Controls.Add(this.BTN_ContainerTypesConfig_Details_Delete);
 			this.splitContainer10.Panel2.Controls.Add(this.BTN_ContainerTypesConfig_Details_New);
 			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_CountMin);
 			this.splitContainer10.Panel2.Controls.Add(this.BTN_ContainerTypesConfig_Details_Apply);
 			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_CountMax);
 			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_Name);
-			this.splitContainer10.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer10.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer10.SplitterDistance = 150;
 			this.splitContainer10.TabIndex = 5;
 			// 
@@ -3306,6 +3500,18 @@ namespace SEConfigTool
 			this.LBL_ContainerTypeConfig_Details_Information_Name.Size = new System.Drawing.Size(38, 13);
 			this.LBL_ContainerTypeConfig_Details_Information_Name.TabIndex = 0;
 			this.LBL_ContainerTypeConfig_Details_Information_Name.Text = "Name:";
+			// 
+			// BTN_ContainerTypesConfig_Details_Delete
+			// 
+			this.BTN_ContainerTypesConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_ContainerTypesConfig_Details_Delete.Enabled = false;
+			this.BTN_ContainerTypesConfig_Details_Delete.Location = new System.Drawing.Point(3, 276);
+			this.BTN_ContainerTypesConfig_Details_Delete.Name = "BTN_ContainerTypesConfig_Details_Delete";
+			this.BTN_ContainerTypesConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_ContainerTypesConfig_Details_Delete.TabIndex = 17;
+			this.BTN_ContainerTypesConfig_Details_Delete.Text = "Delete Item";
+			this.BTN_ContainerTypesConfig_Details_Delete.UseVisualStyleBackColor = false;
+			this.BTN_ContainerTypesConfig_Details_Delete.Click += new System.EventHandler(this.BTN_ContainerTypesConfig_Details_Delete_Click);
 			// 
 			// BTN_ContainerTypesConfig_Details_New
 			// 
@@ -3357,7 +3563,7 @@ namespace SEConfigTool
 			this.TAB_ContainerTypesConfig_Details_Items_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ContainerTypesConfig_Details_Items_Page.Name = "TAB_ContainerTypesConfig_Details_Items_Page";
 			this.TAB_ContainerTypesConfig_Details_Items_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ContainerTypesConfig_Details_Items_Page.Size = new System.Drawing.Size(572, 337);
+			this.TAB_ContainerTypesConfig_Details_Items_Page.Size = new System.Drawing.Size(714, 337);
 			this.TAB_ContainerTypesConfig_Details_Items_Page.TabIndex = 0;
 			this.TAB_ContainerTypesConfig_Details_Items_Page.Text = "Items";
 			this.TAB_ContainerTypesConfig_Details_Items_Page.UseVisualStyleBackColor = true;
@@ -3377,7 +3583,7 @@ namespace SEConfigTool
 			// splitContainer20.Panel2
 			// 
 			this.splitContainer20.Panel2.Controls.Add(this.splitContainer21);
-			this.splitContainer20.Size = new System.Drawing.Size(566, 331);
+			this.splitContainer20.Size = new System.Drawing.Size(708, 331);
 			this.splitContainer20.SplitterDistance = 150;
 			this.splitContainer20.TabIndex = 0;
 			// 
@@ -3408,13 +3614,14 @@ namespace SEConfigTool
 			// 
 			// splitContainer21.Panel2
 			// 
+			this.splitContainer21.Panel2.Controls.Add(this.BTN_ContainerTypeConfig_Items_Delete);
 			this.splitContainer21.Panel2.Controls.Add(this.BTN_ContainerTypeConfig_Items_New);
 			this.splitContainer21.Panel2.Controls.Add(this.CMB_ContainerTypeConfig_Items_Type);
 			this.splitContainer21.Panel2.Controls.Add(this.BTN_ContainerTypeConfig_Items_Apply);
 			this.splitContainer21.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Item_AmountMax);
 			this.splitContainer21.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Item_AmountMin);
 			this.splitContainer21.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Item_Frequency);
-			this.splitContainer21.Size = new System.Drawing.Size(412, 331);
+			this.splitContainer21.Size = new System.Drawing.Size(554, 331);
 			this.splitContainer21.SplitterDistance = 150;
 			this.splitContainer21.TabIndex = 10;
 			// 
@@ -3453,6 +3660,18 @@ namespace SEConfigTool
 			this.LBL_ContainerTypeConfig_Details_Items_AmountMin.Size = new System.Drawing.Size(60, 13);
 			this.LBL_ContainerTypeConfig_Details_Items_AmountMin.TabIndex = 7;
 			this.LBL_ContainerTypeConfig_Details_Items_AmountMin.Text = "AmountMin";
+			// 
+			// BTN_ContainerTypeConfig_Items_Delete
+			// 
+			this.BTN_ContainerTypeConfig_Items_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_ContainerTypeConfig_Items_Delete.Enabled = false;
+			this.BTN_ContainerTypeConfig_Items_Delete.Location = new System.Drawing.Point(4, 279);
+			this.BTN_ContainerTypeConfig_Items_Delete.Name = "BTN_ContainerTypeConfig_Items_Delete";
+			this.BTN_ContainerTypeConfig_Items_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_ContainerTypeConfig_Items_Delete.TabIndex = 18;
+			this.BTN_ContainerTypeConfig_Items_Delete.Text = "Delete Item";
+			this.BTN_ContainerTypeConfig_Items_Delete.UseVisualStyleBackColor = false;
+			this.BTN_ContainerTypeConfig_Items_Delete.Click += new System.EventHandler(this.BTN_ContainerTypeConfig_Items_Delete_Click);
 			// 
 			// BTN_ContainerTypeConfig_Items_New
 			// 
@@ -3514,7 +3733,7 @@ namespace SEConfigTool
 			this.TAB_AmmoConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_AmmoConfig_Page.Name = "TAB_AmmoConfig_Page";
 			this.TAB_AmmoConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_AmmoConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_AmmoConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_AmmoConfig_Page.TabIndex = 3;
 			this.TAB_AmmoConfig_Page.Text = "Ammo";
 			this.TAB_AmmoConfig_Page.UseVisualStyleBackColor = true;
@@ -3535,7 +3754,7 @@ namespace SEConfigTool
 			// splitContainer5.Panel2
 			// 
 			this.splitContainer5.Panel2.Controls.Add(this.GRP_AmmoConfig);
-			this.splitContainer5.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer5.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer5.SplitterDistance = 25;
 			this.splitContainer5.TabIndex = 1;
 			// 
@@ -3565,7 +3784,7 @@ namespace SEConfigTool
 			this.GRP_AmmoConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_AmmoConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_AmmoConfig.Name = "GRP_AmmoConfig";
-			this.GRP_AmmoConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_AmmoConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_AmmoConfig.TabIndex = 2;
 			this.GRP_AmmoConfig.TabStop = false;
 			this.GRP_AmmoConfig.Text = "Ammo";
@@ -3584,7 +3803,7 @@ namespace SEConfigTool
 			// splitContainer6.Panel2
 			// 
 			this.splitContainer6.Panel2.Controls.Add(this.GRP_AmmoConfig_Details);
-			this.splitContainer6.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer6.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer6.SplitterDistance = 200;
 			this.splitContainer6.TabIndex = 1;
 			// 
@@ -3604,7 +3823,7 @@ namespace SEConfigTool
 			this.GRP_AmmoConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_AmmoConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_AmmoConfig_Details.Name = "GRP_AmmoConfig_Details";
-			this.GRP_AmmoConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_AmmoConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_AmmoConfig_Details.TabIndex = 3;
 			this.GRP_AmmoConfig_Details.TabStop = false;
 			this.GRP_AmmoConfig_Details.Text = "Selected Item Details";
@@ -3632,6 +3851,7 @@ namespace SEConfigTool
 			// 
 			this.splitContainer7.Panel2.AutoScroll = true;
 			this.splitContainer7.Panel2.AutoScrollMinSize = new System.Drawing.Size(150, 0);
+			this.splitContainer7.Panel2.Controls.Add(this.BTN_AmmoConfig_Details_Delete);
 			this.splitContainer7.Panel2.Controls.Add(this.BTN_AmmoConfig_Details_New);
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Model);
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Icon);
@@ -3643,7 +3863,7 @@ namespace SEConfigTool
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Id);
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Capacity);
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Name);
-			this.splitContainer7.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer7.Size = new System.Drawing.Size(722, 363);
 			this.splitContainer7.SplitterDistance = 150;
 			this.splitContainer7.TabIndex = 4;
 			// 
@@ -3727,6 +3947,18 @@ namespace SEConfigTool
 			this.LBL_AmmoConfig_Details_Caliber.Size = new System.Drawing.Size(42, 13);
 			this.LBL_AmmoConfig_Details_Caliber.TabIndex = 2;
 			this.LBL_AmmoConfig_Details_Caliber.Text = "Caliber:";
+			// 
+			// BTN_AmmoConfig_Details_Delete
+			// 
+			this.BTN_AmmoConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_AmmoConfig_Details_Delete.Enabled = false;
+			this.BTN_AmmoConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
+			this.BTN_AmmoConfig_Details_Delete.Name = "BTN_AmmoConfig_Details_Delete";
+			this.BTN_AmmoConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_AmmoConfig_Details_Delete.TabIndex = 16;
+			this.BTN_AmmoConfig_Details_Delete.Text = "Delete Item";
+			this.BTN_AmmoConfig_Details_Delete.UseVisualStyleBackColor = false;
+			this.BTN_AmmoConfig_Details_Delete.Click += new System.EventHandler(this.BTN_AmmoConfig_Details_Delete_Click);
 			// 
 			// BTN_AmmoConfig_Details_New
 			// 
@@ -3828,7 +4060,7 @@ namespace SEConfigTool
 			this.TAB_BlocksConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_BlocksConfig_Page.Name = "TAB_BlocksConfig_Page";
 			this.TAB_BlocksConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_BlocksConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_BlocksConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_BlocksConfig_Page.TabIndex = 1;
 			this.TAB_BlocksConfig_Page.Text = "Blocks";
 			this.TAB_BlocksConfig_Page.UseVisualStyleBackColor = true;
@@ -3849,7 +4081,7 @@ namespace SEConfigTool
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.GRP_BlocksConfig);
-			this.splitContainer3.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer3.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer3.SplitterDistance = 25;
 			this.splitContainer3.TabIndex = 1;
 			// 
@@ -3879,7 +4111,7 @@ namespace SEConfigTool
 			this.GRP_BlocksConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_BlocksConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_BlocksConfig.Name = "GRP_BlocksConfig";
-			this.GRP_BlocksConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_BlocksConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_BlocksConfig.TabIndex = 2;
 			this.GRP_BlocksConfig.TabStop = false;
 			this.GRP_BlocksConfig.Text = "Blocks";
@@ -3898,7 +4130,7 @@ namespace SEConfigTool
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.GRP_BlocksConfig_Details);
-			this.splitContainer2.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer2.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer2.SplitterDistance = 200;
 			this.splitContainer2.TabIndex = 1;
 			// 
@@ -3920,7 +4152,7 @@ namespace SEConfigTool
 			this.GRP_BlocksConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_BlocksConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_BlocksConfig_Details.Name = "GRP_BlocksConfig_Details";
-			this.GRP_BlocksConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_BlocksConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_BlocksConfig_Details.TabIndex = 3;
 			this.GRP_BlocksConfig_Details.TabStop = false;
 			this.GRP_BlocksConfig_Details.Text = "Selected Item Details";
@@ -3946,13 +4178,15 @@ namespace SEConfigTool
 			// 
 			this.splitContainer4.Panel2.AutoScroll = true;
 			this.splitContainer4.Panel2.AutoScrollMinSize = new System.Drawing.Size(150, 0);
+			this.splitContainer4.Panel2.Controls.Add(this.BTN_BlocksConfig_Details_New);
+			this.splitContainer4.Panel2.Controls.Add(this.BTN_BlocksConfig_Details_Delete);
 			this.splitContainer4.Panel2.Controls.Add(this.DGV_BlocksConfig_Details_Components);
 			this.splitContainer4.Panel2.Controls.Add(this.BTN_BlocksConfig_Details_Apply);
 			this.splitContainer4.Panel2.Controls.Add(this.TXT_BlocksConfig_Details_Id);
 			this.splitContainer4.Panel2.Controls.Add(this.TXT_BlocksConfig_Details_DisassembleRatio);
 			this.splitContainer4.Panel2.Controls.Add(this.TXT_BlocksConfig_Details_Name);
 			this.splitContainer4.Panel2.Controls.Add(this.TXT_BlocksConfig_Details_BuildTime);
-			this.splitContainer4.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer4.Size = new System.Drawing.Size(722, 363);
 			this.splitContainer4.SplitterDistance = 150;
 			this.splitContainer4.TabIndex = 4;
 			// 
@@ -4012,6 +4246,28 @@ namespace SEConfigTool
 			this.LBL_BlocksConfig_Details_BuildTime.TabIndex = 2;
 			this.LBL_BlocksConfig_Details_BuildTime.Text = "Build Time:";
 			// 
+			// BTN_BlocksConfig_Details_New
+			// 
+			this.BTN_BlocksConfig_Details_New.Location = new System.Drawing.Point(3, 337);
+			this.BTN_BlocksConfig_Details_New.Name = "BTN_BlocksConfig_Details_New";
+			this.BTN_BlocksConfig_Details_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_BlocksConfig_Details_New.TabIndex = 16;
+			this.BTN_BlocksConfig_Details_New.Text = "New";
+			this.BTN_BlocksConfig_Details_New.UseVisualStyleBackColor = true;
+			this.BTN_BlocksConfig_Details_New.Click += new System.EventHandler(this.BTN_BlocksConfig_Details_New_Click);
+			// 
+			// BTN_BlocksConfig_Details_Delete
+			// 
+			this.BTN_BlocksConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_BlocksConfig_Details_Delete.Enabled = false;
+			this.BTN_BlocksConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
+			this.BTN_BlocksConfig_Details_Delete.Name = "BTN_BlocksConfig_Details_Delete";
+			this.BTN_BlocksConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_BlocksConfig_Details_Delete.TabIndex = 14;
+			this.BTN_BlocksConfig_Details_Delete.Text = "Delete Item";
+			this.BTN_BlocksConfig_Details_Delete.UseVisualStyleBackColor = false;
+			this.BTN_BlocksConfig_Details_Delete.Click += new System.EventHandler(this.BTN_BlocksConfig_Details_Delete_Click);
+			// 
 			// DGV_BlocksConfig_Details_Components
 			// 
 			this.DGV_BlocksConfig_Details_Components.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -4023,7 +4279,7 @@ namespace SEConfigTool
 			// BTN_BlocksConfig_Details_Apply
 			// 
 			this.BTN_BlocksConfig_Details_Apply.Enabled = false;
-			this.BTN_BlocksConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
+			this.BTN_BlocksConfig_Details_Apply.Location = new System.Drawing.Point(53, 337);
 			this.BTN_BlocksConfig_Details_Apply.Name = "BTN_BlocksConfig_Details_Apply";
 			this.BTN_BlocksConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_BlocksConfig_Details_Apply.TabIndex = 8;
@@ -4069,7 +4325,7 @@ namespace SEConfigTool
 			this.TAB_SaveGamePage_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SaveGamePage_Page.Name = "TAB_SaveGamePage_Page";
 			this.TAB_SaveGamePage_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SaveGamePage_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_SaveGamePage_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_SaveGamePage_Page.TabIndex = 0;
 			this.TAB_SaveGamePage_Page.Text = "Saved Game";
 			this.TAB_SaveGamePage_Page.UseVisualStyleBackColor = true;
@@ -4090,7 +4346,7 @@ namespace SEConfigTool
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.GRP_SavedGame);
-			this.splitContainer1.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer1.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer1.SplitterDistance = 26;
 			this.splitContainer1.TabIndex = 1;
 			// 
@@ -4120,7 +4376,7 @@ namespace SEConfigTool
 			this.GRP_SavedGame.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_SavedGame.Location = new System.Drawing.Point(0, 0);
 			this.GRP_SavedGame.Name = "GRP_SavedGame";
-			this.GRP_SavedGame.Size = new System.Drawing.Size(796, 400);
+			this.GRP_SavedGame.Size = new System.Drawing.Size(938, 400);
 			this.GRP_SavedGame.TabIndex = 1;
 			this.GRP_SavedGame.TabStop = false;
 			this.GRP_SavedGame.Text = "Sector";
@@ -4134,7 +4390,7 @@ namespace SEConfigTool
 			this.TAB_SavedGame_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_SavedGame_Details.Name = "TAB_SavedGame_Details";
 			this.TAB_SavedGame_Details.SelectedIndex = 0;
-			this.TAB_SavedGame_Details.Size = new System.Drawing.Size(790, 381);
+			this.TAB_SavedGame_Details.Size = new System.Drawing.Size(932, 381);
 			this.TAB_SavedGame_Details.TabIndex = 1;
 			// 
 			// TAB_SavedGame_Properties_Page
@@ -4143,7 +4399,7 @@ namespace SEConfigTool
 			this.TAB_SavedGame_Properties_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SavedGame_Properties_Page.Name = "TAB_SavedGame_Properties_Page";
 			this.TAB_SavedGame_Properties_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SavedGame_Properties_Page.Size = new System.Drawing.Size(782, 355);
+			this.TAB_SavedGame_Properties_Page.Size = new System.Drawing.Size(924, 355);
 			this.TAB_SavedGame_Properties_Page.TabIndex = 0;
 			this.TAB_SavedGame_Properties_Page.Text = "Properties";
 			this.TAB_SavedGame_Properties_Page.UseVisualStyleBackColor = true;
@@ -4165,7 +4421,7 @@ namespace SEConfigTool
 			// 
 			this.splitContainer35.Panel2.Controls.Add(this.TXT_SavedGame_Properties_AppVersion);
 			this.splitContainer35.Panel2.Controls.Add(this.TXT_SavedGame_Properties_Position);
-			this.splitContainer35.Size = new System.Drawing.Size(776, 349);
+			this.splitContainer35.Size = new System.Drawing.Size(918, 349);
 			this.splitContainer35.SplitterDistance = 150;
 			this.splitContainer35.TabIndex = 0;
 			// 
@@ -4442,6 +4698,18 @@ namespace SEConfigTool
 			this.LBL_Sector_Objects_Field1.Text = "Dynamic Field 1:";
 			this.LBL_Sector_Objects_Field1.Visible = false;
 			// 
+			// BTN_Sector_Objects_Delete
+			// 
+			this.BTN_Sector_Objects_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_Sector_Objects_Delete.Enabled = false;
+			this.BTN_Sector_Objects_Delete.Location = new System.Drawing.Point(3, 294);
+			this.BTN_Sector_Objects_Delete.Name = "BTN_Sector_Objects_Delete";
+			this.BTN_Sector_Objects_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_Sector_Objects_Delete.TabIndex = 13;
+			this.BTN_Sector_Objects_Delete.Text = "Delete Item";
+			this.BTN_Sector_Objects_Delete.UseVisualStyleBackColor = false;
+			this.BTN_Sector_Objects_Delete.Click += new System.EventHandler(this.BTN_Sector_Objects_Delete_Click);
+			// 
 			// CMB_Sector_Objects_Field1
 			// 
 			this.CMB_Sector_Objects_Field1.FormattingEnabled = true;
@@ -4546,7 +4814,7 @@ namespace SEConfigTool
 			this.TAB_LayoutPages.Location = new System.Drawing.Point(0, 0);
 			this.TAB_LayoutPages.Name = "TAB_LayoutPages";
 			this.TAB_LayoutPages.SelectedIndex = 0;
-			this.TAB_LayoutPages.Size = new System.Drawing.Size(810, 462);
+			this.TAB_LayoutPages.Size = new System.Drawing.Size(952, 462);
 			this.TAB_LayoutPages.TabIndex = 0;
 			// 
 			// TAB_TransparentMaterialsConfig_Page
@@ -4555,7 +4823,7 @@ namespace SEConfigTool
 			this.TAB_TransparentMaterialsConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_TransparentMaterialsConfig_Page.Name = "TAB_TransparentMaterialsConfig_Page";
 			this.TAB_TransparentMaterialsConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_TransparentMaterialsConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_TransparentMaterialsConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_TransparentMaterialsConfig_Page.TabIndex = 14;
 			this.TAB_TransparentMaterialsConfig_Page.Text = "Transparent Materials";
 			this.TAB_TransparentMaterialsConfig_Page.UseVisualStyleBackColor = true;
@@ -4576,7 +4844,7 @@ namespace SEConfigTool
 			// splitContainer41.Panel2
 			// 
 			this.splitContainer41.Panel2.Controls.Add(this.GRP_TransparentMaterialsConfig);
-			this.splitContainer41.Size = new System.Drawing.Size(796, 430);
+			this.splitContainer41.Size = new System.Drawing.Size(938, 430);
 			this.splitContainer41.SplitterDistance = 25;
 			this.splitContainer41.TabIndex = 5;
 			// 
@@ -4606,7 +4874,7 @@ namespace SEConfigTool
 			this.GRP_TransparentMaterialsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_TransparentMaterialsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_TransparentMaterialsConfig.Name = "GRP_TransparentMaterialsConfig";
-			this.GRP_TransparentMaterialsConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_TransparentMaterialsConfig.Size = new System.Drawing.Size(938, 401);
 			this.GRP_TransparentMaterialsConfig.TabIndex = 2;
 			this.GRP_TransparentMaterialsConfig.TabStop = false;
 			this.GRP_TransparentMaterialsConfig.Text = "Transparent Materials";
@@ -4626,7 +4894,7 @@ namespace SEConfigTool
 			// splitContainer46.Panel2
 			// 
 			this.splitContainer46.Panel2.Controls.Add(this.GRP_TransparentMaterialsConfig_Details);
-			this.splitContainer46.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer46.Size = new System.Drawing.Size(932, 382);
 			this.splitContainer46.SplitterDistance = 200;
 			this.splitContainer46.TabIndex = 1;
 			// 
@@ -4646,7 +4914,7 @@ namespace SEConfigTool
 			this.GRP_TransparentMaterialsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_TransparentMaterialsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_TransparentMaterialsConfig_Details.Name = "GRP_TransparentMaterialsConfig_Details";
-			this.GRP_TransparentMaterialsConfig_Details.Size = new System.Drawing.Size(586, 382);
+			this.GRP_TransparentMaterialsConfig_Details.Size = new System.Drawing.Size(728, 382);
 			this.GRP_TransparentMaterialsConfig_Details.TabIndex = 1;
 			this.GRP_TransparentMaterialsConfig_Details.TabStop = false;
 			this.GRP_TransparentMaterialsConfig_Details.Text = "Selected Item Details";
@@ -4674,6 +4942,8 @@ namespace SEConfigTool
 			// 
 			// splitContainer47.Panel2
 			// 
+			this.splitContainer47.Panel2.Controls.Add(this.BTN_TransparentMaterialConfig_Details_Delete);
+			this.splitContainer47.Panel2.Controls.Add(this.BTN_TransparentMaterialConfig_Details_New);
 			this.splitContainer47.Panel2.Controls.Add(this.TXT_TransparentMaterialConfig_Details_UVSize_Y);
 			this.splitContainer47.Panel2.Controls.Add(this.TXT_TransparentMaterialConfig_Details_UVSize_X);
 			this.splitContainer47.Panel2.Controls.Add(this.TXT_TransparentMaterialConfig_Details_UVOffset_Y);
@@ -4683,7 +4953,7 @@ namespace SEConfigTool
 			this.splitContainer47.Panel2.Controls.Add(this.TXT_TransparentMaterialConfig_Details_Emissivity);
 			this.splitContainer47.Panel2.Controls.Add(this.TXT_TransparentMaterialConfig_Details_Name);
 			this.splitContainer47.Panel2.Controls.Add(this.BTN_TransparentMaterialConfig_Details_Apply);
-			this.splitContainer47.Size = new System.Drawing.Size(580, 363);
+			this.splitContainer47.Size = new System.Drawing.Size(722, 363);
 			this.splitContainer47.SplitterDistance = 190;
 			this.splitContainer47.TabIndex = 4;
 			// 
@@ -4785,6 +5055,16 @@ namespace SEConfigTool
 			this.LBL_TransparentMaterialConfig_Name.TabIndex = 7;
 			this.LBL_TransparentMaterialConfig_Name.Text = "Name:";
 			// 
+			// BTN_TransparentMaterialConfig_Details_New
+			// 
+			this.BTN_TransparentMaterialConfig_Details_New.Location = new System.Drawing.Point(3, 337);
+			this.BTN_TransparentMaterialConfig_Details_New.Name = "BTN_TransparentMaterialConfig_Details_New";
+			this.BTN_TransparentMaterialConfig_Details_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_TransparentMaterialConfig_Details_New.TabIndex = 26;
+			this.BTN_TransparentMaterialConfig_Details_New.Text = "New";
+			this.BTN_TransparentMaterialConfig_Details_New.UseVisualStyleBackColor = true;
+			this.BTN_TransparentMaterialConfig_Details_New.Click += new System.EventHandler(this.BTN_TransparentMaterialConfig_Details_New_Click);
+			// 
 			// TXT_TransparentMaterialConfig_Details_UVSize_Y
 			// 
 			this.TXT_TransparentMaterialConfig_Details_UVSize_Y.Location = new System.Drawing.Point(81, 237);
@@ -4852,7 +5132,7 @@ namespace SEConfigTool
 			// BTN_TransparentMaterialConfig_Details_Apply
 			// 
 			this.BTN_TransparentMaterialConfig_Details_Apply.Enabled = false;
-			this.BTN_TransparentMaterialConfig_Details_Apply.Location = new System.Drawing.Point(28, 337);
+			this.BTN_TransparentMaterialConfig_Details_Apply.Location = new System.Drawing.Point(53, 337);
 			this.BTN_TransparentMaterialConfig_Details_Apply.Name = "BTN_TransparentMaterialConfig_Details_Apply";
 			this.BTN_TransparentMaterialConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
 			this.BTN_TransparentMaterialConfig_Details_Apply.TabIndex = 8;
@@ -4867,7 +5147,7 @@ namespace SEConfigTool
 			this.TAB_ConfigurationConfig_Page.Controls.Add(this.GRP_ConfigurationConfig);
 			this.TAB_ConfigurationConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ConfigurationConfig_Page.Name = "TAB_ConfigurationConfig_Page";
-			this.TAB_ConfigurationConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_ConfigurationConfig_Page.Size = new System.Drawing.Size(944, 436);
 			this.TAB_ConfigurationConfig_Page.TabIndex = 15;
 			this.TAB_ConfigurationConfig_Page.Text = "Configuration";
 			this.TAB_ConfigurationConfig_Page.UseVisualStyleBackColor = true;
@@ -5018,23 +5298,100 @@ namespace SEConfigTool
 			this.BTN_ConfigurationConfig_Apply.Text = "Apply changes";
 			this.BTN_ConfigurationConfig_Apply.UseVisualStyleBackColor = true;
 			// 
-			// BTN_Sector_Objects_Delete
+			// BTN_TransparentMaterialConfig_Details_Delete
 			// 
-			this.BTN_Sector_Objects_Delete.BackColor = System.Drawing.Color.Transparent;
-			this.BTN_Sector_Objects_Delete.Enabled = false;
-			this.BTN_Sector_Objects_Delete.Location = new System.Drawing.Point(3, 294);
-			this.BTN_Sector_Objects_Delete.Name = "BTN_Sector_Objects_Delete";
-			this.BTN_Sector_Objects_Delete.Size = new System.Drawing.Size(150, 23);
-			this.BTN_Sector_Objects_Delete.TabIndex = 13;
-			this.BTN_Sector_Objects_Delete.Text = "Delete Item";
-			this.BTN_Sector_Objects_Delete.UseVisualStyleBackColor = false;
-			this.BTN_Sector_Objects_Delete.Click += new System.EventHandler(this.BTN_Sector_Objects_Delete_Click);
+			this.BTN_TransparentMaterialConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_TransparentMaterialConfig_Details_Delete.Enabled = false;
+			this.BTN_TransparentMaterialConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
+			this.BTN_TransparentMaterialConfig_Details_Delete.Name = "BTN_TransparentMaterialConfig_Details_Delete";
+			this.BTN_TransparentMaterialConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_TransparentMaterialConfig_Details_Delete.TabIndex = 28;
+			this.BTN_TransparentMaterialConfig_Details_Delete.Text = "Delete Item";
+			this.BTN_TransparentMaterialConfig_Details_Delete.UseVisualStyleBackColor = false;
+			this.BTN_TransparentMaterialConfig_Details_Delete.Click += new System.EventHandler(this.BTN_TransparentMaterialConfig_Details_Delete_Click);
+			// 
+			// BTN_ScenarioConfig_Details_Info_New
+			// 
+			this.BTN_ScenarioConfig_Details_Info_New.Location = new System.Drawing.Point(3, 305);
+			this.BTN_ScenarioConfig_Details_Info_New.Name = "BTN_ScenarioConfig_Details_Info_New";
+			this.BTN_ScenarioConfig_Details_Info_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_ScenarioConfig_Details_Info_New.TabIndex = 22;
+			this.BTN_ScenarioConfig_Details_Info_New.Text = "New";
+			this.BTN_ScenarioConfig_Details_Info_New.UseVisualStyleBackColor = true;
+			this.BTN_ScenarioConfig_Details_Info_New.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Info_New_Click);
+			// 
+			// BTN_ScenarioConfig_Details_Info_Apply
+			// 
+			this.BTN_ScenarioConfig_Details_Info_Apply.Enabled = false;
+			this.BTN_ScenarioConfig_Details_Info_Apply.Location = new System.Drawing.Point(53, 305);
+			this.BTN_ScenarioConfig_Details_Info_Apply.Name = "BTN_ScenarioConfig_Details_Info_Apply";
+			this.BTN_ScenarioConfig_Details_Info_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_ScenarioConfig_Details_Info_Apply.TabIndex = 23;
+			this.BTN_ScenarioConfig_Details_Info_Apply.Text = "Apply changes";
+			this.BTN_ScenarioConfig_Details_Info_Apply.UseVisualStyleBackColor = true;
+			this.BTN_ScenarioConfig_Details_Info_Apply.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Info_Apply_Click);
+			// 
+			// BTN_ScenarioConfig_Details_Info_Delete
+			// 
+			this.BTN_ScenarioConfig_Details_Info_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_ScenarioConfig_Details_Info_Delete.Enabled = false;
+			this.BTN_ScenarioConfig_Details_Info_Delete.Location = new System.Drawing.Point(3, 276);
+			this.BTN_ScenarioConfig_Details_Info_Delete.Name = "BTN_ScenarioConfig_Details_Info_Delete";
+			this.BTN_ScenarioConfig_Details_Info_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_ScenarioConfig_Details_Info_Delete.TabIndex = 28;
+			this.BTN_ScenarioConfig_Details_Info_Delete.Text = "Delete Item";
+			this.BTN_ScenarioConfig_Details_Info_Delete.UseVisualStyleBackColor = false;
+			this.BTN_ScenarioConfig_Details_Info_Delete.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Info_Delete_Click);
+			// 
+			// BTN_ScenarioConfig_Details_StartingStates_New
+			// 
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Location = new System.Drawing.Point(3, 305);
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Name = "BTN_ScenarioConfig_Details_StartingStates_New";
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_ScenarioConfig_Details_StartingStates_New.TabIndex = 24;
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Text = "New";
+			this.BTN_ScenarioConfig_Details_StartingStates_New.UseVisualStyleBackColor = true;
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_StartingStates_New_Click);
+			// 
+			// BTN_ScenarioConfig_Details_StartingStates_Delete
+			// 
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Enabled = false;
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Location = new System.Drawing.Point(3, 276);
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Name = "BTN_ScenarioConfig_Details_StartingStates_Delete";
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.TabIndex = 30;
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Text = "Delete Item";
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.UseVisualStyleBackColor = false;
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_StartingStates_Delete_Click);
+			// 
+			// BTN_ScenariosConfig_Details_GeneratorOperations_New
+			// 
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Location = new System.Drawing.Point(3, 308);
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Name = "BTN_ScenariosConfig_Details_GeneratorOperations_New";
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.TabIndex = 25;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Text = "New";
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.UseVisualStyleBackColor = true;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Click += new System.EventHandler(this.BTN_ScenariosConfig_Details_GeneratorOperations_New_Click);
+			// 
+			// BTN_ScenariosConfig_Details_GeneratorOperations_Delete
+			// 
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Enabled = false;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Location = new System.Drawing.Point(3, 279);
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Name = "BTN_ScenariosConfig_Details_GeneratorOperations_Delete";
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.TabIndex = 31;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Text = "Delete Item";
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.UseVisualStyleBackColor = false;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Click += new System.EventHandler(this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete_Click);
 			// 
 			// SEConfigTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(810, 487);
+			this.ClientSize = new System.Drawing.Size(952, 487);
 			this.Controls.Add(this.STS_Status);
 			this.Controls.Add(this.TAB_LayoutPages);
 			this.Name = "SEConfigTool";
@@ -5740,6 +6097,33 @@ namespace SEConfigTool
 		private System.Windows.Forms.Button BTN_Sector_Objects_Apply;
 		private System.Windows.Forms.ComboBox CMB_Sector_Objects_Field1;
 		private System.Windows.Forms.Button BTN_Sector_Objects_Delete;
+		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Details_Info_New;
+		private System.Windows.Forms.Button BTN_ContainerTypesConfig_Details_Delete;
+		private System.Windows.Forms.Button BTN_AmmoConfig_Details_Delete;
+		private System.Windows.Forms.Button BTN_BlocksConfig_Details_New;
+		private System.Windows.Forms.Button BTN_BlocksConfig_Details_Delete;
+		private System.Windows.Forms.Button BTN_GlobalEventConfig_Details_Delete;
+		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Details_Info_Delete;
+		private System.Windows.Forms.Button BTN_PhysicalItemConfig_Details_Delete;
+		private System.Windows.Forms.Button BTN_ComponentConfig_Details_Delete;
+		private System.Windows.Forms.Button BTN_ContainerTypeConfig_Items_Delete;
+		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Details_Prefabs_New;
+		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Details_Prefabs_Delete;
+		private System.Windows.Forms.Button BTN_BlueprintConfig_Details_Result_Delete;
+		private System.Windows.Forms.Button BTN_BlueprintConfig_Details_Result_New;
+		private System.Windows.Forms.Button BTN_BlueprintConfig_Details_Prerequisites_Delete;
+		private System.Windows.Forms.Button BTN_BlueprintConfig_Details_Prerequisites_New;
+		private System.Windows.Forms.Button BTN_VoxelMaterialsConfig_Details_Delete;
+		private System.Windows.Forms.Button BTN_VoxelMaterialsConfig_Details_New;
+		private System.Windows.Forms.Button BTN_TransparentMaterialConfig_Details_New;
+		private System.Windows.Forms.Button BTN_TransparentMaterialConfig_Details_Delete;
+		private System.Windows.Forms.Button BTN_ScenarioConfig_Details_Info_Delete;
+		private System.Windows.Forms.Button BTN_ScenarioConfig_Details_Info_Apply;
+		private System.Windows.Forms.Button BTN_ScenarioConfig_Details_Info_New;
+		private System.Windows.Forms.Button BTN_ScenarioConfig_Details_StartingStates_Delete;
+		private System.Windows.Forms.Button BTN_ScenarioConfig_Details_StartingStates_New;
+		private System.Windows.Forms.Button BTN_ScenariosConfig_Details_GeneratorOperations_Delete;
+		private System.Windows.Forms.Button BTN_ScenariosConfig_Details_GeneratorOperations_New;
 
     }
 }
