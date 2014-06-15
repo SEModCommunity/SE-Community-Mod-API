@@ -110,6 +110,5 @@ namespace SEModAPI.API.Definitions
 	}
 
 	public class PhysicalItemDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_PhysicalItemDefinition, PhysicalItemsDefinition>
-	{
-	}
+	{}
 }
