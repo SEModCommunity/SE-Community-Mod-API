@@ -103,6 +103,7 @@ namespace SEConfigTool
 			TXT_SavedGame_Properties_Position.Text = sector.Position.ToString();
 			TXT_SavedGame_Properties_AppVersion.Text = sector.AppVersion.ToString();
 
+			LST_SavedGame_Events.Items.Clear();
 			foreach (Event currentEvent in sector.Events)
 			{
 				LST_SavedGame_Events.Items.Add(currentEvent.Name);
@@ -118,6 +119,8 @@ namespace SEConfigTool
 			TRV_SavedGame_Objects.Nodes.Add("Meteors");
 			TRV_SavedGame_Objects.Nodes.Add("Unknown");
 
+			#region CubeGrids
+
 			//Add the cube grids
 			foreach (CubeGrid cubeGrid in sector.CubeGrids)
 			{
@@ -127,14 +130,17 @@ namespace SEConfigTool
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-				TreeNode newNode = TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.EntityId.ToString(), cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				TreeNode newNode = TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.EntityId.ToString(), cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m");
 				newNode.Tag = cubeGrid;
 
 				//Create the cube grid sub-item categories
 				TreeNode blocksNode = newNode.Nodes.Add("Cube Blocks (" + cubeGrid.CubeBlocks.Count.ToString() + ")");
-				newNode.Nodes.Add("Conveyor Lines (" + cubeGrid.ConveyorLines.Count.ToString() + ")");
-				newNode.Nodes.Add("Block Groups (" + cubeGrid.BlockGroups.Count.ToString() + ")");
+				TreeNode conveyorLinesNode = newNode.Nodes.Add("Conveyor Lines (" + cubeGrid.ConveyorLines.Count.ToString() + ")");
+				TreeNode blockGroupsNode = newNode.Nodes.Add("Block Groups (" + cubeGrid.BlockGroups.Count.ToString() + ")");
 
+				#region CubeBlocks
+
+				//Create the cube block categories
 				TreeNode structuralBlocksNode = blocksNode.Nodes.Add("Structural");
 				TreeNode containerBlocksNode = blocksNode.Nodes.Add("Containers");
 				TreeNode productionBlocksNode = blocksNode.Nodes.Add("Refinement and Production");
@@ -147,7 +153,6 @@ namespace SEConfigTool
 				foreach (var cubeBlockObject in cubeGrid.CubeBlocks)
 				{
 					TreeNode blockNode = null;
-					InventoryEntity blockInventory = null;
 
 					Type cubeType = cubeBlockObject.GetType();
 
@@ -192,17 +197,27 @@ namespace SEConfigTool
 					if (cubeType.IsAssignableFrom(typeof(CargoContainerEntity)))
 					{
 						CargoContainerEntity cargoContainer = (CargoContainerEntity)cubeBlockObject;
-						blockInventory = cargoContainer.Inventory;
 
 						blockNode = containerBlocksNode.Nodes.Add(cargoContainer.EntityId.ToString(), cargoContainer.Name);
+
+						foreach (var item in cargoContainer.Inventory.Items)
+						{
+							TreeNode itemNode = blockNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.Amount.ToString());
+							itemNode.Tag = item;
+						}
 					}
 					
 					if (cubeType.IsAssignableFrom(typeof(ReactorEntity)))
 					{
 						ReactorEntity reactorBlock = (ReactorEntity)cubeBlockObject;
-						blockInventory = reactorBlock.Inventory;
 
 						blockNode = energyBlocksNode.Nodes.Add(reactorBlock.EntityId.ToString(), reactorBlock.Name);
+
+						foreach (var item in reactorBlock.Inventory.Items)
+						{
+							TreeNode itemNode = blockNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.Amount.ToString());
+							itemNode.Tag = item;
+						}
 					}
 
 					if (cubeType.IsAssignableFrom(typeof(MedicalRoomEntity)))
@@ -216,16 +231,18 @@ namespace SEConfigTool
 						continue;
 
 					blockNode.Tag = cubeBlockObject;
-
-					if (blockInventory != null)
-					{
-						foreach (var item in blockInventory.Items)
-						{
-							blockNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.Amount.ToString());
-						}
-					}
 				}
+
+				#endregion
+
+				#region ConveyorLines
+				#endregion
+
+				#region BlockGroups
+				#endregion
 			}
+
+			#endregion
 
 			//Add the voxel maps
 			foreach (VoxelMap voxelMap in sector.VoxelMaps)
@@ -280,6 +297,8 @@ namespace SEConfigTool
 			stopWatch.Stop();
 			TLS_StatusLabel.Text = "Done in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 			BTN_SavedGame_Events_Apply.Enabled = false;
+
+			MessageBox.Show(this, "Sector loaded successfully in " + stopWatch.ElapsedMilliseconds.ToString() + "ms!");
 		}
 
 		private void FillBlocksConfigurationListBox()
@@ -491,7 +510,7 @@ namespace SEConfigTool
 
 		#region SavedGame
 
-		private void BTN_LoadSaveGame_Click(object sender, EventArgs e)
+		private void BTN_SavedGame_Load_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog openFileDialog = new OpenFileDialog
 			{
@@ -518,7 +537,15 @@ namespace SEConfigTool
 
 		private void BTN_SavedGame_Save_Click(object sender, EventArgs e)
 		{
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
 			m_sectorManager.Save();
+
+			stopWatch.Stop();
+			TLS_StatusLabel.Text = "Done in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
+
+			MessageBox.Show(this, "Sector saved successfully in " + stopWatch.ElapsedMilliseconds.ToString() + "ms!");
 		}
 
 		private void BTN_SavedGame_Events_Apply_Click(object sender, EventArgs e)
@@ -566,11 +593,17 @@ namespace SEConfigTool
 			TXT_Sector_Objects_Field4.Visible = false;
 			TXT_Sector_Objects_Field5.Visible = false;
 
+			CMB_Sector_Objects_Field1.Visible = false;
+
 			TXT_Sector_Objects_Field1.Enabled = false;
 			TXT_Sector_Objects_Field2.Enabled = false;
 			TXT_Sector_Objects_Field3.Enabled = false;
 			TXT_Sector_Objects_Field4.Enabled = false;
 			TXT_Sector_Objects_Field5.Enabled = false;
+
+			BTN_Sector_Objects_New.Enabled = false;
+			BTN_Sector_Objects_Apply.Enabled = false;
+			BTN_Sector_Objects_Delete.Enabled = false;
 
 			TXT_Sector_Objects_Field1.ReadOnly = true;
 			TXT_Sector_Objects_Field2.ReadOnly = true;
@@ -578,11 +611,7 @@ namespace SEConfigTool
 			TXT_Sector_Objects_Field4.ReadOnly = true;
 			TXT_Sector_Objects_Field5.ReadOnly = true;
 
-			BTN_Sector_Objects_New.Visible = false;
-			BTN_Sector_Objects_Apply.Visible = false;
-
-			BTN_Sector_Objects_New.Enabled = false;
-			BTN_Sector_Objects_Apply.Enabled = false;
+			CMB_Sector_Objects_Field1.Items.Clear();
 
 			var linkedObject = e.Node.Tag;
 			if (linkedObject == null)
@@ -683,8 +712,6 @@ namespace SEConfigTool
 				TXT_Sector_Objects_Field2.Visible = true;
 				TXT_Sector_Objects_Field3.Visible = true;
 
-				BTN_Sector_Objects_Apply.Visible = true;
-
 				TXT_Sector_Objects_Field3.Enabled = true;
 				TXT_Sector_Objects_Field3.ReadOnly = false;
 
@@ -714,10 +741,60 @@ namespace SEConfigTool
 				TXT_Sector_Objects_Field2.Text = cubeGrid.EntityId.ToString();
 			}
 
+			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
+			{
+				InventoryItemEntity item = (InventoryItemEntity)linkedObject;
+
+				LBL_Sector_Objects_Field1.Visible = true;
+				LBL_Sector_Objects_Field2.Visible = true;
+
+				TXT_Sector_Objects_Field2.Visible = true;
+
+				CMB_Sector_Objects_Field1.Visible = true;
+
+				BTN_Sector_Objects_New.Enabled = true;
+				BTN_Sector_Objects_Delete.Enabled = true;
+
+				TXT_Sector_Objects_Field2.Enabled = true;
+				TXT_Sector_Objects_Field2.ReadOnly = false;
+
+				LBL_Sector_Objects_Field1.Text = "Type:";
+				LBL_Sector_Objects_Field2.Text = "Amount:";
+
+				//Add all physical items, components, and ammo to the combo box
+				CMB_Sector_Objects_Field1.Items.Clear();
+				foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
+				{
+					CMB_Sector_Objects_Field1.Items.Add(itemType.Id);
+				}
+				foreach (var itemType in m_componentsDefinitionsManager.Definitions)
+				{
+					CMB_Sector_Objects_Field1.Items.Add(itemType.Id);
+				}
+				foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
+				{
+					CMB_Sector_Objects_Field1.Items.Add(itemType.Id);
+				}
+
+				//Select the matching type/subtype item in the list
+				SerializableDefinitionId itemTypeId = new SerializableDefinitionId(item.PhysicalContent.TypeId, item.PhysicalContent.SubtypeName);
+				CMB_Sector_Objects_Field1.SelectedItem = itemTypeId;
+
+				TXT_Sector_Objects_Field2.Text = item.Amount.ToString();
+			}
+
 			m_currentlySelecting = false;
 		}
 
 		private void TXT_Sector_Objects_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_Sector_Objects_Apply.Enabled = true;
+			}
+		}
+
+		private void CMB_Sector_Objects_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
@@ -742,12 +819,116 @@ namespace SEConfigTool
 				medicalBlock.SteamUserId = Convert.ToUInt64(TXT_Sector_Objects_Field3.Text, m_numberFormatInfo);
 			}
 
+			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
+			{
+				InventoryItemEntity itemEntity = (InventoryItemEntity)linkedObject;
+
+				//Update the item
+				itemEntity.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject((SerializableDefinitionId)CMB_Sector_Objects_Field1.SelectedItem);
+				itemEntity.Amount = Convert.ToSingle(TXT_Sector_Objects_Field2.Text, m_numberFormatInfo);
+
+				TreeNode parentNode = selectedNode.Parent;
+
+				var linkedContainer = parentNode.Tag;
+				if (linkedContainer == null)
+					return;
+
+				Type linkedContainerType = linkedContainer.GetType();
+
+				if (linkedContainerType.IsAssignableFrom(typeof(CargoContainerEntity)))
+				{
+					CargoContainerEntity containerBlock = (CargoContainerEntity)linkedContainer;
+
+					//Refresh the sub-item list on the container
+					parentNode.Nodes.Clear();
+					foreach (var item in containerBlock.Inventory.Items)
+					{
+						TreeNode itemNode = parentNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.Amount.ToString());
+						itemNode.Tag = item;
+					}
+				}
+			}
+
 			BTN_Sector_Objects_Apply.Enabled = false;
 		}
 
 		private void BTN_Sector_Objects_New_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			TreeNode selectedNode = TRV_SavedGame_Objects.SelectedNode;
+
+			var linkedObject = selectedNode.Tag;
+			if (linkedObject == null)
+				return;
+
+			Type linkedType = linkedObject.GetType();
+
+			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
+			{
+				TreeNode parentNode = selectedNode.Parent;
+
+				var linkedContainer = parentNode.Tag;
+				if (linkedContainer == null)
+					return;
+
+				Type linkedContainerType = linkedContainer.GetType();
+
+				if (linkedContainerType.IsAssignableFrom(typeof(CargoContainerEntity)))
+				{
+					CargoContainerEntity containerBlock = (CargoContainerEntity)linkedContainer;
+
+					InventoryItemEntity newItem = containerBlock.Inventory.NewEntry();
+					SerializableDefinitionId itemTypeId = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, "SteelPlate");
+					newItem.PhysicalContent = (MyObjectBuilder_PhysicalObject) MyObjectBuilder_PhysicalObject.CreateNewObject(itemTypeId);
+					newItem.Amount = 1;
+
+					parentNode.Nodes.Clear();
+					foreach (var item in containerBlock.Inventory.Items)
+					{
+						TreeNode itemNode = parentNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.Amount.ToString());
+						itemNode.Tag = item;
+					}
+				}
+			}
+		}
+
+		private void BTN_Sector_Objects_Delete_Click(object sender, EventArgs e)
+		{
+			TreeNode selectedNode = TRV_SavedGame_Objects.SelectedNode;
+
+			var linkedObject = selectedNode.Tag;
+			if (linkedObject == null)
+				return;
+
+			Type linkedType = linkedObject.GetType();
+
+			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
+			{
+				InventoryItemEntity itemEntity = (InventoryItemEntity)linkedObject;
+
+				TreeNode parentNode = selectedNode.Parent;
+
+				var linkedContainer = parentNode.Tag;
+				if (linkedContainer == null)
+					return;
+
+				Type linkedContainerType = linkedContainer.GetType();
+
+				if (linkedContainerType.IsAssignableFrom(typeof(CargoContainerEntity)))
+				{
+					CargoContainerEntity containerBlock = (CargoContainerEntity)linkedContainer;
+
+					//Delete the item from the container
+					containerBlock.Inventory.DeleteEntry(itemEntity);
+
+					//Refresh the sub-item list on the container
+					parentNode.Nodes.Clear();
+					foreach (var item in containerBlock.Inventory.Items)
+					{
+						TreeNode itemNode = parentNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.Amount.ToString());
+						itemNode.Tag = item;
+					}
+				}
+			}
 		}
 
 		private void TXT_SavedGame_Events_TextChanged(object sender, EventArgs e)

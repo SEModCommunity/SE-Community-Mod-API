@@ -335,7 +335,7 @@ namespace SEConfigTool
 			this.TAB_SaveGamePage_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.BTN_SavedGame_Save = new System.Windows.Forms.Button();
-			this.BTN_LoadSaveGame = new System.Windows.Forms.Button();
+			this.BTN_SavedGame_Load = new System.Windows.Forms.Button();
 			this.GRP_SavedGame = new System.Windows.Forms.GroupBox();
 			this.TAB_SavedGame_Details = new System.Windows.Forms.TabControl();
 			this.TAB_SavedGame_Properties_Page = new System.Windows.Forms.TabPage();
@@ -363,6 +363,9 @@ namespace SEConfigTool
 			this.LBL_Sector_Objects_Field3 = new System.Windows.Forms.Label();
 			this.LBL_Sector_Objects_Field2 = new System.Windows.Forms.Label();
 			this.LBL_Sector_Objects_Field1 = new System.Windows.Forms.Label();
+			this.CMB_Sector_Objects_Field1 = new System.Windows.Forms.ComboBox();
+			this.BTN_Sector_Objects_New = new System.Windows.Forms.Button();
+			this.BTN_Sector_Objects_Apply = new System.Windows.Forms.Button();
 			this.TXT_Sector_Objects_Field5 = new System.Windows.Forms.TextBox();
 			this.TXT_Sector_Objects_Field4 = new System.Windows.Forms.TextBox();
 			this.TXT_Sector_Objects_Field3 = new System.Windows.Forms.TextBox();
@@ -413,8 +416,7 @@ namespace SEConfigTool
 			this.TXT_ConfigurationConfig_LargeBlockSize = new System.Windows.Forms.TextBox();
 			this.TXT_ConfigurationConfig_SmallBlockSize = new System.Windows.Forms.TextBox();
 			this.BTN_ConfigurationConfig_Apply = new System.Windows.Forms.Button();
-			this.BTN_Sector_Objects_Apply = new System.Windows.Forms.Button();
-			this.BTN_Sector_Objects_New = new System.Windows.Forms.Button();
+			this.BTN_Sector_Objects_Delete = new System.Windows.Forms.Button();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -4083,7 +4085,7 @@ namespace SEConfigTool
 			// splitContainer1.Panel1
 			// 
 			this.splitContainer1.Panel1.Controls.Add(this.BTN_SavedGame_Save);
-			this.splitContainer1.Panel1.Controls.Add(this.BTN_LoadSaveGame);
+			this.splitContainer1.Panel1.Controls.Add(this.BTN_SavedGame_Load);
 			// 
 			// splitContainer1.Panel2
 			// 
@@ -4102,15 +4104,15 @@ namespace SEConfigTool
 			this.BTN_SavedGame_Save.UseVisualStyleBackColor = true;
 			this.BTN_SavedGame_Save.Click += new System.EventHandler(this.BTN_SavedGame_Save_Click);
 			// 
-			// BTN_LoadSaveGame
+			// BTN_SavedGame_Load
 			// 
-			this.BTN_LoadSaveGame.Location = new System.Drawing.Point(4, 1);
-			this.BTN_LoadSaveGame.Name = "BTN_LoadSaveGame";
-			this.BTN_LoadSaveGame.Size = new System.Drawing.Size(100, 23);
-			this.BTN_LoadSaveGame.TabIndex = 0;
-			this.BTN_LoadSaveGame.Text = "Load Sector";
-			this.BTN_LoadSaveGame.UseVisualStyleBackColor = true;
-			this.BTN_LoadSaveGame.Click += new System.EventHandler(this.BTN_LoadSaveGame_Click);
+			this.BTN_SavedGame_Load.Location = new System.Drawing.Point(4, 1);
+			this.BTN_SavedGame_Load.Name = "BTN_SavedGame_Load";
+			this.BTN_SavedGame_Load.Size = new System.Drawing.Size(100, 23);
+			this.BTN_SavedGame_Load.TabIndex = 0;
+			this.BTN_SavedGame_Load.Text = "Load Sector";
+			this.BTN_SavedGame_Load.UseVisualStyleBackColor = true;
+			this.BTN_SavedGame_Load.Click += new System.EventHandler(this.BTN_SavedGame_Load_Click);
 			// 
 			// GRP_SavedGame
 			// 
@@ -4377,6 +4379,8 @@ namespace SEConfigTool
 			// 
 			// splitContainer51.Panel2
 			// 
+			this.splitContainer51.Panel2.Controls.Add(this.BTN_Sector_Objects_Delete);
+			this.splitContainer51.Panel2.Controls.Add(this.CMB_Sector_Objects_Field1);
 			this.splitContainer51.Panel2.Controls.Add(this.BTN_Sector_Objects_New);
 			this.splitContainer51.Panel2.Controls.Add(this.BTN_Sector_Objects_Apply);
 			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field5);
@@ -4437,6 +4441,39 @@ namespace SEConfigTool
 			this.LBL_Sector_Objects_Field1.TabIndex = 5;
 			this.LBL_Sector_Objects_Field1.Text = "Dynamic Field 1:";
 			this.LBL_Sector_Objects_Field1.Visible = false;
+			// 
+			// CMB_Sector_Objects_Field1
+			// 
+			this.CMB_Sector_Objects_Field1.FormattingEnabled = true;
+			this.CMB_Sector_Objects_Field1.Location = new System.Drawing.Point(3, 3);
+			this.CMB_Sector_Objects_Field1.Name = "CMB_Sector_Objects_Field1";
+			this.CMB_Sector_Objects_Field1.Size = new System.Drawing.Size(150, 21);
+			this.CMB_Sector_Objects_Field1.TabIndex = 12;
+			this.CMB_Sector_Objects_Field1.Visible = false;
+			this.CMB_Sector_Objects_Field1.SelectedIndexChanged += new System.EventHandler(this.CMB_Sector_Objects_SelectedIndexChanged);
+			// 
+			// BTN_Sector_Objects_New
+			// 
+			this.BTN_Sector_Objects_New.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_Sector_Objects_New.Enabled = false;
+			this.BTN_Sector_Objects_New.Location = new System.Drawing.Point(3, 323);
+			this.BTN_Sector_Objects_New.Name = "BTN_Sector_Objects_New";
+			this.BTN_Sector_Objects_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_Sector_Objects_New.TabIndex = 11;
+			this.BTN_Sector_Objects_New.Text = "New";
+			this.BTN_Sector_Objects_New.UseVisualStyleBackColor = false;
+			this.BTN_Sector_Objects_New.Click += new System.EventHandler(this.BTN_Sector_Objects_New_Click);
+			// 
+			// BTN_Sector_Objects_Apply
+			// 
+			this.BTN_Sector_Objects_Apply.Enabled = false;
+			this.BTN_Sector_Objects_Apply.Location = new System.Drawing.Point(53, 323);
+			this.BTN_Sector_Objects_Apply.Name = "BTN_Sector_Objects_Apply";
+			this.BTN_Sector_Objects_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_Sector_Objects_Apply.TabIndex = 10;
+			this.BTN_Sector_Objects_Apply.Text = "Apply changes";
+			this.BTN_Sector_Objects_Apply.UseVisualStyleBackColor = true;
+			this.BTN_Sector_Objects_Apply.Click += new System.EventHandler(this.BTN_Sector_Objects_Apply_Click);
 			// 
 			// TXT_Sector_Objects_Field5
 			// 
@@ -4981,28 +5018,17 @@ namespace SEConfigTool
 			this.BTN_ConfigurationConfig_Apply.Text = "Apply changes";
 			this.BTN_ConfigurationConfig_Apply.UseVisualStyleBackColor = true;
 			// 
-			// BTN_Sector_Objects_Apply
+			// BTN_Sector_Objects_Delete
 			// 
-			this.BTN_Sector_Objects_Apply.Enabled = false;
-			this.BTN_Sector_Objects_Apply.Location = new System.Drawing.Point(53, 323);
-			this.BTN_Sector_Objects_Apply.Name = "BTN_Sector_Objects_Apply";
-			this.BTN_Sector_Objects_Apply.Size = new System.Drawing.Size(100, 23);
-			this.BTN_Sector_Objects_Apply.TabIndex = 10;
-			this.BTN_Sector_Objects_Apply.Text = "Apply changes";
-			this.BTN_Sector_Objects_Apply.UseVisualStyleBackColor = true;
-			this.BTN_Sector_Objects_Apply.Visible = false;
-			this.BTN_Sector_Objects_Apply.Click += new System.EventHandler(this.BTN_Sector_Objects_Apply_Click);
-			// 
-			// BTN_Sector_Objects_New
-			// 
-			this.BTN_Sector_Objects_New.Location = new System.Drawing.Point(3, 323);
-			this.BTN_Sector_Objects_New.Name = "BTN_Sector_Objects_New";
-			this.BTN_Sector_Objects_New.Size = new System.Drawing.Size(50, 23);
-			this.BTN_Sector_Objects_New.TabIndex = 11;
-			this.BTN_Sector_Objects_New.Text = "New";
-			this.BTN_Sector_Objects_New.UseVisualStyleBackColor = true;
-			this.BTN_Sector_Objects_New.Visible = false;
-			this.BTN_Sector_Objects_New.Click += new System.EventHandler(this.BTN_Sector_Objects_New_Click);
+			this.BTN_Sector_Objects_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_Sector_Objects_Delete.Enabled = false;
+			this.BTN_Sector_Objects_Delete.Location = new System.Drawing.Point(3, 294);
+			this.BTN_Sector_Objects_Delete.Name = "BTN_Sector_Objects_Delete";
+			this.BTN_Sector_Objects_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_Sector_Objects_Delete.TabIndex = 13;
+			this.BTN_Sector_Objects_Delete.Text = "Delete Item";
+			this.BTN_Sector_Objects_Delete.UseVisualStyleBackColor = false;
+			this.BTN_Sector_Objects_Delete.Click += new System.EventHandler(this.BTN_Sector_Objects_Delete_Click);
 			// 
 			// SEConfigTool
 			// 
@@ -5574,7 +5600,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.TabPage TAB_SaveGamePage_Page;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.Button BTN_SavedGame_Save;
-		private System.Windows.Forms.Button BTN_LoadSaveGame;
+		private System.Windows.Forms.Button BTN_SavedGame_Load;
 		private System.Windows.Forms.GroupBox GRP_SavedGame;
 		private System.Windows.Forms.TabControl TAB_SavedGame_Details;
 		private System.Windows.Forms.TabPage TAB_SavedGame_Properties_Page;
@@ -5712,6 +5738,8 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TXT_Sector_Objects_Field1;
 		private System.Windows.Forms.Button BTN_Sector_Objects_New;
 		private System.Windows.Forms.Button BTN_Sector_Objects_Apply;
+		private System.Windows.Forms.ComboBox CMB_Sector_Objects_Field1;
+		private System.Windows.Forms.Button BTN_Sector_Objects_Delete;
 
     }
 }
