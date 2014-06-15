@@ -390,6 +390,22 @@ namespace SEConfigTool
 			this.TXT_TransparentMaterialConfig_Details_Emissivity = new System.Windows.Forms.TextBox();
 			this.TXT_TransparentMaterialConfig_Details_Name = new System.Windows.Forms.TextBox();
 			this.BTN_TransparentMaterialConfig_Details_Apply = new System.Windows.Forms.Button();
+			this.TAB_ConfigurationConfig_Page = new System.Windows.Forms.TabPage();
+			this.GRP_ConfigurationConfig = new System.Windows.Forms.GroupBox();
+			this.splitContainer50 = new System.Windows.Forms.SplitContainer();
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab = new System.Windows.Forms.Label();
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab = new System.Windows.Forms.Label();
+			this.LBL_ConfigurationConfig_LargeBlockSize = new System.Windows.Forms.Label();
+			this.LBL_ConfigurationConfig_SmallBlockSize = new System.Windows.Forms.Label();
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab = new System.Windows.Forms.TextBox();
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab = new System.Windows.Forms.TextBox();
+			this.TXT_ConfigurationConfig_LargeBlockSize = new System.Windows.Forms.TextBox();
+			this.TXT_ConfigurationConfig_SmallBlockSize = new System.Windows.Forms.TextBox();
+			this.BTN_ConfigurationConfig_Apply = new System.Windows.Forms.Button();
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab = new System.Windows.Forms.TextBox();
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab = new System.Windows.Forms.Label();
+			this.BTN_ConfigurationConfig_Reload = new System.Windows.Forms.Button();
+			this.BTN_ConfigurationConfig_Save = new System.Windows.Forms.Button();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -641,6 +657,12 @@ namespace SEConfigTool
 			this.splitContainer47.Panel1.SuspendLayout();
 			this.splitContainer47.Panel2.SuspendLayout();
 			this.splitContainer47.SuspendLayout();
+			this.TAB_ConfigurationConfig_Page.SuspendLayout();
+			this.GRP_ConfigurationConfig.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer50)).BeginInit();
+			this.splitContainer50.Panel1.SuspendLayout();
+			this.splitContainer50.Panel2.SuspendLayout();
+			this.splitContainer50.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// STS_Status
@@ -4376,6 +4398,7 @@ namespace SEConfigTool
 			this.LayoutPages.Controls.Add(this.TAB_VoxelMaterialConfig_Page);
 			this.LayoutPages.Controls.Add(this.TAB_ScenariosConfig_Page);
 			this.LayoutPages.Controls.Add(this.TAB_TransparentMaterialsConfig_Page);
+			this.LayoutPages.Controls.Add(this.TAB_ConfigurationConfig_Page);
 			this.LayoutPages.Location = new System.Drawing.Point(0, 0);
 			this.LayoutPages.Name = "LayoutPages";
 			this.LayoutPages.SelectedIndex = 0;
@@ -4693,6 +4716,164 @@ namespace SEConfigTool
 			this.BTN_TransparentMaterialConfig_Details_Apply.UseVisualStyleBackColor = true;
 			this.BTN_TransparentMaterialConfig_Details_Apply.Click += new System.EventHandler(this.BTN_TransparentMaterialsConfig_Details_Apply_Click);
 			// 
+			// TAB_ConfigurationConfig_Page
+			// 
+			this.TAB_ConfigurationConfig_Page.Controls.Add(this.BTN_ConfigurationConfig_Reload);
+			this.TAB_ConfigurationConfig_Page.Controls.Add(this.BTN_ConfigurationConfig_Save);
+			this.TAB_ConfigurationConfig_Page.Controls.Add(this.GRP_ConfigurationConfig);
+			this.TAB_ConfigurationConfig_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_ConfigurationConfig_Page.Name = "TAB_ConfigurationConfig_Page";
+			this.TAB_ConfigurationConfig_Page.Size = new System.Drawing.Size(802, 436);
+			this.TAB_ConfigurationConfig_Page.TabIndex = 15;
+			this.TAB_ConfigurationConfig_Page.Text = "Configuration";
+			this.TAB_ConfigurationConfig_Page.UseVisualStyleBackColor = true;
+			// 
+			// GRP_ConfigurationConfig
+			// 
+			this.GRP_ConfigurationConfig.Controls.Add(this.splitContainer50);
+			this.GRP_ConfigurationConfig.Location = new System.Drawing.Point(3, 32);
+			this.GRP_ConfigurationConfig.Name = "GRP_ConfigurationConfig";
+			this.GRP_ConfigurationConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_ConfigurationConfig.TabIndex = 2;
+			this.GRP_ConfigurationConfig.TabStop = false;
+			this.GRP_ConfigurationConfig.Text = "Selected Item Details";
+			// 
+			// splitContainer50
+			// 
+			this.splitContainer50.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer50.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer50.Location = new System.Drawing.Point(3, 16);
+			this.splitContainer50.Name = "splitContainer50";
+			// 
+			// splitContainer50.Panel1
+			// 
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_BaseStationBlockPrefab);
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_BaseLargeBlockPrefab);
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_BaseSmallBlockPrefab);
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_LargeBlockSize);
+			this.splitContainer50.Panel1.Controls.Add(this.LBL_ConfigurationConfig_SmallBlockSize);
+			this.splitContainer50.Panel1MinSize = 190;
+			// 
+			// splitContainer50.Panel2
+			// 
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_BaseStationBlockPrefab);
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_BaseLargeBlockPrefab);
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_BaseSmallBlockPrefab);
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_LargeBlockSize);
+			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_SmallBlockSize);
+			this.splitContainer50.Panel2.Controls.Add(this.BTN_ConfigurationConfig_Apply);
+			this.splitContainer50.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer50.SplitterDistance = 190;
+			this.splitContainer50.TabIndex = 4;
+			// 
+			// LBL_ConfigurationConfig_BaseLargeBlockPrefab
+			// 
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.AutoSize = true;
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.Location = new System.Drawing.Point(3, 84);
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.Name = "LBL_ConfigurationConfig_BaseLargeBlockPrefab";
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.Size = new System.Drawing.Size(128, 13);
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.TabIndex = 23;
+			this.LBL_ConfigurationConfig_BaseLargeBlockPrefab.Text = "Base Large Block Prefab:";
+			// 
+			// LBL_ConfigurationConfig_BaseSmallBlockPrefab
+			// 
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.AutoSize = true;
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.Location = new System.Drawing.Point(3, 58);
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.Name = "LBL_ConfigurationConfig_BaseSmallBlockPrefab";
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.Size = new System.Drawing.Size(126, 13);
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.TabIndex = 22;
+			this.LBL_ConfigurationConfig_BaseSmallBlockPrefab.Text = "Base Small Block Prefab:";
+			// 
+			// LBL_ConfigurationConfig_LargeBlockSize
+			// 
+			this.LBL_ConfigurationConfig_LargeBlockSize.AutoSize = true;
+			this.LBL_ConfigurationConfig_LargeBlockSize.Location = new System.Drawing.Point(3, 32);
+			this.LBL_ConfigurationConfig_LargeBlockSize.Name = "LBL_ConfigurationConfig_LargeBlockSize";
+			this.LBL_ConfigurationConfig_LargeBlockSize.Size = new System.Drawing.Size(90, 13);
+			this.LBL_ConfigurationConfig_LargeBlockSize.TabIndex = 8;
+			this.LBL_ConfigurationConfig_LargeBlockSize.Text = "Large Block Size:";
+			// 
+			// LBL_ConfigurationConfig_SmallBlockSize
+			// 
+			this.LBL_ConfigurationConfig_SmallBlockSize.AutoSize = true;
+			this.LBL_ConfigurationConfig_SmallBlockSize.Location = new System.Drawing.Point(3, 6);
+			this.LBL_ConfigurationConfig_SmallBlockSize.Name = "LBL_ConfigurationConfig_SmallBlockSize";
+			this.LBL_ConfigurationConfig_SmallBlockSize.Size = new System.Drawing.Size(88, 13);
+			this.LBL_ConfigurationConfig_SmallBlockSize.TabIndex = 7;
+			this.LBL_ConfigurationConfig_SmallBlockSize.Text = "Small Block Size:";
+			// 
+			// TXT_ConfigurationConfig_BaseLargeBlockPrefab
+			// 
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab.Location = new System.Drawing.Point(3, 81);
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab.Name = "TXT_ConfigurationConfig_BaseLargeBlockPrefab";
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_BaseLargeBlockPrefab.TabIndex = 21;
+			// 
+			// TXT_ConfigurationConfig_BaseSmallBlockPrefab
+			// 
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab.Location = new System.Drawing.Point(3, 55);
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab.Name = "TXT_ConfigurationConfig_BaseSmallBlockPrefab";
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_BaseSmallBlockPrefab.TabIndex = 20;
+			// 
+			// TXT_ConfigurationConfig_LargeBlockSize
+			// 
+			this.TXT_ConfigurationConfig_LargeBlockSize.Location = new System.Drawing.Point(3, 29);
+			this.TXT_ConfigurationConfig_LargeBlockSize.Name = "TXT_ConfigurationConfig_LargeBlockSize";
+			this.TXT_ConfigurationConfig_LargeBlockSize.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_LargeBlockSize.TabIndex = 11;
+			// 
+			// TXT_ConfigurationConfig_SmallBlockSize
+			// 
+			this.TXT_ConfigurationConfig_SmallBlockSize.Location = new System.Drawing.Point(3, 3);
+			this.TXT_ConfigurationConfig_SmallBlockSize.Name = "TXT_ConfigurationConfig_SmallBlockSize";
+			this.TXT_ConfigurationConfig_SmallBlockSize.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_SmallBlockSize.TabIndex = 10;
+			// 
+			// BTN_ConfigurationConfig_Apply
+			// 
+			this.BTN_ConfigurationConfig_Apply.Enabled = false;
+			this.BTN_ConfigurationConfig_Apply.Location = new System.Drawing.Point(24, 391);
+			this.BTN_ConfigurationConfig_Apply.Name = "BTN_ConfigurationConfig_Apply";
+			this.BTN_ConfigurationConfig_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_ConfigurationConfig_Apply.TabIndex = 8;
+			this.BTN_ConfigurationConfig_Apply.Text = "Apply changes";
+			this.BTN_ConfigurationConfig_Apply.UseVisualStyleBackColor = true;
+			// 
+			// TXT_ConfigurationConfig_BaseStationBlockPrefab
+			// 
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab.Location = new System.Drawing.Point(3, 107);
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab.Name = "TXT_ConfigurationConfig_BaseStationBlockPrefab";
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab.Size = new System.Drawing.Size(150, 20);
+			this.TXT_ConfigurationConfig_BaseStationBlockPrefab.TabIndex = 22;
+			// 
+			// LBL_ConfigurationConfig_BaseStationBlockPrefab
+			// 
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.AutoSize = true;
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.Location = new System.Drawing.Point(3, 110);
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.Name = "LBL_ConfigurationConfig_BaseStationBlockPrefab";
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.Size = new System.Drawing.Size(134, 13);
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.TabIndex = 24;
+			this.LBL_ConfigurationConfig_BaseStationBlockPrefab.Text = "Base Station Block Prefab:";
+			// 
+			// BTN_ConfigurationConfig_Reload
+			// 
+			this.BTN_ConfigurationConfig_Reload.Location = new System.Drawing.Point(3, 3);
+			this.BTN_ConfigurationConfig_Reload.Name = "BTN_ConfigurationConfig_Reload";
+			this.BTN_ConfigurationConfig_Reload.Size = new System.Drawing.Size(116, 23);
+			this.BTN_ConfigurationConfig_Reload.TabIndex = 4;
+			this.BTN_ConfigurationConfig_Reload.Text = "Reload Configuration";
+			this.BTN_ConfigurationConfig_Reload.UseVisualStyleBackColor = true;
+			// 
+			// BTN_ConfigurationConfig_Save
+			// 
+			this.BTN_ConfigurationConfig_Save.Location = new System.Drawing.Point(122, 3);
+			this.BTN_ConfigurationConfig_Save.Name = "BTN_ConfigurationConfig_Save";
+			this.BTN_ConfigurationConfig_Save.Size = new System.Drawing.Size(105, 23);
+			this.BTN_ConfigurationConfig_Save.TabIndex = 3;
+			this.BTN_ConfigurationConfig_Save.Text = "Save Configuration";
+			this.BTN_ConfigurationConfig_Save.UseVisualStyleBackColor = true;
+			// 
 			// SEConfigTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4993,6 +5174,14 @@ namespace SEConfigTool
 			this.splitContainer47.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer47)).EndInit();
 			this.splitContainer47.ResumeLayout(false);
+			this.TAB_ConfigurationConfig_Page.ResumeLayout(false);
+			this.GRP_ConfigurationConfig.ResumeLayout(false);
+			this.splitContainer50.Panel1.ResumeLayout(false);
+			this.splitContainer50.Panel1.PerformLayout();
+			this.splitContainer50.Panel2.ResumeLayout(false);
+			this.splitContainer50.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer50)).EndInit();
+			this.splitContainer50.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -5361,6 +5550,22 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Capacity;
 		private System.Windows.Forms.TextBox TXT_AmmoConfig_Details_Name;
 		private System.Windows.Forms.ComboBox CMB_BlueprintConfig_Details_Result_TypeId;
+		private System.Windows.Forms.TabPage TAB_ConfigurationConfig_Page;
+		private System.Windows.Forms.GroupBox GRP_ConfigurationConfig;
+		private System.Windows.Forms.SplitContainer splitContainer50;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_BaseLargeBlockPrefab;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_BaseSmallBlockPrefab;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_LargeBlockSize;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_SmallBlockSize;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_BaseLargeBlockPrefab;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_BaseSmallBlockPrefab;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_LargeBlockSize;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_SmallBlockSize;
+		private System.Windows.Forms.Button BTN_ConfigurationConfig_Apply;
+		private System.Windows.Forms.Label LBL_ConfigurationConfig_BaseStationBlockPrefab;
+		private System.Windows.Forms.TextBox TXT_ConfigurationConfig_BaseStationBlockPrefab;
+		private System.Windows.Forms.Button BTN_ConfigurationConfig_Reload;
+		private System.Windows.Forms.Button BTN_ConfigurationConfig_Save;
 
     }
 }

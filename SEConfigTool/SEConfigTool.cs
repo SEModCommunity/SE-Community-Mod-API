@@ -38,6 +38,7 @@ namespace SEConfigTool
 		private VoxelMaterialDefinitionsManager m_voxelMaterialsDefinitionsManager;
 		private ScenariosDefinitionsManager m_scenariosDefinitionManager;
 		private TransparentMaterialsDefinitionManager m_transparentMaterialsDefinitionManager;
+		private ConfigurationDefinition m_configurationDefinition;
 
 		private bool m_currentlyFillingConfigurationListBox;
 		private bool m_currentlySelecting;
@@ -396,6 +397,7 @@ namespace SEConfigTool
 			FillVoxelMaterialConfigurationListBox();
 			FillScenariosConfigurationListBox();
 			FillTransparentMaterialsConfigurationListBox();
+			
 		}
 
 		#region SavedGame
