@@ -984,6 +984,7 @@ namespace SEConfigTool
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.TabIndex = 8;
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.Text = "Apply changes";
 			this.BTN_ScenarioConfig_Details_Asteroid_Apply.UseVisualStyleBackColor = true;
+			this.BTN_ScenarioConfig_Details_Asteroid_Apply.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Asteroid_Apply_Click);
 			// 
 			// TAB_ScenariosConfig_Details_StartingStates_Page
 			// 
@@ -1075,6 +1076,7 @@ namespace SEConfigTool
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.TabIndex = 10;
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Text = "Apply changes";
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.UseVisualStyleBackColor = true;
+			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_StartingStates_Apply_Click);
 			// 
 			// TAB_ScenariosConfig_Details_GeneratorOperations_Page
 			// 
@@ -1188,6 +1190,7 @@ namespace SEConfigTool
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.TabIndex = 10;
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Text = "Apply changes";
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.UseVisualStyleBackColor = true;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Click += new System.EventHandler(this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply_Click);
 			// 
 			// TXT_ScenarioConfig_Details_GeneratorOperations_RandomRadius
 			// 
