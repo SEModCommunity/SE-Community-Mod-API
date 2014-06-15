@@ -18,6 +18,17 @@ namespace SEModAPI.API.Definitions
 
         #region "Properties"
 
+		public string DisplayName
+		{
+			get { return m_baseDefinition.DisplayName; }
+			set
+			{
+				if (m_baseDefinition.DisplayName == value) return;
+				m_baseDefinition.DisplayName = value;
+				Changed = true;
+			}
+		}
+
         public VRageMath.Vector3 Size
         {
             get { return m_baseDefinition.Size; }
@@ -42,7 +53,7 @@ namespace SEModAPI.API.Definitions
 
 		public float Volume
 		{
-            get { return m_baseDefinition.Volume.Value; }
+            get { return m_baseDefinition.Volume.GetValueOrDefault(0); }
 			set
 			{
                 if (m_baseDefinition.Volume == value) return;
@@ -77,7 +88,7 @@ namespace SEModAPI.API.Definitions
 		{
 		    get
             {
-                    return m_baseDefinition.IconSymbol.Value;
+                    return m_baseDefinition.IconSymbol.GetValueOrDefault(MyTextsWrapperEnum.IconSymbol_Stone);
             } 
 			set
 			{

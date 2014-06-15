@@ -11,8 +11,10 @@ using SEModAPI.API.Definitions;
 using SEModAPI.API.Definitions.CubeBlocks;
 using SEModAPI.API.SaveData;
 
+using Sandbox.Common.Localization;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using VRageMath;
 using System.Diagnostics;
 
 namespace SEConfigTool
@@ -35,6 +37,8 @@ namespace SEConfigTool
 		private BlueprintDefinitionsManager m_blueprintsDefinitionsManager;
 		private VoxelMaterialDefinitionsManager m_voxelMaterialsDefinitionsManager;
 		private ScenariosDefinitionsManager m_scenariosDefinitionManager;
+		private TransparentMaterialsDefinitionManager m_transparentMaterialsDefinitionManager;
+		private ConfigurationDefinition m_configurationDefinition;
 
 		private bool m_currentlyFillingConfigurationListBox;
 		private bool m_currentlySelecting;
@@ -68,8 +72,13 @@ namespace SEConfigTool
 			m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager();
 			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
 			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
+			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
 
 			m_globalEventsDefinitionsManager.IsMutable = true;
+			m_ammoMagazinesDefinitionsManager.IsMutable = true;
+			m_componentsDefinitionsManager.IsMutable = true;
+			m_physicalItemsDefinitionsManager.IsMutable = true;
+			m_containerTypesDefinitionsManager.IsMutable = true;
 		}
 
 		#endregion
@@ -117,18 +126,86 @@ namespace SEConfigTool
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-				TreeNode newNode = TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				TreeNode newNode = TRV_SavedGame_Objects.Nodes[0].Nodes.Add(cubeGrid.EntityId.ToString(), cubeGrid.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				newNode.Tag = cubeGrid;
 
 				//Create the cube grid sub-item categories
-				newNode.Nodes.Add("Cube Blocks");
-				newNode.Nodes.Add("Conveyor Lines");
-				newNode.Nodes.Add("Block Groups");
+				TreeNode blocksNode = newNode.Nodes.Add("Cube Blocks (" + cubeGrid.CubeBlocks.Count.ToString() + ")");
+				newNode.Nodes.Add("Conveyor Lines (" + cubeGrid.ConveyorLines.Count.ToString() + ")");
+				newNode.Nodes.Add("Block Groups (" + cubeGrid.BlockGroups.Count.ToString() + ")");
+
+				TreeNode structuralBlocksNode = blocksNode.Nodes.Add("Structural");
+				TreeNode containerBlocksNode = blocksNode.Nodes.Add("Containers");
+				TreeNode productionBlocksNode = blocksNode.Nodes.Add("Refinement and Production");
+				TreeNode energyBlocksNode = blocksNode.Nodes.Add("Energy");
+				TreeNode conveyorBlocksNode = blocksNode.Nodes.Add("Conveyor");
+				TreeNode utilityBlocksNode = blocksNode.Nodes.Add("Utility");
+				TreeNode miscBlocksNode = blocksNode.Nodes.Add("Misc");
 
 				//Add the cube blocks
 				foreach (CubeBlock cubeBlock in cubeGrid.CubeBlocks)
 				{
-					newNode.Nodes[0].Nodes.Add(cubeBlock.Name);
-			}
+					TreeNode blockNode = null;
+					MyObjectBuilder_Inventory blockInventory = null;
+					switch (cubeBlock.BaseDefinition.TypeId)
+					{
+						case MyObjectBuilderTypeEnum.CubeBlock:
+							blockNode = structuralBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.CargoContainer:
+							blockNode = containerBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							MyObjectBuilder_CargoContainer containerBlock = (MyObjectBuilder_CargoContainer) cubeBlock.BaseDefinition;
+							blockInventory = containerBlock.Inventory;
+							break;
+						case MyObjectBuilderTypeEnum.Refinery:
+							blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Assembler:
+							blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Reactor:
+							MyObjectBuilder_Reactor reactorBlock = (MyObjectBuilder_Reactor)cubeBlock.BaseDefinition;
+							blockInventory = reactorBlock.Inventory;
+							blockNode = energyBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.SolarPanel:
+							blockNode = energyBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.ShipConnector:
+							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Collector:
+							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Conveyor:
+							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.ConveyorConnector:
+							blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.Cockpit:
+							blockNode = utilityBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						case MyObjectBuilderTypeEnum.MedicalRoom:
+							blockNode = utilityBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+						default:
+							blockNode = miscBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							break;
+					}
+					if (blockNode == null)
+						continue;
+
+					blockNode.Tag = cubeBlock;
+
+					if (blockInventory != null)
+					{
+						foreach (var item in blockInventory.Items)
+						{
+							blockNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.AmountDecimal.ToString());
+						}
+					}
+				}
 			}
 
 			//Add the voxel maps
@@ -183,7 +260,7 @@ namespace SEConfigTool
 
 			stopWatch.Stop();
 			TLS_StatusLabel.Text = "Done in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
-			BTN_SavedGame_Events_Apply.Visible = false;
+			BTN_SavedGame_Events_Apply.Enabled = false;
 		}
 
 		private void FillBlocksConfigurationListBox()
@@ -192,41 +269,43 @@ namespace SEConfigTool
 
 			m_cubeBlockDefinitionsManager.Load(GetContentDataFile("CubeBlocks.sbc"));
 
-			LST_BlocksConfiguration.Items.Clear();
+			LST_BlocksConfig.Items.Clear();
 			foreach (var definition in m_cubeBlockDefinitionsManager.Definitions)
 			{
-				LST_BlocksConfiguration.Items.Add(definition.Name);
+				LST_BlocksConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillAmmoConfigurationListBox()
+		private void FillAmmoConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_ammoMagazinesDefinitionsManager.Load(GetContentDataFile("AmmoMagazines.sbc"));
+			if (loadFromFile)
+				m_ammoMagazinesDefinitionsManager.Load(GetContentDataFile("AmmoMagazines.sbc"));
 
-			LST_AmmoConfiguration.Items.Clear();
+			LST_AmmoConfig.Items.Clear();
 			foreach (var definition in m_ammoMagazinesDefinitionsManager.Definitions)
 			{
-				LST_AmmoConfiguration.Items.Add(definition.Name);
+				LST_AmmoConfig.Items.Add(definition.Id.SubtypeId);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillContainerTypeConfigurationListBox()
+		private void FillContainerTypeConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_containerTypesDefinitionsManager.Load(GetContentDataFile("ContainerTypes.sbc"));
+			if(loadFromFile)
+				m_containerTypesDefinitionsManager.Load(GetContentDataFile("ContainerTypes.sbc"));
 
-			LST_ContainerTypeConfiguration.Items.Clear();
+			LST_ContainerTypesConfig.Items.Clear();
 			LST_ContainerTypeConfig_Details_Items.Items.Clear();
 			foreach (var definition in m_containerTypesDefinitionsManager.Definitions)
 			{
-				LST_ContainerTypeConfiguration.Items.Add(definition.Name);
+				LST_ContainerTypesConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -239,10 +318,16 @@ namespace SEConfigTool
 			if(loadFromFile)
 				m_globalEventsDefinitionsManager.Load(GetContentDataFile("GlobalEvents.sbc"));
 
-			LST_GlobalEventConfiguration.Items.Clear();
+			LST_GlobalEventConfig.Items.Clear();
 			foreach (var definition in m_globalEventsDefinitionsManager.Definitions)
 			{
-				LST_GlobalEventConfiguration.Items.Add(definition.Name);
+				LST_GlobalEventConfig.Items.Add(definition.Name);
+			}
+
+			CMB_GlobalEventsConfig_Details_EventType.Items.Clear();
+			foreach (var eventType in Enum.GetValues(typeof(MyGlobalEventTypeEnum)))
+			{
+				CMB_GlobalEventsConfig_Details_EventType.Items.Add(eventType);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -254,36 +339,44 @@ namespace SEConfigTool
 
 			m_spawnGroupsDefinitionsManager.Load(GetContentDataFile("SpawnGroups.sbc"));
 
-			LST_SpawnGroupConfiguration.Items.Clear();
+			LST_SpawnGroupConfig.Items.Clear();
 			LST_SpawnGroupConfig_Details_Prefabs.Items.Clear();
 			foreach (var definition in m_spawnGroupsDefinitionsManager.Definitions)
 			{
 				//TODO - Find a better way to uniquely label the spawn groups
-				LST_SpawnGroupConfiguration.Items.Add("Spawn Group " + LST_SpawnGroupConfiguration.Items.Count.ToString());
+				LST_SpawnGroupConfig.Items.Add("Spawn Group " + LST_SpawnGroupConfig.Items.Count.ToString());
 			}
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillPhysicalItemConfigurationListBox()
+		private void FillPhysicalItemConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_physicalItemsDefinitionsManager.Load(GetContentDataFile("PhysicalItems.sbc"));
+			if(loadFromFile)
+				m_physicalItemsDefinitionsManager.Load(GetContentDataFile("PhysicalItems.sbc"));
 
-			LST_PhysicalItemConfiguration.Items.Clear();
+			LST_PhysicalItemConfig.Items.Clear();
 			foreach (var definition in m_physicalItemsDefinitionsManager.Definitions)
 			{
-				LST_PhysicalItemConfiguration.Items.Add(definition.Name);
+				LST_PhysicalItemConfig.Items.Add(definition.Name);
+			}
+
+			CMB_PhysicalItemConfig_Details_Type.Items.Clear();
+			foreach (var type in Enum.GetValues(typeof(MyObjectBuilderTypeEnum)))
+			{
+				CMB_PhysicalItemConfig_Details_Type.Items.Add(type);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillComponentConfigurationListBox()
+		private void FillComponentConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_componentsDefinitionsManager.Load(GetContentDataFile("Components.sbc"));
+			if(loadFromFile)
+				m_componentsDefinitionsManager.Load(GetContentDataFile("Components.sbc"));
 
 			LST_ComponentsConfig.Items.Clear();
 			foreach (var definition in m_componentsDefinitionsManager.Definitions)
@@ -304,7 +397,7 @@ namespace SEConfigTool
 			foreach (var definition in m_blueprintsDefinitionsManager.Definitions)
 			{
 				//TODO - Find a better way to uniquely label the spawn groups
-				LST_BlueprintConfig.Items.Add("Blueprint " + LST_BlueprintConfig.Items.Count.ToString());
+				LST_BlueprintConfig.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -340,6 +433,21 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		private void FillTransparentMaterialsConfigurationListBox()
+		{
+			m_currentlyFillingConfigurationListBox = true;
+
+			m_transparentMaterialsDefinitionManager.Load(GetContentDataFile("TransparentMaterials.sbc"));
+
+			LST_TransparentMaterialsConfig.Items.Clear();
+			foreach (var definition in m_transparentMaterialsDefinitionManager.Definitions)
+			{
+				LST_TransparentMaterialsConfig.Items.Add(definition.Name);
+			}
+
+			m_currentlyFillingConfigurationListBox = false;
+		}
+
 		#endregion
 
 		#region Form events
@@ -358,6 +466,8 @@ namespace SEConfigTool
 			FillBlueprintConfigurationListBox();
 			FillVoxelMaterialConfigurationListBox();
 			FillScenariosConfigurationListBox();
+			FillTransparentMaterialsConfigurationListBox();
+			
 		}
 
 		#region SavedGame
@@ -402,7 +512,7 @@ namespace SEConfigTool
 			sectorEvent.Enabled = CHK_SavedGame_Events_Enabled.CheckState == CheckState.Checked;
 			sectorEvent.ActivationTimeMs = Convert.ToInt64(TXT_SavedGame_Events_ActivationTime.Text, m_numberFormatInfo);
 
-			BTN_SavedGame_Events_Apply.Visible = false;
+			BTN_SavedGame_Events_Apply.Enabled = false;
 		}
 
 		private void LST_SavedGame_Events_SelectedIndexChanged(object sender, EventArgs e)
@@ -418,27 +528,124 @@ namespace SEConfigTool
 			TXT_SavedGame_Events_ActivationTime.Text = sectorEvent.ActivationTimeMs.ToString();
 
 			m_currentlySelecting = false;
-			BTN_SavedGame_Events_Apply.Visible = false;
+			BTN_SavedGame_Events_Apply.Enabled = false;
 		}
 
 		private void TRV_SavedGame_Objects_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			//Ignore top-level category nodes
-			if (e.Node.Level == 0)
+			LBL_Sector_Objects_Field1.Visible = false;
+			LBL_Sector_Objects_Field2.Visible = false;
+			LBL_Sector_Objects_Field3.Visible = false;
+			LBL_Sector_Objects_Field4.Visible = false;
+			LBL_Sector_Objects_Field5.Visible = false;
+
+			TXT_Sector_Objects_Field1.Visible = false;
+			TXT_Sector_Objects_Field2.Visible = false;
+			TXT_Sector_Objects_Field3.Visible = false;
+			TXT_Sector_Objects_Field4.Visible = false;
+			TXT_Sector_Objects_Field5.Visible = false;
+
+			var linkedObject = e.Node.Tag;
+			if (linkedObject == null)
 				return;
 
-			//Sector object nodes
-			if (e.Node.Level == 1)
+			if (linkedObject.GetType() == typeof(CubeBlock))
 			{
+				CubeBlock cubeBlock = (CubeBlock)linkedObject;
+
+				LBL_Sector_Objects_Field1.Visible = true;
+				LBL_Sector_Objects_Field2.Visible = true;
+				TXT_Sector_Objects_Field1.Visible = true;
+				TXT_Sector_Objects_Field2.Visible = true;
+
+				LBL_Sector_Objects_Field1.Text = "Type:";
+				LBL_Sector_Objects_Field2.Text = "Entity Id:";
+				TXT_Sector_Objects_Field1.Text = cubeBlock.SubtypeName;
+				TXT_Sector_Objects_Field2.Text = cubeBlock.EntityId.ToString();
+
+				if (cubeBlock.BaseDefinition.GetType() == typeof(MyObjectBuilder_CubeBlock))
+				{
+					//TODO - Maybe display something like integrity percent or build percent for structural blocks?
 				}
+				else if (cubeBlock.BaseDefinition.GetType() == typeof(MyObjectBuilder_CargoContainer))
+				{
+					MyObjectBuilder_CargoContainer containerBlock = (MyObjectBuilder_CargoContainer)cubeBlock.BaseDefinition;
 
-			//Ignore sector object parts category nodes
-			if (e.Node.Level == 2)
-				return;
+					LBL_Sector_Objects_Field3.Visible = true;
+					LBL_Sector_Objects_Field4.Visible = true;
+					LBL_Sector_Objects_Field5.Visible = true;
+					TXT_Sector_Objects_Field3.Visible = true;
+					TXT_Sector_Objects_Field4.Visible = true;
+					TXT_Sector_Objects_Field5.Visible = true;
 
-			//Sector object parts items nodes
-			if (e.Node.Level == 3)
-			{
+					LBL_Sector_Objects_Field3.Text = "Item Count:";
+					LBL_Sector_Objects_Field4.Text = "Item Volume (L):";
+					LBL_Sector_Objects_Field5.Text = "Item Mass (kg):";
+
+					float itemCount = 0;
+					float itemVolume = 0;
+					float itemMass = 0;
+					foreach (var item in containerBlock.Inventory.Items)
+					{
+						itemCount += item.Amount;
+
+						if (item.PhysicalContent.TypeId == MyObjectBuilderTypeEnum.PhysicalGunObject)
+						{
+							foreach (var physicalItem in m_physicalItemsDefinitionsManager.Definitions)
+							{
+								if (physicalItem.Id.SubtypeId == item.PhysicalContent.SubtypeName)
+								{
+									itemVolume += physicalItem.Volume * item.Amount;
+									itemMass += physicalItem.Mass * item.Amount;
+									break;
+								}
+							}
+						}
+						if (item.PhysicalContent.TypeId == MyObjectBuilderTypeEnum.Component)
+						{
+							foreach (var component in m_componentsDefinitionsManager.Definitions)
+							{
+								if (component.Id.SubtypeId == item.PhysicalContent.SubtypeName)
+								{
+									itemVolume += component.Volume * item.Amount;
+									itemMass += component.Mass * item.Amount;
+									break;
+								}
+							}
+						}
+						if (item.PhysicalContent.TypeId == MyObjectBuilderTypeEnum.AmmoMagazine)
+						{
+							foreach (var ammo in m_ammoMagazinesDefinitionsManager.Definitions)
+							{
+								if (ammo.Id.SubtypeId == item.PhysicalContent.SubtypeName)
+								{
+									itemVolume += ammo.Volume * item.Amount;
+									itemMass += ammo.Mass * item.Amount;
+									break;
+								}
+							}
+						}
+					}
+					TXT_Sector_Objects_Field3.Text = itemCount.ToString();
+					TXT_Sector_Objects_Field4.Text = itemVolume.ToString();
+					TXT_Sector_Objects_Field5.Text = itemMass.ToString();
+				}
+				else
+				{
+					MyObjectBuilder_Reactor containerBlock = (MyObjectBuilder_Reactor)cubeBlock.BaseDefinition;
+
+					LBL_Sector_Objects_Field3.Visible = true;
+					TXT_Sector_Objects_Field3.Visible = true;
+
+					LBL_Sector_Objects_Field3.Text = "Fuel (kg):";
+
+					float fuelMass = 0;
+					foreach (var item in containerBlock.Inventory.Items)
+					{
+						fuelMass += item.Amount;
+					}
+					TXT_Sector_Objects_Field3.Text = fuelMass.ToString();
+				}
 			}
 		}
 
@@ -446,7 +653,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_SavedGame_Events_Apply.Visible = true;
+				BTN_SavedGame_Events_Apply.Enabled = true;
 			}
 		}
 
@@ -454,7 +661,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_SavedGame_Events_Apply.Visible = true;
+				BTN_SavedGame_Events_Apply.Enabled = true;
 			}
 		}
 
@@ -466,8 +673,8 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ConfigApplyChanges.Visible = true;
-			int index = LST_BlocksConfiguration.SelectedIndex;
+				BTN_BlocksConfig_Details_Apply.Enabled = true;
+			int index = LST_BlocksConfig.SelectedIndex;
 			m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CHK_BlocksConfig_ModelIntersection.Checked;
 		}
         }
@@ -476,8 +683,8 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ConfigApplyChanges.Visible = true;
-			int index = LST_BlocksConfiguration.SelectedIndex;
+				BTN_BlocksConfig_Details_Apply.Enabled = true;
+			int index = LST_BlocksConfig.SelectedIndex;
 			m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CHK_BlocksConfig_Enabled.Checked;
 		}
         }
@@ -485,29 +692,29 @@ namespace SEConfigTool
 		private void LST_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_BlocksConfiguration.SelectedIndex;
+			int index = LST_BlocksConfig.SelectedIndex;
 
 			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
 
-			TXT_ConfigBlockName.Text = cubeBlock.Name;
-			TXT_ConfigBlockId.Text = cubeBlock.Id.ToString();
-			TXT_ConfigBuildTime.Text = cubeBlock.BuildTime.ToString(m_numberFormatInfo);
-			TXT_ConfigDisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(m_numberFormatInfo);
+			TXT_BlocksConfig_Details_Name.Text = cubeBlock.Name;
+			TXT_BlocksConfig_Details_Id.Text = cubeBlock.Id.ToString();
+			TXT_BlocksConfig_Details_BuildTime.Text = cubeBlock.BuildTime.ToString(m_numberFormatInfo);
+			TXT_BlocksConfig_Details_DisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(m_numberFormatInfo);
 			CHK_BlocksConfig_Enabled.Checked = cubeBlock.Enabled;
 			CHK_BlocksConfig_ModelIntersection.Checked = cubeBlock.UseModelIntersection;
 
-			DGV_ConfigBlocks_Components.DataSource = cubeBlock.Components.ToArray().Select(x => new { x.Subtype, x.Count }).ToArray();
+			DGV_BlocksConfig_Details_Components.DataSource = cubeBlock.Components.ToArray().Select(x => new { x.Subtype, x.Count }).ToArray();
 
 			m_currentlySelecting = false;
 
-			BTN_ConfigApplyChanges.Visible = false;
+			BTN_BlocksConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigBuildTime_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			char ch = e.KeyChar;
 
-			if (ch == '.' && TXT_ConfigBuildTime.Text.IndexOf('.') != -1)
+			if (ch == '.' && TXT_BlocksConfig_Details_BuildTime.Text.IndexOf('.') != -1)
 			{
 				e.Handled = true;
 			}
@@ -532,20 +739,20 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ConfigApplyChanges.Visible = true;
+				BTN_BlocksConfig_Details_Apply.Enabled = true;
 			}
 		}
 
 		private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
 		{
-			int index = LST_BlocksConfiguration.SelectedIndex;
+			int index = LST_BlocksConfig.SelectedIndex;
 
 			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
 
-			cubeBlock.BuildTime = Convert.ToSingle(TXT_ConfigBuildTime.Text, m_numberFormatInfo);
-			cubeBlock.DisassembleRatio = Convert.ToSingle(TXT_ConfigDisassembleRatio.Text, m_numberFormatInfo);
+			cubeBlock.BuildTime = Convert.ToSingle(TXT_BlocksConfig_Details_BuildTime.Text, m_numberFormatInfo);
+			cubeBlock.DisassembleRatio = Convert.ToSingle(TXT_BlocksConfig_Details_DisassembleRatio.Text, m_numberFormatInfo);
 
-			BTN_ConfigApplyChanges.Visible = false;
+			BTN_BlocksConfig_Details_Apply.Enabled = false;
 		}
 
 		#endregion
@@ -555,7 +762,7 @@ namespace SEConfigTool
 		private void LST_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_AmmoConfiguration.SelectedIndex;
+			int index = LST_AmmoConfig.SelectedIndex;
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
@@ -565,16 +772,19 @@ namespace SEConfigTool
 				CMB_AmmoConfig_Details_Caliber.Items.Add(caliber);
 			}
 
-			TXT_ConfigAmmoName.Text = ammoMagazine.Name;
-			TXT_ConfigAmmoId.Text = ammoMagazine.Id.ToString();
+			TXT_AmmoConfig_Details_Id.Text = ammoMagazine.Id.SubtypeId;
+			TXT_AmmoConfig_Details_Name.Text = ammoMagazine.Name;
+			TXT_AmmoConfig_Details_Description.Text = ammoMagazine.Description;
+			TXT_AmmoConfig_Details_Icon.Text = ammoMagazine.Icon;
+			TXT_AmmoConfig_Details_Model.Text = ammoMagazine.Model;
 			CMB_AmmoConfig_Details_Caliber.SelectedItem = ammoMagazine.Caliber;
-			TXT_ConfigAmmoCapacity.Text = ammoMagazine.Capacity.ToString(m_numberFormatInfo);
-			TXT_ConfigAmmoVolume.Text = ammoMagazine.Volume.ToString(m_numberFormatInfo);
-			TXT_ConfigAmmoMass.Text = ammoMagazine.Mass.ToString(m_numberFormatInfo);
+			TXT_AmmoConfig_Details_Capacity.Text = ammoMagazine.Capacity.ToString(m_numberFormatInfo);
+			TXT_AmmoConfig_Details_Volume.Text = ammoMagazine.Volume.ToString(m_numberFormatInfo);
+			TXT_AmmoConfig_Details_Mass.Text = ammoMagazine.Mass.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
-			BTN_AmmoConfig_Details_Apply.Visible = false;
+			BTN_AmmoConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigAmmoReload_Click(object sender, EventArgs e)
@@ -589,23 +799,29 @@ namespace SEConfigTool
 
 		private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
 		{
-			int index = LST_AmmoConfiguration.SelectedIndex;
+			int index = LST_AmmoConfig.SelectedIndex;
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
 
+			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, TXT_AmmoConfig_Details_Id.Text);
+			ammoMagazine.Name = TXT_AmmoConfig_Details_Name.Text;
+			ammoMagazine.DisplayName = TXT_AmmoConfig_Details_Name.Text;
+			ammoMagazine.Description = TXT_AmmoConfig_Details_Description.Text;
+			ammoMagazine.Icon = TXT_AmmoConfig_Details_Icon.Text;
+			ammoMagazine.Model = TXT_AmmoConfig_Details_Model.Text;
 			ammoMagazine.Caliber = (MyAmmoCategoryEnum) CMB_AmmoConfig_Details_Caliber.SelectedItem;
-			ammoMagazine.Capacity = Convert.ToInt32(TXT_ConfigAmmoCapacity.Text, m_numberFormatInfo);
-			ammoMagazine.Mass = Convert.ToSingle(TXT_ConfigAmmoMass.Text, m_numberFormatInfo);
-			ammoMagazine.Volume = Convert.ToSingle(TXT_ConfigAmmoVolume.Text, m_numberFormatInfo);
+			ammoMagazine.Capacity = Convert.ToInt32(TXT_AmmoConfig_Details_Capacity.Text, m_numberFormatInfo);
+			ammoMagazine.Mass = Convert.ToSingle(TXT_AmmoConfig_Details_Mass.Text, m_numberFormatInfo);
+			ammoMagazine.Volume = Convert.ToSingle(TXT_AmmoConfig_Details_Volume.Text, m_numberFormatInfo);
 
-			BTN_AmmoConfig_Details_Apply.Visible = false;
+			BTN_AmmoConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigAmmo_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_AmmoConfig_Details_Apply.Visible = true;
+				BTN_AmmoConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -613,8 +829,25 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_AmmoConfig_Details_Apply.Visible = true;
+				BTN_AmmoConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_AmmoConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.NewEntry();
+			if (ammoMagazine == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			ammoMagazine.Name = "(New)";
+			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, "NewSubtype");
+
+			FillAmmoConfigurationListBox(false);
+
+			LST_AmmoConfig.SelectedIndex = LST_AmmoConfig.Items.Count - 1;
 		}
 
 		#endregion
@@ -624,15 +857,13 @@ namespace SEConfigTool
 		private void LST_ContainerTypeConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_ContainerTypeConfiguration.SelectedIndex;
+			int index = LST_ContainerTypesConfig.SelectedIndex;
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
 
-			TXT_ConfigContainerTypeName.Text = containerType.Name;
-			TXT_ConfigContainerTypeId.Text = containerType.TypeId.ToString();
-			TXT_ConfigContainerTypeItemCount.Text = containerType.ItemCount.ToString();
-			TXT_ConfigContainerTypeCountMax.Text = containerType.CountMax.ToString();
-			TXT_ConfigContainerTypeCountMin.Text = containerType.CountMin.ToString();
+			TXT_ContainerTypeConfig_Details_Information_Name.Text = containerType.Name;
+			TXT_ContainerTypeConfig_Details_Information_CountMin.Text = containerType.CountMin.ToString();
+			TXT_ContainerTypeConfig_Details_Information_CountMax.Text = containerType.CountMax.ToString();
 
 			LST_ContainerTypeConfig_Details_Items.Items.Clear();
 			foreach (var def in containerType.Items)
@@ -640,19 +871,28 @@ namespace SEConfigTool
 				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
 			}
 
-			CMB_ContainerTypesConfig_Items_Type.Items.Clear();
+			//Add all physical items, components, and ammo to the combo box
+			CMB_ContainerTypeConfig_Items_Type.Items.Clear();
 			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
 			{
-				CMB_ContainerTypesConfig_Items_Type.Items.Add(itemType.Id);
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
 			}
 
-			TXT_ContainerTypeConfig_ItemAmountMin.Text = "";
-			TXT_ContainerTypeConfig_ItemAmountMax.Text = "";
-			TXT_ContainerTypeConfig_ItemFrequency.Text = "";
+			TXT_ContainerTypeConfig_Item_AmountMin.Text = "";
+			TXT_ContainerTypeConfig_Item_AmountMax.Text = "";
+			TXT_ContainerTypeConfig_Item_Frequency.Text = "";
 
 			m_currentlySelecting = false;
 
-			BTN_ContainerTypeConfig_Details_Apply.Visible = false;
+			BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigContainerTypeReload_Click(object sender, EventArgs e)
@@ -667,22 +907,41 @@ namespace SEConfigTool
 
 		private void BTN_ConfigContainerTypeApply_Click(object sender, EventArgs e)
 		{
-			int index = LST_ContainerTypeConfiguration.SelectedIndex;
+			int index = LST_ContainerTypesConfig.SelectedIndex;
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
 
-			containerType.CountMax = Convert.ToInt32(TXT_ConfigContainerTypeCountMax.Text, m_numberFormatInfo);
-			containerType.CountMin = Convert.ToInt32(TXT_ConfigContainerTypeCountMin.Text, m_numberFormatInfo);
+			containerType.Name = TXT_ContainerTypeConfig_Details_Information_Name.Text;
+			containerType.CountMin = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMin.Text, m_numberFormatInfo);
+			containerType.CountMax = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMax.Text, m_numberFormatInfo);
 
-			BTN_ContainerTypeConfig_Details_Apply.Visible = false;
+			BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigContainerType_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ContainerTypeConfig_Details_Apply.Visible = true;
+				BTN_ContainerTypesConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_ContainerTypesConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.NewEntry();
+			if (containerType == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			containerType.Name = "(New)";
+			containerType.CountMin = 1;
+			containerType.CountMax = 1;
+
+			FillContainerTypeConfigurationListBox(false);
+
+			LST_ContainerTypesConfig.SelectedIndex = LST_ContainerTypesConfig.Items.Count - 1;
 		}
 
 		#region Items
@@ -692,40 +951,48 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LST_ContainerTypeConfig_Details_Items.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
-			CMB_ContainerTypesConfig_Items_Type.SelectedItem = containerItem.Id;
+			CMB_ContainerTypeConfig_Items_Type.SelectedItem = containerItem.Id;
 
-			TXT_ContainerTypeConfig_ItemAmountMin.Text = containerItem.AmountMin.ToString();
-			TXT_ContainerTypeConfig_ItemAmountMax.Text = containerItem.AmountMax.ToString();
-			TXT_ContainerTypeConfig_ItemFrequency.Text = containerItem.Frequency.ToString();
+			TXT_ContainerTypeConfig_Item_AmountMin.Text = containerItem.AmountMin.ToString(m_numberFormatInfo);
+			TXT_ContainerTypeConfig_Item_AmountMax.Text = containerItem.AmountMax.ToString(m_numberFormatInfo);
+			TXT_ContainerTypeConfig_Item_Frequency.Text = containerItem.Frequency.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
-			BTN_ContainerTypeConfig_Items_Apply.Visible = false;
+			BTN_ContainerTypeConfig_Items_Apply.Enabled = false;
 		}
 
 		private void BTN_ContainerTypeConfig_Items_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LST_ContainerTypeConfiguration.SelectedIndex;
+			int index = LST_ContainerTypeConfig_Details_Items.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypeConfiguration.SelectedIndex);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
 			ContainerTypeItem containerItem = containerType.Items[index];
 
-			containerItem.Id = (SerializableDefinitionId) CMB_ContainerTypesConfig_Items_Type.SelectedItem;
-			containerItem.AmountMin = Convert.ToInt32(TXT_ContainerTypeConfig_ItemAmountMin.Text, m_numberFormatInfo);
-			containerItem.AmountMax = Convert.ToInt32(TXT_ContainerTypeConfig_ItemAmountMax.Text, m_numberFormatInfo);
-			containerItem.Frequency = Convert.ToSingle(TXT_ContainerTypeConfig_ItemFrequency.Text, m_numberFormatInfo);
+			containerItem.Id = (SerializableDefinitionId) CMB_ContainerTypeConfig_Items_Type.SelectedItem;
+			containerItem.AmountMin = Convert.ToInt32(TXT_ContainerTypeConfig_Item_AmountMin.Text, m_numberFormatInfo);
+			containerItem.AmountMax = Convert.ToInt32(TXT_ContainerTypeConfig_Item_AmountMax.Text, m_numberFormatInfo);
+			containerItem.Frequency = Convert.ToSingle(TXT_ContainerTypeConfig_Item_Frequency.Text, m_numberFormatInfo);
 
-			BTN_ContainerTypeConfig_Items_Apply.Visible = false;
+			BTN_ContainerTypeConfig_Items_Apply.Enabled = false;
+
+			int currentIndex = LST_ContainerTypeConfig_Details_Items.SelectedIndex;
+			LST_ContainerTypeConfig_Details_Items.Items.Clear();
+			foreach (var def in containerType.Items)
+			{
+				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
+			}
+			LST_ContainerTypeConfig_Details_Items.SelectedIndex = currentIndex;
 		}
 
 		private void TXT_ContainerTypeConfig_Item_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ContainerTypeConfig_Items_Apply.Visible = true;
+				BTN_ContainerTypeConfig_Items_Apply.Enabled = true;
 			}
 		}
 
@@ -733,8 +1000,33 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ContainerTypeConfig_Items_Apply.Visible = true;
+				BTN_ContainerTypeConfig_Items_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_ContainerTypeConfig_Items_New_Click(object sender, EventArgs e)
+		{
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
+			ContainerTypeItem containerItem = containerType.ItemsManager.NewEntry();
+			if (containerItem == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			//Set some default values for the new entry
+			containerItem.Name = "(New)";
+			containerItem.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "Stone");
+			containerItem.AmountMin = 1;
+			containerItem.AmountMax = 1;
+
+			LST_ContainerTypeConfig_Details_Items.Items.Clear();
+			foreach (var def in containerType.Items)
+			{
+				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
+			}
+
+			LST_ContainerTypeConfig_Details_Items.SelectedIndex = LST_ContainerTypeConfig_Details_Items.Items.Count - 1;
 		}
 
 		#endregion
@@ -746,27 +1038,20 @@ namespace SEConfigTool
 		private void LST_GlobalEventConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_GlobalEventConfiguration.SelectedIndex;
+			int index = LST_GlobalEventConfig.SelectedIndex;
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
-			CMB_GlobalEventsConfig_Details_EventType.Items.Clear();
-			foreach (var eventType in Enum.GetValues(typeof(MyGlobalEventTypeEnum)))
-			{
-				CMB_GlobalEventsConfig_Details_EventType.Items.Add(eventType);
-			}
-
-			TXT_ConfigGlobalEventId.Text = globalEvent.Id.ToString();
-			TXT_ConfigGlobalEventName.Text = globalEvent.Name;
-			TXT_ConfigGlobalEventDescription.Text = globalEvent.Description;
+			TXT_ConfigGlobalEvent_Details_Name.Text = globalEvent.Name;
+			TXT_ConfigGlobalEvent_Details_Description.Text = globalEvent.Description;
 			CMB_GlobalEventsConfig_Details_EventType.SelectedItem = globalEvent.EventType;
-			TXT_ConfigGlobalEventMinActivation.Text = globalEvent.MinActivation.ToString();
-			TXT_ConfigGlobalEventMaxActivation.Text = globalEvent.MaxActivation.ToString();
-			TXT_ConfigGlobalEventFirstActivation.Text = globalEvent.FirstActivation.ToString();
+			TXT_ConfigGlobalEvent_Details_MinActivation.Text = globalEvent.MinActivation.ToString(m_numberFormatInfo);
+			TXT_ConfigGlobalEvent_Details_MaxActivation.Text = globalEvent.MaxActivation.ToString(m_numberFormatInfo);
+			TXT_ConfigGlobalEvent_Details_FirstActivation.Text = globalEvent.FirstActivation.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
-			BTN_GlobalEventConfig_Apply.Visible = false;
+			BTN_GlobalEventConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigGlobalEventReload_Click(object sender, EventArgs e)
@@ -781,26 +1066,27 @@ namespace SEConfigTool
 
 		private void BTN_ConfigGlobalEventApply_Click(object sender, EventArgs e)
 		{
-			int index = LST_GlobalEventConfiguration.SelectedIndex;
+			int index = LST_GlobalEventConfig.SelectedIndex;
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
-			globalEvent.Name = TXT_ConfigGlobalEventName.Text;
+			globalEvent.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.EventDefinition, ((MyGlobalEventTypeEnum)CMB_GlobalEventsConfig_Details_EventType.SelectedItem).ToString());
+			globalEvent.Name = TXT_ConfigGlobalEvent_Details_Name.Text;
 			globalEvent.DisplayName = globalEvent.Name;
-			globalEvent.Description = TXT_ConfigGlobalEventDescription.Text;
+			globalEvent.Description = TXT_ConfigGlobalEvent_Details_Description.Text;
 			globalEvent.EventType = (MyGlobalEventTypeEnum) CMB_GlobalEventsConfig_Details_EventType.SelectedItem;
-			globalEvent.MinActivation = Convert.ToInt32(TXT_ConfigGlobalEventMinActivation.Text, m_numberFormatInfo);
-			globalEvent.MaxActivation = Convert.ToInt32(TXT_ConfigGlobalEventMaxActivation.Text, m_numberFormatInfo);
-			globalEvent.FirstActivation = Convert.ToInt32(TXT_ConfigGlobalEventFirstActivation.Text, m_numberFormatInfo);
+			globalEvent.MinActivation = Convert.ToInt32(TXT_ConfigGlobalEvent_Details_MinActivation.Text, m_numberFormatInfo);
+			globalEvent.MaxActivation = Convert.ToInt32(TXT_ConfigGlobalEvent_Details_MaxActivation.Text, m_numberFormatInfo);
+			globalEvent.FirstActivation = Convert.ToInt32(TXT_ConfigGlobalEvent_Details_FirstActivation.Text, m_numberFormatInfo);
 
-			BTN_GlobalEventConfig_Apply.Visible = false;
+			BTN_GlobalEventConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigGlobalEvent_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_GlobalEventConfig_Apply.Visible = true;
+				BTN_GlobalEventConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -808,7 +1094,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_GlobalEventConfig_Apply.Visible = true;
+				BTN_GlobalEventConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -826,7 +1112,7 @@ namespace SEConfigTool
 
 			FillGlobalEventConfigurationListBox(false);
 
-			LST_GlobalEventConfiguration.SelectedIndex = LST_GlobalEventConfiguration.Items.Count - 1;
+			LST_GlobalEventConfig.SelectedIndex = LST_GlobalEventConfig.Items.Count - 1;
 		}
 
 		#endregion
@@ -836,26 +1122,26 @@ namespace SEConfigTool
 		private void LST_SpawnGroupConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_SpawnGroupConfiguration.SelectedIndex;
+			int index = LST_SpawnGroupConfig.SelectedIndex;
 
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(index);
 
-			TXT_ConfigSpawnGroupPrefabCount.Text = spawnGroup.PrefabCount.ToString();
-			TXT_ConfigSpawnGroupFrequency.Text = spawnGroup.Frequency.ToString();
+			TXT_SpawnGroupConfig_Details_Info_Count.Text = spawnGroup.PrefabCount.ToString();
+			TXT_SpawnGroupConfig_Details_Info_Frequency.Text = spawnGroup.Frequency.ToString(m_numberFormatInfo);
 
 			LST_SpawnGroupConfig_Details_Prefabs.Items.Clear();
 			foreach (var def in spawnGroup.Prefabs)
 			{
 				LST_SpawnGroupConfig_Details_Prefabs.Items.Add(def.BeaconText);
 			}
-			TXT_SpawnGroupConfig_Details_PrefabFile.Text = "";
-			TXT_SpawnGroupConfig_Details_PrefabPosition.Text = "";
-			TXT_SpawnGroupConfig_Details_PrefabBeaconText.Text = "";
-			TXT_SpawnGroupConfig_Details_PrefabSpeed.Text = "";
+			TXT_SpawnGroupConfig_Details_Prefabs_File.Text = "";
+			TXT_SpawnGroupConfig_Details_Prefabs_Position.Text = "";
+			TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text = "";
+			TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text = "";
 
 			m_currentlySelecting = false;
 
-			BTN_SpawnGroupConfig_Details_Apply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Info_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigSpawnGroupReload_Click(object sender, EventArgs e)
@@ -870,20 +1156,20 @@ namespace SEConfigTool
 
 		private void BTN_ConfigSpawnGroupApply_Click(object sender, EventArgs e)
 		{
-			int index = LST_SpawnGroupConfiguration.SelectedIndex;
+			int index = LST_SpawnGroupConfig.SelectedIndex;
 
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(index);
 
-			spawnGroup.Frequency = Convert.ToSingle(TXT_ConfigSpawnGroupFrequency.Text, m_numberFormatInfo);
+			spawnGroup.Frequency = Convert.ToSingle(TXT_SpawnGroupConfig_Details_Info_Frequency.Text, m_numberFormatInfo);
 
-			BTN_SpawnGroupConfig_Details_Apply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Info_Apply.Enabled = false;
 		}
 
 		private void TXT_ConfigSpawnGroup_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_SpawnGroupConfig_Details_Apply.Visible = true;
+				BTN_SpawnGroupConfig_Details_Info_Apply.Enabled = true;
 			}
 		}
 
@@ -894,37 +1180,37 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
 
-			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfiguration.SelectedIndex);
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfig.SelectedIndex);
 			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
 
-			TXT_SpawnGroupConfig_Details_PrefabFile.Text = spawnGroupPrefab.File;
-			TXT_SpawnGroupConfig_Details_PrefabPosition.Text = spawnGroupPrefab.Position.ToString();
-			TXT_SpawnGroupConfig_Details_PrefabBeaconText.Text = spawnGroupPrefab.BeaconText;
-			TXT_SpawnGroupConfig_Details_PrefabSpeed.Text = spawnGroupPrefab.Speed.ToString();
+			TXT_SpawnGroupConfig_Details_Prefabs_File.Text = spawnGroupPrefab.File;
+			TXT_SpawnGroupConfig_Details_Prefabs_Position.Text = spawnGroupPrefab.Position.ToString();
+			TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text = spawnGroupPrefab.BeaconText;
+			TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text = spawnGroupPrefab.Speed.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
-			BTN_SpawnGroupConfig_Prefabs_Apply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Prefabs_Apply.Enabled = false;
 		}
 
 		private void BTN_SpawnGroupConfig_Prefabs_Apply_Click(object sender, EventArgs e)
 		{
 			int index = LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
 
-			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfiguration.SelectedIndex);
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfig.SelectedIndex);
 			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
 
-			spawnGroupPrefab.BeaconText = TXT_SpawnGroupConfig_Details_PrefabBeaconText.Text;
-			spawnGroupPrefab.Speed = Convert.ToSingle(TXT_SpawnGroupConfig_Details_PrefabSpeed.Text, m_numberFormatInfo);
+			spawnGroupPrefab.BeaconText = TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text;
+			spawnGroupPrefab.Speed = Convert.ToSingle(TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text, m_numberFormatInfo);
 
-			BTN_SpawnGroupConfig_Prefabs_Apply.Visible = false;
+			BTN_SpawnGroupConfig_Details_Prefabs_Apply.Enabled = false;
 		}
 
 		private void TXT_SpawnGroupConfig_Details_PrefabText_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_SpawnGroupConfig_Prefabs_Apply.Visible = true;
+				BTN_SpawnGroupConfig_Details_Prefabs_Apply.Enabled = true;
 			}
 		}
 
@@ -937,33 +1223,26 @@ namespace SEConfigTool
 		private void LST_PhysicalItemConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_PhysicalItemConfiguration.SelectedIndex;
+			int index = LST_PhysicalItemConfig.SelectedIndex;
 
 			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
 
-			TXT_PhysicalItemConfig_Id.Text = physicalItem.Id.ToString();
-			TXT_PhysicalItemConfig_Name.Text = physicalItem.Name;
-			TXT_PhysicalItemConfig_Description.Text = physicalItem.Description;
-			TXT_PhysicalItemConfig_Size.Text = physicalItem.Size.ToString();
-			TXT_PhysicalItemConfig_Mass.Text = physicalItem.Mass.ToString();
-			TXT_PhysicalItemConfig_Volume.Text = physicalItem.Volume.ToString();
-			TXT_PhysicalItemConfig_Model.Text = physicalItem.Model;
-			TXT_PhysicalItemConfig_Icon.Text = physicalItem.Icon;
-			try
-			{
-			TXT_PhysicalItemConfig_IconSymbol.Text = physicalItem.IconSymbol.ToString();
-			}
-			catch (InvalidOperationException NREx)
-			{
-				Console.WriteLine(NREx.ToString());
-				TXT_PhysicalItemConfig_IconSymbol.Text = "";
-			}
-            
-            
+			CMB_PhysicalItemConfig_Details_Type.SelectedItem = physicalItem.Id.TypeId;
+			TXT_PhysicalItemConfig_Details_Id.Text = physicalItem.Id.SubtypeId;
+			TXT_PhysicalItemConfig_Details_Name.Text = physicalItem.Name;
+			TXT_PhysicalItemConfig_Details_Description.Text = physicalItem.Description;
+			TXT_PhysicalItemConfig_Details_Icon.Text = physicalItem.Icon;
+			TXT_PhysicalItemConfig_Details_Model.Text = physicalItem.Model;
+			TXT_PhysicalItemConfig_Details_IconSymbol.Text = physicalItem.IconSymbol.ToString();
+			TXT_PhysicalItemConfig_Details_Size_X.Text = physicalItem.Size.X.ToString(m_numberFormatInfo);
+			TXT_PhysicalItemConfig_Details_Size_Y.Text = physicalItem.Size.Y.ToString(m_numberFormatInfo);
+			TXT_PhysicalItemConfig_Details_Size_Z.Text = physicalItem.Size.Z.ToString(m_numberFormatInfo);
+			TXT_PhysicalItemConfig_Details_Mass.Text = physicalItem.Mass.ToString(m_numberFormatInfo);
+			TXT_PhysicalItemConfig_Details_Volume.Text = physicalItem.Volume.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
-			BTN_PhysicalItemConfig_Details_Apply.Visible = false;
+			BTN_PhysicalItemConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ConfigPhysicalItemReload_Click(object sender, EventArgs e)
@@ -978,22 +1257,49 @@ namespace SEConfigTool
 
 		private void BTN_ConfigPhysicalItemApply_Click(object sender, EventArgs e)
 		{
-			int index = LST_PhysicalItemConfiguration.SelectedIndex;
+			int index = LST_PhysicalItemConfig.SelectedIndex;
 
 			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
 
-			physicalItem.Mass = Convert.ToSingle(TXT_PhysicalItemConfig_Mass.Text, m_numberFormatInfo);
-			physicalItem.Volume = Convert.ToSingle(TXT_PhysicalItemConfig_Volume.Text, m_numberFormatInfo);
+			physicalItem.Id = new SerializableDefinitionId((MyObjectBuilderTypeEnum) CMB_PhysicalItemConfig_Details_Type.SelectedItem, TXT_PhysicalItemConfig_Details_Id.Text);
+			physicalItem.Name = TXT_PhysicalItemConfig_Details_Name.Text;
+			physicalItem.DisplayName = TXT_PhysicalItemConfig_Details_Name.Text;
+			physicalItem.Description = TXT_PhysicalItemConfig_Details_Description.Text;
+			physicalItem.Icon = TXT_PhysicalItemConfig_Details_Icon.Text;
+			physicalItem.Model = TXT_PhysicalItemConfig_Details_Model.Text;
+			MyTextsWrapperEnum iconSymbol;
+			Enum.TryParse<MyTextsWrapperEnum>(TXT_PhysicalItemConfig_Details_IconSymbol.Text, true, out iconSymbol);
+			physicalItem.IconSymbol = iconSymbol;
+			physicalItem.Size = new Vector3(Convert.ToSingle(TXT_PhysicalItemConfig_Details_Size_X.Text, m_numberFormatInfo), Convert.ToSingle(TXT_PhysicalItemConfig_Details_Size_Y.Text, m_numberFormatInfo), Convert.ToSingle(TXT_PhysicalItemConfig_Details_Size_Z.Text, m_numberFormatInfo));
+			physicalItem.Mass = Convert.ToSingle(TXT_PhysicalItemConfig_Details_Mass.Text, m_numberFormatInfo);
+			physicalItem.Volume = Convert.ToSingle(TXT_PhysicalItemConfig_Details_Volume.Text, m_numberFormatInfo);
 
-			BTN_PhysicalItemConfig_Details_Apply.Visible = false;
+			BTN_PhysicalItemConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_PhysicalItemConfig_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_PhysicalItemConfig_Details_Apply.Visible = true;
+				BTN_PhysicalItemConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_PhysicalItemConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.NewEntry();
+			if (physicalItem == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			physicalItem.Name = "(New)";
+			physicalItem.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "NewSubtype");
+
+			FillPhysicalItemConfigurationListBox(false);
+
+			LST_PhysicalItemConfig.SelectedIndex = LST_PhysicalItemConfig.Items.Count - 1;
 		}
 
 		#endregion
@@ -1007,20 +1313,22 @@ namespace SEConfigTool
 
 			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
 
-			TXT_ComponentConfig_Id.Text = component.Id.ToString();
-			TXT_ComponentConfig_Name.Text = component.Name;
-			TXT_ComponentConfig_Description.Text = component.Description;
-			TXT_ComponentConfig_Size.Text = component.Size.ToString();
-			TXT_ComponentConfig_Mass.Text = component.Mass.ToString();
-			TXT_ComponentConfig_Volume.Text = component.Volume.ToString();
-			TXT_ComponentConfig_Model.Text = component.Model;
-			TXT_ComponentConfig_Icon.Text = component.Icon;
-			TXT_ComponentConfig_MaxIntegrity.Text = component.MaxIntegrity.ToString();
-			TXT_ComponentConfig_DropProbability.Text = component.DropProbability.ToString();
+			TXT_ComponentConfig_Details_Id.Text = component.Id.SubtypeId;
+			TXT_ComponentConfig_Details_Name.Text = component.Name;
+			TXT_ComponentConfig_Details_Description.Text = component.Description;
+			TXT_ComponentConfig_Details_Icon.Text = component.Icon;
+			TXT_ComponentConfig_Details_Model.Text = component.Model;
+			TXT_ComponentConfig_Details_Size_X.Text = component.Size.X.ToString(m_numberFormatInfo);
+			TXT_ComponentConfig_Details_Size_Y.Text = component.Size.Y.ToString(m_numberFormatInfo);
+			TXT_ComponentConfig_Details_Size_Z.Text = component.Size.Z.ToString(m_numberFormatInfo);
+			TXT_ComponentConfig_Details_Mass.Text = component.Mass.ToString(m_numberFormatInfo);
+			TXT_ComponentConfig_Details_Volume.Text = component.Volume.ToString(m_numberFormatInfo);
+			TXT_ComponentConfig_Details_MaxIntegrity.Text = component.MaxIntegrity.ToString();
+			TXT_ComponentConfig_Details_DropProbability.Text = component.DropProbability.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
 
-			BTN_ComponentConfig_Details_Apply.Visible = false;
+			BTN_ComponentConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_ComponentConfig_Reload_Click(object sender, EventArgs e)
@@ -1039,20 +1347,44 @@ namespace SEConfigTool
 
 			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
 
-			component.Mass = Convert.ToSingle(TXT_ComponentConfig_Mass.Text, m_numberFormatInfo);
-			component.Volume = Convert.ToSingle(TXT_ComponentConfig_Volume.Text, m_numberFormatInfo);
-			component.MaxIntegrity = Convert.ToInt32(TXT_ComponentConfig_MaxIntegrity.Text, m_numberFormatInfo);
-			component.DropProbability = Convert.ToSingle(TXT_ComponentConfig_DropProbability.Text, m_numberFormatInfo);
+			component.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, TXT_ComponentConfig_Details_Id.Text);
+			component.Name = TXT_ComponentConfig_Details_Name.Text;
+			component.DisplayName = TXT_ComponentConfig_Details_Name.Text;
+			component.Description = TXT_ComponentConfig_Details_Description.Text;
+			component.Icon = TXT_ComponentConfig_Details_Icon.Text;
+			component.Model = TXT_ComponentConfig_Details_Model.Text;
+			component.Size = new Vector3(Convert.ToSingle(TXT_ComponentConfig_Details_Size_X.Text, m_numberFormatInfo), Convert.ToSingle(TXT_ComponentConfig_Details_Size_Y.Text, m_numberFormatInfo), Convert.ToSingle(TXT_ComponentConfig_Details_Size_Z.Text, m_numberFormatInfo));
+			component.Mass = Convert.ToSingle(TXT_ComponentConfig_Details_Mass.Text, m_numberFormatInfo);
+			component.Volume = Convert.ToSingle(TXT_ComponentConfig_Details_Volume.Text, m_numberFormatInfo);
+			component.MaxIntegrity = Convert.ToInt32(TXT_ComponentConfig_Details_MaxIntegrity.Text, m_numberFormatInfo);
+			component.DropProbability = Convert.ToSingle(TXT_ComponentConfig_Details_DropProbability.Text, m_numberFormatInfo);
 
-			BTN_ComponentConfig_Details_Apply.Visible = false;
+			BTN_ComponentConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_ComponentConfig_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_ComponentConfig_Details_Apply.Visible = true;
+				BTN_ComponentConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_ComponentConfig_Details_New_Click(object sender, EventArgs e)
+		{
+			ComponentsDefinition component = m_componentsDefinitionsManager.NewEntry();
+			if (component == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			component.Name = "(New)";
+			component.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, "NewSubtype");
+
+			FillComponentConfigurationListBox(false);
+
+			LST_ComponentsConfig.SelectedIndex = LST_ComponentsConfig.Items.Count - 1;
 		}
 
 		#endregion
@@ -1066,17 +1398,26 @@ namespace SEConfigTool
 
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(index);
 
-			TXT_BlueprintConfig_Details_Result.Text = blueprint.Result.TypeId.ToString() + "/" + blueprint.Result.SubtypeId + " x" + blueprint.Result.Amount.ToString();
-			TXT_BlueprintConfig_Details_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString();
+			TXT_BlueprintConfig_Details_Result_SubtypeId.Text = blueprint.Result.SubTypeId;
+			TXT_BlueprintConfig_Details_Result_Amount.Text = blueprint.Result.Amount.ToString(m_numberFormatInfo);
+			TXT_BlueprintConfig_Details_Result_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString(m_numberFormatInfo);
 
 			LST_BlueprintConfig_Details_Prerequisites.Items.Clear();
 			foreach (var prereq in blueprint.Prerequisites)
 			{
-				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.TypeId.ToString() + "/" + prereq.SubtypeId + " x" + prereq.Amount.ToString());
+				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.Name);
 			}
 
+			CMB_BlueprintConfig_Details_Result_TypeId.DataSource = Enum.GetValues(typeof(MyObjectBuilderTypeEnum));
+			CMB_BlueprintConfig_Details_Prerequisites_TypeId.DataSource = Enum.GetValues(typeof(MyObjectBuilderTypeEnum));
+
+			CMB_BlueprintConfig_Details_Result_TypeId.SelectedItem = blueprint.Result.TypeId;
+			CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedIndex = -1;
+
 			m_currentlySelecting = false;
-			BTN_BlueprintConfig_Details_Apply.Visible = false;
+
+			BTN_BlueprintConfig_Details_Result_Apply.Enabled = false;
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
 		}
 
 		private void BTN_BlueprintConfig_Reload_Click(object sender, EventArgs e)
@@ -1089,24 +1430,75 @@ namespace SEConfigTool
 			m_blueprintsDefinitionsManager.Save();
 		}
 
-		private void BTN_BlueprintConfig_Details_Apply_Click(object sender, EventArgs e)
+		private void BTN_BlueprintConfig_Details_Result_Apply_Click(object sender, EventArgs e)
 		{
 			int index = LST_BlueprintConfig.SelectedIndex;
-
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(index);
 
-			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TXT_BlueprintConfig_Details_BaseProductionTime.Text, m_numberFormatInfo);
+			blueprint.Result.TypeId = (MyObjectBuilderTypeEnum)CMB_BlueprintConfig_Details_Result_TypeId.SelectedValue;
+			blueprint.Result.SubTypeId = TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Text;
+			blueprint.Result.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Result_Amount.Text, m_numberFormatInfo);
+			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TXT_BlueprintConfig_Details_Result_BaseProductionTime.Text, m_numberFormatInfo);
 
-			BTN_BlueprintConfig_Details_Apply.Visible = false;
+			BTN_BlueprintConfig_Details_Result_Apply.Enabled = false;
 		}
 
-		private void TXT_BlueprintConfig_Details_TextChanged(object sender, EventArgs e)
+		private void TXT_BlueprintConfig_Details_Result_TextChanged(object sender, EventArgs e)
 		{
-			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-			{
-				BTN_BlueprintConfig_Details_Apply.Visible = true;
-			}
+			BTN_BlueprintConfig_Details_Result_Apply.Enabled = true;
 		}
+
+		private void CMB_BlueprintConfig_Details_Result_TypeId_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			BTN_BlueprintConfig_Details_Result_Apply.Enabled = true;
+		}
+
+		#region Prerequisites
+
+		private void LST_BlueprintConfig_Details_Prerequisites_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int blueprintIndex = LST_BlueprintConfig.SelectedIndex;
+			int prereqIndex = LST_BlueprintConfig_Details_Prerequisites.SelectedIndex;
+
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(blueprintIndex);
+			BlueprintItemDefinition prereq = blueprint.Prerequisites[prereqIndex];
+
+			CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedItem = prereq.TypeId;
+			TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Text = prereq.SubTypeId;
+			TXT_BlueprintConfig_Details_Prerequisites_Amount.Text = prereq.Amount.ToString(m_numberFormatInfo);
+
+			m_currentlySelecting = false;
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
+		}
+
+		private void BTN_BlueprintConfig_Details_Prerequisites_Apply_Click(object sender, EventArgs e)
+		{
+			int blueprintIndex = LST_BlueprintConfig.SelectedIndex;
+			int prereqIndex = LST_BlueprintConfig_Details_Prerequisites.SelectedIndex;
+
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(blueprintIndex);
+			BlueprintItemDefinition prereq = blueprint.Prerequisites[prereqIndex];
+
+			prereq.TypeId = (MyObjectBuilderTypeEnum)CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedValue;
+			prereq.SubTypeId = TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Text;
+			prereq.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Prerequisites_Amount.Text, m_numberFormatInfo);
+
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
+		}
+
+
+		private void TXT_BlueprintConfig_Details_Prerequisites_TextChanged(object sender, EventArgs e)
+		{
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = true;
+		}
+
+		private void CMB_BlueprintConfig_Details_Prerequisites_TypeId_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = true;
+		}
+
+		#endregion
 
 		#endregion
 
@@ -1119,21 +1511,21 @@ namespace SEConfigTool
 
 			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(index);
 
-			TXT_VoxelMaterialsConfig_Details_Name.Text = voxelMaterial.Name;
-			TXT_VoxelMaterialsConfig_Details_AssetName.Text = voxelMaterial.AssetName;
-			TXT_VoxelMaterialsConfig_Details_MinedOre.Text = voxelMaterial.MinedOre;
+			TXT_VoxelMaterialConfig_Details_Name.Text = voxelMaterial.Name;
+			TXT_VoxelMaterialConfig_Details_AssetName.Text = voxelMaterial.AssetName;
+			TXT_VoxelMaterialConfig_Details_MinedOre.Text = voxelMaterial.MinedOre;
 
-			TXT_VoxelMaterialsConfig_Details_MinedOreRatio.Text = voxelMaterial.MinedOreRatio.ToString();
-			TXT_VoxelMaterialsConfig_Details_DamageRatio.Text = voxelMaterial.DamageRatio.ToString();
-			TXT_VoxelMaterialsConfig_Details_SpecularPower.Text = voxelMaterial.SpecularPower.ToString();
-			TXT_VoxelMaterialsConfig_Details_SpecularShininess.Text = voxelMaterial.SpecularShininess.ToString();
+			TXT_VoxelMaterialConfig_Details_MinedOreRatio.Text = voxelMaterial.MinedOreRatio.ToString(m_numberFormatInfo);
+			TXT_VoxelMaterialConfig_Details_DamageRatio.Text = voxelMaterial.DamageRatio.ToString(m_numberFormatInfo);
+			TXT_VoxelMaterialConfig_Details_SpecularPower.Text = voxelMaterial.SpecularPower.ToString(m_numberFormatInfo);
+			TXT_VoxelMaterialConfig_Details_SpecularShininess.Text = voxelMaterial.SpecularShininess.ToString(m_numberFormatInfo);
 
-			CHK_VoxelMaterialsConfig_Details_CanBeHarvested.Checked = voxelMaterial.CanBeHarvested;
-			CHK_VoxelMaterialsConfig_Details_IsRare.Checked = voxelMaterial.IsRare;
-			CHK_VoxelMaterialsConfig_Details_UseTwoTextures.Checked = voxelMaterial.UseTwoTextures;
+			CHK_VoxelMaterialConfig_Details_CanBeHarvested.Checked = voxelMaterial.CanBeHarvested;
+			CHK_VoxelMaterialConfig_Details_IsRare.Checked = voxelMaterial.IsRare;
+			CHK_VoxelMaterialConfig_Details_UseTwoTextures.Checked = voxelMaterial.UseTwoTextures;
 
 			m_currentlySelecting = false;
-			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
+			BTN_VoxelMaterialsConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_VoxelMaterialsConfig_Reload_Click(object sender, EventArgs e)
@@ -1152,27 +1544,27 @@ namespace SEConfigTool
 
 			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(index);
 
-			voxelMaterial.Name = TXT_VoxelMaterialsConfig_Details_Name.Text;
-			voxelMaterial.AssetName = TXT_VoxelMaterialsConfig_Details_AssetName.Text;
-			voxelMaterial.MinedOre = TXT_VoxelMaterialsConfig_Details_MinedOre.Text;
+			voxelMaterial.Name = TXT_VoxelMaterialConfig_Details_Name.Text;
+			voxelMaterial.AssetName = TXT_VoxelMaterialConfig_Details_AssetName.Text;
+			voxelMaterial.MinedOre = TXT_VoxelMaterialConfig_Details_MinedOre.Text;
 
-			voxelMaterial.MinedOreRatio = Convert.ToSingle(TXT_VoxelMaterialsConfig_Details_MinedOreRatio.Text, m_numberFormatInfo);
-			voxelMaterial.DamageRatio = Convert.ToSingle(TXT_VoxelMaterialsConfig_Details_DamageRatio.Text, m_numberFormatInfo);
-			voxelMaterial.SpecularPower = Convert.ToSingle(TXT_VoxelMaterialsConfig_Details_SpecularPower.Text, m_numberFormatInfo);
-			voxelMaterial.SpecularShininess = Convert.ToSingle(TXT_VoxelMaterialsConfig_Details_SpecularShininess.Text, m_numberFormatInfo);
+			voxelMaterial.MinedOreRatio = Convert.ToSingle(TXT_VoxelMaterialConfig_Details_MinedOreRatio.Text, m_numberFormatInfo);
+			voxelMaterial.DamageRatio = Convert.ToSingle(TXT_VoxelMaterialConfig_Details_DamageRatio.Text, m_numberFormatInfo);
+			voxelMaterial.SpecularPower = Convert.ToSingle(TXT_VoxelMaterialConfig_Details_SpecularPower.Text, m_numberFormatInfo);
+			voxelMaterial.SpecularShininess = Convert.ToSingle(TXT_VoxelMaterialConfig_Details_SpecularShininess.Text, m_numberFormatInfo);
 
-			voxelMaterial.CanBeHarvested = CHK_VoxelMaterialsConfig_Details_CanBeHarvested.CheckState == CheckState.Checked;
-			voxelMaterial.IsRare = CHK_VoxelMaterialsConfig_Details_IsRare.CheckState == CheckState.Checked;
-			voxelMaterial.UseTwoTextures = CHK_VoxelMaterialsConfig_Details_UseTwoTextures.CheckState == CheckState.Checked;
+			voxelMaterial.CanBeHarvested = CHK_VoxelMaterialConfig_Details_CanBeHarvested.CheckState == CheckState.Checked;
+			voxelMaterial.IsRare = CHK_VoxelMaterialConfig_Details_IsRare.CheckState == CheckState.Checked;
+			voxelMaterial.UseTwoTextures = CHK_VoxelMaterialConfig_Details_UseTwoTextures.CheckState == CheckState.Checked;
 
-			BTN_VoxelMaterialsConfig_Details_Apply.Visible = false;
+			BTN_VoxelMaterialsConfig_Details_Apply.Enabled = false;
 		}
 
 		private void TXT_VoxelMaterialsConfig_Details_TextChanged(object sender, EventArgs e)
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_VoxelMaterialsConfig_Details_Apply.Visible = true;
+				BTN_VoxelMaterialsConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -1180,7 +1572,7 @@ namespace SEConfigTool
 		{
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
-				BTN_VoxelMaterialsConfig_Details_Apply.Visible = true;
+				BTN_VoxelMaterialsConfig_Details_Apply.Enabled = true;
 			}
 		}
 
@@ -1195,14 +1587,99 @@ namespace SEConfigTool
 
 			ScenariosDefinition scenario = m_scenariosDefinitionManager.DefinitionOf(index);
 
-			TXT_ScenariosConfig_Details_Info_Id.Text = scenario.Id;
-			TXT_ScenariosConfig_Details_Info_Name.Text = scenario.Name;
+			TXT_ScenarioConfig_Details_Information_Id.Text = scenario.Id;
+			TXT_ScenarioConfig_Details_Information_Name.Text = scenario.Name;
 
-			CHK_ScenariosConfig_Details_Asteroid_Enabled.Checked = scenario.AsteroidClusters.Enabled;
-			CHK_ScenariosConfig_Details_Asteroid_CentralCluster.Checked = scenario.AsteroidClusters.CentralCluster;
-			TXT_ScenariosConfig_Details_Asteroid_Offset.Text = scenario.AsteroidClusters.Offset.ToString();
+			CHK_ScenarioConfig_Details_Asteroid_Enabled.Checked = scenario.AsteroidClusters.Enabled;
+			CHK_ScenarioConfig_Details_Asteroid_CentralCluster.Checked = scenario.AsteroidClusters.CentralCluster;
+			TXT_ScenariosConfig_Details_Asteroid_Offset.Text = scenario.AsteroidClusters.Offset.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
+		}
+
+		#endregion
+
+		#region TransparentMaterials
+
+		private void LST_TransparentMaterialsConfig_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_currentlySelecting = true;
+			int index = LST_TransparentMaterialsConfig.SelectedIndex;
+
+			TransparentMaterialsDefinition transparentMaterials = m_transparentMaterialsDefinitionManager.DefinitionOf(index);
+
+			TXT_TransparentMaterialConfig_Details_Name.Text = transparentMaterials.Name;
+			TXT_TransparentMaterialConfig_Details_Emissivity.Text = transparentMaterials.Emissivity.ToString(m_numberFormatInfo);
+			TXT_TransparentMaterialConfig_Details_SoftParticleDistanceScale.Text = transparentMaterials.SoftParticleDistanceScale.ToString(m_numberFormatInfo);
+			TXT_TransparentMaterialConfig_Details_Texture.Text = transparentMaterials.Texture;
+
+			TXT_TransparentMaterialConfig_Details_UVOffset_X.Text = transparentMaterials.UVOffset.X.ToString(m_numberFormatInfo);
+			TXT_TransparentMaterialConfig_Details_UVOffset_Y.Text = transparentMaterials.UVOffset.Y.ToString(m_numberFormatInfo);
+			TXT_TransparentMaterialConfig_Details_UVSize_X.Text = transparentMaterials.UVSize.X.ToString(m_numberFormatInfo);
+			TXT_TransparentMaterialConfig_Details_UVSize_Y.Text = transparentMaterials.UVSize.Y.ToString(m_numberFormatInfo);
+
+			CHK_TransparentMaterialConfig_Details_AlphaMistingEnable.Checked = transparentMaterials.AlphaMistingEnable;
+			CHK_TransparentMaterialConfig_Details_CanBeAffectedByLight.Checked = transparentMaterials.CanBeAffectedByOtherLights;
+			CHK_TransparentMaterialConfig_Details_IgnoreDepth.Checked = transparentMaterials.IgnoreDepth;
+			CHK_TransparentMaterialConfig_Details_UseAtlas.Checked = transparentMaterials.UseAtlas;
+
+			BTN_TransparentMaterialConfig_Details_Apply.Enabled = false;
+			m_currentlySelecting = false;
+		}
+
+		private void BTN_TransparentMaterialsConfig_Reload_Click(object sender, EventArgs e)
+		{
+			FillTransparentMaterialsConfigurationListBox();
+		}
+
+		private void BTN_TransparentMaterialsConfig_Save_Click(object sender, EventArgs e)
+		{
+			m_transparentMaterialsDefinitionManager.Save();
+		}
+
+		private void BTN_TransparentMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
+		{
+			int index = LST_TransparentMaterialsConfig.SelectedIndex;
+
+			TransparentMaterialsDefinition transparentMaterial = m_transparentMaterialsDefinitionManager.DefinitionOf(index);
+
+			transparentMaterial.Name = TXT_TransparentMaterialConfig_Details_Name.Text;
+			transparentMaterial.Emissivity = Convert.ToSingle(TXT_TransparentMaterialConfig_Details_Emissivity.Text, m_numberFormatInfo);
+			transparentMaterial.SoftParticleDistanceScale = Convert.ToSingle(TXT_TransparentMaterialConfig_Details_SoftParticleDistanceScale.Text, m_numberFormatInfo);
+			transparentMaterial.Texture = TXT_TransparentMaterialConfig_Details_Texture.Text;
+
+			transparentMaterial.AlphaMistingEnable = CHK_TransparentMaterialConfig_Details_AlphaMistingEnable.Checked;
+			transparentMaterial.CanBeAffectedByOtherLights = CHK_TransparentMaterialConfig_Details_CanBeAffectedByLight.Checked;
+			transparentMaterial.IgnoreDepth = CHK_TransparentMaterialConfig_Details_IgnoreDepth.Checked;
+			transparentMaterial.UseAtlas = CHK_TransparentMaterialConfig_Details_UseAtlas.Checked;
+
+			float uvOffsetX = Convert.ToSingle(TXT_TransparentMaterialConfig_Details_UVOffset_X.Text, m_numberFormatInfo);
+			float uvOffsetY = Convert.ToSingle(TXT_TransparentMaterialConfig_Details_UVOffset_Y.Text, m_numberFormatInfo);
+
+			transparentMaterial.UVOffset = new Vector2(uvOffsetX, uvOffsetY);
+
+			float uvSizeX = Convert.ToSingle(TXT_TransparentMaterialConfig_Details_UVSize_X.Text, m_numberFormatInfo);
+			float uvSizeY = Convert.ToSingle(TXT_TransparentMaterialConfig_Details_UVSize_Y.Text, m_numberFormatInfo);
+
+			transparentMaterial.UVSize = new Vector2(uvSizeX, uvSizeY);
+
+			BTN_TransparentMaterialConfig_Details_Apply.Enabled = false;
+		}
+
+		private void TXT_TransparentMaterialsConfig_Details_TextChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_TransparentMaterialConfig_Details_Apply.Enabled = true;
+			}
+		}
+
+		private void CHK_TransparentMaterialsConfig_Details_CheckedChanged(object sender, EventArgs e)
+		{
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_TransparentMaterialConfig_Details_Apply.Enabled = true;
+			}
 		}
 
 		#endregion

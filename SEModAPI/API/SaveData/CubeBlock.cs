@@ -26,6 +26,33 @@ namespace SEModAPI.API.SaveData
 			get { return this.GetNameFrom(m_baseDefinition); }
 		}
 
+		public long EntityId
+		{
+			get {
+				if (m_baseDefinition.EntityId == null)
+					return -1;
+				else
+					return m_baseDefinition.EntityId;
+			}
+			set
+			{
+				if (m_baseDefinition.EntityId == value) return;
+				m_baseDefinition.EntityId = value;
+				Changed = true;
+			}
+		}
+
+		public string SubtypeName
+		{
+			get { return m_baseDefinition.SubtypeName; }
+			set
+			{
+				if (m_baseDefinition.SubtypeName == value) return;
+				m_baseDefinition.SubtypeName = value;
+				Changed = true;
+			}
+		}
+
 		public SerializableVector3I Min
 		{
 			get { return m_baseDefinition.Min; }
@@ -82,6 +109,14 @@ namespace SEModAPI.API.SaveData
 		public CubeBlockManager(MyObjectBuilder_CubeBlock[] definitions)
 			: base(definitions)
 		{}
+
+		new public CubeBlock AddChildrenFrom(MyObjectBuilder_CubeBlock definition)
+		{
+			var newEntry = CreateOverLayerSubTypeInstance(definition);
+			m_definitions.Add(definition.EntityId, newEntry);
+
+			return newEntry;
+		}
 
 		#endregion
 

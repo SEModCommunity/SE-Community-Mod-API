@@ -14,6 +14,50 @@ namespace SEModAPI.API.Definitions
 
         #region "Properties"
 
+		public string DisplayName
+		{
+			get { return m_baseDefinition.DisplayName; }
+			set
+			{
+				if (m_baseDefinition.DisplayName == value) return;
+				m_baseDefinition.DisplayName = value;
+				Changed = true;
+			}
+		}
+
+		public string Icon
+		{
+			get { return m_baseDefinition.Icon; }
+			set
+			{
+				if (m_baseDefinition.Icon == value) return;
+				m_baseDefinition.Icon = value;
+				Changed = true;
+			}
+		}
+
+		public string Model
+		{
+			get { return m_baseDefinition.Model; }
+			set
+			{
+				if (m_baseDefinition.Model == value) return;
+				m_baseDefinition.Model = value;
+				Changed = true;
+			}
+		}
+
+		public VRageMath.Vector3 Size
+		{
+			get { return m_baseDefinition.Size; }
+			set
+			{
+				if (m_baseDefinition.Size == value) return;
+				m_baseDefinition.Size = value;
+				Changed = true;
+			}
+		}
+
         public MyAmmoCategoryEnum Caliber
         {
             get { return m_baseDefinition.Category; }

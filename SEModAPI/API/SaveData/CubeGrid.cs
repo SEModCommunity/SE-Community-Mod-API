@@ -28,6 +28,23 @@ namespace SEModAPI.API.SaveData
 
 		#region "Properties"
 
+		public long EntityId
+		{
+			get
+			{
+				if (m_baseDefinition.EntityId == null)
+					return -1;
+				else
+					return m_baseDefinition.EntityId;
+			}
+			set
+			{
+				if (m_baseDefinition.EntityId == value) return;
+				m_baseDefinition.EntityId = value;
+				Changed = true;
+			}
+		}
+
 		public MyCubeSize GridSizeEnum
 		{
 			get { return m_baseDefinition.GridSizeEnum; }
@@ -138,6 +155,14 @@ namespace SEModAPI.API.SaveData
 		public CubeGridManager(MyObjectBuilder_CubeGrid[] definitions)
 			: base(definitions)
 		{}
+
+		new public CubeGrid AddChildrenFrom(MyObjectBuilder_CubeGrid definition)
+		{
+			var newEntry = CreateOverLayerSubTypeInstance(definition);
+			m_definitions.Add(definition.EntityId, newEntry);
+
+			return newEntry;
+		}
 
 		#endregion
 

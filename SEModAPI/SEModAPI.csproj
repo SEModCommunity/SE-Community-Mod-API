@@ -83,7 +83,6 @@
     <Compile Include="API\SaveData\CubeBlock.cs" />
     <Compile Include="API\SaveData\CubeGrid.cs" />
     <Compile Include="API\Definitions\OverLayerDefinition.cs" />
-    <Compile Include="API\ConfigFileSerializer.cs" />
     <Compile Include="API\Definitions\BlueprintsDefinition.cs" />
     <Compile Include="API\Definitions\ComponentsDefinition.cs" />
     <Compile Include="API\Definitions\ConfigurationDefinition.cs" />
