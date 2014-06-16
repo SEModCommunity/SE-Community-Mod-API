@@ -20,7 +20,6 @@ namespace SEModAPI.API.Definitions
 			m_itemsManager = new ContainerTypeItemsManager();
 			if(definition.Items != null)
 				m_itemsManager.Load(definition.Items);
-			m_itemsManager.IsMutable = true;
 		}
 
         #endregion
@@ -40,7 +39,7 @@ namespace SEModAPI.API.Definitions
 
                 return false;
             }
-            set
+            private set
             {
                 base.Changed = value;
             }
