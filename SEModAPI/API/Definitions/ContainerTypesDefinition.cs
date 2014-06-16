@@ -14,11 +14,12 @@ namespace SEModAPI.API.Definitions
 
         #region "Constructors and Initializers"
 
-        public ContainerTypesDefinition(MyObjectBuilder_ContainerTypeDefinition myObjectBuilderDefinitionSubType)
-            : base(myObjectBuilderDefinitionSubType)
+		public ContainerTypesDefinition(MyObjectBuilder_ContainerTypeDefinition definition)
+			: base(definition)
         {
 			m_itemsManager = new ContainerTypeItemsManager();
-			m_itemsManager.Load(myObjectBuilderDefinitionSubType.Items);
+			if(definition.Items != null)
+				m_itemsManager.Load(definition.Items);
 			m_itemsManager.IsMutable = true;
 		}
 
@@ -30,6 +31,7 @@ namespace SEModAPI.API.Definitions
         {
             get
             {
+				if (base.Changed) return true;
 				foreach (var def in m_itemsManager.Definitions)
                 {
                     if (def.Changed)
@@ -52,6 +54,15 @@ namespace SEModAPI.API.Definitions
 				if (m_baseDefinition.Name == value) return;
 				m_baseDefinition.Name = value;
 				Changed = true;
+			}
+		}
+
+		new public MyObjectBuilder_ContainerTypeDefinition BaseDefinition
+		{
+			get
+			{
+				m_baseDefinition.Items = m_itemsManager.ExtractBaseDefinitions().ToArray();
+				return m_baseDefinition;
 			}
 		}
 
@@ -92,20 +103,10 @@ namespace SEModAPI.API.Definitions
             }
         }
 
-		public MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem[] BaseItems
-		{
-			get { return m_itemsManager.ExtractBaseDefinitions().ToArray(); }
-		}
-
         public ContainerTypeItem[] Items
         {
             get { return m_itemsManager.Definitions; }
         }
-
-		public ContainerTypeItemsManager ItemsManager
-		{
-			get { return m_itemsManager; }
-		}
 
         #endregion
 
@@ -115,6 +116,16 @@ namespace SEModAPI.API.Definitions
         {
             return definition.Name;
         }
+
+		public ContainerTypeItem NewEntry()
+		{
+			return m_itemsManager.NewEntry();
+		}
+
+		public bool DeleteEntry(ContainerTypeItem source)
+		{
+			return m_itemsManager.DeleteEntry(source);
+		}
 
         #endregion
     }
@@ -194,28 +205,6 @@ namespace SEModAPI.API.Definitions
 
 	public class ContainerTypesDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition, ContainerTypesDefinition>
     {
-		#region "Methods"
-
-		protected override bool GetChangedState(ContainerTypesDefinition overLayer)
-		{
-			foreach (var def in overLayer.Items)
-			{
-				if (def.Changed)
-					return true;
-			}
-
-			return overLayer.Changed;
-		}
-
-		protected override MyObjectBuilder_ContainerTypeDefinition GetBaseTypeOf(ContainerTypesDefinition overLayer)
-		{
-			MyObjectBuilder_ContainerTypeDefinition baseDef = overLayer.BaseDefinition;
-			baseDef.Items = overLayer.BaseItems;
-
-			return baseDef;
-		}
-
-		#endregion
 	}
 
 	public class ContainerTypeItemsManager : SerializableDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem, ContainerTypeItem>

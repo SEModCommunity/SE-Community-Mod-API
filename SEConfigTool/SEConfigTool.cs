@@ -1212,9 +1212,14 @@ namespace SEConfigTool
 		private void LST_ContainerTypeConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_ContainerTypesConfig.SelectedIndex;
 
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
+			if (LST_ContainerTypesConfig.SelectedIndex < 0)
+			{
+				BTN_ContainerTypesConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
 
 			TXT_ContainerTypeConfig_Details_Information_Name.Text = containerType.Name;
 			TXT_ContainerTypeConfig_Details_Information_CountMin.Text = containerType.CountMin.ToString();
@@ -1248,6 +1253,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
+			BTN_ContainerTypesConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_ConfigContainerTypeReload_Click(object sender, EventArgs e)
@@ -1257,14 +1263,25 @@ namespace SEConfigTool
 
 		private void BTN_SaveContainerTypeConfig_Click(object sender, EventArgs e)
 		{
-			m_containerTypesDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_containerTypesDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save ContainerTypes config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving ContainerTypes in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
-		private void BTN_ConfigContainerTypeApply_Click(object sender, EventArgs e)
+		private void BTN_ContainerTypesConfig_Details_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LST_ContainerTypesConfig.SelectedIndex;
-
-			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(index);
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
 
 			containerType.Name = TXT_ContainerTypeConfig_Details_Information_Name.Text;
 			containerType.CountMin = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMin.Text, m_numberFormatInfo);
@@ -1301,7 +1318,18 @@ namespace SEConfigTool
 
 		private void BTN_ContainerTypesConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_ContainerTypesConfig.SelectedIndex < 0) return;
+
+			ContainerTypesDefinition ammoMagazine = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
+
+			bool deleteResult = m_containerTypesDefinitionsManager.DeleteEntry(ammoMagazine);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete ContainerTypes entry!");
+				return;
+			}
+
+			FillContainerTypeConfigurationListBox(false);
 		}
 
 		#region Items
@@ -1309,10 +1337,15 @@ namespace SEConfigTool
 		private void LST_ContainerTypeConfiguration_Items_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_ContainerTypeConfig_Details_Items.SelectedIndex;
+
+			if (LST_ContainerTypeConfig_Details_Items.SelectedIndex < 0)
+			{
+				BTN_ContainerTypeConfig_Items_Delete.Enabled = false;
+				return;
+			}
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
-			ContainerTypeItem containerItem = containerType.Items[index];
+			ContainerTypeItem containerItem = containerType.Items[LST_ContainerTypeConfig_Details_Items.SelectedIndex];
 
 			CMB_ContainerTypeConfig_Items_Type.SelectedItem = containerItem.Id;
 
@@ -1323,6 +1356,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_ContainerTypeConfig_Items_Apply.Enabled = false;
+			BTN_ContainerTypeConfig_Items_Delete.Enabled = true;
 		}
 
 		private void BTN_ContainerTypeConfig_Items_Apply_Click(object sender, EventArgs e)
@@ -1367,7 +1401,7 @@ namespace SEConfigTool
 		private void BTN_ContainerTypeConfig_Items_New_Click(object sender, EventArgs e)
 		{
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
-			ContainerTypeItem containerItem = containerType.ItemsManager.NewEntry();
+			ContainerTypeItem containerItem = containerType.NewEntry();
 			if (containerItem == null)
 			{
 				MessageBox.Show(this, "Failed to create new entry");
@@ -1391,7 +1425,23 @@ namespace SEConfigTool
 
 		private void BTN_ContainerTypeConfig_Items_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_ContainerTypeConfig_Details_Items.SelectedIndex < 0) return;
+
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
+			ContainerTypeItem containerItem = containerType.Items[LST_ContainerTypeConfig_Details_Items.SelectedIndex];
+
+			bool deleteResult = containerType.DeleteEntry(containerItem);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete ContainerTypes Item entry!");
+				return;
+			}
+
+			LST_ContainerTypeConfig_Details_Items.Items.Clear();
+			foreach (var def in containerType.Items)
+			{
+				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
+			}
 		}
 
 		#endregion

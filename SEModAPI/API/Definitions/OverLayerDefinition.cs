@@ -263,6 +263,7 @@ namespace SEModAPI.API.Definitions
 
 			var newEntry = CreateOverLayerSubTypeInstance((T)Activator.CreateInstance(typeof(T), new object[] { }));
 			GetInternalData().Add(id, newEntry);
+			m_changed = true;
 
 			return newEntry;
 		}
@@ -273,6 +274,7 @@ namespace SEModAPI.API.Definitions
 
 			var newEntry = CreateOverLayerSubTypeInstance(source);
 			GetInternalData().Add(m_definitions.Count, newEntry);
+			m_changed = true;
 
 			return newEntry;
 		}

@@ -3641,6 +3641,7 @@ namespace SEConfigTool
 			this.BTN_ContainerTypesConfig_Details_Apply.TabIndex = 8;
 			this.BTN_ContainerTypesConfig_Details_Apply.Text = "Apply changes";
 			this.BTN_ContainerTypesConfig_Details_Apply.UseVisualStyleBackColor = true;
+			this.BTN_ContainerTypesConfig_Details_Apply.Click += new System.EventHandler(this.BTN_ContainerTypesConfig_Details_Apply_Click);
 			// 
 			// TXT_ContainerTypeConfig_Details_Information_CountMax
 			// 
