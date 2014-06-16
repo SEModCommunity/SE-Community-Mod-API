@@ -3954,7 +3954,6 @@ namespace SEConfigTool
 			// BTN_AmmoConfig_Details_Delete
 			// 
 			this.BTN_AmmoConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
-			this.BTN_AmmoConfig_Details_Delete.Enabled = false;
 			this.BTN_AmmoConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
 			this.BTN_AmmoConfig_Details_Delete.Name = "BTN_AmmoConfig_Details_Delete";
 			this.BTN_AmmoConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);

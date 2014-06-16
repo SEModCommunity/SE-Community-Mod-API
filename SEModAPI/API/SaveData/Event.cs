@@ -57,6 +57,7 @@ namespace SEModAPI.API.SaveData
 				Changed = true;
 			}
 		}
+
 		public MyGlobalEventTypeEnum EventType
 		{
 			get { return m_baseDefinition.EventType; }

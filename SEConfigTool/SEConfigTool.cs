@@ -74,12 +74,6 @@ namespace SEConfigTool
 			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
 			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
 			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
-
-			m_globalEventsDefinitionsManager.IsMutable = true;
-			m_ammoMagazinesDefinitionsManager.IsMutable = true;
-			m_componentsDefinitionsManager.IsMutable = true;
-			m_physicalItemsDefinitionsManager.IsMutable = true;
-			m_containerTypesDefinitionsManager.IsMutable = true;
 		}
 
 		#endregion
@@ -329,6 +323,16 @@ namespace SEConfigTool
 				LST_AmmoConfig.Items.Add(definition.Id.SubtypeId);
 			}
 
+			TXT_AmmoConfig_Details_Id.Text = "";
+			TXT_AmmoConfig_Details_Name.Text = "";
+			TXT_AmmoConfig_Details_Description.Text = "";
+			TXT_AmmoConfig_Details_Icon.Text = "";
+			TXT_AmmoConfig_Details_Model.Text = "";
+			CMB_AmmoConfig_Details_Caliber.SelectedItem = MyAmmoCategoryEnum.SmallCaliber;
+			TXT_AmmoConfig_Details_Capacity.Text = "";
+			TXT_AmmoConfig_Details_Volume.Text = "";
+			TXT_AmmoConfig_Details_Mass.Text = "";
+
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
@@ -543,7 +547,7 @@ namespace SEConfigTool
 			m_sectorManager.Save();
 
 			stopWatch.Stop();
-			TLS_StatusLabel.Text = "Done in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
+			TLS_StatusLabel.Text = "Done saving Sector in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 
 			MessageBox.Show(this, "Sector saved successfully in " + stopWatch.ElapsedMilliseconds.ToString() + "ms!");
 		}
@@ -1086,27 +1090,20 @@ namespace SEConfigTool
 
 		private void BTN_SaveAmmoConfig_Click(object sender, EventArgs e)
 		{
-			m_ammoMagazinesDefinitionsManager.Save();
-		}
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
 
-		private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
-		{
-			int index = LST_AmmoConfig.SelectedIndex;
+			bool saveResult = m_ammoMagazinesDefinitionsManager.Save();
 
-			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
+			stopWatch.Stop();
 
-			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, TXT_AmmoConfig_Details_Id.Text);
-			ammoMagazine.Name = TXT_AmmoConfig_Details_Name.Text;
-			ammoMagazine.DisplayName = TXT_AmmoConfig_Details_Name.Text;
-			ammoMagazine.Description = TXT_AmmoConfig_Details_Description.Text;
-			ammoMagazine.Icon = TXT_AmmoConfig_Details_Icon.Text;
-			ammoMagazine.Model = TXT_AmmoConfig_Details_Model.Text;
-			ammoMagazine.Caliber = (MyAmmoCategoryEnum) CMB_AmmoConfig_Details_Caliber.SelectedItem;
-			ammoMagazine.Capacity = Convert.ToInt32(TXT_AmmoConfig_Details_Capacity.Text, m_numberFormatInfo);
-			ammoMagazine.Mass = Convert.ToSingle(TXT_AmmoConfig_Details_Mass.Text, m_numberFormatInfo);
-			ammoMagazine.Volume = Convert.ToSingle(TXT_AmmoConfig_Details_Volume.Text, m_numberFormatInfo);
+			if(!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save AmmoMagazines config!");
+				return;
+			}
 
-			BTN_AmmoConfig_Details_Apply.Enabled = false;
+			TLS_StatusLabel.Text = "Done saving AmmoMagazines in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void TXT_ConfigAmmo_TextChanged(object sender, EventArgs e)
@@ -1123,6 +1120,26 @@ namespace SEConfigTool
 			{
 				BTN_AmmoConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
+		{
+			if (LST_AmmoConfig.SelectedIndex < 0) return;
+
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(LST_AmmoConfig.SelectedIndex);
+
+			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, TXT_AmmoConfig_Details_Id.Text);
+			ammoMagazine.Name = TXT_AmmoConfig_Details_Name.Text;
+			ammoMagazine.DisplayName = TXT_AmmoConfig_Details_Name.Text;
+			ammoMagazine.Description = TXT_AmmoConfig_Details_Description.Text;
+			ammoMagazine.Icon = TXT_AmmoConfig_Details_Icon.Text;
+			ammoMagazine.Model = TXT_AmmoConfig_Details_Model.Text;
+			ammoMagazine.Caliber = (MyAmmoCategoryEnum)CMB_AmmoConfig_Details_Caliber.SelectedItem;
+			ammoMagazine.Capacity = Convert.ToInt32(TXT_AmmoConfig_Details_Capacity.Text, m_numberFormatInfo);
+			ammoMagazine.Mass = Convert.ToSingle(TXT_AmmoConfig_Details_Mass.Text, m_numberFormatInfo);
+			ammoMagazine.Volume = Convert.ToSingle(TXT_AmmoConfig_Details_Volume.Text, m_numberFormatInfo);
+
+			BTN_AmmoConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_AmmoConfig_Details_New_Click(object sender, EventArgs e)
@@ -1144,7 +1161,18 @@ namespace SEConfigTool
 
 		private void BTN_AmmoConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_AmmoConfig.SelectedIndex < 0) return;
+
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(LST_AmmoConfig.SelectedIndex);
+
+			bool deleteResult = m_ammoMagazinesDefinitionsManager.DeleteEntry(ammoMagazine);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete AmmoMagazines entry!");
+				return;
+			}
+
+			FillAmmoConfigurationListBox(false);
 		}
 
 		#endregion
