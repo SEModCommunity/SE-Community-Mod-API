@@ -204,7 +204,15 @@ namespace SEModAPI.API.Definitions
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public class ContainerTypesDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition, ContainerTypesDefinition>
-    {
+	{
+		#region "Methods"
+
+		protected override MyObjectBuilder_ContainerTypeDefinition GetBaseTypeOf(ContainerTypesDefinition overLayer)
+		{
+			return overLayer.BaseDefinition;
+		}
+
+		#endregion
 	}
 
 	public class ContainerTypeItemsManager : SerializableDefinitionsManager<MyObjectBuilder_ContainerTypeDefinition.ContainerTypeItem, ContainerTypeItem>
