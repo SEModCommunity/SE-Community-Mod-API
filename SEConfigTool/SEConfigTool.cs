@@ -445,11 +445,12 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillVoxelMaterialConfigurationListBox()
+		private void FillVoxelMaterialConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_voxelMaterialsDefinitionsManager.Load(GetContentDataFile("VoxelMaterials.sbc"));
+			if(loadFromFile)
+				m_voxelMaterialsDefinitionsManager.Load(GetContentDataFile("VoxelMaterials.sbc"));
 
 			LST_VoxelMaterialsConfig.Items.Clear();
 			foreach (var definition in m_voxelMaterialsDefinitionsManager.Definitions)
@@ -475,11 +476,12 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillTransparentMaterialsConfigurationListBox()
+		private void FillTransparentMaterialsConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_transparentMaterialsDefinitionManager.Load(GetContentDataFile("TransparentMaterials.sbc"));
+			if(loadFromFile)
+				m_transparentMaterialsDefinitionManager.Load(GetContentDataFile("TransparentMaterials.sbc"));
 
 			LST_TransparentMaterialsConfig.Items.Clear();
 			foreach (var definition in m_transparentMaterialsDefinitionManager.Definitions)
@@ -1993,9 +1995,14 @@ namespace SEConfigTool
 		private void LST_VoxelMaterialsConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_VoxelMaterialsConfig.SelectedIndex;
 
-			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(index);
+			if (LST_VoxelMaterialsConfig.SelectedIndex < 0)
+			{
+				BTN_VoxelMaterialsConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(LST_VoxelMaterialsConfig.SelectedIndex);
 
 			TXT_VoxelMaterialConfig_Details_Name.Text = voxelMaterial.Name;
 			TXT_VoxelMaterialConfig_Details_AssetName.Text = voxelMaterial.AssetName;
@@ -2012,6 +2019,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 			BTN_VoxelMaterialsConfig_Details_Apply.Enabled = false;
+			BTN_VoxelMaterialsConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_VoxelMaterialsConfig_Reload_Click(object sender, EventArgs e)
@@ -2021,7 +2029,20 @@ namespace SEConfigTool
 
 		private void BTN_VoxelMaterialsConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_voxelMaterialsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_voxelMaterialsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save VoxelMaterials config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving VoxelMaterials in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_VoxelMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
@@ -2064,12 +2085,34 @@ namespace SEConfigTool
 
 		private void BTN_VoxelMaterialsConfig_Details_New_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.NewEntry();
+			if (voxelMaterial == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			voxelMaterial.Name = "(New)";
+
+			FillVoxelMaterialConfigurationListBox(false);
+
+			LST_VoxelMaterialsConfig.SelectedIndex = LST_VoxelMaterialsConfig.Items.Count - 1;
 		}
 
 		private void BTN_VoxelMaterialsConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_VoxelMaterialsConfig.SelectedIndex < 0) return;
+
+			VoxelMaterialsDefinition itemToDelete = m_voxelMaterialsDefinitionsManager.DefinitionOf(LST_VoxelMaterialsConfig.SelectedIndex);
+
+			bool deleteResult = m_voxelMaterialsDefinitionsManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete VoxelMaterials entry!");
+				return;
+			}
+
+			FillVoxelMaterialConfigurationListBox(false);
 		}
 
 		#endregion
