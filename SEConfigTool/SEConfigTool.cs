@@ -1058,9 +1058,14 @@ namespace SEConfigTool
 		private void LST_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_AmmoConfig.SelectedIndex;
 
-			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
+			if (LST_AmmoConfig.SelectedIndex < 0)
+			{
+				BTN_AmmoConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(LST_AmmoConfig.SelectedIndex);
 
 			CMB_AmmoConfig_Details_Caliber.Items.Clear();
 			foreach (var caliber in Enum.GetValues(typeof(MyAmmoCategoryEnum)))
@@ -1081,6 +1086,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_AmmoConfig_Details_Apply.Enabled = false;
+			BTN_AmmoConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_ConfigAmmoReload_Click(object sender, EventArgs e)
@@ -1373,9 +1379,14 @@ namespace SEConfigTool
 		private void LST_GlobalEventConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_GlobalEventConfig.SelectedIndex;
 
-			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
+			if (LST_GlobalEventConfig.SelectedIndex < 0)
+			{
+				BTN_GlobalEventConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(LST_GlobalEventConfig.SelectedIndex);
 
 			TXT_ConfigGlobalEvent_Details_Name.Text = globalEvent.Name;
 			TXT_ConfigGlobalEvent_Details_Description.Text = globalEvent.Description;
@@ -1387,6 +1398,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_GlobalEventConfig_Details_Apply.Enabled = false;
+			BTN_GlobalEventConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_ConfigGlobalEventReload_Click(object sender, EventArgs e)
@@ -1396,7 +1408,20 @@ namespace SEConfigTool
 
 		private void BTN_SaveGlobalEventConfig_Click(object sender, EventArgs e)
 		{
-			m_globalEventsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_globalEventsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save GlobalEvents config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving GlobalEvents in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_ConfigGlobalEventApply_Click(object sender, EventArgs e)
@@ -1452,7 +1477,18 @@ namespace SEConfigTool
 
 		private void BTN_GlobalEventConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_GlobalEventConfig.SelectedIndex < 0) return;
+
+			GlobalEventsDefinition itemToDelete = m_globalEventsDefinitionsManager.DefinitionOf(LST_GlobalEventConfig.SelectedIndex);
+
+			bool deleteResult = m_globalEventsDefinitionsManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete GlobalEvents entry!");
+				return;
+			}
+
+			FillGlobalEventConfigurationListBox(false);
 		}
 
 		#endregion
@@ -1583,9 +1619,14 @@ namespace SEConfigTool
 		private void LST_PhysicalItemConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_PhysicalItemConfig.SelectedIndex;
 
-			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
+			if (LST_PhysicalItemConfig.SelectedIndex < 0)
+			{
+				BTN_PhysicalItemConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(LST_PhysicalItemConfig.SelectedIndex);
 
 			CMB_PhysicalItemConfig_Details_Type.SelectedItem = physicalItem.Id.TypeId;
 			TXT_PhysicalItemConfig_Details_Id.Text = physicalItem.Id.SubtypeId;
@@ -1603,6 +1644,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_PhysicalItemConfig_Details_Apply.Enabled = false;
+			BTN_PhysicalItemConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_ConfigPhysicalItemReload_Click(object sender, EventArgs e)
@@ -1612,7 +1654,20 @@ namespace SEConfigTool
 
 		private void BTN_SavePhysicalItemConfig_Click(object sender, EventArgs e)
 		{
-			m_physicalItemsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_physicalItemsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save PhysicalItems config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving PhysicalItems in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_ConfigPhysicalItemApply_Click(object sender, EventArgs e)
@@ -1664,7 +1719,18 @@ namespace SEConfigTool
 
 		private void BTN_PhysicalItemConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_PhysicalItemConfig.SelectedIndex < 0) return;
+
+			PhysicalItemsDefinition itemToDelete = m_physicalItemsDefinitionsManager.DefinitionOf(LST_PhysicalItemConfig.SelectedIndex);
+
+			bool deleteResult = m_physicalItemsDefinitionsManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete PhysicalItems entry!");
+				return;
+			}
+
+			FillPhysicalItemConfigurationListBox(false);
 		}
 
 		#endregion
@@ -1674,9 +1740,14 @@ namespace SEConfigTool
 		private void LST_ComponentsConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_ComponentsConfig.SelectedIndex;
 
-			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
+			if (LST_ComponentsConfig.SelectedIndex < 0)
+			{
+				BTN_ComponentConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(LST_ComponentsConfig.SelectedIndex);
 
 			TXT_ComponentConfig_Details_Id.Text = component.Id.SubtypeId;
 			TXT_ComponentConfig_Details_Name.Text = component.Name;
@@ -1694,6 +1765,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_ComponentConfig_Details_Apply.Enabled = false;
+			BTN_ComponentConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_ComponentConfig_Reload_Click(object sender, EventArgs e)
@@ -1703,7 +1775,20 @@ namespace SEConfigTool
 
 		private void BTN_ComponentConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_componentsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_componentsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save Components config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving Components in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_ComponentConfig_Details_Apply_Click(object sender, EventArgs e)
@@ -1754,7 +1839,18 @@ namespace SEConfigTool
 
 		private void BTN_ComponentConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_ComponentsConfig.SelectedIndex < 0) return;
+
+			ComponentsDefinition itemToDelete = m_componentsDefinitionsManager.DefinitionOf(LST_ComponentsConfig.SelectedIndex);
+
+			bool deleteResult = m_componentsDefinitionsManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete Components entry!");
+				return;
+			}
+
+			FillComponentConfigurationListBox(false);
 		}
 
 		#endregion
