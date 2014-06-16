@@ -75,17 +75,8 @@ namespace SEConfigTool
 			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
 			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
 			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
-<<<<<<< HEAD
 			m_configurationDefinitionManager = new ConfigurationDefinition();
 			m_environmentDefinitionManager = new EnvironmentDefinition();
-
-			m_globalEventsDefinitionsManager.IsMutable = true;
-			m_ammoMagazinesDefinitionsManager.IsMutable = true;
-			m_componentsDefinitionsManager.IsMutable = true;
-			m_physicalItemsDefinitionsManager.IsMutable = true;
-			m_containerTypesDefinitionsManager.IsMutable = true;
-=======
->>>>>>> origin/master
 		}
 
 		#endregion
