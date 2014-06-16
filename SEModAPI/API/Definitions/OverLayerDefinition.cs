@@ -41,15 +41,12 @@ namespace SEModAPI.API.Definitions
 
 		public bool Changed { get; protected set; }
 
+		/// <summary>
+		/// Obtain a nicely formated name of the object
+		/// </summary>
 		public string Name
 		{
-			get { return m_name; }
-			set
-			{
-				if (m_name == value.ToString()) return;
-				m_name = value;
-				Changed = true;
-			}
+			get { return GetNameFrom(m_baseDefinition); }
 		}
 
 		public TMyObjectBuilder_Definitions_SubType BaseDefinition

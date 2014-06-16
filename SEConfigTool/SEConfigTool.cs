@@ -1160,7 +1160,6 @@ namespace SEConfigTool
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(LST_AmmoConfig.SelectedIndex);
 
 			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, TXT_AmmoConfig_Details_Id.Text);
-			ammoMagazine.Name = TXT_AmmoConfig_Details_Name.Text;
 			ammoMagazine.DisplayName = TXT_AmmoConfig_Details_Name.Text;
 			ammoMagazine.Description = TXT_AmmoConfig_Details_Description.Text;
 			ammoMagazine.Icon = TXT_AmmoConfig_Details_Icon.Text;
@@ -1182,7 +1181,7 @@ namespace SEConfigTool
 				return;
 			}
 
-			ammoMagazine.Name = "(New)";
+			ammoMagazine.DisplayName = "(New)";
 			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, "NewSubtype");
 
 			FillAmmoConfigurationListBox(false);
@@ -1413,7 +1412,6 @@ namespace SEConfigTool
 			}
 
 			//Set some default values for the new entry
-			containerItem.Name = "(New)";
 			containerItem.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "Stone");
 			containerItem.AmountMin = 1;
 			containerItem.AmountMax = 1;
@@ -1509,7 +1507,6 @@ namespace SEConfigTool
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
 			globalEvent.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.EventDefinition, ((MyGlobalEventTypeEnum)CMB_GlobalEventsConfig_Details_EventType.SelectedItem).ToString());
-			globalEvent.Name = TXT_ConfigGlobalEvent_Details_Name.Text;
 			globalEvent.DisplayName = globalEvent.Name;
 			globalEvent.Description = TXT_ConfigGlobalEvent_Details_Description.Text;
 			globalEvent.EventType = (MyGlobalEventTypeEnum)CMB_GlobalEventsConfig_Details_EventType.SelectedItem;
@@ -1545,7 +1542,7 @@ namespace SEConfigTool
 				return;
 			}
 
-			newGlobalEventDef.Name = "(New)";
+			newGlobalEventDef.DisplayName = "(New)";
 			newGlobalEventDef.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.EventDefinition, MyGlobalEventTypeEnum.InvalidEventType.ToString());
 
 			FillGlobalEventConfigurationListBox(false);
@@ -1646,8 +1643,6 @@ namespace SEConfigTool
 				return;
 			}
 
-			spawnGroup.Name = "(New)";
-			//spawnGroup.Prefabs;
 			spawnGroup.Frequency = 0;
 
 			FillSpawnGroupConfigurationListBox(false);
@@ -1838,7 +1833,6 @@ namespace SEConfigTool
 			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
 
 			physicalItem.Id = new SerializableDefinitionId((MyObjectBuilderTypeEnum)CMB_PhysicalItemConfig_Details_Type.SelectedItem, TXT_PhysicalItemConfig_Details_Id.Text);
-			physicalItem.Name = TXT_PhysicalItemConfig_Details_Name.Text;
 			physicalItem.DisplayName = TXT_PhysicalItemConfig_Details_Name.Text;
 			physicalItem.Description = TXT_PhysicalItemConfig_Details_Description.Text;
 			physicalItem.Icon = TXT_PhysicalItemConfig_Details_Icon.Text;
@@ -1870,7 +1864,7 @@ namespace SEConfigTool
 				return;
 			}
 
-			physicalItem.Name = "(New)";
+			physicalItem.DisplayName = "(New)";
 			physicalItem.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "NewSubtype");
 
 			FillPhysicalItemConfigurationListBox(false);
@@ -1959,7 +1953,6 @@ namespace SEConfigTool
 			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
 
 			component.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, TXT_ComponentConfig_Details_Id.Text);
-			component.Name = TXT_ComponentConfig_Details_Name.Text;
 			component.DisplayName = TXT_ComponentConfig_Details_Name.Text;
 			component.Description = TXT_ComponentConfig_Details_Description.Text;
 			component.Icon = TXT_ComponentConfig_Details_Icon.Text;
@@ -1990,7 +1983,7 @@ namespace SEConfigTool
 				return;
 			}
 
-			component.Name = "(New)";
+			component.DisplayName = "(New)";
 			component.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, "NewSubtype");
 
 			FillComponentConfigurationListBox(false);

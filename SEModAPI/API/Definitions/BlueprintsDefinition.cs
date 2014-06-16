@@ -110,6 +110,11 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		new public string Name
+		{
+			get { return base.Name; }
+		}
+
 		#endregion
 
 		#region "Methods"
