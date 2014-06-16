@@ -2205,9 +2205,14 @@ namespace SEConfigTool
 		private void LST_TransparentMaterialsConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_TransparentMaterialsConfig.SelectedIndex;
 
-			TransparentMaterialsDefinition transparentMaterials = m_transparentMaterialsDefinitionManager.DefinitionOf(index);
+			if (LST_TransparentMaterialsConfig.SelectedIndex < 0)
+			{
+				BTN_TransparentMaterialConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			TransparentMaterialsDefinition transparentMaterials = m_transparentMaterialsDefinitionManager.DefinitionOf(LST_TransparentMaterialsConfig.SelectedIndex);
 
 			TXT_TransparentMaterialConfig_Details_Name.Text = transparentMaterials.Name;
 			TXT_TransparentMaterialConfig_Details_Emissivity.Text = transparentMaterials.Emissivity.ToString(m_numberFormatInfo);
@@ -2224,8 +2229,9 @@ namespace SEConfigTool
 			CHK_TransparentMaterialConfig_Details_IgnoreDepth.Checked = transparentMaterials.IgnoreDepth;
 			CHK_TransparentMaterialConfig_Details_UseAtlas.Checked = transparentMaterials.UseAtlas;
 
-			BTN_TransparentMaterialConfig_Details_Apply.Enabled = false;
 			m_currentlySelecting = false;
+			BTN_TransparentMaterialConfig_Details_Apply.Enabled = false;
+			BTN_TransparentMaterialConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_TransparentMaterialsConfig_Reload_Click(object sender, EventArgs e)
@@ -2235,7 +2241,20 @@ namespace SEConfigTool
 
 		private void BTN_TransparentMaterialsConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_transparentMaterialsDefinitionManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_transparentMaterialsDefinitionManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save TransparentMaterials config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving TransparentMaterials in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_TransparentMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
@@ -2285,12 +2304,34 @@ namespace SEConfigTool
 
 		private void BTN_TransparentMaterialConfig_Details_New_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			TransparentMaterialsDefinition transparentMaterials = m_transparentMaterialsDefinitionManager.NewEntry();
+			if (transparentMaterials == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			transparentMaterials.Name = "(New)";
+
+			FillTransparentMaterialsConfigurationListBox(false);
+
+			LST_TransparentMaterialsConfig.SelectedIndex = LST_TransparentMaterialsConfig.Items.Count - 1;
 		}
 
 		private void BTN_TransparentMaterialConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_TransparentMaterialsConfig.SelectedIndex < 0) return;
+
+			TransparentMaterialsDefinition itemToDelete = m_transparentMaterialsDefinitionManager.DefinitionOf(LST_TransparentMaterialsConfig.SelectedIndex);
+
+			bool deleteResult = m_transparentMaterialsDefinitionManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete TransparentMaterials entry!");
+				return;
+			}
+
+			FillTransparentMaterialsConfigurationListBox(false);
 		}
 
 		#endregion
