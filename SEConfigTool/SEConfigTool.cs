@@ -75,6 +75,7 @@ namespace SEConfigTool
 			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
 			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
 			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
+<<<<<<< HEAD
 			m_configurationDefinitionManager = new ConfigurationDefinition();
 			m_environmentDefinitionManager = new EnvironmentDefinition();
 
@@ -83,6 +84,8 @@ namespace SEConfigTool
 			m_componentsDefinitionsManager.IsMutable = true;
 			m_physicalItemsDefinitionsManager.IsMutable = true;
 			m_containerTypesDefinitionsManager.IsMutable = true;
+=======
+>>>>>>> origin/master
 		}
 
 		#endregion
@@ -332,6 +335,16 @@ namespace SEConfigTool
 				LST_AmmoConfig.Items.Add(definition.Id.SubtypeId);
 			}
 
+			TXT_AmmoConfig_Details_Id.Text = "";
+			TXT_AmmoConfig_Details_Name.Text = "";
+			TXT_AmmoConfig_Details_Description.Text = "";
+			TXT_AmmoConfig_Details_Icon.Text = "";
+			TXT_AmmoConfig_Details_Model.Text = "";
+			CMB_AmmoConfig_Details_Caliber.SelectedItem = MyAmmoCategoryEnum.SmallCaliber;
+			TXT_AmmoConfig_Details_Capacity.Text = "";
+			TXT_AmmoConfig_Details_Volume.Text = "";
+			TXT_AmmoConfig_Details_Mass.Text = "";
+
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
@@ -444,11 +457,12 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillVoxelMaterialConfigurationListBox()
+		private void FillVoxelMaterialConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_voxelMaterialsDefinitionsManager.Load(GetContentDataFile("VoxelMaterials.sbc"));
+			if(loadFromFile)
+				m_voxelMaterialsDefinitionsManager.Load(GetContentDataFile("VoxelMaterials.sbc"));
 
 			LST_VoxelMaterialsConfig.Items.Clear();
 			foreach (var definition in m_voxelMaterialsDefinitionsManager.Definitions)
@@ -474,11 +488,12 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillTransparentMaterialsConfigurationListBox()
+		private void FillTransparentMaterialsConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_transparentMaterialsDefinitionManager.Load(GetContentDataFile("TransparentMaterials.sbc"));
+			if(loadFromFile)
+				m_transparentMaterialsDefinitionManager.Load(GetContentDataFile("TransparentMaterials.sbc"));
 
 			LST_TransparentMaterialsConfig.Items.Clear();
 			foreach (var definition in m_transparentMaterialsDefinitionManager.Definitions)
@@ -565,7 +580,7 @@ namespace SEConfigTool
 			m_sectorManager.Save();
 
 			stopWatch.Stop();
-			TLS_StatusLabel.Text = "Done in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
+			TLS_StatusLabel.Text = "Done saving Sector in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 
 			MessageBox.Show(this, "Sector saved successfully in " + stopWatch.ElapsedMilliseconds.ToString() + "ms!");
 		}
@@ -1076,9 +1091,14 @@ namespace SEConfigTool
 		private void LST_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_AmmoConfig.SelectedIndex;
 
-			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
+			if (LST_AmmoConfig.SelectedIndex < 0)
+			{
+				BTN_AmmoConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(LST_AmmoConfig.SelectedIndex);
 
 			CMB_AmmoConfig_Details_Caliber.Items.Clear();
 			foreach (var caliber in Enum.GetValues(typeof(MyAmmoCategoryEnum)))
@@ -1099,6 +1119,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_AmmoConfig_Details_Apply.Enabled = false;
+			BTN_AmmoConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_ConfigAmmoReload_Click(object sender, EventArgs e)
@@ -1108,27 +1129,20 @@ namespace SEConfigTool
 
 		private void BTN_SaveAmmoConfig_Click(object sender, EventArgs e)
 		{
-			m_ammoMagazinesDefinitionsManager.Save();
-		}
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
 
-		private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
-		{
-			int index = LST_AmmoConfig.SelectedIndex;
+			bool saveResult = m_ammoMagazinesDefinitionsManager.Save();
 
-			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(index);
+			stopWatch.Stop();
 
-			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, TXT_AmmoConfig_Details_Id.Text);
-			ammoMagazine.Name = TXT_AmmoConfig_Details_Name.Text;
-			ammoMagazine.DisplayName = TXT_AmmoConfig_Details_Name.Text;
-			ammoMagazine.Description = TXT_AmmoConfig_Details_Description.Text;
-			ammoMagazine.Icon = TXT_AmmoConfig_Details_Icon.Text;
-			ammoMagazine.Model = TXT_AmmoConfig_Details_Model.Text;
-			ammoMagazine.Caliber = (MyAmmoCategoryEnum) CMB_AmmoConfig_Details_Caliber.SelectedItem;
-			ammoMagazine.Capacity = Convert.ToInt32(TXT_AmmoConfig_Details_Capacity.Text, m_numberFormatInfo);
-			ammoMagazine.Mass = Convert.ToSingle(TXT_AmmoConfig_Details_Mass.Text, m_numberFormatInfo);
-			ammoMagazine.Volume = Convert.ToSingle(TXT_AmmoConfig_Details_Volume.Text, m_numberFormatInfo);
+			if(!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save AmmoMagazines config!");
+				return;
+			}
 
-			BTN_AmmoConfig_Details_Apply.Enabled = false;
+			TLS_StatusLabel.Text = "Done saving AmmoMagazines in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void TXT_ConfigAmmo_TextChanged(object sender, EventArgs e)
@@ -1145,6 +1159,26 @@ namespace SEConfigTool
 			{
 				BTN_AmmoConfig_Details_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_ConfigAmmoApply_Click(object sender, EventArgs e)
+		{
+			if (LST_AmmoConfig.SelectedIndex < 0) return;
+
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(LST_AmmoConfig.SelectedIndex);
+
+			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, TXT_AmmoConfig_Details_Id.Text);
+			ammoMagazine.Name = TXT_AmmoConfig_Details_Name.Text;
+			ammoMagazine.DisplayName = TXT_AmmoConfig_Details_Name.Text;
+			ammoMagazine.Description = TXT_AmmoConfig_Details_Description.Text;
+			ammoMagazine.Icon = TXT_AmmoConfig_Details_Icon.Text;
+			ammoMagazine.Model = TXT_AmmoConfig_Details_Model.Text;
+			ammoMagazine.Caliber = (MyAmmoCategoryEnum)CMB_AmmoConfig_Details_Caliber.SelectedItem;
+			ammoMagazine.Capacity = Convert.ToInt32(TXT_AmmoConfig_Details_Capacity.Text, m_numberFormatInfo);
+			ammoMagazine.Mass = Convert.ToSingle(TXT_AmmoConfig_Details_Mass.Text, m_numberFormatInfo);
+			ammoMagazine.Volume = Convert.ToSingle(TXT_AmmoConfig_Details_Volume.Text, m_numberFormatInfo);
+
+			BTN_AmmoConfig_Details_Apply.Enabled = false;
 		}
 
 		private void BTN_AmmoConfig_Details_New_Click(object sender, EventArgs e)
@@ -1166,7 +1200,18 @@ namespace SEConfigTool
 
 		private void BTN_AmmoConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_AmmoConfig.SelectedIndex < 0) return;
+
+			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(LST_AmmoConfig.SelectedIndex);
+
+			bool deleteResult = m_ammoMagazinesDefinitionsManager.DeleteEntry(ammoMagazine);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete AmmoMagazines entry!");
+				return;
+			}
+
+			FillAmmoConfigurationListBox(false);
 		}
 
 		#endregion
@@ -1367,9 +1412,14 @@ namespace SEConfigTool
 		private void LST_GlobalEventConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_GlobalEventConfig.SelectedIndex;
 
-			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
+			if (LST_GlobalEventConfig.SelectedIndex < 0)
+			{
+				BTN_GlobalEventConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(LST_GlobalEventConfig.SelectedIndex);
 
 			TXT_ConfigGlobalEvent_Details_Name.Text = globalEvent.Name;
 			TXT_ConfigGlobalEvent_Details_Description.Text = globalEvent.Description;
@@ -1381,6 +1431,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_GlobalEventConfig_Details_Apply.Enabled = false;
+			BTN_GlobalEventConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_ConfigGlobalEventReload_Click(object sender, EventArgs e)
@@ -1390,7 +1441,20 @@ namespace SEConfigTool
 
 		private void BTN_SaveGlobalEventConfig_Click(object sender, EventArgs e)
 		{
-			m_globalEventsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_globalEventsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save GlobalEvents config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving GlobalEvents in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_ConfigGlobalEventApply_Click(object sender, EventArgs e)
@@ -1446,7 +1510,18 @@ namespace SEConfigTool
 
 		private void BTN_GlobalEventConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_GlobalEventConfig.SelectedIndex < 0) return;
+
+			GlobalEventsDefinition itemToDelete = m_globalEventsDefinitionsManager.DefinitionOf(LST_GlobalEventConfig.SelectedIndex);
+
+			bool deleteResult = m_globalEventsDefinitionsManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete GlobalEvents entry!");
+				return;
+			}
+
+			FillGlobalEventConfigurationListBox(false);
 		}
 
 		#endregion
@@ -1577,9 +1652,14 @@ namespace SEConfigTool
 		private void LST_PhysicalItemConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_PhysicalItemConfig.SelectedIndex;
 
-			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
+			if (LST_PhysicalItemConfig.SelectedIndex < 0)
+			{
+				BTN_PhysicalItemConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(LST_PhysicalItemConfig.SelectedIndex);
 
 			CMB_PhysicalItemConfig_Details_Type.SelectedItem = physicalItem.Id.TypeId;
 			TXT_PhysicalItemConfig_Details_Id.Text = physicalItem.Id.SubtypeId;
@@ -1597,6 +1677,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_PhysicalItemConfig_Details_Apply.Enabled = false;
+			BTN_PhysicalItemConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_ConfigPhysicalItemReload_Click(object sender, EventArgs e)
@@ -1606,7 +1687,20 @@ namespace SEConfigTool
 
 		private void BTN_SavePhysicalItemConfig_Click(object sender, EventArgs e)
 		{
-			m_physicalItemsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_physicalItemsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save PhysicalItems config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving PhysicalItems in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_ConfigPhysicalItemApply_Click(object sender, EventArgs e)
@@ -1658,7 +1752,18 @@ namespace SEConfigTool
 
 		private void BTN_PhysicalItemConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_PhysicalItemConfig.SelectedIndex < 0) return;
+
+			PhysicalItemsDefinition itemToDelete = m_physicalItemsDefinitionsManager.DefinitionOf(LST_PhysicalItemConfig.SelectedIndex);
+
+			bool deleteResult = m_physicalItemsDefinitionsManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete PhysicalItems entry!");
+				return;
+			}
+
+			FillPhysicalItemConfigurationListBox(false);
 		}
 
 		#endregion
@@ -1668,9 +1773,14 @@ namespace SEConfigTool
 		private void LST_ComponentsConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_ComponentsConfig.SelectedIndex;
 
-			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
+			if (LST_ComponentsConfig.SelectedIndex < 0)
+			{
+				BTN_ComponentConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(LST_ComponentsConfig.SelectedIndex);
 
 			TXT_ComponentConfig_Details_Id.Text = component.Id.SubtypeId;
 			TXT_ComponentConfig_Details_Name.Text = component.Name;
@@ -1688,6 +1798,7 @@ namespace SEConfigTool
 			m_currentlySelecting = false;
 
 			BTN_ComponentConfig_Details_Apply.Enabled = false;
+			BTN_ComponentConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_ComponentConfig_Reload_Click(object sender, EventArgs e)
@@ -1697,7 +1808,20 @@ namespace SEConfigTool
 
 		private void BTN_ComponentConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_componentsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_componentsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save Components config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving Components in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_ComponentConfig_Details_Apply_Click(object sender, EventArgs e)
@@ -1748,7 +1872,18 @@ namespace SEConfigTool
 
 		private void BTN_ComponentConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_ComponentsConfig.SelectedIndex < 0) return;
+
+			ComponentsDefinition itemToDelete = m_componentsDefinitionsManager.DefinitionOf(LST_ComponentsConfig.SelectedIndex);
+
+			bool deleteResult = m_componentsDefinitionsManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete Components entry!");
+				return;
+			}
+
+			FillComponentConfigurationListBox(false);
 		}
 
 		#endregion
@@ -1891,9 +2026,14 @@ namespace SEConfigTool
 		private void LST_VoxelMaterialsConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_VoxelMaterialsConfig.SelectedIndex;
 
-			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(index);
+			if (LST_VoxelMaterialsConfig.SelectedIndex < 0)
+			{
+				BTN_VoxelMaterialsConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(LST_VoxelMaterialsConfig.SelectedIndex);
 
 			TXT_VoxelMaterialConfig_Details_Name.Text = voxelMaterial.Name;
 			TXT_VoxelMaterialConfig_Details_AssetName.Text = voxelMaterial.AssetName;
@@ -1910,6 +2050,7 @@ namespace SEConfigTool
 
 			m_currentlySelecting = false;
 			BTN_VoxelMaterialsConfig_Details_Apply.Enabled = false;
+			BTN_VoxelMaterialsConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_VoxelMaterialsConfig_Reload_Click(object sender, EventArgs e)
@@ -1919,7 +2060,20 @@ namespace SEConfigTool
 
 		private void BTN_VoxelMaterialsConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_voxelMaterialsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_voxelMaterialsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save VoxelMaterials config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving VoxelMaterials in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_VoxelMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
@@ -1962,12 +2116,34 @@ namespace SEConfigTool
 
 		private void BTN_VoxelMaterialsConfig_Details_New_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.NewEntry();
+			if (voxelMaterial == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			voxelMaterial.Name = "(New)";
+
+			FillVoxelMaterialConfigurationListBox(false);
+
+			LST_VoxelMaterialsConfig.SelectedIndex = LST_VoxelMaterialsConfig.Items.Count - 1;
 		}
 
 		private void BTN_VoxelMaterialsConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_VoxelMaterialsConfig.SelectedIndex < 0) return;
+
+			VoxelMaterialsDefinition itemToDelete = m_voxelMaterialsDefinitionsManager.DefinitionOf(LST_VoxelMaterialsConfig.SelectedIndex);
+
+			bool deleteResult = m_voxelMaterialsDefinitionsManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete VoxelMaterials entry!");
+				return;
+			}
+
+			FillVoxelMaterialConfigurationListBox(false);
 		}
 
 		#endregion
@@ -2060,9 +2236,14 @@ namespace SEConfigTool
 		private void LST_TransparentMaterialsConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_currentlySelecting = true;
-			int index = LST_TransparentMaterialsConfig.SelectedIndex;
 
-			TransparentMaterialsDefinition transparentMaterials = m_transparentMaterialsDefinitionManager.DefinitionOf(index);
+			if (LST_TransparentMaterialsConfig.SelectedIndex < 0)
+			{
+				BTN_TransparentMaterialConfig_Details_Delete.Enabled = false;
+				return;
+			}
+
+			TransparentMaterialsDefinition transparentMaterials = m_transparentMaterialsDefinitionManager.DefinitionOf(LST_TransparentMaterialsConfig.SelectedIndex);
 
 			TXT_TransparentMaterialConfig_Details_Name.Text = transparentMaterials.Name;
 			TXT_TransparentMaterialConfig_Details_Emissivity.Text = transparentMaterials.Emissivity.ToString(m_numberFormatInfo);
@@ -2079,8 +2260,9 @@ namespace SEConfigTool
 			CHK_TransparentMaterialConfig_Details_IgnoreDepth.Checked = transparentMaterials.IgnoreDepth;
 			CHK_TransparentMaterialConfig_Details_UseAtlas.Checked = transparentMaterials.UseAtlas;
 
-			BTN_TransparentMaterialConfig_Details_Apply.Enabled = false;
 			m_currentlySelecting = false;
+			BTN_TransparentMaterialConfig_Details_Apply.Enabled = false;
+			BTN_TransparentMaterialConfig_Details_Delete.Enabled = true;
 		}
 
 		private void BTN_TransparentMaterialsConfig_Reload_Click(object sender, EventArgs e)
@@ -2090,7 +2272,20 @@ namespace SEConfigTool
 
 		private void BTN_TransparentMaterialsConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_transparentMaterialsDefinitionManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_transparentMaterialsDefinitionManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save TransparentMaterials config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving TransparentMaterials in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_TransparentMaterialsConfig_Details_Apply_Click(object sender, EventArgs e)
@@ -2140,12 +2335,34 @@ namespace SEConfigTool
 
 		private void BTN_TransparentMaterialConfig_Details_New_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			TransparentMaterialsDefinition transparentMaterials = m_transparentMaterialsDefinitionManager.NewEntry();
+			if (transparentMaterials == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			transparentMaterials.Name = "(New)";
+
+			FillTransparentMaterialsConfigurationListBox(false);
+
+			LST_TransparentMaterialsConfig.SelectedIndex = LST_TransparentMaterialsConfig.Items.Count - 1;
 		}
 
 		private void BTN_TransparentMaterialConfig_Details_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_TransparentMaterialsConfig.SelectedIndex < 0) return;
+
+			TransparentMaterialsDefinition itemToDelete = m_transparentMaterialsDefinitionManager.DefinitionOf(LST_TransparentMaterialsConfig.SelectedIndex);
+
+			bool deleteResult = m_transparentMaterialsDefinitionManager.DeleteEntry(itemToDelete);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete TransparentMaterials entry!");
+				return;
+			}
+
+			FillTransparentMaterialsConfigurationListBox(false);
 		}
 
 		#endregion

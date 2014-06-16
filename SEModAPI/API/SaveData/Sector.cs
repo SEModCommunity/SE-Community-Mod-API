@@ -225,9 +225,9 @@ namespace SEModAPI.API.SaveData
 			m_Sector = new Sector(data);
 		}
 
-		new public void Save()
+		new public bool Save()
 		{
-			WriteSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(m_Sector.BaseDefinition, this.FileInfo.FullName);
+			return WriteSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(m_Sector.BaseDefinition, this.FileInfo.FullName);
 		}
 
 		#endregion

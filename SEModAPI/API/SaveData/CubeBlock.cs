@@ -68,7 +68,11 @@ namespace SEModAPI.API.SaveData
 
 	public class CubeBlockManager : SerializableEntityManager<MyObjectBuilder_CubeBlock, CubeBlock<MyObjectBuilder_CubeBlock>>
 	{
+		#region "Attributes"
+
 		private Dictionary<long, Object> m_rawDefinitions = new Dictionary<long, Object>();
+
+		#endregion
 
 		#region "Properties"
 

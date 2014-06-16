@@ -117,11 +117,11 @@ namespace SEModAPI.API.Definitions
 	{
 		#region "Attributes"
 
-		private bool m_isMutable;
+		private bool m_isMutable = true;
 		private bool m_changed = false;
 
 		//Use Long (key) as Id and OverLayerDefinition sub type (value) as Name
-		//For entity objects (saved game data) we use EnityId as the long key
+		//For entity objects (saved game data) we use EntityId as the long key
 		private Dictionary<long, U> m_definitions = new Dictionary<long, U>();
 
 		#endregion
@@ -159,6 +159,7 @@ namespace SEModAPI.API.Definitions
 		{
 			get
 			{
+				if (m_changed) return true;
 				foreach (var def in GetInternalData())
 				{
 					if (GetChangedState(def.Value))
@@ -302,6 +303,7 @@ namespace SEModAPI.API.Definitions
 			if (GetInternalData().ContainsKey(id))
 			{
 				GetInternalData().Remove(id);
+				m_changed = true;
 				return true;
 			}
 
@@ -317,6 +319,7 @@ namespace SEModAPI.API.Definitions
 				if (def.Value.BaseDefinition.Equals(entry))
 				{
 					GetInternalData().Remove(def.Key);
+					m_changed = true;
 					return true;
 				}
 			}
@@ -333,6 +336,7 @@ namespace SEModAPI.API.Definitions
 				if (def.Value.Equals(entry))
 				{
 					GetInternalData().Remove(def.Key);
+					m_changed = true;
 					return true;
 				}
 			}
@@ -651,11 +655,11 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
-		public void Save()
+		public bool Save()
 		{
-			if (!this.Changed) return;
-			if (!this.IsMutable) return;
-			if (this.FileInfo == null) return;
+			if (!this.Changed) return false;
+			if (!this.IsMutable) return false;
+			if (this.FileInfo == null) return false;
 
 			MyObjectBuilder_Definitions definitionsContainer = new MyObjectBuilder_Definitions();
 
@@ -667,6 +671,8 @@ namespace SEModAPI.API.Definitions
 
 			//Save the definitions container out to the file
 			SaveContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(definitionsContainer, m_fileInfo);
+
+			return true;
 		}
 
 		#endregion
