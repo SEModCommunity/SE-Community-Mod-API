@@ -44,6 +44,9 @@ namespace SEConfigTool
 			this.splitContainer39 = new System.Windows.Forms.SplitContainer();
 			this.LBL_ScenarioConfig_Details_Information_Id = new System.Windows.Forms.Label();
 			this.LBL_ScenarioConfig_Details_Information_Name = new System.Windows.Forms.Label();
+			this.BTN_ScenarioConfig_Details_Info_Delete = new System.Windows.Forms.Button();
+			this.BTN_ScenarioConfig_Details_Info_Apply = new System.Windows.Forms.Button();
+			this.BTN_ScenarioConfig_Details_Info_New = new System.Windows.Forms.Button();
 			this.TXT_ScenarioConfig_Details_Information_Id = new System.Windows.Forms.TextBox();
 			this.TXT_ScenarioConfig_Details_Information_Name = new System.Windows.Forms.TextBox();
 			this.TAB_ScenariosConfig_Details_AsteroidClusters_Page = new System.Windows.Forms.TabPage();
@@ -59,6 +62,8 @@ namespace SEConfigTool
 			this.splitContainer43 = new System.Windows.Forms.SplitContainer();
 			this.CHK_ScenarioConfig_Details_StartingStates_InertiaDampeners = new System.Windows.Forms.CheckBox();
 			this.CHK_ScenarioConfig_Details_StartingStates_Jetpack = new System.Windows.Forms.CheckBox();
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete = new System.Windows.Forms.Button();
+			this.BTN_ScenarioConfig_Details_StartingStates_New = new System.Windows.Forms.Button();
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply = new System.Windows.Forms.Button();
 			this.TAB_ScenariosConfig_Details_GeneratorOperations_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer44 = new System.Windows.Forms.SplitContainer();
@@ -68,6 +73,8 @@ namespace SEConfigTool
 			this.LBL_ScenarioConfig_Details_GeneratorOperations_RandomRadius = new System.Windows.Forms.Label();
 			this.LBL_ScenarioConfig_Details_GeneratorOperations_PrefabFile = new System.Windows.Forms.Label();
 			this.LBL_ScenarioConfig_Details_GeneratorOperations_Type = new System.Windows.Forms.Label();
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete = new System.Windows.Forms.Button();
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New = new System.Windows.Forms.Button();
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply = new System.Windows.Forms.Button();
 			this.TXT_ScenarioConfig_Details_GeneratorOperations_RandomRadius = new System.Windows.Forms.TextBox();
 			this.TXT_ScenarioConfig_Details_GeneratorOperations_AsteroidName = new System.Windows.Forms.TextBox();
@@ -410,6 +417,7 @@ namespace SEConfigTool
 			this.LBL_TransparentMaterialConfig_Details_UVOffset = new System.Windows.Forms.Label();
 			this.LBL_TransparentMaterialConfig_Details_Emissivity = new System.Windows.Forms.Label();
 			this.LBL_TransparentMaterialConfig_Name = new System.Windows.Forms.Label();
+			this.BTN_TransparentMaterialConfig_Details_Delete = new System.Windows.Forms.Button();
 			this.BTN_TransparentMaterialConfig_Details_New = new System.Windows.Forms.Button();
 			this.TXT_TransparentMaterialConfig_Details_UVSize_Y = new System.Windows.Forms.TextBox();
 			this.TXT_TransparentMaterialConfig_Details_UVSize_X = new System.Windows.Forms.TextBox();
@@ -436,14 +444,25 @@ namespace SEConfigTool
 			this.TXT_ConfigurationConfig_LargeBlockSize = new System.Windows.Forms.TextBox();
 			this.TXT_ConfigurationConfig_SmallBlockSize = new System.Windows.Forms.TextBox();
 			this.BTN_ConfigurationConfig_Apply = new System.Windows.Forms.Button();
-			this.BTN_TransparentMaterialConfig_Details_Delete = new System.Windows.Forms.Button();
-			this.BTN_ScenarioConfig_Details_Info_New = new System.Windows.Forms.Button();
-			this.BTN_ScenarioConfig_Details_Info_Apply = new System.Windows.Forms.Button();
-			this.BTN_ScenarioConfig_Details_Info_Delete = new System.Windows.Forms.Button();
-			this.BTN_ScenarioConfig_Details_StartingStates_New = new System.Windows.Forms.Button();
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete = new System.Windows.Forms.Button();
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_New = new System.Windows.Forms.Button();
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete = new System.Windows.Forms.Button();
+			this.TAB_EnvironmentConfig_Page = new System.Windows.Forms.TabPage();
+			this.BTN_EnvironmentConfig_Reload = new System.Windows.Forms.Button();
+			this.BTN_EnvironmentConfig_Save = new System.Windows.Forms.Button();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.splitContainer52 = new System.Windows.Forms.SplitContainer();
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Pitch = new System.Windows.Forms.Label();
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Yaw = new System.Windows.Forms.Label();
+			this.LBL_EnvironmentConfig_EnvironmentOrientation = new System.Windows.Forms.Label();
+			this.LBL_EnvironmentConfig_EnvironmentTexture = new System.Windows.Forms.Label();
+			this.LBL_EnvironmentConfig_SunDirection = new System.Windows.Forms.Label();
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Pitch = new System.Windows.Forms.TextBox();
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Yaw = new System.Windows.Forms.TextBox();
+			this.TXT_EnvironmentConfig_EnvironmentTexture = new System.Windows.Forms.TextBox();
+			this.button3 = new System.Windows.Forms.Button();
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Roll = new System.Windows.Forms.TextBox();
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Roll = new System.Windows.Forms.Label();
+			this.TXT_EnvironmentConfig_SunDirection_Z = new System.Windows.Forms.TextBox();
+			this.TXT_EnvironmentConfig_SunDirection_Y = new System.Windows.Forms.TextBox();
+			this.TXT_EnvironmentConfig_SunDirection_X = new System.Windows.Forms.TextBox();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -706,6 +725,12 @@ namespace SEConfigTool
 			this.splitContainer50.Panel1.SuspendLayout();
 			this.splitContainer50.Panel2.SuspendLayout();
 			this.splitContainer50.SuspendLayout();
+			this.TAB_EnvironmentConfig_Page.SuspendLayout();
+			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer52)).BeginInit();
+			this.splitContainer52.Panel1.SuspendLayout();
+			this.splitContainer52.Panel2.SuspendLayout();
+			this.splitContainer52.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// STS_Status
@@ -714,7 +739,7 @@ namespace SEConfigTool
             this.TLS_StatusLabel});
 			this.STS_Status.Location = new System.Drawing.Point(0, 465);
 			this.STS_Status.Name = "STS_Status";
-			this.STS_Status.Size = new System.Drawing.Size(952, 22);
+			this.STS_Status.Size = new System.Drawing.Size(1034, 22);
 			this.STS_Status.TabIndex = 1;
 			this.STS_Status.Text = "statusStrip1";
 			// 
@@ -730,7 +755,7 @@ namespace SEConfigTool
 			this.TAB_ScenariosConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ScenariosConfig_Page.Name = "TAB_ScenariosConfig_Page";
 			this.TAB_ScenariosConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ScenariosConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_ScenariosConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_ScenariosConfig_Page.TabIndex = 13;
 			this.TAB_ScenariosConfig_Page.Text = "Scenarios";
 			this.TAB_ScenariosConfig_Page.UseVisualStyleBackColor = true;
@@ -751,7 +776,7 @@ namespace SEConfigTool
 			// splitContainer37.Panel2
 			// 
 			this.splitContainer37.Panel2.Controls.Add(this.GRP_ScenariosConfig);
-			this.splitContainer37.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer37.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer37.SplitterDistance = 25;
 			this.splitContainer37.TabIndex = 1;
 			// 
@@ -779,7 +804,7 @@ namespace SEConfigTool
 			this.GRP_ScenariosConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ScenariosConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ScenariosConfig.Name = "GRP_ScenariosConfig";
-			this.GRP_ScenariosConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_ScenariosConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_ScenariosConfig.TabIndex = 2;
 			this.GRP_ScenariosConfig.TabStop = false;
 			this.GRP_ScenariosConfig.Text = "Scenarios";
@@ -799,7 +824,7 @@ namespace SEConfigTool
 			// splitContainer38.Panel2
 			// 
 			this.splitContainer38.Panel2.Controls.Add(this.GRP_ScenariosConfig_Details);
-			this.splitContainer38.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer38.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer38.SplitterDistance = 200;
 			this.splitContainer38.TabIndex = 1;
 			// 
@@ -819,7 +844,7 @@ namespace SEConfigTool
 			this.GRP_ScenariosConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ScenariosConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ScenariosConfig_Details.Name = "GRP_ScenariosConfig_Details";
-			this.GRP_ScenariosConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_ScenariosConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_ScenariosConfig_Details.TabIndex = 1;
 			this.GRP_ScenariosConfig_Details.TabStop = false;
 			this.GRP_ScenariosConfig_Details.Text = "Selected Item Details";
@@ -834,7 +859,7 @@ namespace SEConfigTool
 			this.TAB_ScenariosConfig_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_ScenariosConfig_Details.Name = "TAB_ScenariosConfig_Details";
 			this.TAB_ScenariosConfig_Details.SelectedIndex = 0;
-			this.TAB_ScenariosConfig_Details.Size = new System.Drawing.Size(722, 363);
+			this.TAB_ScenariosConfig_Details.Size = new System.Drawing.Size(804, 363);
 			this.TAB_ScenariosConfig_Details.TabIndex = 0;
 			// 
 			// TAB_ScenariosConfig_Details_Information_Page
@@ -843,7 +868,7 @@ namespace SEConfigTool
 			this.TAB_ScenariosConfig_Details_Information_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ScenariosConfig_Details_Information_Page.Name = "TAB_ScenariosConfig_Details_Information_Page";
 			this.TAB_ScenariosConfig_Details_Information_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ScenariosConfig_Details_Information_Page.Size = new System.Drawing.Size(714, 337);
+			this.TAB_ScenariosConfig_Details_Information_Page.Size = new System.Drawing.Size(796, 337);
 			this.TAB_ScenariosConfig_Details_Information_Page.TabIndex = 0;
 			this.TAB_ScenariosConfig_Details_Information_Page.Text = "Information";
 			this.TAB_ScenariosConfig_Details_Information_Page.UseVisualStyleBackColor = true;
@@ -868,7 +893,7 @@ namespace SEConfigTool
 			this.splitContainer39.Panel2.Controls.Add(this.BTN_ScenarioConfig_Details_Info_New);
 			this.splitContainer39.Panel2.Controls.Add(this.TXT_ScenarioConfig_Details_Information_Id);
 			this.splitContainer39.Panel2.Controls.Add(this.TXT_ScenarioConfig_Details_Information_Name);
-			this.splitContainer39.Size = new System.Drawing.Size(708, 331);
+			this.splitContainer39.Size = new System.Drawing.Size(790, 331);
 			this.splitContainer39.SplitterDistance = 150;
 			this.splitContainer39.TabIndex = 5;
 			// 
@@ -889,6 +914,39 @@ namespace SEConfigTool
 			this.LBL_ScenarioConfig_Details_Information_Name.Size = new System.Drawing.Size(38, 13);
 			this.LBL_ScenarioConfig_Details_Information_Name.TabIndex = 2;
 			this.LBL_ScenarioConfig_Details_Information_Name.Text = "Name:";
+			// 
+			// BTN_ScenarioConfig_Details_Info_Delete
+			// 
+			this.BTN_ScenarioConfig_Details_Info_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_ScenarioConfig_Details_Info_Delete.Enabled = false;
+			this.BTN_ScenarioConfig_Details_Info_Delete.Location = new System.Drawing.Point(3, 276);
+			this.BTN_ScenarioConfig_Details_Info_Delete.Name = "BTN_ScenarioConfig_Details_Info_Delete";
+			this.BTN_ScenarioConfig_Details_Info_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_ScenarioConfig_Details_Info_Delete.TabIndex = 28;
+			this.BTN_ScenarioConfig_Details_Info_Delete.Text = "Delete Item";
+			this.BTN_ScenarioConfig_Details_Info_Delete.UseVisualStyleBackColor = false;
+			this.BTN_ScenarioConfig_Details_Info_Delete.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Info_Delete_Click);
+			// 
+			// BTN_ScenarioConfig_Details_Info_Apply
+			// 
+			this.BTN_ScenarioConfig_Details_Info_Apply.Enabled = false;
+			this.BTN_ScenarioConfig_Details_Info_Apply.Location = new System.Drawing.Point(53, 305);
+			this.BTN_ScenarioConfig_Details_Info_Apply.Name = "BTN_ScenarioConfig_Details_Info_Apply";
+			this.BTN_ScenarioConfig_Details_Info_Apply.Size = new System.Drawing.Size(100, 23);
+			this.BTN_ScenarioConfig_Details_Info_Apply.TabIndex = 23;
+			this.BTN_ScenarioConfig_Details_Info_Apply.Text = "Apply changes";
+			this.BTN_ScenarioConfig_Details_Info_Apply.UseVisualStyleBackColor = true;
+			this.BTN_ScenarioConfig_Details_Info_Apply.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Info_Apply_Click);
+			// 
+			// BTN_ScenarioConfig_Details_Info_New
+			// 
+			this.BTN_ScenarioConfig_Details_Info_New.Location = new System.Drawing.Point(3, 305);
+			this.BTN_ScenarioConfig_Details_Info_New.Name = "BTN_ScenarioConfig_Details_Info_New";
+			this.BTN_ScenarioConfig_Details_Info_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_ScenarioConfig_Details_Info_New.TabIndex = 22;
+			this.BTN_ScenarioConfig_Details_Info_New.Text = "New";
+			this.BTN_ScenarioConfig_Details_Info_New.UseVisualStyleBackColor = true;
+			this.BTN_ScenarioConfig_Details_Info_New.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Info_New_Click);
 			// 
 			// TXT_ScenarioConfig_Details_Information_Id
 			// 
@@ -1067,6 +1125,28 @@ namespace SEConfigTool
 			this.CHK_ScenarioConfig_Details_StartingStates_Jetpack.Text = "Jetpack ";
 			this.CHK_ScenarioConfig_Details_StartingStates_Jetpack.UseVisualStyleBackColor = true;
 			// 
+			// BTN_ScenarioConfig_Details_StartingStates_Delete
+			// 
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Enabled = false;
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Location = new System.Drawing.Point(3, 276);
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Name = "BTN_ScenarioConfig_Details_StartingStates_Delete";
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.TabIndex = 30;
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Text = "Delete Item";
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.UseVisualStyleBackColor = false;
+			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_StartingStates_Delete_Click);
+			// 
+			// BTN_ScenarioConfig_Details_StartingStates_New
+			// 
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Location = new System.Drawing.Point(3, 305);
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Name = "BTN_ScenarioConfig_Details_StartingStates_New";
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_ScenarioConfig_Details_StartingStates_New.TabIndex = 24;
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Text = "New";
+			this.BTN_ScenarioConfig_Details_StartingStates_New.UseVisualStyleBackColor = true;
+			this.BTN_ScenarioConfig_Details_StartingStates_New.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_StartingStates_New_Click);
+			// 
 			// BTN_ScenarioConfig_Details_StartingStates_Apply
 			// 
 			this.BTN_ScenarioConfig_Details_StartingStates_Apply.Enabled = false;
@@ -1181,6 +1261,28 @@ namespace SEConfigTool
 			this.LBL_ScenarioConfig_Details_GeneratorOperations_Type.TabIndex = 1;
 			this.LBL_ScenarioConfig_Details_GeneratorOperations_Type.Text = "Type:";
 			// 
+			// BTN_ScenariosConfig_Details_GeneratorOperations_Delete
+			// 
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Enabled = false;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Location = new System.Drawing.Point(3, 279);
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Name = "BTN_ScenariosConfig_Details_GeneratorOperations_Delete";
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.TabIndex = 31;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Text = "Delete Item";
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.UseVisualStyleBackColor = false;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Click += new System.EventHandler(this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete_Click);
+			// 
+			// BTN_ScenariosConfig_Details_GeneratorOperations_New
+			// 
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Location = new System.Drawing.Point(3, 308);
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Name = "BTN_ScenariosConfig_Details_GeneratorOperations_New";
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Size = new System.Drawing.Size(50, 23);
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.TabIndex = 25;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Text = "New";
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.UseVisualStyleBackColor = true;
+			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Click += new System.EventHandler(this.BTN_ScenariosConfig_Details_GeneratorOperations_New_Click);
+			// 
 			// BTN_ScenariosConfig_Details_GeneratorOperations_Apply
 			// 
 			this.BTN_ScenariosConfig_Details_GeneratorOperations_Apply.Enabled = false;
@@ -1229,7 +1331,7 @@ namespace SEConfigTool
 			this.TAB_VoxelMaterialConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_VoxelMaterialConfig_Page.Name = "TAB_VoxelMaterialConfig_Page";
 			this.TAB_VoxelMaterialConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_VoxelMaterialConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_VoxelMaterialConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_VoxelMaterialConfig_Page.TabIndex = 11;
 			this.TAB_VoxelMaterialConfig_Page.Text = "Voxel Materials";
 			this.TAB_VoxelMaterialConfig_Page.UseVisualStyleBackColor = true;
@@ -1250,7 +1352,7 @@ namespace SEConfigTool
 			// splitContainer30.Panel2
 			// 
 			this.splitContainer30.Panel2.Controls.Add(this.GRP_VoxelMaterialsConfig);
-			this.splitContainer30.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer30.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer30.SplitterDistance = 25;
 			this.splitContainer30.TabIndex = 5;
 			// 
@@ -1280,7 +1382,7 @@ namespace SEConfigTool
 			this.GRP_VoxelMaterialsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_VoxelMaterialsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_VoxelMaterialsConfig.Name = "GRP_VoxelMaterialsConfig";
-			this.GRP_VoxelMaterialsConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_VoxelMaterialsConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_VoxelMaterialsConfig.TabIndex = 2;
 			this.GRP_VoxelMaterialsConfig.TabStop = false;
 			this.GRP_VoxelMaterialsConfig.Text = "Voxel Materials";
@@ -1300,7 +1402,7 @@ namespace SEConfigTool
 			// splitContainer31.Panel2
 			// 
 			this.splitContainer31.Panel2.Controls.Add(this.GRP_VoxelMaterialsConfig_Details);
-			this.splitContainer31.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer31.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer31.SplitterDistance = 200;
 			this.splitContainer31.TabIndex = 1;
 			// 
@@ -1320,7 +1422,7 @@ namespace SEConfigTool
 			this.GRP_VoxelMaterialsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_VoxelMaterialsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_VoxelMaterialsConfig_Details.Name = "GRP_VoxelMaterialsConfig_Details";
-			this.GRP_VoxelMaterialsConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_VoxelMaterialsConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_VoxelMaterialsConfig_Details.TabIndex = 1;
 			this.GRP_VoxelMaterialsConfig_Details.TabStop = false;
 			this.GRP_VoxelMaterialsConfig_Details.Text = "Selected Item Details";
@@ -1358,7 +1460,7 @@ namespace SEConfigTool
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialConfig_Details_Name);
 			this.splitContainer32.Panel2.Controls.Add(this.BTN_VoxelMaterialsConfig_Details_Apply);
 			this.splitContainer32.Panel2.Controls.Add(this.TXT_VoxelMaterialConfig_Details_MinedOre);
-			this.splitContainer32.Size = new System.Drawing.Size(722, 363);
+			this.splitContainer32.Size = new System.Drawing.Size(804, 363);
 			this.splitContainer32.SplitterDistance = 150;
 			this.splitContainer32.TabIndex = 4;
 			// 
@@ -1553,7 +1655,7 @@ namespace SEConfigTool
 			this.TAB_BlueprintConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_BlueprintConfig_Page.Name = "TAB_BlueprintConfig_Page";
 			this.TAB_BlueprintConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_BlueprintConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_BlueprintConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_BlueprintConfig_Page.TabIndex = 10;
 			this.TAB_BlueprintConfig_Page.Text = "Blueprints";
 			this.TAB_BlueprintConfig_Page.UseVisualStyleBackColor = true;
@@ -1574,7 +1676,7 @@ namespace SEConfigTool
 			// splitContainer27.Panel2
 			// 
 			this.splitContainer27.Panel2.Controls.Add(this.GRP_BlueprintConfig);
-			this.splitContainer27.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer27.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer27.SplitterDistance = 25;
 			this.splitContainer27.TabIndex = 4;
 			// 
@@ -1604,7 +1706,7 @@ namespace SEConfigTool
 			this.GRP_BlueprintConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_BlueprintConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_BlueprintConfig.Name = "GRP_BlueprintConfig";
-			this.GRP_BlueprintConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_BlueprintConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_BlueprintConfig.TabIndex = 2;
 			this.GRP_BlueprintConfig.TabStop = false;
 			this.GRP_BlueprintConfig.Text = "Blueprints";
@@ -1624,7 +1726,7 @@ namespace SEConfigTool
 			// splitContainer28.Panel2
 			// 
 			this.splitContainer28.Panel2.Controls.Add(this.GRP_BlueprintsConfig_Details);
-			this.splitContainer28.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer28.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer28.SplitterDistance = 200;
 			this.splitContainer28.TabIndex = 1;
 			// 
@@ -1644,7 +1746,7 @@ namespace SEConfigTool
 			this.GRP_BlueprintsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_BlueprintsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_BlueprintsConfig_Details.Name = "GRP_BlueprintsConfig_Details";
-			this.GRP_BlueprintsConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_BlueprintsConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_BlueprintsConfig_Details.TabIndex = 1;
 			this.GRP_BlueprintsConfig_Details.TabStop = false;
 			this.GRP_BlueprintsConfig_Details.Text = "Selected Item Details";
@@ -1657,7 +1759,7 @@ namespace SEConfigTool
 			this.TAB_BlueprintConfig_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_BlueprintConfig_Details.Name = "TAB_BlueprintConfig_Details";
 			this.TAB_BlueprintConfig_Details.SelectedIndex = 0;
-			this.TAB_BlueprintConfig_Details.Size = new System.Drawing.Size(722, 363);
+			this.TAB_BlueprintConfig_Details.Size = new System.Drawing.Size(804, 363);
 			this.TAB_BlueprintConfig_Details.TabIndex = 1;
 			// 
 			// TAB_BlueprintConfig_Details_Result_Page
@@ -1666,7 +1768,7 @@ namespace SEConfigTool
 			this.TAB_BlueprintConfig_Details_Result_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_BlueprintConfig_Details_Result_Page.Name = "TAB_BlueprintConfig_Details_Result_Page";
 			this.TAB_BlueprintConfig_Details_Result_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_BlueprintConfig_Details_Result_Page.Size = new System.Drawing.Size(714, 337);
+			this.TAB_BlueprintConfig_Details_Result_Page.Size = new System.Drawing.Size(796, 337);
 			this.TAB_BlueprintConfig_Details_Result_Page.TabIndex = 1;
 			this.TAB_BlueprintConfig_Details_Result_Page.Text = "Result";
 			this.TAB_BlueprintConfig_Details_Result_Page.UseVisualStyleBackColor = true;
@@ -1695,7 +1797,7 @@ namespace SEConfigTool
 			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_BaseProductionTime);
 			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_SubtypeId);
 			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_Amount);
-			this.splitContainer29.Size = new System.Drawing.Size(708, 331);
+			this.splitContainer29.Size = new System.Drawing.Size(790, 331);
 			this.splitContainer29.SplitterDistance = 150;
 			this.splitContainer29.TabIndex = 5;
 			// 
@@ -1953,7 +2055,7 @@ namespace SEConfigTool
 			this.TAB_ComponentConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ComponentConfig_Page.Name = "TAB_ComponentConfig_Page";
 			this.TAB_ComponentConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ComponentConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_ComponentConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_ComponentConfig_Page.TabIndex = 9;
 			this.TAB_ComponentConfig_Page.Text = "Components";
 			this.TAB_ComponentConfig_Page.UseVisualStyleBackColor = true;
@@ -1974,7 +2076,7 @@ namespace SEConfigTool
 			// splitContainer24.Panel2
 			// 
 			this.splitContainer24.Panel2.Controls.Add(this.GRP_ComponentsConfig);
-			this.splitContainer24.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer24.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer24.SplitterDistance = 25;
 			this.splitContainer24.TabIndex = 3;
 			// 
@@ -2004,7 +2106,7 @@ namespace SEConfigTool
 			this.GRP_ComponentsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ComponentsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ComponentsConfig.Name = "GRP_ComponentsConfig";
-			this.GRP_ComponentsConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_ComponentsConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_ComponentsConfig.TabIndex = 2;
 			this.GRP_ComponentsConfig.TabStop = false;
 			this.GRP_ComponentsConfig.Text = "Components";
@@ -2024,7 +2126,7 @@ namespace SEConfigTool
 			// splitContainer25.Panel2
 			// 
 			this.splitContainer25.Panel2.Controls.Add(this.GRP_ComponentsConfig_Details);
-			this.splitContainer25.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer25.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer25.SplitterDistance = 200;
 			this.splitContainer25.TabIndex = 1;
 			// 
@@ -2044,7 +2146,7 @@ namespace SEConfigTool
 			this.GRP_ComponentsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ComponentsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ComponentsConfig_Details.Name = "GRP_ComponentsConfig_Details";
-			this.GRP_ComponentsConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_ComponentsConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_ComponentsConfig_Details.TabIndex = 1;
 			this.GRP_ComponentsConfig_Details.TabStop = false;
 			this.GRP_ComponentsConfig_Details.Text = "Selected Item Details";
@@ -2087,7 +2189,7 @@ namespace SEConfigTool
 			this.splitContainer26.Panel2.Controls.Add(this.TXT_ComponentConfig_Details_Name);
 			this.splitContainer26.Panel2.Controls.Add(this.TXT_ComponentConfig_Details_Id);
 			this.splitContainer26.Panel2.Controls.Add(this.TXT_ComponentConfig_Details_Description);
-			this.splitContainer26.Size = new System.Drawing.Size(722, 363);
+			this.splitContainer26.Size = new System.Drawing.Size(804, 363);
 			this.splitContainer26.SplitterDistance = 150;
 			this.splitContainer26.TabIndex = 4;
 			// 
@@ -2316,7 +2418,7 @@ namespace SEConfigTool
 			this.TAB_PhysicalItemsConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_PhysicalItemsConfig_Page.Name = "TAB_PhysicalItemsConfig_Page";
 			this.TAB_PhysicalItemsConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_PhysicalItemsConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_PhysicalItemsConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_PhysicalItemsConfig_Page.TabIndex = 8;
 			this.TAB_PhysicalItemsConfig_Page.Text = "Physical Items";
 			this.TAB_PhysicalItemsConfig_Page.UseVisualStyleBackColor = true;
@@ -2337,7 +2439,7 @@ namespace SEConfigTool
 			// splitContainer19.Panel2
 			// 
 			this.splitContainer19.Panel2.Controls.Add(this.GRP_PhysicalItemsConfig);
-			this.splitContainer19.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer19.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer19.SplitterDistance = 25;
 			this.splitContainer19.TabIndex = 2;
 			// 
@@ -2367,7 +2469,7 @@ namespace SEConfigTool
 			this.GRP_PhysicalItemsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_PhysicalItemsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_PhysicalItemsConfig.Name = "GRP_PhysicalItemsConfig";
-			this.GRP_PhysicalItemsConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_PhysicalItemsConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_PhysicalItemsConfig.TabIndex = 2;
 			this.GRP_PhysicalItemsConfig.TabStop = false;
 			this.GRP_PhysicalItemsConfig.Text = "Physical Items";
@@ -2387,7 +2489,7 @@ namespace SEConfigTool
 			// splitContainer22.Panel2
 			// 
 			this.splitContainer22.Panel2.Controls.Add(this.GRP_PhysicalItemConfig_Details);
-			this.splitContainer22.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer22.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer22.SplitterDistance = 200;
 			this.splitContainer22.TabIndex = 1;
 			// 
@@ -2407,7 +2509,7 @@ namespace SEConfigTool
 			this.GRP_PhysicalItemConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_PhysicalItemConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_PhysicalItemConfig_Details.Name = "GRP_PhysicalItemConfig_Details";
-			this.GRP_PhysicalItemConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_PhysicalItemConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_PhysicalItemConfig_Details.TabIndex = 1;
 			this.GRP_PhysicalItemConfig_Details.TabStop = false;
 			this.GRP_PhysicalItemConfig_Details.Text = "Selected Item Details";
@@ -2450,7 +2552,7 @@ namespace SEConfigTool
 			this.splitContainer23.Panel2.Controls.Add(this.TXT_PhysicalItemConfig_Details_Name);
 			this.splitContainer23.Panel2.Controls.Add(this.TXT_PhysicalItemConfig_Details_Id);
 			this.splitContainer23.Panel2.Controls.Add(this.TXT_PhysicalItemConfig_Details_Description);
-			this.splitContainer23.Size = new System.Drawing.Size(722, 363);
+			this.splitContainer23.Size = new System.Drawing.Size(804, 363);
 			this.splitContainer23.SplitterDistance = 150;
 			this.splitContainer23.TabIndex = 4;
 			// 
@@ -2679,7 +2781,7 @@ namespace SEConfigTool
 			this.TAB_SpawnGroupConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SpawnGroupConfig_Page.Name = "TAB_SpawnGroupConfig_Page";
 			this.TAB_SpawnGroupConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SpawnGroupConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_SpawnGroupConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_SpawnGroupConfig_Page.TabIndex = 7;
 			this.TAB_SpawnGroupConfig_Page.Text = "Spawn Groups";
 			this.TAB_SpawnGroupConfig_Page.UseVisualStyleBackColor = true;
@@ -2700,7 +2802,7 @@ namespace SEConfigTool
 			// splitContainer14.Panel2
 			// 
 			this.splitContainer14.Panel2.Controls.Add(this.GRP_SpawnGroupConfig);
-			this.splitContainer14.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer14.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer14.SplitterDistance = 25;
 			this.splitContainer14.TabIndex = 1;
 			// 
@@ -2730,7 +2832,7 @@ namespace SEConfigTool
 			this.GRP_SpawnGroupConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_SpawnGroupConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_SpawnGroupConfig.Name = "GRP_SpawnGroupConfig";
-			this.GRP_SpawnGroupConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_SpawnGroupConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_SpawnGroupConfig.TabIndex = 2;
 			this.GRP_SpawnGroupConfig.TabStop = false;
 			this.GRP_SpawnGroupConfig.Text = "Spawn Groups";
@@ -2750,7 +2852,7 @@ namespace SEConfigTool
 			// splitContainer15.Panel2
 			// 
 			this.splitContainer15.Panel2.Controls.Add(this.GRP_SpawnGroupConfig_Details);
-			this.splitContainer15.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer15.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer15.SplitterDistance = 200;
 			this.splitContainer15.TabIndex = 1;
 			// 
@@ -2770,7 +2872,7 @@ namespace SEConfigTool
 			this.GRP_SpawnGroupConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_SpawnGroupConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_SpawnGroupConfig_Details.Name = "GRP_SpawnGroupConfig_Details";
-			this.GRP_SpawnGroupConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_SpawnGroupConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_SpawnGroupConfig_Details.TabIndex = 1;
 			this.GRP_SpawnGroupConfig_Details.TabStop = false;
 			this.GRP_SpawnGroupConfig_Details.Text = "Selected Item Details";
@@ -2783,7 +2885,7 @@ namespace SEConfigTool
 			this.TAB_SpawnGroupConfig_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_SpawnGroupConfig_Details.Name = "TAB_SpawnGroupConfig_Details";
 			this.TAB_SpawnGroupConfig_Details.SelectedIndex = 0;
-			this.TAB_SpawnGroupConfig_Details.Size = new System.Drawing.Size(722, 363);
+			this.TAB_SpawnGroupConfig_Details.Size = new System.Drawing.Size(804, 363);
 			this.TAB_SpawnGroupConfig_Details.TabIndex = 0;
 			// 
 			// TAB_SpawnGroupConfig_Details_Information_Page
@@ -2792,7 +2894,7 @@ namespace SEConfigTool
 			this.TAB_SpawnGroupConfig_Details_Information_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SpawnGroupConfig_Details_Information_Page.Name = "TAB_SpawnGroupConfig_Details_Information_Page";
 			this.TAB_SpawnGroupConfig_Details_Information_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SpawnGroupConfig_Details_Information_Page.Size = new System.Drawing.Size(714, 337);
+			this.TAB_SpawnGroupConfig_Details_Information_Page.Size = new System.Drawing.Size(796, 337);
 			this.TAB_SpawnGroupConfig_Details_Information_Page.TabIndex = 0;
 			this.TAB_SpawnGroupConfig_Details_Information_Page.Text = "Information";
 			this.TAB_SpawnGroupConfig_Details_Information_Page.UseVisualStyleBackColor = true;
@@ -2817,7 +2919,7 @@ namespace SEConfigTool
 			this.splitContainer16.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Info_Apply);
 			this.splitContainer16.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Info_Count);
 			this.splitContainer16.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Info_Frequency);
-			this.splitContainer16.Size = new System.Drawing.Size(708, 331);
+			this.splitContainer16.Size = new System.Drawing.Size(790, 331);
 			this.splitContainer16.SplitterDistance = 150;
 			this.splitContainer16.TabIndex = 5;
 			// 
@@ -3063,7 +3165,7 @@ namespace SEConfigTool
 			this.TAB_GlobalEventConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_GlobalEventConfig_Page.Name = "TAB_GlobalEventConfig_Page";
 			this.TAB_GlobalEventConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_GlobalEventConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_GlobalEventConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_GlobalEventConfig_Page.TabIndex = 6;
 			this.TAB_GlobalEventConfig_Page.Text = "Global Events";
 			this.TAB_GlobalEventConfig_Page.UseVisualStyleBackColor = true;
@@ -3084,7 +3186,7 @@ namespace SEConfigTool
 			// splitContainer11.Panel2
 			// 
 			this.splitContainer11.Panel2.Controls.Add(this.GRP_GlobalEventConfig);
-			this.splitContainer11.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer11.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer11.SplitterDistance = 25;
 			this.splitContainer11.TabIndex = 1;
 			// 
@@ -3114,7 +3216,7 @@ namespace SEConfigTool
 			this.GRP_GlobalEventConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_GlobalEventConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_GlobalEventConfig.Name = "GRP_GlobalEventConfig";
-			this.GRP_GlobalEventConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_GlobalEventConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_GlobalEventConfig.TabIndex = 2;
 			this.GRP_GlobalEventConfig.TabStop = false;
 			this.GRP_GlobalEventConfig.Text = "Global Events";
@@ -3134,7 +3236,7 @@ namespace SEConfigTool
 			// splitContainer12.Panel2
 			// 
 			this.splitContainer12.Panel2.Controls.Add(this.GRP_GlobalEventConfig_Details);
-			this.splitContainer12.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer12.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer12.SplitterDistance = 200;
 			this.splitContainer12.TabIndex = 1;
 			// 
@@ -3154,7 +3256,7 @@ namespace SEConfigTool
 			this.GRP_GlobalEventConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_GlobalEventConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_GlobalEventConfig_Details.Name = "GRP_GlobalEventConfig_Details";
-			this.GRP_GlobalEventConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_GlobalEventConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_GlobalEventConfig_Details.TabIndex = 1;
 			this.GRP_GlobalEventConfig_Details.TabStop = false;
 			this.GRP_GlobalEventConfig_Details.Text = "Selected Item Details";
@@ -3187,7 +3289,7 @@ namespace SEConfigTool
 			this.splitContainer13.Panel2.Controls.Add(this.BTN_GlobalEventConfig_Details_Apply);
 			this.splitContainer13.Panel2.Controls.Add(this.TXT_ConfigGlobalEvent_Details_Name);
 			this.splitContainer13.Panel2.Controls.Add(this.TXT_ConfigGlobalEvent_Details_Description);
-			this.splitContainer13.Size = new System.Drawing.Size(722, 363);
+			this.splitContainer13.Size = new System.Drawing.Size(804, 363);
 			this.splitContainer13.SplitterDistance = 150;
 			this.splitContainer13.TabIndex = 4;
 			// 
@@ -3333,7 +3435,7 @@ namespace SEConfigTool
 			this.TAB_ContainerTypeConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ContainerTypeConfig_Page.Name = "TAB_ContainerTypeConfig_Page";
 			this.TAB_ContainerTypeConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ContainerTypeConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_ContainerTypeConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_ContainerTypeConfig_Page.TabIndex = 5;
 			this.TAB_ContainerTypeConfig_Page.Text = "Container Types";
 			this.TAB_ContainerTypeConfig_Page.UseVisualStyleBackColor = true;
@@ -3354,7 +3456,7 @@ namespace SEConfigTool
 			// splitContainer8.Panel2
 			// 
 			this.splitContainer8.Panel2.Controls.Add(this.GRP_ContainerTypesConfig);
-			this.splitContainer8.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer8.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer8.SplitterDistance = 25;
 			this.splitContainer8.TabIndex = 1;
 			// 
@@ -3384,7 +3486,7 @@ namespace SEConfigTool
 			this.GRP_ContainerTypesConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ContainerTypesConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ContainerTypesConfig.Name = "GRP_ContainerTypesConfig";
-			this.GRP_ContainerTypesConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_ContainerTypesConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_ContainerTypesConfig.TabIndex = 2;
 			this.GRP_ContainerTypesConfig.TabStop = false;
 			this.GRP_ContainerTypesConfig.Text = "Container Types";
@@ -3404,7 +3506,7 @@ namespace SEConfigTool
 			// splitContainer9.Panel2
 			// 
 			this.splitContainer9.Panel2.Controls.Add(this.GRP_ContainerTypesConfig_Details);
-			this.splitContainer9.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer9.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer9.SplitterDistance = 200;
 			this.splitContainer9.TabIndex = 1;
 			// 
@@ -3424,7 +3526,7 @@ namespace SEConfigTool
 			this.GRP_ContainerTypesConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_ContainerTypesConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_ContainerTypesConfig_Details.Name = "GRP_ContainerTypesConfig_Details";
-			this.GRP_ContainerTypesConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_ContainerTypesConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_ContainerTypesConfig_Details.TabIndex = 1;
 			this.GRP_ContainerTypesConfig_Details.TabStop = false;
 			this.GRP_ContainerTypesConfig_Details.Text = "Selected Item Details";
@@ -3437,7 +3539,7 @@ namespace SEConfigTool
 			this.TAB_ContainerTypesConfig_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_ContainerTypesConfig_Details.Name = "TAB_ContainerTypesConfig_Details";
 			this.TAB_ContainerTypesConfig_Details.SelectedIndex = 0;
-			this.TAB_ContainerTypesConfig_Details.Size = new System.Drawing.Size(722, 363);
+			this.TAB_ContainerTypesConfig_Details.Size = new System.Drawing.Size(804, 363);
 			this.TAB_ContainerTypesConfig_Details.TabIndex = 0;
 			// 
 			// TAB_ContainerTypesConfig_Details_Information_Page
@@ -3446,7 +3548,7 @@ namespace SEConfigTool
 			this.TAB_ContainerTypesConfig_Details_Information_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ContainerTypesConfig_Details_Information_Page.Name = "TAB_ContainerTypesConfig_Details_Information_Page";
 			this.TAB_ContainerTypesConfig_Details_Information_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_ContainerTypesConfig_Details_Information_Page.Size = new System.Drawing.Size(714, 337);
+			this.TAB_ContainerTypesConfig_Details_Information_Page.Size = new System.Drawing.Size(796, 337);
 			this.TAB_ContainerTypesConfig_Details_Information_Page.TabIndex = 1;
 			this.TAB_ContainerTypesConfig_Details_Information_Page.Text = "Information";
 			this.TAB_ContainerTypesConfig_Details_Information_Page.UseVisualStyleBackColor = true;
@@ -3473,7 +3575,7 @@ namespace SEConfigTool
 			this.splitContainer10.Panel2.Controls.Add(this.BTN_ContainerTypesConfig_Details_Apply);
 			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_CountMax);
 			this.splitContainer10.Panel2.Controls.Add(this.TXT_ContainerTypeConfig_Details_Information_Name);
-			this.splitContainer10.Size = new System.Drawing.Size(708, 331);
+			this.splitContainer10.Size = new System.Drawing.Size(790, 331);
 			this.splitContainer10.SplitterDistance = 150;
 			this.splitContainer10.TabIndex = 5;
 			// 
@@ -3736,7 +3838,7 @@ namespace SEConfigTool
 			this.TAB_AmmoConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_AmmoConfig_Page.Name = "TAB_AmmoConfig_Page";
 			this.TAB_AmmoConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_AmmoConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_AmmoConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_AmmoConfig_Page.TabIndex = 3;
 			this.TAB_AmmoConfig_Page.Text = "Ammo";
 			this.TAB_AmmoConfig_Page.UseVisualStyleBackColor = true;
@@ -3757,7 +3859,7 @@ namespace SEConfigTool
 			// splitContainer5.Panel2
 			// 
 			this.splitContainer5.Panel2.Controls.Add(this.GRP_AmmoConfig);
-			this.splitContainer5.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer5.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer5.SplitterDistance = 25;
 			this.splitContainer5.TabIndex = 1;
 			// 
@@ -3787,7 +3889,7 @@ namespace SEConfigTool
 			this.GRP_AmmoConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_AmmoConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_AmmoConfig.Name = "GRP_AmmoConfig";
-			this.GRP_AmmoConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_AmmoConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_AmmoConfig.TabIndex = 2;
 			this.GRP_AmmoConfig.TabStop = false;
 			this.GRP_AmmoConfig.Text = "Ammo";
@@ -3806,7 +3908,7 @@ namespace SEConfigTool
 			// splitContainer6.Panel2
 			// 
 			this.splitContainer6.Panel2.Controls.Add(this.GRP_AmmoConfig_Details);
-			this.splitContainer6.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer6.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer6.SplitterDistance = 200;
 			this.splitContainer6.TabIndex = 1;
 			// 
@@ -3826,7 +3928,7 @@ namespace SEConfigTool
 			this.GRP_AmmoConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_AmmoConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_AmmoConfig_Details.Name = "GRP_AmmoConfig_Details";
-			this.GRP_AmmoConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_AmmoConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_AmmoConfig_Details.TabIndex = 3;
 			this.GRP_AmmoConfig_Details.TabStop = false;
 			this.GRP_AmmoConfig_Details.Text = "Selected Item Details";
@@ -3866,7 +3968,7 @@ namespace SEConfigTool
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Id);
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Capacity);
 			this.splitContainer7.Panel2.Controls.Add(this.TXT_AmmoConfig_Details_Name);
-			this.splitContainer7.Size = new System.Drawing.Size(722, 363);
+			this.splitContainer7.Size = new System.Drawing.Size(804, 363);
 			this.splitContainer7.SplitterDistance = 150;
 			this.splitContainer7.TabIndex = 4;
 			// 
@@ -4328,7 +4430,7 @@ namespace SEConfigTool
 			this.TAB_SaveGamePage_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SaveGamePage_Page.Name = "TAB_SaveGamePage_Page";
 			this.TAB_SaveGamePage_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SaveGamePage_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_SaveGamePage_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_SaveGamePage_Page.TabIndex = 0;
 			this.TAB_SaveGamePage_Page.Text = "Saved Game";
 			this.TAB_SaveGamePage_Page.UseVisualStyleBackColor = true;
@@ -4349,7 +4451,7 @@ namespace SEConfigTool
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.GRP_SavedGame);
-			this.splitContainer1.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer1.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer1.SplitterDistance = 26;
 			this.splitContainer1.TabIndex = 1;
 			// 
@@ -4379,7 +4481,7 @@ namespace SEConfigTool
 			this.GRP_SavedGame.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_SavedGame.Location = new System.Drawing.Point(0, 0);
 			this.GRP_SavedGame.Name = "GRP_SavedGame";
-			this.GRP_SavedGame.Size = new System.Drawing.Size(938, 400);
+			this.GRP_SavedGame.Size = new System.Drawing.Size(1020, 400);
 			this.GRP_SavedGame.TabIndex = 1;
 			this.GRP_SavedGame.TabStop = false;
 			this.GRP_SavedGame.Text = "Sector";
@@ -4393,7 +4495,7 @@ namespace SEConfigTool
 			this.TAB_SavedGame_Details.Location = new System.Drawing.Point(3, 16);
 			this.TAB_SavedGame_Details.Name = "TAB_SavedGame_Details";
 			this.TAB_SavedGame_Details.SelectedIndex = 0;
-			this.TAB_SavedGame_Details.Size = new System.Drawing.Size(932, 381);
+			this.TAB_SavedGame_Details.Size = new System.Drawing.Size(1014, 381);
 			this.TAB_SavedGame_Details.TabIndex = 1;
 			// 
 			// TAB_SavedGame_Properties_Page
@@ -4402,7 +4504,7 @@ namespace SEConfigTool
 			this.TAB_SavedGame_Properties_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SavedGame_Properties_Page.Name = "TAB_SavedGame_Properties_Page";
 			this.TAB_SavedGame_Properties_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SavedGame_Properties_Page.Size = new System.Drawing.Size(924, 355);
+			this.TAB_SavedGame_Properties_Page.Size = new System.Drawing.Size(1006, 355);
 			this.TAB_SavedGame_Properties_Page.TabIndex = 0;
 			this.TAB_SavedGame_Properties_Page.Text = "Properties";
 			this.TAB_SavedGame_Properties_Page.UseVisualStyleBackColor = true;
@@ -4424,7 +4526,7 @@ namespace SEConfigTool
 			// 
 			this.splitContainer35.Panel2.Controls.Add(this.TXT_SavedGame_Properties_AppVersion);
 			this.splitContainer35.Panel2.Controls.Add(this.TXT_SavedGame_Properties_Position);
-			this.splitContainer35.Size = new System.Drawing.Size(918, 349);
+			this.splitContainer35.Size = new System.Drawing.Size(1000, 349);
 			this.splitContainer35.SplitterDistance = 150;
 			this.splitContainer35.TabIndex = 0;
 			// 
@@ -4468,7 +4570,7 @@ namespace SEConfigTool
 			this.TAB_SavedGame_Events_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SavedGame_Events_Page.Name = "TAB_SavedGame_Events_Page";
 			this.TAB_SavedGame_Events_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SavedGame_Events_Page.Size = new System.Drawing.Size(782, 355);
+			this.TAB_SavedGame_Events_Page.Size = new System.Drawing.Size(924, 355);
 			this.TAB_SavedGame_Events_Page.TabIndex = 1;
 			this.TAB_SavedGame_Events_Page.Text = "Events";
 			this.TAB_SavedGame_Events_Page.UseVisualStyleBackColor = true;
@@ -4488,7 +4590,7 @@ namespace SEConfigTool
 			// splitContainer34.Panel2
 			// 
 			this.splitContainer34.Panel2.Controls.Add(this.splitContainer36);
-			this.splitContainer34.Size = new System.Drawing.Size(776, 349);
+			this.splitContainer34.Size = new System.Drawing.Size(918, 349);
 			this.splitContainer34.SplitterDistance = 200;
 			this.splitContainer34.TabIndex = 2;
 			// 
@@ -4521,7 +4623,7 @@ namespace SEConfigTool
 			this.splitContainer36.Panel2.Controls.Add(this.BTN_SavedGame_Events_Apply);
 			this.splitContainer36.Panel2.Controls.Add(this.TXT_SavedGame_Events_ActivationTime);
 			this.splitContainer36.Panel2.Controls.Add(this.TXT_SavedGame_Events_Type);
-			this.splitContainer36.Size = new System.Drawing.Size(572, 349);
+			this.splitContainer36.Size = new System.Drawing.Size(714, 349);
 			this.splitContainer36.SplitterDistance = 150;
 			this.splitContainer36.TabIndex = 0;
 			// 
@@ -4587,7 +4689,7 @@ namespace SEConfigTool
 			this.TAB_SavedGame_Objects_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_SavedGame_Objects_Page.Name = "TAB_SavedGame_Objects_Page";
 			this.TAB_SavedGame_Objects_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_SavedGame_Objects_Page.Size = new System.Drawing.Size(782, 355);
+			this.TAB_SavedGame_Objects_Page.Size = new System.Drawing.Size(1006, 355);
 			this.TAB_SavedGame_Objects_Page.TabIndex = 2;
 			this.TAB_SavedGame_Objects_Page.Text = "Objects";
 			this.TAB_SavedGame_Objects_Page.UseVisualStyleBackColor = true;
@@ -4607,7 +4709,7 @@ namespace SEConfigTool
 			// splitContainer33.Panel2
 			// 
 			this.splitContainer33.Panel2.Controls.Add(this.splitContainer51);
-			this.splitContainer33.Size = new System.Drawing.Size(776, 349);
+			this.splitContainer33.Size = new System.Drawing.Size(1000, 349);
 			this.splitContainer33.SplitterDistance = 300;
 			this.splitContainer33.TabIndex = 1;
 			// 
@@ -4647,7 +4749,7 @@ namespace SEConfigTool
 			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field3);
 			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field2);
 			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field1);
-			this.splitContainer51.Size = new System.Drawing.Size(472, 349);
+			this.splitContainer51.Size = new System.Drawing.Size(696, 349);
 			this.splitContainer51.SplitterDistance = 150;
 			this.splitContainer51.TabIndex = 2;
 			// 
@@ -4798,9 +4900,9 @@ namespace SEConfigTool
 			// 
 			// TAB_LayoutPages
 			// 
-			this.TAB_LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.TAB_LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.TAB_LayoutPages.Controls.Add(this.TAB_SaveGamePage_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_BlocksConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_AmmoConfig_Page);
@@ -4814,10 +4916,11 @@ namespace SEConfigTool
 			this.TAB_LayoutPages.Controls.Add(this.TAB_ScenariosConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_TransparentMaterialsConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_ConfigurationConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_EnvironmentConfig_Page);
 			this.TAB_LayoutPages.Location = new System.Drawing.Point(0, 0);
 			this.TAB_LayoutPages.Name = "TAB_LayoutPages";
 			this.TAB_LayoutPages.SelectedIndex = 0;
-			this.TAB_LayoutPages.Size = new System.Drawing.Size(952, 462);
+			this.TAB_LayoutPages.Size = new System.Drawing.Size(1034, 462);
 			this.TAB_LayoutPages.TabIndex = 0;
 			// 
 			// TAB_TransparentMaterialsConfig_Page
@@ -4826,7 +4929,7 @@ namespace SEConfigTool
 			this.TAB_TransparentMaterialsConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_TransparentMaterialsConfig_Page.Name = "TAB_TransparentMaterialsConfig_Page";
 			this.TAB_TransparentMaterialsConfig_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_TransparentMaterialsConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_TransparentMaterialsConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_TransparentMaterialsConfig_Page.TabIndex = 14;
 			this.TAB_TransparentMaterialsConfig_Page.Text = "Transparent Materials";
 			this.TAB_TransparentMaterialsConfig_Page.UseVisualStyleBackColor = true;
@@ -4847,7 +4950,7 @@ namespace SEConfigTool
 			// splitContainer41.Panel2
 			// 
 			this.splitContainer41.Panel2.Controls.Add(this.GRP_TransparentMaterialsConfig);
-			this.splitContainer41.Size = new System.Drawing.Size(938, 430);
+			this.splitContainer41.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer41.SplitterDistance = 25;
 			this.splitContainer41.TabIndex = 5;
 			// 
@@ -4877,7 +4980,7 @@ namespace SEConfigTool
 			this.GRP_TransparentMaterialsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_TransparentMaterialsConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_TransparentMaterialsConfig.Name = "GRP_TransparentMaterialsConfig";
-			this.GRP_TransparentMaterialsConfig.Size = new System.Drawing.Size(938, 401);
+			this.GRP_TransparentMaterialsConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_TransparentMaterialsConfig.TabIndex = 2;
 			this.GRP_TransparentMaterialsConfig.TabStop = false;
 			this.GRP_TransparentMaterialsConfig.Text = "Transparent Materials";
@@ -4897,7 +5000,7 @@ namespace SEConfigTool
 			// splitContainer46.Panel2
 			// 
 			this.splitContainer46.Panel2.Controls.Add(this.GRP_TransparentMaterialsConfig_Details);
-			this.splitContainer46.Size = new System.Drawing.Size(932, 382);
+			this.splitContainer46.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer46.SplitterDistance = 200;
 			this.splitContainer46.TabIndex = 1;
 			// 
@@ -4917,7 +5020,7 @@ namespace SEConfigTool
 			this.GRP_TransparentMaterialsConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_TransparentMaterialsConfig_Details.Location = new System.Drawing.Point(0, 0);
 			this.GRP_TransparentMaterialsConfig_Details.Name = "GRP_TransparentMaterialsConfig_Details";
-			this.GRP_TransparentMaterialsConfig_Details.Size = new System.Drawing.Size(728, 382);
+			this.GRP_TransparentMaterialsConfig_Details.Size = new System.Drawing.Size(810, 382);
 			this.GRP_TransparentMaterialsConfig_Details.TabIndex = 1;
 			this.GRP_TransparentMaterialsConfig_Details.TabStop = false;
 			this.GRP_TransparentMaterialsConfig_Details.Text = "Selected Item Details";
@@ -4956,7 +5059,7 @@ namespace SEConfigTool
 			this.splitContainer47.Panel2.Controls.Add(this.TXT_TransparentMaterialConfig_Details_Emissivity);
 			this.splitContainer47.Panel2.Controls.Add(this.TXT_TransparentMaterialConfig_Details_Name);
 			this.splitContainer47.Panel2.Controls.Add(this.BTN_TransparentMaterialConfig_Details_Apply);
-			this.splitContainer47.Size = new System.Drawing.Size(722, 363);
+			this.splitContainer47.Size = new System.Drawing.Size(804, 363);
 			this.splitContainer47.SplitterDistance = 190;
 			this.splitContainer47.TabIndex = 4;
 			// 
@@ -5058,6 +5161,18 @@ namespace SEConfigTool
 			this.LBL_TransparentMaterialConfig_Name.TabIndex = 7;
 			this.LBL_TransparentMaterialConfig_Name.Text = "Name:";
 			// 
+			// BTN_TransparentMaterialConfig_Details_Delete
+			// 
+			this.BTN_TransparentMaterialConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
+			this.BTN_TransparentMaterialConfig_Details_Delete.Enabled = false;
+			this.BTN_TransparentMaterialConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
+			this.BTN_TransparentMaterialConfig_Details_Delete.Name = "BTN_TransparentMaterialConfig_Details_Delete";
+			this.BTN_TransparentMaterialConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
+			this.BTN_TransparentMaterialConfig_Details_Delete.TabIndex = 28;
+			this.BTN_TransparentMaterialConfig_Details_Delete.Text = "Delete Item";
+			this.BTN_TransparentMaterialConfig_Details_Delete.UseVisualStyleBackColor = false;
+			this.BTN_TransparentMaterialConfig_Details_Delete.Click += new System.EventHandler(this.BTN_TransparentMaterialConfig_Details_Delete_Click);
+			// 
 			// BTN_TransparentMaterialConfig_Details_New
 			// 
 			this.BTN_TransparentMaterialConfig_Details_New.Location = new System.Drawing.Point(3, 337);
@@ -5150,7 +5265,7 @@ namespace SEConfigTool
 			this.TAB_ConfigurationConfig_Page.Controls.Add(this.GRP_ConfigurationConfig);
 			this.TAB_ConfigurationConfig_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_ConfigurationConfig_Page.Name = "TAB_ConfigurationConfig_Page";
-			this.TAB_ConfigurationConfig_Page.Size = new System.Drawing.Size(944, 436);
+			this.TAB_ConfigurationConfig_Page.Size = new System.Drawing.Size(1026, 436);
 			this.TAB_ConfigurationConfig_Page.TabIndex = 15;
 			this.TAB_ConfigurationConfig_Page.Text = "Configuration";
 			this.TAB_ConfigurationConfig_Page.UseVisualStyleBackColor = true;
@@ -5175,10 +5290,13 @@ namespace SEConfigTool
 			// 
 			// GRP_ConfigurationConfig
 			// 
+			this.GRP_ConfigurationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.GRP_ConfigurationConfig.Controls.Add(this.splitContainer50);
 			this.GRP_ConfigurationConfig.Location = new System.Drawing.Point(3, 32);
 			this.GRP_ConfigurationConfig.Name = "GRP_ConfigurationConfig";
-			this.GRP_ConfigurationConfig.Size = new System.Drawing.Size(796, 401);
+			this.GRP_ConfigurationConfig.Size = new System.Drawing.Size(1020, 401);
 			this.GRP_ConfigurationConfig.TabIndex = 2;
 			this.GRP_ConfigurationConfig.TabStop = false;
 			this.GRP_ConfigurationConfig.Text = "Selected Item Details";
@@ -5207,7 +5325,7 @@ namespace SEConfigTool
 			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_LargeBlockSize);
 			this.splitContainer50.Panel2.Controls.Add(this.TXT_ConfigurationConfig_SmallBlockSize);
 			this.splitContainer50.Panel2.Controls.Add(this.BTN_ConfigurationConfig_Apply);
-			this.splitContainer50.Size = new System.Drawing.Size(790, 382);
+			this.splitContainer50.Size = new System.Drawing.Size(1014, 382);
 			this.splitContainer50.SplitterDistance = 190;
 			this.splitContainer50.TabIndex = 4;
 			// 
@@ -5301,100 +5419,198 @@ namespace SEConfigTool
 			this.BTN_ConfigurationConfig_Apply.Text = "Apply changes";
 			this.BTN_ConfigurationConfig_Apply.UseVisualStyleBackColor = true;
 			// 
-			// BTN_TransparentMaterialConfig_Details_Delete
+			// TAB_EnvironmentConfig_Page
 			// 
-			this.BTN_TransparentMaterialConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
-			this.BTN_TransparentMaterialConfig_Details_Delete.Enabled = false;
-			this.BTN_TransparentMaterialConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
-			this.BTN_TransparentMaterialConfig_Details_Delete.Name = "BTN_TransparentMaterialConfig_Details_Delete";
-			this.BTN_TransparentMaterialConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
-			this.BTN_TransparentMaterialConfig_Details_Delete.TabIndex = 28;
-			this.BTN_TransparentMaterialConfig_Details_Delete.Text = "Delete Item";
-			this.BTN_TransparentMaterialConfig_Details_Delete.UseVisualStyleBackColor = false;
-			this.BTN_TransparentMaterialConfig_Details_Delete.Click += new System.EventHandler(this.BTN_TransparentMaterialConfig_Details_Delete_Click);
+			this.TAB_EnvironmentConfig_Page.Controls.Add(this.BTN_EnvironmentConfig_Reload);
+			this.TAB_EnvironmentConfig_Page.Controls.Add(this.BTN_EnvironmentConfig_Save);
+			this.TAB_EnvironmentConfig_Page.Controls.Add(this.groupBox1);
+			this.TAB_EnvironmentConfig_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_EnvironmentConfig_Page.Name = "TAB_EnvironmentConfig_Page";
+			this.TAB_EnvironmentConfig_Page.Size = new System.Drawing.Size(1026, 436);
+			this.TAB_EnvironmentConfig_Page.TabIndex = 16;
+			this.TAB_EnvironmentConfig_Page.Text = "Environment";
+			this.TAB_EnvironmentConfig_Page.UseVisualStyleBackColor = true;
 			// 
-			// BTN_ScenarioConfig_Details_Info_New
+			// BTN_EnvironmentConfig_Reload
 			// 
-			this.BTN_ScenarioConfig_Details_Info_New.Location = new System.Drawing.Point(3, 305);
-			this.BTN_ScenarioConfig_Details_Info_New.Name = "BTN_ScenarioConfig_Details_Info_New";
-			this.BTN_ScenarioConfig_Details_Info_New.Size = new System.Drawing.Size(50, 23);
-			this.BTN_ScenarioConfig_Details_Info_New.TabIndex = 22;
-			this.BTN_ScenarioConfig_Details_Info_New.Text = "New";
-			this.BTN_ScenarioConfig_Details_Info_New.UseVisualStyleBackColor = true;
-			this.BTN_ScenarioConfig_Details_Info_New.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Info_New_Click);
+			this.BTN_EnvironmentConfig_Reload.Location = new System.Drawing.Point(3, 3);
+			this.BTN_EnvironmentConfig_Reload.Name = "BTN_EnvironmentConfig_Reload";
+			this.BTN_EnvironmentConfig_Reload.Size = new System.Drawing.Size(116, 23);
+			this.BTN_EnvironmentConfig_Reload.TabIndex = 4;
+			this.BTN_EnvironmentConfig_Reload.Text = "Reload Configuration";
+			this.BTN_EnvironmentConfig_Reload.UseVisualStyleBackColor = true;
 			// 
-			// BTN_ScenarioConfig_Details_Info_Apply
+			// BTN_EnvironmentConfig_Save
 			// 
-			this.BTN_ScenarioConfig_Details_Info_Apply.Enabled = false;
-			this.BTN_ScenarioConfig_Details_Info_Apply.Location = new System.Drawing.Point(53, 305);
-			this.BTN_ScenarioConfig_Details_Info_Apply.Name = "BTN_ScenarioConfig_Details_Info_Apply";
-			this.BTN_ScenarioConfig_Details_Info_Apply.Size = new System.Drawing.Size(100, 23);
-			this.BTN_ScenarioConfig_Details_Info_Apply.TabIndex = 23;
-			this.BTN_ScenarioConfig_Details_Info_Apply.Text = "Apply changes";
-			this.BTN_ScenarioConfig_Details_Info_Apply.UseVisualStyleBackColor = true;
-			this.BTN_ScenarioConfig_Details_Info_Apply.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Info_Apply_Click);
+			this.BTN_EnvironmentConfig_Save.Location = new System.Drawing.Point(122, 3);
+			this.BTN_EnvironmentConfig_Save.Name = "BTN_EnvironmentConfig_Save";
+			this.BTN_EnvironmentConfig_Save.Size = new System.Drawing.Size(105, 23);
+			this.BTN_EnvironmentConfig_Save.TabIndex = 3;
+			this.BTN_EnvironmentConfig_Save.Text = "Save Configuration";
+			this.BTN_EnvironmentConfig_Save.UseVisualStyleBackColor = true;
 			// 
-			// BTN_ScenarioConfig_Details_Info_Delete
+			// groupBox1
 			// 
-			this.BTN_ScenarioConfig_Details_Info_Delete.BackColor = System.Drawing.Color.Transparent;
-			this.BTN_ScenarioConfig_Details_Info_Delete.Enabled = false;
-			this.BTN_ScenarioConfig_Details_Info_Delete.Location = new System.Drawing.Point(3, 276);
-			this.BTN_ScenarioConfig_Details_Info_Delete.Name = "BTN_ScenarioConfig_Details_Info_Delete";
-			this.BTN_ScenarioConfig_Details_Info_Delete.Size = new System.Drawing.Size(150, 23);
-			this.BTN_ScenarioConfig_Details_Info_Delete.TabIndex = 28;
-			this.BTN_ScenarioConfig_Details_Info_Delete.Text = "Delete Item";
-			this.BTN_ScenarioConfig_Details_Info_Delete.UseVisualStyleBackColor = false;
-			this.BTN_ScenarioConfig_Details_Info_Delete.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_Info_Delete_Click);
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Controls.Add(this.splitContainer52);
+			this.groupBox1.Location = new System.Drawing.Point(3, 32);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(1020, 401);
+			this.groupBox1.TabIndex = 2;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Selected Item Details";
 			// 
-			// BTN_ScenarioConfig_Details_StartingStates_New
+			// splitContainer52
 			// 
-			this.BTN_ScenarioConfig_Details_StartingStates_New.Location = new System.Drawing.Point(3, 305);
-			this.BTN_ScenarioConfig_Details_StartingStates_New.Name = "BTN_ScenarioConfig_Details_StartingStates_New";
-			this.BTN_ScenarioConfig_Details_StartingStates_New.Size = new System.Drawing.Size(50, 23);
-			this.BTN_ScenarioConfig_Details_StartingStates_New.TabIndex = 24;
-			this.BTN_ScenarioConfig_Details_StartingStates_New.Text = "New";
-			this.BTN_ScenarioConfig_Details_StartingStates_New.UseVisualStyleBackColor = true;
-			this.BTN_ScenarioConfig_Details_StartingStates_New.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_StartingStates_New_Click);
+			this.splitContainer52.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer52.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer52.Location = new System.Drawing.Point(3, 16);
+			this.splitContainer52.Name = "splitContainer52";
 			// 
-			// BTN_ScenarioConfig_Details_StartingStates_Delete
+			// splitContainer52.Panel1
 			// 
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete.BackColor = System.Drawing.Color.Transparent;
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Enabled = false;
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Location = new System.Drawing.Point(3, 276);
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Name = "BTN_ScenarioConfig_Details_StartingStates_Delete";
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Size = new System.Drawing.Size(150, 23);
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete.TabIndex = 30;
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Text = "Delete Item";
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete.UseVisualStyleBackColor = false;
-			this.BTN_ScenarioConfig_Details_StartingStates_Delete.Click += new System.EventHandler(this.BTN_ScenarioConfig_Details_StartingStates_Delete_Click);
+			this.splitContainer52.Panel1.Controls.Add(this.LBL_EnvironmentConfig_EnvironmentOrientation_Roll);
+			this.splitContainer52.Panel1.Controls.Add(this.LBL_EnvironmentConfig_EnvironmentOrientation_Pitch);
+			this.splitContainer52.Panel1.Controls.Add(this.LBL_EnvironmentConfig_EnvironmentOrientation_Yaw);
+			this.splitContainer52.Panel1.Controls.Add(this.LBL_EnvironmentConfig_EnvironmentOrientation);
+			this.splitContainer52.Panel1.Controls.Add(this.LBL_EnvironmentConfig_EnvironmentTexture);
+			this.splitContainer52.Panel1.Controls.Add(this.LBL_EnvironmentConfig_SunDirection);
+			this.splitContainer52.Panel1MinSize = 190;
 			// 
-			// BTN_ScenariosConfig_Details_GeneratorOperations_New
+			// splitContainer52.Panel2
 			// 
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Location = new System.Drawing.Point(3, 308);
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Name = "BTN_ScenariosConfig_Details_GeneratorOperations_New";
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Size = new System.Drawing.Size(50, 23);
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.TabIndex = 25;
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Text = "New";
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.UseVisualStyleBackColor = true;
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_New.Click += new System.EventHandler(this.BTN_ScenariosConfig_Details_GeneratorOperations_New_Click);
+			this.splitContainer52.Panel2.Controls.Add(this.TXT_EnvironmentConfig_SunDirection_Z);
+			this.splitContainer52.Panel2.Controls.Add(this.TXT_EnvironmentConfig_SunDirection_Y);
+			this.splitContainer52.Panel2.Controls.Add(this.TXT_EnvironmentConfig_SunDirection_X);
+			this.splitContainer52.Panel2.Controls.Add(this.TXT_EnvironmentConfig_EnvironmentOrientation_Roll);
+			this.splitContainer52.Panel2.Controls.Add(this.TXT_EnvironmentConfig_EnvironmentOrientation_Pitch);
+			this.splitContainer52.Panel2.Controls.Add(this.TXT_EnvironmentConfig_EnvironmentOrientation_Yaw);
+			this.splitContainer52.Panel2.Controls.Add(this.TXT_EnvironmentConfig_EnvironmentTexture);
+			this.splitContainer52.Panel2.Controls.Add(this.button3);
+			this.splitContainer52.Size = new System.Drawing.Size(1014, 382);
+			this.splitContainer52.SplitterDistance = 190;
+			this.splitContainer52.TabIndex = 4;
 			// 
-			// BTN_ScenariosConfig_Details_GeneratorOperations_Delete
+			// LBL_EnvironmentConfig_EnvironmentOrientation_Pitch
 			// 
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.BackColor = System.Drawing.Color.Transparent;
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Enabled = false;
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Location = new System.Drawing.Point(3, 279);
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Name = "BTN_ScenariosConfig_Details_GeneratorOperations_Delete";
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Size = new System.Drawing.Size(150, 23);
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.TabIndex = 31;
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Text = "Delete Item";
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.UseVisualStyleBackColor = false;
-			this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete.Click += new System.EventHandler(this.BTN_ScenariosConfig_Details_GeneratorOperations_Delete_Click);
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Pitch.AutoSize = true;
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Pitch.Location = new System.Drawing.Point(3, 110);
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Pitch.Name = "LBL_EnvironmentConfig_EnvironmentOrientation_Pitch";
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Pitch.Size = new System.Drawing.Size(34, 13);
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Pitch.TabIndex = 24;
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Pitch.Text = "Pitch:";
+			// 
+			// LBL_EnvironmentConfig_EnvironmentOrientation_Yaw
+			// 
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Yaw.AutoSize = true;
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Yaw.Location = new System.Drawing.Point(3, 84);
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Yaw.Name = "LBL_EnvironmentConfig_EnvironmentOrientation_Yaw";
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Yaw.Size = new System.Drawing.Size(31, 13);
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Yaw.TabIndex = 23;
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Yaw.Text = "Yaw:";
+			// 
+			// LBL_EnvironmentConfig_EnvironmentOrientation
+			// 
+			this.LBL_EnvironmentConfig_EnvironmentOrientation.AutoSize = true;
+			this.LBL_EnvironmentConfig_EnvironmentOrientation.Location = new System.Drawing.Point(3, 58);
+			this.LBL_EnvironmentConfig_EnvironmentOrientation.Name = "LBL_EnvironmentConfig_EnvironmentOrientation";
+			this.LBL_EnvironmentConfig_EnvironmentOrientation.Size = new System.Drawing.Size(96, 13);
+			this.LBL_EnvironmentConfig_EnvironmentOrientation.TabIndex = 22;
+			this.LBL_EnvironmentConfig_EnvironmentOrientation.Text = "Skybox Orientation";
+			// 
+			// LBL_EnvironmentConfig_EnvironmentTexture
+			// 
+			this.LBL_EnvironmentConfig_EnvironmentTexture.AutoSize = true;
+			this.LBL_EnvironmentConfig_EnvironmentTexture.Location = new System.Drawing.Point(3, 32);
+			this.LBL_EnvironmentConfig_EnvironmentTexture.Name = "LBL_EnvironmentConfig_EnvironmentTexture";
+			this.LBL_EnvironmentConfig_EnvironmentTexture.Size = new System.Drawing.Size(77, 13);
+			this.LBL_EnvironmentConfig_EnvironmentTexture.TabIndex = 8;
+			this.LBL_EnvironmentConfig_EnvironmentTexture.Text = "Skybox Image:";
+			// 
+			// LBL_EnvironmentConfig_SunDirection
+			// 
+			this.LBL_EnvironmentConfig_SunDirection.AutoSize = true;
+			this.LBL_EnvironmentConfig_SunDirection.Location = new System.Drawing.Point(3, 6);
+			this.LBL_EnvironmentConfig_SunDirection.Name = "LBL_EnvironmentConfig_SunDirection";
+			this.LBL_EnvironmentConfig_SunDirection.Size = new System.Drawing.Size(74, 13);
+			this.LBL_EnvironmentConfig_SunDirection.TabIndex = 7;
+			this.LBL_EnvironmentConfig_SunDirection.Text = "Sun Direction:";
+			// 
+			// TXT_EnvironmentConfig_EnvironmentOrientation_Pitch
+			// 
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Pitch.Location = new System.Drawing.Point(3, 107);
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Pitch.Name = "TXT_EnvironmentConfig_EnvironmentOrientation_Pitch";
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Pitch.Size = new System.Drawing.Size(150, 20);
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Pitch.TabIndex = 22;
+			// 
+			// TXT_EnvironmentConfig_EnvironmentOrientation_Yaw
+			// 
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Yaw.Location = new System.Drawing.Point(3, 81);
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Yaw.Name = "TXT_EnvironmentConfig_EnvironmentOrientation_Yaw";
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Yaw.Size = new System.Drawing.Size(150, 20);
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Yaw.TabIndex = 21;
+			// 
+			// TXT_EnvironmentConfig_EnvironmentTexture
+			// 
+			this.TXT_EnvironmentConfig_EnvironmentTexture.Location = new System.Drawing.Point(3, 29);
+			this.TXT_EnvironmentConfig_EnvironmentTexture.Name = "TXT_EnvironmentConfig_EnvironmentTexture";
+			this.TXT_EnvironmentConfig_EnvironmentTexture.Size = new System.Drawing.Size(150, 20);
+			this.TXT_EnvironmentConfig_EnvironmentTexture.TabIndex = 11;
+			// 
+			// button3
+			// 
+			this.button3.Enabled = false;
+			this.button3.Location = new System.Drawing.Point(24, 391);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(100, 23);
+			this.button3.TabIndex = 8;
+			this.button3.Text = "Apply changes";
+			this.button3.UseVisualStyleBackColor = true;
+			// 
+			// TXT_EnvironmentConfig_EnvironmentOrientation_Roll
+			// 
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Roll.Location = new System.Drawing.Point(3, 133);
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Roll.Name = "TXT_EnvironmentConfig_EnvironmentOrientation_Roll";
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Roll.Size = new System.Drawing.Size(150, 20);
+			this.TXT_EnvironmentConfig_EnvironmentOrientation_Roll.TabIndex = 23;
+			// 
+			// LBL_EnvironmentConfig_EnvironmentOrientation_Roll
+			// 
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Roll.AutoSize = true;
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Roll.Location = new System.Drawing.Point(3, 136);
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Roll.Name = "LBL_EnvironmentConfig_EnvironmentOrientation_Roll";
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Roll.Size = new System.Drawing.Size(28, 13);
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Roll.TabIndex = 25;
+			this.LBL_EnvironmentConfig_EnvironmentOrientation_Roll.Text = "Roll:";
+			// 
+			// TXT_EnvironmentConfig_SunDirection_Z
+			// 
+			this.TXT_EnvironmentConfig_SunDirection_Z.Location = new System.Drawing.Point(107, 3);
+			this.TXT_EnvironmentConfig_SunDirection_Z.Name = "TXT_EnvironmentConfig_SunDirection_Z";
+			this.TXT_EnvironmentConfig_SunDirection_Z.Size = new System.Drawing.Size(46, 20);
+			this.TXT_EnvironmentConfig_SunDirection_Z.TabIndex = 26;
+			// 
+			// TXT_EnvironmentConfig_SunDirection_Y
+			// 
+			this.TXT_EnvironmentConfig_SunDirection_Y.Location = new System.Drawing.Point(55, 3);
+			this.TXT_EnvironmentConfig_SunDirection_Y.Name = "TXT_EnvironmentConfig_SunDirection_Y";
+			this.TXT_EnvironmentConfig_SunDirection_Y.Size = new System.Drawing.Size(46, 20);
+			this.TXT_EnvironmentConfig_SunDirection_Y.TabIndex = 25;
+			// 
+			// TXT_EnvironmentConfig_SunDirection_X
+			// 
+			this.TXT_EnvironmentConfig_SunDirection_X.Location = new System.Drawing.Point(3, 3);
+			this.TXT_EnvironmentConfig_SunDirection_X.Name = "TXT_EnvironmentConfig_SunDirection_X";
+			this.TXT_EnvironmentConfig_SunDirection_X.Size = new System.Drawing.Size(46, 20);
+			this.TXT_EnvironmentConfig_SunDirection_X.TabIndex = 24;
 			// 
 			// SEConfigTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(952, 487);
+			this.ClientSize = new System.Drawing.Size(1034, 487);
 			this.Controls.Add(this.STS_Status);
 			this.Controls.Add(this.TAB_LayoutPages);
 			this.Name = "SEConfigTool";
@@ -5705,6 +5921,14 @@ namespace SEConfigTool
 			this.splitContainer50.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer50)).EndInit();
 			this.splitContainer50.ResumeLayout(false);
+			this.TAB_EnvironmentConfig_Page.ResumeLayout(false);
+			this.groupBox1.ResumeLayout(false);
+			this.splitContainer52.Panel1.ResumeLayout(false);
+			this.splitContainer52.Panel1.PerformLayout();
+			this.splitContainer52.Panel2.ResumeLayout(false);
+			this.splitContainer52.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer52)).EndInit();
+			this.splitContainer52.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -6127,6 +6351,25 @@ namespace SEConfigTool
 		private System.Windows.Forms.Button BTN_ScenarioConfig_Details_StartingStates_New;
 		private System.Windows.Forms.Button BTN_ScenariosConfig_Details_GeneratorOperations_Delete;
 		private System.Windows.Forms.Button BTN_ScenariosConfig_Details_GeneratorOperations_New;
+		private System.Windows.Forms.TabPage TAB_EnvironmentConfig_Page;
+		private System.Windows.Forms.Button BTN_EnvironmentConfig_Reload;
+		private System.Windows.Forms.Button BTN_EnvironmentConfig_Save;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.SplitContainer splitContainer52;
+		private System.Windows.Forms.Label LBL_EnvironmentConfig_EnvironmentOrientation_Roll;
+		private System.Windows.Forms.Label LBL_EnvironmentConfig_EnvironmentOrientation_Pitch;
+		private System.Windows.Forms.Label LBL_EnvironmentConfig_EnvironmentOrientation_Yaw;
+		private System.Windows.Forms.Label LBL_EnvironmentConfig_EnvironmentOrientation;
+		private System.Windows.Forms.Label LBL_EnvironmentConfig_EnvironmentTexture;
+		private System.Windows.Forms.Label LBL_EnvironmentConfig_SunDirection;
+		private System.Windows.Forms.TextBox TXT_EnvironmentConfig_SunDirection_Z;
+		private System.Windows.Forms.TextBox TXT_EnvironmentConfig_SunDirection_Y;
+		private System.Windows.Forms.TextBox TXT_EnvironmentConfig_SunDirection_X;
+		private System.Windows.Forms.TextBox TXT_EnvironmentConfig_EnvironmentOrientation_Roll;
+		private System.Windows.Forms.TextBox TXT_EnvironmentConfig_EnvironmentOrientation_Pitch;
+		private System.Windows.Forms.TextBox TXT_EnvironmentConfig_EnvironmentOrientation_Yaw;
+		private System.Windows.Forms.TextBox TXT_EnvironmentConfig_EnvironmentTexture;
+		private System.Windows.Forms.Button button3;
 
     }
 }
