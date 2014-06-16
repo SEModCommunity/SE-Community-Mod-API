@@ -1,21 +1,39 @@
 ﻿using System;
+using Microsoft.Xml.Serialization.GeneratedAssembly;
 using System.Collections.Generic;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using Sandbox.Common.ObjectBuilders.VRageData;
 using SEModAPI.Support;
+using System.Xml;
+using System.IO;
 
 namespace SEModAPI.API.Definitions
 {
-    public class ConfigurationDefinition : OverLayerDefinition<MyObjectBuilder_Configuration>
+	public class ConfigurationDefinition
 	{
+		#region "Attributes"
+
+		private MyObjectBuilder_Configuration m_baseDefinition;
+
+		#endregion
+
 		#region "Constructors and Initializers"
 
-		public ConfigurationDefinition(MyObjectBuilder_Configuration definition): base(definition)
-		{}
+		public ConfigurationDefinition()
+		{
+
+		}
 
 		#endregion
 
 		#region "Properties"
+
+		public bool Changed
+		{
+			get;
+			private set;
+		}
 
 		public float LargeCubeSize
 		{
@@ -123,11 +141,6 @@ namespace SEModAPI.API.Definitions
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_Configuration definition)
-        {
-            return null;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

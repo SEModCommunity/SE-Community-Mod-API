@@ -39,7 +39,8 @@ namespace SEConfigTool
 		private VoxelMaterialDefinitionsManager m_voxelMaterialsDefinitionsManager;
 		private ScenariosDefinitionsManager m_scenariosDefinitionManager;
 		private TransparentMaterialsDefinitionManager m_transparentMaterialsDefinitionManager;
-		private ConfigurationDefinition m_configurationDefinition;
+		private ConfigurationDefinition m_configurationDefinitionManager;
+		private EnvironmentDefinition m_environmentDefinitionManager;
 
 		private bool m_currentlyFillingConfigurationListBox;
 		private bool m_currentlySelecting;
@@ -74,6 +75,8 @@ namespace SEConfigTool
 			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
 			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
 			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
+			m_configurationDefinitionManager = new ConfigurationDefinition();
+			m_environmentDefinitionManager = new EnvironmentDefinition();
 
 			m_globalEventsDefinitionsManager.IsMutable = true;
 			m_ammoMagazinesDefinitionsManager.IsMutable = true;
@@ -486,6 +489,25 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		private void FillEnvironmentConfigurationInfo()
+		{
+			m_currentlyFillingConfigurationListBox = true;
+
+			//m_environmentDefinitionManager.Load(GetContentDataFile("Environment.sbc"));
+
+			//EnvironmentDefinition environment = m_environmentDefinitionManager.DefinitionOf(0);
+
+			//TXT_EnvironmentConfig_SunDirection_X.Text = environment.SunDirection.X.ToString(m_numberFormatInfo);
+			//TXT_EnvironmentConfig_SunDirection_Y.Text = environment.SunDirection.Y.ToString(m_numberFormatInfo);
+			//TXT_EnvironmentConfig_SunDirection_Z.Text = environment.SunDirection.Z.ToString(m_numberFormatInfo);
+			//TXT_EnvironmentConfig_EnvironmentTexture.Text = environment.EnvironmentTexture;
+			//TXT_EnvironmentConfig_EnvironmentOrientation_Pitch.Text = environment.EnvironmentOrientation.Pitch.ToString(m_numberFormatInfo);
+			//TXT_EnvironmentConfig_EnvironmentOrientation_Roll.Text = environment.EnvironmentOrientation.Roll.ToString(m_numberFormatInfo);
+			//TXT_EnvironmentConfig_EnvironmentOrientation_Yaw.Text = environment.EnvironmentOrientation.Yaw.ToString(m_numberFormatInfo);
+
+			m_currentlyFillingConfigurationListBox = false;
+		}
+
 		#endregion
 
 		#region Form events
@@ -505,7 +527,7 @@ namespace SEConfigTool
 			FillVoxelMaterialConfigurationListBox();
 			FillScenariosConfigurationListBox();
 			FillTransparentMaterialsConfigurationListBox();
-			
+			FillEnvironmentConfigurationInfo();
 		}
 
 		#region SavedGame
@@ -2127,6 +2149,20 @@ namespace SEConfigTool
 		}
 
 		#endregion
+
+		#region Environment
+
+		private void BTN_EnvironmentConfig_Reload_Click(object sender, EventArgs e)
+		{
+			FillEnvironmentConfigurationInfo();
+		}
+
+		private void BTN_EnvironmentConfig_Save_Click(object sender, EventArgs e)
+		{
+			//m_environmentDefinitionManager.Save();
+		}
+
+		#endregion 
 
 		#endregion
 	}

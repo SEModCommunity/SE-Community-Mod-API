@@ -5439,6 +5439,7 @@ namespace SEConfigTool
 			this.BTN_EnvironmentConfig_Reload.TabIndex = 4;
 			this.BTN_EnvironmentConfig_Reload.Text = "Reload Configuration";
 			this.BTN_EnvironmentConfig_Reload.UseVisualStyleBackColor = true;
+			this.BTN_EnvironmentConfig_Reload.Click += new System.EventHandler(this.BTN_EnvironmentConfig_Reload_Click);
 			// 
 			// BTN_EnvironmentConfig_Save
 			// 
@@ -5448,6 +5449,7 @@ namespace SEConfigTool
 			this.BTN_EnvironmentConfig_Save.TabIndex = 3;
 			this.BTN_EnvironmentConfig_Save.Text = "Save Configuration";
 			this.BTN_EnvironmentConfig_Save.UseVisualStyleBackColor = true;
+			this.BTN_EnvironmentConfig_Save.Click += new System.EventHandler(this.BTN_EnvironmentConfig_Save_Click);
 			// 
 			// groupBox1
 			// 

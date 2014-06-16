@@ -7,16 +7,28 @@ using VRageMath;
 
 namespace SEModAPI.API.Definitions
 {
-    public class EnvironmentDefinition : OverLayerDefinition<MyObjectBuilder_EnvironmentDefinition>
+    public class EnvironmentDefinition
 	{
+		#region "Attributes"
+
+		MyObjectBuilder_EnvironmentDefinition m_baseDefinition;
+
+		#endregion
+
 		#region "Constructors and Initializers"
 
-		public EnvironmentDefinition(MyObjectBuilder_EnvironmentDefinition definition): base(definition)
+		public EnvironmentDefinition()
 		{}
 
 		#endregion
 
 		#region "Properties"
+
+		public bool Changed
+		{
+			get;
+			private set;
+		}
 
 		public Vector3 SunDirection
 		{
@@ -58,14 +70,6 @@ namespace SEModAPI.API.Definitions
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_EnvironmentDefinition definition)
-        {
-            return null;
-        }
-
         #endregion
     }
-
-	public class EnvironmentDefinitionManager : SerializableDefinitionsManager<MyObjectBuilder_EnvironmentDefinition, EnvironmentDefinition>
-	{ }
 }
