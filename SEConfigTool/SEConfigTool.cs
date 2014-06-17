@@ -353,7 +353,27 @@ namespace SEConfigTool
 				LST_ContainerTypesConfig.Items.Add(definition.Name);
 			}
 
+			FillContainerTypeItemsTypeConfigurationListBox();
+
 			m_currentlyFillingConfigurationListBox = false;
+		}
+
+		private void FillContainerTypeItemsTypeConfigurationListBox()
+		{
+			//Add all physical items, components, and ammo to the combo box
+			CMB_ContainerTypeConfig_Items_Type.Items.Clear();
+			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
 		}
 
 		private void FillGlobalEventConfigurationListBox(bool loadFromFile = true)
@@ -433,20 +453,45 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
-		private void FillBlueprintConfigurationListBox()
+		private void FillBlueprintConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_blueprintsDefinitionsManager.Load(GetContentDataFile("Blueprints.sbc"));
+			if(loadFromFile)
+				m_blueprintsDefinitionsManager.Load(GetContentDataFile("Blueprints.sbc"));
 
 			LST_BlueprintConfig.Items.Clear();
+			LST_BlueprintConfig_Details_Prerequisites.Items.Clear();
 			foreach (var definition in m_blueprintsDefinitionsManager.Definitions)
 			{
-				//TODO - Find a better way to uniquely label the spawn groups
 				LST_BlueprintConfig.Items.Add(definition.Name);
 			}
 
+			FillBlueprintResulPrereqsItemsConfigurationListBox();
+
 			m_currentlyFillingConfigurationListBox = false;
+		}
+
+		private void FillBlueprintResulPrereqsItemsConfigurationListBox()
+		{
+			//Add all physical items, components, and ammo to the combo boxes
+			CMB_BlueprintConfig_Details_Result_TypeId.Items.Clear();
+			CMB_BlueprintConfig_Details_Prerequisites_TypeId.Items.Clear();
+			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
+			{
+				CMB_BlueprintConfig_Details_Result_TypeId.Items.Add(itemType.Id);
+				CMB_BlueprintConfig_Details_Prerequisites_TypeId.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
+			{
+				CMB_BlueprintConfig_Details_Result_TypeId.Items.Add(itemType.Id);
+				CMB_BlueprintConfig_Details_Prerequisites_TypeId.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
+			{
+				CMB_BlueprintConfig_Details_Result_TypeId.Items.Add(itemType.Id);
+				CMB_BlueprintConfig_Details_Prerequisites_TypeId.Items.Add(itemType.Id);
+			}
 		}
 
 		private void FillVoxelMaterialConfigurationListBox(bool loadFromFile = true)
@@ -1231,21 +1276,6 @@ namespace SEConfigTool
 				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
 			}
 
-			//Add all physical items, components, and ammo to the combo box
-			CMB_ContainerTypeConfig_Items_Type.Items.Clear();
-			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
-			{
-				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
-			}
-			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
-			{
-				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
-			}
-			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
-			{
-				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
-			}
-
 			TXT_ContainerTypeConfig_Item_AmountMin.Text = "";
 			TXT_ContainerTypeConfig_Item_AmountMax.Text = "";
 			TXT_ContainerTypeConfig_Item_Frequency.Text = "";
@@ -1562,6 +1592,7 @@ namespace SEConfigTool
 				return;
 			}
 
+			LST_GlobalEventConfig.SelectedIndex = -1;
 			FillGlobalEventConfigurationListBox(false);
 		}
 
@@ -1779,13 +1810,13 @@ namespace SEConfigTool
 
 		private void LST_PhysicalItemConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			m_currentlySelecting = true;
-
 			if (LST_PhysicalItemConfig.SelectedIndex < 0)
 			{
 				BTN_PhysicalItemConfig_Details_Delete.Enabled = false;
 				return;
 			}
+
+			m_currentlySelecting = true;
 
 			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(LST_PhysicalItemConfig.SelectedIndex);
 
@@ -1899,13 +1930,13 @@ namespace SEConfigTool
 
 		private void LST_ComponentsConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			m_currentlySelecting = true;
-
 			if (LST_ComponentsConfig.SelectedIndex < 0)
 			{
 				BTN_ComponentConfig_Details_Delete.Enabled = false;
 				return;
 			}
+
+			m_currentlySelecting = true;
 
 			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(LST_ComponentsConfig.SelectedIndex);
 
@@ -2018,12 +2049,17 @@ namespace SEConfigTool
 
 		private void LST_BlueprintConfig_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			if (LST_BlueprintConfig.SelectedIndex < 0)
+			{
+				BTN_BlueprintConfig_Details_Result_Delete.Enabled = false;
+				BTN_BlueprintConfig_Details_Prerequisites_Delete.Enabled = false;
+				return;
+			}
+
 			m_currentlySelecting = true;
-			int index = LST_BlueprintConfig.SelectedIndex;
 
-			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(index);
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(LST_BlueprintConfig.SelectedIndex);
 
-			TXT_BlueprintConfig_Details_Result_SubtypeId.Text = blueprint.Result.SubTypeId;
 			TXT_BlueprintConfig_Details_Result_Amount.Text = blueprint.Result.Amount.ToString(m_numberFormatInfo);
 			TXT_BlueprintConfig_Details_Result_BaseProductionTime.Text = blueprint.BaseProductionTimeInSeconds.ToString(m_numberFormatInfo);
 
@@ -2033,16 +2069,15 @@ namespace SEConfigTool
 				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.Name);
 			}
 
-			CMB_BlueprintConfig_Details_Result_TypeId.DataSource = Enum.GetValues(typeof(MyObjectBuilderTypeEnum));
-			CMB_BlueprintConfig_Details_Prerequisites_TypeId.DataSource = Enum.GetValues(typeof(MyObjectBuilderTypeEnum));
-
-			CMB_BlueprintConfig_Details_Result_TypeId.SelectedItem = blueprint.Result.TypeId;
+			CMB_BlueprintConfig_Details_Result_TypeId.SelectedItem = new SerializableDefinitionId(blueprint.Result.TypeId, blueprint.Result.SubTypeId);
 			CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedIndex = -1;
 
 			m_currentlySelecting = false;
 
 			BTN_BlueprintConfig_Details_Result_Apply.Enabled = false;
+			BTN_BlueprintConfig_Details_Result_Delete.Enabled = true;
 			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
+			BTN_BlueprintConfig_Details_Prerequisites_Delete.Enabled = true;
 		}
 
 		private void BTN_BlueprintConfig_Reload_Click(object sender, EventArgs e)
@@ -2052,16 +2087,29 @@ namespace SEConfigTool
 
 		private void BTN_BlueprintConfig_Save_Click(object sender, EventArgs e)
 		{
-			m_blueprintsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_blueprintsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save Blueprints config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving Blueprints in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_BlueprintConfig_Details_Result_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LST_BlueprintConfig.SelectedIndex;
-			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(index);
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(LST_BlueprintConfig.SelectedIndex);
 
-			blueprint.Result.TypeId = (MyObjectBuilderTypeEnum)CMB_BlueprintConfig_Details_Result_TypeId.SelectedValue;
-			blueprint.Result.SubTypeId = TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Text;
+			SerializableDefinitionId selectedItem = (SerializableDefinitionId)CMB_BlueprintConfig_Details_Result_TypeId.SelectedValue;
+			blueprint.Result.TypeId = selectedItem.TypeId;
+			blueprint.Result.SubTypeId = selectedItem.SubtypeName;
 			blueprint.Result.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Result_Amount.Text, m_numberFormatInfo);
 			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TXT_BlueprintConfig_Details_Result_BaseProductionTime.Text, m_numberFormatInfo);
 
@@ -2070,37 +2118,84 @@ namespace SEConfigTool
 
 		private void TXT_BlueprintConfig_Details_Result_TextChanged(object sender, EventArgs e)
 		{
-			BTN_BlueprintConfig_Details_Result_Apply.Enabled = true;
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_BlueprintConfig_Details_Result_Apply.Enabled = true;
+			}
 		}
 
 		private void CMB_BlueprintConfig_Details_Result_TypeId_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			BTN_BlueprintConfig_Details_Result_Apply.Enabled = true;
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_BlueprintConfig_Details_Result_Apply.Enabled = true;
+			}
 		}
 
 		private void BTN_BlueprintConfig_Details_Result_New_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			SerializableDefinitionId selectedItem = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "Stone");
+			MyObjectBuilder_BlueprintDefinition temp = new MyObjectBuilder_BlueprintDefinition();
+			temp.BaseProductionTimeInSeconds = 1;
+			temp.Prerequisites = new MyObjectBuilder_BlueprintDefinition.Item[1];
+			temp.Prerequisites[0] = new MyObjectBuilder_BlueprintDefinition.Item();
+			temp.Prerequisites[0].TypeId = selectedItem.TypeId;
+			temp.Prerequisites[0].SubtypeId = selectedItem.SubtypeName;
+			temp.Prerequisites[0].Amount = 1;
+			temp.Result = new MyObjectBuilder_BlueprintDefinition.Item();
+			temp.Result.Amount = 1;
+			temp.Result.TypeId = selectedItem.TypeId;
+			temp.Result.SubtypeId = selectedItem.SubtypeName;
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.NewEntry(temp);
+			if (blueprint == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			FillBlueprintConfigurationListBox(false);
+
+			LST_BlueprintConfig.SelectedIndex = LST_BlueprintConfig.Items.Count - 1;
 		}
 
 		private void BTN_BlueprintConfig_Details_Result_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_BlueprintConfig.SelectedIndex < 0)
+			{
+				BTN_BlueprintConfig_Details_Result_Apply.Enabled = false;
+				BTN_BlueprintConfig_Details_Result_Delete.Enabled = false;
+				return;
+			}
+
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(LST_BlueprintConfig.SelectedIndex);
+
+			bool deleteResult = m_blueprintsDefinitionsManager.DeleteEntry(blueprint);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete Blueprints entry!");
+				return;
+			}
+
+			LST_BlueprintConfig.SelectedIndex = -1;
+			FillBlueprintConfigurationListBox(false);
 		}
 
 		#region Prerequisites
 
 		private void LST_BlueprintConfig_Details_Prerequisites_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			if (LST_BlueprintConfig_Details_Prerequisites.SelectedIndex < 0) return;
+
 			m_currentlySelecting = true;
+
 			int blueprintIndex = LST_BlueprintConfig.SelectedIndex;
 			int prereqIndex = LST_BlueprintConfig_Details_Prerequisites.SelectedIndex;
 
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(blueprintIndex);
 			BlueprintItemDefinition prereq = blueprint.Prerequisites[prereqIndex];
 
-			CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedItem = prereq.TypeId;
-			TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Text = prereq.SubTypeId;
+			SerializableDefinitionId selectedItem = new SerializableDefinitionId(prereq.TypeId, prereq.SubTypeId);
+			CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedItem = selectedItem;
 			TXT_BlueprintConfig_Details_Prerequisites_Amount.Text = prereq.Amount.ToString(m_numberFormatInfo);
 
 			m_currentlySelecting = false;
@@ -2115,32 +2210,82 @@ namespace SEConfigTool
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(blueprintIndex);
 			BlueprintItemDefinition prereq = blueprint.Prerequisites[prereqIndex];
 
-			prereq.TypeId = (MyObjectBuilderTypeEnum)CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedValue;
-			prereq.SubTypeId = TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Text;
+			SerializableDefinitionId selectedItem = (SerializableDefinitionId)CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedItem;
+			prereq.TypeId = selectedItem.TypeId;
+			prereq.SubTypeId = selectedItem.SubtypeName;
 			prereq.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Prerequisites_Amount.Text, m_numberFormatInfo);
 
 			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
-		}
 
+			LST_BlueprintConfig_Details_Prerequisites.Items.Clear();
+			foreach (var prereqItem in blueprint.Prerequisites)
+			{
+				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereqItem.Name);
+			}
+			LST_BlueprintConfig_Details_Prerequisites.SelectedItem = selectedItem;
+		}
 
 		private void TXT_BlueprintConfig_Details_Prerequisites_TextChanged(object sender, EventArgs e)
 		{
-			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = true;
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = true;
+			}
 		}
 
 		private void CMB_BlueprintConfig_Details_Prerequisites_TypeId_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = true;
+			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
+			{
+				BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = true;
+			}
 		}
 
 		private void BTN_BlueprintConfig_Details_Prerequisites_New_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(LST_BlueprintConfig.SelectedIndex);
+			BlueprintItemDefinition blueprintItem = blueprint.NewEntry();
+			if (blueprintItem == null)
+			{
+				MessageBox.Show(this, "Failed to create new entry");
+				return;
+			}
+
+			LST_BlueprintConfig_Details_Prerequisites.Items.Clear();
+			foreach (var prereq in blueprint.Prerequisites)
+			{
+				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.Name);
+			}
+
+			LST_BlueprintConfig_Details_Prerequisites.SelectedIndex = LST_BlueprintConfig_Details_Prerequisites.Items.Count - 1;
 		}
 
 		private void BTN_BlueprintConfig_Details_Prerequisites_Delete_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this, "This feature is not yet implemented");
+			if (LST_BlueprintConfig_Details_Prerequisites.SelectedIndex < 0)
+			{
+				BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
+				BTN_BlueprintConfig_Details_Prerequisites_Delete.Enabled = false;
+				return;
+			}
+
+			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(LST_BlueprintConfig.SelectedIndex);
+			BlueprintItemDefinition blueprintItem = blueprint.Prerequisites[LST_BlueprintConfig_Details_Prerequisites.SelectedIndex];
+
+			bool deleteResult = blueprint.DeleteEntry(blueprintItem);
+			if (!deleteResult)
+			{
+				MessageBox.Show(this, "Failed to delete Blueprints Prerequisite entry!");
+				return;
+			}
+
+			LST_BlueprintConfig_Details_Prerequisites.SelectedIndex = -1;
+
+			LST_BlueprintConfig_Details_Prerequisites.Items.Clear();
+			foreach (var prereq in blueprint.Prerequisites)
+			{
+				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.Name);
+			}
 		}
 
 		#endregion

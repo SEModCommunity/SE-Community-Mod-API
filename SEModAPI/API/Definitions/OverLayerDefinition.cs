@@ -251,7 +251,8 @@ namespace SEModAPI.API.Definitions
 		{
 			if (!IsMutable) return default(U);
 
-			return NewEntry((T)Activator.CreateInstance(typeof(T), new object[] { }));
+			var sourceInstance = (T)Activator.CreateInstance(typeof(T), new object[] { });
+			return NewEntry(sourceInstance);
 		}
 
 		public U NewEntry(long id)

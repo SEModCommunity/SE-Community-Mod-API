@@ -59,11 +59,6 @@ namespace SEModAPI.API.Definitions
             }
         }
 
-        public int PrefabCount
-        {
-            get { return Prefabs.Length; }
-        }
-
 		public SpawnGroupPrefab[] Prefabs
 		{
 			get { return m_prefabsManager.Definitions; }

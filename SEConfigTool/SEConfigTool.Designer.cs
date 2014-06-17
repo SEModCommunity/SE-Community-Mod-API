@@ -122,28 +122,24 @@ namespace SEConfigTool
 			this.splitContainer29 = new System.Windows.Forms.SplitContainer();
 			this.LBL_BlueprintConfig_Details_Result_TypeId = new System.Windows.Forms.Label();
 			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime = new System.Windows.Forms.Label();
-			this.LBL_BlueprintConfig_Details_Result_SubtypeId = new System.Windows.Forms.Label();
 			this.LBL_BlueprintConfig_Details_Result_Amount = new System.Windows.Forms.Label();
 			this.BTN_BlueprintConfig_Details_Result_Delete = new System.Windows.Forms.Button();
 			this.BTN_BlueprintConfig_Details_Result_New = new System.Windows.Forms.Button();
 			this.CMB_BlueprintConfig_Details_Result_TypeId = new System.Windows.Forms.ComboBox();
 			this.BTN_BlueprintConfig_Details_Result_Apply = new System.Windows.Forms.Button();
 			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime = new System.Windows.Forms.TextBox();
-			this.TXT_BlueprintConfig_Details_Result_SubtypeId = new System.Windows.Forms.TextBox();
 			this.TXT_BlueprintConfig_Details_Result_Amount = new System.Windows.Forms.TextBox();
 			this.TAB_BlueprintConfig_Details_Prerequisites = new System.Windows.Forms.TabPage();
 			this.splitContainer48 = new System.Windows.Forms.SplitContainer();
 			this.LST_BlueprintConfig_Details_Prerequisites = new System.Windows.Forms.ListBox();
 			this.splitContainer49 = new System.Windows.Forms.SplitContainer();
 			this.label1 = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.BTN_BlueprintConfig_Details_Prerequisites_Delete = new System.Windows.Forms.Button();
 			this.BTN_BlueprintConfig_Details_Prerequisites_New = new System.Windows.Forms.Button();
 			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId = new System.Windows.Forms.ComboBox();
 			this.BTN_BlueprintConfig_Details_Prerequisites_Apply = new System.Windows.Forms.Button();
 			this.TXT_BlueprintConfig_Details_Prerequisites_Amount = new System.Windows.Forms.TextBox();
-			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId = new System.Windows.Forms.TextBox();
 			this.TAB_ComponentConfig_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer24 = new System.Windows.Forms.SplitContainer();
 			this.BTN_ComponentConfig_Reload = new System.Windows.Forms.Button();
@@ -1781,7 +1777,6 @@ namespace SEConfigTool
 			// 
 			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Result_TypeId);
 			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Result_BaseProductionTime);
-			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Result_SubtypeId);
 			this.splitContainer29.Panel1.Controls.Add(this.LBL_BlueprintConfig_Details_Result_Amount);
 			this.splitContainer29.Panel1MinSize = 150;
 			// 
@@ -1792,7 +1787,6 @@ namespace SEConfigTool
 			this.splitContainer29.Panel2.Controls.Add(this.CMB_BlueprintConfig_Details_Result_TypeId);
 			this.splitContainer29.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Result_Apply);
 			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_BaseProductionTime);
-			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_SubtypeId);
 			this.splitContainer29.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Result_Amount);
 			this.splitContainer29.Size = new System.Drawing.Size(790, 331);
 			this.splitContainer29.SplitterDistance = 150;
@@ -1810,25 +1804,16 @@ namespace SEConfigTool
 			// LBL_BlueprintConfig_Details_Result_BaseProductionTime
 			// 
 			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.AutoSize = true;
-			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.Location = new System.Drawing.Point(3, 84);
+			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.Location = new System.Drawing.Point(3, 59);
 			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.Name = "LBL_BlueprintConfig_Details_Result_BaseProductionTime";
 			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.Size = new System.Drawing.Size(114, 13);
 			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.TabIndex = 3;
 			this.LBL_BlueprintConfig_Details_Result_BaseProductionTime.Text = "Base Production Time:";
 			// 
-			// LBL_BlueprintConfig_Details_Result_SubtypeId
-			// 
-			this.LBL_BlueprintConfig_Details_Result_SubtypeId.AutoSize = true;
-			this.LBL_BlueprintConfig_Details_Result_SubtypeId.Location = new System.Drawing.Point(3, 32);
-			this.LBL_BlueprintConfig_Details_Result_SubtypeId.Name = "LBL_BlueprintConfig_Details_Result_SubtypeId";
-			this.LBL_BlueprintConfig_Details_Result_SubtypeId.Size = new System.Drawing.Size(61, 13);
-			this.LBL_BlueprintConfig_Details_Result_SubtypeId.TabIndex = 0;
-			this.LBL_BlueprintConfig_Details_Result_SubtypeId.Text = "Subtype Id:";
-			// 
 			// LBL_BlueprintConfig_Details_Result_Amount
 			// 
 			this.LBL_BlueprintConfig_Details_Result_Amount.AutoSize = true;
-			this.LBL_BlueprintConfig_Details_Result_Amount.Location = new System.Drawing.Point(3, 58);
+			this.LBL_BlueprintConfig_Details_Result_Amount.Location = new System.Drawing.Point(3, 33);
 			this.LBL_BlueprintConfig_Details_Result_Amount.Name = "LBL_BlueprintConfig_Details_Result_Amount";
 			this.LBL_BlueprintConfig_Details_Result_Amount.Size = new System.Drawing.Size(46, 13);
 			this.LBL_BlueprintConfig_Details_Result_Amount.TabIndex = 2;
@@ -1878,23 +1863,15 @@ namespace SEConfigTool
 			// 
 			// TXT_BlueprintConfig_Details_Result_BaseProductionTime
 			// 
-			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.Location = new System.Drawing.Point(3, 81);
+			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.Location = new System.Drawing.Point(3, 56);
 			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.Name = "TXT_BlueprintConfig_Details_Result_BaseProductionTime";
 			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.Size = new System.Drawing.Size(150, 20);
 			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.TabIndex = 6;
 			this.TXT_BlueprintConfig_Details_Result_BaseProductionTime.TextChanged += new System.EventHandler(this.TXT_BlueprintConfig_Details_Result_TextChanged);
 			// 
-			// TXT_BlueprintConfig_Details_Result_SubtypeId
-			// 
-			this.TXT_BlueprintConfig_Details_Result_SubtypeId.Location = new System.Drawing.Point(3, 29);
-			this.TXT_BlueprintConfig_Details_Result_SubtypeId.Name = "TXT_BlueprintConfig_Details_Result_SubtypeId";
-			this.TXT_BlueprintConfig_Details_Result_SubtypeId.Size = new System.Drawing.Size(150, 20);
-			this.TXT_BlueprintConfig_Details_Result_SubtypeId.TabIndex = 5;
-			this.TXT_BlueprintConfig_Details_Result_SubtypeId.TextChanged += new System.EventHandler(this.TXT_BlueprintConfig_Details_Result_TextChanged);
-			// 
 			// TXT_BlueprintConfig_Details_Result_Amount
 			// 
-			this.TXT_BlueprintConfig_Details_Result_Amount.Location = new System.Drawing.Point(3, 55);
+			this.TXT_BlueprintConfig_Details_Result_Amount.Location = new System.Drawing.Point(3, 30);
 			this.TXT_BlueprintConfig_Details_Result_Amount.Name = "TXT_BlueprintConfig_Details_Result_Amount";
 			this.TXT_BlueprintConfig_Details_Result_Amount.Size = new System.Drawing.Size(150, 20);
 			this.TXT_BlueprintConfig_Details_Result_Amount.TabIndex = 4;
@@ -1938,6 +1915,7 @@ namespace SEConfigTool
 			this.LST_BlueprintConfig_Details_Prerequisites.Name = "LST_BlueprintConfig_Details_Prerequisites";
 			this.LST_BlueprintConfig_Details_Prerequisites.Size = new System.Drawing.Size(150, 331);
 			this.LST_BlueprintConfig_Details_Prerequisites.TabIndex = 10;
+			this.LST_BlueprintConfig_Details_Prerequisites.SelectedIndexChanged += new System.EventHandler(this.LST_BlueprintConfig_Details_Prerequisites_SelectedIndexChanged);
 			// 
 			// splitContainer49
 			// 
@@ -1949,7 +1927,6 @@ namespace SEConfigTool
 			// splitContainer49.Panel1
 			// 
 			this.splitContainer49.Panel1.Controls.Add(this.label1);
-			this.splitContainer49.Panel1.Controls.Add(this.label6);
 			this.splitContainer49.Panel1.Controls.Add(this.label7);
 			this.splitContainer49.Panel1MinSize = 150;
 			// 
@@ -1960,7 +1937,6 @@ namespace SEConfigTool
 			this.splitContainer49.Panel2.Controls.Add(this.CMB_BlueprintConfig_Details_Prerequisites_TypeId);
 			this.splitContainer49.Panel2.Controls.Add(this.BTN_BlueprintConfig_Details_Prerequisites_Apply);
 			this.splitContainer49.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Prerequisites_Amount);
-			this.splitContainer49.Panel2.Controls.Add(this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId);
 			this.splitContainer49.Size = new System.Drawing.Size(636, 331);
 			this.splitContainer49.SplitterDistance = 150;
 			this.splitContainer49.TabIndex = 10;
@@ -1974,19 +1950,10 @@ namespace SEConfigTool
 			this.label1.TabIndex = 12;
 			this.label1.Text = "Type Id:";
 			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(2, 34);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(61, 13);
-			this.label6.TabIndex = 10;
-			this.label6.Text = "Subtype Id:";
-			// 
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(2, 60);
+			this.label7.Location = new System.Drawing.Point(3, 34);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(46, 13);
 			this.label7.TabIndex = 11;
@@ -2021,6 +1988,7 @@ namespace SEConfigTool
 			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.Name = "CMB_BlueprintConfig_Details_Prerequisites_TypeId";
 			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.Size = new System.Drawing.Size(150, 21);
 			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.TabIndex = 10;
+			this.CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedIndexChanged += new System.EventHandler(this.CMB_BlueprintConfig_Details_Prerequisites_TypeId_SelectedIndexChanged);
 			// 
 			// BTN_BlueprintConfig_Details_Prerequisites_Apply
 			// 
@@ -2031,20 +1999,14 @@ namespace SEConfigTool
 			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.TabIndex = 9;
 			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Text = "Apply changes";
 			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.UseVisualStyleBackColor = true;
+			this.BTN_BlueprintConfig_Details_Prerequisites_Apply.Click += new System.EventHandler(this.BTN_BlueprintConfig_Details_Prerequisites_Apply_Click);
 			// 
 			// TXT_BlueprintConfig_Details_Prerequisites_Amount
 			// 
-			this.TXT_BlueprintConfig_Details_Prerequisites_Amount.Location = new System.Drawing.Point(4, 57);
+			this.TXT_BlueprintConfig_Details_Prerequisites_Amount.Location = new System.Drawing.Point(4, 31);
 			this.TXT_BlueprintConfig_Details_Prerequisites_Amount.Name = "TXT_BlueprintConfig_Details_Prerequisites_Amount";
 			this.TXT_BlueprintConfig_Details_Prerequisites_Amount.Size = new System.Drawing.Size(150, 20);
 			this.TXT_BlueprintConfig_Details_Prerequisites_Amount.TabIndex = 6;
-			// 
-			// TXT_BlueprintConfig_Details_Prerequisites_SubtypeId
-			// 
-			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Location = new System.Drawing.Point(4, 31);
-			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Name = "TXT_BlueprintConfig_Details_Prerequisites_SubtypeId";
-			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.Size = new System.Drawing.Size(150, 20);
-			this.TXT_BlueprintConfig_Details_Prerequisites_SubtypeId.TabIndex = 3;
 			// 
 			// TAB_ComponentConfig_Page
 			// 
@@ -6228,11 +6190,9 @@ namespace SEConfigTool
 		private System.Windows.Forms.SplitContainer splitContainer29;
 		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Result_TypeId;
 		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Result_BaseProductionTime;
-		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Result_SubtypeId;
 		private System.Windows.Forms.Label LBL_BlueprintConfig_Details_Result_Amount;
 		private System.Windows.Forms.Button BTN_BlueprintConfig_Details_Result_Apply;
 		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Result_BaseProductionTime;
-		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Result_SubtypeId;
 		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Result_Amount;
 		private System.Windows.Forms.TabPage TAB_BlueprintConfig_Details_Prerequisites;
 		private System.Windows.Forms.SplitContainer splitContainer7;
@@ -6277,12 +6237,10 @@ namespace SEConfigTool
 		private System.Windows.Forms.ListBox LST_BlueprintConfig_Details_Prerequisites;
 		private System.Windows.Forms.SplitContainer splitContainer49;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.ComboBox CMB_BlueprintConfig_Details_Prerequisites_TypeId;
 		private System.Windows.Forms.Button BTN_BlueprintConfig_Details_Prerequisites_Apply;
 		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Prerequisites_Amount;
-		private System.Windows.Forms.TextBox TXT_BlueprintConfig_Details_Prerequisites_SubtypeId;
 		private System.Windows.Forms.SplitContainer splitContainer51;
 		private System.Windows.Forms.Label LBL_Sector_Objects_Field5;
 		private System.Windows.Forms.Label LBL_Sector_Objects_Field4;

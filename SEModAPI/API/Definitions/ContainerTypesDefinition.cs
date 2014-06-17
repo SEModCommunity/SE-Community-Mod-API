@@ -75,11 +75,6 @@ namespace SEModAPI.API.Definitions
             get { return m_baseDefinition.SubtypeId; }
         }
 
-        public int ItemCount
-        {
-            get { return m_baseDefinition.Items.Length; }
-        }
-
         public int CountMin
         {
             get { return m_baseDefinition.CountMin; }
