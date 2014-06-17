@@ -1082,13 +1082,13 @@ namespace SEConfigTool
 
 		private void LST_AmmoConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			m_currentlySelecting = true;
-
 			if (LST_AmmoConfig.SelectedIndex < 0)
 			{
 				BTN_AmmoConfig_Details_Delete.Enabled = false;
 				return;
 			}
+
+			m_currentlySelecting = true;
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(LST_AmmoConfig.SelectedIndex);
 
@@ -1211,48 +1211,47 @@ namespace SEConfigTool
 
 		private void LST_ContainerTypeConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			m_currentlySelecting = true;
-
 			if (LST_ContainerTypesConfig.SelectedIndex < 0)
 			{
 				BTN_ContainerTypesConfig_Details_Delete.Enabled = false;
+				return;
 			}
-			else
+
+			m_currentlySelecting = true;
+
+			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
+
+			TXT_ContainerTypeConfig_Details_Information_Name.Text = containerType.Name;
+			TXT_ContainerTypeConfig_Details_Information_CountMin.Text = containerType.CountMin.ToString();
+			TXT_ContainerTypeConfig_Details_Information_CountMax.Text = containerType.CountMax.ToString();
+
+			LST_ContainerTypeConfig_Details_Items.Items.Clear();
+			foreach (var def in containerType.Items)
 			{
-				ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
-
-				TXT_ContainerTypeConfig_Details_Information_Name.Text = containerType.Name;
-				TXT_ContainerTypeConfig_Details_Information_CountMin.Text = containerType.CountMin.ToString();
-				TXT_ContainerTypeConfig_Details_Information_CountMax.Text = containerType.CountMax.ToString();
-
-				LST_ContainerTypeConfig_Details_Items.Items.Clear();
-				foreach (var def in containerType.Items)
-				{
-					LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
-				}
-
-				//Add all physical items, components, and ammo to the combo box
-				CMB_ContainerTypeConfig_Items_Type.Items.Clear();
-				foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
-				{
-					CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
-				}
-				foreach (var itemType in m_componentsDefinitionsManager.Definitions)
-				{
-					CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
-				}
-				foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
-				{
-					CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
-				}
-
-				TXT_ContainerTypeConfig_Item_AmountMin.Text = "";
-				TXT_ContainerTypeConfig_Item_AmountMax.Text = "";
-				TXT_ContainerTypeConfig_Item_Frequency.Text = "";
-
-				BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
-				BTN_ContainerTypesConfig_Details_Delete.Enabled = true;
+				LST_ContainerTypeConfig_Details_Items.Items.Add(def.Id.ToString());
 			}
+
+			//Add all physical items, components, and ammo to the combo box
+			CMB_ContainerTypeConfig_Items_Type.Items.Clear();
+			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
+			{
+				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
+			}
+
+			TXT_ContainerTypeConfig_Item_AmountMin.Text = "";
+			TXT_ContainerTypeConfig_Item_AmountMax.Text = "";
+			TXT_ContainerTypeConfig_Item_Frequency.Text = "";
+
+			BTN_ContainerTypesConfig_Details_Apply.Enabled = false;
+			BTN_ContainerTypesConfig_Details_Delete.Enabled = true;
 
 			m_currentlySelecting = false;
 		}
@@ -1454,13 +1453,13 @@ namespace SEConfigTool
 
 		private void LST_GlobalEventConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			m_currentlySelecting = true;
-
 			if (LST_GlobalEventConfig.SelectedIndex < 0)
 			{
 				BTN_GlobalEventConfig_Details_Delete.Enabled = false;
 				return;
 			}
+
+			m_currentlySelecting = true;
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(LST_GlobalEventConfig.SelectedIndex);
 
@@ -1572,35 +1571,31 @@ namespace SEConfigTool
 
 		private void LST_SpawnGroupConfiguration_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			m_currentlySelecting = true;
-
-			int index = LST_SpawnGroupConfig.SelectedIndex;
-
 			BTN_SpawnGroupConfig_Details_Info_Apply.Enabled = false;
 
-			if (index < 0)
+			if (LST_SpawnGroupConfig.SelectedIndex < 0)
 			{
 				BTN_SpawnGroupConfig_Details_Info_Delete.Enabled = false;
+				return;
 			}
-			else
+
+			m_currentlySelecting = true;
+
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfig.SelectedIndex);
+
+			TXT_SpawnGroupConfig_Details_Info_Frequency.Text = spawnGroup.Frequency.ToString(m_numberFormatInfo);
+
+			LST_SpawnGroupConfig_Details_Prefabs.Items.Clear();
+			foreach (var def in spawnGroup.Prefabs)
 			{
-				SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(index);
-
-				TXT_SpawnGroupConfig_Details_Info_Count.Text = spawnGroup.PrefabCount.ToString();
-				TXT_SpawnGroupConfig_Details_Info_Frequency.Text = spawnGroup.Frequency.ToString(m_numberFormatInfo);
-
-				LST_SpawnGroupConfig_Details_Prefabs.Items.Clear();
-				foreach (var def in spawnGroup.Prefabs)
-				{
-					LST_SpawnGroupConfig_Details_Prefabs.Items.Add(def.BeaconText);
-				}
-				TXT_SpawnGroupConfig_Details_Prefabs_File.Text = "";
-				TXT_SpawnGroupConfig_Details_Prefabs_Position.Text = "";
-				TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text = "";
-				TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text = "";
-
-				BTN_SpawnGroupConfig_Details_Info_Delete.Enabled = true;
+				LST_SpawnGroupConfig_Details_Prefabs.Items.Add(def.BeaconText);
 			}
+			TXT_SpawnGroupConfig_Details_Prefabs_File.Text = "";
+			TXT_SpawnGroupConfig_Details_Prefabs_Position.Text = "";
+			TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text = "";
+			TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text = "";
+
+			BTN_SpawnGroupConfig_Details_Info_Delete.Enabled = true;
 
 			m_currentlySelecting = false;
 		}
@@ -1612,7 +1607,20 @@ namespace SEConfigTool
 
 		private void BTN_SaveSpawnGroupConfig_Click(object sender, EventArgs e)
 		{
-			m_spawnGroupsDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_spawnGroupsDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save SpawnGroups config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving SpawnGroups in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void BTN_ConfigSpawnGroupApply_Click(object sender, EventArgs e)
@@ -1676,36 +1684,35 @@ namespace SEConfigTool
 
 		private void LST_SpawnGroupConfig_Details_Prefabs_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			m_currentlySelecting = true;
 			BTN_SpawnGroupConfig_Details_Prefabs_Apply.Enabled = false;
 
-			int index = LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
-			if (index < 0)
+			if (LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex < 0)
 			{
 				BTN_SpawnGroupConfig_Details_Prefabs_Delete.Enabled = false;
+				return;
 			}
-			else
-			{
-				SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfig.SelectedIndex);
-				SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
 
-				TXT_SpawnGroupConfig_Details_Prefabs_File.Text = spawnGroupPrefab.File;
-				TXT_SpawnGroupConfig_Details_Prefabs_Position.Text = spawnGroupPrefab.Position.ToString();
-				TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text = spawnGroupPrefab.BeaconText;
-				TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text = spawnGroupPrefab.Speed.ToString(m_numberFormatInfo);
+			m_currentlySelecting = true;
 
-				BTN_SpawnGroupConfig_Details_Prefabs_Delete.Enabled = true;
-			}
+			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfig.SelectedIndex);
+			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex];
+
+			TXT_SpawnGroupConfig_Details_Prefabs_File.Text = spawnGroupPrefab.File;
+			TXT_SpawnGroupConfig_Details_Prefabs_Position.Text = spawnGroupPrefab.Position.ToString();
+			TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text = spawnGroupPrefab.BeaconText;
+			TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text = spawnGroupPrefab.Speed.ToString(m_numberFormatInfo);
+
+			BTN_SpawnGroupConfig_Details_Prefabs_Delete.Enabled = true;
+
 			m_currentlySelecting = false;
 		}
 
 		private void BTN_SpawnGroupConfig_Prefabs_Apply_Click(object sender, EventArgs e)
 		{
-			int index = LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex;
-
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfig.SelectedIndex);
-			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[index];
+			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex];
 
+			spawnGroupPrefab.File = TXT_SpawnGroupConfig_Details_Prefabs_File.Text;
 			spawnGroupPrefab.BeaconText = TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text;
 			spawnGroupPrefab.Speed = Convert.ToSingle(TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text, m_numberFormatInfo);
 
@@ -1740,7 +1747,6 @@ namespace SEConfigTool
 			}
 
 			LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex = LST_SpawnGroupConfig_Details_Prefabs.Items.Count - 1;
-
 		}
 
 		private void BTN_SpawnGroupConfig_Details_Prefabs_Delete_Click(object sender, EventArgs e)
@@ -1754,7 +1760,7 @@ namespace SEConfigTool
 			bool deleteResult = spawnGroup.DeleteEntry(prefab);
 			if (!deleteResult)
 			{
-				MessageBox.Show(this, "Failed to delete ContainerTypes Item entry!");
+				MessageBox.Show(this, "Failed to delete SpawnGroups Prefab entry!");
 				return;
 			}
 
@@ -1763,7 +1769,6 @@ namespace SEConfigTool
 			{
 				LST_SpawnGroupConfig_Details_Prefabs.Items.Add(def.Name.ToString());
 			}
-
 		}
 
 		#endregion

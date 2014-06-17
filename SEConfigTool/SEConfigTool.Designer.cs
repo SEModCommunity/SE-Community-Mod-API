@@ -223,12 +223,10 @@ namespace SEConfigTool
 			this.TAB_SpawnGroupConfig_Details = new System.Windows.Forms.TabControl();
 			this.TAB_SpawnGroupConfig_Details_Information_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer16 = new System.Windows.Forms.SplitContainer();
-			this.LBL_SpawnGroupConfig_Details_Info_PrefabCount = new System.Windows.Forms.Label();
 			this.LBL_SpawnGroupConfig_Details_Info_Frequency = new System.Windows.Forms.Label();
 			this.BTN_SpawnGroupConfig_Details_Info_Delete = new System.Windows.Forms.Button();
 			this.BTN_SpawnGroupConfig_Details_Info_New = new System.Windows.Forms.Button();
 			this.BTN_SpawnGroupConfig_Details_Info_Apply = new System.Windows.Forms.Button();
-			this.TXT_SpawnGroupConfig_Details_Info_Count = new System.Windows.Forms.TextBox();
 			this.TXT_SpawnGroupConfig_Details_Info_Frequency = new System.Windows.Forms.TextBox();
 			this.TAB_SpawnGroupConfig_Details_Prefabs_Tab = new System.Windows.Forms.TabPage();
 			this.splitContainer17 = new System.Windows.Forms.SplitContainer();
@@ -2905,7 +2903,6 @@ namespace SEConfigTool
 			// 
 			// splitContainer16.Panel1
 			// 
-			this.splitContainer16.Panel1.Controls.Add(this.LBL_SpawnGroupConfig_Details_Info_PrefabCount);
 			this.splitContainer16.Panel1.Controls.Add(this.LBL_SpawnGroupConfig_Details_Info_Frequency);
 			this.splitContainer16.Panel1MinSize = 150;
 			// 
@@ -2914,25 +2911,15 @@ namespace SEConfigTool
 			this.splitContainer16.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Info_Delete);
 			this.splitContainer16.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Info_New);
 			this.splitContainer16.Panel2.Controls.Add(this.BTN_SpawnGroupConfig_Details_Info_Apply);
-			this.splitContainer16.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Info_Count);
 			this.splitContainer16.Panel2.Controls.Add(this.TXT_SpawnGroupConfig_Details_Info_Frequency);
 			this.splitContainer16.Size = new System.Drawing.Size(790, 331);
 			this.splitContainer16.SplitterDistance = 150;
 			this.splitContainer16.TabIndex = 5;
 			// 
-			// LBL_SpawnGroupConfig_Details_Info_PrefabCount
-			// 
-			this.LBL_SpawnGroupConfig_Details_Info_PrefabCount.AutoSize = true;
-			this.LBL_SpawnGroupConfig_Details_Info_PrefabCount.Location = new System.Drawing.Point(3, 6);
-			this.LBL_SpawnGroupConfig_Details_Info_PrefabCount.Name = "LBL_SpawnGroupConfig_Details_Info_PrefabCount";
-			this.LBL_SpawnGroupConfig_Details_Info_PrefabCount.Size = new System.Drawing.Size(72, 13);
-			this.LBL_SpawnGroupConfig_Details_Info_PrefabCount.TabIndex = 6;
-			this.LBL_SpawnGroupConfig_Details_Info_PrefabCount.Text = "Prefab Count:";
-			// 
 			// LBL_SpawnGroupConfig_Details_Info_Frequency
 			// 
 			this.LBL_SpawnGroupConfig_Details_Info_Frequency.AutoSize = true;
-			this.LBL_SpawnGroupConfig_Details_Info_Frequency.Location = new System.Drawing.Point(3, 32);
+			this.LBL_SpawnGroupConfig_Details_Info_Frequency.Location = new System.Drawing.Point(3, 6);
 			this.LBL_SpawnGroupConfig_Details_Info_Frequency.Name = "LBL_SpawnGroupConfig_Details_Info_Frequency";
 			this.LBL_SpawnGroupConfig_Details_Info_Frequency.Size = new System.Drawing.Size(60, 13);
 			this.LBL_SpawnGroupConfig_Details_Info_Frequency.TabIndex = 2;
@@ -2971,17 +2958,9 @@ namespace SEConfigTool
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.UseVisualStyleBackColor = true;
 			this.BTN_SpawnGroupConfig_Details_Info_Apply.Click += new System.EventHandler(this.BTN_ConfigSpawnGroupApply_Click);
 			// 
-			// TXT_SpawnGroupConfig_Details_Info_Count
-			// 
-			this.TXT_SpawnGroupConfig_Details_Info_Count.Location = new System.Drawing.Point(3, 3);
-			this.TXT_SpawnGroupConfig_Details_Info_Count.Name = "TXT_SpawnGroupConfig_Details_Info_Count";
-			this.TXT_SpawnGroupConfig_Details_Info_Count.ReadOnly = true;
-			this.TXT_SpawnGroupConfig_Details_Info_Count.Size = new System.Drawing.Size(150, 20);
-			this.TXT_SpawnGroupConfig_Details_Info_Count.TabIndex = 7;
-			// 
 			// TXT_SpawnGroupConfig_Details_Info_Frequency
 			// 
-			this.TXT_SpawnGroupConfig_Details_Info_Frequency.Location = new System.Drawing.Point(3, 29);
+			this.TXT_SpawnGroupConfig_Details_Info_Frequency.Location = new System.Drawing.Point(3, 3);
 			this.TXT_SpawnGroupConfig_Details_Info_Frequency.Name = "TXT_SpawnGroupConfig_Details_Info_Frequency";
 			this.TXT_SpawnGroupConfig_Details_Info_Frequency.Size = new System.Drawing.Size(150, 20);
 			this.TXT_SpawnGroupConfig_Details_Info_Frequency.TabIndex = 4;
@@ -3152,9 +3131,9 @@ namespace SEConfigTool
 			// 
 			this.TXT_SpawnGroupConfig_Details_Prefabs_File.Location = new System.Drawing.Point(3, 3);
 			this.TXT_SpawnGroupConfig_Details_Prefabs_File.Name = "TXT_SpawnGroupConfig_Details_Prefabs_File";
-			this.TXT_SpawnGroupConfig_Details_Prefabs_File.ReadOnly = true;
 			this.TXT_SpawnGroupConfig_Details_Prefabs_File.Size = new System.Drawing.Size(150, 20);
 			this.TXT_SpawnGroupConfig_Details_Prefabs_File.TabIndex = 6;
+			this.TXT_SpawnGroupConfig_Details_Prefabs_File.TextChanged += new System.EventHandler(this.TXT_SpawnGroupConfig_Details_PrefabText_TextChanged);
 			// 
 			// TAB_GlobalEventConfig_Page
 			// 
@@ -6078,10 +6057,8 @@ namespace SEConfigTool
 		private System.Windows.Forms.TabControl TAB_SpawnGroupConfig_Details;
 		private System.Windows.Forms.TabPage TAB_SpawnGroupConfig_Details_Information_Page;
 		private System.Windows.Forms.SplitContainer splitContainer16;
-		private System.Windows.Forms.Label LBL_SpawnGroupConfig_Details_Info_PrefabCount;
 		private System.Windows.Forms.Label LBL_SpawnGroupConfig_Details_Info_Frequency;
 		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Details_Info_Apply;
-		private System.Windows.Forms.TextBox TXT_SpawnGroupConfig_Details_Info_Count;
 		private System.Windows.Forms.TextBox TXT_SpawnGroupConfig_Details_Info_Frequency;
 		private System.Windows.Forms.TabPage TAB_SpawnGroupConfig_Details_Prefabs_Tab;
 		private System.Windows.Forms.SplitContainer splitContainer17;
