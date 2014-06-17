@@ -752,6 +752,8 @@ namespace SEConfigTool
 			{
 				Meteor meteor = (Meteor)linkedObject;
 
+				BTN_Sector_Objects_Delete.Enabled = true;
+
 				PG_Sector_Objects_Details.Visible = true;
 				PG_Sector_Objects_Details.SelectedObject = meteor;
 			}
@@ -853,6 +855,23 @@ namespace SEConfigTool
 				else
 				{
 					MessageBox.Show(this, "Failed to delete FloatingObject entry!");
+				}
+			}
+
+			if (linkedType.IsAssignableFrom(typeof(Meteor)))
+			{
+				Meteor meteor = (Meteor)linkedObject;
+
+				bool result = m_sectorManager.Sector.DeleteEntry(meteor);
+				if (result)
+				{
+					BTN_Sector_Objects_Delete.Enabled = false;
+					TRV_SavedGame_Objects.SelectedNode = selectedNode.Parent;
+					selectedNode.Remove();
+				}
+				else
+				{
+					MessageBox.Show(this, "Failed to delete Meteor entry!");
 				}
 			}
 

@@ -25,8 +25,8 @@ namespace SEModAPI.API.SaveData
 		private CubeGridManager m_cubeGridManager;
 		private VoxelMapManager m_voxelMapManager;
 		private FloatingObjectManager m_floatingObjectManager;
-		//TODO - Build managers for these so that we aren't using lists
-		private List<Meteor> m_meteors;
+		private MeteorManager m_meteorManager;
+		//TODO - Build a manager for this so that we aren't using a list
 		private List<SectorObject<MyObjectBuilder_EntityBase>> m_unknownObjects;
 
 		#endregion
@@ -39,8 +39,8 @@ namespace SEModAPI.API.SaveData
 			m_cubeGridManager = new CubeGridManager();
 			m_voxelMapManager = new VoxelMapManager();
 			m_floatingObjectManager = new FloatingObjectManager();
+			m_meteorManager = new MeteorManager();
 
-			m_meteors = new List<Meteor>();
 			m_unknownObjects = new List<SectorObject<MyObjectBuilder_EntityBase>>();
 
 			List<MyObjectBuilder_GlobalEventBase> events = new List<MyObjectBuilder_GlobalEventBase>();
@@ -52,6 +52,7 @@ namespace SEModAPI.API.SaveData
 			List<MyObjectBuilder_CubeGrid> cubeGrids = new List<MyObjectBuilder_CubeGrid>();
 			List<MyObjectBuilder_VoxelMap> voxelMaps = new List<MyObjectBuilder_VoxelMap>();
 			List<MyObjectBuilder_FloatingObject> floatingObjects = new List<MyObjectBuilder_FloatingObject>();
+			List<MyObjectBuilder_Meteor> meteors = new List<MyObjectBuilder_Meteor>();
 			foreach (var sectorObject in definition.SectorObjects)
 			{
 				if (sectorObject.TypeId == MyObjectBuilderTypeEnum.CubeGrid)
@@ -72,7 +73,7 @@ namespace SEModAPI.API.SaveData
 				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.Meteor)
 				{
 					MyObjectBuilder_Meteor meteor = (MyObjectBuilder_Meteor)sectorObject;
-					m_meteors.Add(new Meteor(meteor));
+					meteors.Add(meteor);
 				}
 				else
 				{
@@ -85,6 +86,7 @@ namespace SEModAPI.API.SaveData
 			m_cubeGridManager.Load(cubeGrids.ToArray());
 			m_voxelMapManager.Load(voxelMaps.ToArray());
 			m_floatingObjectManager.Load(floatingObjects.ToArray());
+			m_meteorManager.Load(meteors.ToArray());
 		}
 
 		#endregion
@@ -118,7 +120,7 @@ namespace SEModAPI.API.SaveData
 				{
 					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
 				}
-				foreach (var item in m_meteors)
+				foreach (var item in m_meteorManager.Definitions)
 				{
 					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
 				}
@@ -195,7 +197,12 @@ namespace SEModAPI.API.SaveData
 		[Browsable(false)]
 		public List<Meteor> Meteors
 		{
-			get { return m_meteors; }
+			get
+			{
+				//TODO - Look into changing manager base class to return a List so we don't have to do the array conversion
+				List<Meteor> newList = new List<Meteor>(m_meteorManager.Definitions);
+				return newList;
+			}
 		}
 
 		[Category("Sector")]
@@ -222,6 +229,8 @@ namespace SEModAPI.API.SaveData
 				return m_voxelMapManager.NewEntry();
 			if (newType == typeof(FloatingObject))
 				return m_floatingObjectManager.NewEntry();
+			if (newType == typeof(Meteor))
+				return m_meteorManager.NewEntry();
 
 			return null;
 		}
@@ -235,6 +244,8 @@ namespace SEModAPI.API.SaveData
 				return m_voxelMapManager.DeleteEntry((VoxelMap)source);
 			if (deleteType == typeof(FloatingObject))
 				return m_floatingObjectManager.DeleteEntry((FloatingObject)source);
+			if (deleteType == typeof(Meteor))
+				return m_meteorManager.DeleteEntry((Meteor)source);
 
 			return false;
 		}
