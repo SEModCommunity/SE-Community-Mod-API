@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API.Definitions;
 
@@ -29,6 +31,7 @@ namespace SEModAPI.API.SaveData
 
 		#region "Properties"
 
+		[Browsable(false)]
 		new public MyObjectBuilder_CubeGrid BaseDefinition
 		{
 			get
@@ -72,6 +75,8 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Vector3")]
+		[TypeConverter(typeof(Vector3TypeConverter))]
 		public VRageMath.Vector3 LinearVelocity
 		{
 			get { return m_baseDefinition.LinearVelocity; }
@@ -83,6 +88,8 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Vector3")]
+		[TypeConverter(typeof(Vector3TypeConverter))]
 		public VRageMath.Vector3 AngularVelocity
 		{
 			get { return m_baseDefinition.AngularVelocity; }
@@ -94,6 +101,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Browsable(false)]
 		public List<Object> CubeBlocks
 		{
 			get
@@ -103,16 +111,19 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Browsable(false)]
 		public List<BoneInfo> Skeleton
 		{
 			get { return m_baseDefinition.Skeleton; }
 		}
 
+		[Browsable(false)]
 		public List<MyObjectBuilder_ConveyorLine> ConveyorLines
 		{
 			get { return m_baseDefinition.ConveyorLines; }
 		}
 
+		[Browsable(false)]
 		public List<MyObjectBuilder_BlockGroup> BlockGroups
 		{
 			get { return m_baseDefinition.BlockGroups; }

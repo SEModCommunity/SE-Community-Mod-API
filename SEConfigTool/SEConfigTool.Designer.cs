@@ -457,6 +457,7 @@ namespace SEConfigTool
 			this.TXT_EnvironmentConfig_EnvironmentOrientation_Yaw = new System.Windows.Forms.TextBox();
 			this.TXT_EnvironmentConfig_EnvironmentTexture = new System.Windows.Forms.TextBox();
 			this.button3 = new System.Windows.Forms.Button();
+			this.PG_Sector_Objects_Details = new System.Windows.Forms.PropertyGrid();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -4686,6 +4687,7 @@ namespace SEConfigTool
 			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field3);
 			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field2);
 			this.splitContainer51.Panel2.Controls.Add(this.TXT_Sector_Objects_Field1);
+			this.splitContainer51.Panel2.Controls.Add(this.PG_Sector_Objects_Details);
 			this.splitContainer51.Size = new System.Drawing.Size(696, 349);
 			this.splitContainer51.SplitterDistance = 150;
 			this.splitContainer51.TabIndex = 2;
@@ -5544,6 +5546,15 @@ namespace SEConfigTool
 			this.button3.Text = "Apply changes";
 			this.button3.UseVisualStyleBackColor = true;
 			// 
+			// PG_Sector_Objects_Details
+			// 
+			this.PG_Sector_Objects_Details.Dock = System.Windows.Forms.DockStyle.Top;
+			this.PG_Sector_Objects_Details.Location = new System.Drawing.Point(0, 0);
+			this.PG_Sector_Objects_Details.Name = "PG_Sector_Objects_Details";
+			this.PG_Sector_Objects_Details.Size = new System.Drawing.Size(542, 288);
+			this.PG_Sector_Objects_Details.TabIndex = 14;
+			this.PG_Sector_Objects_Details.Visible = false;
+			// 
 			// SEConfigTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -6302,6 +6313,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.TextBox TXT_EnvironmentConfig_EnvironmentOrientation_Yaw;
 		private System.Windows.Forms.TextBox TXT_EnvironmentConfig_EnvironmentTexture;
 		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.PropertyGrid PG_Sector_Objects_Details;
 
     }
 }

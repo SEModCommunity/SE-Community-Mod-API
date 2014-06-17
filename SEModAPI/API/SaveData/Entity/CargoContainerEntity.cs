@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -30,6 +31,7 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		[Browsable(false)]
 		new public MyObjectBuilder_CargoContainer BaseDefinition
 		{
 			get
@@ -39,9 +41,49 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Browsable(false)]
 		public InventoryEntity Inventory
 		{
 			get { return m_Inventory; }
+		}
+
+		public float ItemCount
+		{
+			get
+			{
+				float count = 0;
+				foreach (var item in m_Inventory.Items)
+				{
+					count += item.Amount;
+				}
+				return count;
+			}
+		}
+
+		public float ItemMass
+		{
+			get
+			{
+				float mass = 0;
+				foreach (var item in m_Inventory.Items)
+				{
+					mass += item.Mass;
+				}
+				return mass;
+			}
+		}
+
+		public float ItemVolume
+		{
+			get
+			{
+				float volume = 0;
+				foreach (var item in m_Inventory.Items)
+				{
+					volume += item.Volume;
+				}
+				return volume;
+			}
 		}
 
 		#endregion

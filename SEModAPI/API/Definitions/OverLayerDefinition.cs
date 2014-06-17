@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -39,6 +40,7 @@ namespace SEModAPI.API.Definitions
 
 		#region "Properties"
 
+		[Browsable(false)]
 		public bool Changed { get; protected set; }
 
 		/// <summary>

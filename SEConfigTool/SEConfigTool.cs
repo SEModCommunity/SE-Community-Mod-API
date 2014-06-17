@@ -687,6 +687,8 @@ namespace SEConfigTool
 
 			CMB_Sector_Objects_Field1.Items.Clear();
 
+			PG_Sector_Objects_Details.Visible = false;
+
 			var linkedObject = e.Node.Tag;
 			if (linkedObject == null)
 				return;
@@ -697,122 +699,40 @@ namespace SEConfigTool
 			{
 				CubeBlock<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlock<MyObjectBuilder_CubeBlock>)linkedObject;
 
-				LBL_Sector_Objects_Field1.Visible = true;
-				LBL_Sector_Objects_Field2.Visible = true;
-				TXT_Sector_Objects_Field1.Visible = true;
-				TXT_Sector_Objects_Field2.Visible = true;
-
-				LBL_Sector_Objects_Field1.Text = "Type:";
-				LBL_Sector_Objects_Field2.Text = "Entity Id:";
-				TXT_Sector_Objects_Field1.Text = cubeBlock.SubtypeName;
-				TXT_Sector_Objects_Field2.Text = cubeBlock.EntityId.ToString();
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = cubeBlock;
 			}
 
 			if (linkedType.IsAssignableFrom(typeof(CargoContainerEntity)))
 			{
 				CargoContainerEntity containerBlock = (CargoContainerEntity)linkedObject;
 
-				LBL_Sector_Objects_Field1.Visible = true;
-				LBL_Sector_Objects_Field2.Visible = true;
-				LBL_Sector_Objects_Field3.Visible = true;
-				LBL_Sector_Objects_Field4.Visible = true;
-				LBL_Sector_Objects_Field5.Visible = true;
-
-				TXT_Sector_Objects_Field1.Visible = true;
-				TXT_Sector_Objects_Field2.Visible = true;
-				TXT_Sector_Objects_Field3.Visible = true;
-				TXT_Sector_Objects_Field4.Visible = true;
-				TXT_Sector_Objects_Field5.Visible = true;
-
-				LBL_Sector_Objects_Field1.Text = "Type:";
-				LBL_Sector_Objects_Field2.Text = "Entity Id:";
-				LBL_Sector_Objects_Field3.Text = "Item Count:";
-				LBL_Sector_Objects_Field4.Text = "Item Volume (L):";
-				LBL_Sector_Objects_Field5.Text = "Item Mass (kg):";
-
-				float itemCount = 0;
-				float itemVolume = 0;
-				float itemMass = 0;
-				foreach (var item in containerBlock.Inventory.Items)
-				{
-					itemCount += item.Amount;
-					itemVolume += item.Volume;
-					itemMass += item.Mass;
-				}
-
-				TXT_Sector_Objects_Field1.Text = containerBlock.SubtypeName;
-				TXT_Sector_Objects_Field2.Text = containerBlock.EntityId.ToString();
-				TXT_Sector_Objects_Field3.Text = itemCount.ToString();
-				TXT_Sector_Objects_Field4.Text = itemVolume.ToString();
-				TXT_Sector_Objects_Field5.Text = itemMass.ToString();
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = containerBlock;
 			}
 
 			if (linkedType.IsAssignableFrom(typeof(ReactorEntity)))
 			{
 				ReactorEntity reactorBlock = (ReactorEntity)linkedObject;
 
-				LBL_Sector_Objects_Field1.Visible = true;
-				LBL_Sector_Objects_Field2.Visible = true;
-				LBL_Sector_Objects_Field3.Visible = true;
-
-				TXT_Sector_Objects_Field1.Visible = true;
-				TXT_Sector_Objects_Field2.Visible = true;
-				TXT_Sector_Objects_Field3.Visible = true;
-
-				LBL_Sector_Objects_Field1.Text = "Type:";
-				LBL_Sector_Objects_Field2.Text = "Entity Id:";
-				LBL_Sector_Objects_Field3.Text = "Fuel (kg):";
-
-				float fuelMass = 0;
-				foreach (var item in reactorBlock.Inventory.Items)
-				{
-					fuelMass += item.Amount;
-				}
-
-				TXT_Sector_Objects_Field1.Text = reactorBlock.SubtypeName;
-				TXT_Sector_Objects_Field2.Text = reactorBlock.EntityId.ToString();
-				TXT_Sector_Objects_Field3.Text = fuelMass.ToString();
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = reactorBlock;
 			}
 
 			if (linkedType.IsAssignableFrom(typeof(MedicalRoomEntity)))
 			{
 				MedicalRoomEntity medicalBlock = (MedicalRoomEntity)linkedObject;
 
-				LBL_Sector_Objects_Field1.Visible = true;
-				LBL_Sector_Objects_Field2.Visible = true;
-				LBL_Sector_Objects_Field3.Visible = true;
-
-				TXT_Sector_Objects_Field1.Visible = true;
-				TXT_Sector_Objects_Field2.Visible = true;
-				TXT_Sector_Objects_Field3.Visible = true;
-
-				TXT_Sector_Objects_Field3.Enabled = true;
-				TXT_Sector_Objects_Field3.ReadOnly = false;
-
-				LBL_Sector_Objects_Field1.Text = "Type:";
-				LBL_Sector_Objects_Field2.Text = "Entity Id:";
-				LBL_Sector_Objects_Field3.Text = "Steam User Id:";
-
-				TXT_Sector_Objects_Field1.Text = medicalBlock.SubtypeName;
-				TXT_Sector_Objects_Field2.Text = medicalBlock.EntityId.ToString();
-				TXT_Sector_Objects_Field3.Text = medicalBlock.SteamUserId.ToString();
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = medicalBlock;
 			}
 
 			if (linkedType.IsAssignableFrom(typeof(CubeGrid)))
 			{
 				CubeGrid cubeGrid = (CubeGrid)linkedObject;
 
-				LBL_Sector_Objects_Field1.Visible = true;
-				LBL_Sector_Objects_Field2.Visible = true;
-
-				TXT_Sector_Objects_Field1.Visible = true;
-				TXT_Sector_Objects_Field2.Visible = true;
-
-				LBL_Sector_Objects_Field1.Text = "Position:";
-				LBL_Sector_Objects_Field2.Text = "Entity Id:";
-
-				TXT_Sector_Objects_Field1.Text = cubeGrid.PositionAndOrientation.Position.x.ToString(m_numberFormatInfo) + ", " + cubeGrid.PositionAndOrientation.Position.y.ToString(m_numberFormatInfo) + ", " + cubeGrid.PositionAndOrientation.Position.z.ToString(m_numberFormatInfo);
-				TXT_Sector_Objects_Field2.Text = cubeGrid.EntityId.ToString();
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = cubeGrid;
 			}
 
 			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))

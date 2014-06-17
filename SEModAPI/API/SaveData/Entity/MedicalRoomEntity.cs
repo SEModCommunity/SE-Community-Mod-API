@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -23,6 +24,7 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		[Browsable(false)]
 		new public MyObjectBuilder_MedicalRoom BaseDefinition
 		{
 			get { return m_baseDefinition; }

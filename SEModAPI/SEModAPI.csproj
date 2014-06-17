@@ -109,6 +109,7 @@
     <Compile Include="API\SaveData\SerializableEntity.cs" />
     <Compile Include="API\SaveData\VoxelMap.cs" />
     <Compile Include="API\SEModAPIExceptions.cs" />
+    <Compile Include="API\TypeConverters.cs" />
     <Compile Include="Interop\ClassType.cs" />
     <Compile Include="Interop\CubeType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

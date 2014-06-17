@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -30,6 +31,7 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		[Browsable(false)]
 		new public MyObjectBuilder_Reactor BaseDefinition
 		{
 			get
@@ -39,9 +41,23 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Browsable(false)]
 		public InventoryEntity Inventory
 		{
 			get { return m_Inventory; }
+		}
+
+		public float Fuel
+		{
+			get
+			{
+				float fuelMass = 0;
+				foreach (var item in m_Inventory.Items)
+				{
+					fuelMass += item.Mass;
+				}
+				return fuelMass;
+			}
 		}
 
 		#endregion

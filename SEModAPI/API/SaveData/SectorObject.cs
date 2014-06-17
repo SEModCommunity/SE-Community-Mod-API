@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API.Definitions;
 
@@ -42,6 +44,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Browsable(false)]
 		public MyPositionAndOrientation PositionAndOrientation
 		{
 			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault(); }
@@ -51,6 +54,27 @@ namespace SEModAPI.API.SaveData
 				m_baseDefinition.PositionAndOrientation = value;
 				Changed = true;
 			}
+		}
+
+		[Category("Vector3")]
+		[TypeConverter(typeof(SerializableVector3TypeConverter))]
+		public SerializableVector3 Position
+		{
+			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Position; }
+		}
+
+		[Category("Vector3")]
+		[TypeConverter(typeof(SerializableVector3TypeConverter))]
+		public SerializableVector3 Up
+		{
+			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Up; }
+		}
+
+		[Category("Vector3")]
+		[TypeConverter(typeof(SerializableVector3TypeConverter))]
+		public SerializableVector3 Forward
+		{
+			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Forward; }
 		}
 
 		#endregion
