@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -30,5 +31,9 @@ namespace SEModAPI.API.SaveData
 		}
 
 		#endregion
+	}
+
+	public class FloatingObjectManager : SerializableEntityManager<MyObjectBuilder_FloatingObject, FloatingObject>
+	{
 	}
 }

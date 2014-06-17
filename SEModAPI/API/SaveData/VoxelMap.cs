@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -21,6 +22,7 @@ namespace SEModAPI.API.SaveData
 
 		#region "Properties"
 
+		[Category("Voxel Map")]
 		public string Filename
 		{
 			get { return m_baseDefinition.Filename; }
@@ -42,5 +44,9 @@ namespace SEModAPI.API.SaveData
 		}
 
 		#endregion
+	}
+
+	public class VoxelMapManager : SerializableEntityManager<MyObjectBuilder_VoxelMap, VoxelMap>
+	{
 	}
 }

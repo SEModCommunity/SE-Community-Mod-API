@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 using Sandbox.Common.ObjectBuilders;
@@ -22,9 +23,9 @@ namespace SEModAPI.API.SaveData
 
 		//Sector Objects
 		private CubeGridManager m_cubeGridManager;
+		private VoxelMapManager m_voxelMapManager;
+		private FloatingObjectManager m_floatingObjectManager;
 		//TODO - Build managers for these so that we aren't using lists
-		private List<VoxelMap> m_voxelMaps;
-		private List<FloatingObject> m_floatingObjects;
 		private List<Meteor> m_meteors;
 		private List<SectorObject<MyObjectBuilder_EntityBase>> m_unknownObjects;
 
@@ -36,9 +37,9 @@ namespace SEModAPI.API.SaveData
 			: base(definition)
 		{
 			m_cubeGridManager = new CubeGridManager();
+			m_voxelMapManager = new VoxelMapManager();
+			m_floatingObjectManager = new FloatingObjectManager();
 
-			m_voxelMaps = new List<VoxelMap>();
-			m_floatingObjects = new List<FloatingObject>();
 			m_meteors = new List<Meteor>();
 			m_unknownObjects = new List<SectorObject<MyObjectBuilder_EntityBase>>();
 
@@ -49,6 +50,8 @@ namespace SEModAPI.API.SaveData
 			}
 
 			List<MyObjectBuilder_CubeGrid> cubeGrids = new List<MyObjectBuilder_CubeGrid>();
+			List<MyObjectBuilder_VoxelMap> voxelMaps = new List<MyObjectBuilder_VoxelMap>();
+			List<MyObjectBuilder_FloatingObject> floatingObjects = new List<MyObjectBuilder_FloatingObject>();
 			foreach (var sectorObject in definition.SectorObjects)
 			{
 				if (sectorObject.TypeId == MyObjectBuilderTypeEnum.CubeGrid)
@@ -59,12 +62,12 @@ namespace SEModAPI.API.SaveData
 				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.VoxelMap)
 				{
 					MyObjectBuilder_VoxelMap voxelMap = (MyObjectBuilder_VoxelMap)sectorObject;
-					m_voxelMaps.Add(new VoxelMap(voxelMap));
+					voxelMaps.Add(voxelMap);
 				}
 				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.FloatingObject)
 				{
 					MyObjectBuilder_FloatingObject floatingObject = (MyObjectBuilder_FloatingObject)sectorObject;
-					m_floatingObjects.Add(new FloatingObject(floatingObject));
+					floatingObjects.Add(floatingObject);
 				}
 				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.Meteor)
 				{
@@ -80,12 +83,16 @@ namespace SEModAPI.API.SaveData
 			//Build the managers from the lists
 			m_eventManager = new EventManager(events);
 			m_cubeGridManager.Load(cubeGrids.ToArray());
+			m_voxelMapManager.Load(voxelMaps.ToArray());
+			m_floatingObjectManager.Load(floatingObjects.ToArray());
 		}
 
 		#endregion
 
 		#region "Properties"
 
+		[Category("Sector")]
+		[Browsable(false)]
 		new public MyObjectBuilder_Sector BaseDefinition
 		{
 			get
@@ -103,11 +110,11 @@ namespace SEModAPI.API.SaveData
 				{
 					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
 				}
-				foreach (var item in m_voxelMaps)
+				foreach (var item in m_voxelMapManager.Definitions)
 				{
 					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
 				}
-				foreach (var item in m_floatingObjects)
+				foreach (var item in m_floatingObjectManager.Definitions)
 				{
 					m_baseDefinition.SectorObjects.Add(item.BaseDefinition);
 				}
@@ -124,16 +131,20 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Sector")]
 		public VRageMath.Vector3I Position
 		{
 			get { return m_baseDefinition.Position; }
 		}
 
+		[Category("Sector")]
 		public int AppVersion
 		{
 			get { return m_baseDefinition.AppVersion; }
 		}
 
+		[Category("Sector")]
+		[Browsable(false)]
 		public List<Event> Events
 		{
 			get
@@ -144,6 +155,8 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Sector")]
+		[Browsable(false)]
 		public List<CubeGrid> CubeGrids
 		{
 			get
@@ -154,21 +167,39 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Sector")]
+		[Browsable(false)]
 		public List<VoxelMap> VoxelMaps
 		{
-			get { return m_voxelMaps; }
+			get
+			{
+				//TODO - Look into changing manager base class to return a List so we don't have to do the array conversion
+				List<VoxelMap> newList = new List<VoxelMap>(m_voxelMapManager.Definitions);
+				return newList;
+			}
 		}
 
+		[Category("Sector")]
+		[Browsable(false)]
 		public List<FloatingObject> FloatingObjects
 		{
-			get { return m_floatingObjects; }
+			get
+			{
+				//TODO - Look into changing manager base class to return a List so we don't have to do the array conversion
+				List<FloatingObject> newList = new List<FloatingObject>(m_floatingObjectManager.Definitions);
+				return newList;
+			}
 		}
 
+		[Category("Sector")]
+		[Browsable(false)]
 		public List<Meteor> Meteors
 		{
 			get { return m_meteors; }
 		}
 
+		[Category("Sector")]
+		[Browsable(false)]
 		public List<SectorObject<MyObjectBuilder_EntityBase>> UnknownObjects
 		{
 			get { return m_unknownObjects; }
@@ -181,6 +212,31 @@ namespace SEModAPI.API.SaveData
 		protected override string GetNameFrom(MyObjectBuilder_Sector definition)
 		{
 			return "SANDBOX_" + this.Position.X + "_" + this.Position.Y + "_" + this.Position.Z + "_";
+		}
+
+		public Object NewEntry(Type newType)
+		{
+			if(newType == typeof(CubeGrid))
+				return m_cubeGridManager.NewEntry();
+			if(newType == typeof(VoxelMap))
+				return m_voxelMapManager.NewEntry();
+			if (newType == typeof(FloatingObject))
+				return m_floatingObjectManager.NewEntry();
+
+			return null;
+		}
+
+		public bool DeleteEntry(Object source)
+		{
+			Type deleteType = source.GetType();
+			if (deleteType == typeof(CubeGrid))
+				return m_cubeGridManager.DeleteEntry((CubeGrid)source);
+			if (deleteType == typeof(VoxelMap))
+				return m_voxelMapManager.DeleteEntry((VoxelMap)source);
+			if (deleteType == typeof(FloatingObject))
+				return m_floatingObjectManager.DeleteEntry((FloatingObject)source);
+
+			return false;
 		}
 
 		#endregion

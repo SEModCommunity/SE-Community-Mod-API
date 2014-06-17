@@ -40,17 +40,25 @@ namespace SEModAPI.API.Definitions
 
 		#region "Properties"
 
+		/// <summary>
+		/// Gets the changed status of the object
+		/// </summary>
 		[Browsable(false)]
 		public bool Changed { get; protected set; }
 
 		/// <summary>
 		/// Obtain a nicely formated name of the object
 		/// </summary>
+		[Browsable(false)]
 		public string Name
 		{
 			get { return GetNameFrom(m_baseDefinition); }
 		}
 
+		/// <summary>
+		/// Gets the internal data of the object
+		/// </summary>
+		[Browsable(false)]
 		public TMyObjectBuilder_Definitions_SubType BaseDefinition
 		{
 			get { return m_baseDefinition; }

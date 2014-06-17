@@ -250,7 +250,8 @@ namespace SEConfigTool
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-				TRV_SavedGame_Objects.Nodes[1].Nodes.Add(voxelMap.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				TreeNode newNode = TRV_SavedGame_Objects.Nodes[1].Nodes.Add(voxelMap.Name + " | " + "Dist: " + dist.ToString("F2") + "m");
+				newNode.Tag = voxelMap;
 			}
 
 			//Add the floating objects
@@ -262,7 +263,8 @@ namespace SEConfigTool
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-				TRV_SavedGame_Objects.Nodes[2].Nodes.Add(floatingObject.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				TreeNode newNode = TRV_SavedGame_Objects.Nodes[2].Nodes.Add(floatingObject.Name + " | " + "Dist: " + dist.ToString("F2") + "m");
+				newNode.Tag = floatingObject;
 			}
 
 			//Add the meteors
@@ -274,7 +276,8 @@ namespace SEConfigTool
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-				TRV_SavedGame_Objects.Nodes[3].Nodes.Add(meteor.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				TreeNode newNode = TRV_SavedGame_Objects.Nodes[3].Nodes.Add(meteor.Name + " | " + "Dist: " + dist.ToString("F2") + "m");
+				newNode.Tag = meteor;
 			}
 
 			//Add any unknown objects
@@ -286,7 +289,8 @@ namespace SEConfigTool
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
-				TRV_SavedGame_Objects.Nodes[4].Nodes.Add(unknown.Name + " | " + "Dist: " + dist.ToString("F2") + "m | " + x + ";" + z + ";" + y);
+				TreeNode newNode = TRV_SavedGame_Objects.Nodes[4].Nodes.Add(unknown.Name + " | " + "Dist: " + dist.ToString("F2") + "m");
+				newNode.Tag = unknown;
 			}
 
 			TRV_SavedGame_Objects.EndUpdate();
@@ -718,24 +722,30 @@ namespace SEConfigTool
 			{
 				CubeGrid cubeGrid = (CubeGrid)linkedObject;
 
+				BTN_Sector_Objects_Delete.Enabled = true;
+
 				PG_Sector_Objects_Details.Visible = true;
 				PG_Sector_Objects_Details.SelectedObject = cubeGrid;
-			}
-
-			if (linkedType.IsAssignableFrom(typeof(FloatingObject)))
-			{
-				FloatingObject floatingObject = (FloatingObject)linkedObject;
-
-				PG_Sector_Objects_Details.Visible = true;
-				PG_Sector_Objects_Details.SelectedObject = floatingObject;
 			}
 
 			if (linkedType.IsAssignableFrom(typeof(VoxelMap)))
 			{
 				VoxelMap voxelMap = (VoxelMap)linkedObject;
 
+				BTN_Sector_Objects_Delete.Enabled = true;
+
 				PG_Sector_Objects_Details.Visible = true;
 				PG_Sector_Objects_Details.SelectedObject = voxelMap;
+			}
+
+			if (linkedType.IsAssignableFrom(typeof(FloatingObject)))
+			{
+				FloatingObject floatingObject = (FloatingObject)linkedObject;
+
+				BTN_Sector_Objects_Delete.Enabled = true;
+
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = floatingObject;
 			}
 
 			if (linkedType.IsAssignableFrom(typeof(Meteor)))
@@ -794,6 +804,57 @@ namespace SEConfigTool
 				return;
 
 			Type linkedType = linkedObject.GetType();
+
+			if (linkedType.IsAssignableFrom(typeof(CubeGrid)))
+			{
+				CubeGrid cubeGrid = (CubeGrid)linkedObject;
+
+				bool result = m_sectorManager.Sector.DeleteEntry(cubeGrid);
+				if (result)
+				{
+					BTN_Sector_Objects_Delete.Enabled = false;
+					TRV_SavedGame_Objects.SelectedNode = selectedNode.Parent;
+					selectedNode.Remove();
+				}
+				else
+				{
+					MessageBox.Show(this, "Failed to delete CubeGrid entry!");
+				}
+			}
+
+			if (linkedType.IsAssignableFrom(typeof(VoxelMap)))
+			{
+				VoxelMap voxelMap = (VoxelMap)linkedObject;
+
+				bool result = m_sectorManager.Sector.DeleteEntry(voxelMap);
+				if (result)
+				{
+					BTN_Sector_Objects_Delete.Enabled = false;
+					TRV_SavedGame_Objects.SelectedNode = selectedNode.Parent;
+					selectedNode.Remove();
+				}
+				else
+				{
+					MessageBox.Show(this, "Failed to delete VoxelMap entry!");
+				}
+			}
+
+			if (linkedType.IsAssignableFrom(typeof(FloatingObject)))
+			{
+				FloatingObject floatingObject = (FloatingObject)linkedObject;
+
+				bool result = m_sectorManager.Sector.DeleteEntry(floatingObject);
+				if (result)
+				{
+					BTN_Sector_Objects_Delete.Enabled = false;
+					TRV_SavedGame_Objects.SelectedNode = selectedNode.Parent;
+					selectedNode.Remove();
+				}
+				else
+				{
+					MessageBox.Show(this, "Failed to delete FloatingObject entry!");
+				}
+			}
 
 			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
 			{
