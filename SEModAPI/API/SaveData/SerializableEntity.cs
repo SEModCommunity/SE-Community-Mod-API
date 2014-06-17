@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -34,7 +35,28 @@ namespace SEModAPI.API.SaveData
 
 		#region "Properties"
 
-		public MyObjectBuilderTypeEnum TypeId
+		[Category("Entity")]
+		[ReadOnly(true)]
+		[TypeConverter(typeof(ObjectSerializableDefinitionIdTypeConverter))]
+		public SerializableDefinitionId Id
+		{
+			get
+			{
+				SerializableDefinitionId newId = new SerializableDefinitionId(m_baseDefinition.TypeId, m_baseDefinition.SubtypeName);
+				return newId;
+			}
+			set
+			{
+				if (m_baseDefinition.TypeId == value.TypeId && m_baseDefinition.SubtypeName == value.SubtypeName) return;
+				m_baseDefinition = (T)m_baseDefinition.ChangeType(value.TypeId, value.SubtypeName);
+
+				Changed = true;
+			}
+		}
+
+		[Category("Entity")]
+		[Browsable(false)]
+		protected MyObjectBuilderTypeEnum TypeId
 		{
 			get { return m_baseDefinition.TypeId; }
 			set
@@ -45,7 +67,9 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
-		public string SubtypeName
+		[Category("Entity")]
+		[Browsable(false)]
+		protected string SubtypeName
 		{
 			get { return m_baseDefinition.SubtypeName; }
 			set
@@ -56,6 +80,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Entity")]
 		public long EntityId
 		{
 			get { return m_entityId; }

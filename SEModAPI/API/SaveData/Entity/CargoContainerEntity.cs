@@ -31,6 +31,7 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		[Category("Cargo Container")]
 		[Browsable(false)]
 		new public MyObjectBuilder_CargoContainer BaseDefinition
 		{
@@ -41,12 +42,14 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Category("Cargo Container")]
 		[Browsable(false)]
 		public InventoryEntity Inventory
 		{
 			get { return m_Inventory; }
 		}
 
+		[Category("Cargo Container")]
 		public float ItemCount
 		{
 			get
@@ -60,6 +63,7 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Category("Cargo Container")]
 		public float ItemMass
 		{
 			get
@@ -73,6 +77,7 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Category("Cargo Container")]
 		public float ItemVolume
 		{
 			get

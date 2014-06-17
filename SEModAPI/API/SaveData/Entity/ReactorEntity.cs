@@ -31,6 +31,7 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		[Category("Reactor")]
 		[Browsable(false)]
 		new public MyObjectBuilder_Reactor BaseDefinition
 		{
@@ -41,12 +42,14 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Category("Reactor")]
 		[Browsable(false)]
 		public InventoryEntity Inventory
 		{
 			get { return m_Inventory; }
 		}
 
+		[Category("Reactor")]
 		public float Fuel
 		{
 			get

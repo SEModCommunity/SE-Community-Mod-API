@@ -156,7 +156,7 @@ namespace SEConfigTool
 					if (cubeType.IsAssignableFrom(typeof(CubeBlock<MyObjectBuilder_CubeBlock>)))
 					{
 						CubeBlock<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlock<MyObjectBuilder_CubeBlock>)cubeBlockObject;
-						switch (cubeBlock.TypeId)
+						switch (cubeBlock.Id.TypeId)
 						{
 							case MyObjectBuilderTypeEnum.CubeBlock:
 								blockNode = structuralBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
@@ -353,27 +353,9 @@ namespace SEConfigTool
 				LST_ContainerTypesConfig.Items.Add(definition.Name);
 			}
 
-			FillContainerTypeItemsTypeConfigurationListBox();
+			FillComboWithItems(CMB_ContainerTypeConfig_Items_Type);
 
 			m_currentlyFillingConfigurationListBox = false;
-		}
-
-		private void FillContainerTypeItemsTypeConfigurationListBox()
-		{
-			//Add all physical items, components, and ammo to the combo box
-			CMB_ContainerTypeConfig_Items_Type.Items.Clear();
-			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
-			{
-				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
-			}
-			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
-			{
-				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
-			}
-			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
-			{
-				CMB_ContainerTypeConfig_Items_Type.Items.Add(itemType.Id);
-			}
 		}
 
 		private void FillGlobalEventConfigurationListBox(bool loadFromFile = true)
@@ -467,31 +449,10 @@ namespace SEConfigTool
 				LST_BlueprintConfig.Items.Add(definition.Name);
 			}
 
-			FillBlueprintResulPrereqsItemsConfigurationListBox();
+			FillComboWithItems(CMB_BlueprintConfig_Details_Result_TypeId);
+			FillComboWithItems(CMB_BlueprintConfig_Details_Prerequisites_TypeId);
 
 			m_currentlyFillingConfigurationListBox = false;
-		}
-
-		private void FillBlueprintResulPrereqsItemsConfigurationListBox()
-		{
-			//Add all physical items, components, and ammo to the combo boxes
-			CMB_BlueprintConfig_Details_Result_TypeId.Items.Clear();
-			CMB_BlueprintConfig_Details_Prerequisites_TypeId.Items.Clear();
-			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
-			{
-				CMB_BlueprintConfig_Details_Result_TypeId.Items.Add(itemType.Id);
-				CMB_BlueprintConfig_Details_Prerequisites_TypeId.Items.Add(itemType.Id);
-			}
-			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
-			{
-				CMB_BlueprintConfig_Details_Result_TypeId.Items.Add(itemType.Id);
-				CMB_BlueprintConfig_Details_Prerequisites_TypeId.Items.Add(itemType.Id);
-			}
-			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
-			{
-				CMB_BlueprintConfig_Details_Result_TypeId.Items.Add(itemType.Id);
-				CMB_BlueprintConfig_Details_Prerequisites_TypeId.Items.Add(itemType.Id);
-			}
 		}
 
 		private void FillVoxelMaterialConfigurationListBox(bool loadFromFile = true)
@@ -558,6 +519,50 @@ namespace SEConfigTool
 			//TXT_EnvironmentConfig_EnvironmentOrientation_Yaw.Text = environment.EnvironmentOrientation.Yaw.ToString(m_numberFormatInfo);
 
 			m_currentlyFillingConfigurationListBox = false;
+		}
+
+		/// <summary>
+		/// Fills the combo box with all of the physical items, components, and ammo magazines
+		/// </summary>
+		/// <param name="combo"></param>
+		private void FillComboWithItems(ComboBox combo)
+		{
+			//Add all physical items, components, and ammo to the combo box
+			combo.Items.Clear();
+			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
+			{
+				combo.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
+			{
+				combo.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
+			{
+				combo.Items.Add(itemType.Id);
+			}
+		}
+
+		/// <summary>
+		/// Fills the list box with all of the physical items, components, and ammo magazines
+		/// </summary>
+		/// <param name="list"></param>
+		private void FillListWithItems(ListBox list)
+		{
+			//Add all physical items, components, and ammo to the list
+			list.Items.Clear();
+			foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
+			{
+				list.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_componentsDefinitionsManager.Definitions)
+			{
+				list.Items.Add(itemType.Id);
+			}
+			foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
+			{
+				list.Items.Add(itemType.Id);
+			}
 		}
 
 		#endregion
@@ -655,37 +660,8 @@ namespace SEConfigTool
 		{
 			m_currentlySelecting = true;
 
-			LBL_Sector_Objects_Field1.Visible = false;
-			LBL_Sector_Objects_Field2.Visible = false;
-			LBL_Sector_Objects_Field3.Visible = false;
-			LBL_Sector_Objects_Field4.Visible = false;
-			LBL_Sector_Objects_Field5.Visible = false;
-
-			TXT_Sector_Objects_Field1.Visible = false;
-			TXT_Sector_Objects_Field2.Visible = false;
-			TXT_Sector_Objects_Field3.Visible = false;
-			TXT_Sector_Objects_Field4.Visible = false;
-			TXT_Sector_Objects_Field5.Visible = false;
-
-			CMB_Sector_Objects_Field1.Visible = false;
-
-			TXT_Sector_Objects_Field1.Enabled = false;
-			TXT_Sector_Objects_Field2.Enabled = false;
-			TXT_Sector_Objects_Field3.Enabled = false;
-			TXT_Sector_Objects_Field4.Enabled = false;
-			TXT_Sector_Objects_Field5.Enabled = false;
-
 			BTN_Sector_Objects_New.Enabled = false;
-			BTN_Sector_Objects_Apply.Enabled = false;
 			BTN_Sector_Objects_Delete.Enabled = false;
-
-			TXT_Sector_Objects_Field1.ReadOnly = true;
-			TXT_Sector_Objects_Field2.ReadOnly = true;
-			TXT_Sector_Objects_Field3.ReadOnly = true;
-			TXT_Sector_Objects_Field4.ReadOnly = true;
-			TXT_Sector_Objects_Field5.ReadOnly = true;
-
-			CMB_Sector_Objects_Field1.Items.Clear();
 
 			PG_Sector_Objects_Details.Visible = false;
 
@@ -727,6 +703,17 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = medicalBlock;
 			}
 
+			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
+			{
+				InventoryItemEntity item = (InventoryItemEntity)linkedObject;
+
+				BTN_Sector_Objects_New.Enabled = true;
+				BTN_Sector_Objects_Delete.Enabled = true;
+
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = item;
+			}
+
 			if (linkedType.IsAssignableFrom(typeof(CubeGrid)))
 			{
 				CubeGrid cubeGrid = (CubeGrid)linkedObject;
@@ -735,115 +722,31 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = cubeGrid;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
+			if (linkedType.IsAssignableFrom(typeof(FloatingObject)))
 			{
-				InventoryItemEntity item = (InventoryItemEntity)linkedObject;
+				FloatingObject floatingObject = (FloatingObject)linkedObject;
 
-				LBL_Sector_Objects_Field1.Visible = true;
-				LBL_Sector_Objects_Field2.Visible = true;
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = floatingObject;
+			}
 
-				TXT_Sector_Objects_Field2.Visible = true;
+			if (linkedType.IsAssignableFrom(typeof(VoxelMap)))
+			{
+				VoxelMap voxelMap = (VoxelMap)linkedObject;
 
-				CMB_Sector_Objects_Field1.Visible = true;
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = voxelMap;
+			}
 
-				BTN_Sector_Objects_New.Enabled = true;
-				BTN_Sector_Objects_Delete.Enabled = true;
+			if (linkedType.IsAssignableFrom(typeof(Meteor)))
+			{
+				Meteor meteor = (Meteor)linkedObject;
 
-				TXT_Sector_Objects_Field2.Enabled = true;
-				TXT_Sector_Objects_Field2.ReadOnly = false;
-
-				LBL_Sector_Objects_Field1.Text = "Type:";
-				LBL_Sector_Objects_Field2.Text = "Amount:";
-
-				//Add all physical items, components, and ammo to the combo box
-				CMB_Sector_Objects_Field1.Items.Clear();
-				foreach (var itemType in m_physicalItemsDefinitionsManager.Definitions)
-				{
-					CMB_Sector_Objects_Field1.Items.Add(itemType.Id);
-				}
-				foreach (var itemType in m_componentsDefinitionsManager.Definitions)
-				{
-					CMB_Sector_Objects_Field1.Items.Add(itemType.Id);
-				}
-				foreach (var itemType in m_ammoMagazinesDefinitionsManager.Definitions)
-				{
-					CMB_Sector_Objects_Field1.Items.Add(itemType.Id);
-				}
-
-				//Select the matching type/subtype item in the list
-				SerializableDefinitionId itemTypeId = new SerializableDefinitionId(item.PhysicalContent.TypeId, item.PhysicalContent.SubtypeName);
-				CMB_Sector_Objects_Field1.SelectedItem = itemTypeId;
-
-				TXT_Sector_Objects_Field2.Text = item.Amount.ToString();
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = meteor;
 			}
 
 			m_currentlySelecting = false;
-		}
-
-		private void TXT_Sector_Objects_TextChanged(object sender, EventArgs e)
-		{
-			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-			{
-				BTN_Sector_Objects_Apply.Enabled = true;
-			}
-		}
-
-		private void CMB_Sector_Objects_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-			{
-				BTN_Sector_Objects_Apply.Enabled = true;
-			}
-		}
-
-		private void BTN_Sector_Objects_Apply_Click(object sender, EventArgs e)
-		{
-			TreeNode selectedNode = TRV_SavedGame_Objects.SelectedNode;
-
-			var linkedObject = selectedNode.Tag;
-			if (linkedObject == null)
-				return;
-
-			Type linkedType = linkedObject.GetType();
-
-			if (linkedType.IsAssignableFrom(typeof(MedicalRoomEntity)))
-			{
-				MedicalRoomEntity medicalBlock = (MedicalRoomEntity)linkedObject;
-
-				medicalBlock.SteamUserId = Convert.ToUInt64(TXT_Sector_Objects_Field3.Text, m_numberFormatInfo);
-			}
-
-			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
-			{
-				InventoryItemEntity itemEntity = (InventoryItemEntity)linkedObject;
-
-				//Update the item
-				itemEntity.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject((SerializableDefinitionId)CMB_Sector_Objects_Field1.SelectedItem);
-				itemEntity.Amount = Convert.ToSingle(TXT_Sector_Objects_Field2.Text, m_numberFormatInfo);
-
-				TreeNode parentNode = selectedNode.Parent;
-
-				var linkedContainer = parentNode.Tag;
-				if (linkedContainer == null)
-					return;
-
-				Type linkedContainerType = linkedContainer.GetType();
-
-				if (linkedContainerType.IsAssignableFrom(typeof(CargoContainerEntity)))
-				{
-					CargoContainerEntity containerBlock = (CargoContainerEntity)linkedContainer;
-
-					//Refresh the sub-item list on the container
-					parentNode.Nodes.Clear();
-					foreach (var item in containerBlock.Inventory.Items)
-					{
-						TreeNode itemNode = parentNode.Nodes.Add(item.PhysicalContent.SubtypeName + " x" + item.Amount.ToString());
-						itemNode.Tag = item;
-					}
-				}
-			}
-
-			BTN_Sector_Objects_Apply.Enabled = false;
 		}
 
 		private void BTN_Sector_Objects_New_Click(object sender, EventArgs e)
@@ -871,9 +774,6 @@ namespace SEConfigTool
 					CargoContainerEntity containerBlock = (CargoContainerEntity)linkedContainer;
 
 					InventoryItemEntity newItem = containerBlock.Inventory.NewEntry();
-					SerializableDefinitionId itemTypeId = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, "SteelPlate");
-					newItem.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(itemTypeId);
-					newItem.Amount = 1;
 
 					parentNode.Nodes.Clear();
 					foreach (var item in containerBlock.Inventory.Items)

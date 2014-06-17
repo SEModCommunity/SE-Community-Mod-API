@@ -24,12 +24,14 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		[Category("Medical Room")]
 		[Browsable(false)]
 		new public MyObjectBuilder_MedicalRoom BaseDefinition
 		{
 			get { return m_baseDefinition; }
 		}
 
+		[Category("Medical Room")]
 		public ulong SteamUserId
 		{
 			get { return m_baseDefinition.SteamUserId; }

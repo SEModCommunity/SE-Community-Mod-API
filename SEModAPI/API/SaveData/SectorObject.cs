@@ -33,6 +33,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Sector Object")]
 		public MyPersistentEntityFlags2 PersistentFlags
 		{
 			get { return m_baseDefinition.PersistentFlags; }
@@ -44,6 +45,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Sector Object")]
 		[Browsable(false)]
 		public MyPositionAndOrientation PositionAndOrientation
 		{
@@ -56,25 +58,46 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
-		[Category("Vector3")]
+		[Category("Sector Object")]
 		[TypeConverter(typeof(SerializableVector3TypeConverter))]
 		public SerializableVector3 Position
 		{
 			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Position; }
+			set
+			{
+				if (Position.Equals(value)) return;
+				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(value, Forward, Up);
+				m_baseDefinition.PositionAndOrientation = positionOrientation;
+				Changed = true;
+			}
 		}
 
-		[Category("Vector3")]
+		[Category("Sector Object")]
 		[TypeConverter(typeof(SerializableVector3TypeConverter))]
 		public SerializableVector3 Up
 		{
 			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Up; }
+			set
+			{
+				if (Up.Equals(value)) return;
+				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(Position, Forward, value);
+				m_baseDefinition.PositionAndOrientation = positionOrientation;
+				Changed = true;
+			}
 		}
 
-		[Category("Vector3")]
+		[Category("Sector Object")]
 		[TypeConverter(typeof(SerializableVector3TypeConverter))]
 		public SerializableVector3 Forward
 		{
 			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Forward; }
+			set
+			{
+				if (Forward.Equals(value)) return;
+				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(Position, value, Up);
+				m_baseDefinition.PositionAndOrientation = positionOrientation;
+				Changed = true;
+			}
 		}
 
 		#endregion

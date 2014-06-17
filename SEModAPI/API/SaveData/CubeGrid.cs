@@ -31,6 +31,7 @@ namespace SEModAPI.API.SaveData
 
 		#region "Properties"
 
+		[Category("Cube Grid")]
 		[Browsable(false)]
 		new public MyObjectBuilder_CubeGrid BaseDefinition
 		{
@@ -42,17 +43,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
-		new public long EntityId
-		{
-			get { return m_baseDefinition.EntityId; }
-			set
-			{
-				if (m_baseDefinition.EntityId == value) return;
-				m_baseDefinition.EntityId = value;
-				Changed = true;
-			}
-		}
-
+		[Category("Cube Grid")]
 		public MyCubeSize GridSizeEnum
 		{
 			get { return m_baseDefinition.GridSizeEnum; }
@@ -64,6 +55,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Cube Grid")]
 		public bool IsStatic
 		{
 			get { return m_baseDefinition.IsStatic; }
@@ -75,7 +67,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
-		[Category("Vector3")]
+		[Category("Cube Grid")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public VRageMath.Vector3 LinearVelocity
 		{
@@ -88,7 +80,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
-		[Category("Vector3")]
+		[Category("Cube Grid")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public VRageMath.Vector3 AngularVelocity
 		{
@@ -101,6 +93,7 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<Object> CubeBlocks
 		{
@@ -111,18 +104,21 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<BoneInfo> Skeleton
 		{
 			get { return m_baseDefinition.Skeleton; }
 		}
 
+		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<MyObjectBuilder_ConveyorLine> ConveyorLines
 		{
 			get { return m_baseDefinition.ConveyorLines; }
 		}
 
+		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<MyObjectBuilder_BlockGroup> BlockGroups
 		{

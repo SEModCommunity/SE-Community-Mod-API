@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
 
 using Sandbox.Common.ObjectBuilders;
@@ -25,11 +26,15 @@ namespace SEModAPI.API.SaveData
 
 		#region "Properties"
 
+		[Category("Cube Block")]
+		[Browsable(false)]
 		new public T BaseDefinition
 		{
 			get { return m_baseDefinition; }
 		}
 
+		[Category("Cube Block")]
+		[TypeConverter(typeof(SerializableVector3ITypeConverter))]
 		public SerializableVector3I Min
 		{
 			get { return m_baseDefinition.Min; }
@@ -41,6 +46,8 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Cube Block")]
+		[Browsable(false)]
 		public SerializableBlockOrientation BlockOrientation
 		{
 			get { return m_baseDefinition.BlockOrientation; }
@@ -52,6 +59,8 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Cube Block")]
+		[TypeConverter(typeof(SerializableVector3TypeConverter))]
 		public SerializableVector3 ColorMaskHSV
 		{
 			get { return m_baseDefinition.ColorMaskHSV; }

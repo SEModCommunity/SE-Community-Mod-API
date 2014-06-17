@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -32,6 +33,8 @@ namespace SEModAPI.API.SaveData.Entity
 
 		#region "Properties"
 
+		[Category("Container Inventory")]
+		[Browsable(false)]
 		new public MyObjectBuilder_Inventory BaseDefinition
 		{
 			get
@@ -41,6 +44,7 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Category("Container Inventory")]
 		public uint NextItemId
 		{
 			get { return m_baseDefinition.nextItemId; }
@@ -52,6 +56,8 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Category("Container Inventory")]
+		[Browsable(false)]
 		public List<InventoryItemEntity> Items
 		{
 			get
@@ -67,7 +73,12 @@ namespace SEModAPI.API.SaveData.Entity
 
 		public InventoryItemEntity NewEntry()
 		{
-			InventoryItemEntity newItem = m_itemManager.NewEntry();
+			MyObjectBuilder_InventoryItem defaults = new MyObjectBuilder_InventoryItem();
+			SerializableDefinitionId itemTypeId = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "Stone");
+			defaults.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(itemTypeId);
+			defaults.Amount = 1;
+
+			InventoryItemEntity newItem = m_itemManager.NewEntry(defaults);
 			newItem.ItemId = NextItemId;
 			NextItemId = NextItemId + 1;
 			return newItem;
@@ -105,6 +116,10 @@ namespace SEModAPI.API.SaveData.Entity
 		private static ComponentDefinitionsManager m_componentsManager;
 		private static AmmoMagazinesDefinitionsManager m_ammoManager;
 
+		private SerializableDefinitionId m_itemId;
+		private float m_itemMass = -1;
+		private float m_itemVolume = -1;
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -127,12 +142,37 @@ namespace SEModAPI.API.SaveData.Entity
 				m_ammoManager = new AmmoMagazinesDefinitionsManager();
 				m_ammoManager.Load(AmmoMagazinesDefinitionsManager.GetContentDataFile("AmmoMagazines.sbc"));
 			}
+
+			FindMatchingItem();
 		}
 
 		#endregion
 
 		#region "Properties"
 
+		[Category("Container Item")]
+		[ReadOnly(false)]
+		[TypeConverter(typeof(ItemSerializableDefinitionIdTypeConverter))]
+		new public SerializableDefinitionId Id
+		{
+			get { return m_itemId; }
+			set
+			{
+				if (m_itemId.Equals(value)) return;
+
+				m_baseDefinition.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(value);
+				bool result = FindMatchingItem();
+				if (!result)
+				{
+					m_baseDefinition.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(m_itemId);
+					return;
+				}
+
+				Changed = true;
+			}
+		}
+
+		[Category("Container Item")]
 		public uint ItemId
 		{
 			get { return m_baseDefinition.ItemId; }
@@ -144,6 +184,7 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Category("Container Item")]
 		public float Amount
 		{
 			get { return m_baseDefinition.Amount; }
@@ -155,6 +196,8 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Category("Container Item")]
+		[Browsable(false)]
 		public MyObjectBuilder_PhysicalObject PhysicalContent
 		{
 			get { return m_baseDefinition.PhysicalContent; }
@@ -166,64 +209,98 @@ namespace SEModAPI.API.SaveData.Entity
 			}
 		}
 
+		[Category("Container Item")]
+		public float TotalMass
+		{
+			get { return m_baseDefinition.Amount * m_itemMass; }
+		}
+
+		[Category("Container Item")]
+		public float TotalVolume
+		{
+			get { return m_baseDefinition.Amount * m_itemVolume; }
+		}
+
+		[Category("Container Item")]
+		[ReadOnly(true)]
 		public float Mass
 		{
-			get
+			get { return m_itemMass; }
+			set
 			{
-				foreach (var item in m_physicalItemsManager.Definitions)
-				{
-					if (item.Id.SubtypeId == PhysicalContent.SubtypeName)
-					{
-						return item.Mass * m_baseDefinition.Amount;
-					}
-				}
-				foreach (var item in m_componentsManager.Definitions)
-				{
-					if (item.Id.SubtypeId == PhysicalContent.SubtypeName)
-					{
-						return item.Mass * m_baseDefinition.Amount;
-					}
-				}
-				foreach (var item in m_ammoManager.Definitions)
-				{
-					if (item.Id.SubtypeId == PhysicalContent.SubtypeName)
-					{
-						return item.Mass * m_baseDefinition.Amount;
-					}
-				}
-
-				return -1;
+				if (m_itemMass == value) return;
+				m_itemMass = value;
+				Changed = true;
 			}
 		}
 
+		[Category("Container Item")]
+		[ReadOnly(true)]
 		public float Volume
 		{
-			get
+			get { return m_itemVolume; }
+			set
+			{
+				if (m_itemVolume == value) return;
+				m_itemVolume = value;
+				Changed = true;
+			}
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		private bool FindMatchingItem()
+		{
+			bool foundMatchingItem = false;
+			if (!foundMatchingItem)
 			{
 				foreach (var item in m_physicalItemsManager.Definitions)
 				{
-					if (item.Id.SubtypeId == PhysicalContent.SubtypeName)
+					if (item.Id.TypeId == PhysicalContent.TypeId && item.Id.SubtypeId == PhysicalContent.SubtypeName)
 					{
-						return item.Volume * m_baseDefinition.Amount;
+						m_itemId = item.Id;
+						m_itemMass = item.Mass;
+						m_itemVolume = item.Volume;
+
+						foundMatchingItem = true;
+						break;
 					}
 				}
+			}
+			if (!foundMatchingItem)
+			{
 				foreach (var item in m_componentsManager.Definitions)
 				{
-					if (item.Id.SubtypeId == PhysicalContent.SubtypeName)
+					if (item.Id.TypeId == PhysicalContent.TypeId && item.Id.SubtypeId == PhysicalContent.SubtypeName)
 					{
-						return item.Volume * m_baseDefinition.Amount;
+						m_itemId = item.Id;
+						m_itemMass = item.Mass;
+						m_itemVolume = item.Volume;
+
+						foundMatchingItem = true;
+						break;
 					}
 				}
+			}
+			if (!foundMatchingItem)
+			{
 				foreach (var item in m_ammoManager.Definitions)
 				{
-					if (item.Id.SubtypeId == PhysicalContent.SubtypeName)
+					if (item.Id.TypeId == PhysicalContent.TypeId && item.Id.SubtypeId == PhysicalContent.SubtypeName)
 					{
-						return item.Volume * m_baseDefinition.Amount;
+						m_itemId = item.Id;
+						m_itemMass = item.Mass;
+						m_itemVolume = item.Volume;
+
+						foundMatchingItem = true;
+						break;
 					}
 				}
-
-				return -1;
 			}
+
+			return foundMatchingItem;
 		}
 
 		#endregion
