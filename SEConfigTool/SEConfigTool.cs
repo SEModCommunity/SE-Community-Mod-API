@@ -850,8 +850,6 @@ namespace SEConfigTool
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
 				BTN_BlocksConfig_Details_Apply.Enabled = true;
-				int index = LST_BlocksConfig.SelectedIndex;
-				m_cubeBlockDefinitionsManager.DefinitionOf(index).UseModelIntersection = CHK_BlocksConfig_ModelIntersection.Checked;
 			}
 		}
 
@@ -860,8 +858,6 @@ namespace SEConfigTool
 			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
 			{
 				BTN_BlocksConfig_Details_Apply.Enabled = true;
-				int index = LST_BlocksConfig.SelectedIndex;
-				m_cubeBlockDefinitionsManager.DefinitionOf(index).Enabled = CHK_BlocksConfig_Enabled.Checked;
 			}
 		}
 
@@ -908,7 +904,20 @@ namespace SEConfigTool
 
 		private void BTN_SaveBlocksConfiguration_Click(object sender, EventArgs e)
 		{
-			m_cubeBlockDefinitionsManager.Save();
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			bool saveResult = m_cubeBlockDefinitionsManager.Save();
+
+			stopWatch.Stop();
+
+			if (!saveResult)
+			{
+				MessageBox.Show(this, "Failed to save CubeBlocks config!");
+				return;
+			}
+
+			TLS_StatusLabel.Text = "Done saving CubeBlocks in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
 		}
 
 		private void TXT_ConfigBlocks_TextChanged(object sender, EventArgs e)
@@ -927,6 +936,8 @@ namespace SEConfigTool
 
 			cubeBlock.BuildTime = Convert.ToSingle(TXT_BlocksConfig_Details_BuildTime.Text, m_numberFormatInfo);
 			cubeBlock.DisassembleRatio = Convert.ToSingle(TXT_BlocksConfig_Details_DisassembleRatio.Text, m_numberFormatInfo);
+			cubeBlock.Enabled = CHK_BlocksConfig_Enabled.CheckState == CheckState.Checked;
+			cubeBlock.UseModelIntersection = CHK_BlocksConfig_ModelIntersection.CheckState == CheckState.Checked;
 
 			BTN_BlocksConfig_Details_Apply.Enabled = false;
 		}

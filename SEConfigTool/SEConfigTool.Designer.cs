@@ -375,6 +375,8 @@ namespace SEConfigTool
 			this.TXT_SavedGame_Events_Type = new System.Windows.Forms.TextBox();
 			this.TAB_SavedGame_Objects_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer33 = new System.Windows.Forms.SplitContainer();
+			this.splitContainer51 = new System.Windows.Forms.SplitContainer();
+			this.TRV_SavedGame_Objects = new System.Windows.Forms.TreeView();
 			this.BTN_Sector_Objects_New = new System.Windows.Forms.Button();
 			this.BTN_Sector_Objects_Delete = new System.Windows.Forms.Button();
 			this.PG_Sector_Objects_Details = new System.Windows.Forms.PropertyGrid();
@@ -444,8 +446,6 @@ namespace SEConfigTool
 			this.TXT_EnvironmentConfig_EnvironmentOrientation_Yaw = new System.Windows.Forms.TextBox();
 			this.TXT_EnvironmentConfig_EnvironmentTexture = new System.Windows.Forms.TextBox();
 			this.button3 = new System.Windows.Forms.Button();
-			this.splitContainer51 = new System.Windows.Forms.SplitContainer();
-			this.TRV_SavedGame_Objects = new System.Windows.Forms.TreeView();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -682,6 +682,10 @@ namespace SEConfigTool
 			this.splitContainer33.Panel1.SuspendLayout();
 			this.splitContainer33.Panel2.SuspendLayout();
 			this.splitContainer33.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer51)).BeginInit();
+			this.splitContainer51.Panel1.SuspendLayout();
+			this.splitContainer51.Panel2.SuspendLayout();
+			this.splitContainer51.SuspendLayout();
 			this.TAB_LayoutPages.SuspendLayout();
 			this.TAB_TransparentMaterialsConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer41)).BeginInit();
@@ -710,10 +714,6 @@ namespace SEConfigTool
 			this.splitContainer52.Panel1.SuspendLayout();
 			this.splitContainer52.Panel2.SuspendLayout();
 			this.splitContainer52.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer51)).BeginInit();
-			this.splitContainer51.Panel1.SuspendLayout();
-			this.splitContainer51.Panel2.SuspendLayout();
-			this.splitContainer51.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// STS_Status
@@ -4279,6 +4279,7 @@ namespace SEConfigTool
 			// 
 			// BTN_BlocksConfig_Details_New
 			// 
+			this.BTN_BlocksConfig_Details_New.Enabled = false;
 			this.BTN_BlocksConfig_Details_New.Location = new System.Drawing.Point(3, 337);
 			this.BTN_BlocksConfig_Details_New.Name = "BTN_BlocksConfig_Details_New";
 			this.BTN_BlocksConfig_Details_New.Size = new System.Drawing.Size(50, 23);
@@ -4638,6 +4639,35 @@ namespace SEConfigTool
 			this.splitContainer33.Size = new System.Drawing.Size(1000, 349);
 			this.splitContainer33.SplitterDistance = 300;
 			this.splitContainer33.TabIndex = 1;
+			// 
+			// splitContainer51
+			// 
+			this.splitContainer51.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer51.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			this.splitContainer51.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer51.Name = "splitContainer51";
+			this.splitContainer51.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer51.Panel1
+			// 
+			this.splitContainer51.Panel1.Controls.Add(this.TRV_SavedGame_Objects);
+			// 
+			// splitContainer51.Panel2
+			// 
+			this.splitContainer51.Panel2.Controls.Add(this.BTN_Sector_Objects_New);
+			this.splitContainer51.Panel2.Controls.Add(this.BTN_Sector_Objects_Delete);
+			this.splitContainer51.Size = new System.Drawing.Size(300, 349);
+			this.splitContainer51.SplitterDistance = 317;
+			this.splitContainer51.TabIndex = 1;
+			// 
+			// TRV_SavedGame_Objects
+			// 
+			this.TRV_SavedGame_Objects.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TRV_SavedGame_Objects.Location = new System.Drawing.Point(0, 0);
+			this.TRV_SavedGame_Objects.Name = "TRV_SavedGame_Objects";
+			this.TRV_SavedGame_Objects.Size = new System.Drawing.Size(300, 317);
+			this.TRV_SavedGame_Objects.TabIndex = 1;
+			this.TRV_SavedGame_Objects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_SavedGame_Objects_AfterSelect);
 			// 
 			// BTN_Sector_Objects_New
 			// 
@@ -5381,35 +5411,6 @@ namespace SEConfigTool
 			this.button3.Text = "Apply changes";
 			this.button3.UseVisualStyleBackColor = true;
 			// 
-			// splitContainer51
-			// 
-			this.splitContainer51.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer51.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-			this.splitContainer51.Location = new System.Drawing.Point(0, 0);
-			this.splitContainer51.Name = "splitContainer51";
-			this.splitContainer51.Orientation = System.Windows.Forms.Orientation.Horizontal;
-			// 
-			// splitContainer51.Panel1
-			// 
-			this.splitContainer51.Panel1.Controls.Add(this.TRV_SavedGame_Objects);
-			// 
-			// splitContainer51.Panel2
-			// 
-			this.splitContainer51.Panel2.Controls.Add(this.BTN_Sector_Objects_New);
-			this.splitContainer51.Panel2.Controls.Add(this.BTN_Sector_Objects_Delete);
-			this.splitContainer51.Size = new System.Drawing.Size(300, 349);
-			this.splitContainer51.SplitterDistance = 317;
-			this.splitContainer51.TabIndex = 1;
-			// 
-			// TRV_SavedGame_Objects
-			// 
-			this.TRV_SavedGame_Objects.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TRV_SavedGame_Objects.Location = new System.Drawing.Point(0, 0);
-			this.TRV_SavedGame_Objects.Name = "TRV_SavedGame_Objects";
-			this.TRV_SavedGame_Objects.Size = new System.Drawing.Size(300, 317);
-			this.TRV_SavedGame_Objects.TabIndex = 1;
-			this.TRV_SavedGame_Objects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_SavedGame_Objects_AfterSelect);
-			// 
 			// SEConfigTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5693,6 +5694,10 @@ namespace SEConfigTool
 			this.splitContainer33.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer33)).EndInit();
 			this.splitContainer33.ResumeLayout(false);
+			this.splitContainer51.Panel1.ResumeLayout(false);
+			this.splitContainer51.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer51)).EndInit();
+			this.splitContainer51.ResumeLayout(false);
 			this.TAB_LayoutPages.ResumeLayout(false);
 			this.TAB_TransparentMaterialsConfig_Page.ResumeLayout(false);
 			this.splitContainer41.Panel1.ResumeLayout(false);
@@ -5727,10 +5732,6 @@ namespace SEConfigTool
 			this.splitContainer52.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer52)).EndInit();
 			this.splitContainer52.ResumeLayout(false);
-			this.splitContainer51.Panel1.ResumeLayout(false);
-			this.splitContainer51.Panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer51)).EndInit();
-			this.splitContainer51.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
