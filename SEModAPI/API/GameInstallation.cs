@@ -55,6 +55,11 @@ namespace SEModAPI.API
             //if (m_GamePath == "") { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.SteamNotRegistered)); }
 
             if (!IsValidGamePath(m_GamePath)) { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory)); }
+
+			if(IsBaseAssembliesChanged())
+			{
+				UpdateBaseFiles();
+			}
         }
 
 		/// <summary>
@@ -67,6 +72,11 @@ namespace SEModAPI.API
 			if (m_GamePath == "") { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered)); }
 
 			if (!IsValidGamePath(m_GamePath)) { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory)); }
+
+			if (IsBaseAssembliesChanged())
+			{
+				UpdateBaseFiles();
+			}
 		}
 
 		public static bool IsValidGamePath(string gamePath)
