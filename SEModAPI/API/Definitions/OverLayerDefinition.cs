@@ -362,7 +362,6 @@ namespace SEModAPI.API.Definitions
 		#region "Attributes"
 
 		private FileInfo m_fileInfo;
-		private readonly GameInstallationInfo m_gameInstallation;
 		private readonly FieldInfo m_definitionsContainerField;
 
 		#endregion
@@ -372,7 +371,6 @@ namespace SEModAPI.API.Definitions
 		protected SerializableDefinitionsManager()
 		{
 			m_fileInfo = null;
-			m_gameInstallation = new GameInstallationInfo();
 
 			m_definitionsContainerField = GetMatchingDefinitionsContainerField();
 		}
@@ -395,7 +393,7 @@ namespace SEModAPI.API.Definitions
 
 		public static FileInfo GetContentDataFile(string configName)
 		{
-			string filePath = Path.Combine(Path.Combine(GameInstallationInfo.GetGameRegistryPath(), @"Content\Data"), configName);
+			string filePath = Path.Combine(Path.Combine(GameInstallationInfo.GamePath, @"Content\Data"), configName);
 			FileInfo saveFileInfo = new FileInfo(filePath);
 
 			return saveFileInfo;

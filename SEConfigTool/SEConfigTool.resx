@@ -120,4 +120,7 @@
   <metadata name="STS_Status.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>18, 10</value>
   </metadata>
+  <metadata name="OFD_GamePath.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>111, 11</value>
+  </metadata>
 </root>

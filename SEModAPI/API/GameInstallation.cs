@@ -20,11 +20,11 @@ namespace SEModAPI.API
     {
         #region "Attributes"
 
-        private string m_GamePath;
-        public string GamePath { get { return m_GamePath; } }
+        private static string m_GamePath;
+        public static string GamePath { get { return m_GamePath; } }
 
-        private string m_SteamPath;
-        public string SteamPath { get { return m_SteamPath; } }
+        //private string m_SteamPath;
+        //public string SteamPath { get { return m_SteamPath; } }
 
         internal static readonly string[] CoreSpaceEngineersFiles = 
         {
@@ -39,31 +39,46 @@ namespace SEModAPI.API
 
         #region "Constructor & Validators"
 
+		/// <summary>
+		/// <para>Create a new instance of GameInstallationInfo with the automatically detected game path.</para>
+		/// <para>
+		/// It is not recommanded to purely rely on this function since if the game is not found,
+		/// the API will not be able to work
+		/// </para>
+		/// </summary>
         public GameInstallationInfo()
         {
             m_GamePath = GetGameRegistryPath();
             if (m_GamePath == "") { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered));}
 
-            m_SteamPath = GetSteamPath();
-            if (m_GamePath == "") { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.SteamNotRegistered)); }
+            //m_SteamPath = GetSteamPath();
+            //if (m_GamePath == "") { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.SteamNotRegistered)); }
 
-            if (!ValidateSpaceEngineersInstall()) { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory)); }
+            if (!IsValidGamePath(m_GamePath)) { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory)); }
         }
 
-        /// <summary>
-        /// Checks for key directory existance in the root game folder.
-        /// </summary>
-        /// <returns>if the current game installation is valid</returns>
-        private bool ValidateSpaceEngineersInstall()
-        {
-            if (string.IsNullOrEmpty(m_GamePath)) { return false; }
-            if (!Directory.Exists(m_GamePath)) return false;
-            if (!Directory.Exists(Path.Combine(m_GamePath, "Bin64"))) { return false; }
-            if (!Directory.Exists(Path.Combine(m_GamePath, "Content"))) { return false; }
+		/// <summary>
+		/// Create a new instance of GameInstallationInfo with the specified game location
+		/// </summary>
+		/// <param name="gamePath">Location of the game executable</param>
+		public GameInstallationInfo(string gamePath)
+		{
+			m_GamePath = gamePath;
+			if (m_GamePath == "") { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered)); }
 
-            // Skip checking for the .exe. Not required currently.
-            return true;
-        }
+			if (!IsValidGamePath(m_GamePath)) { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory)); }
+		}
+
+		public static bool IsValidGamePath(string gamePath)
+		{
+			if (string.IsNullOrEmpty(gamePath)) { return false; }
+			if (!Directory.Exists(gamePath)) return false;
+			if (!Directory.Exists(Path.Combine(gamePath, "Bin64"))) { return false; }
+			if (!Directory.Exists(Path.Combine(gamePath, "Content"))) { return false; }
+
+			// Skip checking for the .exe. Not required currently.
+			return true;
+		}
 
         #endregion
 
@@ -86,42 +101,35 @@ namespace SEModAPI.API
                 return key.GetValue("InstallLocation") as string;
             }
 
-            // Backup check, but no choice if the above goes to pot.
-            // Using the [Software\Valve\Steam\SteamPath] as a base for "\steamapps\common\SpaceEngineers", is unreliable, as the Steam Library is customizable and could be on another drive and directory.
-            var steamPath = GetSteamPath();
-            if (!string.IsNullOrEmpty(steamPath))
-            {
-                return Path.Combine(steamPath, @"SteamApps\common\SpaceEngineers");
-            }
-
             return null;
         }
 
-        public static void GetSettings()
-        {
-        }
+		//Why is this here?
+		//public static void GetSettings()
+		//{
+		//}
 
-        /// <summary>
-        /// Looks for the Steam install location in the Registry, which should return the form:
-        /// "C:\Program Files (x86)\Steam"
-        /// </summary>
-        /// <returns></returns>
-        public static string GetSteamPath()
-        {
-            RegistryKey key;
+		/// <summary>
+		/// Looks for the Steam install location in the Registry, which should return the form:
+		/// "C:\Program Files (x86)\Steam"
+		/// </summary>
+		/// <returns>Return the Steam install location, or null if not found</returns>
+		public static string GetSteamPath()
+		{
+			RegistryKey key;
 
-            if (Environment.Is64BitProcess)
-                key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Valve\Steam", false);
-            else
-                key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Valve\Steam", false);
+			if (Environment.Is64BitProcess)
+				key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Valve\Steam", false);
+			else
+				key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Valve\Steam", false);
 
-            if (key != null)
-            {
-                return (string)key.GetValue("InstallPath");
-            }
+			if (key != null)
+			{
+				return (string)key.GetValue("InstallPath");
+			}
 
-            return null;
-        }
+			return null;
+		}
 
         public bool IsBaseAssembliesChanged()
         {

@@ -446,6 +446,7 @@ namespace SEConfigTool
 			this.TXT_EnvironmentConfig_EnvironmentOrientation_Yaw = new System.Windows.Forms.TextBox();
 			this.TXT_EnvironmentConfig_EnvironmentTexture = new System.Windows.Forms.TextBox();
 			this.button3 = new System.Windows.Forms.Button();
+			this.OFD_GamePath = new System.Windows.Forms.OpenFileDialog();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -4704,9 +4705,9 @@ namespace SEConfigTool
 			// 
 			// TAB_LayoutPages
 			// 
-			this.TAB_LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.TAB_LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.TAB_LayoutPages.Controls.Add(this.TAB_SaveGamePage_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_BlocksConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_AmmoConfig_Page);
@@ -5093,9 +5094,9 @@ namespace SEConfigTool
 			// 
 			// GRP_ConfigurationConfig
 			// 
-			this.GRP_ConfigurationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.GRP_ConfigurationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.GRP_ConfigurationConfig.Controls.Add(this.splitContainer50);
 			this.GRP_ConfigurationConfig.Location = new System.Drawing.Point(3, 32);
 			this.GRP_ConfigurationConfig.Name = "GRP_ConfigurationConfig";
@@ -5256,9 +5257,9 @@ namespace SEConfigTool
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.Controls.Add(this.splitContainer52);
 			this.groupBox1.Location = new System.Drawing.Point(3, 32);
 			this.groupBox1.Name = "groupBox1";
@@ -5410,6 +5411,13 @@ namespace SEConfigTool
 			this.button3.TabIndex = 8;
 			this.button3.Text = "Apply changes";
 			this.button3.UseVisualStyleBackColor = true;
+			// 
+			// OFD_GamePath
+			// 
+			this.OFD_GamePath.AddExtension = false;
+			this.OFD_GamePath.DefaultExt = "exe";
+			this.OFD_GamePath.FileName = "SpaceEngineers.exe";
+			this.OFD_GamePath.Filter = "Game executable|*.exe";
 			// 
 			// SEConfigTool
 			// 
@@ -6156,6 +6164,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.PropertyGrid PG_Sector_Objects_Details;
 		private System.Windows.Forms.SplitContainer splitContainer51;
 		private System.Windows.Forms.TreeView TRV_SavedGame_Objects;
+		private System.Windows.Forms.OpenFileDialog OFD_GamePath;
 
     }
 }

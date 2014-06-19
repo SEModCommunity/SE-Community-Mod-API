@@ -11,6 +11,7 @@ using SEModAPI.API.Definitions;
 using SEModAPI.API.Definitions.CubeBlocks;
 using SEModAPI.API.SaveData;
 using SEModAPI.API.SaveData.Entity;
+using SEModAPI.Support;
 
 using Sandbox.Common.Localization;
 using Sandbox.Common.ObjectBuilders;
@@ -25,6 +26,7 @@ namespace SEConfigTool
 		#region Attributes
 
 		private string m_standardSavePath;
+		private bool m_isClosing;
 
 		private SectorManager m_sectorManager;
 
@@ -63,20 +65,37 @@ namespace SEConfigTool
 			m_groupSeparator = m_numberFormatInfo.NumberGroupSeparator;
 			m_negativeSign = m_numberFormatInfo.NegativeSign;
 
-			m_sectorManager = new SectorManager();
-			m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager();
-			m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager();
-			m_containerTypesDefinitionsManager = new ContainerTypesDefinitionsManager();
-			m_globalEventsDefinitionsManager = new GlobalEventsDefinitionsManager();
-			m_spawnGroupsDefinitionsManager = new SpawnGroupsDefinitionsManager();
-			m_physicalItemsDefinitionsManager = new PhysicalItemDefinitionsManager();
-			m_componentsDefinitionsManager = new ComponentDefinitionsManager();
-			m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager();
-			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
-			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
-			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
-			m_configurationDefinitionManager = new ConfigurationDefinition();
-			m_environmentDefinitionManager = new EnvironmentDefinition();
+			//Determine wether we could find or not steam folder
+			try
+			{
+				new GameInstallationInfo();
+			}
+			catch (AutoException)
+			{
+				string gamePath = GetGamePath();
+				if (gamePath == null)
+				{
+					this.Visible = false;
+					return;
+				}
+				new GameInstallationInfo(gamePath);
+			}
+
+			//If the game path was not found, we skip the definition initialisation
+				m_sectorManager = new SectorManager();
+				m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager();
+				m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager();
+				m_containerTypesDefinitionsManager = new ContainerTypesDefinitionsManager();
+				m_globalEventsDefinitionsManager = new GlobalEventsDefinitionsManager();
+				m_spawnGroupsDefinitionsManager = new SpawnGroupsDefinitionsManager();
+				m_physicalItemsDefinitionsManager = new PhysicalItemDefinitionsManager();
+				m_componentsDefinitionsManager = new ComponentDefinitionsManager();
+				m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager();
+				m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
+				m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
+				m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
+				m_configurationDefinitionManager = new ConfigurationDefinition();
+				m_environmentDefinitionManager = new EnvironmentDefinition();
 		}
 
 		#endregion
@@ -87,6 +106,50 @@ namespace SEConfigTool
 		{
 			return SerializableDefinitionsManager<MyObjectBuilder_Base, OverLayerDefinition<MyObjectBuilder_Base>>.GetContentDataFile(configFileName);
 		}
+
+		/// <summary>
+		/// Try to find manually the SpaceEngineers game path
+		/// </summary>
+		/// <returns>The game path, or null if not found</returns>
+		private string GetGamePath()
+		{
+			bool continueLoad = true;
+
+			string steamPath = GameInstallationInfo.GetSteamPath();
+			if (steamPath != null)
+				OFD_GamePath.InitialDirectory = Path.Combine(steamPath, "SteamApps", "common");
+
+			while (continueLoad)
+			{
+				DialogResult resultOpen = OFD_GamePath.ShowDialog();
+				if (resultOpen == DialogResult.OK)
+				{
+					string selectedPath = Path.GetDirectoryName(OFD_GamePath.FileName);
+					string gamePath = Path.Combine(selectedPath, "..");
+					if (GameInstallationInfo.IsValidGamePath(gamePath))
+						return gamePath;
+					else
+					{
+						DialogResult resultRetry = MessageBox.Show("The selected location is an invalid SpaceEngineers installation.", 
+							"Invalid installation", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+
+						if (resultRetry != DialogResult.Retry)
+							continueLoad = false;
+					}
+				}
+				else 
+					continueLoad = false;
+			}
+
+			//If this point is reached, then the user must have cancelled it.
+			MessageBox.Show("The game installation location could not be found. The application can not run without it.", 
+				"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+			m_isClosing = true;
+			return null;
+		}
+
+		#region Savefile
 
 		private void LoadSaveFile(FileInfo saveFileInfo)
 		{
@@ -302,6 +365,12 @@ namespace SEConfigTool
 			MessageBox.Show(this, "Sector loaded successfully in " + stopWatch.ElapsedMilliseconds.ToString() + "ms!");
 		}
 
+		#endregion Savefile
+
+		#region Fillers
+
+		#region Blocks Config
+
 		private void FillBlocksConfigurationListBox()
 		{
 			m_currentlyFillingConfigurationListBox = true;
@@ -316,6 +385,10 @@ namespace SEConfigTool
 
 			m_currentlyFillingConfigurationListBox = false;
 		}
+
+		#endregion
+
+		#region Ammo Config
 
 		private void FillAmmoConfigurationListBox(bool loadFromFile = true)
 		{
@@ -343,6 +416,10 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		#endregion
+
+		#region ContainerType Config
+
 		private void FillContainerTypeConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
@@ -361,6 +438,10 @@ namespace SEConfigTool
 
 			m_currentlyFillingConfigurationListBox = false;
 		}
+
+		#endregion
+
+		#region GlobalEvent Config
 
 		private void FillGlobalEventConfigurationListBox(bool loadFromFile = true)
 		{
@@ -384,6 +465,10 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		#endregion
+
+		#region Spawngroup Config
+
 		private void FillSpawnGroupConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
@@ -400,6 +485,10 @@ namespace SEConfigTool
 			}
 			m_currentlyFillingConfigurationListBox = false;
 		}
+
+		#endregion
+
+		#region PhysicalItem Config
 
 		private void FillPhysicalItemConfigurationListBox(bool loadFromFile = true)
 		{
@@ -423,6 +512,10 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		#endregion
+
+		#region Component Config
+
 		private void FillComponentConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
@@ -439,11 +532,15 @@ namespace SEConfigTool
 			m_currentlyFillingConfigurationListBox = false;
 		}
 
+		#endregion
+
+		#region Blueprint Config
+
 		private void FillBlueprintConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			if(loadFromFile)
+			if (loadFromFile)
 				m_blueprintsDefinitionsManager.Load(GetContentDataFile("Blueprints.sbc"));
 
 			LST_BlueprintConfig.Items.Clear();
@@ -458,6 +555,8 @@ namespace SEConfigTool
 
 			m_currentlyFillingConfigurationListBox = false;
 		}
+
+		#endregion
 
 		private void FillVoxelMaterialConfigurationListBox(bool loadFromFile = true)
 		{
@@ -571,10 +670,18 @@ namespace SEConfigTool
 
 		#endregion
 
+		#endregion
+
 		#region Form events
 
 		private void SEConfigTool_Load(object sender, EventArgs e)
 		{
+			if (m_isClosing)
+			{
+				this.Close();
+				return;
+			}
+
 			m_standardSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineers", "Saves");
 
 			FillBlocksConfigurationListBox();
