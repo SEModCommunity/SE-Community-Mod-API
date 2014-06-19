@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using SEModAPI.Support;
 
 namespace SEConfigTool
 {
@@ -14,9 +12,22 @@ namespace SEConfigTool
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SEConfigTool());
+	        try
+	        {
+		        Application.EnableVisualStyles();
+		        Application.SetCompatibleTextRenderingDefault(false);
+		        Application.Run(new SEConfigTool());
+	        }
+	        catch (AutoException eEx)
+	        {
+				MessageBox.Show(eEx.AdditionnalInfo + "\n\r" + eEx.GetDebugString(), @"SEConfigTool", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		        throw;
+	        }
+	        catch (Exception ex)
+	        {
+				MessageBox.Show(ex.ToString() , @"SEConfigTool", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		        throw;
+	        }
         }
     }
 }
