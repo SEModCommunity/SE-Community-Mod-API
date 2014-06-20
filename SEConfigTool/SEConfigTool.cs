@@ -115,7 +115,7 @@ namespace SEConfigTool
 		{
 			bool continueLoad = true;
 
-			string steamPath = GameInstallationInfo.GetSteamPath();
+			string steamPath = GameInstallationInfo.GetGameSteamPath();
 			if (steamPath != null)
 				OFD_GamePath.InitialDirectory = Path.Combine(steamPath, "SteamApps", "common");
 

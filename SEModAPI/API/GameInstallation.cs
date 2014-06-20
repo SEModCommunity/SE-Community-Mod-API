@@ -44,7 +44,7 @@ namespace SEModAPI.API
 			m_GamePath = GetGameRegistryPath();
 			if (m_GamePath == null || m_GamePath == "")
 			{
-				m_GamePath = GetSteamPath();
+				m_GamePath = GetGameSteamPath();
 				if (m_GamePath == null || m_GamePath == "")
 					throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered));
 			}
@@ -118,7 +118,7 @@ namespace SEModAPI.API
 		/// "C:\Program Files (x86)\Steam"
 		/// </summary>
 		/// <returns>Return the Steam install location, or null if not found</returns>
-		public static string GetSteamPath()
+		public static string GetGameSteamPath()
 		{
 			RegistryKey key;
 
