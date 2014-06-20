@@ -447,6 +447,7 @@ namespace SEConfigTool
 			this.TXT_EnvironmentConfig_EnvironmentTexture = new System.Windows.Forms.TextBox();
 			this.button3 = new System.Windows.Forms.Button();
 			this.OFD_GamePath = new System.Windows.Forms.OpenFileDialog();
+			this.BTN_SavedGame_LaunchGame = new System.Windows.Forms.Button();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -4373,6 +4374,7 @@ namespace SEConfigTool
 			// 
 			// splitContainer1.Panel1
 			// 
+			this.splitContainer1.Panel1.Controls.Add(this.BTN_SavedGame_LaunchGame);
 			this.splitContainer1.Panel1.Controls.Add(this.BTN_SavedGame_Save);
 			this.splitContainer1.Panel1.Controls.Add(this.BTN_SavedGame_Load);
 			// 
@@ -4705,9 +4707,9 @@ namespace SEConfigTool
 			// 
 			// TAB_LayoutPages
 			// 
-			this.TAB_LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.TAB_LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.TAB_LayoutPages.Controls.Add(this.TAB_SaveGamePage_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_BlocksConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_AmmoConfig_Page);
@@ -5094,9 +5096,9 @@ namespace SEConfigTool
 			// 
 			// GRP_ConfigurationConfig
 			// 
-			this.GRP_ConfigurationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.GRP_ConfigurationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.GRP_ConfigurationConfig.Controls.Add(this.splitContainer50);
 			this.GRP_ConfigurationConfig.Location = new System.Drawing.Point(3, 32);
 			this.GRP_ConfigurationConfig.Name = "GRP_ConfigurationConfig";
@@ -5257,9 +5259,9 @@ namespace SEConfigTool
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.Controls.Add(this.splitContainer52);
 			this.groupBox1.Location = new System.Drawing.Point(3, 32);
 			this.groupBox1.Name = "groupBox1";
@@ -5418,6 +5420,16 @@ namespace SEConfigTool
 			this.OFD_GamePath.DefaultExt = "exe";
 			this.OFD_GamePath.FileName = "SpaceEngineers.exe";
 			this.OFD_GamePath.Filter = "Game executable|*.exe";
+			// 
+			// BTN_SavedGame_LaunchGame
+			// 
+			this.BTN_SavedGame_LaunchGame.Location = new System.Drawing.Point(912, 1);
+			this.BTN_SavedGame_LaunchGame.Name = "BTN_SavedGame_LaunchGame";
+			this.BTN_SavedGame_LaunchGame.Size = new System.Drawing.Size(105, 23);
+			this.BTN_SavedGame_LaunchGame.TabIndex = 2;
+			this.BTN_SavedGame_LaunchGame.Text = "Start Game";
+			this.BTN_SavedGame_LaunchGame.UseVisualStyleBackColor = true;
+			this.BTN_SavedGame_LaunchGame.Click += new System.EventHandler(this.BTN_SavedGame_LaunchGame_Click);
 			// 
 			// SEConfigTool
 			// 
@@ -6165,6 +6177,7 @@ namespace SEConfigTool
 		private System.Windows.Forms.SplitContainer splitContainer51;
 		private System.Windows.Forms.TreeView TRV_SavedGame_Objects;
 		private System.Windows.Forms.OpenFileDialog OFD_GamePath;
+		private System.Windows.Forms.Button BTN_SavedGame_LaunchGame;
 
     }
 }

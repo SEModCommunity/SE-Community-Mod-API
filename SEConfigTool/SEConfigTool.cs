@@ -9,6 +9,7 @@ using SEModAPI;
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
 using SEModAPI.API.Definitions.CubeBlocks;
+using SEModAPI.API.ProcessWrapper;
 using SEModAPI.API.SaveData;
 using SEModAPI.API.SaveData.Entity;
 using SEModAPI.Support;
@@ -27,6 +28,8 @@ namespace SEConfigTool
 
 		private string m_standardSavePath;
 		private bool m_isClosing;
+
+		private ProcessWrapper m_processWrapper;
 
 		private SectorManager m_sectorManager;
 
@@ -59,6 +62,8 @@ namespace SEConfigTool
 		public SEConfigTool()
 		{
 			InitializeComponent();
+
+			m_processWrapper = new ProcessWrapper();
 
 			m_numberFormatInfo = CultureInfo.GetCultureInfo("EN-US").NumberFormat;
 			m_decimalSeparator = m_numberFormatInfo.CurrencyDecimalSeparator;
@@ -1111,6 +1116,11 @@ namespace SEConfigTool
 			{
 				BTN_SavedGame_Events_Apply.Enabled = true;
 			}
+		}
+
+		private void BTN_SavedGame_LaunchGame_Click(object sender, EventArgs e)
+		{
+			m_processWrapper.StartGame();
 		}
 
 		#endregion
