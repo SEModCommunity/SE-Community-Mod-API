@@ -65,7 +65,7 @@ namespace SEConfigTool
 			m_groupSeparator = m_numberFormatInfo.NumberGroupSeparator;
 			m_negativeSign = m_numberFormatInfo.NegativeSign;
 
-			//Determine wether we could find or not steam folder
+			//Determine wether or not we could find the game installation
 			try
 			{
 				new GameInstallationInfo();
@@ -75,27 +75,27 @@ namespace SEConfigTool
 				string gamePath = GetGamePath();
 				if (gamePath == null || gamePath == "")
 				{
+					//If the game path was not found, we skip all initialisation
 					this.Visible = false;
 					return;
 				}
 				new GameInstallationInfo(gamePath);
 			}
 
-			//If the game path was not found, we skip the definition initialisation
-				m_sectorManager = new SectorManager();
-				m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager();
-				m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager();
-				m_containerTypesDefinitionsManager = new ContainerTypesDefinitionsManager();
-				m_globalEventsDefinitionsManager = new GlobalEventsDefinitionsManager();
-				m_spawnGroupsDefinitionsManager = new SpawnGroupsDefinitionsManager();
-				m_physicalItemsDefinitionsManager = new PhysicalItemDefinitionsManager();
-				m_componentsDefinitionsManager = new ComponentDefinitionsManager();
-				m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager();
-				m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
-				m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
-				m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
-				m_configurationDefinitionManager = new ConfigurationDefinition();
-				m_environmentDefinitionManager = new EnvironmentDefinition();
+			m_sectorManager = new SectorManager();
+			m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager();
+			m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager();
+			m_containerTypesDefinitionsManager = new ContainerTypesDefinitionsManager();
+			m_globalEventsDefinitionsManager = new GlobalEventsDefinitionsManager();
+			m_spawnGroupsDefinitionsManager = new SpawnGroupsDefinitionsManager();
+			m_physicalItemsDefinitionsManager = new PhysicalItemDefinitionsManager();
+			m_componentsDefinitionsManager = new ComponentDefinitionsManager();
+			m_blueprintsDefinitionsManager = new BlueprintDefinitionsManager();
+			m_voxelMaterialsDefinitionsManager = new VoxelMaterialDefinitionsManager();
+			m_scenariosDefinitionManager = new ScenariosDefinitionsManager();
+			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
+			m_configurationDefinitionManager = new ConfigurationDefinition();
+			m_environmentDefinitionManager = new EnvironmentDefinition();
 		}
 
 		#endregion
@@ -207,6 +207,8 @@ namespace SEConfigTool
 				TreeNode energyBlocksNode = blocksNode.Nodes.Add("Energy");
 				TreeNode conveyorBlocksNode = blocksNode.Nodes.Add("Conveyor");
 				TreeNode utilityBlocksNode = blocksNode.Nodes.Add("Utility");
+				TreeNode weaponBlocksNode = blocksNode.Nodes.Add("Weapons");
+				TreeNode toolBlocksNode = blocksNode.Nodes.Add("Tools");
 				TreeNode miscBlocksNode = blocksNode.Nodes.Add("Misc");
 
 				//Add the cube blocks
@@ -219,37 +221,60 @@ namespace SEConfigTool
 					if (cubeType.IsAssignableFrom(typeof(CubeBlockEntity<MyObjectBuilder_CubeBlock>)))
 					{
 						CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)cubeBlockObject;
+						string nodeName = cubeBlock.Name;
+						if (nodeName == "")
+							nodeName = cubeBlock.EntityId.ToString();
+						if (nodeName == "")
+							nodeName = cubeBlock.Id.ToString();
 						switch (cubeBlock.Id.TypeId)
 						{
 							case MyObjectBuilderTypeEnum.CubeBlock:
-								blockNode = structuralBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								blockNode = structuralBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
 							case MyObjectBuilderTypeEnum.Refinery:
-								blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
 							case MyObjectBuilderTypeEnum.Assembler:
-								blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								blockNode = productionBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
 							case MyObjectBuilderTypeEnum.SolarPanel:
-								blockNode = energyBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								blockNode = energyBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
 							case MyObjectBuilderTypeEnum.ShipConnector:
-								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
 							case MyObjectBuilderTypeEnum.Collector:
-								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
 							case MyObjectBuilderTypeEnum.Conveyor:
-								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
 							case MyObjectBuilderTypeEnum.ConveyorConnector:
-								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								blockNode = conveyorBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
-							case MyObjectBuilderTypeEnum.Cockpit:
-								blockNode = utilityBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+							case MyObjectBuilderTypeEnum.SmallGatlingGun:
+								blockNode = weaponBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
+								break;
+							case MyObjectBuilderTypeEnum.SmallMissileLauncher:
+								blockNode = weaponBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
+								break;
+							case MyObjectBuilderTypeEnum.LargeGatlingTurret:
+								blockNode = weaponBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
+								break;
+							case MyObjectBuilderTypeEnum.LargeMissileTurret:
+								blockNode = weaponBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
+								break;
+							case MyObjectBuilderTypeEnum.ShipWelder:
+								blockNode = toolBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
+								break;
+							case MyObjectBuilderTypeEnum.ShipGrinder:
+								blockNode = toolBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
+								break;
+							case MyObjectBuilderTypeEnum.Drill:
+								blockNode = toolBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
 							default:
-								blockNode = miscBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), cubeBlock.Name);
+								blockNode = miscBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
 						}
 					}
@@ -287,6 +312,27 @@ namespace SEConfigTool
 						blockNode = utilityBlocksNode.Nodes.Add(medicalBlock.EntityId.ToString(), medicalBlock.Name);
 					}
 
+					if (cubeType.IsAssignableFrom(typeof(CockpitEntity)))
+					{
+						CockpitEntity cockpitBlock = (CockpitEntity)cubeBlockObject;
+
+						blockNode = utilityBlocksNode.Nodes.Add(cockpitBlock.EntityId.ToString(), cockpitBlock.Name);
+					}
+
+					if (cubeType.IsAssignableFrom(typeof(BeaconEntity)))
+					{
+						BeaconEntity beaconBlock = (BeaconEntity)cubeBlockObject;
+
+						blockNode = utilityBlocksNode.Nodes.Add(beaconBlock.EntityId.ToString(), beaconBlock.Name);
+					}
+
+					if (cubeType.IsAssignableFrom(typeof(GravityGeneratorEntity)))
+					{
+						GravityGeneratorEntity gravityGenerator = (GravityGeneratorEntity)cubeBlockObject;
+
+						blockNode = utilityBlocksNode.Nodes.Add(gravityGenerator.EntityId.ToString(), gravityGenerator.Name);
+					}
+
 					if (blockNode == null)
 						continue;
 
@@ -303,6 +349,8 @@ namespace SEConfigTool
 			}
 
 			#endregion
+			
+			#region VoxelMaps
 
 			//Add the voxel maps
 			foreach (VoxelMap voxelMap in sector.VoxelMaps)
@@ -317,6 +365,10 @@ namespace SEConfigTool
 				newNode.Tag = voxelMap;
 			}
 
+			#endregion
+
+			#region FloatingObjects
+
 			//Add the floating objects
 			foreach (FloatingObject floatingObject in sector.FloatingObjects)
 			{
@@ -329,6 +381,10 @@ namespace SEConfigTool
 				TreeNode newNode = TRV_SavedGame_Objects.Nodes[2].Nodes.Add(floatingObject.Name + " | " + "Dist: " + dist.ToString("F2") + "m");
 				newNode.Tag = floatingObject;
 			}
+
+			#endregion
+
+			#region Meteors
 
 			//Add the meteors
 			foreach (Meteor meteor in sector.Meteors)
@@ -343,6 +399,10 @@ namespace SEConfigTool
 				newNode.Tag = meteor;
 			}
 
+			#endregion
+
+			#region UnknownObjects
+
 			//Add any unknown objects
 			foreach (SectorObject<MyObjectBuilder_EntityBase> unknown in sector.UnknownObjects)
 			{
@@ -355,6 +415,8 @@ namespace SEConfigTool
 				TreeNode newNode = TRV_SavedGame_Objects.Nodes[4].Nodes.Add(unknown.Name + " | " + "Dist: " + dist.ToString("F2") + "m");
 				newNode.Tag = unknown;
 			}
+
+			#endregion
 
 			TRV_SavedGame_Objects.EndUpdate();
 
@@ -782,6 +844,8 @@ namespace SEConfigTool
 
 			Type linkedType = linkedObject.GetType();
 
+			#region CubeBlocks
+
 			if (linkedType.IsAssignableFrom(typeof(CubeBlockEntity<MyObjectBuilder_CubeBlock>)))
 			{
 				CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)linkedObject;
@@ -814,6 +878,14 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = medicalBlock;
 			}
 
+			if (linkedType.IsAssignableFrom(typeof(CockpitEntity)))
+			{
+				CockpitEntity cockpit = (CockpitEntity)linkedObject;
+
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = cockpit;
+			}
+
 			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
 			{
 				InventoryItemEntity item = (InventoryItemEntity)linkedObject;
@@ -824,6 +896,24 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.Visible = true;
 				PG_Sector_Objects_Details.SelectedObject = item;
 			}
+
+			if (linkedType.IsAssignableFrom(typeof(BeaconEntity)))
+			{
+				BeaconEntity beacon = (BeaconEntity)linkedObject;
+
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = beacon;
+			}
+
+			if (linkedType.IsAssignableFrom(typeof(GravityGeneratorEntity)))
+			{
+				GravityGeneratorEntity gravityGenerator = (GravityGeneratorEntity)linkedObject;
+
+				PG_Sector_Objects_Details.Visible = true;
+				PG_Sector_Objects_Details.SelectedObject = gravityGenerator;
+			}
+
+			#endregion
 
 			if (linkedType.IsAssignableFrom(typeof(CubeGrid)))
 			{

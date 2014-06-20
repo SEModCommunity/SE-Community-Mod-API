@@ -81,7 +81,11 @@
     <Compile Include="API\SaveData\BlockGroups.cs" />
     <Compile Include="API\SaveData\ConveyorLines.cs" />
     <Compile Include="API\SaveData\CubeBlock.cs" />
+    <Compile Include="API\SaveData\Entity\BeaconEntity.cs" />
     <Compile Include="API\SaveData\Entity\CargoContainerEntity.cs" />
+    <Compile Include="API\SaveData\Entity\CockpitEntity.cs" />
+    <Compile Include="API\SaveData\Entity\FunctionalBlockEntity.cs" />
+    <Compile Include="API\SaveData\Entity\GravityGeneratorEntity.cs" />
     <Compile Include="API\SaveData\Entity\InventoryEntity.cs" />
     <Compile Include="API\SaveData\Entity\MedicalRoomEntity.cs" />
     <Compile Include="API\SaveData\Entity\ReactorEntity.cs" />
@@ -101,6 +105,7 @@
     <Compile Include="API\Definitions\TransparentMaterialsDefinition.cs" />
     <Compile Include="API\Definitions\VoxelMaterialsDefinition.cs" />
     <Compile Include="API\GameInstallation.cs" />
+    <Compile Include="API\SaveData\Entity\TerminalBlockEntity.cs" />
     <Compile Include="API\SaveData\Event.cs" />
     <Compile Include="API\SaveData\FloatingObject.cs" />
     <Compile Include="API\SaveData\Meteor.cs" />

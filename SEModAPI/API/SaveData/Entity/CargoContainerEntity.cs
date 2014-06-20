@@ -10,7 +10,7 @@ using Sandbox.Common.ObjectBuilders.VRageData;
 
 namespace SEModAPI.API.SaveData.Entity
 {
-	public class CargoContainerEntity : CubeBlockEntity<MyObjectBuilder_CargoContainer>
+	public class CargoContainerEntity : TerminalBlockEntity<MyObjectBuilder_CargoContainer>
 	{
 		#region "Attributes"
 

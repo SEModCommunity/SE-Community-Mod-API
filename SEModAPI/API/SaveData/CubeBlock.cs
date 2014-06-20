@@ -73,6 +73,31 @@ namespace SEModAPI.API.SaveData
 		}
 
 		[Category("Cube Block")]
+		public float BuildPercent
+		{
+			get { return m_baseDefinition.BuildPercent; }
+			set
+			{
+				if (m_baseDefinition.BuildPercent == value) return;
+				m_baseDefinition.BuildPercent = value;
+				Changed = true;
+			}
+		}
+
+		[Category("Cube Block")]
+		public float IntegrityPercent
+		{
+			get { return m_baseDefinition.IntegrityPercent; }
+			set
+			{
+				if (m_baseDefinition.IntegrityPercent == value) return;
+				m_baseDefinition.IntegrityPercent = value;
+				Changed = true;
+			}
+		}
+
+		[Category("Cube Block")]
+		[Description("Added as of 1.035.005")]
 		public ulong Owner
 		{
 			get { return m_baseDefinition.Owner; }
@@ -85,6 +110,7 @@ namespace SEModAPI.API.SaveData
 		}
 
 		[Category("Cube Block")]
+		[Description("Added as of 1.035.005")]
 		public bool ShareWithFaction
 		{
 			get { return m_baseDefinition.ShareWithFaction; }
@@ -152,6 +178,15 @@ namespace SEModAPI.API.SaveData
 						break;
 					case MyObjectBuilderTypeEnum.MedicalRoom:
 						NewEntry<MyObjectBuilder_MedicalRoom, MedicalRoomEntity>((MyObjectBuilder_MedicalRoom)definition);
+						break;
+					case MyObjectBuilderTypeEnum.Cockpit:
+						NewEntry<MyObjectBuilder_Cockpit, CockpitEntity>((MyObjectBuilder_Cockpit)definition);
+						break;
+					case MyObjectBuilderTypeEnum.Beacon:
+						NewEntry<MyObjectBuilder_Beacon, BeaconEntity>((MyObjectBuilder_Beacon)definition);
+						break;
+					case MyObjectBuilderTypeEnum.GravityGenerator:
+						NewEntry<MyObjectBuilder_GravityGenerator, GravityGeneratorEntity>((MyObjectBuilder_GravityGenerator)definition);
 						break;
 					default:
 						NewEntry<MyObjectBuilder_CubeBlock, CubeBlockEntity<MyObjectBuilder_CubeBlock>>((MyObjectBuilder_CubeBlock)definition);
