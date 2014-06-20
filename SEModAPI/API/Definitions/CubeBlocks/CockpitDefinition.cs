@@ -132,6 +132,20 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 			}
 		}
 
+		/// <summary>
+		/// Set or Get the possibility to enable ship control
+		/// </summary>
+		public bool EnableShipControl
+		{
+			get { return m_baseDefinition.EnableShipControl; }
+			set
+			{
+				if (m_baseDefinition.EnableShipControl == value) return;
+				m_baseDefinition.EnableShipControl = value;
+				Changed = true;
+			}
+		}
+
 		#endregion
 
 		#region "Methods"

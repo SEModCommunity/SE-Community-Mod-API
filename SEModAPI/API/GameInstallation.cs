@@ -7,37 +7,30 @@ using System.Reflection;
 using System.Security.Principal;
 using SEModAPI.Support;
 
-
 namespace SEModAPI.API
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// <summary>
-    /// Class dedicated to handle of Space Engineer installation and information
-    /// </summary>
-    public class GameInstallationInfo
-    {
-        #region "Attributes"
+	/// <summary>
+	/// Class dedicated to handle of Space Engineer installation and information
+	/// </summary>
+	public class GameInstallationInfo
+	{
+		#region "Attributes"
 
-        private static string m_GamePath;
-        public static string GamePath { get { return m_GamePath; } }
+		private static string m_GamePath;
+		public static string GamePath { get { return m_GamePath; } }
 
-        //private string m_SteamPath;
-        //public string SteamPath { get { return m_SteamPath; } }
+		internal static readonly string[] CoreSpaceEngineersFiles = 
+		{
+			"Sandbox.Common.dll",
+			"Sandbox.Common.XmlSerializers.dll",
+			"VRage.Common.dll",
+			"VRage.Library.dll",
+			"VRage.Math.dll"
+		};
 
-        internal static readonly string[] CoreSpaceEngineersFiles = 
-        {
-            "Sandbox.Common.dll",
-            "Sandbox.Common.XmlSerializers.dll",
-            "VRage.Common.dll",
-            "VRage.Library.dll",
-            "VRage.Math.dll"
-        };
+		#endregion
 
-        #endregion
-
-        #region "Constructor & Validators"
+		#region "Constructor and Initializers"
 
 		/// <summary>
 		/// <para>Create a new instance of GameInstallationInfo with the automatically detected game path.</para>
@@ -46,21 +39,24 @@ namespace SEModAPI.API
 		/// the API will not be able to work
 		/// </para>
 		/// </summary>
-        public GameInstallationInfo()
-        {
-            m_GamePath = GetGameRegistryPath();
-            if (m_GamePath == "") { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered));}
+		public GameInstallationInfo()
+		{
+			m_GamePath = GetGameRegistryPath();
+			if (m_GamePath == null || m_GamePath == "")
+			{
+				m_GamePath = GetSteamPath();
+				if (m_GamePath == null || m_GamePath == "")
+					throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered));
+			}
 
-            //m_SteamPath = GetSteamPath();
-            //if (m_GamePath == "") { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.SteamNotRegistered)); }
-
-            if (!IsValidGamePath(m_GamePath)) { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory)); }
+			if (!IsValidGamePath(m_GamePath))
+				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory));
 
 			if(IsBaseAssembliesChanged())
 			{
 				UpdateBaseFiles();
 			}
-        }
+		}
 
 		/// <summary>
 		/// Create a new instance of GameInstallationInfo with the specified game location
@@ -69,9 +65,11 @@ namespace SEModAPI.API
 		public GameInstallationInfo(string gamePath)
 		{
 			m_GamePath = gamePath;
-			if (m_GamePath == "") { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered)); }
+			if (m_GamePath == null || m_GamePath == "")
+				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered));
 
-			if (!IsValidGamePath(m_GamePath)) { throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory)); }
+			if (!IsValidGamePath(m_GamePath))
+				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory));
 
 			if (IsBaseAssembliesChanged())
 			{
@@ -90,34 +88,30 @@ namespace SEModAPI.API
 			return true;
 		}
 
-        #endregion
+		#endregion
 
-        #region "Methods"
-        /// <summary>
-        /// Looks for the Space Engineers install location in the Registry, which should return the form:
-        /// "C:\Program Files (x86)\Steam\steamapps\common\SpaceEngineers"
-        /// </summary>
-        /// <returns>The absolute path to the game installation</returns>
-        public static string GetGameRegistryPath()
-        {
-            RegistryKey key;
-            if (Environment.Is64BitProcess)
-                key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 244850", false);
-            else
-                key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 244850", false);
+		#region "Methods"
 
-            if (key != null)
-            {
-                return key.GetValue("InstallLocation") as string;
-            }
+		/// <summary>
+		/// Looks for the Space Engineers install location in the Registry, which should return the form:
+		/// "C:\Program Files (x86)\Steam\steamapps\common\SpaceEngineers"
+		/// </summary>
+		/// <returns>The absolute path to the game installation</returns>
+		public static string GetGameRegistryPath()
+		{
+			RegistryKey key;
+			if (Environment.Is64BitProcess)
+				key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 244850", false);
+			else
+				key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 244850", false);
 
-            return null;
-        }
+			if (key != null)
+			{
+				return key.GetValue("InstallLocation") as string;
+			}
 
-		//Why is this here?
-		//public static void GetSettings()
-		//{
-		//}
+			return null;
+		}
 
 		/// <summary>
 		/// Looks for the Steam install location in the Registry, which should return the form:
@@ -135,111 +129,111 @@ namespace SEModAPI.API
 
 			if (key != null)
 			{
-				return (string)key.GetValue("InstallPath");
+				string steamBasePath = (string)key.GetValue("InstallPath");
+				return Path.Combine(steamBasePath, "steamapps", "common", "spaceengineers");
 			}
 
 			return null;
 		}
 
-        public bool IsBaseAssembliesChanged()
-        {
-            // We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
-            var baseFilePath = Path.Combine(GamePath, "Bin64");
+		public bool IsBaseAssembliesChanged()
+		{
+			// We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
+			var baseFilePath = Path.Combine(GamePath, "Bin64");
 
-            var appFilePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+			var appFilePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
-            foreach (var filename in CoreSpaceEngineersFiles)
-            {
-                if (DoFilesDiffer(baseFilePath, appFilePath, filename))
-                    return true;
-            }
+			foreach (var filename in CoreSpaceEngineersFiles)
+			{
+				if (DoFilesDiffer(baseFilePath, appFilePath, filename))
+					return true;
+			}
 
-            return false;
-        }
+			return false;
+		}
 
-        public bool UpdateBaseFiles()
-        {
-            // We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
-            var baseFilePath = Path.Combine(GamePath, "Bin64");
-            var appFilePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+		public bool UpdateBaseFiles()
+		{
+			// We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
+			var baseFilePath = Path.Combine(GamePath, "Bin64");
+			var appFilePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
-            foreach (var filename in CoreSpaceEngineersFiles)
-            {
-                var sourceFile = Path.Combine(baseFilePath, filename);
+			foreach (var filename in CoreSpaceEngineersFiles)
+			{
+				var sourceFile = Path.Combine(baseFilePath, filename);
 
-                if (File.Exists(sourceFile))
-                {
-                    File.Copy(sourceFile, Path.Combine(appFilePath, filename), true);
-                }
-            }
+				if (File.Exists(sourceFile))
+				{
+					File.Copy(sourceFile, Path.Combine(appFilePath, filename), true);
+				}
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        public static bool DoFilesDiffer(string directory1, string directory2, string filename)
-        {
-            return DoFilesDiffer(Path.Combine(directory1, filename), Path.Combine(directory2, filename));
-        }
+		public static bool DoFilesDiffer(string directory1, string directory2, string filename)
+		{
+			return DoFilesDiffer(Path.Combine(directory1, filename), Path.Combine(directory2, filename));
+		}
 
-        public static bool DoFilesDiffer(string file1, string file2)
-        {
-            if (File.Exists(file1) != File.Exists(file2))
-                return false;
+		public static bool DoFilesDiffer(string file1, string file2)
+		{
+			if (File.Exists(file1) != File.Exists(file2))
+				return false;
 
-            var buffer1 = File.ReadAllBytes(file1);
-            var buffer2 = File.ReadAllBytes(file2);
+			var buffer1 = File.ReadAllBytes(file1);
+			var buffer2 = File.ReadAllBytes(file2);
 
-            if (buffer1.Length != buffer2.Length)
-                return true;
+			if (buffer1.Length != buffer2.Length)
+				return true;
 
-            var ass1 = Assembly.Load(buffer1);
-            var guid1 = ass1.ManifestModule.ModuleVersionId;
+			var ass1 = Assembly.Load(buffer1);
+			var guid1 = ass1.ManifestModule.ModuleVersionId;
 
-            var ass2 = Assembly.Load(buffer2);
-            var guid2 = ass2.ManifestModule.ModuleVersionId;
+			var ass2 = Assembly.Load(buffer2);
+			var guid2 = ass2.ManifestModule.ModuleVersionId;
 
-            return guid1 != guid2;
-        }
+			return guid1 != guid2;
+		}
 
+		internal static bool CheckIsRuningElevated()
+		{
+			var pricipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+			return pricipal.IsInRole(WindowsBuiltInRole.Administrator);
+		}
 
-        internal static bool CheckIsRuningElevated()
-        {
-            var pricipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-            return pricipal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
+		internal static int? RunElevated(string fileName, string arguments, bool elevate, bool waitForExit)
+		{
+			var processInfo = new ProcessStartInfo(fileName, arguments);
 
-        internal static int? RunElevated(string fileName, string arguments, bool elevate, bool waitForExit)
-        {
-            var processInfo = new ProcessStartInfo(fileName, arguments);
+			if (elevate)
+			{
+				processInfo.Verb = "runas";
+			}
 
-            if (elevate)
-            {
-                processInfo.Verb = "runas";
-            }
+			try
+			{
+				var process = Process.Start(processInfo);
 
-            try
-            {
-                var process = Process.Start(processInfo);
+				if (waitForExit)
+				{
+					if (process != null)
+					{
+						process.WaitForExit();
 
-                if (waitForExit)
-                {
-                    if (process != null)
-                    {
-                        process.WaitForExit();
+						return process.ExitCode;
+					}
+				}
 
-                        return process.ExitCode;
-                    }
-                }
+				return 0;
+			}
+			catch (Win32Exception)
+			{
+				// Do nothing. Probably the user canceled the UAC window
+				return null;
+			}
+		}
 
-                return 0;
-            }
-            catch (Win32Exception)
-            {
-                // Do nothing. Probably the user canceled the UAC window
-                return null;
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

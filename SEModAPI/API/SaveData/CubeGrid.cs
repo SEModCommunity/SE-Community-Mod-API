@@ -163,7 +163,7 @@ namespace SEModAPI.API.SaveData
 		{
 			foreach (var def in overLayer.CubeBlocks)
 			{
-				CubeBlock<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlock<MyObjectBuilder_CubeBlock>)def;
+				CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)def;
 				if (cubeBlock.Changed)
 					return true;
 			}

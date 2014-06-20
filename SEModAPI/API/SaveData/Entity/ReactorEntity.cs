@@ -10,7 +10,7 @@ using Sandbox.Common.ObjectBuilders.VRageData;
 
 namespace SEModAPI.API.SaveData.Entity
 {
-	public class ReactorEntity : CubeBlock<MyObjectBuilder_Reactor>
+	public class ReactorEntity : CubeBlockEntity<MyObjectBuilder_Reactor>
 	{
 		#region "Attributes"
 

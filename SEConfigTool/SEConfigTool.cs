@@ -73,7 +73,7 @@ namespace SEConfigTool
 			catch (AutoException)
 			{
 				string gamePath = GetGamePath();
-				if (gamePath == null)
+				if (gamePath == null || gamePath == "")
 				{
 					this.Visible = false;
 					return;
@@ -216,9 +216,9 @@ namespace SEConfigTool
 
 					Type cubeType = cubeBlockObject.GetType();
 
-					if (cubeType.IsAssignableFrom(typeof(CubeBlock<MyObjectBuilder_CubeBlock>)))
+					if (cubeType.IsAssignableFrom(typeof(CubeBlockEntity<MyObjectBuilder_CubeBlock>)))
 					{
-						CubeBlock<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlock<MyObjectBuilder_CubeBlock>)cubeBlockObject;
+						CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)cubeBlockObject;
 						switch (cubeBlock.Id.TypeId)
 						{
 							case MyObjectBuilderTypeEnum.CubeBlock:
@@ -782,9 +782,9 @@ namespace SEConfigTool
 
 			Type linkedType = linkedObject.GetType();
 
-			if (linkedType.IsAssignableFrom(typeof(CubeBlock<MyObjectBuilder_CubeBlock>)))
+			if (linkedType.IsAssignableFrom(typeof(CubeBlockEntity<MyObjectBuilder_CubeBlock>)))
 			{
-				CubeBlock<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlock<MyObjectBuilder_CubeBlock>)linkedObject;
+				CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)linkedObject;
 
 				PG_Sector_Objects_Details.Visible = true;
 				PG_Sector_Objects_Details.SelectedObject = cubeBlock;

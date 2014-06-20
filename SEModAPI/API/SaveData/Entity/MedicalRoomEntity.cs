@@ -10,7 +10,7 @@ using Sandbox.Common.ObjectBuilders.VRageData;
 
 namespace SEModAPI.API.SaveData.Entity
 {
-	public class MedicalRoomEntity : CubeBlock<MyObjectBuilder_MedicalRoom>
+	public class MedicalRoomEntity : CubeBlockEntity<MyObjectBuilder_MedicalRoom>
 	{
 		#region "Constructors and Initializers"
 

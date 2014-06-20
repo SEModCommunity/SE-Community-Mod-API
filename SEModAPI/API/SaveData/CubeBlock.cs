@@ -12,11 +12,11 @@ using SEModAPI.API.SaveData.Entity;
 
 namespace SEModAPI.API.SaveData
 {
-	public class CubeBlock<T> : SerializableEntity<T> where T : MyObjectBuilder_CubeBlock
+	public class CubeBlockEntity<T> : SerializableEntity<T> where T : MyObjectBuilder_CubeBlock
 	{
 		#region "Constructors and Initializers"
 
-		public CubeBlock(T definition)
+		public CubeBlockEntity(T definition)
 			: base(definition)
 		{
 			EntityId = definition.EntityId;
@@ -72,10 +72,34 @@ namespace SEModAPI.API.SaveData
 			}
 		}
 
+		[Category("Cube Block")]
+		public ulong Owner
+		{
+			get { return m_baseDefinition.Owner; }
+			set
+			{
+				if (m_baseDefinition.Owner == value) return;
+				m_baseDefinition.Owner = value;
+				Changed = true;
+			}
+		}
+
+		[Category("Cube Block")]
+		public bool ShareWithFaction
+		{
+			get { return m_baseDefinition.ShareWithFaction; }
+			set
+			{
+				if (m_baseDefinition.ShareWithFaction == value) return;
+				m_baseDefinition.ShareWithFaction = value;
+				Changed = true;
+			}
+		}
+
 		#endregion
 	}
 
-	public class CubeBlockManager : SerializableEntityManager<MyObjectBuilder_CubeBlock, CubeBlock<MyObjectBuilder_CubeBlock>>
+	public class CubeBlockManager : SerializableEntityManager<MyObjectBuilder_CubeBlock, CubeBlockEntity<MyObjectBuilder_CubeBlock>>
 	{
 		#region "Attributes"
 
@@ -130,17 +154,17 @@ namespace SEModAPI.API.SaveData
 						NewEntry<MyObjectBuilder_MedicalRoom, MedicalRoomEntity>((MyObjectBuilder_MedicalRoom)definition);
 						break;
 					default:
-						NewEntry<MyObjectBuilder_CubeBlock, CubeBlock<MyObjectBuilder_CubeBlock>>((MyObjectBuilder_CubeBlock)definition);
+						NewEntry<MyObjectBuilder_CubeBlock, CubeBlockEntity<MyObjectBuilder_CubeBlock>>((MyObjectBuilder_CubeBlock)definition);
 						break;
 				}
 			}
 		}
 
-		public CubeBlock<T> NewEntry<T, V>(T source)
+		public CubeBlockEntity<T> NewEntry<T, V>(T source)
 			where T : MyObjectBuilder_CubeBlock
-			where V : CubeBlock<T>
+			where V : CubeBlockEntity<T>
 		{
-			if (!IsMutable) return default(CubeBlock<T>);
+			if (!IsMutable) return default(CubeBlockEntity<T>);
 
 			var newEntryType = typeof(V);
 
