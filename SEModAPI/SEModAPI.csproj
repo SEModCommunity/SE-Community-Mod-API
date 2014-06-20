@@ -41,8 +41,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
+    <Reference Include="Sandbox.Game, Version=0.1.5283.28200, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>GameLibraries\Sandbox.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="SpaceEngineersDedicated, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <ExecutableExtension>.exe</ExecutableExtension>
+      <HintPath>GameLibraries\SpaceEngineersDedicated.exe</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />

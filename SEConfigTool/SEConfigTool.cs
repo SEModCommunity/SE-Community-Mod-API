@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 using SEModAPI;
 using SEModAPI.API;
@@ -18,7 +19,6 @@ using Sandbox.Common.Localization;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using VRageMath;
-using System.Diagnostics;
 
 namespace SEConfigTool
 {
