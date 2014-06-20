@@ -19,6 +19,7 @@ using Sandbox.Engine.Multiplayer;
 using Sandbox.Game.Weapons;
 using Sandbox.Game.World;
 
+using SEModAPI.API;
 using SEModAPI.API.SaveData;
 using SEModAPI.API.SaveData.Entity;
 
@@ -30,7 +31,7 @@ using VRage.Common.Utils;
 using B337879D0C82A5F9C44D51D954769590;	//Source - Sandbox.Game.dll
 using BD713F20F183AB7899BBC0EB8ADF61B6;	//Source - SpaceEngineersDedicated.exe
 
-namespace SEModAPI.API.ProcessWrapper
+namespace SEServerExtender.API
 {
 	public class ServerAssemblyWrapper
 	{
