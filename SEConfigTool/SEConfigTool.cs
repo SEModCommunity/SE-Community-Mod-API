@@ -223,9 +223,9 @@ namespace SEConfigTool
 						CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)cubeBlockObject;
 						string nodeName = cubeBlock.Name;
 						if (nodeName == "")
-							nodeName = cubeBlock.EntityId.ToString();
-						if (nodeName == "")
 							nodeName = cubeBlock.Id.ToString();
+						if (nodeName == "")
+							nodeName = cubeBlock.EntityId.ToString();
 						switch (cubeBlock.Id.TypeId)
 						{
 							case MyObjectBuilderTypeEnum.CubeBlock:
