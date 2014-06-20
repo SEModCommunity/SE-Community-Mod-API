@@ -216,9 +216,7 @@ namespace SEConfigTool
 				{
 					TreeNode blockNode = null;
 
-					Type cubeType = cubeBlockObject.GetType();
-
-					if (cubeType.IsAssignableFrom(typeof(CubeBlockEntity<MyObjectBuilder_CubeBlock>)))
+					if (cubeBlockObject is CubeBlockEntity<MyObjectBuilder_CubeBlock>)
 					{
 						CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)cubeBlockObject;
 						string nodeName = cubeBlock.Name;
@@ -279,7 +277,7 @@ namespace SEConfigTool
 						}
 					}
 
-					if (cubeType.IsAssignableFrom(typeof(CargoContainerEntity)))
+					if (cubeBlockObject is CargoContainerEntity)
 					{
 						CargoContainerEntity cargoContainer = (CargoContainerEntity)cubeBlockObject;
 
@@ -292,7 +290,7 @@ namespace SEConfigTool
 						}
 					}
 
-					if (cubeType.IsAssignableFrom(typeof(ReactorEntity)))
+					if (cubeBlockObject is ReactorEntity)
 					{
 						ReactorEntity reactorBlock = (ReactorEntity)cubeBlockObject;
 
@@ -305,38 +303,37 @@ namespace SEConfigTool
 						}
 					}
 
-					if (cubeType.IsAssignableFrom(typeof(MedicalRoomEntity)))
+					if (cubeBlockObject is MedicalRoomEntity)
 					{
 						MedicalRoomEntity medicalBlock = (MedicalRoomEntity)cubeBlockObject;
 
 						blockNode = utilityBlocksNode.Nodes.Add(medicalBlock.EntityId.ToString(), medicalBlock.Name);
 					}
 
-					if (cubeType.IsAssignableFrom(typeof(CockpitEntity)))
+					if (cubeBlockObject is CockpitEntity)
 					{
 						CockpitEntity cockpitBlock = (CockpitEntity)cubeBlockObject;
 
 						blockNode = utilityBlocksNode.Nodes.Add(cockpitBlock.EntityId.ToString(), cockpitBlock.Name);
 					}
 
-					if (cubeType.IsAssignableFrom(typeof(BeaconEntity)))
+					if (cubeBlockObject is BeaconEntity)
 					{
 						BeaconEntity beaconBlock = (BeaconEntity)cubeBlockObject;
 
 						blockNode = utilityBlocksNode.Nodes.Add(beaconBlock.EntityId.ToString(), beaconBlock.Name);
 					}
 
-					if (cubeType.IsAssignableFrom(typeof(GravityGeneratorEntity)))
+					if (cubeBlockObject is GravityGeneratorEntity)
 					{
 						GravityGeneratorEntity gravityGenerator = (GravityGeneratorEntity)cubeBlockObject;
 
 						blockNode = utilityBlocksNode.Nodes.Add(gravityGenerator.EntityId.ToString(), gravityGenerator.Name);
 					}
 
-					if (blockNode == null)
-						continue;
-
-					blockNode.Tag = cubeBlockObject;
+					//Attach the object to the new tree node
+					if (blockNode != null && cubeBlockObject != null)
+						blockNode.Tag = cubeBlockObject;
 				}
 
 				#endregion
@@ -842,11 +839,9 @@ namespace SEConfigTool
 			if (linkedObject == null)
 				return;
 
-			Type linkedType = linkedObject.GetType();
-
 			#region CubeBlocks
 
-			if (linkedType.IsAssignableFrom(typeof(CubeBlockEntity<MyObjectBuilder_CubeBlock>)))
+			if (linkedObject is CubeBlockEntity<MyObjectBuilder_CubeBlock>)
 			{
 				CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)linkedObject;
 
@@ -854,7 +849,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = cubeBlock;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(CargoContainerEntity)))
+			if (linkedObject is CargoContainerEntity)
 			{
 				CargoContainerEntity containerBlock = (CargoContainerEntity)linkedObject;
 
@@ -862,7 +857,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = containerBlock;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(ReactorEntity)))
+			if (linkedObject is ReactorEntity)
 			{
 				ReactorEntity reactorBlock = (ReactorEntity)linkedObject;
 
@@ -870,7 +865,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = reactorBlock;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(MedicalRoomEntity)))
+			if (linkedObject is MedicalRoomEntity)
 			{
 				MedicalRoomEntity medicalBlock = (MedicalRoomEntity)linkedObject;
 
@@ -878,7 +873,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = medicalBlock;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(CockpitEntity)))
+			if (linkedObject is CockpitEntity)
 			{
 				CockpitEntity cockpit = (CockpitEntity)linkedObject;
 
@@ -886,7 +881,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = cockpit;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(InventoryItemEntity)))
+			if (linkedObject is InventoryItemEntity)
 			{
 				InventoryItemEntity item = (InventoryItemEntity)linkedObject;
 
@@ -897,7 +892,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = item;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(BeaconEntity)))
+			if (linkedObject is BeaconEntity)
 			{
 				BeaconEntity beacon = (BeaconEntity)linkedObject;
 
@@ -905,7 +900,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = beacon;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(GravityGeneratorEntity)))
+			if (linkedObject is GravityGeneratorEntity)
 			{
 				GravityGeneratorEntity gravityGenerator = (GravityGeneratorEntity)linkedObject;
 
@@ -915,7 +910,7 @@ namespace SEConfigTool
 
 			#endregion
 
-			if (linkedType.IsAssignableFrom(typeof(CubeGrid)))
+			if (linkedObject is CubeGrid)
 			{
 				CubeGrid cubeGrid = (CubeGrid)linkedObject;
 
@@ -925,7 +920,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = cubeGrid;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(VoxelMap)))
+			if (linkedObject is VoxelMap)
 			{
 				VoxelMap voxelMap = (VoxelMap)linkedObject;
 
@@ -935,7 +930,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = voxelMap;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(FloatingObject)))
+			if (linkedObject is FloatingObject)
 			{
 				FloatingObject floatingObject = (FloatingObject)linkedObject;
 
@@ -945,7 +940,7 @@ namespace SEConfigTool
 				PG_Sector_Objects_Details.SelectedObject = floatingObject;
 			}
 
-			if (linkedType.IsAssignableFrom(typeof(Meteor)))
+			if (linkedObject is Meteor)
 			{
 				Meteor meteor = (Meteor)linkedObject;
 
