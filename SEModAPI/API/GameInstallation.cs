@@ -17,7 +17,6 @@ namespace SEModAPI.API
 		#region "Attributes"
 
 		private static string m_GamePath;
-		public static string GamePath { get { return m_GamePath; } }
 
 		internal static readonly string[] CoreSpaceEngineersFiles = 
 		{
@@ -77,6 +76,19 @@ namespace SEModAPI.API
 			}
 		}
 
+		#endregion
+
+		#region "Properties"
+
+		public static string GamePath
+		{
+			get { return m_GamePath; }
+		}
+
+		#endregion
+
+		#region "Methods"
+
 		public static bool IsValidGamePath(string gamePath)
 		{
 			if (string.IsNullOrEmpty(gamePath)) { return false; }
@@ -87,10 +99,6 @@ namespace SEModAPI.API
 			// Skip checking for the .exe. Not required currently.
 			return true;
 		}
-
-		#endregion
-
-		#region "Methods"
 
 		/// <summary>
 		/// Looks for the Space Engineers install location in the Registry, which should return the form:
