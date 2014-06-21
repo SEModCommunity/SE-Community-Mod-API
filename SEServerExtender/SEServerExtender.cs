@@ -30,7 +30,6 @@ namespace SEServerExtender
 			new GameInstallationInfo();
 
 			m_processWrapper = new ProcessWrapper();
-			m_processWrapper.SetEntityTree(TRV_Entities);
 
 			m_entityTreeRefreshTimer = new Timer();
 			m_entityTreeRefreshTimer.Interval = 500;

@@ -255,8 +255,8 @@ namespace SEServerExtender.API
 			MyConfigDedicatedData config = (MyConfigDedicatedData)m_configContainerDedicatedDataField.GetValue(configContainer);
 			if (config == null)
 			{
-				MethodInfo newConfigDataMethod = m_configContainerField.FieldType.GetMethod("BF7B93CB2FCA9B901FFBD420350B9932", BindingFlags.NonPublic | BindingFlags.Instance);
-				newConfigDataMethod.Invoke(configContainer, new object[] { });
+				MethodInfo loadConfigDataMethod = m_configContainerField.FieldType.GetMethod("4DD64FD1D45E514D01C925D07B69B3BE", BindingFlags.Public | BindingFlags.Instance);
+				loadConfigDataMethod.Invoke(configContainer, new object[] { });
 				config = (MyConfigDedicatedData)m_configContainerDedicatedDataField.GetValue(configContainer);
 			}
 
@@ -309,17 +309,10 @@ namespace SEServerExtender.API
 		private static Thread m_runServerThread;
 		private static Thread m_monitorServerThread;
 
-		private TreeView m_linkedEntityTree;
-
 		private static bool m_serverRunning;
 
 		public ProcessWrapper()
 		{
-		}
-
-		public void SetEntityTree(TreeView tree)
-		{
-			m_linkedEntityTree = tree;
 		}
 
 		public void StartGame(string worldName)
@@ -332,16 +325,19 @@ namespace SEServerExtender.API
 
 				m_serverRunning = false;
 
-				bool result = LoadWorld(worldName);
-				if (!result)
+				if (worldName != "")
 				{
-					MyConfigDedicatedData config = m_sandboxGameWrapper.GetServerConfig();
-					throw new Exception("Failed to load world config from checkpoint");
-				}
-				else
-				{
-					MyConfigDedicatedData config = m_sandboxGameWrapper.GetServerConfig();
-					Console.WriteLine("Loaded world config from checkpoint");
+					bool result = LoadWorld(worldName);
+					if (!result)
+					{
+						MyConfigDedicatedData config = m_sandboxGameWrapper.GetServerConfig();
+						throw new Exception("Failed to load world config from checkpoint");
+					}
+					else
+					{
+						MyConfigDedicatedData config = m_sandboxGameWrapper.GetServerConfig();
+						Console.WriteLine("Loaded world config from checkpoint");
+					}
 				}
 
 				m_runServerThread = new Thread(new ThreadStart(this.RunServer));
@@ -376,7 +372,7 @@ namespace SEServerExtender.API
 				isLoaded = true;
 			}
 
-			//TODO - Find a way to determine when the server thread is fully loaded
+			//TODO - Find a way to determine when the server is fully loaded
 			Thread.Sleep(20000);
 
 			Console.WriteLine("MONITOR - Server has started");
@@ -404,6 +400,8 @@ namespace SEServerExtender.API
 
 		private void RunServer()
 		{
+			MyFileSystem.Reset();
+
 			//Args as of 1.035.009
 			string consoleArgs = m_serverWrapper.GetLookupString2(621743686, 82754060, 11514536);
 			string[] params0 = consoleArgs.Split(' ');
@@ -428,8 +426,6 @@ namespace SEServerExtender.API
 				Object configContainer = m_sandboxGameWrapper.GetServerConfigContainer();
 				MyConfigDedicatedData config = m_sandboxGameWrapper.GetServerConfig();
 				config.LoadWorld = worldName;
-
-				MyFileSystem.Reset();
 
 				return true;
 			}
