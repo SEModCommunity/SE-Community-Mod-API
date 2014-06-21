@@ -93,6 +93,7 @@
     <Compile Include="API\SaveData\CubeBlock.cs" />
     <Compile Include="API\SaveData\Entity\BeaconEntity.cs" />
     <Compile Include="API\SaveData\Entity\CargoContainerEntity.cs" />
+    <Compile Include="API\SaveData\Entity\CharacterEntity.cs" />
     <Compile Include="API\SaveData\Entity\CockpitEntity.cs" />
     <Compile Include="API\SaveData\Entity\FunctionalBlockEntity.cs" />
     <Compile Include="API\SaveData\Entity\GravityGeneratorEntity.cs" />

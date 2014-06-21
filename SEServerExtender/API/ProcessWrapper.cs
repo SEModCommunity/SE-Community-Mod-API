@@ -150,6 +150,7 @@ namespace SEServerExtender.API
 		private Type m_checkpointManagerType;
 		private Type m_cubeGridType;
 		private Type m_objectManagerType;
+		private Type m_characterType;
 
 		private MethodInfo m_saveCheckpoint;
 		private MethodInfo m_getServerSector;
@@ -173,14 +174,13 @@ namespace SEServerExtender.API
 			//string assemblyPath = Path.Combine(path, "Sandbox.Game.dll");
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
-			//string cubeGridClass = "5BCAC68007431E61367F5B2CF24E2D6F.98262C3F38A1199E47F2B9338045794C";
 			//string conveyorLineManagerClass = "8EAF60352312606996BD8147B0A3C880.68E5FDFBB1457F6347DEBE26175326B0";
-			//string characterClass = "F79C930F3AD8FDAF31A59E2702EECE70.3B71F31E6039CAE9D8706B5F32FE468D";
 
 			m_mainGameType = typeof(B3531963E948FB4FA1D057C4340C61B4);
 			m_checkpointManagerType = m_assembly.GetType("36CC7CE820B9BBBE4B3FECFEEFE4AE86.828574590CB1B1AE5A5659D4B9659548");
 			m_cubeGridType = m_assembly.GetType("5BCAC68007431E61367F5B2CF24E2D6F.98262C3F38A1199E47F2B9338045794C");
 			m_objectManagerType = m_assembly.GetType("5BCAC68007431E61367F5B2CF24E2D6F.CAF1EB435F77C7B77580E2E16F988BED");
+			m_characterType = m_assembly.GetType("F79C930F3AD8FDAF31A59E2702EECE70.3B71F31E6039CAE9D8706B5F32FE468D");
 			//TODO - Update this to get the correct type for 1.035.009
 			m_stringLookupType1 = m_assembly.GetType("B337879D0C82A5F9C44D51D954769590.1C03EE9704BF0B992EC4DE5FB699F226");
 
@@ -222,6 +222,11 @@ namespace SEServerExtender.API
 			get { return m_cubeGridType; }
 		}
 
+		public Type CharacterType
+		{
+			get { return m_characterType; }
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -248,6 +253,12 @@ namespace SEServerExtender.API
 		{
 			Object configContainer = GetServerConfigContainer();
 			MyConfigDedicatedData config = (MyConfigDedicatedData)m_configContainerDedicatedDataField.GetValue(configContainer);
+			if (config == null)
+			{
+				MethodInfo newConfigDataMethod = m_configContainerField.FieldType.GetMethod("BF7B93CB2FCA9B901FFBD420350B9932", BindingFlags.NonPublic | BindingFlags.Instance);
+				newConfigDataMethod.Invoke(configContainer, new object[] { });
+				config = (MyConfigDedicatedData)m_configContainerDedicatedDataField.GetValue(configContainer);
+			}
 
 			return config;
 		}
@@ -298,13 +309,20 @@ namespace SEServerExtender.API
 		private static Thread m_runServerThread;
 		private static Thread m_monitorServerThread;
 
+		private TreeView m_linkedEntityTree;
+
 		private static bool m_serverRunning;
 
 		public ProcessWrapper()
 		{
 		}
 
-		public void StartGame()
+		public void SetEntityTree(TreeView tree)
+		{
+			m_linkedEntityTree = tree;
+		}
+
+		public void StartGame(string worldName)
 		{
 			try
 			{
@@ -314,7 +332,6 @@ namespace SEServerExtender.API
 
 				m_serverRunning = false;
 
-				string worldName = "DotS - Survival World 1";
 				bool result = LoadWorld(worldName);
 				if (!result)
 				{
@@ -362,9 +379,7 @@ namespace SEServerExtender.API
 			//TODO - Find a way to determine when the server thread is fully loaded
 			Thread.Sleep(20000);
 
-			Console.WriteLine("MONITOR - Loaded World: " + m_sandboxGameWrapper.GetServerConfig().LoadWorld);
-			Console.WriteLine("MONITOR - Server Name: " + m_sandboxGameWrapper.GetServerConfig().ServerName);
-			Console.WriteLine("MONITOR - Entities: " + m_sandboxGameWrapper.GetBaseEntities().Count.ToString());
+			Console.WriteLine("MONITOR - Server has started");
 
 			m_serverRunning = true;
 
@@ -381,22 +396,7 @@ namespace SEServerExtender.API
 
 				List<MyObjectBuilder_EntityBase> entities = m_sandboxGameWrapper.GetBaseEntities();
 
-				foreach (var entity in entities)
-				{
-					if (entity.GetType() == typeof(MyObjectBuilder_CubeGrid))
-					{
-						MyObjectBuilder_CubeGrid cubeGridBase = (MyObjectBuilder_CubeGrid)entity;
-						SerializableVector3 rawVelocity = cubeGridBase.LinearVelocity;
-						double velocity = Math.Sqrt(rawVelocity.X * rawVelocity.X + rawVelocity.Y * rawVelocity.Y + rawVelocity.Z * rawVelocity.Z);
-						if (velocity > 1)
-						{
-							CubeGrid cubeGrid = new CubeGrid(cubeGridBase);
-							Console.WriteLine("MONITOR - CubeGrid '" + cubeGrid.Name + "' is moving!");
-						}
-					}
-				}
-
-				Thread.Sleep(1000);
+				Thread.Sleep(5000);
 			}
 
 			Console.WriteLine("MONITOR - Server has shut down");
@@ -425,6 +425,9 @@ namespace SEServerExtender.API
 			if (checkpoint != null)
 			{
 				//TODO - Find a method to copy the checkpoint into the config
+				Object configContainer = m_sandboxGameWrapper.GetServerConfigContainer();
+				MyConfigDedicatedData config = m_sandboxGameWrapper.GetServerConfig();
+				config.LoadWorld = worldName;
 
 				MyFileSystem.Reset();
 
@@ -432,6 +435,11 @@ namespace SEServerExtender.API
 			}
 
 			return false;
+		}
+
+		public List<MyObjectBuilder_EntityBase> GetEntityList()
+		{
+			return m_sandboxGameWrapper.GetBaseEntities();
 		}
 	}
 }
