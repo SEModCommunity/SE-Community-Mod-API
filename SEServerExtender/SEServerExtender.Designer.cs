@@ -169,6 +169,7 @@
 			this.LBL_Control_WorldName.Size = new System.Drawing.Size(69, 13);
 			this.LBL_Control_WorldName.TabIndex = 3;
 			this.LBL_Control_WorldName.Text = "World Name:";
+			this.LBL_Control_WorldName.Visible = false;
 			// 
 			// TXT_Control_WorldName
 			// 
@@ -177,6 +178,7 @@
 			this.TXT_Control_WorldName.Size = new System.Drawing.Size(150, 20);
 			this.TXT_Control_WorldName.TabIndex = 2;
 			this.TXT_Control_WorldName.Text = "DotS - Survival World 1";
+			this.TXT_Control_WorldName.Visible = false;
 			// 
 			// TAB_Entities_Page
 			// 
