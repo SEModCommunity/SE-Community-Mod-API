@@ -78,6 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Internal\BaseEntity.cs" />
+    <Compile Include="API\Internal\BaseInternalWrapper.cs" />
+    <Compile Include="API\Internal\CubeBlockInternalWrapper.cs" />
     <Compile Include="API\Internal\GameObjectManagerWrapper.cs" />
     <Compile Include="API\Internal\SandboxGameAssemblyWrapper.cs" />
     <Compile Include="API\Definitions\AmmoMagazinesDefinition.cs" />
@@ -98,7 +100,7 @@
     <Compile Include="API\Internal\ServerAssemblyWrapper.cs" />
     <Compile Include="API\SaveData\BlockGroups.cs" />
     <Compile Include="API\SaveData\ConveyorLines.cs" />
-    <Compile Include="API\SaveData\CubeBlock.cs" />
+    <Compile Include="API\SaveData\CubeBlockEntity.cs" />
     <Compile Include="API\SaveData\Entity\BeaconEntity.cs" />
     <Compile Include="API\SaveData\Entity\CargoContainerEntity.cs" />
     <Compile Include="API\SaveData\Entity\CharacterEntity.cs" />

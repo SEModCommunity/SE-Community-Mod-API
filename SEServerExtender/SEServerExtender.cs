@@ -12,6 +12,7 @@ using Sandbox.Common.ObjectBuilders.Voxels;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API;
+using SEModAPI.API.Internal;
 using SEModAPI.API.SaveData;
 using SEModAPI.API.SaveData.Entity;
 
@@ -57,6 +58,44 @@ namespace SEServerExtender
 		#endregion
 
 		#region "Methods"
+
+		void UpdateNodeCubeBlockBranch<T, TO>(TreeNode node, List<T> source, string name)
+			where TO : MyObjectBuilder_CubeBlock
+			where T : CubeBlockEntity<TO>
+		{
+			try
+			{
+				bool entriesChanged = (node.Nodes.Count != source.Count);
+				if (entriesChanged)
+				{
+					node.Nodes.Clear();
+					node.Text = name + " (" + source.Count.ToString() + ")";
+				}
+
+				int index = 0;
+				foreach (var item in source)
+				{
+					TreeNode itemNode = null;
+					if (entriesChanged)
+					{
+						itemNode = node.Nodes.Add(item.Name);
+						itemNode.Tag = item;
+					}
+					else
+					{
+						itemNode = node.Nodes[index];
+						itemNode.Text = item.Name;
+						itemNode.Tag = item;
+					}
+
+					index++;
+				}
+			}
+			catch (Exception ex)
+			{
+				//TODO - Do something about the exception
+			}
+		}
 
 		void UpdateNodeBranch<T, TO>(TreeNode node, List<T> source, string name)
 			where TO : MyObjectBuilder_EntityBase
@@ -115,11 +154,11 @@ namespace SEServerExtender
 		{
 			TRV_Entities.BeginUpdate();
 
-			List<CubeGrid> cubeGrids = m_processWrapper.GetGameObjectManager().GetCubeGrids();
-			List<CharacterEntity> characters = m_processWrapper.GetGameObjectManager().GetCharacters();
-			List<VoxelMap> voxelMaps = m_processWrapper.GetGameObjectManager().GetVoxelMaps();
-			List<FloatingObject> floatingObjects = m_processWrapper.GetGameObjectManager().GetFloatingObjects();
-			List<Meteor> meteors = m_processWrapper.GetGameObjectManager().GetMeteors();
+			List<CubeGrid> cubeGrids = GameObjectManagerWrapper.GetInstance().GetCubeGrids();
+			List<CharacterEntity> characters = GameObjectManagerWrapper.GetInstance().GetCharacters();
+			List<VoxelMap> voxelMaps = GameObjectManagerWrapper.GetInstance().GetVoxelMaps();
+			List<FloatingObject> floatingObjects = GameObjectManagerWrapper.GetInstance().GetFloatingObjects();
+			List<Meteor> meteors = GameObjectManagerWrapper.GetInstance().GetMeteors();
 
 			UpdateNodeBranch<CubeGrid, MyObjectBuilder_CubeGrid>(TRV_Entities.Nodes[0], cubeGrids, "Cube Grids");
 			UpdateNodeBranch<CharacterEntity, MyObjectBuilder_Character>(TRV_Entities.Nodes[1], characters, "Characters");
@@ -148,6 +187,27 @@ namespace SEServerExtender
 			var linkedObject = e.Node.Tag;
 
 			PG_Entities_Details.SelectedObject = linkedObject;
+
+			if (linkedObject is CubeGrid)
+			{
+				if (e.Node.Nodes.Count < 2)
+				{
+					e.Node.Nodes.Add("Structural Blocks (0)");
+					e.Node.Nodes.Add("Container Blocks (0)");
+				}
+
+				CubeGrid cubeGrid = (CubeGrid)linkedObject;
+
+				List<CubeBlockEntity<MyObjectBuilder_CubeBlock>> structuralBlocks = CubeBlockInternalWrapper.GetInstance().GetStructuralBlocks(cubeGrid);
+				List<CargoContainerEntity> containerBlocks = CubeBlockInternalWrapper.GetInstance().GetCargoContainerBlocks(cubeGrid);
+
+				TRV_Entities.BeginUpdate();
+
+				UpdateNodeCubeBlockBranch<CubeBlockEntity<MyObjectBuilder_CubeBlock>, MyObjectBuilder_CubeBlock>(e.Node.Nodes[0], structuralBlocks, "Structural Blocks");
+				UpdateNodeCubeBlockBranch<CargoContainerEntity, MyObjectBuilder_CargoContainer>(e.Node.Nodes[1], containerBlocks, "Container Blocks");
+
+				TRV_Entities.EndUpdate();
+			}
 		}
 
 		#endregion

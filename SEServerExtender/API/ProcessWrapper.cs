@@ -47,9 +47,9 @@ namespace SEServerExtender.API
 					return;
 
 				string basePath = Path.Combine(GameInstallationInfo.GamePath, "DedicatedServer64");
-				m_serverWrapper = new ServerAssemblyWrapper(basePath);
-				m_sandboxGameWrapper = new SandboxGameAssemblyWrapper(basePath);
-				m_gameObjectManagerWrapper = new GameObjectManagerWrapper(basePath);
+				m_serverWrapper = ServerAssemblyWrapper.GetInstance(basePath);
+				m_sandboxGameWrapper = SandboxGameAssemblyWrapper.GetInstance(basePath);
+				m_gameObjectManagerWrapper = GameObjectManagerWrapper.GetInstance(basePath);
 
 				m_worldName = worldName;
 
@@ -127,11 +127,6 @@ namespace SEServerExtender.API
 		{
 			m_gameObjectManagerWrapper.GameThread = Thread.CurrentThread;
 			m_serverRunning = m_serverWrapper.StartServer(m_worldName);
-		}
-
-		public GameObjectManagerWrapper GetGameObjectManager()
-		{
-			return m_gameObjectManagerWrapper;
 		}
 
 		#endregion

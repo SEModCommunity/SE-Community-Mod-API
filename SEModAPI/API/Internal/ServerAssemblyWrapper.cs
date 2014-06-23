@@ -9,9 +9,11 @@ using VRage.Common.Utils;
 
 namespace SEModAPI.API.Internal
 {
-	public class ServerAssemblyWrapper
+	public class ServerAssemblyWrapper : BaseInternalWrapper
 	{
 		#region "Attributes"
+
+		protected new static ServerAssemblyWrapper m_instance;
 
 		private Assembly m_assembly;
 
@@ -36,8 +38,11 @@ namespace SEModAPI.API.Internal
 
 		#region "Constructors and Initializers"
 
-		public ServerAssemblyWrapper(string path)
+		protected ServerAssemblyWrapper(string path)
+			: base(path)
 		{
+			m_instance = this;
+
 			//string assemblyPath = Path.Combine(path, "SpaceEngineersDedicated.exe");
 			m_assembly = Assembly.UnsafeLoadFrom("SpaceEngineersDedicated.exe");
 
@@ -63,6 +68,15 @@ namespace SEModAPI.API.Internal
 			m_stringLookupMethod5 = m_stringLookupType5.GetMethod("3E89EC795A63B176C4AB0733443E79E0", BindingFlags.Static | BindingFlags.NonPublic);
 
 			Console.WriteLine("Finished loading SpaceEngineersDedicated.exe assembly wrapper");
+		}
+
+		new public static ServerAssemblyWrapper GetInstance(string basePath = "")
+		{
+			if (m_instance == null)
+			{
+				m_instance = new ServerAssemblyWrapper(basePath);
+			}
+			return (ServerAssemblyWrapper)m_instance;
 		}
 
 		#endregion

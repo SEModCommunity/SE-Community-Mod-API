@@ -2,18 +2,27 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API.Definitions;
+using SEModAPI.API.Internal;
 using SEModAPI.API.SaveData.Entity;
 
 namespace SEModAPI.API.SaveData
 {
 	public class CubeBlockEntity<T> : SerializableEntity<T> where T : MyObjectBuilder_CubeBlock
 	{
+		#region "Attributes"
+
+		private Object m_backingObject;
+		private Thread m_backingThread;
+
+		#endregion
+
 		#region "Constructors and Initializers"
 
 		public CubeBlockEntity(T definition)
@@ -25,6 +34,30 @@ namespace SEModAPI.API.SaveData
 		#endregion
 
 		#region "Properties"
+
+		[Category("Cube Block")]
+		[Browsable(false)]
+		public Object BackingObject
+		{
+			get { return m_backingObject; }
+			set
+			{
+				m_backingObject = value;
+				Changed = true;
+			}
+		}
+
+		[Category("Cube Block")]
+		[Browsable(false)]
+		public Thread BackingThread
+		{
+			get { return m_backingThread; }
+			set
+			{
+				m_backingThread = value;
+				Changed = true;
+			}
+		}
 
 		[Category("Cube Block")]
 		[Browsable(false)]

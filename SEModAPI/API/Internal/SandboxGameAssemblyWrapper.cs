@@ -15,9 +15,11 @@ using VRageMath;
 
 namespace SEModAPI.API.Internal
 {
-	public class SandboxGameAssemblyWrapper
+	public class SandboxGameAssemblyWrapper : BaseInternalWrapper
 	{
 		#region "Attributes"
+
+		protected new static SandboxGameAssemblyWrapper m_instance;
 
 		private Assembly m_assembly;
 
@@ -44,8 +46,11 @@ namespace SEModAPI.API.Internal
 
 		#region "Constructors and Initializers"
 
-		public SandboxGameAssemblyWrapper(string path)
+		protected SandboxGameAssemblyWrapper(string path)
+			: base(path)
 		{
+			m_instance = this;
+
 			//string assemblyPath = Path.Combine(path, "Sandbox.Game.dll");
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 			ResourceManager resourceManager = new ResourceManager("Resources.Strings", m_assembly);
@@ -78,6 +83,15 @@ namespace SEModAPI.API.Internal
 			m_setConfigWorldName = m_configContainerType.GetMethod("493E0E7BC7A617699C44A9A5FB8FF679", BindingFlags.Public | BindingFlags.Instance);
 
 			Console.WriteLine("Finished loading Sandbox.Game.dll assembly wrapper");
+		}
+
+		new public static SandboxGameAssemblyWrapper GetInstance(string basePath = "")
+		{
+			if (m_instance == null)
+			{
+				m_instance = new SandboxGameAssemblyWrapper(basePath);
+			}
+			return (SandboxGameAssemblyWrapper)m_instance;
 		}
 
 		#endregion

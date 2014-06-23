@@ -22,7 +22,6 @@ namespace SEModAPI.API.SaveData
 
 		private Object m_backingObject;
 		private Thread m_backingThread;
-		private GameObjectManagerWrapper m_backingObjectManager;
 
 		#endregion
 
@@ -45,7 +44,7 @@ namespace SEModAPI.API.SaveData
 				m_baseDefinition.EntityId = value;
 				Changed = true;
 
-				BackingObjectManager.UpdateEntityId(BackingObject, value);
+				GameObjectManagerWrapper.GetInstance().UpdateEntityId(BackingObject, value);
 			}
 		}
 
@@ -69,18 +68,6 @@ namespace SEModAPI.API.SaveData
 			set
 			{
 				m_backingThread = value;
-				Changed = true;
-			}
-		}
-
-		[Category("Sector Object")]
-		[Browsable(false)]
-		public GameObjectManagerWrapper BackingObjectManager
-		{
-			get { return m_backingObjectManager; }
-			set
-			{
-				m_backingObjectManager = value;
 				Changed = true;
 			}
 		}
@@ -110,7 +97,7 @@ namespace SEModAPI.API.SaveData
 				m_baseDefinition.PositionAndOrientation = value;
 				Changed = true;
 
-				BackingObjectManager.SetEntityPositionOrientationMatrix(BackingObject, value.GetMatrix());
+				GameObjectManagerWrapper.GetInstance().SetEntityPositionOrientationMatrix(BackingObject, value.GetMatrix());
 			}
 		}
 
@@ -126,7 +113,7 @@ namespace SEModAPI.API.SaveData
 				m_baseDefinition.PositionAndOrientation = positionOrientation;
 				Changed = true;
 
-				BackingObjectManager.UpdateEntityPosition(BackingObject, value);
+				GameObjectManagerWrapper.GetInstance().UpdateEntityPosition(BackingObject, value);
 			}
 		}
 

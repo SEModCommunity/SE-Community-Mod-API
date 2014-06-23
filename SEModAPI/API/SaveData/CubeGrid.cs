@@ -8,6 +8,7 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API.Definitions;
+using SEModAPI.API.Internal;
 
 using VRageMath;
 
@@ -81,7 +82,7 @@ namespace SEModAPI.API.SaveData
 				m_baseDefinition.LinearVelocity = value;
 				Changed = true;
 
-				BackingObjectManager.UpdateEntityVelocity(BackingObject, value);
+				GameObjectManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
 			}
 		}
 

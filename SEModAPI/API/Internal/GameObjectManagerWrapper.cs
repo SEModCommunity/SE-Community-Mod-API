@@ -19,9 +19,11 @@ using VRageMath;
 
 namespace SEModAPI.API.Internal
 {
-	public class GameObjectManagerWrapper
+	public class GameObjectManagerWrapper : BaseInternalWrapper
 	{
 		#region "Attributes"
+
+		protected new static GameObjectManagerWrapper m_instance;
 
 		private Thread m_mainGameThread;
 
@@ -37,8 +39,11 @@ namespace SEModAPI.API.Internal
 
 		#region "Constructors and Initializers"
 
-		public GameObjectManagerWrapper(string basePath)
+		protected GameObjectManagerWrapper(string basePath)
+			: base(basePath)
 		{
+			m_instance = this;
+
 			//string assemblyPath = Path.Combine(path, "Sandbox.Game.dll");
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
@@ -47,6 +52,15 @@ namespace SEModAPI.API.Internal
 			m_GetObjectBuilderEntities = m_objectManagerType.GetMethod("0A1670B270D5F8417447CFCBA7BF0FA8", BindingFlags.NonPublic | BindingFlags.Static);
 			m_RemoveEntity = m_objectManagerType.GetMethod("E02368B53672686387A0DE0CF91F60B7", BindingFlags.Public | BindingFlags.Static);
 			m_GetEntityHashSet = m_objectManagerType.GetMethod("84C54760C0F0DDDA50B0BE27B7116ED8", BindingFlags.Public | BindingFlags.Static);
+		}
+
+		new public static GameObjectManagerWrapper GetInstance(string basePath = "")
+		{
+			if (m_instance == null)
+			{
+				m_instance = new GameObjectManagerWrapper(basePath);
+			}
+			return (GameObjectManagerWrapper)m_instance;
 		}
 
 		#endregion
@@ -102,7 +116,6 @@ namespace SEModAPI.API.Internal
 						T apiEntity = (T)Activator.CreateInstance(typeof(T), new object[] { objectBuilder });
 						apiEntity.BackingObject = entity;
 						apiEntity.BackingThread = GameThread;
-						apiEntity.BackingObjectManager = this;
 
 						list.Add(apiEntity);
 					}
@@ -144,85 +157,6 @@ namespace SEModAPI.API.Internal
 		#endregion
 
 		#region Private
-
-		private HashSet<Object> ConvertHashSet(Object source)
-		{
-			Type rawType = source.GetType();
-			Type[] genericArgs = rawType.GetGenericArguments();
-			MethodInfo conversion = this.GetType().GetMethod("ConvertEntityHashSet", BindingFlags.NonPublic | BindingFlags.Instance);
-			conversion = conversion.MakeGenericMethod(genericArgs[0]);
-			HashSet<Object> result = (HashSet<Object>)conversion.Invoke(this, new object[] { source });
-
-			return result;
-		}
-
-		private HashSet<Object> ConvertEntityHashSet<T>(IEnumerable<T> source)
-		{
-			HashSet<Object> dataSet = new HashSet<Object>();
-			foreach (var rawEntity in source)
-			{
-				dataSet.Add(rawEntity);
-			}
-
-			return dataSet;
-		}
-
-		private FastResourceLock GetResourceLock()
-		{
-			FieldInfo lockField = m_objectManagerType.GetField("A409DEE43296E7444E7F83583E7407F9", BindingFlags.NonPublic | BindingFlags.Static);
-			FastResourceLock result = (FastResourceLock)lockField.GetValue(null);
-
-			return result;
-		}
-
-		private FieldInfo GetEntityField(Object gameEntity, string fieldName)
-		{
-			try
-			{
-				FieldInfo field = gameEntity.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-				return field;
-			}
-			catch (Exception ex)
-			{
-				return null;
-			}
-		}
-
-		private MethodInfo GetEntityMethod(Object gameEntity, string methodName)
-		{
-			try
-			{
-				MethodInfo method = gameEntity.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-				return method;
-			}
-			catch (Exception ex)
-			{
-				return null;
-			}
-		}
-
-		private Object InvokeEntityMethod(Object gameEntity, string methodName, Object[] parameters)
-		{
-			try
-			{
-				MethodInfo method = GetEntityMethod(gameEntity, methodName);
-				Object result = method.Invoke(gameEntity, parameters);
-
-				return result;
-			}
-			catch (AccessViolationException ex)
-			{
-				return null;
-			}
-			catch (TargetInvocationException ex)
-			{
-				return null;
-			}
-			catch (Exception ex)
-			{
-				return null;
-			}
-		}
 
 		private Object GetEntityPhysicsObject(Object gameEntity)
 		{
@@ -288,8 +222,8 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				using (FastResourceLockExtensions.AcquireSharedUsing(GetResourceLock()))
-					InvokeEntityMethod(gameEntity, "C48126915FC17C83D48E111D3AA53F85", new object[] { position });
+				//TODO - Fix this! This does not work due to memory access violations. Need to find a way to get a memory lock
+				InvokeEntityMethod(gameEntity, "C48126915FC17C83D48E111D3AA53F85", new object[] { position });
 
 				return true;
 			}
