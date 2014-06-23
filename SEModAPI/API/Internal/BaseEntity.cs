@@ -773,6 +773,7 @@ namespace SEModAPI.API.Internal
 	public class U_3B71F31E6039CAE9D8706B5F32FE468D : F6DF01EE4159339113BB9650DEEE1913
 	{
 		//Health
+		//Note: Doesn't seem to actually be the health. If it is, then something weird is going on with updating
 		public float? U_9AA4CB0291C222C5235976CE5BA91DAC = new float?();
 
 		//Get Battery Entity

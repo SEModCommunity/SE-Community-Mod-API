@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Game.Weapons;
 
 using SEModAPI.API.SaveData;
 using SEModAPI.API.SaveData.Entity;
@@ -389,6 +390,21 @@ namespace SEModAPI.API.Internal
 			float health = (float)InvokeEntityMethod(character.BackingObject, "7047AFF5D44FC8A44572E92DBAD13011", new object[] { });
 
 			return health;
+		}
+
+		public bool DamageCharacter(CharacterEntity character, float damage)
+		{
+			try
+			{
+				InvokeEntityMethod(character.BackingObject, "CF6EEF37B5AE4047E65CA4A0BB43F774", new object[] { damage, MyDamageType.Unknown, true });
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				//TODO - Find a better way to handle an exception here
+				return false;
+			}
 		}
 
 		public bool UpdateCharacterHealth(CharacterEntity character, float health)

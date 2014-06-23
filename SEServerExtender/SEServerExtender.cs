@@ -22,6 +22,7 @@ namespace SEServerExtender
 	{
 		private ProcessWrapper m_processWrapper;
 		private Timer m_entityTreeRefreshTimer;
+		private Timer m_propertyGridRefreshTimer;
 
 		public SEServerExtender()
 		{
@@ -33,13 +34,29 @@ namespace SEServerExtender
 
 			m_entityTreeRefreshTimer = new Timer();
 			m_entityTreeRefreshTimer.Interval = 500;
-			m_entityTreeRefreshTimer.Tick += new EventHandler(timer_Tick);
+			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
+
+			m_propertyGridRefreshTimer = new Timer();
+			m_propertyGridRefreshTimer.Interval = 5000;
+			m_propertyGridRefreshTimer.Tick += new EventHandler(PropertyGridRefresh);
 
 			TRV_Entities.Nodes.Add("Cube Grids (0)");
 			TRV_Entities.Nodes.Add("Characters (0)");
 		}
 
-		void timer_Tick(object sender, EventArgs e)
+		void PropertyGridRefresh(object sender, EventArgs e)
+		{
+			TreeNode selectedNode = TRV_Entities.SelectedNode;
+			if (selectedNode == null)
+			{
+				PG_Entities_Details.SelectedObject = null;
+				return;
+			}
+
+			PG_Entities_Details.SelectedObject = selectedNode.Tag;
+		}
+
+		void TreeViewRefresh(object sender, EventArgs e)
 		{
 			TRV_Entities.BeginUpdate();
 
@@ -113,6 +130,7 @@ namespace SEServerExtender
 			m_processWrapper.StartGame(TXT_Control_WorldName.Text);
 
 			m_entityTreeRefreshTimer.Start();
+			m_propertyGridRefreshTimer.Start();
 		}
 
 		private void BTN_ServerControl_Stop_Click(object sender, EventArgs e)

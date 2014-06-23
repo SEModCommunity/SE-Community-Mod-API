@@ -84,10 +84,11 @@ namespace SEModAPI.API.SaveData.Entity
 			set
 			{
 				if (Health == value) return;
+
+				BackingObjectManager.DamageCharacter(this, Health - value);
+
 				m_baseDefinition.Health = value;
 				Changed = true;
-
-				BackingObjectManager.UpdateCharacterHealth(this, value);
 			}
 		}
 
