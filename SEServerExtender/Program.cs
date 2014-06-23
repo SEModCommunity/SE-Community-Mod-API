@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows.Forms;
+
 using SEModAPI.Support;
 
 namespace SEServerExtender
@@ -21,12 +23,17 @@ namespace SEServerExtender
 			catch (AutoException eEx)
 			{
 				MessageBox.Show(eEx.AdditionnalInfo + "\n\r" + eEx.GetDebugString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				throw;
+				//throw;
+			}
+			catch (TargetInvocationException ex)
+			{
+				MessageBox.Show(ex.ToString() + "\n\r" + ex.InnerException.ToString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				//throw;
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.ToString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				throw;
+				//throw;
 			}
 		}
 	}

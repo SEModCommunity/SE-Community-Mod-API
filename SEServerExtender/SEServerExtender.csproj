@@ -39,16 +39,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Sandbox.Common">
-      <HintPath>..\GameLibraries\Sandbox.Common.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SEModAPI\GameLibraries\Sandbox.Common.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Common.XmlSerializers">
-      <HintPath>..\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SEModAPI\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
-    <Reference Include="Sandbox.Game">
-      <HintPath>..\GameLibraries\Sandbox.Game.dll</HintPath>
+    <Reference Include="Sandbox.Game, Version=0.1.5284.27817, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SEModAPI\GameLibraries\Sandbox.Game.dll</HintPath>
     </Reference>
     <Reference Include="SpaceEngineersDedicated">
-      <HintPath>..\GameLibraries\SpaceEngineersDedicated.exe</HintPath>
+      <HintPath>..\SEModAPI\GameLibraries\SpaceEngineersDedicated.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,13 +63,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="VRage.Common">
-      <HintPath>..\GameLibraries\VRage.Common.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SEModAPI\GameLibraries\VRage.Common.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Library">
-      <HintPath>..\GameLibraries\VRage.Library.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SEModAPI\GameLibraries\VRage.Library.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Math">
-      <HintPath>..\GameLibraries\VRage.Math.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SEModAPI\GameLibraries\VRage.Math.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +100,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -33,21 +33,22 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sandbox.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="HavokWrapper">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>GameLibraries\HavokWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sandbox.Common">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>GameLibraries\Sandbox.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Sandbox.Common.XmlSerializers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Sandbox.Common.XmlSerializers">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
-    <Reference Include="Sandbox.Game, Version=0.1.5283.28200, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Sandbox.Game">
       <HintPath>GameLibraries\Sandbox.Game.dll</HintPath>
     </Reference>
-    <Reference Include="SpaceEngineersDedicated, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <ExecutableExtension>.exe</ExecutableExtension>
+    <Reference Include="SpaceEngineersDedicated">
       <HintPath>GameLibraries\SpaceEngineersDedicated.exe</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -59,20 +60,26 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VRage.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="VRage.Common">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>GameLibraries\VRage.Common.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="VRage.Library">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>GameLibraries\VRage.Library.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Math, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="VRage.Math">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>GameLibraries\VRage.Math.dll</HintPath>
     </Reference>
+    <Reference Include="VRage.Render">
+      <HintPath>GameLibraries\VRage.Render.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Internal\BaseEntity.cs" />
+    <Compile Include="API\Internal\GameObjectManagerWrapper.cs" />
+    <Compile Include="API\Internal\SandboxGameAssemblyWrapper.cs" />
     <Compile Include="API\Definitions\AmmoMagazinesDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\AssemblerDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\CargoContainerDefinition.cs" />
@@ -88,6 +95,7 @@
     <Compile Include="API\Definitions\CubeBlocks\SolarPanelDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\ThrustersDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\VirtualMassDefinition.cs" />
+    <Compile Include="API\Internal\ServerAssemblyWrapper.cs" />
     <Compile Include="API\SaveData\BlockGroups.cs" />
     <Compile Include="API\SaveData\ConveyorLines.cs" />
     <Compile Include="API\SaveData\CubeBlock.cs" />
@@ -140,6 +148,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="GameLibraries\HavokWrapper.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="GameLibraries\Sandbox.Common.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

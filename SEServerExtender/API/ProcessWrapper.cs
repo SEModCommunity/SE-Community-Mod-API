@@ -1,355 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
 using System.IO;
-using System.Management;
-using System.Reflection;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
-using Sandbox.Common;
-using Sandbox.Common.Localization;
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Common.ObjectBuilders.VRageData;
-using Sandbox.AppCode.App;
-using Sandbox.Engine.Multiplayer;
-using Sandbox.Game.Weapons;
-using Sandbox.Game.World;
 
 using SEModAPI.API;
+using SEModAPI.API.Internal;
 using SEModAPI.API.SaveData;
 using SEModAPI.API.SaveData.Entity;
 
-using DedicatedConfigurator;
-
-using VRageMath;
 using VRage.Common.Utils;
-
-using B337879D0C82A5F9C44D51D954769590;	//Source - Sandbox.Game.dll
-using BD713F20F183AB7899BBC0EB8ADF61B6;
-using System.Resources;	//Source - SpaceEngineersDedicated.exe
 
 namespace SEServerExtender.API
 {
-	public class ServerAssemblyWrapper
-	{
-		#region "Attributes"
-
-		private Assembly m_assembly;
-
-		private Type m_dedicatedServerType;
-
-		private MethodInfo m_dedicatedStartup;
-		private MethodInfo m_dedicatedStartupBase;
-
-		private Type m_stringLookupType1;
-		private Type m_stringLookupType2;
-		private Type m_stringLookupType3;
-		private Type m_stringLookupType4;
-		private Type m_stringLookupType5;
-
-		private MethodInfo m_stringLookupMethod1;
-		private MethodInfo m_stringLookupMethod2;
-		private MethodInfo m_stringLookupMethod3;
-		private MethodInfo m_stringLookupMethod4;
-		private MethodInfo m_stringLookupMethod5;
-
-		#endregion
-
-		#region "Constructors and Initializers"
-
-		public ServerAssemblyWrapper(string path)
-		{
-			//string assemblyPath = Path.Combine(path, "SpaceEngineersDedicated.exe");
-			m_assembly = Assembly.UnsafeLoadFrom("SpaceEngineersDedicated.exe");
-
-			string mainServerNamespace = "83BCBFA49B3A2A6EC1BC99583DA2D399";
-			string stringLookupNamespace = "BD713F20F183AB7899BBC0EB8ADF61B6";
-
-			m_dedicatedServerType = m_assembly.GetType(mainServerNamespace + ".49BCFF86BA276A9C7C0D269C2924DE2D");
-
-			m_dedicatedStartup = m_dedicatedServerType.GetMethod("0D8AAA624C2EEA412F85ABB3AEFAF743", BindingFlags.Static | BindingFlags.NonPublic);
-			m_dedicatedStartupBase = m_dedicatedServerType.GetMethod("26A7ABEA729FAE1F24679E21470F8E98", BindingFlags.Static | BindingFlags.NonPublic);
-
-
-			m_stringLookupType1 = m_assembly.GetType(stringLookupNamespace + ".6E02B994707E60A052A320F2555CA3CE");
-			m_stringLookupType2 = m_assembly.GetType(stringLookupNamespace + ".7F0DC7E5BE13D0909DEE3B9AC309419A");
-			m_stringLookupType3 = m_assembly.GetType(stringLookupNamespace + ".A35C60B97C5EA5F93A3D6C693756C5AD");
-			m_stringLookupType4 = m_assembly.GetType(stringLookupNamespace + ".A7D02B8FCFBFAF4F0C9A2C8C27195680");
-			m_stringLookupType5 = m_assembly.GetType(mainServerNamespace + ".AD1EEFD4E986B1869408666EB76B00CF");
-
-			m_stringLookupMethod1 = m_stringLookupType1.GetMethod("8FB14F437CD839C2A1EAC7F24E98B34A", BindingFlags.Static | BindingFlags.NonPublic);
-			m_stringLookupMethod2 = m_stringLookupType2.GetMethod("CE231683AC4A8C955232EB6CFB284F55", BindingFlags.Static | BindingFlags.NonPublic);
-			m_stringLookupMethod3 = m_stringLookupType3.GetMethod("325DC833204460A8DB1337A0DF319F12", BindingFlags.Static | BindingFlags.NonPublic);
-			m_stringLookupMethod4 = m_stringLookupType4.GetMethod("CD9E0AF5742DAE6925FF82E237147C79", BindingFlags.Static | BindingFlags.NonPublic);
-			m_stringLookupMethod5 = m_stringLookupType5.GetMethod("3E89EC795A63B176C4AB0733443E79E0", BindingFlags.Static | BindingFlags.NonPublic);
-
-			Console.WriteLine("Finished loading SpaceEngineersDedicated.exe assembly wrapper");
-		}
-
-		#endregion
-
-		#region "Methods"
-
-		public Type DedicatedServerType
-		{
-			get { return m_dedicatedServerType; }
-		}
-
-		public string GetLookupString1(int key, int start, int length)
-		{
-			string result = (string)m_stringLookupMethod1.Invoke(null, new object[] { key, start, length });
-			return result;
-		}
-
-		public string GetLookupString2(int key, int start, int length)
-		{
-			string result = (string)m_stringLookupMethod2.Invoke(null, new object[] { key, start, length });
-			return result;
-		}
-
-		public string GetLookupString3(int key, int start, int length)
-		{
-			string result = (string)m_stringLookupMethod3.Invoke(null, new object[] { key, start, length });
-			return result;
-		}
-
-		public string GetLookupString4(int key, int start, int length)
-		{
-			string result = (string)m_stringLookupMethod4.Invoke(null, new object[] { key, start, length });
-			return result;
-		}
-
-		public string GetLookupString5(int key, int start, int length)
-		{
-			string result = (string)m_stringLookupMethod5.Invoke(null, new object[] { key, start, length });
-			return result;
-		}
-
-		public bool StartServer(string worldName)
-		{
-			try
-			{
-				SandboxGameAssemblyWrapper.SetNullRender(true);
-				//SandboxGameAssemblyWrapper.SetConfigWorld(worldName);
-
-				MyFileSystem.Reset();
-				object[] methodParams = new object[]
-				{
-					"",
-					(string) null,
-					false,
-					true
-				};
-				m_dedicatedStartupBase.Invoke(null, methodParams);
-
-				return false;
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.ToString());
-				return false;
-			}
-		}
-
-		#endregion
-	}
-
-	public class SandboxGameAssemblyWrapper
-	{
-		#region "Attributes"
-
-		private Assembly m_assembly;
-
-		private Type m_mainGameType;
-		private Type m_checkpointManagerType;
-		private Type m_cubeGridType;
-		private Type m_objectManagerType;
-		private Type m_characterType;
-		private Type m_serverCoreType;
-		private static Type m_configContainerType;
-
-		private MethodInfo m_saveCheckpoint;
-		private MethodInfo m_getServerSector;
-		private MethodInfo m_getServerCheckpoint;
-		private MethodInfo m_getBaseEntities;
-		private static MethodInfo m_setConfigWorldName;
-
-		private FieldInfo m_mainGameInstanceField;
-		private static FieldInfo m_configContainerField;
-		private static FieldInfo m_configContainerDedicatedDataField;
-		private static FieldInfo m_serverCoreNullRender;
-
-		private Type m_stringLookupType1;
-
-		private MethodInfo m_stringLookupMethod1;
-
-		#endregion
-
-		#region "Constructors and Initializers"
-
-		public SandboxGameAssemblyWrapper(string path)
-		{
-			//string assemblyPath = Path.Combine(path, "Sandbox.Game.dll");
-			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
-			ResourceManager resourceManager = new ResourceManager("Resources.Strings", m_assembly);
-
-			//string conveyorLineManagerClass = "8EAF60352312606996BD8147B0A3C880.68E5FDFBB1457F6347DEBE26175326B0";
-			//string MySandboxGame_ExitMethod = "246E732EE67F7F6F88C4FF63B3901107";
-			//string MySandboxGame_Initialize = "2AA66FBD3F2C5EC250558B3136F3974A";
-
-			m_mainGameType = typeof(B3531963E948FB4FA1D057C4340C61B4);
-			m_checkpointManagerType = m_assembly.GetType("36CC7CE820B9BBBE4B3FECFEEFE4AE86.828574590CB1B1AE5A5659D4B9659548");
-			m_cubeGridType = m_assembly.GetType("5BCAC68007431E61367F5B2CF24E2D6F.98262C3F38A1199E47F2B9338045794C");
-			m_objectManagerType = m_assembly.GetType("5BCAC68007431E61367F5B2CF24E2D6F.CAF1EB435F77C7B77580E2E16F988BED");
-			m_characterType = m_assembly.GetType("F79C930F3AD8FDAF31A59E2702EECE70.3B71F31E6039CAE9D8706B5F32FE468D");
-			m_serverCoreType = m_assembly.GetType("168638249D29224100DB50BB468E7C07.7BAD4AFD06B91BCD63EA57F7C0D4F408");
-			m_stringLookupType1 = m_assembly.GetType("B337879D0C82A5F9C44D51D954769590.2F60967103E6024E563836A2572899F1");
-
-			Type[] argTypes = new Type[2];
-			argTypes[0] = typeof(MyObjectBuilder_Checkpoint);
-			argTypes[1] = typeof(string);
-			m_saveCheckpoint = m_checkpointManagerType.GetMethod("03AA898C5E9A48425F2CB4FFB2A49A82", argTypes);
-			m_getServerSector = m_checkpointManagerType.GetMethod("B6D13C37B0C7FDBF469AB93D18E4444A", BindingFlags.Static | BindingFlags.Public);
-			m_getServerCheckpoint = m_checkpointManagerType.GetMethod("825106F82475488A49F8184C627DADEB", BindingFlags.Static | BindingFlags.Public);
-			m_getBaseEntities = m_objectManagerType.GetMethod("0A1670B270D5F8417447CFCBA7BF0FA8", BindingFlags.NonPublic | BindingFlags.Static);
-
-			m_mainGameInstanceField = m_mainGameType.GetField("392503BDB6F8C1E34A232489E2A0C6D4", BindingFlags.Static | BindingFlags.Public);
-			m_configContainerField = m_mainGameType.GetField("4895ADD02F2C27ED00C63E7E506EE808", BindingFlags.Static | BindingFlags.Public);
-			m_configContainerType = m_configContainerField.FieldType;
-			m_configContainerDedicatedDataField = m_configContainerType.GetField("44A1510B70FC1BBE3664969D47820439", BindingFlags.NonPublic | BindingFlags.Instance);
-			m_serverCoreNullRender = m_serverCoreType.GetField("53A34747D8E8EDA65E601C194BECE141", BindingFlags.Public | BindingFlags.Static);
-
-			m_setConfigWorldName = m_configContainerType.GetMethod("493E0E7BC7A617699C44A9A5FB8FF679", BindingFlags.Public | BindingFlags.Instance);
-
-			m_stringLookupMethod1 = m_stringLookupType1.GetMethod("D893F76B8F00FC565CF848A64C4B6F97", BindingFlags.Static | BindingFlags.NonPublic);
-
-			Console.WriteLine("Finished loading Sandbox.Game.dll assembly wrapper");
-		}
-
-		#endregion
-
-		#region "Properties"
-
-		public Type MainGameType
-		{
-			get { return m_mainGameType; }
-		}
-
-		public Type CheckpointManagerType
-		{
-			get { return m_checkpointManagerType; }
-		}
-
-		public Type CubeGridType
-		{
-			get { return m_cubeGridType; }
-		}
-
-		public Type CharacterType
-		{
-			get { return m_characterType; }
-		}
-
-		#endregion
-
-		#region "Methods"
-
-		private string GetLookupString(MethodInfo method, int key, int start, int length)
-		{
-			string result = (string)method.Invoke(null, new object[] { key, start, length });
-			return result;
-		}
-
-		public string GetLookupString1(int key, int start, int length)
-		{
-			return GetLookupString(m_stringLookupMethod1, key, start, length);
-		}
-
-		public static Object GetServerConfigContainer()
-		{
-			Object configObject = m_configContainerField.GetValue(null);
-
-			return configObject;
-		}
-
-		public static MyConfigDedicatedData GetServerConfig()
-		{
-			Object configContainer = GetServerConfigContainer();
-			MyConfigDedicatedData config = (MyConfigDedicatedData)m_configContainerDedicatedDataField.GetValue(configContainer);
-			if (config == null)
-			{
-				MethodInfo loadConfigDataMethod = m_configContainerField.FieldType.GetMethod("4DD64FD1D45E514D01C925D07B69B3BE", BindingFlags.Public | BindingFlags.Instance);
-				loadConfigDataMethod.Invoke(configContainer, new object[] { });
-				config = (MyConfigDedicatedData)m_configContainerDedicatedDataField.GetValue(configContainer);
-			}
-
-			return config;
-		}
-
-		public bool SaveCheckpoint(MyObjectBuilder_Checkpoint checkpoint, string worldName)
-		{
-			return (bool)m_saveCheckpoint.Invoke(null, new object[] { checkpoint, worldName });
-		}
-
-		public MyObjectBuilder_Sector GetServerSector(string worldName, Vector3I sectorLocation, out ulong sectorId)
-		{
-			object[] parameters = new object[] { worldName, sectorLocation, null };
-			MyObjectBuilder_Sector result = (MyObjectBuilder_Sector)m_getServerSector.Invoke(null, parameters);
-			sectorId = (ulong)parameters[1];
-
-			return result;
-		}
-
-		public MyObjectBuilder_Checkpoint GetServerCheckpoint(string worldName, out ulong worldId)
-		{
-			object[] parameters = new object[] { worldName, null };
-			MyObjectBuilder_Checkpoint result = (MyObjectBuilder_Checkpoint)m_getServerCheckpoint.Invoke(null, parameters);
-			worldId = (ulong)parameters[1];
-
-			return result;
-		}
-
-		public B3531963E948FB4FA1D057C4340C61B4 GetMainGameInstance()
-		{
-			return (B3531963E948FB4FA1D057C4340C61B4)m_mainGameInstanceField.GetValue(null);
-		}
-
-		public List<MyObjectBuilder_EntityBase> GetBaseEntities()
-		{
-			List<MyObjectBuilder_EntityBase> entities = (List<MyObjectBuilder_EntityBase>)m_getBaseEntities.Invoke(null, new object[] { });
-
-			return entities;
-		}
-
-		public static void SetNullRender(bool nullRender)
-		{
-			m_serverCoreNullRender.SetValue(null, nullRender);
-		}
-
-		public static void SetConfigWorld(string worldName)
-		{
-			MyConfigDedicatedData config = GetServerConfig();
-
-			m_setConfigWorldName.Invoke(GetServerConfigContainer(), new object[] { worldName });
-		}
-
-		#endregion
-	}
-
 	public class ProcessWrapper
 	{
+		#region "Attributes"
+
 		private ServerAssemblyWrapper m_serverWrapper;
 		private SandboxGameAssemblyWrapper m_sandboxGameWrapper;
+		private GameObjectManagerWrapper m_gameObjectManagerWrapper;
 
 		private static Thread m_runServerThread;
 		private static Thread m_monitorServerThread;
 
 		private static bool m_serverRunning;
 		private static string m_worldName;
+
+		#endregion
+
+		#region "Constructors and Initializers"
 
 		public ProcessWrapper()
 		{
@@ -366,6 +49,7 @@ namespace SEServerExtender.API
 				string basePath = Path.Combine(GameInstallationInfo.GamePath, "DedicatedServer64");
 				m_serverWrapper = new ServerAssemblyWrapper(basePath);
 				m_sandboxGameWrapper = new SandboxGameAssemblyWrapper(basePath);
+				m_gameObjectManagerWrapper = new GameObjectManagerWrapper(basePath);
 
 				m_worldName = worldName;
 
@@ -386,8 +70,15 @@ namespace SEServerExtender.API
 			}
 		}
 
+		#endregion
+
+		#region "Methods"
+
 		private void MonitorServer()
 		{
+			B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4 mainGame = null;
+			MyConfigDedicatedData config = null;
+
 			bool isLoaded = false;
 			while (!isLoaded)
 			{
@@ -395,10 +86,10 @@ namespace SEServerExtender.API
 
 				Thread.Sleep(1000);
 
-				B3531963E948FB4FA1D057C4340C61B4 mainGame = m_sandboxGameWrapper.GetMainGameInstance();
+				mainGame = m_sandboxGameWrapper.GetMainGameInstance();
 				if (mainGame == null)
 					continue;
-				MyConfigDedicatedData config = SandboxGameAssemblyWrapper.GetServerConfig();
+				config = SandboxGameAssemblyWrapper.GetServerConfig();
 				if (config == null)
 					continue;
 				if (config.LoadWorld == null)
@@ -408,7 +99,7 @@ namespace SEServerExtender.API
 			}
 
 			//TODO - Find a way to determine when the server is fully loaded
-			Thread.Sleep(20000);
+			Thread.Sleep(25000);
 
 			Console.WriteLine("MONITOR - Server has started");
 
@@ -416,20 +107,15 @@ namespace SEServerExtender.API
 
 			while (m_serverRunning && m_runServerThread.ThreadState != System.Threading.ThreadState.Stopped)
 			{
-				B3531963E948FB4FA1D057C4340C61B4 mainGame = m_sandboxGameWrapper.GetMainGameInstance();
-				if (mainGame == null)
+				mainGame = m_sandboxGameWrapper.GetMainGameInstance();
+				config = SandboxGameAssemblyWrapper.GetServerConfig();
+				if (mainGame == null || config == null)
 				{
 					m_serverRunning = false;
 					continue;
 				}
 
-				MyConfigDedicatedData config = SandboxGameAssemblyWrapper.GetServerConfig();
-
-				Console.WriteLine("MONITOR - Loaded World: " + config.LoadWorld);
-
-				List<MyObjectBuilder_EntityBase> entities = m_sandboxGameWrapper.GetBaseEntities();
-
-				Thread.Sleep(5000);
+				Thread.Sleep(2000);
 			}
 
 			m_serverRunning = false;
@@ -439,12 +125,15 @@ namespace SEServerExtender.API
 
 		private void RunServer()
 		{
+			m_gameObjectManagerWrapper.GameThread = Thread.CurrentThread;
 			m_serverRunning = m_serverWrapper.StartServer(m_worldName);
 		}
 
-		public List<MyObjectBuilder_EntityBase> GetEntityList()
+		public GameObjectManagerWrapper GetGameObjectManager()
 		{
-			return m_sandboxGameWrapper.GetBaseEntities();
+			return m_gameObjectManagerWrapper;
 		}
+
+		#endregion
 	}
 }

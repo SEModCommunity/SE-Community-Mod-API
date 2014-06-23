@@ -53,24 +53,41 @@ namespace SEModAPI.API.SaveData.Entity
 		[Category("Character")]
 		public float BatteryLevel
 		{
-			get { return m_baseDefinition.Battery.CurrentCapacity; }
+			get
+			{
+				float originalValue = m_baseDefinition.Battery.CurrentCapacity;
+				float percentageValue = (float)Math.Round(originalValue * 10000000, 2);
+				return percentageValue;
+			}
 			set
 			{
-				if (m_baseDefinition.Battery.CurrentCapacity == value) return;
-				m_baseDefinition.Battery.CurrentCapacity = value;
+				float originalValue = m_baseDefinition.Battery.CurrentCapacity;
+				float percentageValue = (float)Math.Round(originalValue * 10000000, 2);
+				if (percentageValue == value) return;
+				m_baseDefinition.Battery.CurrentCapacity = value / 10000000;
 				Changed = true;
+
+				BackingObjectManager.UpdateCharacterBatteryLevel(this, m_baseDefinition.Battery.CurrentCapacity);
 			}
 		}
 
 		[Category("Character")]
 		public float Health
 		{
-			get { return m_baseDefinition.Health.GetValueOrDefault(); }
+			get
+			{
+				float health = m_baseDefinition.Health.GetValueOrDefault(-1);
+				if(health <= 0)
+					health = BackingObjectManager.GetCharacterHealth(this);
+				return health;
+			}
 			set
 			{
-				if (m_baseDefinition.Health == value) return;
+				if (Health == value) return;
 				m_baseDefinition.Health = value;
 				Changed = true;
+
+				BackingObjectManager.UpdateCharacterHealth(this, value);
 			}
 		}
 
@@ -80,7 +97,8 @@ namespace SEModAPI.API.SaveData.Entity
 
 		protected override string GetNameFrom(MyObjectBuilder_Character definition)
 		{
-			return m_baseDefinition.Name;
+			//TODO - Find a way to get the player's steam name
+			return EntityId.ToString();
 		}
 
 		#endregion
