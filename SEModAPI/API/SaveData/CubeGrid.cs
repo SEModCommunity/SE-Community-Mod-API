@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API.Definitions;
+using SEModAPI.API.Internal;
+
+using VRageMath;
 
 namespace SEModAPI.API.SaveData
 {
@@ -69,7 +73,7 @@ namespace SEModAPI.API.SaveData
 
 		[Category("Cube Grid")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public VRageMath.Vector3 LinearVelocity
+		public Vector3 LinearVelocity
 		{
 			get { return m_baseDefinition.LinearVelocity; }
 			set
@@ -77,12 +81,14 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.LinearVelocity == value) return;
 				m_baseDefinition.LinearVelocity = value;
 				Changed = true;
+
+				GameObjectManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
 			}
 		}
 
 		[Category("Cube Grid")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public VRageMath.Vector3 AngularVelocity
+		public Vector3 AngularVelocity
 		{
 			get { return m_baseDefinition.AngularVelocity; }
 			set

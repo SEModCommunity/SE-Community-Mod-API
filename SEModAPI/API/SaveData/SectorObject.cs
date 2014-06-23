@@ -1,17 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
+using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API.Definitions;
+using SEModAPI.API.Internal;
+
+using VRageMath;
+using VRage;
 
 namespace SEModAPI.API.SaveData
 {
 	public class SectorObject<T> : SerializableEntity<T> where T : MyObjectBuilder_EntityBase
 	{
+		#region "Attributes"
+
+		private Object m_backingObject;
+		private Thread m_backingThread;
+
+		#endregion
+
 		#region "Constructors and Initializers"
 
 		public SectorObject(T definition)
@@ -30,6 +43,32 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.EntityId == value) return;
 				m_baseDefinition.EntityId = value;
 				Changed = true;
+
+				GameObjectManagerWrapper.GetInstance().UpdateEntityId(BackingObject, value);
+			}
+		}
+
+		[Category("Sector Object")]
+		[Browsable(false)]
+		public Object BackingObject
+		{
+			get { return m_backingObject; }
+			set
+			{
+				m_backingObject = value;
+				Changed = true;
+			}
+		}
+
+		[Category("Sector Object")]
+		[Browsable(false)]
+		public Thread BackingThread
+		{
+			get { return m_backingThread; }
+			set
+			{
+				m_backingThread = value;
+				Changed = true;
 			}
 		}
 
@@ -42,6 +81,8 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.PersistentFlags == value) return;
 				m_baseDefinition.PersistentFlags = value;
 				Changed = true;
+
+				//TODO - Find what the backing field is for this
 			}
 		}
 
@@ -52,9 +93,11 @@ namespace SEModAPI.API.SaveData
 			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault(); }
 			set
 			{
-				if (m_baseDefinition.PositionAndOrientation.ToString() == value.ToString()) return;
+				if (m_baseDefinition.PositionAndOrientation.Equals(value)) return;
 				m_baseDefinition.PositionAndOrientation = value;
 				Changed = true;
+
+				GameObjectManagerWrapper.GetInstance().SetEntityPositionOrientationMatrix(BackingObject, value.GetMatrix());
 			}
 		}
 
@@ -69,6 +112,8 @@ namespace SEModAPI.API.SaveData
 				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(value, Forward, Up);
 				m_baseDefinition.PositionAndOrientation = positionOrientation;
 				Changed = true;
+
+				GameObjectManagerWrapper.GetInstance().UpdateEntityPosition(BackingObject, value);
 			}
 		}
 

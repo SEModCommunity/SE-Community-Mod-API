@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,11 +36,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sandbox.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Sandbox.Common">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SEModAPI\GameLibraries\Sandbox.Common.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Common.XmlSerializers">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SEModAPI\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -52,15 +54,15 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="VRage.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="VRage.Common">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SEModAPI\GameLibraries\VRage.Common.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="VRage.Library">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SEModAPI\GameLibraries\VRage.Library.dll</HintPath>
     </Reference>
-    <Reference Include="VRage.Math, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="VRage.Math">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SEModAPI\GameLibraries\VRage.Math.dll</HintPath>
     </Reference>
