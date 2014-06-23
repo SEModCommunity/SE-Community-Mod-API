@@ -130,7 +130,7 @@
 			this.BTN_ServerControl_Start.TabIndex = 0;
 			this.BTN_ServerControl_Start.Text = "Start Server";
 			this.BTN_ServerControl_Start.UseVisualStyleBackColor = true;
-			this.BTN_ServerControl_Start.Click += new System.EventHandler(this.button1_Click);
+			this.BTN_ServerControl_Start.Click += new System.EventHandler(this.BTN_ServerControl_Start_Click);
 			// 
 			// BTN_ServerControl_Stop
 			// 

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Common.ObjectBuilders.Voxels;
 using Sandbox.Game.Weapons;
 
 using SEModAPI.API.SaveData;
@@ -80,53 +81,30 @@ namespace SEModAPI.API.Internal
 			return convertedSet;
 		}
 
-		public List<CubeGrid> GetCubeGrids()
+		#region APIEntityLists
+
+		private List<T> GetAPIEntityList<T, TO>(MyObjectBuilderTypeEnum type)
+			where TO : MyObjectBuilder_EntityBase
+			where T : SectorObject<TO>
 		{
 			HashSet<Object> rawEntities = GetObjectManagerHashSetData();
-			List<CubeGrid> cubeGridList = new List<CubeGrid>();
-
-			foreach (Object entity in rawEntities)
-			{
-				Type entityType = entity.GetType();
-				MethodInfo objectBuilderMethod = entityType.GetMethod("GetObjectBuilder");
-				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderMethod.Invoke(entity, new object[] { });
-
-				if (baseEntity.TypeId == MyObjectBuilderTypeEnum.CubeGrid)
-				{
-					MyObjectBuilder_CubeGrid objectBuilder = (MyObjectBuilder_CubeGrid)baseEntity;
-					CubeGrid cubeGrid = new CubeGrid(objectBuilder);
-					cubeGrid.BackingObject = entity;
-					cubeGrid.BackingThread = GameThread;
-					cubeGrid.BackingObjectManager = this;
-
-					cubeGridList.Add(cubeGrid);
-				}
-			}
-
-			return cubeGridList;
-		}
-
-		public List<CharacterEntity> GetCharacters()
-		{
-			HashSet<Object> rawEntities = GetObjectManagerHashSetData();
-			List<CharacterEntity> characterList = new List<CharacterEntity>();
+			List<T> list = new List<T>();
 
 			foreach (Object entity in rawEntities)
 			{
 				try
 				{
-					MethodInfo objectBuilderMethod = GetEntityMethod(entity, "GetObjectBuilder");
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderMethod.Invoke(entity, new object[] { });
+					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)InvokeEntityMethod(entity, "GetObjectBuilder", new object[] { });
 
-					if (baseEntity.TypeId == MyObjectBuilderTypeEnum.Character)
+					if (baseEntity.TypeId == type)
 					{
-						MyObjectBuilder_Character objectBuilder = (MyObjectBuilder_Character)baseEntity;
-						CharacterEntity character = new CharacterEntity(objectBuilder);
-						character.BackingObject = entity;
-						character.BackingThread = GameThread;
-						character.BackingObjectManager = this;
+						TO objectBuilder = (TO)baseEntity;
+						T apiEntity = (T)Activator.CreateInstance(typeof(T), new object[] { objectBuilder });
+						apiEntity.BackingObject = entity;
+						apiEntity.BackingThread = GameThread;
+						apiEntity.BackingObjectManager = this;
 
-						characterList.Add(character);
+						list.Add(apiEntity);
 					}
 				}
 				catch (Exception ex)
@@ -135,8 +113,35 @@ namespace SEModAPI.API.Internal
 				}
 			}
 
-			return characterList;
+			return list;
 		}
+
+		public List<CubeGrid> GetCubeGrids()
+		{
+			return GetAPIEntityList<CubeGrid, MyObjectBuilder_CubeGrid>(MyObjectBuilderTypeEnum.CubeGrid);
+		}
+
+		public List<CharacterEntity> GetCharacters()
+		{
+			return GetAPIEntityList<CharacterEntity, MyObjectBuilder_Character>(MyObjectBuilderTypeEnum.Character);
+		}
+
+		public List<VoxelMap> GetVoxelMaps()
+		{
+			return GetAPIEntityList<VoxelMap, MyObjectBuilder_VoxelMap>(MyObjectBuilderTypeEnum.VoxelMap);
+		}
+
+		public List<FloatingObject> GetFloatingObjects()
+		{
+			return GetAPIEntityList<FloatingObject, MyObjectBuilder_FloatingObject>(MyObjectBuilderTypeEnum.FloatingObject);
+		}
+
+		public List<Meteor> GetMeteors()
+		{
+			return GetAPIEntityList<Meteor, MyObjectBuilder_Meteor>(MyObjectBuilderTypeEnum.Meteor);
+		}
+
+		#endregion
 
 		#region Private
 

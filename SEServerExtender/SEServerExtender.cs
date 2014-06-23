@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Common.ObjectBuilders.Voxels;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API;
@@ -20,9 +21,15 @@ namespace SEServerExtender
 {
 	public partial class SEServerExtender : Form
 	{
+		#region "Attributes"
+
 		private ProcessWrapper m_processWrapper;
 		private Timer m_entityTreeRefreshTimer;
 		private Timer m_propertyGridRefreshTimer;
+
+		#endregion
+
+		#region "Constructors and Initializers"
 
 		public SEServerExtender()
 		{
@@ -42,6 +49,54 @@ namespace SEServerExtender
 
 			TRV_Entities.Nodes.Add("Cube Grids (0)");
 			TRV_Entities.Nodes.Add("Characters (0)");
+			TRV_Entities.Nodes.Add("Voxel Maps (0)");
+			TRV_Entities.Nodes.Add("Floating Objects (0)");
+			TRV_Entities.Nodes.Add("Meteors (0)");
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		void UpdateNodeBranch<T, TO>(TreeNode node, List<T> source, string name)
+			where TO : MyObjectBuilder_EntityBase
+			where T : SectorObject<TO>
+		{
+			try
+			{
+				bool entriesChanged = (node.Nodes.Count != source.Count);
+				if (entriesChanged)
+				{
+					node.Nodes.Clear();
+					node.Text = name + " (" + source.Count.ToString() + ")";
+				}
+
+				int index = 0;
+				foreach (var item in source)
+				{
+					SerializableVector3 rawPosition = item.Position;
+					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+
+					TreeNode itemNode = null;
+					if (entriesChanged)
+					{
+						itemNode = node.Nodes.Add(item.Name + " | Dist: " + distance.ToString() + "m");
+						itemNode.Tag = item;
+					}
+					else
+					{
+						itemNode = node.Nodes[index];
+						itemNode.Text = item.Name + " | Dist: " + distance.ToString() + "m";
+						itemNode.Tag = item;
+					}
+
+					index++;
+				}
+			}
+			catch (Exception ex)
+			{
+				//TODO - Do something about the exception
+			}
 		}
 
 		void PropertyGridRefresh(object sender, EventArgs e)
@@ -62,70 +117,20 @@ namespace SEServerExtender
 
 			List<CubeGrid> cubeGrids = m_processWrapper.GetGameObjectManager().GetCubeGrids();
 			List<CharacterEntity> characters = m_processWrapper.GetGameObjectManager().GetCharacters();
+			List<VoxelMap> voxelMaps = m_processWrapper.GetGameObjectManager().GetVoxelMaps();
+			List<FloatingObject> floatingObjects = m_processWrapper.GetGameObjectManager().GetFloatingObjects();
+			List<Meteor> meteors = m_processWrapper.GetGameObjectManager().GetMeteors();
 
-			TreeNode cubeGridsNode = TRV_Entities.Nodes[0];
-			TreeNode charactersNode = TRV_Entities.Nodes[1];
-
-			bool gridEntriesChanged = (cubeGridsNode.Nodes.Count != cubeGrids.Count);
-			if (gridEntriesChanged)
-			{
-				cubeGridsNode.Nodes.Clear();
-				cubeGridsNode.Text = "Cube Grids (" + cubeGrids.Count.ToString() + ")";
-			}
-			bool charactersChanged = (charactersNode.Nodes.Count != characters.Count);
-			if (charactersChanged)
-			{
-				charactersNode.Nodes.Clear();
-				charactersNode.Text = "Characters (" + characters.Count.ToString() + ")";
-			}
-
-			int index = 0;
-			foreach (CubeGrid cubeGrid in cubeGrids)
-			{
-				SerializableVector3 rawVelocity = cubeGrid.LinearVelocity;
-				double velocity = Math.Round(Math.Sqrt(rawVelocity.X * rawVelocity.X + rawVelocity.Y * rawVelocity.Y + rawVelocity.Z * rawVelocity.Z), 2);
-
-				TreeNode node = null;
-				if (gridEntriesChanged)
-				{
-					node = cubeGridsNode.Nodes.Add(cubeGrid.Name + " | Velocity: " + velocity.ToString() + " m/s");
-					node.Tag = cubeGrid;
-				}
-				else
-				{
-					node = cubeGridsNode.Nodes[index];
-					node.Text = cubeGrid.Name + " | Velocity: " + velocity.ToString() + " m/s";
-					node.Tag = cubeGrid;
-				}
-
-				index++;
-			}
-			index = 0;
-			foreach (CharacterEntity character in characters)
-			{
-				SerializableVector3 rawVelocity = character.LinearVelocity;
-				double velocity = Math.Round(Math.Sqrt(rawVelocity.X * rawVelocity.X + rawVelocity.Y * rawVelocity.Y + rawVelocity.Z * rawVelocity.Z), 2);
-
-				TreeNode node = null;
-				if (charactersChanged)
-				{
-					node = charactersNode.Nodes.Add(character.Name + " | Velocity: " + velocity.ToString() + " m/s");
-					node.Tag = character;
-				}
-				else
-				{
-					node = charactersNode.Nodes[index];
-					node.Text = character.Name + " | Velocity: " + velocity.ToString() + " m/s";
-					node.Tag = character;
-				}
-
-				index++;
-			}
+			UpdateNodeBranch<CubeGrid, MyObjectBuilder_CubeGrid>(TRV_Entities.Nodes[0], cubeGrids, "Cube Grids");
+			UpdateNodeBranch<CharacterEntity, MyObjectBuilder_Character>(TRV_Entities.Nodes[1], characters, "Characters");
+			UpdateNodeBranch<VoxelMap, MyObjectBuilder_VoxelMap>(TRV_Entities.Nodes[2], voxelMaps, "Voxel Maps");
+			UpdateNodeBranch<FloatingObject, MyObjectBuilder_FloatingObject>(TRV_Entities.Nodes[3], floatingObjects, "Floating Objects");
+			UpdateNodeBranch<Meteor, MyObjectBuilder_Meteor>(TRV_Entities.Nodes[4], meteors, "Meteors");
 
 			TRV_Entities.EndUpdate();
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void BTN_ServerControl_Start_Click(object sender, EventArgs e)
 		{
 			m_processWrapper.StartGame(TXT_Control_WorldName.Text);
 
@@ -144,5 +149,7 @@ namespace SEServerExtender
 
 			PG_Entities_Details.SelectedObject = linkedObject;
 		}
+
+		#endregion
 	}
 }
