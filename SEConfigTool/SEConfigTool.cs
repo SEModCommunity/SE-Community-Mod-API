@@ -33,7 +33,7 @@ namespace SEConfigTool
 
 		private SectorManager m_sectorManager;
 
-		private CubeBlockDefinitionsManager m_cubeBlockDefinitionsManager;
+		private BlocksManager m_blockDefinitionsManager;
 		private AmmoMagazinesDefinitionsManager m_ammoMagazinesDefinitionsManager;
 		private ContainerTypesDefinitionsManager m_containerTypesDefinitionsManager;
 		private GlobalEventsDefinitionsManager m_globalEventsDefinitionsManager;
@@ -88,7 +88,7 @@ namespace SEConfigTool
 			}
 
 			m_sectorManager = new SectorManager();
-			m_cubeBlockDefinitionsManager = new CubeBlockDefinitionsManager();
+			m_blockDefinitionsManager = new BlocksManager(GetContentDataFile("CubeBlocks.sbc"));
 			m_ammoMagazinesDefinitionsManager = new AmmoMagazinesDefinitionsManager();
 			m_containerTypesDefinitionsManager = new ContainerTypesDefinitionsManager();
 			m_globalEventsDefinitionsManager = new GlobalEventsDefinitionsManager();
@@ -435,16 +435,85 @@ namespace SEConfigTool
 
 		#region Blocks Config
 
-		private void FillBlocksConfigurationListBox()
+		private void FillBlocksConfigurationListBoxes()
 		{
 			m_currentlyFillingConfigurationListBox = true;
 
-			m_cubeBlockDefinitionsManager.Load(GetContentDataFile("CubeBlocks.sbc"));
+			LST_ConfigBlocks_General.Items.Clear();
+			LST_ConfigBlock_Assemblers.Items.Clear();
+			LST_ConfigBlock_CargoContainers.Items.Clear();
+			LST_ConfigBlock_Cockpits.Items.Clear();
+			LST_ConfigBlock_GravityGenerators.Items.Clear();
+			LST_ConfigBlock_Gyroscopes.Items.Clear();
+			LST_ConfigBlock_LightingBlocks.Items.Clear();
+			LST_ConfigBlock_MotorStators.Items.Clear();
+			LST_ConfigBlock_OreDetectors.Items.Clear();
+			LST_ConfigBlock_Reactors.Items.Clear();
+			LST_ConfigBlock_Refineries.Items.Clear();
+			LST_ConfigBlock_ShipDrills.Items.Clear();
+			LST_ConfigBlock_SolarPanels.Items.Clear();
+			LST_ConfigBlock_Thursters.Items.Clear();
+			LST_ConfigBlock_VirtualMasses.Items.Clear();
 
-			LST_BlocksConfig.Items.Clear();
-			foreach (var definition in m_cubeBlockDefinitionsManager.Definitions)
+			foreach (var definition in m_blockDefinitionsManager.CubeBlocks)
 			{
-				LST_BlocksConfig.Items.Add(definition.Name);
+				LST_ConfigBlocks_General.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.Assemblers)
+			{
+				LST_ConfigBlock_Assemblers.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.CargoContainers)
+			{
+				LST_ConfigBlock_CargoContainers.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.Cockpits)
+			{
+				LST_ConfigBlock_Cockpits.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.GravityGenerators)
+			{
+				LST_ConfigBlock_GravityGenerators.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.Gyroscopes)
+			{
+				LST_ConfigBlock_Gyroscopes.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.LightingBlocks)
+			{
+				LST_ConfigBlock_LightingBlocks.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.MotorStators)
+			{
+				LST_ConfigBlock_MotorStators.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.OreDetectors)
+			{
+				LST_ConfigBlock_OreDetectors.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.Reactors)
+			{
+				LST_ConfigBlock_Reactors.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.Refineries)
+			{
+				LST_ConfigBlock_Refineries.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.ShipDrills)
+			{
+				LST_ConfigBlock_ShipDrills.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.SolarPanels)
+			{
+				LST_ConfigBlock_SolarPanels.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.Thrusters)
+			{
+				LST_ConfigBlock_Thursters.Items.Add(definition.Name);
+			}
+			foreach (var definition in m_blockDefinitionsManager.VirtualMasses)
+			{
+				LST_ConfigBlock_VirtualMasses.Items.Add(definition.Name);
 			}
 
 			m_currentlyFillingConfigurationListBox = false;
@@ -748,7 +817,7 @@ namespace SEConfigTool
 
 			m_standardSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineers", "Saves");
 
-			FillBlocksConfigurationListBox();
+			FillBlocksConfigurationListBoxes();
 			FillAmmoConfigurationListBox();
 			FillContainerTypeConfigurationListBox();
 			FillGlobalEventConfigurationListBox();
@@ -1127,111 +1196,108 @@ namespace SEConfigTool
 
 		#region CubeBlock
 
-		private void CHK_BlocksConfig_ModelIntersection_CheckedChanged(object sender, EventArgs e)
+		#region "CubeBlocks ListBoxes"
+		private void LST_ConfigBlocks_General_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-			{
-				BTN_BlocksConfig_Details_Apply.Enabled = true;
-			}
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.CubeBlocks[LST_ConfigBlocks_General.SelectedIndex];
 		}
 
-		private void CHK_BlocksConfig_Enabled_CheckedChanged(object sender, EventArgs e)
+		private void LST_ConfigBlock_Assemblers_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-			{
-				BTN_BlocksConfig_Details_Apply.Enabled = true;
-			}
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.Assemblers[LST_ConfigBlock_Assemblers.SelectedIndex];
 		}
 
-		private void LST_BlocksConfiguration_SelectedIndexChanged(object sender, EventArgs e)
+		private void LST_ConfigBlock_CargoContainers_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			m_currentlySelecting = true;
-			int index = LST_BlocksConfig.SelectedIndex;
-
-			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
-
-			TXT_BlocksConfig_Details_Name.Text = cubeBlock.Name;
-			TXT_BlocksConfig_Details_Id.Text = cubeBlock.Id.ToString();
-			TXT_BlocksConfig_Details_BuildTime.Text = cubeBlock.BuildTime.ToString(m_numberFormatInfo);
-			TXT_BlocksConfig_Details_DisassembleRatio.Text = cubeBlock.DisassembleRatio.ToString(m_numberFormatInfo);
-			CHK_BlocksConfig_Enabled.Checked = cubeBlock.Enabled;
-			CHK_BlocksConfig_ModelIntersection.Checked = cubeBlock.UseModelIntersection;
-
-			DGV_BlocksConfig_Details_Components.DataSource = cubeBlock.Components.ToArray().Select(x => new { x.Subtype, x.Count }).ToArray();
-
-			m_currentlySelecting = false;
-
-			BTN_BlocksConfig_Details_Apply.Enabled = false;
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.CargoContainers[LST_ConfigBlock_CargoContainers.SelectedIndex];
 		}
 
-		private void TXT_ConfigBuildTime_KeyPress(object sender, KeyPressEventArgs e)
+		private void LST_ConfigBlock_Cockpits_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			char ch = e.KeyChar;
-
-			if (ch == '.' && TXT_BlocksConfig_Details_BuildTime.Text.IndexOf('.') != -1)
-			{
-				e.Handled = true;
-			}
-
-			if (!Char.IsDigit(ch) && ch != m_decimalSeparator[0] && ch != 8) //8 for ASCII (backspace)
-			{
-				e.Handled = true;
-			}
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.Cockpits[LST_ConfigBlock_Cockpits.SelectedIndex];
 		}
+
+		private void LST_ConfigBlock_GravityGenerators_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.GravityGenerators[LST_ConfigBlock_GravityGenerators.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_Gyroscopes_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.Gyroscopes[LST_ConfigBlock_Gyroscopes.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_LightingBlocks_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.LightingBlocks[LST_ConfigBlock_LightingBlocks.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_MotorStators_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.MotorStators[LST_ConfigBlock_MotorStators.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_OreDetectors_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.OreDetectors[LST_ConfigBlock_OreDetectors.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_Reactors_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.Reactors[LST_ConfigBlock_Reactors.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_Refineries_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.Refineries[LST_ConfigBlock_Refineries.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_ShipDrills_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.ShipDrills[LST_ConfigBlock_ShipDrills.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_SolarPanels_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.SolarPanels[LST_ConfigBlock_SolarPanels.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_Thursters_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.Thrusters[LST_ConfigBlock_Thursters.SelectedIndex];
+		}
+
+		private void LST_ConfigBlock_VirtualMasses_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_ConfigBlocks_BlockInformations.SelectedObject = m_blockDefinitionsManager.VirtualMasses[LST_ConfigBlock_VirtualMasses.SelectedIndex];
+		}
+
+		#endregion
 
 		private void BTN_ConfigReload_Click(object sender, EventArgs e)
 		{
-			FillBlocksConfigurationListBox();
+			m_blockDefinitionsManager.Deserialize();
+			FillBlocksConfigurationListBoxes();
 		}
+
 
 		private void BTN_SaveBlocksConfiguration_Click(object sender, EventArgs e)
 		{
 			Stopwatch stopWatch = new Stopwatch();
-			stopWatch.Start();
-
-			bool saveResult = m_cubeBlockDefinitionsManager.Save();
-
-			stopWatch.Stop();
-
-			if (!saveResult)
+			try
 			{
-				MessageBox.Show(this, "Failed to save CubeBlocks config!");
-				return;
+				stopWatch.Start();
+
+				m_blockDefinitionsManager.Serialize();
+
+				stopWatch.Stop();
+			}
+			catch (AutoException aEx)
+			{
+				MessageBox.Show(this, aEx.AdditionnalInfo + "\r\n" + aEx.GetDebugString());
 			}
 
 			TLS_StatusLabel.Text = "Done saving CubeBlocks in " + stopWatch.ElapsedMilliseconds.ToString() + "ms";
-		}
-
-		private void TXT_ConfigBlocks_TextChanged(object sender, EventArgs e)
-		{
-			if (!m_currentlyFillingConfigurationListBox && !m_currentlySelecting)
-			{
-				BTN_BlocksConfig_Details_Apply.Enabled = true;
-			}
-		}
-
-		private void BTN_ConfigApplyChanges_Click(object sender, EventArgs e)
-		{
-			int index = LST_BlocksConfig.SelectedIndex;
-
-			CubeBlockDefinition cubeBlock = m_cubeBlockDefinitionsManager.DefinitionOf(index);
-
-			cubeBlock.BuildTime = Convert.ToSingle(TXT_BlocksConfig_Details_BuildTime.Text, m_numberFormatInfo);
-			cubeBlock.DisassembleRatio = Convert.ToSingle(TXT_BlocksConfig_Details_DisassembleRatio.Text, m_numberFormatInfo);
-			cubeBlock.Enabled = CHK_BlocksConfig_Enabled.CheckState == CheckState.Checked;
-			cubeBlock.UseModelIntersection = CHK_BlocksConfig_ModelIntersection.CheckState == CheckState.Checked;
-
-			BTN_BlocksConfig_Details_Apply.Enabled = false;
-		}
-
-		private void BTN_BlocksConfig_Details_New_Click(object sender, EventArgs e)
-		{
-			MessageBox.Show(this, "This feature is not yet implemented");
-		}
-
-		private void BTN_BlocksConfig_Details_Delete_Click(object sender, EventArgs e)
-		{
-			MessageBox.Show(this, "This feature is not yet implemented");
 		}
 
 		#endregion
@@ -2764,7 +2830,6 @@ namespace SEConfigTool
 		}
 
 		#endregion
-
 		#endregion
 	}
 }

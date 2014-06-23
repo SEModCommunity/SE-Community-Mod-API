@@ -1,8 +1,9 @@
-﻿using Sandbox.Common.ObjectBuilders.Definitions;
+﻿using System.ComponentModel;
+using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API.Definitions.CubeBlocks
 {
-	public class RefineryDefinition : ObjectOverLayerDefinition<MyObjectBuilder_RefineryDefinition>
+	public class RefineryDefinition : BlockDefinition
 	{
 		#region "Constructors and Initializers"
 
@@ -15,77 +16,18 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		#region "Properties"
 
 		/// <summary>
-		/// Get or set the current Thruster build time in second.
-		/// </summary>
-		public float BuildTime
-		{
-			get { return m_baseDefinition.BuildTimeSeconds; }
-			set
-			{
-				if (m_baseDefinition.BuildTimeSeconds == value) return;
-				m_baseDefinition.BuildTimeSeconds = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// Get or Set the current Thruster DisassembleRatio
-		/// The value is a multiplyer of BuildTime
-		/// [Disassemble time] = BuildTime * DisassembleRatio
-		/// </summary>
-		public float DisassembleRatio
-		{
-			get { return m_baseDefinition.DisassembleRatio; }
-			set
-			{
-				if (m_baseDefinition.DisassembleRatio == value) return;
-				m_baseDefinition.DisassembleRatio = value;
-				Changed = true;
-			}
-		}
-		public MyObjectBuilder_CubeBlockDefinition.CubeBlockComponent[] Components
-		{
-			get { return m_baseDefinition.Components; }
-		}
-
-		/// <summary>
-		/// The activation state of the current Thruster
-		/// </summary>
-		public bool Enabled
-		{
-			get { return m_baseDefinition.Public; }
-			set
-			{
-				if (m_baseDefinition.Public == value) return;
-				m_baseDefinition.Public = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The Model intersection state of the current Thruster 
-		/// </summary>
-		public bool UseModelIntersection
-		{
-			get { return m_baseDefinition.UseModelIntersection; }
-			set
-			{
-				if (m_baseDefinition.UseModelIntersection == value) return;
-				m_baseDefinition.UseModelIntersection = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
 		/// The current Refinery materiel efficiency
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Refinery materiel efficiency.")]
 		public float MaterialEfficiency
 		{
-			get { return m_baseDefinition.MaterialEfficiency; }
+			get { return GetSubTypeDefinition().MaterialEfficiency; }
 			set
 			{
-				if (m_baseDefinition.MaterialEfficiency.Equals(value)) return;
-				m_baseDefinition.MaterialEfficiency = value;
+				if (GetSubTypeDefinition().MaterialEfficiency.Equals(value)) return;
+				GetSubTypeDefinition().MaterialEfficiency = value;
 				Changed = true;
 			}
 		}
@@ -93,13 +35,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Refinery Refine Speed
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Refinery Refine Speed.")]
 		public float RefineSpeed
 		{
-			get { return m_baseDefinition.RefineSpeed; }
+			get { return GetSubTypeDefinition().RefineSpeed; }
 			set
 			{
-				if (m_baseDefinition.RefineSpeed.Equals(value)) return;
-				m_baseDefinition.RefineSpeed = value;
+				if (GetSubTypeDefinition().RefineSpeed.Equals(value)) return;
+				GetSubTypeDefinition().RefineSpeed = value;
 				Changed = true;
 			}
 		}
@@ -108,43 +53,13 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_RefineryDefinition definition)
+		/// <summary>
+		/// Method to get the casted instance from parent signature
+		/// </summary>
+		/// <returns>The casted instance into the class type</returns>
+		public new virtual MyObjectBuilder_RefineryDefinition GetSubTypeDefinition()
 		{
-			return definition.Id.SubtypeName == "" ? definition.Id.TypeId.ToString() : definition.Id.SubtypeName;
-		}
-
-		#endregion
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public class RefineryDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_RefineryDefinition, RefineryDefinition>
-	{
-		#region "Constructors and Initializers"
-
-		public RefineryDefinitionsManager(MyObjectBuilder_RefineryDefinition[] definitions)
-			: base(definitions)
-		{ }
-
-		#endregion
-
-		#region "Methods"
-
-		protected override RefineryDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_RefineryDefinition definition)
-		{
-			return new RefineryDefinition(definition);
-		}
-
-		protected override MyObjectBuilder_RefineryDefinition GetBaseTypeOf(RefineryDefinition overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
-
-		protected override bool GetChangedState(RefineryDefinition overLayer)
-		{
-			return overLayer.Changed;
+			return (MyObjectBuilder_RefineryDefinition)m_baseDefinition;
 		}
 
 		#endregion

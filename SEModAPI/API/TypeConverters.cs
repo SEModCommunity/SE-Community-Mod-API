@@ -270,7 +270,7 @@ namespace SEModAPI.API
 			return base.ConvertFrom(context, culture, value);
 		}
 	}
-	
+
 	public class ObjectSerializableDefinitionIdTypeConverter : TypeConverter
 	{
 		private static CubeBlockDefinitionsManager m_blocksManager;
@@ -310,7 +310,7 @@ namespace SEModAPI.API
 		{
 			return new StandardValuesCollection(m_idList);
 		}
-		
+
 		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			if (sourceType == typeof(string))

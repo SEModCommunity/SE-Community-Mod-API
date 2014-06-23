@@ -1,8 +1,9 @@
-﻿using Sandbox.Common.ObjectBuilders.Definitions;
+﻿using System.ComponentModel;
+using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API.Definitions.CubeBlocks
 {
-	public class ThrusterDefinition : ObjectOverLayerDefinition<MyObjectBuilder_ThrustDefinition>
+	public class ThrusterDefinition : BlockDefinition
 	{
 		#region "Constructors and Initializers"
 
@@ -15,77 +16,18 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		#region "Properties"
 
 		/// <summary>
-		/// Get or set the current Thruster build time in second.
-		/// </summary>
-		public float BuildTime
-		{
-			get { return m_baseDefinition.BuildTimeSeconds; }
-			set
-			{
-				if (m_baseDefinition.BuildTimeSeconds == value) return;
-				m_baseDefinition.BuildTimeSeconds = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// Get or Set the current Thruster DisassembleRatio
-		/// The value is a multiplyer of BuildTime
-		/// [Disassemble time] = BuildTime * DisassembleRatio
-		/// </summary>
-		public float DisassembleRatio
-		{
-			get { return m_baseDefinition.DisassembleRatio; }
-			set
-			{
-				if (m_baseDefinition.DisassembleRatio == value) return;
-				m_baseDefinition.DisassembleRatio = value;
-				Changed = true;
-			}
-		}
-		public MyObjectBuilder_CubeBlockDefinition.CubeBlockComponent[] Components
-		{
-			get { return m_baseDefinition.Components; }
-		}
-
-		/// <summary>
-		/// The activation state of the current Thruster
-		/// </summary>
-		public bool Enabled
-		{
-			get { return m_baseDefinition.Public; }
-			set
-			{
-				if (m_baseDefinition.Public == value) return;
-				m_baseDefinition.Public = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The Model intersection state of the current Thruster 
-		/// </summary>
-		public bool UseModelIntersection
-		{
-			get { return m_baseDefinition.UseModelIntersection; }
-			set
-			{
-				if (m_baseDefinition.UseModelIntersection == value) return;
-				m_baseDefinition.UseModelIntersection = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
 		/// The current Thruster Damage Area Size
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Thruster Damage Area Size.")]
 		public float DamageAreaSize
 		{
-			get { return m_baseDefinition.DamageAreaSize; }
+			get { return GetSubTypeDefinition().DamageAreaSize; }
 			set
 			{
-				if (m_baseDefinition.DamageAreaSize == value) return;
-				m_baseDefinition.DamageAreaSize = value;
+				if (GetSubTypeDefinition().DamageAreaSize.Equals(value)) return;
+				GetSubTypeDefinition().DamageAreaSize = value;
 				Changed = true;
 			}
 		}
@@ -93,13 +35,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Thruster flame scale, or "Flame volume"
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Thruster flame scale, or 'Flame volume'.")]
 		public float FlameScale
 		{
-			get { return m_baseDefinition.FlameScale; }
+			get { return GetSubTypeDefinition().FlameScale; }
 			set
 			{
-				if (m_baseDefinition.FlameScale == value) return;
-				m_baseDefinition.FlameScale = value;
+				if (GetSubTypeDefinition().FlameScale.Equals(value)) return;
+				GetSubTypeDefinition().FlameScale = value;
 				Changed = true;
 			}
 		}
@@ -107,13 +52,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Thruster force magnitude, or "push capacity"
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Thruster force magnitude, or 'push capacity'.")]
 		public float ForceMagnitude
 		{
-			get { return m_baseDefinition.ForceMagnitude; }
+			get { return GetSubTypeDefinition().ForceMagnitude; }
 			set
 			{
-				if (m_baseDefinition.ForceMagnitude == value) return;
-				m_baseDefinition.ForceMagnitude = value;
+				if (GetSubTypeDefinition().ForceMagnitude.Equals(value)) return;
+				GetSubTypeDefinition().ForceMagnitude = value;
 				Changed = true;
 			}
 		}
@@ -121,13 +69,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Thruster maximum power consumption
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Thruster maximum power consumption.")]
 		public float MaxPowerConsumption
 		{
-			get { return m_baseDefinition.MaxPowerConsumption; }
+			get { return GetSubTypeDefinition().MaxPowerConsumption; }
 			set
 			{
-				if (m_baseDefinition.MaxPowerConsumption == value) return;
-				m_baseDefinition.MaxPowerConsumption = value;
+				if (GetSubTypeDefinition().MaxPowerConsumption.Equals(value)) return;
+				GetSubTypeDefinition().MaxPowerConsumption = value;
 				Changed = true;
 			}
 		}
@@ -135,13 +86,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Thruster minimum power consumption
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Thruster minimum power consumption.")]
 		public float MinPowerConsumption
 		{
-			get { return m_baseDefinition.MinPowerConsumption; }
+			get { return GetSubTypeDefinition().MinPowerConsumption; }
 			set
 			{
-				if (m_baseDefinition.MinPowerConsumption == value) return;
-				m_baseDefinition.MinPowerConsumption = value;
+				if (GetSubTypeDefinition().MinPowerConsumption.Equals(value)) return;
+				GetSubTypeDefinition().MinPowerConsumption = value;
 				Changed = true;
 			}
 		}
@@ -149,13 +103,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Thruster movement coefficient
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Thruster movement coefficient.")]
 		public float MovementCoefficient
 		{
-			get { return m_baseDefinition.MovementCoefficient; }
+			get { return GetSubTypeDefinition().MovementCoefficient; }
 			set
 			{
-				if (m_baseDefinition.MovementCoefficient == value) return;
-				m_baseDefinition.MovementCoefficient = value;
+				if (GetSubTypeDefinition().MovementCoefficient.Equals(value)) return;
+				GetSubTypeDefinition().MovementCoefficient = value;
 				Changed = true;
 			}
 		}
@@ -164,43 +121,13 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_ThrustDefinition definition)
+		/// <summary>
+		/// Method to get the casted instance from parent signature
+		/// </summary>
+		/// <returns>The casted instance into the class type</returns>
+		public new virtual MyObjectBuilder_ThrustDefinition GetSubTypeDefinition()
 		{
-			return definition.Id.SubtypeName == "" ? definition.Id.TypeId.ToString() : definition.Id.SubtypeName;
-		}
-
-		#endregion
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public class ThrusterDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_ThrustDefinition, ThrusterDefinition>
-	{
-		#region "Constructors and Initializers"
-
-		public ThrusterDefinitionsManager(MyObjectBuilder_ThrustDefinition[] definitions)
-			: base(definitions)
-		{ }
-
-		#endregion
-
-		#region "Methods"
-
-		protected override ThrusterDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_ThrustDefinition definition)
-		{
-			return new ThrusterDefinition(definition);
-		}
-
-		protected override MyObjectBuilder_ThrustDefinition GetBaseTypeOf(ThrusterDefinition overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
-
-		protected override bool GetChangedState(ThrusterDefinition overLayer)
-		{
-			return overLayer.Changed;
+			return (MyObjectBuilder_ThrustDefinition)m_baseDefinition;
 		}
 
 		#endregion

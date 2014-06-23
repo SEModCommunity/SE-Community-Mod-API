@@ -411,7 +411,7 @@ namespace SEModAPI.API.Definitions
 
 			if (!File.Exists(filePath))
 			{
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileMissing), filePath);
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileMissing, filePath);
 			}
 
 			try
@@ -420,12 +420,12 @@ namespace SEModAPI.API.Definitions
 			}
 			catch
 			{
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileCorrupted), filePath);
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileCorrupted, filePath);
 			}
 
 			if (fileContent == null)
 			{
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileEmpty), filePath);
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileEmpty, filePath);
 			}
 
 			// TODO: set a file watch to reload the files, incase modding is occuring at the same time this is open.
@@ -442,7 +442,7 @@ namespace SEModAPI.API.Definitions
 
 			if (!File.Exists(filePath))
 			{
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileMissing), filePath);
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileMissing, filePath);
 			}
 
 			try
@@ -451,56 +451,17 @@ namespace SEModAPI.API.Definitions
 			}
 			catch
 			{
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileCorrupted), filePath);
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileCorrupted, filePath);
 			}
 
 			if (fileContent == null)
 			{
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileEmpty), filePath);
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileEmpty, filePath);
 			}
 
 			// TODO: set a file watch to reload the files, incase modding is occuring at the same time this is open.
 			//     Lock the load during this time, in case it happens multiple times.
 			// Report a friendly error if this load fails.
-		}
-
-		protected T ReadSpaceEngineersFile<T, TS>(Stream stream)
-			where TS : XmlSerializer1
-		{
-			var settings = new XmlReaderSettings
-			{
-				IgnoreComments = true,
-				IgnoreWhitespace = true,
-			};
-
-			object obj;
-
-			using (var xmlReader = XmlReader.Create(stream, settings))
-			{
-
-				var serializer = (TS)Activator.CreateInstance(typeof(TS));
-				//serializer.UnknownAttribute += serializer_UnknownAttribute;
-				//serializer.UnknownElement += serializer_UnknownElement;
-				//serializer.UnknownNode += serializer_UnknownNode;
-				obj = serializer.Deserialize(xmlReader);
-			}
-
-			return (T)obj;
-		}
-
-		protected bool TryReadSpaceEngineersFile<T, TS>(string filename, out T entity)
-			 where TS : XmlSerializer1
-		{
-			try
-			{
-				entity = ReadSpaceEngineersFile<T, TS>(filename);
-				return true;
-			}
-			catch
-			{
-				entity = default(T);
-				return false;
-			}
 		}
 
 		protected T ReadSpaceEngineersFile<T, TS>(string filename)
@@ -630,7 +591,7 @@ namespace SEModAPI.API.Definitions
 			MyObjectBuilder_Definitions definitionsContainer = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_fileInfo);
 
 			if (m_definitionsContainerField == null)
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.Invalid), "Failed to find matching definitions field");
+				throw new SEConfigurationException(SEConfigurationExceptionState.InvalidConfigurationFile, "Failed to find matching definitions field in the specified file.");
 
 			//Get the data from the definitions container
 			T[] baseDefinitions = (T[])m_definitionsContainerField.GetValue(definitionsContainer);
@@ -672,7 +633,7 @@ namespace SEModAPI.API.Definitions
 			MyObjectBuilder_Definitions definitionsContainer = new MyObjectBuilder_Definitions();
 
 			if (m_definitionsContainerField == null)
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.Invalid), "Failed to find matching definitions field");
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.Invalid, "Failed to find matching definitions field in the given file.");
 
 			//Save the source data into the definitions container
 			m_definitionsContainerField.SetValue(definitionsContainer, ExtractBaseDefinitions().ToArray());

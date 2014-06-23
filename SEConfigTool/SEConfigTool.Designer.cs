@@ -333,26 +333,42 @@ namespace SEConfigTool
 			this.BTN_BlocksConfig_Reload = new System.Windows.Forms.Button();
 			this.BTN_BlocksConfig_Save = new System.Windows.Forms.Button();
 			this.GRP_BlocksConfig = new System.Windows.Forms.GroupBox();
-			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.LST_BlocksConfig = new System.Windows.Forms.ListBox();
-			this.GRP_BlocksConfig_Details = new System.Windows.Forms.GroupBox();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-			this.CHK_BlocksConfig_ModelIntersection = new System.Windows.Forms.CheckBox();
-			this.CHK_BlocksConfig_Enabled = new System.Windows.Forms.CheckBox();
-			this.LBL_BlocksConfig_Details_Id = new System.Windows.Forms.Label();
-			this.LBL_BlocksConfig_Details_DisassembleRatio = new System.Windows.Forms.Label();
-			this.LBL_BlocksConfig_Details_Name = new System.Windows.Forms.Label();
-			this.LBL_BlocksConfig_Details_BuildTime = new System.Windows.Forms.Label();
-			this.BTN_BlocksConfig_Details_New = new System.Windows.Forms.Button();
-			this.BTN_BlocksConfig_Details_Delete = new System.Windows.Forms.Button();
-			this.DGV_BlocksConfig_Details_Components = new System.Windows.Forms.DataGridView();
-			this.BTN_BlocksConfig_Details_Apply = new System.Windows.Forms.Button();
-			this.TXT_BlocksConfig_Details_Id = new System.Windows.Forms.TextBox();
-			this.TXT_BlocksConfig_Details_DisassembleRatio = new System.Windows.Forms.TextBox();
-			this.TXT_BlocksConfig_Details_Name = new System.Windows.Forms.TextBox();
-			this.TXT_BlocksConfig_Details_BuildTime = new System.Windows.Forms.TextBox();
+			this.TAB_ConfigBlock_GeneralBlocks = new System.Windows.Forms.TabControl();
+			this.GeneralBlocks = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlocks_General = new System.Windows.Forms.ListBox();
+			this.Assemblers = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_Assemblers = new System.Windows.Forms.ListBox();
+			this.CargoContainers = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_CargoContainers = new System.Windows.Forms.ListBox();
+			this.Cockpits = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_Cockpits = new System.Windows.Forms.ListBox();
+			this.GravityGenerators = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_GravityGenerators = new System.Windows.Forms.ListBox();
+			this.Gyroscopes = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_Gyroscopes = new System.Windows.Forms.ListBox();
+			this.LightingBlocks = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_LightingBlocks = new System.Windows.Forms.ListBox();
+			this.MotorStators = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_MotorStators = new System.Windows.Forms.ListBox();
+			this.OreDetectors = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_OreDetectors = new System.Windows.Forms.ListBox();
+			this.Reactors = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_Reactors = new System.Windows.Forms.ListBox();
+			this.Refineries = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_Refineries = new System.Windows.Forms.ListBox();
+			this.ShipDrills = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_ShipDrills = new System.Windows.Forms.ListBox();
+			this.SolarPanels = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_SolarPanels = new System.Windows.Forms.ListBox();
+			this.Thrusters = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_Thursters = new System.Windows.Forms.ListBox();
+			this.VirtualMasses = new System.Windows.Forms.TabPage();
+			this.LST_ConfigBlock_VirtualMasses = new System.Windows.Forms.ListBox();
+			this.PG_ConfigBlocks_BlockInformations = new System.Windows.Forms.PropertyGrid();
 			this.TAB_SaveGamePage_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.BTN_SavedGame_LaunchGame = new System.Windows.Forms.Button();
 			this.BTN_SavedGame_Save = new System.Windows.Forms.Button();
 			this.BTN_SavedGame_Load = new System.Windows.Forms.Button();
 			this.GRP_SavedGame = new System.Windows.Forms.GroupBox();
@@ -447,7 +463,6 @@ namespace SEConfigTool
 			this.TXT_EnvironmentConfig_EnvironmentTexture = new System.Windows.Forms.TextBox();
 			this.button3 = new System.Windows.Forms.Button();
 			this.OFD_GamePath = new System.Windows.Forms.OpenFileDialog();
-			this.BTN_SavedGame_LaunchGame = new System.Windows.Forms.Button();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -648,16 +663,26 @@ namespace SEConfigTool
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
 			this.GRP_BlocksConfig.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-			this.splitContainer2.Panel1.SuspendLayout();
-			this.splitContainer2.Panel2.SuspendLayout();
-			this.splitContainer2.SuspendLayout();
-			this.GRP_BlocksConfig_Details.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
 			this.splitContainer4.Panel1.SuspendLayout();
 			this.splitContainer4.Panel2.SuspendLayout();
 			this.splitContainer4.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.DGV_BlocksConfig_Details_Components)).BeginInit();
+			this.TAB_ConfigBlock_GeneralBlocks.SuspendLayout();
+			this.GeneralBlocks.SuspendLayout();
+			this.Assemblers.SuspendLayout();
+			this.CargoContainers.SuspendLayout();
+			this.Cockpits.SuspendLayout();
+			this.GravityGenerators.SuspendLayout();
+			this.Gyroscopes.SuspendLayout();
+			this.LightingBlocks.SuspendLayout();
+			this.MotorStators.SuspendLayout();
+			this.OreDetectors.SuspendLayout();
+			this.Reactors.SuspendLayout();
+			this.Refineries.SuspendLayout();
+			this.ShipDrills.SuspendLayout();
+			this.SolarPanels.SuspendLayout();
+			this.Thrusters.SuspendLayout();
+			this.VirtualMasses.SuspendLayout();
 			this.TAB_SaveGamePage_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -4140,7 +4165,7 @@ namespace SEConfigTool
 			// 
 			// GRP_BlocksConfig
 			// 
-			this.GRP_BlocksConfig.Controls.Add(this.splitContainer2);
+			this.GRP_BlocksConfig.Controls.Add(this.splitContainer4);
 			this.GRP_BlocksConfig.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_BlocksConfig.Location = new System.Drawing.Point(0, 0);
 			this.GRP_BlocksConfig.Name = "GRP_BlocksConfig";
@@ -4149,209 +4174,359 @@ namespace SEConfigTool
 			this.GRP_BlocksConfig.TabStop = false;
 			this.GRP_BlocksConfig.Text = "Blocks";
 			// 
-			// splitContainer2
-			// 
-			this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer2.Location = new System.Drawing.Point(3, 16);
-			this.splitContainer2.Name = "splitContainer2";
-			// 
-			// splitContainer2.Panel1
-			// 
-			this.splitContainer2.Panel1.Controls.Add(this.LST_BlocksConfig);
-			// 
-			// splitContainer2.Panel2
-			// 
-			this.splitContainer2.Panel2.Controls.Add(this.GRP_BlocksConfig_Details);
-			this.splitContainer2.Size = new System.Drawing.Size(1014, 382);
-			this.splitContainer2.SplitterDistance = 200;
-			this.splitContainer2.TabIndex = 1;
-			// 
-			// LST_BlocksConfig
-			// 
-			this.LST_BlocksConfig.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LST_BlocksConfig.FormattingEnabled = true;
-			this.LST_BlocksConfig.Location = new System.Drawing.Point(0, 0);
-			this.LST_BlocksConfig.Name = "LST_BlocksConfig";
-			this.LST_BlocksConfig.Size = new System.Drawing.Size(200, 382);
-			this.LST_BlocksConfig.TabIndex = 0;
-			this.LST_BlocksConfig.SelectedIndexChanged += new System.EventHandler(this.LST_BlocksConfiguration_SelectedIndexChanged);
-			// 
-			// GRP_BlocksConfig_Details
-			// 
-			this.GRP_BlocksConfig_Details.AutoSize = true;
-			this.GRP_BlocksConfig_Details.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.GRP_BlocksConfig_Details.Controls.Add(this.splitContainer4);
-			this.GRP_BlocksConfig_Details.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.GRP_BlocksConfig_Details.Location = new System.Drawing.Point(0, 0);
-			this.GRP_BlocksConfig_Details.Name = "GRP_BlocksConfig_Details";
-			this.GRP_BlocksConfig_Details.Size = new System.Drawing.Size(810, 382);
-			this.GRP_BlocksConfig_Details.TabIndex = 3;
-			this.GRP_BlocksConfig_Details.TabStop = false;
-			this.GRP_BlocksConfig_Details.Text = "Selected Item Details";
-			// 
 			// splitContainer4
 			// 
 			this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer4.IsSplitterFixed = true;
 			this.splitContainer4.Location = new System.Drawing.Point(3, 16);
 			this.splitContainer4.Name = "splitContainer4";
 			// 
 			// splitContainer4.Panel1
 			// 
-			this.splitContainer4.Panel1.Controls.Add(this.CHK_BlocksConfig_ModelIntersection);
-			this.splitContainer4.Panel1.Controls.Add(this.CHK_BlocksConfig_Enabled);
-			this.splitContainer4.Panel1.Controls.Add(this.LBL_BlocksConfig_Details_Id);
-			this.splitContainer4.Panel1.Controls.Add(this.LBL_BlocksConfig_Details_DisassembleRatio);
-			this.splitContainer4.Panel1.Controls.Add(this.LBL_BlocksConfig_Details_Name);
-			this.splitContainer4.Panel1.Controls.Add(this.LBL_BlocksConfig_Details_BuildTime);
+			this.splitContainer4.Panel1.Controls.Add(this.TAB_ConfigBlock_GeneralBlocks);
 			// 
 			// splitContainer4.Panel2
 			// 
 			this.splitContainer4.Panel2.AutoScroll = true;
 			this.splitContainer4.Panel2.AutoScrollMinSize = new System.Drawing.Size(150, 0);
-			this.splitContainer4.Panel2.Controls.Add(this.BTN_BlocksConfig_Details_New);
-			this.splitContainer4.Panel2.Controls.Add(this.BTN_BlocksConfig_Details_Delete);
-			this.splitContainer4.Panel2.Controls.Add(this.DGV_BlocksConfig_Details_Components);
-			this.splitContainer4.Panel2.Controls.Add(this.BTN_BlocksConfig_Details_Apply);
-			this.splitContainer4.Panel2.Controls.Add(this.TXT_BlocksConfig_Details_Id);
-			this.splitContainer4.Panel2.Controls.Add(this.TXT_BlocksConfig_Details_DisassembleRatio);
-			this.splitContainer4.Panel2.Controls.Add(this.TXT_BlocksConfig_Details_Name);
-			this.splitContainer4.Panel2.Controls.Add(this.TXT_BlocksConfig_Details_BuildTime);
-			this.splitContainer4.Size = new System.Drawing.Size(804, 363);
-			this.splitContainer4.SplitterDistance = 150;
+			this.splitContainer4.Panel2.Controls.Add(this.PG_ConfigBlocks_BlockInformations);
+			this.splitContainer4.Size = new System.Drawing.Size(1014, 382);
+			this.splitContainer4.SplitterDistance = 403;
 			this.splitContainer4.TabIndex = 4;
 			// 
-			// CHK_BlocksConfig_ModelIntersection
+			// TAB_ConfigBlock_GeneralBlocks
 			// 
-			this.CHK_BlocksConfig_ModelIntersection.Location = new System.Drawing.Point(6, 132);
-			this.CHK_BlocksConfig_ModelIntersection.Name = "CHK_BlocksConfig_ModelIntersection";
-			this.CHK_BlocksConfig_ModelIntersection.Size = new System.Drawing.Size(126, 24);
-			this.CHK_BlocksConfig_ModelIntersection.TabIndex = 0;
-			this.CHK_BlocksConfig_ModelIntersection.Text = "ModelIntersection";
-			this.CHK_BlocksConfig_ModelIntersection.CheckedChanged += new System.EventHandler(this.CHK_BlocksConfig_ModelIntersection_CheckedChanged);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.GeneralBlocks);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.Assemblers);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.CargoContainers);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.Cockpits);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.GravityGenerators);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.Gyroscopes);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.LightingBlocks);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.MotorStators);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.OreDetectors);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.Reactors);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.Refineries);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.ShipDrills);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.SolarPanels);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.Thrusters);
+			this.TAB_ConfigBlock_GeneralBlocks.Controls.Add(this.VirtualMasses);
+			this.TAB_ConfigBlock_GeneralBlocks.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TAB_ConfigBlock_GeneralBlocks.Location = new System.Drawing.Point(0, 0);
+			this.TAB_ConfigBlock_GeneralBlocks.Name = "TAB_ConfigBlock_GeneralBlocks";
+			this.TAB_ConfigBlock_GeneralBlocks.SelectedIndex = 0;
+			this.TAB_ConfigBlock_GeneralBlocks.Size = new System.Drawing.Size(403, 382);
+			this.TAB_ConfigBlock_GeneralBlocks.TabIndex = 5;
 			// 
-			// CHK_BlocksConfig_Enabled
+			// GeneralBlocks
 			// 
-			this.CHK_BlocksConfig_Enabled.AutoSize = true;
-			this.CHK_BlocksConfig_Enabled.Location = new System.Drawing.Point(6, 109);
-			this.CHK_BlocksConfig_Enabled.Name = "CHK_BlocksConfig_Enabled";
-			this.CHK_BlocksConfig_Enabled.Size = new System.Drawing.Size(65, 17);
-			this.CHK_BlocksConfig_Enabled.TabIndex = 9;
-			this.CHK_BlocksConfig_Enabled.Text = "Enabled";
-			this.CHK_BlocksConfig_Enabled.UseVisualStyleBackColor = true;
-			this.CHK_BlocksConfig_Enabled.CheckedChanged += new System.EventHandler(this.CHK_BlocksConfig_Enabled_CheckedChanged);
+			this.GeneralBlocks.Controls.Add(this.LST_ConfigBlocks_General);
+			this.GeneralBlocks.Location = new System.Drawing.Point(4, 22);
+			this.GeneralBlocks.Name = "GeneralBlocks";
+			this.GeneralBlocks.Padding = new System.Windows.Forms.Padding(3);
+			this.GeneralBlocks.Size = new System.Drawing.Size(395, 356);
+			this.GeneralBlocks.TabIndex = 0;
+			this.GeneralBlocks.Text = "General blocks";
+			this.GeneralBlocks.UseVisualStyleBackColor = true;
 			// 
-			// LBL_BlocksConfig_Details_Id
+			// LST_ConfigBlocks_General
 			// 
-			this.LBL_BlocksConfig_Details_Id.AutoSize = true;
-			this.LBL_BlocksConfig_Details_Id.Location = new System.Drawing.Point(3, 6);
-			this.LBL_BlocksConfig_Details_Id.Name = "LBL_BlocksConfig_Details_Id";
-			this.LBL_BlocksConfig_Details_Id.Size = new System.Drawing.Size(19, 13);
-			this.LBL_BlocksConfig_Details_Id.TabIndex = 6;
-			this.LBL_BlocksConfig_Details_Id.Text = "Id:";
+			this.LST_ConfigBlocks_General.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlocks_General.FormattingEnabled = true;
+			this.LST_ConfigBlocks_General.Location = new System.Drawing.Point(3, 3);
+			this.LST_ConfigBlocks_General.Name = "LST_ConfigBlocks_General";
+			this.LST_ConfigBlocks_General.Size = new System.Drawing.Size(389, 350);
+			this.LST_ConfigBlocks_General.TabIndex = 0;
+			this.LST_ConfigBlocks_General.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlocks_General_SelectedIndexChanged);
 			// 
-			// LBL_BlocksConfig_Details_DisassembleRatio
+			// Assemblers
 			// 
-			this.LBL_BlocksConfig_Details_DisassembleRatio.AutoSize = true;
-			this.LBL_BlocksConfig_Details_DisassembleRatio.Location = new System.Drawing.Point(3, 84);
-			this.LBL_BlocksConfig_Details_DisassembleRatio.Name = "LBL_BlocksConfig_Details_DisassembleRatio";
-			this.LBL_BlocksConfig_Details_DisassembleRatio.Size = new System.Drawing.Size(97, 13);
-			this.LBL_BlocksConfig_Details_DisassembleRatio.TabIndex = 3;
-			this.LBL_BlocksConfig_Details_DisassembleRatio.Text = "Disassemble Ratio:";
+			this.Assemblers.Controls.Add(this.LST_ConfigBlock_Assemblers);
+			this.Assemblers.Location = new System.Drawing.Point(4, 22);
+			this.Assemblers.Name = "Assemblers";
+			this.Assemblers.Padding = new System.Windows.Forms.Padding(3);
+			this.Assemblers.Size = new System.Drawing.Size(395, 356);
+			this.Assemblers.TabIndex = 1;
+			this.Assemblers.Text = "Assemblers";
+			this.Assemblers.UseVisualStyleBackColor = true;
 			// 
-			// LBL_BlocksConfig_Details_Name
+			// LST_ConfigBlock_Assemblers
 			// 
-			this.LBL_BlocksConfig_Details_Name.AutoSize = true;
-			this.LBL_BlocksConfig_Details_Name.Location = new System.Drawing.Point(3, 32);
-			this.LBL_BlocksConfig_Details_Name.Name = "LBL_BlocksConfig_Details_Name";
-			this.LBL_BlocksConfig_Details_Name.Size = new System.Drawing.Size(38, 13);
-			this.LBL_BlocksConfig_Details_Name.TabIndex = 0;
-			this.LBL_BlocksConfig_Details_Name.Text = "Name:";
+			this.LST_ConfigBlock_Assemblers.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_Assemblers.FormattingEnabled = true;
+			this.LST_ConfigBlock_Assemblers.Location = new System.Drawing.Point(3, 3);
+			this.LST_ConfigBlock_Assemblers.Name = "LST_ConfigBlock_Assemblers";
+			this.LST_ConfigBlock_Assemblers.Size = new System.Drawing.Size(389, 350);
+			this.LST_ConfigBlock_Assemblers.TabIndex = 1;
+			this.LST_ConfigBlock_Assemblers.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_Assemblers_SelectedIndexChanged);
 			// 
-			// LBL_BlocksConfig_Details_BuildTime
+			// CargoContainers
 			// 
-			this.LBL_BlocksConfig_Details_BuildTime.AutoSize = true;
-			this.LBL_BlocksConfig_Details_BuildTime.Location = new System.Drawing.Point(3, 58);
-			this.LBL_BlocksConfig_Details_BuildTime.Name = "LBL_BlocksConfig_Details_BuildTime";
-			this.LBL_BlocksConfig_Details_BuildTime.Size = new System.Drawing.Size(59, 13);
-			this.LBL_BlocksConfig_Details_BuildTime.TabIndex = 2;
-			this.LBL_BlocksConfig_Details_BuildTime.Text = "Build Time:";
+			this.CargoContainers.Controls.Add(this.LST_ConfigBlock_CargoContainers);
+			this.CargoContainers.Location = new System.Drawing.Point(4, 22);
+			this.CargoContainers.Name = "CargoContainers";
+			this.CargoContainers.Size = new System.Drawing.Size(395, 356);
+			this.CargoContainers.TabIndex = 14;
+			this.CargoContainers.Text = "Cargo containers";
+			this.CargoContainers.UseVisualStyleBackColor = true;
 			// 
-			// BTN_BlocksConfig_Details_New
+			// LST_ConfigBlock_CargoContainers
 			// 
-			this.BTN_BlocksConfig_Details_New.Enabled = false;
-			this.BTN_BlocksConfig_Details_New.Location = new System.Drawing.Point(3, 337);
-			this.BTN_BlocksConfig_Details_New.Name = "BTN_BlocksConfig_Details_New";
-			this.BTN_BlocksConfig_Details_New.Size = new System.Drawing.Size(50, 23);
-			this.BTN_BlocksConfig_Details_New.TabIndex = 16;
-			this.BTN_BlocksConfig_Details_New.Text = "New";
-			this.BTN_BlocksConfig_Details_New.UseVisualStyleBackColor = true;
-			this.BTN_BlocksConfig_Details_New.Click += new System.EventHandler(this.BTN_BlocksConfig_Details_New_Click);
+			this.LST_ConfigBlock_CargoContainers.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_CargoContainers.FormattingEnabled = true;
+			this.LST_ConfigBlock_CargoContainers.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_CargoContainers.Name = "LST_ConfigBlock_CargoContainers";
+			this.LST_ConfigBlock_CargoContainers.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_CargoContainers.TabIndex = 0;
+			this.LST_ConfigBlock_CargoContainers.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_CargoContainers_SelectedIndexChanged);
 			// 
-			// BTN_BlocksConfig_Details_Delete
+			// Cockpits
 			// 
-			this.BTN_BlocksConfig_Details_Delete.BackColor = System.Drawing.Color.Transparent;
-			this.BTN_BlocksConfig_Details_Delete.Enabled = false;
-			this.BTN_BlocksConfig_Details_Delete.Location = new System.Drawing.Point(3, 308);
-			this.BTN_BlocksConfig_Details_Delete.Name = "BTN_BlocksConfig_Details_Delete";
-			this.BTN_BlocksConfig_Details_Delete.Size = new System.Drawing.Size(150, 23);
-			this.BTN_BlocksConfig_Details_Delete.TabIndex = 14;
-			this.BTN_BlocksConfig_Details_Delete.Text = "Delete Item";
-			this.BTN_BlocksConfig_Details_Delete.UseVisualStyleBackColor = false;
-			this.BTN_BlocksConfig_Details_Delete.Click += new System.EventHandler(this.BTN_BlocksConfig_Details_Delete_Click);
+			this.Cockpits.Controls.Add(this.LST_ConfigBlock_Cockpits);
+			this.Cockpits.Location = new System.Drawing.Point(4, 22);
+			this.Cockpits.Name = "Cockpits";
+			this.Cockpits.Size = new System.Drawing.Size(395, 356);
+			this.Cockpits.TabIndex = 2;
+			this.Cockpits.Text = "Cockpits";
+			this.Cockpits.UseVisualStyleBackColor = true;
 			// 
-			// DGV_BlocksConfig_Details_Components
+			// LST_ConfigBlock_Cockpits
 			// 
-			this.DGV_BlocksConfig_Details_Components.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.DGV_BlocksConfig_Details_Components.Location = new System.Drawing.Point(159, 6);
-			this.DGV_BlocksConfig_Details_Components.Name = "DGV_BlocksConfig_Details_Components";
-			this.DGV_BlocksConfig_Details_Components.Size = new System.Drawing.Size(264, 150);
-			this.DGV_BlocksConfig_Details_Components.TabIndex = 9;
+			this.LST_ConfigBlock_Cockpits.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_Cockpits.FormattingEnabled = true;
+			this.LST_ConfigBlock_Cockpits.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_Cockpits.Name = "LST_ConfigBlock_Cockpits";
+			this.LST_ConfigBlock_Cockpits.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_Cockpits.TabIndex = 1;
+			this.LST_ConfigBlock_Cockpits.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_Cockpits_SelectedIndexChanged);
 			// 
-			// BTN_BlocksConfig_Details_Apply
+			// GravityGenerators
 			// 
-			this.BTN_BlocksConfig_Details_Apply.Enabled = false;
-			this.BTN_BlocksConfig_Details_Apply.Location = new System.Drawing.Point(53, 337);
-			this.BTN_BlocksConfig_Details_Apply.Name = "BTN_BlocksConfig_Details_Apply";
-			this.BTN_BlocksConfig_Details_Apply.Size = new System.Drawing.Size(100, 23);
-			this.BTN_BlocksConfig_Details_Apply.TabIndex = 8;
-			this.BTN_BlocksConfig_Details_Apply.Text = "Apply changes";
-			this.BTN_BlocksConfig_Details_Apply.UseVisualStyleBackColor = true;
-			this.BTN_BlocksConfig_Details_Apply.Click += new System.EventHandler(this.BTN_ConfigApplyChanges_Click);
+			this.GravityGenerators.Controls.Add(this.LST_ConfigBlock_GravityGenerators);
+			this.GravityGenerators.Location = new System.Drawing.Point(4, 22);
+			this.GravityGenerators.Name = "GravityGenerators";
+			this.GravityGenerators.Size = new System.Drawing.Size(395, 356);
+			this.GravityGenerators.TabIndex = 3;
+			this.GravityGenerators.Text = "Gravity generators";
+			this.GravityGenerators.UseVisualStyleBackColor = true;
 			// 
-			// TXT_BlocksConfig_Details_Id
+			// LST_ConfigBlock_GravityGenerators
 			// 
-			this.TXT_BlocksConfig_Details_Id.Location = new System.Drawing.Point(3, 3);
-			this.TXT_BlocksConfig_Details_Id.Name = "TXT_BlocksConfig_Details_Id";
-			this.TXT_BlocksConfig_Details_Id.ReadOnly = true;
-			this.TXT_BlocksConfig_Details_Id.Size = new System.Drawing.Size(150, 20);
-			this.TXT_BlocksConfig_Details_Id.TabIndex = 7;
+			this.LST_ConfigBlock_GravityGenerators.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_GravityGenerators.FormattingEnabled = true;
+			this.LST_ConfigBlock_GravityGenerators.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_GravityGenerators.Name = "LST_ConfigBlock_GravityGenerators";
+			this.LST_ConfigBlock_GravityGenerators.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_GravityGenerators.TabIndex = 1;
+			this.LST_ConfigBlock_GravityGenerators.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_GravityGenerators_SelectedIndexChanged);
 			// 
-			// TXT_BlocksConfig_Details_DisassembleRatio
+			// Gyroscopes
 			// 
-			this.TXT_BlocksConfig_Details_DisassembleRatio.Location = new System.Drawing.Point(3, 81);
-			this.TXT_BlocksConfig_Details_DisassembleRatio.Name = "TXT_BlocksConfig_Details_DisassembleRatio";
-			this.TXT_BlocksConfig_Details_DisassembleRatio.Size = new System.Drawing.Size(150, 20);
-			this.TXT_BlocksConfig_Details_DisassembleRatio.TabIndex = 6;
-			this.TXT_BlocksConfig_Details_DisassembleRatio.TextChanged += new System.EventHandler(this.TXT_ConfigBlocks_TextChanged);
+			this.Gyroscopes.Controls.Add(this.LST_ConfigBlock_Gyroscopes);
+			this.Gyroscopes.Location = new System.Drawing.Point(4, 22);
+			this.Gyroscopes.Name = "Gyroscopes";
+			this.Gyroscopes.Size = new System.Drawing.Size(395, 356);
+			this.Gyroscopes.TabIndex = 4;
+			this.Gyroscopes.Text = "Gyroscopes";
+			this.Gyroscopes.UseVisualStyleBackColor = true;
 			// 
-			// TXT_BlocksConfig_Details_Name
+			// LST_ConfigBlock_Gyroscopes
 			// 
-			this.TXT_BlocksConfig_Details_Name.Location = new System.Drawing.Point(3, 29);
-			this.TXT_BlocksConfig_Details_Name.Name = "TXT_BlocksConfig_Details_Name";
-			this.TXT_BlocksConfig_Details_Name.ReadOnly = true;
-			this.TXT_BlocksConfig_Details_Name.Size = new System.Drawing.Size(150, 20);
-			this.TXT_BlocksConfig_Details_Name.TabIndex = 5;
+			this.LST_ConfigBlock_Gyroscopes.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_Gyroscopes.FormattingEnabled = true;
+			this.LST_ConfigBlock_Gyroscopes.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_Gyroscopes.Name = "LST_ConfigBlock_Gyroscopes";
+			this.LST_ConfigBlock_Gyroscopes.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_Gyroscopes.TabIndex = 1;
+			this.LST_ConfigBlock_Gyroscopes.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_Gyroscopes_SelectedIndexChanged);
 			// 
-			// TXT_BlocksConfig_Details_BuildTime
+			// LightingBlocks
 			// 
-			this.TXT_BlocksConfig_Details_BuildTime.Location = new System.Drawing.Point(3, 55);
-			this.TXT_BlocksConfig_Details_BuildTime.Name = "TXT_BlocksConfig_Details_BuildTime";
-			this.TXT_BlocksConfig_Details_BuildTime.Size = new System.Drawing.Size(150, 20);
-			this.TXT_BlocksConfig_Details_BuildTime.TabIndex = 4;
-			this.TXT_BlocksConfig_Details_BuildTime.TextChanged += new System.EventHandler(this.TXT_ConfigBlocks_TextChanged);
+			this.LightingBlocks.Controls.Add(this.LST_ConfigBlock_LightingBlocks);
+			this.LightingBlocks.Location = new System.Drawing.Point(4, 22);
+			this.LightingBlocks.Name = "LightingBlocks";
+			this.LightingBlocks.Size = new System.Drawing.Size(395, 356);
+			this.LightingBlocks.TabIndex = 5;
+			this.LightingBlocks.Text = "Lighting blocks";
+			this.LightingBlocks.UseVisualStyleBackColor = true;
+			// 
+			// LST_ConfigBlock_LightingBlocks
+			// 
+			this.LST_ConfigBlock_LightingBlocks.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_LightingBlocks.FormattingEnabled = true;
+			this.LST_ConfigBlock_LightingBlocks.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_LightingBlocks.Name = "LST_ConfigBlock_LightingBlocks";
+			this.LST_ConfigBlock_LightingBlocks.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_LightingBlocks.TabIndex = 1;
+			this.LST_ConfigBlock_LightingBlocks.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_LightingBlocks_SelectedIndexChanged);
+			// 
+			// MotorStators
+			// 
+			this.MotorStators.Controls.Add(this.LST_ConfigBlock_MotorStators);
+			this.MotorStators.Location = new System.Drawing.Point(4, 22);
+			this.MotorStators.Name = "MotorStators";
+			this.MotorStators.Size = new System.Drawing.Size(395, 356);
+			this.MotorStators.TabIndex = 6;
+			this.MotorStators.Text = "Motor stators";
+			this.MotorStators.UseVisualStyleBackColor = true;
+			// 
+			// LST_ConfigBlock_MotorStators
+			// 
+			this.LST_ConfigBlock_MotorStators.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_MotorStators.FormattingEnabled = true;
+			this.LST_ConfigBlock_MotorStators.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_MotorStators.Name = "LST_ConfigBlock_MotorStators";
+			this.LST_ConfigBlock_MotorStators.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_MotorStators.TabIndex = 1;
+			this.LST_ConfigBlock_MotorStators.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_MotorStators_SelectedIndexChanged);
+			// 
+			// OreDetectors
+			// 
+			this.OreDetectors.Controls.Add(this.LST_ConfigBlock_OreDetectors);
+			this.OreDetectors.Location = new System.Drawing.Point(4, 22);
+			this.OreDetectors.Name = "OreDetectors";
+			this.OreDetectors.Size = new System.Drawing.Size(395, 356);
+			this.OreDetectors.TabIndex = 7;
+			this.OreDetectors.Text = "Ore Detectors";
+			this.OreDetectors.UseVisualStyleBackColor = true;
+			// 
+			// LST_ConfigBlock_OreDetectors
+			// 
+			this.LST_ConfigBlock_OreDetectors.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_OreDetectors.FormattingEnabled = true;
+			this.LST_ConfigBlock_OreDetectors.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_OreDetectors.Name = "LST_ConfigBlock_OreDetectors";
+			this.LST_ConfigBlock_OreDetectors.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_OreDetectors.TabIndex = 1;
+			this.LST_ConfigBlock_OreDetectors.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_OreDetectors_SelectedIndexChanged);
+			// 
+			// Reactors
+			// 
+			this.Reactors.Controls.Add(this.LST_ConfigBlock_Reactors);
+			this.Reactors.Location = new System.Drawing.Point(4, 22);
+			this.Reactors.Name = "Reactors";
+			this.Reactors.Size = new System.Drawing.Size(395, 356);
+			this.Reactors.TabIndex = 8;
+			this.Reactors.Text = "Reactors";
+			this.Reactors.UseVisualStyleBackColor = true;
+			// 
+			// LST_ConfigBlock_Reactors
+			// 
+			this.LST_ConfigBlock_Reactors.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_Reactors.FormattingEnabled = true;
+			this.LST_ConfigBlock_Reactors.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_Reactors.Name = "LST_ConfigBlock_Reactors";
+			this.LST_ConfigBlock_Reactors.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_Reactors.TabIndex = 1;
+			this.LST_ConfigBlock_Reactors.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_Reactors_SelectedIndexChanged);
+			// 
+			// Refineries
+			// 
+			this.Refineries.Controls.Add(this.LST_ConfigBlock_Refineries);
+			this.Refineries.Location = new System.Drawing.Point(4, 22);
+			this.Refineries.Name = "Refineries";
+			this.Refineries.Size = new System.Drawing.Size(395, 356);
+			this.Refineries.TabIndex = 9;
+			this.Refineries.Text = "Refineries";
+			this.Refineries.UseVisualStyleBackColor = true;
+			// 
+			// LST_ConfigBlock_Refineries
+			// 
+			this.LST_ConfigBlock_Refineries.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_Refineries.FormattingEnabled = true;
+			this.LST_ConfigBlock_Refineries.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_Refineries.Name = "LST_ConfigBlock_Refineries";
+			this.LST_ConfigBlock_Refineries.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_Refineries.TabIndex = 1;
+			this.LST_ConfigBlock_Refineries.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_Refineries_SelectedIndexChanged);
+			// 
+			// ShipDrills
+			// 
+			this.ShipDrills.Controls.Add(this.LST_ConfigBlock_ShipDrills);
+			this.ShipDrills.Location = new System.Drawing.Point(4, 22);
+			this.ShipDrills.Name = "ShipDrills";
+			this.ShipDrills.Size = new System.Drawing.Size(395, 356);
+			this.ShipDrills.TabIndex = 10;
+			this.ShipDrills.Text = "Ship drills";
+			this.ShipDrills.UseVisualStyleBackColor = true;
+			// 
+			// LST_ConfigBlock_ShipDrills
+			// 
+			this.LST_ConfigBlock_ShipDrills.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_ShipDrills.FormattingEnabled = true;
+			this.LST_ConfigBlock_ShipDrills.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_ShipDrills.Name = "LST_ConfigBlock_ShipDrills";
+			this.LST_ConfigBlock_ShipDrills.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_ShipDrills.TabIndex = 1;
+			this.LST_ConfigBlock_ShipDrills.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_ShipDrills_SelectedIndexChanged);
+			// 
+			// SolarPanels
+			// 
+			this.SolarPanels.Controls.Add(this.LST_ConfigBlock_SolarPanels);
+			this.SolarPanels.Location = new System.Drawing.Point(4, 22);
+			this.SolarPanels.Name = "SolarPanels";
+			this.SolarPanels.Size = new System.Drawing.Size(395, 356);
+			this.SolarPanels.TabIndex = 11;
+			this.SolarPanels.Text = "Solar Panels";
+			this.SolarPanels.UseVisualStyleBackColor = true;
+			// 
+			// LST_ConfigBlock_SolarPanels
+			// 
+			this.LST_ConfigBlock_SolarPanels.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_SolarPanels.FormattingEnabled = true;
+			this.LST_ConfigBlock_SolarPanels.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_SolarPanels.Name = "LST_ConfigBlock_SolarPanels";
+			this.LST_ConfigBlock_SolarPanels.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_SolarPanels.TabIndex = 1;
+			this.LST_ConfigBlock_SolarPanels.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_SolarPanels_SelectedIndexChanged);
+			// 
+			// Thrusters
+			// 
+			this.Thrusters.Controls.Add(this.LST_ConfigBlock_Thursters);
+			this.Thrusters.Location = new System.Drawing.Point(4, 22);
+			this.Thrusters.Name = "Thrusters";
+			this.Thrusters.Size = new System.Drawing.Size(395, 356);
+			this.Thrusters.TabIndex = 12;
+			this.Thrusters.Text = "Thrusters";
+			this.Thrusters.UseVisualStyleBackColor = true;
+			// 
+			// LST_ConfigBlock_Thursters
+			// 
+			this.LST_ConfigBlock_Thursters.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_Thursters.FormattingEnabled = true;
+			this.LST_ConfigBlock_Thursters.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_Thursters.Name = "LST_ConfigBlock_Thursters";
+			this.LST_ConfigBlock_Thursters.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_Thursters.TabIndex = 1;
+			this.LST_ConfigBlock_Thursters.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_Thursters_SelectedIndexChanged);
+			// 
+			// VirtualMasses
+			// 
+			this.VirtualMasses.Controls.Add(this.LST_ConfigBlock_VirtualMasses);
+			this.VirtualMasses.Location = new System.Drawing.Point(4, 22);
+			this.VirtualMasses.Name = "VirtualMasses";
+			this.VirtualMasses.Size = new System.Drawing.Size(395, 356);
+			this.VirtualMasses.TabIndex = 13;
+			this.VirtualMasses.Text = "Virtual Masses";
+			this.VirtualMasses.UseVisualStyleBackColor = true;
+			// 
+			// LST_ConfigBlock_VirtualMasses
+			// 
+			this.LST_ConfigBlock_VirtualMasses.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_ConfigBlock_VirtualMasses.FormattingEnabled = true;
+			this.LST_ConfigBlock_VirtualMasses.Location = new System.Drawing.Point(0, 0);
+			this.LST_ConfigBlock_VirtualMasses.Name = "LST_ConfigBlock_VirtualMasses";
+			this.LST_ConfigBlock_VirtualMasses.Size = new System.Drawing.Size(395, 356);
+			this.LST_ConfigBlock_VirtualMasses.TabIndex = 1;
+			this.LST_ConfigBlock_VirtualMasses.SelectedIndexChanged += new System.EventHandler(this.LST_ConfigBlock_VirtualMasses_SelectedIndexChanged);
+			// 
+			// PG_ConfigBlocks_BlockInformations
+			// 
+			this.PG_ConfigBlocks_BlockInformations.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PG_ConfigBlocks_BlockInformations.Location = new System.Drawing.Point(0, 0);
+			this.PG_ConfigBlocks_BlockInformations.Name = "PG_ConfigBlocks_BlockInformations";
+			this.PG_ConfigBlocks_BlockInformations.Size = new System.Drawing.Size(607, 382);
+			this.PG_ConfigBlocks_BlockInformations.TabIndex = 0;
 			// 
 			// TAB_SaveGamePage_Page
 			// 
@@ -4384,6 +4559,16 @@ namespace SEConfigTool
 			this.splitContainer1.Size = new System.Drawing.Size(1020, 430);
 			this.splitContainer1.SplitterDistance = 26;
 			this.splitContainer1.TabIndex = 1;
+			// 
+			// BTN_SavedGame_LaunchGame
+			// 
+			this.BTN_SavedGame_LaunchGame.Location = new System.Drawing.Point(912, 1);
+			this.BTN_SavedGame_LaunchGame.Name = "BTN_SavedGame_LaunchGame";
+			this.BTN_SavedGame_LaunchGame.Size = new System.Drawing.Size(105, 23);
+			this.BTN_SavedGame_LaunchGame.TabIndex = 2;
+			this.BTN_SavedGame_LaunchGame.Text = "Start Game";
+			this.BTN_SavedGame_LaunchGame.UseVisualStyleBackColor = true;
+			this.BTN_SavedGame_LaunchGame.Click += new System.EventHandler(this.BTN_SavedGame_LaunchGame_Click);
 			// 
 			// BTN_SavedGame_Save
 			// 
@@ -4707,9 +4892,9 @@ namespace SEConfigTool
 			// 
 			// TAB_LayoutPages
 			// 
-			this.TAB_LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.TAB_LayoutPages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.TAB_LayoutPages.Controls.Add(this.TAB_SaveGamePage_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_BlocksConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_AmmoConfig_Page);
@@ -5096,9 +5281,9 @@ namespace SEConfigTool
 			// 
 			// GRP_ConfigurationConfig
 			// 
-			this.GRP_ConfigurationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.GRP_ConfigurationConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.GRP_ConfigurationConfig.Controls.Add(this.splitContainer50);
 			this.GRP_ConfigurationConfig.Location = new System.Drawing.Point(3, 32);
 			this.GRP_ConfigurationConfig.Name = "GRP_ConfigurationConfig";
@@ -5259,9 +5444,9 @@ namespace SEConfigTool
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.Controls.Add(this.splitContainer52);
 			this.groupBox1.Location = new System.Drawing.Point(3, 32);
 			this.groupBox1.Name = "groupBox1";
@@ -5420,16 +5605,6 @@ namespace SEConfigTool
 			this.OFD_GamePath.DefaultExt = "exe";
 			this.OFD_GamePath.FileName = "SpaceEngineers.exe";
 			this.OFD_GamePath.Filter = "Game executable|*.exe";
-			// 
-			// BTN_SavedGame_LaunchGame
-			// 
-			this.BTN_SavedGame_LaunchGame.Location = new System.Drawing.Point(912, 1);
-			this.BTN_SavedGame_LaunchGame.Name = "BTN_SavedGame_LaunchGame";
-			this.BTN_SavedGame_LaunchGame.Size = new System.Drawing.Size(105, 23);
-			this.BTN_SavedGame_LaunchGame.TabIndex = 2;
-			this.BTN_SavedGame_LaunchGame.Text = "Start Game";
-			this.BTN_SavedGame_LaunchGame.UseVisualStyleBackColor = true;
-			this.BTN_SavedGame_LaunchGame.Click += new System.EventHandler(this.BTN_SavedGame_LaunchGame_Click);
 			// 
 			// SEConfigTool
 			// 
@@ -5671,19 +5846,26 @@ namespace SEConfigTool
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 			this.splitContainer3.ResumeLayout(false);
 			this.GRP_BlocksConfig.ResumeLayout(false);
-			this.splitContainer2.Panel1.ResumeLayout(false);
-			this.splitContainer2.Panel2.ResumeLayout(false);
-			this.splitContainer2.Panel2.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-			this.splitContainer2.ResumeLayout(false);
-			this.GRP_BlocksConfig_Details.ResumeLayout(false);
 			this.splitContainer4.Panel1.ResumeLayout(false);
-			this.splitContainer4.Panel1.PerformLayout();
 			this.splitContainer4.Panel2.ResumeLayout(false);
-			this.splitContainer4.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
 			this.splitContainer4.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.DGV_BlocksConfig_Details_Components)).EndInit();
+			this.TAB_ConfigBlock_GeneralBlocks.ResumeLayout(false);
+			this.GeneralBlocks.ResumeLayout(false);
+			this.Assemblers.ResumeLayout(false);
+			this.CargoContainers.ResumeLayout(false);
+			this.Cockpits.ResumeLayout(false);
+			this.GravityGenerators.ResumeLayout(false);
+			this.Gyroscopes.ResumeLayout(false);
+			this.LightingBlocks.ResumeLayout(false);
+			this.MotorStators.ResumeLayout(false);
+			this.OreDetectors.ResumeLayout(false);
+			this.Reactors.ResumeLayout(false);
+			this.Refineries.ResumeLayout(false);
+			this.ShipDrills.ResumeLayout(false);
+			this.SolarPanels.ResumeLayout(false);
+			this.Thrusters.ResumeLayout(false);
+			this.VirtualMasses.ResumeLayout(false);
 			this.TAB_SaveGamePage_Page.ResumeLayout(false);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
@@ -5986,22 +6168,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.Button BTN_BlocksConfig_Reload;
 		private System.Windows.Forms.Button BTN_BlocksConfig_Save;
 		private System.Windows.Forms.GroupBox GRP_BlocksConfig;
-		private System.Windows.Forms.SplitContainer splitContainer2;
-		private System.Windows.Forms.ListBox LST_BlocksConfig;
-		private System.Windows.Forms.GroupBox GRP_BlocksConfig_Details;
-		private System.Windows.Forms.SplitContainer splitContainer4;
-		private System.Windows.Forms.CheckBox CHK_BlocksConfig_ModelIntersection;
-		private System.Windows.Forms.CheckBox CHK_BlocksConfig_Enabled;
-		private System.Windows.Forms.Label LBL_BlocksConfig_Details_Id;
-		private System.Windows.Forms.Label LBL_BlocksConfig_Details_DisassembleRatio;
-		private System.Windows.Forms.Label LBL_BlocksConfig_Details_Name;
-		private System.Windows.Forms.Label LBL_BlocksConfig_Details_BuildTime;
-		private System.Windows.Forms.DataGridView DGV_BlocksConfig_Details_Components;
-		private System.Windows.Forms.Button BTN_BlocksConfig_Details_Apply;
-		private System.Windows.Forms.TextBox TXT_BlocksConfig_Details_Id;
-		private System.Windows.Forms.TextBox TXT_BlocksConfig_Details_DisassembleRatio;
-		private System.Windows.Forms.TextBox TXT_BlocksConfig_Details_Name;
-		private System.Windows.Forms.TextBox TXT_BlocksConfig_Details_BuildTime;
 		private System.Windows.Forms.TabPage TAB_SaveGamePage_Page;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.Button BTN_SavedGame_Save;
@@ -6130,8 +6296,6 @@ namespace SEConfigTool
 		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Details_Info_New;
 		private System.Windows.Forms.Button BTN_ContainerTypesConfig_Details_Delete;
 		private System.Windows.Forms.Button BTN_AmmoConfig_Details_Delete;
-		private System.Windows.Forms.Button BTN_BlocksConfig_Details_New;
-		private System.Windows.Forms.Button BTN_BlocksConfig_Details_Delete;
 		private System.Windows.Forms.Button BTN_GlobalEventConfig_Details_Delete;
 		private System.Windows.Forms.Button BTN_SpawnGroupConfig_Details_Info_Delete;
 		private System.Windows.Forms.Button BTN_PhysicalItemConfig_Details_Delete;
@@ -6178,6 +6342,39 @@ namespace SEConfigTool
 		private System.Windows.Forms.TreeView TRV_SavedGame_Objects;
 		private System.Windows.Forms.OpenFileDialog OFD_GamePath;
 		private System.Windows.Forms.Button BTN_SavedGame_LaunchGame;
+		private System.Windows.Forms.TabControl TAB_ConfigBlock_GeneralBlocks;
+		private System.Windows.Forms.TabPage GeneralBlocks;
+		private System.Windows.Forms.TabPage Assemblers;
+		private System.Windows.Forms.SplitContainer splitContainer4;
+		private System.Windows.Forms.PropertyGrid PG_ConfigBlocks_BlockInformations;
+		private System.Windows.Forms.ListBox LST_ConfigBlocks_General;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_Assemblers;
+		private System.Windows.Forms.TabPage Cockpits;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_Cockpits;
+		private System.Windows.Forms.TabPage GravityGenerators;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_GravityGenerators;
+		private System.Windows.Forms.TabPage Gyroscopes;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_Gyroscopes;
+		private System.Windows.Forms.TabPage LightingBlocks;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_LightingBlocks;
+		private System.Windows.Forms.TabPage MotorStators;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_MotorStators;
+		private System.Windows.Forms.TabPage OreDetectors;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_OreDetectors;
+		private System.Windows.Forms.TabPage Reactors;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_Reactors;
+		private System.Windows.Forms.TabPage Refineries;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_Refineries;
+		private System.Windows.Forms.TabPage ShipDrills;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_ShipDrills;
+		private System.Windows.Forms.TabPage SolarPanels;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_SolarPanels;
+		private System.Windows.Forms.TabPage Thrusters;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_Thursters;
+		private System.Windows.Forms.TabPage VirtualMasses;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_VirtualMasses;
+		private System.Windows.Forms.TabPage CargoContainers;
+		private System.Windows.Forms.ListBox LST_ConfigBlock_CargoContainers;
 
     }
 }

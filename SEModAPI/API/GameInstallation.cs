@@ -45,11 +45,14 @@ namespace SEModAPI.API
 			{
 				m_GamePath = GetGameSteamPath();
 				if (m_GamePath == null || m_GamePath == "")
-					throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered));
+				{
+					throw new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered, "Can't find the steam path in registry");	
+				}
+					
 			}
 
 			if (!IsValidGamePath(m_GamePath))
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory));
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory, "The game directory is broken");
 
 			if(IsBaseAssembliesChanged())
 			{
@@ -65,10 +68,10 @@ namespace SEModAPI.API
 		{
 			m_GamePath = gamePath;
 			if (m_GamePath == null || m_GamePath == "")
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered));
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.EmptyGamePath, "The gamePath given is empty");
 
 			if (!IsValidGamePath(m_GamePath))
-				throw new AutoException(new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory));
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory, "The gamePath provided is invalid");
 
 			if (IsBaseAssembliesChanged())
 			{
@@ -172,7 +175,7 @@ namespace SEModAPI.API
 
 				if (File.Exists(sourceFile))
 				{
-					File.Copy(sourceFile, Path.Combine(appFilePath, filename), true);
+					//File.Copy(sourceFile, Path.Combine(appFilePath, filename), true);
 				}
 			}
 

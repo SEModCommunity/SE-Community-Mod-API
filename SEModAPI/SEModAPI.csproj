@@ -63,10 +63,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Definitions\ConfigFileSerializer.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\ShipDrillDefinition.cs" />
+    <Compile Include="API\Definitions\DefinitionOverLayer.cs" />
     <Compile Include="API\Definitions\AmmoMagazinesDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\AssemblerDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\BlockDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\CargoContainerDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\CockpitDefinition.cs" />
+    <Compile Include="API\Definitions\CubeBlocks\BlocksManager.cs" />
     <Compile Include="API\Definitions\CubeBlocks\GravityGeneratorDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\GyroscopeDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\LightingBlockDefinition.cs" />

@@ -1,8 +1,9 @@
-﻿using Sandbox.Common.ObjectBuilders.Definitions;
+﻿using System.ComponentModel;
+using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API.Definitions.CubeBlocks
 {
-	public class CockpitDefinition : ObjectOverLayerDefinition<MyObjectBuilder_CockpitDefinition>
+	public class CockpitDefinition : BlockDefinition
 	{
 		#region "Constructors and Initializers"
 
@@ -15,77 +16,18 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		#region "Properties"
 
 		/// <summary>
-		/// Get or set the current Thruster build time in second.
-		/// </summary>
-		public float BuildTime
-		{
-			get { return m_baseDefinition.BuildTimeSeconds; }
-			set
-			{
-				if (m_baseDefinition.BuildTimeSeconds == value) return;
-				m_baseDefinition.BuildTimeSeconds = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// Get or Set the current Thruster DisassembleRatio
-		/// The value is a multiplyer of BuildTime
-		/// [Disassemble time] = BuildTime * DisassembleRatio
-		/// </summary>
-		public float DisassembleRatio
-		{
-			get { return m_baseDefinition.DisassembleRatio; }
-			set
-			{
-				if (m_baseDefinition.DisassembleRatio == value) return;
-				m_baseDefinition.DisassembleRatio = value;
-				Changed = true;
-			}
-		}
-		public MyObjectBuilder_CubeBlockDefinition.CubeBlockComponent[] Components
-		{
-			get { return m_baseDefinition.Components; }
-		}
-
-		/// <summary>
-		/// The activation state of the current Thruster
-		/// </summary>
-		public bool Enabled
-		{
-			get { return m_baseDefinition.Public; }
-			set
-			{
-				if (m_baseDefinition.Public == value) return;
-				m_baseDefinition.Public = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The Model intersection state of the current Thruster 
-		/// </summary>
-		public bool UseModelIntersection
-		{
-			get { return m_baseDefinition.UseModelIntersection; }
-			set
-			{
-				if (m_baseDefinition.UseModelIntersection == value) return;
-				m_baseDefinition.UseModelIntersection = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
 		/// The current character animation for this Cockpit
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current character animation for this Cockpit.")]
 		public string CharacterAnimation
 		{
-			get { return m_baseDefinition.CharacterAnimation; }
+			get { return GetSubTypeDefinition().CharacterAnimation; }
 			set
 			{
-				if (m_baseDefinition.CharacterAnimation == value) return;
-				m_baseDefinition.CharacterAnimation = value;
+				if (GetSubTypeDefinition().CharacterAnimation == value) return;
+				GetSubTypeDefinition().CharacterAnimation = value;
 				Changed = true;
 			}
 		}
@@ -93,13 +35,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// Set or Get the possibility to enable first person
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the possibility to enable first person.")]
 		public bool EnableFirstPerson
 		{
-			get { return m_baseDefinition.EnableFirstPerson; }
+			get { return GetSubTypeDefinition().EnableFirstPerson; }
 			set
 			{
-				if (m_baseDefinition.EnableFirstPerson == value) return;
-				m_baseDefinition.EnableFirstPerson = value;
+				if (GetSubTypeDefinition().EnableFirstPerson == value) return;
+				GetSubTypeDefinition().EnableFirstPerson = value;
 				Changed = true;
 			}
 		}
@@ -107,13 +52,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Cockpit glass model
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Cockpit glass model.")]
 		public string GlassModel
 		{
-			get { return m_baseDefinition.GlassModel; }
+			get { return GetSubTypeDefinition().GlassModel; }
 			set
 			{
-				if (m_baseDefinition.GlassModel == value) return;
-				m_baseDefinition.GlassModel = value;
+				if (GetSubTypeDefinition().GlassModel == value) return;
+				GetSubTypeDefinition().GlassModel = value;
 				Changed = true;
 			}
 		}
@@ -121,13 +69,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Cockpit interior model
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Cockpit interior model.")]
 		public string InteriorModel
 		{
-			get { return m_baseDefinition.InteriorModel; }
+			get { return GetSubTypeDefinition().InteriorModel; }
 			set
 			{
-				if (m_baseDefinition.InteriorModel == value) return;
-				m_baseDefinition.InteriorModel = value;
+				if (GetSubTypeDefinition().InteriorModel == value) return;
+				GetSubTypeDefinition().InteriorModel = value;
 				Changed = true;
 			}
 		}
@@ -135,13 +86,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// Set or Get the possibility to enable ship control
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the possibility to enable ship control.")]
 		public bool EnableShipControl
 		{
-			get { return m_baseDefinition.EnableShipControl; }
+			get { return GetSubTypeDefinition().EnableShipControl; }
 			set
 			{
-				if (m_baseDefinition.EnableShipControl == value) return;
-				m_baseDefinition.EnableShipControl = value;
+				if (GetSubTypeDefinition().EnableShipControl == value) return;
+				GetSubTypeDefinition().EnableShipControl = value;
 				Changed = true;
 			}
 		}
@@ -150,46 +104,17 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_CockpitDefinition definition)
+		/// <summary>
+		/// Method to get the casted instance from parent signature
+		/// </summary>
+		/// <returns>The casted instance into the class type</returns>
+		public virtual MyObjectBuilder_CockpitDefinition GetSubTypeDefinition()
 		{
-			return definition.Id.SubtypeName == "" ? definition.Id.TypeId.ToString() : definition.Id.SubtypeName;
+			return (MyObjectBuilder_CockpitDefinition)m_baseDefinition;
 		}
 
 		#endregion
 
 
 	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public class CockpitDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_CockpitDefinition, CockpitDefinition>
-	{
-		#region "Constructors and Initializers"
-
-		public CockpitDefinitionsManager(MyObjectBuilder_CockpitDefinition[] definitions): base(definitions)
-		{ }
-
-		#endregion
-
-		#region "Methods"
-
-		protected override CockpitDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_CockpitDefinition definition)
-		{
-			return new CockpitDefinition(definition);
-		}
-
-		protected override MyObjectBuilder_CockpitDefinition GetBaseTypeOf(CockpitDefinition overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
-
-		protected override bool GetChangedState(CockpitDefinition overLayer)
-		{
-			return overLayer.Changed;
-		}
-
-		#endregion
-	}	
 }

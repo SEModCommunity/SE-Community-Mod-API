@@ -1,8 +1,9 @@
-﻿using Sandbox.Common.ObjectBuilders.Definitions;
+﻿using System.ComponentModel;
+using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API.Definitions.CubeBlocks
 {
-	public class ReactorDefinition : ObjectOverLayerDefinition<MyObjectBuilder_ReactorDefinition>
+	public class ReactorDefinition : BlockDefinition
 	{
 		#region "Constructors and Initializers"
 
@@ -15,77 +16,18 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		#region "Properties"
 
 		/// <summary>
-		/// Get or set the current Thruster build time in second.
-		/// </summary>
-		public float BuildTime
-		{
-			get { return m_baseDefinition.BuildTimeSeconds; }
-			set
-			{
-				if (m_baseDefinition.BuildTimeSeconds == value) return;
-				m_baseDefinition.BuildTimeSeconds = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// Get or Set the current Thruster DisassembleRatio
-		/// The value is a multiplyer of BuildTime
-		/// [Disassemble time] = BuildTime * DisassembleRatio
-		/// </summary>
-		public float DisassembleRatio
-		{
-			get { return m_baseDefinition.DisassembleRatio; }
-			set
-			{
-				if (m_baseDefinition.DisassembleRatio == value) return;
-				m_baseDefinition.DisassembleRatio = value;
-				Changed = true;
-			}
-		}
-		public MyObjectBuilder_CubeBlockDefinition.CubeBlockComponent[] Components
-		{
-			get { return m_baseDefinition.Components; }
-		}
-
-		/// <summary>
-		/// The activation state of the current Thruster
-		/// </summary>
-		public bool Enabled
-		{
-			get { return m_baseDefinition.Public; }
-			set
-			{
-				if (m_baseDefinition.Public == value) return;
-				m_baseDefinition.Public = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The Model intersection state of the current Thruster 
-		/// </summary>
-		public bool UseModelIntersection
-		{
-			get { return m_baseDefinition.UseModelIntersection; }
-			set
-			{
-				if (m_baseDefinition.UseModelIntersection == value) return;
-				m_baseDefinition.UseModelIntersection = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
 		/// The current Reactor Inventory Size
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Reactor Inventory Size.")]
 		public VRageMath.Vector3 InventorySize
 		{
-			get { return m_baseDefinition.InventorySize; }
+			get { return GetSubTypeDefinition().InventorySize; }
 			set
 			{
-				if (m_baseDefinition.InventorySize.Equals(value)) return;
-				m_baseDefinition.InventorySize = value;
+				if (GetSubTypeDefinition().InventorySize.Equals(value)) return;
+				GetSubTypeDefinition().InventorySize = value;
 				Changed = true;
 			}
 		}
@@ -94,43 +36,13 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_ReactorDefinition definition)
+		/// <summary>
+		/// Method to get the casted instance from parent signature
+		/// </summary>
+		/// <returns>The casted instance into the class type</returns>
+		public new virtual MyObjectBuilder_ReactorDefinition GetSubTypeDefinition()
 		{
-			return definition.Id.SubtypeName == "" ? definition.Id.TypeId.ToString() : definition.Id.SubtypeName;
-		}
-
-		#endregion
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public class ReactorDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_ReactorDefinition, ReactorDefinition>
-	{
-		#region "Constructors and Initializers"
-
-		public ReactorDefinitionsManager(MyObjectBuilder_ReactorDefinition[] definitions)
-			: base(definitions)
-		{ }
-
-		#endregion
-
-		#region "Methods"
-
-		protected override ReactorDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_ReactorDefinition definition)
-		{
-			return new ReactorDefinition(definition);
-		}
-
-		protected override MyObjectBuilder_ReactorDefinition GetBaseTypeOf(ReactorDefinition overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
-
-		protected override bool GetChangedState(ReactorDefinition overLayer)
-		{
-			return overLayer.Changed;
+			return (MyObjectBuilder_ReactorDefinition)m_baseDefinition;
 		}
 
 		#endregion

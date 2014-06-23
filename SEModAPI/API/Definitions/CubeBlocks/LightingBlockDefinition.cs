@@ -1,8 +1,9 @@
-﻿using Sandbox.Common.ObjectBuilders.Definitions;
+﻿using System.ComponentModel;
+using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API.Definitions.CubeBlocks
 {
-	public class LightingBlockDefinition : ObjectOverLayerDefinition<MyObjectBuilder_LightingBlockDefinition>
+	public class LightingBlockDefinition : BlockDefinition
 	{
 		#region "Constructors and Initializers"
 
@@ -15,77 +16,18 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		#region "Properties"
 
 		/// <summary>
-		/// Get or set the current Thruster build time in second.
+		/// The current Lithing block required power input
 		/// </summary>
-		public float BuildTime
-		{
-			get { return m_baseDefinition.BuildTimeSeconds; }
-			set
-			{
-				if (m_baseDefinition.BuildTimeSeconds == value) return;
-				m_baseDefinition.BuildTimeSeconds = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// Get or Set the current Thruster DisassembleRatio
-		/// The value is a multiplyer of BuildTime
-		/// [Disassemble time] = BuildTime * DisassembleRatio
-		/// </summary>
-		public float DisassembleRatio
-		{
-			get { return m_baseDefinition.DisassembleRatio; }
-			set
-			{
-				if (m_baseDefinition.DisassembleRatio == value) return;
-				m_baseDefinition.DisassembleRatio = value;
-				Changed = true;
-			}
-		}
-		public MyObjectBuilder_CubeBlockDefinition.CubeBlockComponent[] Components
-		{
-			get { return m_baseDefinition.Components; }
-		}
-
-		/// <summary>
-		/// The activation state of the current Thruster
-		/// </summary>
-		public bool Enabled
-		{
-			get { return m_baseDefinition.Public; }
-			set
-			{
-				if (m_baseDefinition.Public == value) return;
-				m_baseDefinition.Public = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The Model intersection state of the current Thruster 
-		/// </summary>
-		public bool UseModelIntersection
-		{
-			get { return m_baseDefinition.UseModelIntersection; }
-			set
-			{
-				if (m_baseDefinition.UseModelIntersection == value) return;
-				m_baseDefinition.UseModelIntersection = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The current Assembler required power input
-		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Lithing block required power input.")]
 		public float RequiredPowerInput
 		{
-			get { return m_baseDefinition.RequiredPowerInput; }
+			get { return GetSubTypeDefinition().RequiredPowerInput; }
 			set
 			{
-				if (m_baseDefinition.RequiredPowerInput.Equals(value)) return;
-				m_baseDefinition.RequiredPowerInput = value;
+				if (GetSubTypeDefinition().RequiredPowerInput.Equals(value)) return;
+				GetSubTypeDefinition().RequiredPowerInput = value;
 				Changed = true;
 			}
 		}
@@ -93,13 +35,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Lithing block Max light fall off
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Lithing block Max light fall off.")]
 		public float MaxLightFalloff
 		{
-			get { return m_baseDefinition.LightFalloff.Max; }
+			get { return GetSubTypeDefinition().LightFalloff.Max; }
 			set
 			{
-				if (m_baseDefinition.LightFalloff.Max.Equals(value)) return;
-				m_baseDefinition.LightFalloff.Max = value;
+				if (GetSubTypeDefinition().LightFalloff.Max.Equals(value)) return;
+				GetSubTypeDefinition().LightFalloff.Max = value;
 				Changed = true;
 			}
 		}
@@ -107,13 +52,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Lithing block Min light fall off
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Lithing block Min light fall off.")]
 		public float MinLightFalloff
 		{
-			get { return m_baseDefinition.LightFalloff.Min; }
+			get { return GetSubTypeDefinition().LightFalloff.Min; }
 			set
 			{
-				if (m_baseDefinition.LightFalloff.Min.Equals(value)) return;
-				m_baseDefinition.LightFalloff.Min = value;
+				if (GetSubTypeDefinition().LightFalloff.Min.Equals(value)) return;
+				GetSubTypeDefinition().LightFalloff.Min = value;
 				Changed = true;
 			}
 		}
@@ -121,13 +69,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Lithing block Default light fall off
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Lithing block Default light fall off.")]
 		public float DefaultLightFalloff
 		{
-			get { return m_baseDefinition.LightFalloff.Default; }
+			get { return GetSubTypeDefinition().LightFalloff.Default; }
 			set
 			{
-				if (m_baseDefinition.LightFalloff.Default.Equals(value)) return;
-				m_baseDefinition.LightFalloff.Default = value;
+				if (GetSubTypeDefinition().LightFalloff.Default.Equals(value)) return;
+				GetSubTypeDefinition().LightFalloff.Default = value;
 				Changed = true;
 			}
 		}
@@ -136,43 +87,13 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_LightingBlockDefinition definition)
+		/// <summary>
+		/// Method to get the casted instance from parent signature
+		/// </summary>
+		/// <returns>The casted instance into the class type</returns>
+		public virtual MyObjectBuilder_LightingBlockDefinition GetSubTypeDefinition()
 		{
-			return definition.Id.SubtypeName == "" ? definition.Id.TypeId.ToString() : definition.Id.SubtypeName;
-		}
-
-		#endregion
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public class LightingBlockDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_LightingBlockDefinition, LightingBlockDefinition>
-	{
-		#region "Constructors and Initializers"
-
-		public LightingBlockDefinitionsManager(MyObjectBuilder_LightingBlockDefinition[] definitions)
-			: base(definitions)
-		{ }
-
-		#endregion
-
-		#region "Methods"
-
-		protected override LightingBlockDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_LightingBlockDefinition definition)
-		{
-			return new LightingBlockDefinition(definition);
-		}
-
-		protected override MyObjectBuilder_LightingBlockDefinition GetBaseTypeOf(LightingBlockDefinition overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
-
-		protected override bool GetChangedState(LightingBlockDefinition overLayer)
-		{
-			return overLayer.Changed;
+			return (MyObjectBuilder_LightingBlockDefinition)m_baseDefinition;
 		}
 
 		#endregion

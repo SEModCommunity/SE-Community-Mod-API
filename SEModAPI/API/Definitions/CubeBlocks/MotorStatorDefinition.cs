@@ -1,12 +1,13 @@
-﻿using Sandbox.Common.ObjectBuilders.Definitions;
+﻿using System.ComponentModel;
+using Sandbox.Common.ObjectBuilders.Definitions;
 
 namespace SEModAPI.API.Definitions.CubeBlocks
 {
-	public class MotorStatorBlockDefinition : ObjectOverLayerDefinition<MyObjectBuilder_MotorStatorDefinition>
+	public class MotorStatorDefinition : BlockDefinition
 	{
 		#region "Constructors and Initializers"
 
-		public MotorStatorBlockDefinition(MyObjectBuilder_MotorStatorDefinition definition)
+		public MotorStatorDefinition(MyObjectBuilder_MotorStatorDefinition definition)
 			: base(definition)
 		{ }
 
@@ -15,77 +16,18 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		#region "Properties"
 
 		/// <summary>
-		/// Get or set the current Thruster build time in second.
+		/// The current Motor stator required power input
 		/// </summary>
-		public float BuildTime
-		{
-			get { return m_baseDefinition.BuildTimeSeconds; }
-			set
-			{
-				if (m_baseDefinition.BuildTimeSeconds == value) return;
-				m_baseDefinition.BuildTimeSeconds = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// Get or Set the current Thruster DisassembleRatio
-		/// The value is a multiplyer of BuildTime
-		/// [Disassemble time] = BuildTime * DisassembleRatio
-		/// </summary>
-		public float DisassembleRatio
-		{
-			get { return m_baseDefinition.DisassembleRatio; }
-			set
-			{
-				if (m_baseDefinition.DisassembleRatio == value) return;
-				m_baseDefinition.DisassembleRatio = value;
-				Changed = true;
-			}
-		}
-		public MyObjectBuilder_CubeBlockDefinition.CubeBlockComponent[] Components
-		{
-			get { return m_baseDefinition.Components; }
-		}
-
-		/// <summary>
-		/// The activation state of the current Thruster
-		/// </summary>
-		public bool Enabled
-		{
-			get { return m_baseDefinition.Public; }
-			set
-			{
-				if (m_baseDefinition.Public == value) return;
-				m_baseDefinition.Public = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The Model intersection state of the current Thruster 
-		/// </summary>
-		public bool UseModelIntersection
-		{
-			get { return m_baseDefinition.UseModelIntersection; }
-			set
-			{
-				if (m_baseDefinition.UseModelIntersection == value) return;
-				m_baseDefinition.UseModelIntersection = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The current Assembler required power input
-		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Motor stator required power input.")]
 		public float RequiredPowerInput
 		{
-			get { return m_baseDefinition.RequiredPowerInput; }
+			get { return GetSubTypeDefinition().RequiredPowerInput; }
 			set
 			{
-				if (m_baseDefinition.RequiredPowerInput.Equals(value)) return;
-				m_baseDefinition.RequiredPowerInput = value;
+				if (GetSubTypeDefinition().RequiredPowerInput.Equals(value)) return;
+				GetSubTypeDefinition().RequiredPowerInput = value;
 				Changed = true;
 			}
 		}
@@ -93,13 +35,16 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// <summary>
 		/// The current Rotor or Stator Max force magnitude
 		/// </summary>
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("Get or set the current Gravity generator required power input.")]
 		public float MaxForceMagnitude
 		{
-			get { return m_baseDefinition.MaxForceMagnitude; }
+			get { return GetSubTypeDefinition().MaxForceMagnitude; }
 			set
 			{
-				if (m_baseDefinition.MaxForceMagnitude.Equals(value)) return;
-				m_baseDefinition.MaxForceMagnitude = value;
+				if (GetSubTypeDefinition().MaxForceMagnitude.Equals(value)) return;
+				GetSubTypeDefinition().MaxForceMagnitude = value;
 				Changed = true;
 			}
 		}
@@ -108,43 +53,13 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_MotorStatorDefinition definition)
+		/// <summary>
+		/// Method to get the casted instance from parent signature
+		/// </summary>
+		/// <returns>The casted instance into the class type</returns>
+		public new virtual MyObjectBuilder_MotorStatorDefinition GetSubTypeDefinition()
 		{
-			return definition.Id.SubtypeName == "" ? definition.Id.TypeId.ToString() : definition.Id.SubtypeName;
-		}
-
-		#endregion
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public class RotorStatorDefinitionsManager : OverLayerDefinitionsManager<MyObjectBuilder_MotorStatorDefinition, MotorStatorBlockDefinition>
-	{
-		#region "Constructors and Initializers"
-
-		public RotorStatorDefinitionsManager(MyObjectBuilder_MotorStatorDefinition[] definitions)
-			: base(definitions)
-		{ }
-
-		#endregion
-
-		#region "Methods"
-
-		protected override MotorStatorBlockDefinition CreateOverLayerSubTypeInstance(MyObjectBuilder_MotorStatorDefinition definition)
-		{
-			return new MotorStatorBlockDefinition(definition);
-		}
-
-		protected override MyObjectBuilder_MotorStatorDefinition GetBaseTypeOf(MotorStatorBlockDefinition overLayer)
-		{
-			return overLayer.BaseDefinition;
-		}
-
-		protected override bool GetChangedState(MotorStatorBlockDefinition overLayer)
-		{
-			return overLayer.Changed;
+			return (MyObjectBuilder_MotorStatorDefinition)m_baseDefinition;
 		}
 
 		#endregion

@@ -3,6 +3,30 @@ using System.IO;
 
 namespace SEModAPI.API.Definitions.CubeBlocks
 {
+	public class CubeBlockDef : BlockDefinition
+	{
+		#region "Constructors and Initializers"
+
+		public CubeBlockDef(MyObjectBuilder_CubeBlockDefinition definition)
+			: base(definition)
+		{ }
+
+		#endregion
+
+		#region "Methods"
+
+		/// <summary>
+		/// Method to get the casted instance from parent signature
+		/// </summary>
+		/// <returns>The casted instance into the class type</returns>
+		public virtual MyObjectBuilder_CubeBlockDefinition GetSubTypeDefinition()
+		{
+			return (MyObjectBuilder_CubeBlockDefinition)m_baseDefinition;
+		}
+
+		#endregion
+	}
+
 	public class CubeBlockDefinition : ObjectOverLayerDefinition<MyObjectBuilder_CubeBlockDefinition>
     {
 		#region "Constructors and Initializers"
@@ -396,4 +420,6 @@ namespace SEModAPI.API.Definitions.CubeBlocks
     public class CubeBlockDefinitionsManager : SerializableDefinitionsManager<MyObjectBuilder_CubeBlockDefinition, CubeBlockDefinition>
     {
 	}
+
+
 }
