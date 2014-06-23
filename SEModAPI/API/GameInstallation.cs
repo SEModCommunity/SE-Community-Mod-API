@@ -147,7 +147,7 @@ namespace SEModAPI.API
 		public bool IsBaseAssembliesChanged()
 		{
 			// We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
-			var baseFilePath = Path.Combine(GamePath, "Bin64");
+			var baseFilePath = Path.Combine(GamePath, "DedicatedServer64");
 
 			var appFilePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
@@ -163,7 +163,7 @@ namespace SEModAPI.API
 		public bool UpdateBaseFiles()
 		{
 			// We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
-			var baseFilePath = Path.Combine(GamePath, "Bin64");
+			var baseFilePath = Path.Combine(GamePath, "DedicatedServer64");
 			var appFilePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
 			foreach (var filename in CoreSpaceEngineersFiles)
