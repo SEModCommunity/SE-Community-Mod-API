@@ -791,6 +791,11 @@ namespace SEModAPI.API.Internal
 				MethodInfo addEntityMethod = m_objectManagerType.GetMethod("E5E18F5CAD1F62BB276DF991F20AE6AF", BindingFlags.Public | BindingFlags.Static);
 				addEntityMethod.Invoke(null, new object[] { m_nextEntityToUpdate, true });
 
+				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)InvokeEntityMethod(m_nextEntityToUpdate, "GetObjectBuilder", new object[] { });
+				Type someManager = m_assembly.GetType("5F381EA9388E0A32A8C817841E192BE8.8EFE49A46AB934472427B7D117FD3C64");
+				MethodInfo sendEntityMethod = someManager.GetMethod("A6B585C993B43E72219511726BBB0649", BindingFlags.Public | BindingFlags.Static);
+				sendEntityMethod.Invoke(null, new object[] { baseEntity });
+
 				m_nextEntityToUpdate = null;
 			}
 			catch (Exception ex)
