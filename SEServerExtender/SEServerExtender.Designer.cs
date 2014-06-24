@@ -35,6 +35,8 @@
 			this.BTN_ServerControl_Start = new System.Windows.Forms.Button();
 			this.BTN_ServerControl_Stop = new System.Windows.Forms.Button();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+			this.LBL_Control_Debugging = new System.Windows.Forms.Label();
+			this.CHK_Control_Debugging = new System.Windows.Forms.CheckBox();
 			this.TAB_Entities_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
@@ -43,8 +45,8 @@
 			this.BTN_Entities_Delete = new System.Windows.Forms.Button();
 			this.PG_Entities_Details = new System.Windows.Forms.PropertyGrid();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.LBL_Control_Debugging = new System.Windows.Forms.Label();
-			this.CHK_Control_Debugging = new System.Windows.Forms.CheckBox();
+			this.LBL_Control_EnableFactions = new System.Windows.Forms.Label();
+			this.CHK_Control_EnableFactions = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -158,15 +160,36 @@
 			// 
 			// splitContainer4.Panel1
 			// 
+			this.splitContainer4.Panel1.Controls.Add(this.LBL_Control_EnableFactions);
 			this.splitContainer4.Panel1.Controls.Add(this.LBL_Control_Debugging);
 			this.splitContainer4.Panel1MinSize = 120;
 			// 
 			// splitContainer4.Panel2
 			// 
+			this.splitContainer4.Panel2.Controls.Add(this.CHK_Control_EnableFactions);
 			this.splitContainer4.Panel2.Controls.Add(this.CHK_Control_Debugging);
 			this.splitContainer4.Size = new System.Drawing.Size(398, 595);
 			this.splitContainer4.SplitterDistance = 120;
 			this.splitContainer4.TabIndex = 0;
+			// 
+			// LBL_Control_Debugging
+			// 
+			this.LBL_Control_Debugging.AutoSize = true;
+			this.LBL_Control_Debugging.Location = new System.Drawing.Point(3, 4);
+			this.LBL_Control_Debugging.Name = "LBL_Control_Debugging";
+			this.LBL_Control_Debugging.Size = new System.Drawing.Size(98, 13);
+			this.LBL_Control_Debugging.TabIndex = 0;
+			this.LBL_Control_Debugging.Text = "Enable Debugging:";
+			// 
+			// CHK_Control_Debugging
+			// 
+			this.CHK_Control_Debugging.AutoSize = true;
+			this.CHK_Control_Debugging.Location = new System.Drawing.Point(3, 3);
+			this.CHK_Control_Debugging.Name = "CHK_Control_Debugging";
+			this.CHK_Control_Debugging.Size = new System.Drawing.Size(15, 14);
+			this.CHK_Control_Debugging.TabIndex = 0;
+			this.CHK_Control_Debugging.UseVisualStyleBackColor = true;
+			this.CHK_Control_Debugging.CheckedChanged += new System.EventHandler(this.CHK_Control_Debugging_CheckedChanged);
 			// 
 			// TAB_Entities_Page
 			// 
@@ -265,24 +288,24 @@
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
-			// LBL_Control_Debugging
+			// LBL_Control_EnableFactions
 			// 
-			this.LBL_Control_Debugging.AutoSize = true;
-			this.LBL_Control_Debugging.Location = new System.Drawing.Point(3, 4);
-			this.LBL_Control_Debugging.Name = "LBL_Control_Debugging";
-			this.LBL_Control_Debugging.Size = new System.Drawing.Size(98, 13);
-			this.LBL_Control_Debugging.TabIndex = 0;
-			this.LBL_Control_Debugging.Text = "Enable Debugging:";
+			this.LBL_Control_EnableFactions.AutoSize = true;
+			this.LBL_Control_EnableFactions.Location = new System.Drawing.Point(3, 26);
+			this.LBL_Control_EnableFactions.Name = "LBL_Control_EnableFactions";
+			this.LBL_Control_EnableFactions.Size = new System.Drawing.Size(86, 13);
+			this.LBL_Control_EnableFactions.TabIndex = 1;
+			this.LBL_Control_EnableFactions.Text = "Enable Factions:";
 			// 
-			// CHK_Control_Debugging
+			// CHK_Control_EnableFactions
 			// 
-			this.CHK_Control_Debugging.AutoSize = true;
-			this.CHK_Control_Debugging.Location = new System.Drawing.Point(3, 3);
-			this.CHK_Control_Debugging.Name = "CHK_Control_Debugging";
-			this.CHK_Control_Debugging.Size = new System.Drawing.Size(15, 14);
-			this.CHK_Control_Debugging.TabIndex = 0;
-			this.CHK_Control_Debugging.UseVisualStyleBackColor = true;
-			this.CHK_Control_Debugging.CheckedChanged += new System.EventHandler(this.CHK_Control_Debugging_CheckedChanged);
+			this.CHK_Control_EnableFactions.AutoSize = true;
+			this.CHK_Control_EnableFactions.Location = new System.Drawing.Point(3, 26);
+			this.CHK_Control_EnableFactions.Name = "CHK_Control_EnableFactions";
+			this.CHK_Control_EnableFactions.Size = new System.Drawing.Size(15, 14);
+			this.CHK_Control_EnableFactions.TabIndex = 1;
+			this.CHK_Control_EnableFactions.UseVisualStyleBackColor = true;
+			this.CHK_Control_EnableFactions.CheckedChanged += new System.EventHandler(this.CHK_Control_EnableFactions_CheckedChanged);
 			// 
 			// SEServerExtender
 			// 
@@ -341,5 +364,7 @@
 		private System.Windows.Forms.Button BTN_Entities_Delete;
 		private System.Windows.Forms.Label LBL_Control_Debugging;
 		private System.Windows.Forms.CheckBox CHK_Control_Debugging;
+		private System.Windows.Forms.Label LBL_Control_EnableFactions;
+		private System.Windows.Forms.CheckBox CHK_Control_EnableFactions;
 	}
 }

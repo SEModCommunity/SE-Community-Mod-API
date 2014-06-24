@@ -316,7 +316,7 @@ namespace SEServerExtender
 
 		private void BTN_Entities_New_Click(object sender, EventArgs e)
 		{
-			if (TRV_Entities.SelectedNode.Text == "Cube Grids" || TRV_Entities.SelectedNode.Tag is CubeGrid)
+			if (TRV_Entities.SelectedNode.Text.StartsWith("Cube Grids") || TRV_Entities.SelectedNode.Tag is CubeGrid)
 			{
 				OpenFileDialog openFileDialog = new OpenFileDialog
 				{
@@ -345,7 +345,17 @@ namespace SEServerExtender
 
 		private void CHK_Control_Debugging_CheckedChanged(object sender, EventArgs e)
 		{
-			BaseInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+			ServerAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+			SandboxGameAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+			GameObjectManagerWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+			CubeGridInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+			CubeBlockInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+			CharacterInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+		}
+
+		private void CHK_Control_EnableFactions_CheckedChanged(object sender, EventArgs e)
+		{
+			SandboxGameAssemblyWrapper.EnableFactions(CHK_Control_EnableFactions.CheckState == CheckState.Checked);
 		}
 
 		#endregion

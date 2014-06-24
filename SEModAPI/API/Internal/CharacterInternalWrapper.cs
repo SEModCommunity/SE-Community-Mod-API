@@ -46,6 +46,24 @@ namespace SEModAPI.API.Internal
 
 		#endregion
 
+		#region "Properties"
+
+		new public static bool IsDebugging
+		{
+			get
+			{
+				CharacterInternalWrapper.GetInstance();
+				return m_isDebugging;
+			}
+			set
+			{
+				CharacterInternalWrapper.GetInstance();
+				m_isDebugging = value;
+			}
+		}
+
+		#endregion
+
 		#region "Methods"
 
 		public float GetCharacterHealth(CharacterEntity character)

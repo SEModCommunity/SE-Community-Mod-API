@@ -44,7 +44,7 @@ namespace SEModAPI.API.SaveData
 				m_baseDefinition.EntityId = value;
 				Changed = true;
 
-				GameObjectManagerWrapper.GetInstance().UpdateEntityId(BackingObject, value);
+				GameObjectManagerWrapper.UpdateEntityId(BackingObject, value);
 			}
 		}
 

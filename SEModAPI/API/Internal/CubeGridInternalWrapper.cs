@@ -54,6 +54,24 @@ namespace SEModAPI.API.Internal
 
 		#endregion
 
+		#region "Properties"
+
+		new public static bool IsDebugging
+		{
+			get
+			{
+				CubeGridInternalWrapper.GetInstance();
+				return m_isDebugging;
+			}
+			set
+			{
+				CubeGridInternalWrapper.GetInstance();
+				m_isDebugging = value;
+			}
+		}
+
+		#endregion
+
 		#region "Methods"
 
 		public static bool UpdateEntityIsStatic(Object gameEntity, bool isStatic)
@@ -109,7 +127,9 @@ namespace SEModAPI.API.Internal
 				if (m_isDebugging)
 					Console.WriteLine("CubeGrid '" + m_cubeGridToUpdate.Name + "' is being added ...");
 
-				m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
+				//Force the constructor to initialize before we continue
+				GetInstance();
+
 				m_baseCubeGridType = m_assembly.GetType(CubeGridClass);
 
 				//Create a blank instance of the base type
@@ -118,7 +138,8 @@ namespace SEModAPI.API.Internal
 				//Invoke 'Init' using the sub object of the grid which is the MyObjectBuilder_CubeGrid type
 				InvokeEntityMethod(m_cubeGridToUpdate.BackingObject, "Init", new object[] { m_cubeGridToUpdate.BaseDefinition });
 
-				//TODO - Need to do more to load it up into the main list
+				//Add the entity to the scene
+				GameObjectManagerWrapper.GetInstance().AddEntity(m_cubeGridToUpdate.BackingObject);
 
 				m_cubeGridToUpdate = null;
 			}

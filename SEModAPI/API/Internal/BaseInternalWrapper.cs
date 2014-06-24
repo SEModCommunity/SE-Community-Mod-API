@@ -14,7 +14,7 @@ namespace SEModAPI.API.Internal
 
 		protected static BaseInternalWrapper m_instance;
 
-		protected static bool m_isDebugging;
+		protected static bool m_isDebugging = false;
 
 		#endregion
 
@@ -39,8 +39,16 @@ namespace SEModAPI.API.Internal
 
 		public static bool IsDebugging
 		{
-			get { return m_isDebugging; }
-			set { m_isDebugging = value; }
+			get
+			{
+				GetInstance();
+				return m_isDebugging;
+			}
+			set
+			{
+				GetInstance();
+				m_isDebugging = value;
+			}
 		}
 
 		#endregion

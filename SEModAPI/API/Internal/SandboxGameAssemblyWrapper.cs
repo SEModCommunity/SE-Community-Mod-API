@@ -25,7 +25,7 @@ namespace SEModAPI.API.Internal
 
 		protected new static SandboxGameAssemblyWrapper m_instance;
 
-		private Assembly m_assembly;
+		private static Assembly m_assembly;
 
 		private static Type m_mainGameType;
 		private Type m_checkpointManagerType;
@@ -113,6 +113,20 @@ namespace SEModAPI.API.Internal
 		public Type CheckpointManagerType
 		{
 			get { return m_checkpointManagerType; }
+		}
+
+		new public static bool IsDebugging
+		{
+			get
+			{
+				SandboxGameAssemblyWrapper.GetInstance();
+				return m_isDebugging;
+			}
+			set
+			{
+				SandboxGameAssemblyWrapper.GetInstance();
+				m_isDebugging = value;
+			}
 		}
 
 		#endregion
@@ -347,6 +361,20 @@ namespace SEModAPI.API.Internal
 		{
 			SteamServerAPI serverAPI = SteamServerAPI.Instance;
 			serverAPI.GameServer.SendUserDisconnect(steamId);
+		}
+
+		public static void EnableFactions(bool enabled = true)
+		{
+			//Force initialization just in case because this method can be called from the UI
+			GetInstance();
+
+			Type gameConstantsType = m_assembly.GetType("00DD5482C0A3DF0D94B151167E77A6D9.5FBC15A83966C3D53201318E6F912741");
+			FieldInfo factionsEnabledField = gameConstantsType.GetField("AE3FD6A65A631D2BF9835EE8E86F8110", BindingFlags.Public | BindingFlags.Static);
+			bool currentValue = (bool)factionsEnabledField.GetValue(null);
+
+			Console.WriteLine("Changing 'Factions' enabled from '" + currentValue.ToString() + "' to '" + enabled.ToString() + "'");
+
+			factionsEnabledField.SetValue(null, enabled);
 		}
 
 		#endregion

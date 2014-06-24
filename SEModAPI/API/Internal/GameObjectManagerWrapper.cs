@@ -28,14 +28,11 @@ namespace SEModAPI.API.Internal
 
 		private Thread m_mainGameThread;
 
-		private Assembly m_assembly;
+		private static Assembly m_assembly;
 
 		private static Type m_objectManagerType;
 		private static Type m_entityBaseType;
 
-		private MethodInfo m_GetObjectBuilderEntities;
-		private MethodInfo m_RemoveEntity;
-		private MethodInfo m_RemoveEntity2;
 		private MethodInfo m_GetEntityHashSet;
 
 		//TODO - Build some sort of Dictionary based structure to hold these temp values
@@ -74,9 +71,6 @@ namespace SEModAPI.API.Internal
 			m_objectManagerType = m_assembly.GetType(ObjectManagerClass);
 			m_entityBaseType = m_assembly.GetType(GameEntityClass);
 
-			m_GetObjectBuilderEntities = m_objectManagerType.GetMethod("0A1670B270D5F8417447CFCBA7BF0FA8", BindingFlags.NonPublic | BindingFlags.Static);
-			m_RemoveEntity = m_objectManagerType.GetMethod("E02368B53672686387A0DE0CF91F60B7", BindingFlags.Public | BindingFlags.Static);
-			m_RemoveEntity2 = m_objectManagerType.GetMethod("D46C6748B5B97161CFB9ECF64126A129", BindingFlags.Public | BindingFlags.Static);
 			m_GetEntityHashSet = m_objectManagerType.GetMethod("84C54760C0F0DDDA50B0BE27B7116ED8", BindingFlags.Public | BindingFlags.Static);
 
 			if(m_isDebugging)
@@ -112,14 +106,23 @@ namespace SEModAPI.API.Internal
 			set { m_mainGameThread = value; }
 		}
 
+		new public static bool IsDebugging
+		{
+			get
+			{
+				GameObjectManagerWrapper.GetInstance();
+				return m_isDebugging;
+			}
+			set
+			{
+				GameObjectManagerWrapper.GetInstance();
+				m_isDebugging = value;
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
-
-		public List<MyObjectBuilder_EntityBase> GetObjectBuilderEntities()
-		{
-			return (List<MyObjectBuilder_EntityBase>)m_GetObjectBuilderEntities.Invoke(null, new object[] { });
-		}
 
 		public HashSet<Object> GetObjectManagerHashSetData()
 		{
@@ -249,6 +252,15 @@ namespace SEModAPI.API.Internal
 
 		#region EntityMethods
 
+		public static long GenerateEntityId()
+		{
+			Type utilityType = m_assembly.GetType("5BCAC68007431E61367F5B2CF24E2D6F.226D9974B43A7269CDD3E322CC8110D5");
+			MethodInfo generateIdMethod = utilityType.GetMethod("3B4924802BEBD1AE13B29920376CE914", BindingFlags.Public | BindingFlags.Static);
+			long entityId = (long)generateIdMethod.Invoke(null, new object[] { });
+
+			return entityId;
+		}
+
 		#region "Setup"
 
 		public bool SetupObjectManagerEventHandlers()
@@ -320,7 +332,7 @@ namespace SEModAPI.API.Internal
 
 		#region "Updates"
 
-		public bool UpdateEntityId(Object gameEntity, long entityId)
+		public static bool UpdateEntityId(Object gameEntity, long entityId)
 		{
 			try
 			{
@@ -435,6 +447,27 @@ namespace SEModAPI.API.Internal
 				m_nextEntityToUpdate = gameEntity;
 
 				Action action = InternalUpdateEntityForward;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+
+				return true;
+			}
+			catch (TargetInvocationException ex)
+			{
+				throw ex.InnerException;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		public bool AddEntity(Object gameEntity)
+		{
+			try
+			{
+				m_nextEntityToUpdate = gameEntity;
+
+				Action action = InternalAddEntity;
 				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
 
 				return true;
@@ -734,6 +767,29 @@ namespace SEModAPI.API.Internal
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Calling 'Close'");
 
 				InvokeEntityMethod(m_nextEntityToUpdate, "Close");
+
+				m_nextEntityToUpdate = null;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+			}
+		}
+
+		public static void InternalAddEntity()
+		{
+			try
+			{
+				if (m_nextEntityToUpdate == null)
+					return;
+				if (GetEntityId(m_nextEntityToUpdate) == 0)
+					return;
+
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Adding to scene ...");
+
+				MethodInfo addEntityMethod = m_objectManagerType.GetMethod("E5E18F5CAD1F62BB276DF991F20AE6AF", BindingFlags.Public | BindingFlags.Static);
+				addEntityMethod.Invoke(null, new object[] { m_nextEntityToUpdate, true });
 
 				m_nextEntityToUpdate = null;
 			}

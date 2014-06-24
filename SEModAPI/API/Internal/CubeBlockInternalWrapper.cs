@@ -38,6 +38,24 @@ namespace SEModAPI.API.Internal
 
 		#endregion
 
+		#region "Properties"
+
+		new public static bool IsDebugging
+		{
+			get
+			{
+				CubeBlockInternalWrapper.GetInstance();
+				return m_isDebugging;
+			}
+			set
+			{
+				CubeBlockInternalWrapper.GetInstance();
+				m_isDebugging = value;
+			}
+		}
+
+		#endregion
+
 		#region "Methods"
 
 		public HashSet<Object> GetCubeBlocksHashSet(CubeGrid cubeGrid)
