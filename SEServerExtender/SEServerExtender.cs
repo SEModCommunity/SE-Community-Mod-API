@@ -45,7 +45,7 @@ namespace SEServerExtender
 			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
 
 			m_propertyGridRefreshTimer = new Timer();
-			m_propertyGridRefreshTimer.Interval = 5000;
+			m_propertyGridRefreshTimer.Interval = 10000;
 			m_propertyGridRefreshTimer.Tick += new EventHandler(PropertyGridRefresh);
 
 			TRV_Entities.Nodes.Add("Cube Grids (0)");
@@ -171,7 +171,7 @@ namespace SEServerExtender
 
 		private void BTN_ServerControl_Start_Click(object sender, EventArgs e)
 		{
-			m_processWrapper.StartGame(TXT_Control_WorldName.Text);
+			m_processWrapper.StartGame("");
 
 			m_entityTreeRefreshTimer.Start();
 			m_propertyGridRefreshTimer.Start();
@@ -187,9 +187,12 @@ namespace SEServerExtender
 			var linkedObject = e.Node.Tag;
 
 			PG_Entities_Details.SelectedObject = linkedObject;
+			BTN_Entities_New.Enabled = false;
+			BTN_Entities_Delete.Enabled = false;
 
 			if (linkedObject is CubeGrid)
 			{
+				BTN_Entities_Delete.Enabled = true;
 				if (e.Node.Nodes.Count < 2)
 				{
 					e.Node.Nodes.Add("Structural Blocks (0)");
@@ -211,5 +214,31 @@ namespace SEServerExtender
 		}
 
 		#endregion
+
+		private void BTN_Entities_Delete_Click(object sender, EventArgs e)
+		{
+			Object linkedObject = TRV_Entities.SelectedNode.Tag;
+			if(linkedObject is CubeGrid)
+			{
+				try
+				{
+					CubeGrid cubeGrid = (CubeGrid)linkedObject;
+					GameObjectManagerWrapper.GetInstance().RemoveEntity(cubeGrid.BackingObject);
+
+					PG_Entities_Details.SelectedObject = null;
+					TRV_Entities.SelectedNode.Tag = null;
+					TRV_Entities.SelectedNode.Remove();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.ToString());
+				}
+			}
+		}
+
+		private void BTN_Entities_New_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show("This feature is not yet implemented");
+		}
 	}
 }

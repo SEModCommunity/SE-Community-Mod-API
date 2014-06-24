@@ -48,6 +48,7 @@ namespace SEModAPI.API.SaveData
 		}
 
 		[Category("Cube Grid")]
+		[ReadOnly(true)]
 		public MyCubeSize GridSizeEnum
 		{
 			get { return m_baseDefinition.GridSizeEnum; }

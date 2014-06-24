@@ -23,10 +23,8 @@ namespace SEModAPI.API.Internal
 
 		private Assembly m_assembly;
 
-		private Type m_mainGameType;
+		private static Type m_mainGameType;
 		private Type m_checkpointManagerType;
-		private Type m_cubeGridType;
-		private Type m_characterType;
 		private Type m_serverCoreType;
 		private static Type m_configContainerType;
 		private Type m_stringLookupType1;
@@ -41,6 +39,13 @@ namespace SEModAPI.API.Internal
 		private static FieldInfo m_configContainerField;
 		private static FieldInfo m_configContainerDedicatedDataField;
 		private static FieldInfo m_serverCoreNullRender;
+
+		public static string MainGameClass = "B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4";
+
+		public static string MainGameAction1 = "0CAB22C866086930782A91BA5F21A936";	//() Entity loading complete
+		public static string MainGameAction2 = "736ABFDB88EC08BFEA24D3A2AB06BE80";	//(Bool) ??
+		public static string MainGameAction3 = "F7E4614DB0033215C446B502BA17BDDB";	//() ??
+		public static string MainGameAction4 = "B43682C38AD089E0EE792C74E4503633";	//() Shutdown started
 
 		#endregion
 
@@ -59,10 +64,8 @@ namespace SEModAPI.API.Internal
 			//string MySandboxGame_ExitMethod = "246E732EE67F7F6F88C4FF63B3901107";
 			//string MySandboxGame_Initialize = "2AA66FBD3F2C5EC250558B3136F3974A";
 
-			m_mainGameType = m_assembly.GetType("B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4");
+			m_mainGameType = m_assembly.GetType(MainGameClass);
 			m_checkpointManagerType = m_assembly.GetType("36CC7CE820B9BBBE4B3FECFEEFE4AE86.828574590CB1B1AE5A5659D4B9659548");
-			m_cubeGridType = m_assembly.GetType("5BCAC68007431E61367F5B2CF24E2D6F.98262C3F38A1199E47F2B9338045794C");
-			m_characterType = m_assembly.GetType("F79C930F3AD8FDAF31A59E2702EECE70.3B71F31E6039CAE9D8706B5F32FE468D");
 			m_serverCoreType = m_assembly.GetType("168638249D29224100DB50BB468E7C07.7BAD4AFD06B91BCD63EA57F7C0D4F408");
 			m_stringLookupType1 = m_assembly.GetType("B337879D0C82A5F9C44D51D954769590.2F60967103E6024E563836A2572899F1");
 
@@ -108,19 +111,113 @@ namespace SEModAPI.API.Internal
 			get { return m_checkpointManagerType; }
 		}
 
-		public Type CubeGridType
-		{
-			get { return m_cubeGridType; }
-		}
-
-		public Type CharacterType
-		{
-			get { return m_characterType; }
-		}
-
 		#endregion
 
 		#region "Methods"
+
+		public static bool SetupMainGameEventHandlers(B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4 mainGame)
+		{
+			try
+			{
+				FieldInfo actionField = m_mainGameType.GetField(MainGameAction1, BindingFlags.NonPublic | BindingFlags.Static);
+				Action newAction1 = MainGameEvent1;
+				actionField.SetValue(null, newAction1);
+				
+				actionField = m_mainGameType.GetField(MainGameAction2, BindingFlags.NonPublic | BindingFlags.Instance);
+				Action<bool> newAction2 = MainGameEvent2;
+				actionField.SetValue(mainGame, newAction2);
+				
+				actionField = m_mainGameType.GetField(MainGameAction3, BindingFlags.NonPublic | BindingFlags.Static);
+				Action newAction3 = MainGameEvent3;
+				actionField.SetValue(null, newAction3);
+				
+				actionField = m_mainGameType.GetField(MainGameAction4, BindingFlags.NonPublic | BindingFlags.Static);
+				Action newAction4 = MainGameEvent4;
+				actionField.SetValue(null, newAction4);
+				
+				return true;
+			}
+			catch (TargetInvocationException ex)
+			{
+				throw ex.InnerException;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		#region "Actions"
+
+		public static void MainGameEvent1()
+		{
+			try
+			{
+				Console.WriteLine("MainGameEvent - '1'");
+
+				FieldInfo actionField = m_mainGameType.GetField(MainGameAction1, BindingFlags.NonPublic | BindingFlags.Static);
+				Action newAction = MainGameEvent1;
+				actionField.SetValue(null, newAction);
+			}
+			catch (Exception ex)
+			{
+				//TODO - Find the best way to handle this exception
+				return;
+			}
+		}
+
+		public static void MainGameEvent2(bool param0)
+		{
+			try
+			{
+				Console.WriteLine("MainGameEvent - '2' - " + param0.ToString());
+
+				FieldInfo actionField = m_mainGameType.GetField(MainGameAction2, BindingFlags.NonPublic | BindingFlags.Instance);
+				Action<bool> newAction = MainGameEvent2;
+				actionField.SetValue(GetMainGameInstance(), newAction);
+			}
+			catch (Exception ex)
+			{
+				//TODO - Find the best way to handle this exception
+				return;
+			}
+		}
+
+		public static void MainGameEvent3()
+		{
+			try
+			{
+				Console.WriteLine("MainGameEvent - '3'");
+
+				FieldInfo actionField = m_mainGameType.GetField(MainGameAction3, BindingFlags.NonPublic | BindingFlags.Static);
+				Action newAction = MainGameEvent3;
+				actionField.SetValue(null, newAction);
+			}
+			catch (Exception ex)
+			{
+				//TODO - Find the best way to handle this exception
+				return;
+			}
+		}
+
+		public static void MainGameEvent4()
+		{
+			try
+			{
+				Console.WriteLine("MainGameEvent - '4'");
+
+				FieldInfo actionField = m_mainGameType.GetField(MainGameAction4, BindingFlags.NonPublic | BindingFlags.Static);
+				Action newAction = MainGameEvent4;
+				actionField.SetValue(null, newAction);
+			}
+			catch (Exception ex)
+			{
+				//TODO - Find the best way to handle this exception
+				return;
+			}
+		}
+
+		#endregion
 
 		private string GetLookupString(MethodInfo method, int key, int start, int length)
 		{
@@ -177,9 +274,14 @@ namespace SEModAPI.API.Internal
 			return result;
 		}
 
-		public B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4 GetMainGameInstance()
+		public static B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4 GetMainGameInstance()
 		{
-			return (B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4)m_mainGameInstanceField.GetValue(null);
+			FieldInfo mainGameInstanceField = m_mainGameType.GetField("392503BDB6F8C1E34A232489E2A0C6D4", BindingFlags.Static | BindingFlags.Public);
+			B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4 mainGame = (B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4)mainGameInstanceField.GetValue(null);
+
+			SetupMainGameEventHandlers(mainGame);
+
+			return mainGame;
 		}
 
 		public static void SetNullRender(bool nullRender)

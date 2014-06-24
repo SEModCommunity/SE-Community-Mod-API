@@ -73,6 +73,7 @@ namespace SEModAPI.API.SaveData
 		}
 
 		[Category("Sector Object")]
+		[ReadOnly(true)]
 		public MyPersistentEntityFlags2 PersistentFlags
 		{
 			get { return m_baseDefinition.PersistentFlags; }
@@ -96,8 +97,6 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.PositionAndOrientation.Equals(value)) return;
 				m_baseDefinition.PositionAndOrientation = value;
 				Changed = true;
-
-				GameObjectManagerWrapper.GetInstance().SetEntityPositionOrientationMatrix(BackingObject, value.GetMatrix());
 			}
 		}
 

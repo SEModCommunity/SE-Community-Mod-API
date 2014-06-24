@@ -71,7 +71,7 @@ namespace SEModAPI.API.SaveData.Entity
 				m_baseDefinition.Battery.CurrentCapacity = value / 10000000;
 				Changed = true;
 
-				GameObjectManagerWrapper.GetInstance().UpdateCharacterBatteryLevel(this, m_baseDefinition.Battery.CurrentCapacity);
+				CharacterInternalWrapper.GetInstance().UpdateCharacterBatteryLevel(this, m_baseDefinition.Battery.CurrentCapacity);
 			}
 		}
 
@@ -82,14 +82,14 @@ namespace SEModAPI.API.SaveData.Entity
 			{
 				float health = m_baseDefinition.Health.GetValueOrDefault(-1);
 				if(health <= 0)
-					health = GameObjectManagerWrapper.GetInstance().GetCharacterHealth(this);
+					health = CharacterInternalWrapper.GetInstance().GetCharacterHealth(this);
 				return health;
 			}
 			set
 			{
 				if (Health == value) return;
 
-				GameObjectManagerWrapper.GetInstance().DamageCharacter(this, Health - value);
+				CharacterInternalWrapper.GetInstance().DamageCharacter(this, Health - value);
 
 				m_baseDefinition.Health = value;
 				Changed = true;

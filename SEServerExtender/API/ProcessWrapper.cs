@@ -86,7 +86,7 @@ namespace SEServerExtender.API
 
 				Thread.Sleep(1000);
 
-				mainGame = m_sandboxGameWrapper.GetMainGameInstance();
+				mainGame = SandboxGameAssemblyWrapper.GetMainGameInstance();
 				if (mainGame == null)
 					continue;
 				config = SandboxGameAssemblyWrapper.GetServerConfig();
@@ -101,13 +101,13 @@ namespace SEServerExtender.API
 			//TODO - Find a way to determine when the server is fully loaded
 			Thread.Sleep(25000);
 
-			Console.WriteLine("MONITOR - Server has started");
+			//Console.WriteLine("MONITOR - Server has started");
 
 			m_serverRunning = true;
 
 			while (m_serverRunning && m_runServerThread.ThreadState != System.Threading.ThreadState.Stopped)
 			{
-				mainGame = m_sandboxGameWrapper.GetMainGameInstance();
+				mainGame = SandboxGameAssemblyWrapper.GetMainGameInstance();
 				config = SandboxGameAssemblyWrapper.GetServerConfig();
 				if (mainGame == null || config == null)
 				{

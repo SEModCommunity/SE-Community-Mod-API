@@ -35,13 +35,14 @@
 			this.BTN_ServerControl_Start = new System.Windows.Forms.Button();
 			this.BTN_ServerControl_Stop = new System.Windows.Forms.Button();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-			this.LBL_Control_WorldName = new System.Windows.Forms.Label();
-			this.TXT_Control_WorldName = new System.Windows.Forms.TextBox();
 			this.TAB_Entities_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.TRV_Entities = new System.Windows.Forms.TreeView();
 			this.PG_Entities_Details = new System.Windows.Forms.PropertyGrid();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+			this.BTN_Entities_Delete = new System.Windows.Forms.Button();
+			this.BTN_Entities_New = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -53,14 +54,16 @@
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
-			this.splitContainer4.Panel1.SuspendLayout();
-			this.splitContainer4.Panel2.SuspendLayout();
 			this.splitContainer4.SuspendLayout();
 			this.TAB_Entities_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
+			this.splitContainer5.Panel1.SuspendLayout();
+			this.splitContainer5.Panel2.SuspendLayout();
+			this.splitContainer5.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -99,7 +102,7 @@
 			this.TAB_Control_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_Control_Page.Name = "TAB_Control_Page";
 			this.TAB_Control_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_Control_Page.Size = new System.Drawing.Size(621, 465);
+			this.TAB_Control_Page.Size = new System.Drawing.Size(790, 601);
 			this.TAB_Control_Page.TabIndex = 0;
 			this.TAB_Control_Page.Text = "Control";
 			this.TAB_Control_Page.UseVisualStyleBackColor = true;
@@ -118,8 +121,8 @@
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-			this.splitContainer3.Size = new System.Drawing.Size(615, 459);
-			this.splitContainer3.SplitterDistance = 300;
+			this.splitContainer3.Size = new System.Drawing.Size(784, 595);
+			this.splitContainer3.SplitterDistance = 382;
 			this.splitContainer3.TabIndex = 4;
 			// 
 			// BTN_ServerControl_Start
@@ -148,37 +151,10 @@
 			this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
 			this.splitContainer4.Location = new System.Drawing.Point(0, 0);
 			this.splitContainer4.Name = "splitContainer4";
-			// 
-			// splitContainer4.Panel1
-			// 
-			this.splitContainer4.Panel1.Controls.Add(this.LBL_Control_WorldName);
 			this.splitContainer4.Panel1MinSize = 100;
-			// 
-			// splitContainer4.Panel2
-			// 
-			this.splitContainer4.Panel2.Controls.Add(this.TXT_Control_WorldName);
-			this.splitContainer4.Size = new System.Drawing.Size(311, 459);
+			this.splitContainer4.Size = new System.Drawing.Size(398, 595);
 			this.splitContainer4.SplitterDistance = 100;
 			this.splitContainer4.TabIndex = 0;
-			// 
-			// LBL_Control_WorldName
-			// 
-			this.LBL_Control_WorldName.AutoSize = true;
-			this.LBL_Control_WorldName.Location = new System.Drawing.Point(3, 6);
-			this.LBL_Control_WorldName.Name = "LBL_Control_WorldName";
-			this.LBL_Control_WorldName.Size = new System.Drawing.Size(69, 13);
-			this.LBL_Control_WorldName.TabIndex = 3;
-			this.LBL_Control_WorldName.Text = "World Name:";
-			this.LBL_Control_WorldName.Visible = false;
-			// 
-			// TXT_Control_WorldName
-			// 
-			this.TXT_Control_WorldName.Location = new System.Drawing.Point(3, 3);
-			this.TXT_Control_WorldName.Name = "TXT_Control_WorldName";
-			this.TXT_Control_WorldName.Size = new System.Drawing.Size(150, 20);
-			this.TXT_Control_WorldName.TabIndex = 2;
-			this.TXT_Control_WorldName.Text = "DotS - Survival World 1";
-			this.TXT_Control_WorldName.Visible = false;
 			// 
 			// TAB_Entities_Page
 			// 
@@ -200,7 +176,7 @@
 			// 
 			// splitContainer2.Panel1
 			// 
-			this.splitContainer2.Panel1.Controls.Add(this.TRV_Entities);
+			this.splitContainer2.Panel1.Controls.Add(this.splitContainer5);
 			this.splitContainer2.Panel1MinSize = 250;
 			// 
 			// splitContainer2.Panel2
@@ -215,7 +191,7 @@
 			this.TRV_Entities.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TRV_Entities.Location = new System.Drawing.Point(0, 0);
 			this.TRV_Entities.Name = "TRV_Entities";
-			this.TRV_Entities.Size = new System.Drawing.Size(250, 595);
+			this.TRV_Entities.Size = new System.Drawing.Size(250, 560);
 			this.TRV_Entities.TabIndex = 0;
 			this.TRV_Entities.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_Entities_AfterSelect);
 			// 
@@ -234,6 +210,48 @@
 			this.statusStrip1.Size = new System.Drawing.Size(798, 22);
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// splitContainer5
+			// 
+			this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			this.splitContainer5.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer5.Name = "splitContainer5";
+			this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer5.Panel1
+			// 
+			this.splitContainer5.Panel1.Controls.Add(this.TRV_Entities);
+			// 
+			// splitContainer5.Panel2
+			// 
+			this.splitContainer5.Panel2.Controls.Add(this.BTN_Entities_New);
+			this.splitContainer5.Panel2.Controls.Add(this.BTN_Entities_Delete);
+			this.splitContainer5.Size = new System.Drawing.Size(250, 595);
+			this.splitContainer5.SplitterDistance = 560;
+			this.splitContainer5.TabIndex = 0;
+			// 
+			// BTN_Entities_Delete
+			// 
+			this.BTN_Entities_Delete.Enabled = false;
+			this.BTN_Entities_Delete.Location = new System.Drawing.Point(172, 5);
+			this.BTN_Entities_Delete.Name = "BTN_Entities_Delete";
+			this.BTN_Entities_Delete.Size = new System.Drawing.Size(75, 23);
+			this.BTN_Entities_Delete.TabIndex = 0;
+			this.BTN_Entities_Delete.Text = "Delete";
+			this.BTN_Entities_Delete.UseVisualStyleBackColor = true;
+			this.BTN_Entities_Delete.Click += new System.EventHandler(this.BTN_Entities_Delete_Click);
+			// 
+			// BTN_Entities_New
+			// 
+			this.BTN_Entities_New.Enabled = false;
+			this.BTN_Entities_New.Location = new System.Drawing.Point(91, 5);
+			this.BTN_Entities_New.Name = "BTN_Entities_New";
+			this.BTN_Entities_New.Size = new System.Drawing.Size(75, 23);
+			this.BTN_Entities_New.TabIndex = 1;
+			this.BTN_Entities_New.Text = "New";
+			this.BTN_Entities_New.UseVisualStyleBackColor = true;
+			this.BTN_Entities_New.Click += new System.EventHandler(this.BTN_Entities_New_Click);
 			// 
 			// SEServerExtender
 			// 
@@ -254,10 +272,6 @@
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 			this.splitContainer3.ResumeLayout(false);
-			this.splitContainer4.Panel1.ResumeLayout(false);
-			this.splitContainer4.Panel1.PerformLayout();
-			this.splitContainer4.Panel2.ResumeLayout(false);
-			this.splitContainer4.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
 			this.splitContainer4.ResumeLayout(false);
 			this.TAB_Entities_Page.ResumeLayout(false);
@@ -265,6 +279,10 @@
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 			this.splitContainer2.ResumeLayout(false);
+			this.splitContainer5.Panel1.ResumeLayout(false);
+			this.splitContainer5.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
+			this.splitContainer5.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -283,7 +301,8 @@
 		private System.Windows.Forms.TreeView TRV_Entities;
 		private System.Windows.Forms.SplitContainer splitContainer3;
 		private System.Windows.Forms.SplitContainer splitContainer4;
-		private System.Windows.Forms.Label LBL_Control_WorldName;
-		private System.Windows.Forms.TextBox TXT_Control_WorldName;
+		private System.Windows.Forms.SplitContainer splitContainer5;
+		private System.Windows.Forms.Button BTN_Entities_New;
+		private System.Windows.Forms.Button BTN_Entities_Delete;
 	}
 }

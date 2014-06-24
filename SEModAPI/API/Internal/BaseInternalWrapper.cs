@@ -57,11 +57,13 @@ namespace SEModAPI.API.Internal
 			return dataSet;
 		}
 
-		protected FieldInfo GetEntityField(Object gameEntity, string fieldName)
+		protected static FieldInfo GetEntityField(Object gameEntity, string fieldName)
 		{
 			try
 			{
 				FieldInfo field = gameEntity.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if(field == null)
+					field = gameEntity.GetType().BaseType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 				return field;
 			}
 			catch (Exception ex)
@@ -70,7 +72,7 @@ namespace SEModAPI.API.Internal
 			}
 		}
 
-		protected MethodInfo GetEntityMethod(Object gameEntity, string methodName)
+		protected static MethodInfo GetEntityMethod(Object gameEntity, string methodName)
 		{
 			try
 			{
@@ -83,7 +85,12 @@ namespace SEModAPI.API.Internal
 			}
 		}
 
-		protected Object InvokeEntityMethod(Object gameEntity, string methodName, Object[] parameters)
+		protected static Object InvokeEntityMethod(Object gameEntity, string methodName)
+		{
+			return InvokeEntityMethod(gameEntity, methodName, new object[] { });
+		}
+
+		protected static Object InvokeEntityMethod(Object gameEntity, string methodName, Object[] parameters)
 		{
 			try
 			{
@@ -103,6 +110,20 @@ namespace SEModAPI.API.Internal
 			catch (Exception ex)
 			{
 				return null;
+			}
+		}
+
+		public static long GetEntityId(Object gameEntity)
+		{
+			try
+			{
+				long entityId = (long)InvokeEntityMethod(gameEntity, "B33C3AC5277AD9E354576C4D92D61698");
+
+				return entityId;
+			}
+			catch (Exception ex)
+			{
+				return 0;
 			}
 		}
 
