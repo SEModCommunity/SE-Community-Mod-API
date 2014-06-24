@@ -65,7 +65,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find a better way to handle an exception here
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return false;
 			}
 		}
@@ -80,7 +80,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find a better way to handle an exception here
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return false;
 			}
 		}
@@ -103,7 +103,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find a better way to handle an exception here
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return false;
 			}
 		}

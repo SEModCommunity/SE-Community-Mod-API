@@ -112,7 +112,8 @@ namespace SEModAPI.API.SaveData
 				m_baseDefinition.PositionAndOrientation = positionOrientation;
 				Changed = true;
 
-				GameObjectManagerWrapper.GetInstance().UpdateEntityPosition(BackingObject, value);
+				if(BackingObject != null)
+					GameObjectManagerWrapper.GetInstance().UpdateEntityPosition(BackingObject, value);
 			}
 		}
 
@@ -127,6 +128,9 @@ namespace SEModAPI.API.SaveData
 				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(Position, Forward, value);
 				m_baseDefinition.PositionAndOrientation = positionOrientation;
 				Changed = true;
+
+				if (BackingObject != null)
+					GameObjectManagerWrapper.GetInstance().UpdateEntityUp(BackingObject, value);
 			}
 		}
 
@@ -141,6 +145,9 @@ namespace SEModAPI.API.SaveData
 				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(Position, value, Up);
 				m_baseDefinition.PositionAndOrientation = positionOrientation;
 				Changed = true;
+
+				if (BackingObject != null)
+					GameObjectManagerWrapper.GetInstance().UpdateEntityForward(BackingObject, value);
 			}
 		}
 

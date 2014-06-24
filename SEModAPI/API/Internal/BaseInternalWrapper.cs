@@ -14,6 +14,8 @@ namespace SEModAPI.API.Internal
 
 		protected static BaseInternalWrapper m_instance;
 
+		protected static bool m_isDebugging;
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -29,6 +31,16 @@ namespace SEModAPI.API.Internal
 				m_instance = new BaseInternalWrapper(basePath);
 			}
 			return m_instance;
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		public static bool IsDebugging
+		{
+			get { return m_isDebugging; }
+			set { m_isDebugging = value; }
 		}
 
 		#endregion

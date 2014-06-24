@@ -31,6 +31,8 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.Filename == value) return;
 				m_baseDefinition.Filename = value;
 				Changed = true;
+
+				//TODO - Adding backing object functionality for this property
 			}
 		}
 

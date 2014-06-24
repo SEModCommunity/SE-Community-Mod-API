@@ -31,24 +31,26 @@ namespace SEModAPI.API.Internal
 		private Assembly m_assembly;
 
 		private static Type m_objectManagerType;
+		private static Type m_entityBaseType;
 
 		private MethodInfo m_GetObjectBuilderEntities;
 		private MethodInfo m_RemoveEntity;
 		private MethodInfo m_RemoveEntity2;
 		private MethodInfo m_GetEntityHashSet;
 
+		//TODO - Build some sort of Dictionary based structure to hold these temp values
 		private static Vector3 m_nextEntityPosition;
 		private static Vector3 m_nextEntityVelocity;
+		private static Vector3 m_nextEntityAngularVelocity;
+		private static Vector3 m_nextEntityUp;
+		private static Vector3 m_nextEntityForward;
+		private static Object m_nextEntityToUpdate;
 
 		public static string ObjectManagerClass = "5BCAC68007431E61367F5B2CF24E2D6F.CAF1EB435F77C7B77580E2E16F988BED";
-
 		public static string ObjectManagerAction1 = "E017E9CA31926307661D7A6B465C8F96";	//() Object Manager shut down?
-
 		public static string ObjectManagerEntityAction1 = "30E511FF32960AE853909500461285C4";	//(GameEntity) Entity-Close()
 		public static string ObjectManagerEntityAction2 = "8C1807427F2EEF4DF981396C4E6A42DD";	//(GameEntity, string, string) Entity-Init()
-
 		public static string GameEntityClass = "5BCAC68007431E61367F5B2CF24E2D6F.F6DF01EE4159339113BB9650DEEE1913";
-
 		public static string EntityAction1 = "8CAF5306D8DF29E8140056369D0F1FC1";	//(GameEntity) OnWorldPositionChanged
 		public static string EntityAction2 = "1CF14BA21D05D5F9AB6993170E4838FE";	//(GameEntity) UpdateAfterSim - Only if certain flags are set on cube blocks, not sure what yet
 		public static string EntityAction3 = "183620F2B4C14EFFC9F34BFBCF35ABCC";	//(GameEntity) ??
@@ -64,17 +66,21 @@ namespace SEModAPI.API.Internal
 		{
 			m_instance = this;
 
+			m_isDebugging = false;
+
 			//string assemblyPath = Path.Combine(path, "Sandbox.Game.dll");
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
 			m_objectManagerType = m_assembly.GetType(ObjectManagerClass);
+			m_entityBaseType = m_assembly.GetType(GameEntityClass);
 
 			m_GetObjectBuilderEntities = m_objectManagerType.GetMethod("0A1670B270D5F8417447CFCBA7BF0FA8", BindingFlags.NonPublic | BindingFlags.Static);
 			m_RemoveEntity = m_objectManagerType.GetMethod("E02368B53672686387A0DE0CF91F60B7", BindingFlags.Public | BindingFlags.Static);
 			m_RemoveEntity2 = m_objectManagerType.GetMethod("D46C6748B5B97161CFB9ECF64126A129", BindingFlags.Public | BindingFlags.Static);
 			m_GetEntityHashSet = m_objectManagerType.GetMethod("84C54760C0F0DDDA50B0BE27B7116ED8", BindingFlags.Public | BindingFlags.Static);
 
-			Console.WriteLine("Finished loading GameObjectManagerWrapper");
+			if(m_isDebugging)
+				Console.WriteLine("Finished loading GameObjectManagerWrapper");
 		}
 
 		new public static GameObjectManagerWrapper GetInstance(string basePath = "")
@@ -90,9 +96,14 @@ namespace SEModAPI.API.Internal
 
 		#region "Properties"
 
-		public Type ObjectManagerType
+		public static Type ObjectManagerType
 		{
 			get { return m_objectManagerType; }
+		}
+
+		public static Type BaseEntityType
+		{
+			get { return m_entityBaseType; }
 		}
 
 		public Thread GameThread
@@ -149,7 +160,7 @@ namespace SEModAPI.API.Internal
 				}
 				catch (Exception ex)
 				{
-					//TODO - Do something about the exception here
+					SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				}
 			}
 
@@ -196,6 +207,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return null;
 			}
 		}
@@ -211,7 +223,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find a better way to handle an exception here
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return null;
 			}
 		}
@@ -228,7 +240,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find a better way to handle an exception here
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return null;
 			}
 		}
@@ -236,6 +248,8 @@ namespace SEModAPI.API.Internal
 		#endregion
 
 		#region EntityMethods
+
+		#region "Setup"
 
 		public bool SetupObjectManagerEventHandlers()
 		{
@@ -302,66 +316,16 @@ namespace SEModAPI.API.Internal
 			}
 		}
 
+		#endregion
+
+		#region "Updates"
+
 		public bool UpdateEntityId(Object gameEntity, long entityId)
 		{
 			try
 			{
 				FieldInfo entityIdField = GetEntityField(gameEntity, "F7E51DBA5F2FD0CCF8BBE66E3573BEAC");
 				entityIdField.SetValue(gameEntity, entityId);
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				return false;
-			}
-		}
-
-		public bool UpdateEntityPosition(Object gameEntity, Vector3 position)
-		{
-			try
-			{
-				m_nextEntityPosition = position;
-
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction1);
-				Action<Object> newAction = InternalUpdateEntityPosition;
-				actionField.SetValue(gameEntity, newAction);
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				//TODO - Find a better way to handle an exception here
-				return false;
-			}
-		}
-
-		public bool UpdateEntityVelocity(Object gameEntity, Vector3 velocity)
-		{
-			try
-			{
-				m_nextEntityVelocity = velocity;
-
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction1);
-				Action<Object> newAction = InternalUpdateEntityVelocity;
-				actionField.SetValue(gameEntity, newAction);
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				//TODO - Find a better way to handle an exception here
-				return false;
-			}
-		}
-
-		public bool RemoveEntity(Object gameEntity)
-		{
-			try
-			{
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction1);
-				Action<Object> newAction = InternalRemoveEntity;
-				actionField.SetValue(gameEntity, newAction);
 
 				return true;
 			}
@@ -375,13 +339,147 @@ namespace SEModAPI.API.Internal
 			}
 		}
 
+		public bool UpdateEntityPosition(Object gameEntity, Vector3 position)
+		{
+			try
+			{
+				m_nextEntityPosition = position;
+				m_nextEntityToUpdate = gameEntity;
+
+				Action action = InternalUpdateEntityPosition;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+
+				return true;
+			}
+			catch (TargetInvocationException ex)
+			{
+				throw ex.InnerException;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		public bool UpdateEntityVelocity(Object gameEntity, Vector3 velocity)
+		{
+			try
+			{
+				m_nextEntityVelocity = velocity;
+				m_nextEntityToUpdate = gameEntity;
+
+				Action action = InternalUpdateEntityVelocity;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+
+				return true;
+			}
+			catch (TargetInvocationException ex)
+			{
+				throw ex.InnerException;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		public bool UpdateEntityAngularVelocity(Object gameEntity, Vector3 velocity)
+		{
+			try
+			{
+				m_nextEntityAngularVelocity = velocity;
+				m_nextEntityToUpdate = gameEntity;
+
+				Action action = InternalUpdateEntityAngularVelocity;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+
+				return true;
+			}
+			catch (TargetInvocationException ex)
+			{
+				throw ex.InnerException;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		public bool UpdateEntityUp(Object gameEntity, Vector3 up)
+		{
+			try
+			{
+				m_nextEntityUp = up;
+				m_nextEntityToUpdate = gameEntity;
+
+				Action action = InternalUpdateEntityUp;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+
+				return true;
+			}
+			catch (TargetInvocationException ex)
+			{
+				throw ex.InnerException;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		public bool UpdateEntityForward(Object gameEntity, Vector3 forward)
+		{
+			try
+			{
+				m_nextEntityForward = forward;
+				m_nextEntityToUpdate = gameEntity;
+
+				Action action = InternalUpdateEntityForward;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+
+				return true;
+			}
+			catch (TargetInvocationException ex)
+			{
+				throw ex.InnerException;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		public bool RemoveEntity(Object gameEntity)
+		{
+			try
+			{
+				m_nextEntityToUpdate = gameEntity;
+
+				Action action = InternalRemoveEntity;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+
+				return true;
+			}
+			catch (TargetInvocationException ex)
+			{
+				throw ex.InnerException;
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		#endregion
+
 		#region "Actions"
 
 		public static void ObjectManagerEvent1()
 		{
 			try
 			{
-				Console.WriteLine("ObjectManagerEvent - '1'");
+				if (m_isDebugging)
+					Console.WriteLine("ObjectManagerEvent - '1'");
 
 				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerAction1, BindingFlags.NonPublic | BindingFlags.Static);
 				Action newAction = ObjectManagerEvent1;
@@ -389,8 +487,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find the best way to handle this exception
-				return;
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 			}
 		}
 
@@ -398,7 +495,8 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': ObjectManagerEvent - Entity Closed");
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': ObjectManagerEvent - Entity Closed");
 
 				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerEntityAction1, BindingFlags.NonPublic | BindingFlags.Static);
 				Action<Object> newAction = ObjectManagerEntityEvent1;
@@ -406,8 +504,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find the best way to handle this exception
-				return;
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 			}
 		}
 
@@ -415,7 +512,8 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': ObjectManagerEvent - Entity Initialized");
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': ObjectManagerEvent - Entity Initialized");
 
 				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerEntityAction2, BindingFlags.NonPublic | BindingFlags.Static);
 				Action<Object, string, string> newAction = ObjectManagerEntityEvent2;
@@ -423,76 +521,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find the best way to handle this exception
-				return;
-			}
-		}
-
-		public static void EntityEvent2(Object gameEntity)
-		{
-			try
-			{
-				Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '2' triggered");
-
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction2);
-				Action<Object> newAction = EntityEvent2;
-				actionField.SetValue(gameEntity, newAction);
-			}
-			catch (Exception ex)
-			{
-				//TODO - Find the best way to handle this exception
-				return;
-			}
-		}
-
-		public static void EntityEvent3(Object gameEntity)
-		{
-			try
-			{
-				Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '3' triggered");
-
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction3);
-				Action<Object> newAction = EntityEvent3;
-				actionField.SetValue(gameEntity, newAction);
-			}
-			catch (Exception ex)
-			{
-				//TODO - Find the best way to handle this exception
-				return;
-			}
-		}
-
-		public static void EntityEvent4(Object gameEntity)
-		{
-			try
-			{
-				Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '4' triggered");
-
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction4);
-				Action<Object> newAction = EntityEvent4;
-				actionField.SetValue(gameEntity, newAction);
-			}
-			catch (Exception ex)
-			{
-				//TODO - Find the best way to handle this exception
-				return;
-			}
-		}
-
-		public static void EntityEvent5(Object gameEntity)
-		{
-			try
-			{
-				Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '5' triggered");
-
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction5);
-				Action<Object> newAction = EntityEvent5;
-				actionField.SetValue(gameEntity, newAction);
-			}
-			catch (Exception ex)
-			{
-				//TODO - Find the best way to handle this exception
-				return;
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 			}
 		}
 
@@ -500,6 +529,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
+				//if(m_isDebugging)
 				//Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event 'PositionChanged' triggered");
 
 				//Make sure the action is still tied to this event handler
@@ -509,74 +539,207 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find the best way to handle this exception
-				return;
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 			}
 		}
 
-		public static void InternalUpdateEntityPosition(Object gameEntity)
+		public static void EntityEvent2(Object gameEntity)
 		{
 			try
 			{
-				Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Updating position to " + m_nextEntityPosition.ToString());
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '2' triggered");
 
-				HkRigidBody havokBody = GetRigidBody(gameEntity);
+				FieldInfo actionField = GetEntityField(gameEntity, EntityAction2);
+				Action<Object> newAction = EntityEvent2;
+				actionField.SetValue(gameEntity, newAction);
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+			}
+		}
+
+		public static void EntityEvent3(Object gameEntity)
+		{
+			try
+			{
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '3' triggered");
+
+				FieldInfo actionField = GetEntityField(gameEntity, EntityAction3);
+				Action<Object> newAction = EntityEvent3;
+				actionField.SetValue(gameEntity, newAction);
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+			}
+		}
+
+		public static void EntityEvent4(Object gameEntity)
+		{
+			try
+			{
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '4' triggered");
+
+				FieldInfo actionField = GetEntityField(gameEntity, EntityAction4);
+				Action<Object> newAction = EntityEvent4;
+				actionField.SetValue(gameEntity, newAction);
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+			}
+		}
+
+		public static void EntityEvent5(Object gameEntity)
+		{
+			try
+			{
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '5' triggered");
+
+				FieldInfo actionField = GetEntityField(gameEntity, EntityAction5);
+				Action<Object> newAction = EntityEvent5;
+				actionField.SetValue(gameEntity, newAction);
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+			}
+		}
+
+		public static void InternalUpdateEntityPosition()
+		{
+			try
+			{
+				if (m_nextEntityToUpdate == null)
+					return;
+				if (GetEntityId(m_nextEntityToUpdate) == 0)
+					return;
+
+				if(m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating position to " + m_nextEntityPosition.ToString());
+
+				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
 				havokBody.Position = m_nextEntityPosition;
 				m_nextEntityPosition = Vector3.Zero;
-
-				//Restore the action back to the default event handler
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction1);
-				Action<Object> newAction = EntityOnPositionChanged;
-				actionField.SetValue(gameEntity, newAction);
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find the best way to handle this exception
-				return;
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 			}
 		}
 
-		public static void InternalUpdateEntityVelocity(Object gameEntity)
+		public static void InternalUpdateEntityVelocity()
 		{
 			try
 			{
-				Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Updating velocity to " + m_nextEntityVelocity.ToString());
+				if (m_nextEntityToUpdate == null)
+					return;
+				if (GetEntityId(m_nextEntityToUpdate) == 0)
+					return;
 
-				HkRigidBody havokBody = GetRigidBody(gameEntity);
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating velocity to " + m_nextEntityVelocity.ToString());
+
+				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
 				havokBody.LinearVelocity = m_nextEntityVelocity;
 				m_nextEntityVelocity = Vector3.Zero;
-
-				//Restore the action back to the default event handler
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction1);
-				Action<Object> newAction = EntityOnPositionChanged;
-				actionField.SetValue(gameEntity, newAction);
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find the best way to handle this exception
-				return;
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 			}
 		}
 
-		public static void InternalRemoveEntity(Object gameEntity)
+		public static void InternalUpdateEntityAngularVelocity()
 		{
 			try
 			{
-				Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Calling 'Close'");
+				if (m_nextEntityToUpdate == null)
+					return;
+				if (GetEntityId(m_nextEntityToUpdate) == 0)
+					return;
 
-				//TODO - Find a better way to do this since just calling the Close() method causes the main game to crash
-				MethodInfo method = GetEntityMethod(gameEntity, "Close");
-				Object result = method.Invoke(gameEntity, new object[] {});
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating angular velocity to " + m_nextEntityAngularVelocity.ToString());
 
-				//Restore the action back to the default event handler
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction1);
-				Action<Object> newAction = EntityOnPositionChanged;
-				actionField.SetValue(gameEntity, newAction);
+				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
+				havokBody.AngularVelocity = m_nextEntityAngularVelocity;
+				m_nextEntityAngularVelocity = Vector3.Zero;
 			}
 			catch (Exception ex)
 			{
-				//TODO - Find the best way to handle this exception
-				return;
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+			}
+		}
+
+		public static void InternalUpdateEntityUp()
+		{
+			try
+			{
+				if (m_nextEntityToUpdate == null)
+					return;
+				if (GetEntityId(m_nextEntityToUpdate) == 0)
+					return;
+
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating 'up' to " + m_nextEntityUp.ToString());
+
+				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
+				//TODO - Figure out how to set the rotation from the 'up' vector and the existing 'forward' vector
+				m_nextEntityUp = Vector3.Zero;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+			}
+		}
+
+		public static void InternalUpdateEntityForward()
+		{
+			try
+			{
+				if (m_nextEntityToUpdate == null)
+					return;
+				if (GetEntityId(m_nextEntityToUpdate) == 0)
+					return;
+
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating 'forward' to " + m_nextEntityForward.ToString());
+
+				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
+				//TODO - Figure out how to set the rotation from the 'forward' vector and the existing 'up' vector
+				m_nextEntityForward = Vector3.Zero;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+			}
+		}
+
+		public static void InternalRemoveEntity()
+		{
+			try
+			{
+				if (m_nextEntityToUpdate == null)
+					return;
+				if (GetEntityId(m_nextEntityToUpdate) == 0)
+					return;
+
+				if (m_isDebugging)
+					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Calling 'Close'");
+
+				InvokeEntityMethod(m_nextEntityToUpdate, "Close");
+
+				m_nextEntityToUpdate = null;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 			}
 		}
 

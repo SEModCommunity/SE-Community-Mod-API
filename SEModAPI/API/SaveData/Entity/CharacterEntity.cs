@@ -37,7 +37,8 @@ namespace SEModAPI.API.SaveData.Entity
 				m_baseDefinition.LinearVelocity = value;
 				Changed = true;
 
-				GameObjectManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
+				if (BackingObject != null)
+					GameObjectManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
 			}
 		}
 
@@ -71,7 +72,8 @@ namespace SEModAPI.API.SaveData.Entity
 				m_baseDefinition.Battery.CurrentCapacity = value / 10000000;
 				Changed = true;
 
-				CharacterInternalWrapper.GetInstance().UpdateCharacterBatteryLevel(this, m_baseDefinition.Battery.CurrentCapacity);
+				if (BackingObject != null)
+					CharacterInternalWrapper.GetInstance().UpdateCharacterBatteryLevel(this, m_baseDefinition.Battery.CurrentCapacity);
 			}
 		}
 
@@ -81,15 +83,17 @@ namespace SEModAPI.API.SaveData.Entity
 			get
 			{
 				float health = m_baseDefinition.Health.GetValueOrDefault(-1);
-				if(health <= 0)
-					health = CharacterInternalWrapper.GetInstance().GetCharacterHealth(this);
+				if (BackingObject != null)
+					if (health <= 0)
+						health = CharacterInternalWrapper.GetInstance().GetCharacterHealth(this);
 				return health;
 			}
 			set
 			{
 				if (Health == value) return;
 
-				CharacterInternalWrapper.GetInstance().DamageCharacter(this, Health - value);
+				if (BackingObject != null)
+					CharacterInternalWrapper.GetInstance().DamageCharacter(this, Health - value);
 
 				m_baseDefinition.Health = value;
 				Changed = true;

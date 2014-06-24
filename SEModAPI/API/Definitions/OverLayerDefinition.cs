@@ -18,18 +18,18 @@ namespace SEModAPI.API.Definitions
 	/// <summary>
 	/// This class is only intended for easy data access and management. It is a wrapper around all MyObjectBuilder_Definitions children sub type
 	/// </summary>
-	public abstract class OverLayerDefinition<TMyObjectBuilder_Definitions_SubType>
+	public abstract class OverLayerDefinition<T>
 	{
 		#region "Attributes"
 
-		protected TMyObjectBuilder_Definitions_SubType m_baseDefinition;
+		protected T m_baseDefinition;
 		protected string m_name;
 
 		#endregion
 
 		#region "Constructors and Initializers"
 
-		protected OverLayerDefinition(TMyObjectBuilder_Definitions_SubType baseDefinition)
+		protected OverLayerDefinition(T baseDefinition)
 		{
 			m_baseDefinition = baseDefinition;
 			m_name = GetNameFrom(m_baseDefinition);
@@ -59,7 +59,7 @@ namespace SEModAPI.API.Definitions
 		/// Gets the internal data of the object
 		/// </summary>
 		[Browsable(false)]
-		public TMyObjectBuilder_Definitions_SubType BaseDefinition
+		public T BaseDefinition
 		{
 			get { return m_baseDefinition; }
 		}
@@ -73,7 +73,7 @@ namespace SEModAPI.API.Definitions
 		/// </summary>
 		/// <param name="definition">The definition from which to get the information</param>
 		/// <returns></returns>
-		protected abstract string GetNameFrom(TMyObjectBuilder_Definitions_SubType definition);
+		protected abstract string GetNameFrom(T definition);
 
 		#endregion
 	}
@@ -403,7 +403,7 @@ namespace SEModAPI.API.Definitions
 
 		#region "Serializers"
 
-		protected T LoadContentFile<T, TS>(FileInfo fileInfo) where TS : XmlSerializer1
+		public static T LoadContentFile<T, TS>(FileInfo fileInfo) where TS : XmlSerializer1
 		{
 			object fileContent = null;
 
@@ -435,7 +435,7 @@ namespace SEModAPI.API.Definitions
 			return (T)fileContent;
 		}
 
-		protected void SaveContentFile<T, TS>(T fileContent, FileInfo fileInfo) where TS : XmlSerializer1
+		public static void SaveContentFile<T, TS>(T fileContent, FileInfo fileInfo) where TS : XmlSerializer1
 		{
 
 			string filePath = fileInfo.FullName;
@@ -464,7 +464,7 @@ namespace SEModAPI.API.Definitions
 			// Report a friendly error if this load fails.
 		}
 
-		protected T ReadSpaceEngineersFile<T, TS>(string filename)
+		public static T ReadSpaceEngineersFile<T, TS>(string filename)
 			where TS : XmlSerializer1
 		{
 			var settings = new XmlReaderSettings
@@ -504,7 +504,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
-		protected bool WriteSpaceEngineersFile<T, TS>(T sector, string filename)
+		public static bool WriteSpaceEngineersFile<T, TS>(T sector, string filename)
 			where TS : XmlSerializer1
 		{
 			// How they appear to be writing the files currently.

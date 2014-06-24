@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -188,11 +189,21 @@ namespace SEServerExtender
 
 			PG_Entities_Details.SelectedObject = linkedObject;
 			BTN_Entities_New.Enabled = false;
-			BTN_Entities_Delete.Enabled = false;
+
+			if (linkedObject == null)
+			{
+				BTN_Entities_Delete.Enabled = false;
+				return;
+			}
+			else
+			{
+				BTN_Entities_Delete.Enabled = true;
+			}
 
 			if (linkedObject is CubeGrid)
 			{
-				BTN_Entities_Delete.Enabled = true;
+				BTN_Entities_New.Enabled = true;
+
 				if (e.Node.Nodes.Count < 2)
 				{
 					e.Node.Nodes.Add("Structural Blocks (0)");
@@ -213,8 +224,6 @@ namespace SEServerExtender
 			}
 		}
 
-		#endregion
-
 		private void BTN_Entities_Delete_Click(object sender, EventArgs e)
 		{
 			Object linkedObject = TRV_Entities.SelectedNode.Tag;
@@ -222,12 +231,81 @@ namespace SEServerExtender
 			{
 				try
 				{
-					CubeGrid cubeGrid = (CubeGrid)linkedObject;
-					GameObjectManagerWrapper.GetInstance().RemoveEntity(cubeGrid.BackingObject);
+					CubeGrid item = (CubeGrid)linkedObject;
+					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
 
 					PG_Entities_Details.SelectedObject = null;
 					TRV_Entities.SelectedNode.Tag = null;
 					TRV_Entities.SelectedNode.Remove();
+					BTN_Entities_Delete.Enabled = false;
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.ToString());
+				}
+			}
+			if (linkedObject is CharacterEntity)
+			{
+				try
+				{
+					CharacterEntity item = (CharacterEntity)linkedObject;
+					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+
+					PG_Entities_Details.SelectedObject = null;
+					TRV_Entities.SelectedNode.Tag = null;
+					TRV_Entities.SelectedNode.Remove();
+					BTN_Entities_Delete.Enabled = false;
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.ToString());
+				}
+			}
+			if (linkedObject is VoxelMap)
+			{
+				try
+				{
+					VoxelMap item = (VoxelMap)linkedObject;
+					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+
+					PG_Entities_Details.SelectedObject = null;
+					TRV_Entities.SelectedNode.Tag = null;
+					TRV_Entities.SelectedNode.Remove();
+					BTN_Entities_Delete.Enabled = false;
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.ToString());
+				}
+			}
+			if (linkedObject is FloatingObject)
+			{
+				try
+				{
+					FloatingObject item = (FloatingObject)linkedObject;
+					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+
+					PG_Entities_Details.SelectedObject = null;
+					TRV_Entities.SelectedNode.Tag = null;
+					TRV_Entities.SelectedNode.Remove();
+					BTN_Entities_Delete.Enabled = false;
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.ToString());
+				}
+			}
+			if (linkedObject is Meteor)
+			{
+				try
+				{
+					Meteor item = (Meteor)linkedObject;
+					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+
+					PG_Entities_Details.SelectedObject = null;
+					TRV_Entities.SelectedNode.Tag = null;
+					TRV_Entities.SelectedNode.Remove();
+					BTN_Entities_Delete.Enabled = false;
 				}
 				catch (Exception ex)
 				{
@@ -238,7 +316,38 @@ namespace SEServerExtender
 
 		private void BTN_Entities_New_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show("This feature is not yet implemented");
+			if (TRV_Entities.SelectedNode.Text == "Cube Grids" || TRV_Entities.SelectedNode.Tag is CubeGrid)
+			{
+				OpenFileDialog openFileDialog = new OpenFileDialog
+				{
+					InitialDirectory = GameInstallationInfo.GamePath,
+					DefaultExt = "sbc file (*.sbc)"
+				};
+
+				if (openFileDialog.ShowDialog() == DialogResult.OK)
+				{
+					FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
+					if (fileInfo.Exists)
+					{
+						try
+						{
+							CubeGrid cubeGrid = new CubeGrid(fileInfo);
+							bool result = CubeGridInternalWrapper.AddCubeGrid(cubeGrid);
+						}
+						catch (Exception ex)
+						{
+							MessageBox.Show(this, ex.Message);
+						}
+					}
+				}
+			}
 		}
+
+		private void CHK_Control_Debugging_CheckedChanged(object sender, EventArgs e)
+		{
+			BaseInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+		}
+
+		#endregion
 	}
 }

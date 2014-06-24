@@ -6,6 +6,7 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 
 using SEModAPI.API.Definitions;
+using SEModAPI.API.Internal;
 using SEModAPI.API.SaveData.Entity;
 
 namespace SEModAPI.API.SaveData
@@ -40,6 +41,8 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.LinearVelocity == value) return;
 				m_baseDefinition.LinearVelocity = value;
 				Changed = true;
+				if (BackingObject != null)
+					GameObjectManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
 			}
 		}
 
@@ -53,6 +56,9 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.AngularVelocity == value) return;
 				m_baseDefinition.AngularVelocity = value;
 				Changed = true;
+
+				if (BackingObject != null)
+					GameObjectManagerWrapper.GetInstance().UpdateEntityAngularVelocity(BackingObject, value);
 			}
 		}
 
@@ -65,6 +71,8 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.Integrity == value) return;
 				m_baseDefinition.Integrity = value;
 				Changed = true;
+
+				//TODO - Add functionality for backing object for this property
 			}
 		}
 

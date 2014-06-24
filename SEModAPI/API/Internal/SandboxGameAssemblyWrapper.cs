@@ -1,10 +1,14 @@
-﻿using System;
+﻿using SteamSDK;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
 using System.Text;
+
+using SysUtils.Utils;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -44,8 +48,8 @@ namespace SEModAPI.API.Internal
 
 		public static string MainGameAction1 = "0CAB22C866086930782A91BA5F21A936";	//() Entity loading complete
 		public static string MainGameAction2 = "736ABFDB88EC08BFEA24D3A2AB06BE80";	//(Bool) ??
-		public static string MainGameAction3 = "F7E4614DB0033215C446B502BA17BDDB";	//() ??
-		public static string MainGameAction4 = "B43682C38AD089E0EE792C74E4503633";	//() Shutdown started
+		public static string MainGameAction3 = "F7E4614DB0033215C446B502BA17BDDB";	//() Triggers Action1
+		public static string MainGameAction4 = "B43682C38AD089E0EE792C74E4503633";	//() Triggered by 'Ctrl+C'
 
 		#endregion
 
@@ -147,13 +151,31 @@ namespace SEModAPI.API.Internal
 			}
 		}
 
+		public static bool EnqueueMainGameAction(Action action)
+		{
+			try
+			{
+				MethodInfo enqueue = m_mainGameType.GetMethod("0172226C0BA7DAE0B1FCE0AF8BC7F735");
+				enqueue.Invoke(GetMainGameInstance(), new object[] { action });
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				//TODO - Find the best way to handle this exception
+				return false;
+			}
+		}
+
 		#region "Actions"
 
 		public static void MainGameEvent1()
 		{
 			try
 			{
-				Console.WriteLine("MainGameEvent - '1'");
+				Console.WriteLine("MainGameEvent - Entity loading complete");
+
+				TestSteamAPI();
 
 				FieldInfo actionField = m_mainGameType.GetField(MainGameAction1, BindingFlags.NonPublic | BindingFlags.Static);
 				Action newAction = MainGameEvent1;
@@ -204,7 +226,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				Console.WriteLine("MainGameEvent - '4'");
+				Console.WriteLine("MainGameEvent - 'Ctrl+C' pressed");
 
 				FieldInfo actionField = m_mainGameType.GetField(MainGameAction4, BindingFlags.NonPublic | BindingFlags.Static);
 				Action newAction = MainGameEvent4;
@@ -294,6 +316,37 @@ namespace SEModAPI.API.Internal
 			MyConfigDedicatedData config = GetServerConfig();
 
 			m_setConfigWorldName.Invoke(GetServerConfigContainer(), new object[] { worldName });
+		}
+
+		public static MyLog GetMyLog()
+		{
+			FieldInfo myLogField = m_mainGameType.GetField("1976E5D4FE6E8C1BD369273DEE0025AC", BindingFlags.Public | BindingFlags.Static);
+			MyLog log = (MyLog)myLogField.GetValue(null);
+
+			return log;
+		}
+
+		public static void TestSteamAPI()
+		{
+			try
+			{
+				SteamServerAPI serverAPI = SteamServerAPI.Instance;
+				GameServer gameServer = serverAPI.GameServer;
+				ulong serverSteamId = gameServer.GetSteamID();
+
+				Console.WriteLine("DEBUG - Steam ID: " + serverSteamId.ToString());
+			}
+			catch (Exception ex)
+			{
+				//TODO - Do something with this exception
+				return;
+			}
+		}
+
+		public static void KickPlayer(ulong steamId)
+		{
+			SteamServerAPI serverAPI = SteamServerAPI.Instance;
+			serverAPI.GameServer.SendUserDisconnect(steamId);
 		}
 
 		#endregion

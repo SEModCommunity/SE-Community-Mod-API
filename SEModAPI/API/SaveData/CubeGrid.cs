@@ -1,14 +1,19 @@
-﻿using System;
+﻿using Microsoft.Xml.Serialization.GeneratedAssembly;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Reflection;
 
+using Sandbox.Common;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API.Definitions;
 using SEModAPI.API.Internal;
+using SEModAPI.API.SaveData;
 
 using VRageMath;
 
@@ -23,6 +28,15 @@ namespace SEModAPI.API.SaveData
 		#endregion
 
 		#region "Constructors and Initializers"
+
+		public CubeGrid(FileInfo prefabFile)
+			: base(null)
+		{
+			m_baseDefinition = SerializableDefinitionsManager<MyObjectBuilder_CubeGrid, CubeGrid>.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile);
+
+			m_cubeBlockManager = new CubeBlockManager();
+			m_cubeBlockManager.Load(m_baseDefinition.CubeBlocks);
+		}
 
 		public CubeGrid(MyObjectBuilder_CubeGrid definition)
 			: base(definition)
@@ -69,6 +83,9 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.IsStatic == value) return;
 				m_baseDefinition.IsStatic = value;
 				Changed = true;
+
+				if (BackingObject != null)
+					CubeGridInternalWrapper.UpdateEntityIsStatic(BackingObject, value);
 			}
 		}
 
@@ -83,7 +100,8 @@ namespace SEModAPI.API.SaveData
 				m_baseDefinition.LinearVelocity = value;
 				Changed = true;
 
-				GameObjectManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
+				if (BackingObject != null)
+					GameObjectManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
 			}
 		}
 
@@ -97,6 +115,9 @@ namespace SEModAPI.API.SaveData
 				if (m_baseDefinition.AngularVelocity == value) return;
 				m_baseDefinition.AngularVelocity = value;
 				Changed = true;
+
+				if (BackingObject != null)
+					GameObjectManagerWrapper.GetInstance().UpdateEntityAngularVelocity(BackingObject, value);
 			}
 		}
 
@@ -143,6 +164,9 @@ namespace SEModAPI.API.SaveData
 		/// <returns></returns>
 		protected override string GetNameFrom(MyObjectBuilder_CubeGrid definition)
 		{
+			if (definition == null)
+				return "";
+
 			string name = "";
 			foreach (var cubeBlock in definition.CubeBlocks)
 			{

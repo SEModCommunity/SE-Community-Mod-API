@@ -37,12 +37,14 @@
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
 			this.TAB_Entities_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
 			this.TRV_Entities = new System.Windows.Forms.TreeView();
+			this.BTN_Entities_New = new System.Windows.Forms.Button();
+			this.BTN_Entities_Delete = new System.Windows.Forms.Button();
 			this.PG_Entities_Details = new System.Windows.Forms.PropertyGrid();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-			this.BTN_Entities_Delete = new System.Windows.Forms.Button();
-			this.BTN_Entities_New = new System.Windows.Forms.Button();
+			this.LBL_Control_Debugging = new System.Windows.Forms.Label();
+			this.CHK_Control_Debugging = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -54,6 +56,8 @@
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+			this.splitContainer4.Panel1.SuspendLayout();
+			this.splitContainer4.Panel2.SuspendLayout();
 			this.splitContainer4.SuspendLayout();
 			this.TAB_Entities_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -151,9 +155,17 @@
 			this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
 			this.splitContainer4.Location = new System.Drawing.Point(0, 0);
 			this.splitContainer4.Name = "splitContainer4";
-			this.splitContainer4.Panel1MinSize = 100;
+			// 
+			// splitContainer4.Panel1
+			// 
+			this.splitContainer4.Panel1.Controls.Add(this.LBL_Control_Debugging);
+			this.splitContainer4.Panel1MinSize = 120;
+			// 
+			// splitContainer4.Panel2
+			// 
+			this.splitContainer4.Panel2.Controls.Add(this.CHK_Control_Debugging);
 			this.splitContainer4.Size = new System.Drawing.Size(398, 595);
-			this.splitContainer4.SplitterDistance = 100;
+			this.splitContainer4.SplitterDistance = 120;
 			this.splitContainer4.TabIndex = 0;
 			// 
 			// TAB_Entities_Page
@@ -186,31 +198,6 @@
 			this.splitContainer2.SplitterDistance = 250;
 			this.splitContainer2.TabIndex = 0;
 			// 
-			// TRV_Entities
-			// 
-			this.TRV_Entities.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TRV_Entities.Location = new System.Drawing.Point(0, 0);
-			this.TRV_Entities.Name = "TRV_Entities";
-			this.TRV_Entities.Size = new System.Drawing.Size(250, 560);
-			this.TRV_Entities.TabIndex = 0;
-			this.TRV_Entities.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_Entities_AfterSelect);
-			// 
-			// PG_Entities_Details
-			// 
-			this.PG_Entities_Details.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PG_Entities_Details.Location = new System.Drawing.Point(0, 0);
-			this.PG_Entities_Details.Name = "PG_Entities_Details";
-			this.PG_Entities_Details.Size = new System.Drawing.Size(530, 595);
-			this.PG_Entities_Details.TabIndex = 0;
-			// 
-			// statusStrip1
-			// 
-			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
-			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(798, 22);
-			this.statusStrip1.TabIndex = 0;
-			this.statusStrip1.Text = "statusStrip1";
-			// 
 			// splitContainer5
 			// 
 			this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -231,16 +218,14 @@
 			this.splitContainer5.SplitterDistance = 560;
 			this.splitContainer5.TabIndex = 0;
 			// 
-			// BTN_Entities_Delete
+			// TRV_Entities
 			// 
-			this.BTN_Entities_Delete.Enabled = false;
-			this.BTN_Entities_Delete.Location = new System.Drawing.Point(172, 5);
-			this.BTN_Entities_Delete.Name = "BTN_Entities_Delete";
-			this.BTN_Entities_Delete.Size = new System.Drawing.Size(75, 23);
-			this.BTN_Entities_Delete.TabIndex = 0;
-			this.BTN_Entities_Delete.Text = "Delete";
-			this.BTN_Entities_Delete.UseVisualStyleBackColor = true;
-			this.BTN_Entities_Delete.Click += new System.EventHandler(this.BTN_Entities_Delete_Click);
+			this.TRV_Entities.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TRV_Entities.Location = new System.Drawing.Point(0, 0);
+			this.TRV_Entities.Name = "TRV_Entities";
+			this.TRV_Entities.Size = new System.Drawing.Size(250, 560);
+			this.TRV_Entities.TabIndex = 0;
+			this.TRV_Entities.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_Entities_AfterSelect);
 			// 
 			// BTN_Entities_New
 			// 
@@ -252,6 +237,52 @@
 			this.BTN_Entities_New.Text = "New";
 			this.BTN_Entities_New.UseVisualStyleBackColor = true;
 			this.BTN_Entities_New.Click += new System.EventHandler(this.BTN_Entities_New_Click);
+			// 
+			// BTN_Entities_Delete
+			// 
+			this.BTN_Entities_Delete.Enabled = false;
+			this.BTN_Entities_Delete.Location = new System.Drawing.Point(172, 5);
+			this.BTN_Entities_Delete.Name = "BTN_Entities_Delete";
+			this.BTN_Entities_Delete.Size = new System.Drawing.Size(75, 23);
+			this.BTN_Entities_Delete.TabIndex = 0;
+			this.BTN_Entities_Delete.Text = "Delete";
+			this.BTN_Entities_Delete.UseVisualStyleBackColor = true;
+			this.BTN_Entities_Delete.Click += new System.EventHandler(this.BTN_Entities_Delete_Click);
+			// 
+			// PG_Entities_Details
+			// 
+			this.PG_Entities_Details.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PG_Entities_Details.Location = new System.Drawing.Point(0, 0);
+			this.PG_Entities_Details.Name = "PG_Entities_Details";
+			this.PG_Entities_Details.Size = new System.Drawing.Size(530, 595);
+			this.PG_Entities_Details.TabIndex = 0;
+			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(798, 22);
+			this.statusStrip1.TabIndex = 0;
+			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// LBL_Control_Debugging
+			// 
+			this.LBL_Control_Debugging.AutoSize = true;
+			this.LBL_Control_Debugging.Location = new System.Drawing.Point(3, 4);
+			this.LBL_Control_Debugging.Name = "LBL_Control_Debugging";
+			this.LBL_Control_Debugging.Size = new System.Drawing.Size(98, 13);
+			this.LBL_Control_Debugging.TabIndex = 0;
+			this.LBL_Control_Debugging.Text = "Enable Debugging:";
+			// 
+			// CHK_Control_Debugging
+			// 
+			this.CHK_Control_Debugging.AutoSize = true;
+			this.CHK_Control_Debugging.Location = new System.Drawing.Point(3, 3);
+			this.CHK_Control_Debugging.Name = "CHK_Control_Debugging";
+			this.CHK_Control_Debugging.Size = new System.Drawing.Size(15, 14);
+			this.CHK_Control_Debugging.TabIndex = 0;
+			this.CHK_Control_Debugging.UseVisualStyleBackColor = true;
+			this.CHK_Control_Debugging.CheckedChanged += new System.EventHandler(this.CHK_Control_Debugging_CheckedChanged);
 			// 
 			// SEServerExtender
 			// 
@@ -272,6 +303,10 @@
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 			this.splitContainer3.ResumeLayout(false);
+			this.splitContainer4.Panel1.ResumeLayout(false);
+			this.splitContainer4.Panel1.PerformLayout();
+			this.splitContainer4.Panel2.ResumeLayout(false);
+			this.splitContainer4.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
 			this.splitContainer4.ResumeLayout(false);
 			this.TAB_Entities_Page.ResumeLayout(false);
@@ -304,5 +339,7 @@
 		private System.Windows.Forms.SplitContainer splitContainer5;
 		private System.Windows.Forms.Button BTN_Entities_New;
 		private System.Windows.Forms.Button BTN_Entities_Delete;
+		private System.Windows.Forms.Label LBL_Control_Debugging;
+		private System.Windows.Forms.CheckBox CHK_Control_Debugging;
 	}
 }

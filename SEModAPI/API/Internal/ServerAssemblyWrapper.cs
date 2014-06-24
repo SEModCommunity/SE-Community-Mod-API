@@ -139,7 +139,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.ToString());
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return false;
 			}
 		}

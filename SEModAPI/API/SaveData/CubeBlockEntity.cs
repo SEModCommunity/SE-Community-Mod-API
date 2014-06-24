@@ -185,12 +185,29 @@ namespace SEModAPI.API.SaveData
 		new public List<MyObjectBuilder_CubeBlock> ExtractBaseDefinitions()
 		{
 			List<MyObjectBuilder_CubeBlock> list = new List<MyObjectBuilder_CubeBlock>();
+
 			foreach (var def in m_rawDefinitions.Values)
 			{
-				Type defType = def.GetType();
-				PropertyInfo defProp = defType.GetProperty("BaseDefinition", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-				var baseDef = (MyObjectBuilder_CubeBlock) defProp.GetGetMethod().Invoke(def, new object[] { });
-				list.Add(baseDef);
+				try
+				{
+					if (def == null)
+						continue;
+
+					Type defType = def.GetType();
+					PropertyInfo defProp = defType.GetProperty("BaseDefinition", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+					if (defProp == null)
+						continue;
+
+					var baseDef = (MyObjectBuilder_CubeBlock)defProp.GetGetMethod().Invoke(def, new object[] { });
+					if (baseDef == null)
+						continue;
+
+					list.Add(baseDef);
+				}
+				catch (Exception ex)
+				{
+					//TODO - Do something with an exception from here
+				}
 			}
 			return list;
 		}
