@@ -17,171 +17,29 @@ using SEModAPI.API.Definitions.CubeBlocks;
 
 namespace SEModAPI.API
 {
-	public class Vector3TypeConverter : TypeConverter
+	public class Vector3TypeConverter : ExpandableObjectConverter
 	{
-		public Vector3TypeConverter()
+		public override bool GetCreateInstanceSupported(ITypeDescriptorContext context)
 		{
+			return true;
 		}
 
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override object CreateInstance(ITypeDescriptorContext context, System.Collections.IDictionary propertyValues)
 		{
-			if (sourceType == typeof(string))
-				return true;
-			else
-				return base.CanConvertFrom(context, sourceType);
-		}
-
-		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-		{
-			if (destinationType == typeof(Vector3))
-				return true;
-			else
-				return base.CanConvertTo(context, destinationType);
-		}
-
-		public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
-			if (value.GetType() == typeof(string))
-			{
-				string source = (string)value;
-				source = source.Replace(" ", "");
-				string[] sourceParts = source.Split(',');
-				if (sourceParts.Length == 3)
-				{
-					float x = Convert.ToSingle(sourceParts[0]);
-					float y = Convert.ToSingle(sourceParts[1]);
-					float z = Convert.ToSingle(sourceParts[2]);
-					Vector3 vector = new Vector3(x, y, z);
-					return vector;
-				}
-			}
-
-			return base.ConvertFrom(context, culture, value);
-		}
-
-		public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
-		{
-			if (destinationType == typeof(string) && value is Vector3)
-			{
-				Vector3 vector = (Vector3) value;
-
-				string result = vector.X + "," + vector.Y + "," + vector.Z;
-				return result;
-			}
-
-			return base.ConvertTo(context, culture, value, destinationType);
+			return new SerializableVector3((float)propertyValues["x"], (float)propertyValues["y"], (float)propertyValues["z"]);
 		}
 	}
 
-	public class SerializableVector3TypeConverter : TypeConverter
+	public class Vector3ITypeConverter : ExpandableObjectConverter
 	{
-		public SerializableVector3TypeConverter()
+		public override bool GetCreateInstanceSupported(ITypeDescriptorContext context)
 		{
+			return true;
 		}
 
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		public override object CreateInstance(ITypeDescriptorContext context, System.Collections.IDictionary propertyValues)
 		{
-			if (sourceType == typeof(string))
-				return true;
-			else
-				return base.CanConvertFrom(context, sourceType);
-		}
-
-		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-		{
-			if (destinationType == typeof(SerializableVector3))
-				return true;
-			else
-				return base.CanConvertTo(context, destinationType);
-		}
-
-		public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
-			if (value.GetType() == typeof(string))
-			{
-				string source = (string)value;
-				source = source.Replace(" ", "");
-				string[] sourceParts = source.Split(',');
-				if (sourceParts.Length == 3)
-				{
-					float x = Convert.ToSingle(sourceParts[0]);
-					float y = Convert.ToSingle(sourceParts[1]);
-					float z = Convert.ToSingle(sourceParts[2]);
-					SerializableVector3 vector = new SerializableVector3(x, y, z);
-					return vector;
-				}
-			}
-
-			return base.ConvertFrom(context, culture, value);
-		}
-
-		public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
-		{
-			if (destinationType == typeof(string) && value is SerializableVector3)
-			{
-				SerializableVector3 vector = (SerializableVector3)value;
-
-				string result = vector.X + "," + vector.Y + "," + vector.Z;
-				return result;
-			}
-
-			return base.ConvertTo(context, culture, value, destinationType);
-		}
-	}
-	
-	public class SerializableVector3ITypeConverter : TypeConverter
-	{
-		public SerializableVector3ITypeConverter()
-		{
-		}
-
-		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-		{
-			if (sourceType == typeof(string))
-				return true;
-			else
-				return base.CanConvertFrom(context, sourceType);
-		}
-
-		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-		{
-			if (destinationType == typeof(SerializableVector3I))
-				return true;
-			else
-				return base.CanConvertTo(context, destinationType);
-		}
-
-		public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
-			if (value.GetType() == typeof(string))
-			{
-				string source = (string)value;
-				source = source.Replace(" ", "");
-				string[] sourceParts = source.Split(',');
-				if (sourceParts.Length == 3)
-				{
-					int x = Convert.ToInt32(sourceParts[0]);
-					int y = Convert.ToInt32(sourceParts[1]);
-					int z = Convert.ToInt32(sourceParts[2]);
-					SerializableVector3I vector = new SerializableVector3I(x, y, z);
-					return vector;
-				}
-			}
-
-			return base.ConvertFrom(context, culture, value);
-		}
-
-		public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
-		{
-			if (destinationType == typeof(string) && value is SerializableVector3I)
-			{
-				SerializableVector3I vector = (SerializableVector3I)value;
-
-				string result = vector.X + "," + vector.Y + "," + vector.Z;
-				return result;
-			}
-
-			return base.ConvertTo(context, culture, value, destinationType);
+			return new SerializableVector3I((int)propertyValues["x"], (int)propertyValues["y"], (int)propertyValues["z"]);
 		}
 	}
 

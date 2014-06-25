@@ -25,7 +25,7 @@ namespace SEModAPI.API.SaveData.Entity
 		#region "Properties"
 
 		[Category("Gravity Generator")]
-		[TypeConverter(typeof(SerializableVector3TypeConverter))]
+		[TypeConverter(typeof(Vector3TypeConverter))]
 		public SerializableVector3 FieldSize
 		{
 			get { return m_baseDefinition.FieldSize; }

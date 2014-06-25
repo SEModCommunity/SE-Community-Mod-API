@@ -91,12 +91,12 @@ namespace SEModAPI.API.SaveData
 
 		[Category("Cube Grid")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public Vector3 LinearVelocity
+		public SerializableVector3 LinearVelocity
 		{
 			get { return m_baseDefinition.LinearVelocity; }
 			set
 			{
-				if (m_baseDefinition.LinearVelocity == value) return;
+				if (m_baseDefinition.LinearVelocity.Equals(value)) return;
 				m_baseDefinition.LinearVelocity = value;
 				Changed = true;
 
@@ -107,12 +107,12 @@ namespace SEModAPI.API.SaveData
 
 		[Category("Cube Grid")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public Vector3 AngularVelocity
+		public SerializableVector3 AngularVelocity
 		{
 			get { return m_baseDefinition.AngularVelocity; }
 			set
 			{
-				if (m_baseDefinition.AngularVelocity == value) return;
+				if (m_baseDefinition.AngularVelocity.Equals(value)) return;
 				m_baseDefinition.AngularVelocity = value;
 				Changed = true;
 

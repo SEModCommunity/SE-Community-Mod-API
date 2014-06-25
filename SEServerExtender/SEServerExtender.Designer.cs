@@ -43,11 +43,11 @@
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
 			this.TRV_Entities = new System.Windows.Forms.TreeView();
+			this.BTN_Entities_Export = new System.Windows.Forms.Button();
 			this.BTN_Entities_New = new System.Windows.Forms.Button();
 			this.BTN_Entities_Delete = new System.Windows.Forms.Button();
 			this.PG_Entities_Details = new System.Windows.Forms.PropertyGrid();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.BTN_Entities_Export = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -271,6 +271,17 @@
 			this.TRV_Entities.TabIndex = 0;
 			this.TRV_Entities.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_Entities_AfterSelect);
 			// 
+			// BTN_Entities_Export
+			// 
+			this.BTN_Entities_Export.Enabled = false;
+			this.BTN_Entities_Export.Location = new System.Drawing.Point(10, 5);
+			this.BTN_Entities_Export.Name = "BTN_Entities_Export";
+			this.BTN_Entities_Export.Size = new System.Drawing.Size(75, 23);
+			this.BTN_Entities_Export.TabIndex = 2;
+			this.BTN_Entities_Export.Text = "Export";
+			this.BTN_Entities_Export.UseVisualStyleBackColor = true;
+			this.BTN_Entities_Export.Click += new System.EventHandler(this.BTN_Entities_Export_Click);
+			// 
 			// BTN_Entities_New
 			// 
 			this.BTN_Entities_New.Enabled = false;
@@ -300,6 +311,9 @@
 			this.PG_Entities_Details.Name = "PG_Entities_Details";
 			this.PG_Entities_Details.Size = new System.Drawing.Size(530, 595);
 			this.PG_Entities_Details.TabIndex = 0;
+			this.PG_Entities_Details.SelectedGridItemChanged += new System.Windows.Forms.SelectedGridItemChangedEventHandler(this.PG_Entities_Details_Click);
+			this.PG_Entities_Details.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.PG_Entities_Details_Click);
+			this.PG_Entities_Details.Validated += new System.EventHandler(this.PG_Entities_Details_Click);
 			// 
 			// statusStrip1
 			// 
@@ -308,17 +322,6 @@
 			this.statusStrip1.Size = new System.Drawing.Size(798, 22);
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
-			// 
-			// BTN_Entities_Export
-			// 
-			this.BTN_Entities_Export.Enabled = false;
-			this.BTN_Entities_Export.Location = new System.Drawing.Point(10, 5);
-			this.BTN_Entities_Export.Name = "BTN_Entities_Export";
-			this.BTN_Entities_Export.Size = new System.Drawing.Size(75, 23);
-			this.BTN_Entities_Export.TabIndex = 2;
-			this.BTN_Entities_Export.Text = "Export";
-			this.BTN_Entities_Export.UseVisualStyleBackColor = true;
-			this.BTN_Entities_Export.Click += new System.EventHandler(this.BTN_Entities_Export_Click);
 			// 
 			// SEServerExtender
 			// 

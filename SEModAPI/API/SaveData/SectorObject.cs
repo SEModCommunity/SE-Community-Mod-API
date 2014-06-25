@@ -104,10 +104,10 @@ namespace SEModAPI.API.SaveData
 		}
 
 		[Category("Sector Object")]
-		[TypeConverter(typeof(SerializableVector3TypeConverter))]
+		[TypeConverter(typeof(Vector3TypeConverter))]
 		public SerializableVector3 Position
 		{
-			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Position; }
+			get	{ return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Position; }
 			set
 			{
 				if (Position.Equals(value)) return;
@@ -121,7 +121,7 @@ namespace SEModAPI.API.SaveData
 		}
 
 		[Category("Sector Object")]
-		[TypeConverter(typeof(SerializableVector3TypeConverter))]
+		[TypeConverter(typeof(Vector3TypeConverter))]
 		public SerializableVector3 Up
 		{
 			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Up; }
@@ -138,7 +138,7 @@ namespace SEModAPI.API.SaveData
 		}
 
 		[Category("Sector Object")]
-		[TypeConverter(typeof(SerializableVector3TypeConverter))]
+		[TypeConverter(typeof(Vector3TypeConverter))]
 		public SerializableVector3 Forward
 		{
 			get { return m_baseDefinition.PositionAndOrientation.GetValueOrDefault().Forward; }

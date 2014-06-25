@@ -67,7 +67,7 @@ namespace SEModAPI.API.SaveData
 		}
 
 		[Category("Cube Block")]
-		[TypeConverter(typeof(SerializableVector3ITypeConverter))]
+		[TypeConverter(typeof(Vector3ITypeConverter))]
 		public SerializableVector3I Min
 		{
 			get { return m_baseDefinition.Min; }
@@ -93,7 +93,7 @@ namespace SEModAPI.API.SaveData
 		}
 
 		[Category("Cube Block")]
-		[TypeConverter(typeof(SerializableVector3TypeConverter))]
+		[TypeConverter(typeof(Vector3TypeConverter))]
 		public SerializableVector3 ColorMaskHSV
 		{
 			get { return m_baseDefinition.ColorMaskHSV; }
