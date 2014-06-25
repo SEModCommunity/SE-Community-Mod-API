@@ -768,6 +768,8 @@ namespace SEModAPI.API.Internal
 
 				InvokeEntityMethod(m_nextEntityToUpdate, "Close");
 
+				//TODO - Figure out what needs to be called to broadcast the removal to the clients
+
 				m_nextEntityToUpdate = null;
 			}
 			catch (Exception ex)

@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xml.Serialization.GeneratedAssembly;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 
@@ -158,6 +161,11 @@ namespace SEModAPI.API.SaveData
 		protected override string GetNameFrom(T definition)
 		{
 			return definition.EntityId.ToString();
+		}
+
+		public void Export<TS>(FileInfo fileInfo) where TS : XmlSerializer1
+		{
+			SerializableDefinitionsManager<T, SectorObject<T>>.SaveContentFile<T, TS>(BaseDefinition, fileInfo);
 		}
 
 		#endregion

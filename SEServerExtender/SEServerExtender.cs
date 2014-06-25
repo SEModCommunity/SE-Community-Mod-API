@@ -189,6 +189,7 @@ namespace SEServerExtender
 
 			PG_Entities_Details.SelectedObject = linkedObject;
 			BTN_Entities_New.Enabled = false;
+			BTN_Entities_Export.Enabled = false;
 
 			if (linkedObject == null)
 			{
@@ -203,6 +204,7 @@ namespace SEServerExtender
 			if (linkedObject is CubeGrid)
 			{
 				BTN_Entities_New.Enabled = true;
+				BTN_Entities_Export.Enabled = true;
 
 				if (e.Node.Nodes.Count < 2)
 				{
@@ -316,7 +318,7 @@ namespace SEServerExtender
 
 		private void BTN_Entities_New_Click(object sender, EventArgs e)
 		{
-			if (TRV_Entities.SelectedNode.Text.StartsWith("Cube Grids") || TRV_Entities.SelectedNode.Tag is CubeGrid)
+			if (TRV_Entities.SelectedNode.Text.Contains("Cube Grids") || TRV_Entities.SelectedNode.Tag is CubeGrid)
 			{
 				OpenFileDialog openFileDialog = new OpenFileDialog
 				{
@@ -356,6 +358,36 @@ namespace SEServerExtender
 		private void CHK_Control_EnableFactions_CheckedChanged(object sender, EventArgs e)
 		{
 			SandboxGameAssemblyWrapper.EnableFactions(CHK_Control_EnableFactions.CheckState == CheckState.Checked);
+		}
+
+		private void BTN_Entities_Export_Click(object sender, EventArgs e)
+		{
+			Object linkedObject = TRV_Entities.SelectedNode.Tag;
+			if (linkedObject is CubeGrid)
+			{
+				CubeGrid item = (CubeGrid)linkedObject;
+				MyObjectBuilder_CubeGrid cubeGrid = item.BaseDefinition;
+
+				SaveFileDialog saveFileDialog = new SaveFileDialog
+				{
+					InitialDirectory = GameInstallationInfo.GamePath,
+					DefaultExt = "sbc file (*.sbc)"
+				};
+
+				if (saveFileDialog.ShowDialog() == DialogResult.OK)
+				{
+					FileInfo fileInfo = new FileInfo(saveFileDialog.FileName);
+					try
+					{
+						item.Export(fileInfo);
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(this, ex.Message);
+					}
+				}
+
+			}
 		}
 
 		#endregion

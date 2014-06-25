@@ -440,10 +440,10 @@ namespace SEModAPI.API.Definitions
 
 			string filePath = fileInfo.FullName;
 
-			if (!File.Exists(filePath))
-			{
-				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileMissing, filePath);
-			}
+			//if (!File.Exists(filePath))
+			//{
+			//	throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileMissing, filePath);
+			//}
 
 			try
 			{

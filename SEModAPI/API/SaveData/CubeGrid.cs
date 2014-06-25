@@ -183,6 +183,11 @@ namespace SEModAPI.API.SaveData
 				return name;
 		}
 
+		new public void Export(FileInfo fileInfo)
+		{
+			SerializableDefinitionsManager<MyObjectBuilder_CubeGrid, CubeGrid>.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(BaseDefinition, fileInfo);
+		}
+
 		#endregion
 	}
 
