@@ -17,7 +17,6 @@ using SEModAPI.API.SaveData.Entity;
 using VRage;
 using VRageMath;
 
-
 namespace SEModAPI.API.Internal
 {
 	public class GameObjectManagerWrapper : BaseInternalWrapper
@@ -47,12 +46,26 @@ namespace SEModAPI.API.Internal
 		public static string ObjectManagerAction1 = "E017E9CA31926307661D7A6B465C8F96";	//() Object Manager shut down?
 		public static string ObjectManagerEntityAction1 = "30E511FF32960AE853909500461285C4";	//(GameEntity) Entity-Close()
 		public static string ObjectManagerEntityAction2 = "8C1807427F2EEF4DF981396C4E6A42DD";	//(GameEntity, string, string) Entity-Init()
+		public static string ObjectManagerGetResourceLock = "6EF7F983A8061B40A5606D75C890AF07";
+		public static string ObjectManagerGetEntityHashSet = "84C54760C0F0DDDA50B0BE27B7116ED8";
+		public static string ObjectManagerAddEntity = "E5E18F5CAD1F62BB276DF991F20AE6AF";
+
+		public static string NetworkSerializerClass = "5F381EA9388E0A32A8C817841E192BE8.8EFE49A46AB934472427B7D117FD3C64";
+		public static string NetworkSerializerSendEntity = "A6B585C993B43E72219511726BBB0649";
+
+		public static string UtilityClass = "5BCAC68007431E61367F5B2CF24E2D6F.226D9974B43A7269CDD3E322CC8110D5";
+		public static string UtilityGenerateEntityId = "3B4924802BEBD1AE13B29920376CE914";
+
 		public static string GameEntityClass = "5BCAC68007431E61367F5B2CF24E2D6F.F6DF01EE4159339113BB9650DEEE1913";
 		public static string EntityAction1 = "8CAF5306D8DF29E8140056369D0F1FC1";	//(GameEntity) OnWorldPositionChanged
 		public static string EntityAction2 = "1CF14BA21D05D5F9AB6993170E4838FE";	//(GameEntity) UpdateAfterSim - Only if certain flags are set on cube blocks, not sure what yet
 		public static string EntityAction3 = "183620F2B4C14EFFC9F34BFBCF35ABCC";	//(GameEntity) ??
 		public static string EntityAction4 = "6C1670C128F0A838E0BE20B6EB3FB7C4";	//(GameEntity) ??
 		public static string EntityAction5 = "FA752E85660B6101F92B340B994C0F29";	//(GameEntity) ??
+		public static string EntityPhysicsObject = "691FA4830C80511C934826203A251981";
+		public static string EntityEntityId = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
+
+		public static string PhysicsObjectGetRigidBody = "634E5EC534E45874230868BD089055B1";
 
 		#endregion
 
@@ -63,15 +76,11 @@ namespace SEModAPI.API.Internal
 		{
 			m_instance = this;
 
-			m_isDebugging = false;
-
 			//string assemblyPath = Path.Combine(path, "Sandbox.Game.dll");
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
 			m_objectManagerType = m_assembly.GetType(ObjectManagerClass);
 			m_entityBaseType = m_assembly.GetType(GameEntityClass);
-
-			m_GetEntityHashSet = m_objectManagerType.GetMethod("84C54760C0F0DDDA50B0BE27B7116ED8", BindingFlags.Public | BindingFlags.Static);
 
 			Console.WriteLine("Finished loading GameObjectManagerWrapper");
 		}
@@ -125,10 +134,19 @@ namespace SEModAPI.API.Internal
 
 		public HashSet<Object> GetObjectManagerHashSetData()
 		{
-			var rawValue = m_GetEntityHashSet.Invoke(null, new object[] { });
-			HashSet<Object> convertedSet = ConvertHashSet(rawValue);
+			try
+			{
+				MethodInfo getEntityHashSet = m_objectManagerType.GetMethod(ObjectManagerGetEntityHashSet, BindingFlags.Public | BindingFlags.Static);
+				var rawValue = getEntityHashSet.Invoke(null, new object[] { });
+				HashSet<Object> convertedSet = ConvertHashSet(rawValue);
 
-			return convertedSet;
+				return convertedSet;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				return null;
+			}
 		}
 
 		#region APIEntityLists
@@ -202,7 +220,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				FieldInfo field = m_objectManagerType.GetField("6EF7F983A8061B40A5606D75C890AF07", BindingFlags.Public | BindingFlags.Static);
+				FieldInfo field = m_objectManagerType.GetField(ObjectManagerGetResourceLock, BindingFlags.Public | BindingFlags.Static);
 				FastResourceLock resourceLock = (FastResourceLock)field.GetValue(null);
 
 				return resourceLock;
@@ -218,7 +236,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				MethodInfo getPhysicsObjectMethod = GetEntityMethod(gameEntity, "691FA4830C80511C934826203A251981");
+				MethodInfo getPhysicsObjectMethod = GetEntityMethod(gameEntity, EntityPhysicsObject);
 				Object physicsObject = getPhysicsObjectMethod.Invoke(gameEntity, new object[] { });
 
 				return physicsObject;
@@ -235,7 +253,7 @@ namespace SEModAPI.API.Internal
 			try
 			{
 				Object physicsObject = GetEntityPhysicsObject(gameEntity);
-				MethodInfo getRigidBodyMethod = GetEntityMethod(physicsObject, "634E5EC534E45874230868BD089055B1");
+				MethodInfo getRigidBodyMethod = GetEntityMethod(physicsObject, PhysicsObjectGetRigidBody);
 				HkRigidBody rigidBody = (HkRigidBody)getRigidBodyMethod.Invoke(physicsObject, new object[] { });
 
 				return rigidBody;
@@ -253,11 +271,19 @@ namespace SEModAPI.API.Internal
 
 		public static long GenerateEntityId()
 		{
-			Type utilityType = m_assembly.GetType("5BCAC68007431E61367F5B2CF24E2D6F.226D9974B43A7269CDD3E322CC8110D5");
-			MethodInfo generateIdMethod = utilityType.GetMethod("3B4924802BEBD1AE13B29920376CE914", BindingFlags.Public | BindingFlags.Static);
-			long entityId = (long)generateIdMethod.Invoke(null, new object[] { });
+			try
+			{
+				Type utilityType = m_assembly.GetType(UtilityClass);
+				MethodInfo generateIdMethod = utilityType.GetMethod(UtilityGenerateEntityId, BindingFlags.Public | BindingFlags.Static);
+				long entityId = (long)generateIdMethod.Invoke(null, new object[] { });
 
-			return entityId;
+				return entityId;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				return 0;
+			}
 		}
 
 		#region "Setup"
@@ -335,7 +361,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				FieldInfo entityIdField = GetEntityField(gameEntity, "F7E51DBA5F2FD0CCF8BBE66E3573BEAC");
+				FieldInfo entityIdField = GetEntityField(gameEntity, EntityEntityId);
 				entityIdField.SetValue(gameEntity, entityId);
 
 				return true;
@@ -791,12 +817,12 @@ namespace SEModAPI.API.Internal
 				if (m_isDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Adding to scene ...");
 
-				MethodInfo addEntityMethod = m_objectManagerType.GetMethod("E5E18F5CAD1F62BB276DF991F20AE6AF", BindingFlags.Public | BindingFlags.Static);
+				MethodInfo addEntityMethod = m_objectManagerType.GetMethod(ObjectManagerAddEntity, BindingFlags.Public | BindingFlags.Static);
 				addEntityMethod.Invoke(null, new object[] { m_nextEntityToUpdate, true });
 
 				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)InvokeEntityMethod(m_nextEntityToUpdate, "GetObjectBuilder", new object[] { });
-				Type someManager = m_assembly.GetType("5F381EA9388E0A32A8C817841E192BE8.8EFE49A46AB934472427B7D117FD3C64");
-				MethodInfo sendEntityMethod = someManager.GetMethod("A6B585C993B43E72219511726BBB0649", BindingFlags.Public | BindingFlags.Static);
+				Type someManager = m_assembly.GetType(NetworkSerializerClass);
+				MethodInfo sendEntityMethod = someManager.GetMethod(NetworkSerializerSendEntity, BindingFlags.Public | BindingFlags.Static);
 				sendEntityMethod.Invoke(null, new object[] { baseEntity });
 
 				m_nextEntityToUpdate = null;

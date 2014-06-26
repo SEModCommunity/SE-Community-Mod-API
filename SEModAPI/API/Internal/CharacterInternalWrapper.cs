@@ -25,6 +25,12 @@ namespace SEModAPI.API.Internal
 
 		protected new static CharacterInternalWrapper m_instance;
 
+		public static string CharacterGetHealthMethod = "7047AFF5D44FC8A44572E92DBAD13011";
+		public static string CharacterDamageCharacterMethod = "CF6EEF37B5AE4047E65CA4A0BB43F774";
+		public static string CharacterSetHealthMethod = "92A0500FD8772AB1AC3A6F79FD2A1C72";
+		public static string CharacterGetBatteryCapacityMethod = "CF72A89940254CB8F535F177150FC743";
+		public static string CharacterSetBatteryCapacityMethod = "C3BF60F3540A8A48CB8FEE0CDD3A95C6";
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -72,7 +78,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				float health = (float)InvokeEntityMethod(character.BackingObject, "7047AFF5D44FC8A44572E92DBAD13011", new object[] { });
+				float health = (float)InvokeEntityMethod(character.BackingObject, CharacterGetHealthMethod, new object[] { });
 
 				return health;
 			}
@@ -87,7 +93,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				InvokeEntityMethod(character.BackingObject, "CF6EEF37B5AE4047E65CA4A0BB43F774", new object[] { damage, MyDamageType.Unknown, true });
+				InvokeEntityMethod(character.BackingObject, CharacterDamageCharacterMethod, new object[] { damage, MyDamageType.Unknown, true });
 
 				return true;
 			}
@@ -102,7 +108,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				InvokeEntityMethod(character.BackingObject, "92A0500FD8772AB1AC3A6F79FD2A1C72", new object[] { health });
+				InvokeEntityMethod(character.BackingObject, CharacterSetHealthMethod, new object[] { health });
 
 				return true;
 			}
@@ -117,7 +123,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				Object battery = InvokeEntityMethod(character.BackingObject, "CF72A89940254CB8F535F177150FC743", new object[] { });
+				Object battery = InvokeEntityMethod(character.BackingObject, CharacterGetBatteryCapacityMethod, new object[] { });
 
 				return battery;
 			}
@@ -133,7 +139,7 @@ namespace SEModAPI.API.Internal
 			try
 			{
 				Object battery = GetCharacterBattery(character);
-				InvokeEntityMethod(battery, "C3BF60F3540A8A48CB8FEE0CDD3A95C6", new object[] { capacity });
+				InvokeEntityMethod(battery, CharacterSetBatteryCapacityMethod, new object[] { capacity });
 
 				return true;
 			}

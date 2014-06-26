@@ -25,9 +25,10 @@ namespace SEModAPI.API.Internal
 
 		private static CubeGrid m_cubeGridToUpdate;
 
-		private static string CubeGridClass = "5BCAC68007431E61367F5B2CF24E2D6F.98262C3F38A1199E47F2B9338045794C";
-
 		private static Type m_baseCubeGridType;
+
+		public static string CubeGridClass = "5BCAC68007431E61367F5B2CF24E2D6F.98262C3F38A1199E47F2B9338045794C";
+		public static string CubeGridIsStaticField = "";
 
 		#endregion
 
@@ -80,10 +81,7 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				throw new Exception("Not yet implemented");
-
-				//TODO - Need to find the field ID for this
-				FieldInfo isStaticField = GetEntityField(gameEntity, "");
+				FieldInfo isStaticField = GetEntityField(gameEntity, CubeGridIsStaticField);
 				isStaticField.SetValue(gameEntity, isStatic);
 
 				return true;

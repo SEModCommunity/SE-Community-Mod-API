@@ -76,7 +76,7 @@ namespace SEServerExtender.API
 
 		private void MonitorServer()
 		{
-			B337879D0C82A5F9C44D51D954769590.B3531963E948FB4FA1D057C4340C61B4 mainGame = null;
+			Object mainGame = null;
 			MyConfigDedicatedData config = null;
 
 			bool isLoaded = false;
