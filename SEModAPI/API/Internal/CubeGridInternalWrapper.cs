@@ -41,6 +41,8 @@ namespace SEModAPI.API.Internal
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
 			m_baseCubeGridType = m_assembly.GetType(CubeGridClass);
+
+			Console.WriteLine("Finished loading CubeGridInternalWrapper");
 		}
 
 		new public static CubeGridInternalWrapper GetInstance(string basePath = "")

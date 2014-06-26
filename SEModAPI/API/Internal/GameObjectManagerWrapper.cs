@@ -73,8 +73,7 @@ namespace SEModAPI.API.Internal
 
 			m_GetEntityHashSet = m_objectManagerType.GetMethod("84C54760C0F0DDDA50B0BE27B7116ED8", BindingFlags.Public | BindingFlags.Static);
 
-			if(m_isDebugging)
-				Console.WriteLine("Finished loading GameObjectManagerWrapper");
+			Console.WriteLine("Finished loading GameObjectManagerWrapper");
 		}
 
 		new public static GameObjectManagerWrapper GetInstance(string basePath = "")
@@ -141,7 +140,7 @@ namespace SEModAPI.API.Internal
 			HashSet<Object> rawEntities = GetObjectManagerHashSetData();
 			List<T> list = new List<T>();
 
-			SetupObjectManagerEventHandlers();
+			//SetupObjectManagerEventHandlers();
 
 			foreach (Object entity in rawEntities)
 			{
@@ -156,7 +155,7 @@ namespace SEModAPI.API.Internal
 						apiEntity.BackingObject = entity;
 						apiEntity.BackingThread = GameThread;
 
-						SetupEntityEventHandlers(entity);
+						//SetupEntityEventHandlers(entity);
 
 						list.Add(apiEntity);
 					}
@@ -766,7 +765,9 @@ namespace SEModAPI.API.Internal
 				if (m_isDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Calling 'Close'");
 
-				InvokeEntityMethod(m_nextEntityToUpdate, "Close");
+				MethodInfo removeEntityMethod = m_nextEntityToUpdate.GetType().GetMethod("Close", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+				removeEntityMethod.Invoke(m_nextEntityToUpdate, new object[] { });
+				//InvokeEntityMethod(m_nextEntityToUpdate, "Close");
 
 				//TODO - Figure out what needs to be called to broadcast the removal to the clients
 

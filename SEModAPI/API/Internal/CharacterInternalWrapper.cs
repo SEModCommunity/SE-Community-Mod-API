@@ -33,6 +33,8 @@ namespace SEModAPI.API.Internal
 			: base(basePath)
 		{
 			m_instance = this;
+
+			Console.WriteLine("Finished loading CharacterInternalWrapper");
 		}
 
 		new public static CharacterInternalWrapper GetInstance(string basePath = "")
@@ -68,9 +70,17 @@ namespace SEModAPI.API.Internal
 
 		public float GetCharacterHealth(CharacterEntity character)
 		{
-			float health = (float)InvokeEntityMethod(character.BackingObject, "7047AFF5D44FC8A44572E92DBAD13011", new object[] { });
+			try
+			{
+				float health = (float)InvokeEntityMethod(character.BackingObject, "7047AFF5D44FC8A44572E92DBAD13011", new object[] { });
 
-			return health;
+				return health;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				return -1;
+			}
 		}
 
 		public bool DamageCharacter(CharacterEntity character, float damage)
@@ -105,9 +115,17 @@ namespace SEModAPI.API.Internal
 
 		public Object GetCharacterBattery(CharacterEntity character)
 		{
-			Object battery = InvokeEntityMethod(character.BackingObject, "CF72A89940254CB8F535F177150FC743", new object[] { });
+			try
+			{
+				Object battery = InvokeEntityMethod(character.BackingObject, "CF72A89940254CB8F535F177150FC743", new object[] { });
 
-			return battery;
+				return battery;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				return -1;
+			}
 		}
 
 		public bool UpdateCharacterBatteryLevel(CharacterEntity character, float capacity)

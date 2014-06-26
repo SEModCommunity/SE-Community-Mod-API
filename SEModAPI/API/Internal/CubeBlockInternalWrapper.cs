@@ -25,6 +25,8 @@ namespace SEModAPI.API.Internal
 			: base(basePath)
 		{
 			m_instance = this;
+
+			Console.WriteLine("Finished loading CubeBlockInternalWrapper");
 		}
 
 		new public static CubeBlockInternalWrapper GetInstance(string basePath = "")

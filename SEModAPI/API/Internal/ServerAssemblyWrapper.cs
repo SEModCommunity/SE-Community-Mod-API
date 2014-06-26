@@ -67,7 +67,7 @@ namespace SEModAPI.API.Internal
 			m_stringLookupMethod4 = m_stringLookupType4.GetMethod("CD9E0AF5742DAE6925FF82E237147C79", BindingFlags.Static | BindingFlags.NonPublic);
 			m_stringLookupMethod5 = m_stringLookupType5.GetMethod("3E89EC795A63B176C4AB0733443E79E0", BindingFlags.Static | BindingFlags.NonPublic);
 
-			Console.WriteLine("Finished loading SpaceEngineersDedicated.exe assembly wrapper");
+			Console.WriteLine("Finished loading ServerAssemblyWrapper");
 		}
 
 		new public static ServerAssemblyWrapper GetInstance(string basePath = "")
@@ -77,6 +77,24 @@ namespace SEModAPI.API.Internal
 				m_instance = new ServerAssemblyWrapper(basePath);
 			}
 			return (ServerAssemblyWrapper)m_instance;
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		new public static bool IsDebugging
+		{
+			get
+			{
+				ServerAssemblyWrapper.GetInstance();
+				return m_isDebugging;
+			}
+			set
+			{
+				ServerAssemblyWrapper.GetInstance();
+				m_isDebugging = value;
+			}
 		}
 
 		#endregion

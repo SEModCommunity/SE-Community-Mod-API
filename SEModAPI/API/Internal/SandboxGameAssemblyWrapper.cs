@@ -89,7 +89,7 @@ namespace SEModAPI.API.Internal
 
 			m_setConfigWorldName = m_configContainerType.GetMethod("493E0E7BC7A617699C44A9A5FB8FF679", BindingFlags.Public | BindingFlags.Instance);
 
-			Console.WriteLine("Finished loading Sandbox.Game.dll assembly wrapper");
+			Console.WriteLine("Finished loading ServerAssemblyWrapper");
 		}
 
 		new public static SandboxGameAssemblyWrapper GetInstance(string basePath = "")
