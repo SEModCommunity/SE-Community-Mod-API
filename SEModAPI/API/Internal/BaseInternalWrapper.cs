@@ -98,9 +98,15 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
+				if (gameEntity == null)
+					throw new Exception("Game entity was null");
+				if (methodName == null || methodName.Length == 0)
+					throw new Exception("Method name was empty");
 				MethodInfo method = gameEntity.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-				if(method == null)
+				if (method == null)
 					method = gameEntity.GetType().BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				if (method == null)
+					throw new Exception("Method not found");
 				return method;
 			}
 			catch (Exception ex)

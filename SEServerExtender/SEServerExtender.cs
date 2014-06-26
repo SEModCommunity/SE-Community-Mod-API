@@ -89,7 +89,7 @@ namespace SEServerExtender
 			}
 			catch (Exception ex)
 			{
-				//TODO - Do something about the exception
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace SEServerExtender
 			}
 			catch (Exception ex)
 			{
-				//TODO - Do something about the exception
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 			}
 		}
 

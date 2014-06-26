@@ -32,8 +32,6 @@ namespace SEModAPI.API.Internal
 		private static Type m_objectManagerType;
 		private static Type m_entityBaseType;
 
-		private MethodInfo m_GetEntityHashSet;
-
 		//TODO - Build some sort of Dictionary based structure to hold these temp values
 		private static Vector3 m_nextEntityPosition;
 		private static Vector3 m_nextEntityVelocity;
@@ -284,6 +282,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine("Failed to generate entity id");
 				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return 0;
 			}
@@ -293,11 +292,6 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				if (gameEntity == null)
-				{
-					throw new Exception("Game Entity is null.");
-				}
-
 				long entityId = (long)InvokeEntityMethod(gameEntity, EntityGetEntityIdMethod);
 
 				return entityId;
@@ -330,12 +324,9 @@ namespace SEModAPI.API.Internal
 				
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -367,12 +358,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -390,12 +378,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -412,12 +397,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -434,12 +416,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -456,12 +435,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -478,12 +454,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -500,12 +473,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -521,12 +491,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -542,12 +509,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
