@@ -350,11 +350,9 @@ namespace SEServerExtender
 				CubeGrid item = (CubeGrid)linkedObject;
 				MyObjectBuilder_CubeGrid cubeGrid = item.BaseDefinition;
 
-				SaveFileDialog saveFileDialog = new SaveFileDialog
-				{
-					InitialDirectory = GameInstallationInfo.GamePath,
-					DefaultExt = "sbc file (*.sbc)"
-				};
+				SaveFileDialog saveFileDialog = new SaveFileDialog();
+				saveFileDialog.Filter = "sbc file (*.sbc)|*.sbc|All files (*.*)|*.*";
+				saveFileDialog.InitialDirectory = GameInstallationInfo.GamePath;
 
 				if (saveFileDialog.ShowDialog() == DialogResult.OK)
 				{

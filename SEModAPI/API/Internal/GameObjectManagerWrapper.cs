@@ -779,11 +779,13 @@ namespace SEModAPI.API.Internal
 				if (m_isDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Calling 'Close'");
 
-				MethodInfo removeEntityMethod = m_nextEntityToUpdate.GetType().GetMethod("Close", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-				removeEntityMethod.Invoke(m_nextEntityToUpdate, new object[] { });
-				//InvokeEntityMethod(m_nextEntityToUpdate, "Close");
+				//Move the ship far, far away as a temp fix to remove the 'ghost' ship on the clients
+				m_nextEntityPosition = m_nextEntityPosition * 1000;
+				InternalUpdateEntityPosition();
 
-				//TODO - Figure out what needs to be called to broadcast the removal to the clients
+				InvokeEntityMethod(m_nextEntityToUpdate, "Close");
+
+				//TODO - Figure out what needs to be called to fully broadcast the removal to the clients
 
 				m_nextEntityToUpdate = null;
 			}
