@@ -88,6 +88,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine("Failed to get entity field '" + fieldName + "'");
 				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return null;
 			}
@@ -97,11 +98,14 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				MethodInfo method = gameEntity.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				MethodInfo method = gameEntity.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				if(method == null)
+					method = gameEntity.GetType().BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
 				return method;
 			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine("Failed to get entity method '" + methodName + "'");
 				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return null;
 			}
@@ -123,8 +127,8 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine("Failed to invoke entity method '" + methodName + "'");
 				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
-				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(methodName);
 				return null;
 			}
 		}

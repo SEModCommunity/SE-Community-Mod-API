@@ -66,6 +66,7 @@ namespace SEModAPI.API.Internal
 		public static string EntityEntityId =					"F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
 		public static string EntityBool1 =						"A0B28D2BCB46F916CFAD5C71B0B68717";	//Should be false for removal
 		public static string EntityBool2 =						"781725BD1387DD32DE9B25B674FC0A2D";	//Should be false for removal
+		public static string EntityGetEntityIdMethod =			"5DB62C4867731C9D7D397DCE5D232D81";
 
 		public static string PhysicsObjectGetRigidBody =		"634E5EC534E45874230868BD089055B1";
 
@@ -294,15 +295,16 @@ namespace SEModAPI.API.Internal
 			{
 				if (gameEntity == null)
 				{
-					SandboxGameAssemblyWrapper.GetMyLog().WriteLine("Do not exist!!!");
 					throw new Exception("Game Entity is null.");
 				}
-				long entityId = (long)InvokeEntityMethod(gameEntity, "5DB62C4867731C9D7D397DCE5D232D81");
+
+				long entityId = (long)InvokeEntityMethod(gameEntity, EntityGetEntityIdMethod);
 
 				return entityId;
 			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine("Failed to get entity id");
 				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return 0;
 			}
