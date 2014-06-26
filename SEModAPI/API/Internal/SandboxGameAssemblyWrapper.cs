@@ -15,6 +15,7 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using VRage;
+using VRage.Common.Utils;
 using VRageMath;
 
 namespace SEModAPI.API.Internal
@@ -479,6 +480,14 @@ namespace SEModAPI.API.Internal
 				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return;
 			}
+		}
+
+		public Vector3? GenerateRandomBorderPosition(Vector3 borderStart, Vector3 borderEnd)
+		{
+			BoundingBox box = new BoundingBox(borderStart, borderEnd);
+			Vector3? nullableResult = new Vector3?(MyVRageUtils.GetRandomBorderPosition(ref box));
+
+			return nullableResult;
 		}
 
 		#endregion

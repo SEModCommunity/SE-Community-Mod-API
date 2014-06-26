@@ -42,30 +42,32 @@ namespace SEModAPI.API.Internal
 		private static Vector3 m_nextEntityForward;
 		private static Object m_nextEntityToUpdate;
 
-		public static string ObjectManagerClass = "5BCAC68007431E61367F5B2CF24E2D6F.CAF1EB435F77C7B77580E2E16F988BED";
-		public static string ObjectManagerAction1 = "E017E9CA31926307661D7A6B465C8F96";	//() Object Manager shut down?
-		public static string ObjectManagerEntityAction1 = "30E511FF32960AE853909500461285C4";	//(GameEntity) Entity-Close()
-		public static string ObjectManagerEntityAction2 = "8C1807427F2EEF4DF981396C4E6A42DD";	//(GameEntity, string, string) Entity-Init()
-		public static string ObjectManagerGetResourceLock = "6EF7F983A8061B40A5606D75C890AF07";
-		public static string ObjectManagerGetEntityHashSet = "84C54760C0F0DDDA50B0BE27B7116ED8";
-		public static string ObjectManagerAddEntity = "E5E18F5CAD1F62BB276DF991F20AE6AF";
+		public static string ObjectManagerClass =				"5BCAC68007431E61367F5B2CF24E2D6F.CAF1EB435F77C7B77580E2E16F988BED";
+		public static string ObjectManagerAction1 =				"E017E9CA31926307661D7A6B465C8F96";	//() Object Manager shut down?
+		public static string ObjectManagerEntityAction1 =		"30E511FF32960AE853909500461285C4";	//(GameEntity) Entity-Close()
+		public static string ObjectManagerEntityAction2 =		"8C1807427F2EEF4DF981396C4E6A42DD";	//(GameEntity, string, string) Entity-Init()
+		public static string ObjectManagerGetResourceLock =		"6EF7F983A8061B40A5606D75C890AF07";
+		public static string ObjectManagerGetEntityHashSet =	"84C54760C0F0DDDA50B0BE27B7116ED8";
+		public static string ObjectManagerAddEntity =			"E5E18F5CAD1F62BB276DF991F20AE6AF";
 
-		public static string NetworkSerializerClass = "5F381EA9388E0A32A8C817841E192BE8.8EFE49A46AB934472427B7D117FD3C64";
-		public static string NetworkSerializerSendEntity = "A6B585C993B43E72219511726BBB0649";
+		public static string NetworkSerializerClass =			"5F381EA9388E0A32A8C817841E192BE8.8EFE49A46AB934472427B7D117FD3C64";
+		public static string NetworkSerializerSendEntity =		"A6B585C993B43E72219511726BBB0649";
 
-		public static string UtilityClass = "5BCAC68007431E61367F5B2CF24E2D6F.226D9974B43A7269CDD3E322CC8110D5";
-		public static string UtilityGenerateEntityId = "3B4924802BEBD1AE13B29920376CE914";
+		public static string UtilityClass =						"5BCAC68007431E61367F5B2CF24E2D6F.226D9974B43A7269CDD3E322CC8110D5";
+		public static string UtilityGenerateEntityId =			"3B4924802BEBD1AE13B29920376CE914";
 
-		public static string GameEntityClass = "5BCAC68007431E61367F5B2CF24E2D6F.F6DF01EE4159339113BB9650DEEE1913";
-		public static string EntityAction1 = "8CAF5306D8DF29E8140056369D0F1FC1";	//(GameEntity) OnWorldPositionChanged
-		public static string EntityAction2 = "1CF14BA21D05D5F9AB6993170E4838FE";	//(GameEntity) UpdateAfterSim - Only if certain flags are set on cube blocks, not sure what yet
-		public static string EntityAction3 = "183620F2B4C14EFFC9F34BFBCF35ABCC";	//(GameEntity) ??
-		public static string EntityAction4 = "6C1670C128F0A838E0BE20B6EB3FB7C4";	//(GameEntity) ??
-		public static string EntityAction5 = "FA752E85660B6101F92B340B994C0F29";	//(GameEntity) ??
-		public static string EntityPhysicsObject = "691FA4830C80511C934826203A251981";
-		public static string EntityEntityId = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
+		public static string GameEntityClass =					"5BCAC68007431E61367F5B2CF24E2D6F.F6DF01EE4159339113BB9650DEEE1913";
+		public static string EntityAction1 =					"8CAF5306D8DF29E8140056369D0F1FC1";	//(GameEntity) OnWorldPositionChanged
+		public static string EntityAction2 =					"1CF14BA21D05D5F9AB6993170E4838FE";	//(GameEntity) UpdateAfterSim - Only if certain flags are set on cube blocks, not sure what yet
+		public static string EntityAction3 =					"183620F2B4C14EFFC9F34BFBCF35ABCC";	//(GameEntity) ??
+		public static string EntityAction4 =					"6C1670C128F0A838E0BE20B6EB3FB7C4";	//(GameEntity) ??
+		public static string EntityAction5 =					"FA752E85660B6101F92B340B994C0F29";	//(GameEntity) ??
+		public static string EntityPhysicsObject =				"691FA4830C80511C934826203A251981";
+		public static string EntityEntityId =					"F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
+		public static string EntityBool1 =						"A0B28D2BCB46F916CFAD5C71B0B68717";	//Should be false for removal
+		public static string EntityBool2 =						"781725BD1387DD32DE9B25B674FC0A2D";	//Should be false for removal
 
-		public static string PhysicsObjectGetRigidBody = "634E5EC534E45874230868BD089055B1";
+		public static string PhysicsObjectGetRigidBody =		"634E5EC534E45874230868BD089055B1";
 
 		#endregion
 
