@@ -17,6 +17,8 @@ namespace SEModAPI.API.Internal
 
 		protected new static CubeBlockInternalWrapper m_instance;
 
+		public static string CubeBlockGetObjectBuilderMethod = "CBB75211A3B0B3188541907C9B1B0C5C";
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -25,6 +27,8 @@ namespace SEModAPI.API.Internal
 			: base(basePath)
 		{
 			m_instance = this;
+
+			Console.WriteLine("Finished loading CubeBlockInternalWrapper");
 		}
 
 		new public static CubeBlockInternalWrapper GetInstance(string basePath = "")
@@ -77,7 +81,7 @@ namespace SEModAPI.API.Internal
 			{
 				try
 				{
-					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)InvokeEntityMethod(entity, "CBB75211A3B0B3188541907C9B1B0C5C", new object[] { });
+					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)InvokeEntityMethod(entity, CubeBlockGetObjectBuilderMethod, new object[] { });
 
 					if (baseEntity.TypeId == type)
 					{
@@ -91,7 +95,7 @@ namespace SEModAPI.API.Internal
 				}
 				catch (Exception ex)
 				{
-					//TODO - Do something about the exception here
+					SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				}
 			}
 
