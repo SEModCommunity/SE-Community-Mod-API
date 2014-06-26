@@ -126,10 +126,18 @@ namespace SEModAPI.API.Internal
 
 		public HashSet<Object> GetObjectManagerHashSetData()
 		{
-			var rawValue = m_GetEntityHashSet.Invoke(null, new object[] { });
-			HashSet<Object> convertedSet = ConvertHashSet(rawValue);
+			try
+			{
+				var rawValue = m_GetEntityHashSet.Invoke(null, new object[] { });
+				HashSet<Object> convertedSet = ConvertHashSet(rawValue);
 
-			return convertedSet;
+				return convertedSet;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				return null;
+			}
 		}
 
 		#region APIEntityLists
@@ -254,11 +262,34 @@ namespace SEModAPI.API.Internal
 
 		public static long GenerateEntityId()
 		{
-			Type utilityType = m_assembly.GetType("5BCAC68007431E61367F5B2CF24E2D6F.226D9974B43A7269CDD3E322CC8110D5");
-			MethodInfo generateIdMethod = utilityType.GetMethod("3B4924802BEBD1AE13B29920376CE914", BindingFlags.Public | BindingFlags.Static);
-			long entityId = (long)generateIdMethod.Invoke(null, new object[] { });
+			try
+			{
+				Type utilityType = m_assembly.GetType("5BCAC68007431E61367F5B2CF24E2D6F.226D9974B43A7269CDD3E322CC8110D5");
+				MethodInfo generateIdMethod = utilityType.GetMethod("3B4924802BEBD1AE13B29920376CE914", BindingFlags.Public | BindingFlags.Static);
+				long entityId = (long)generateIdMethod.Invoke(null, new object[] { });
 
-			return entityId;
+				return entityId;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				return 0;
+			}
+		}
+
+		public static long GetEntityId(Object gameEntity)
+		{
+			try
+			{
+				long entityId = (long)InvokeEntityMethod(gameEntity, "B33C3AC5277AD9E354576C4D92D61698");
+
+				return entityId;
+			}
+			catch (Exception ex)
+			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				return 0;
+			}
 		}
 
 		#region "Setup"

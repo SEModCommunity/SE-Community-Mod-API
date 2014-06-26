@@ -88,6 +88,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return null;
 			}
 		}
@@ -101,6 +102,7 @@ namespace SEModAPI.API.Internal
 			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return null;
 			}
 		}
@@ -119,31 +121,10 @@ namespace SEModAPI.API.Internal
 
 				return result;
 			}
-			catch (AccessViolationException ex)
-			{
-				return null;
-			}
-			catch (TargetInvocationException ex)
-			{
-				return null;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				return null;
-			}
-		}
-
-		public static long GetEntityId(Object gameEntity)
-		{
-			try
-			{
-				long entityId = (long)InvokeEntityMethod(gameEntity, "B33C3AC5277AD9E354576C4D92D61698");
-
-				return entityId;
-			}
-			catch (Exception ex)
-			{
-				return 0;
 			}
 		}
 
