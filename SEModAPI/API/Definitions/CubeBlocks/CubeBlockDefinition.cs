@@ -100,19 +100,19 @@ namespace SEModAPI.API.Definitions.CubeBlocks
             }
         }
 
-		/// <summary>
-		/// The IDModule state of the current CubeBlock 
-		/// </summary>
-		public bool IDModule
-		{
-			get { return m_baseDefinition.IDModule; }
-			set
-			{
-				if (m_baseDefinition.IDModule == value) return;
-				m_baseDefinition.IDModule = value;
-				Changed = true;
-			}
-		}
+		///// <summary>
+		///// The IDModule state of the current CubeBlock 
+		///// </summary>
+		//public bool IDModule
+		//{
+		//	get { return m_baseDefinition.IDModule; }
+		//	set
+		//	{
+		//		if (m_baseDefinition.IDModule == value) return;
+		//		m_baseDefinition.IDModule = value;
+		//		Changed = true;
+		//	}
+		//}
 
 	    #endregion
 

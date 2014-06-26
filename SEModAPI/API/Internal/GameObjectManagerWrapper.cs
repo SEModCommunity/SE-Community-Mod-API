@@ -166,7 +166,7 @@ namespace SEModAPI.API.Internal
 			{
 				try
 				{
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)InvokeEntityMethod(entity, "GetObjectBuilder", new object[] { });
+					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)InvokeEntityMethod(entity, "GetObjectBuilder", new object[] { false });
 
 					if (baseEntity.TypeId == type)
 					{
@@ -292,7 +292,12 @@ namespace SEModAPI.API.Internal
 		{
 			try
 			{
-				long entityId = (long)InvokeEntityMethod(gameEntity, "B33C3AC5277AD9E354576C4D92D61698");
+				if (gameEntity == null)
+				{
+					SandboxGameAssemblyWrapper.GetMyLog().WriteLine("Do not exist!!!");
+					throw new Exception("Game Entity is null.");
+				}
+				long entityId = (long)InvokeEntityMethod(gameEntity, "5DB62C4867731C9D7D397DCE5D232D81");
 
 				return entityId;
 			}

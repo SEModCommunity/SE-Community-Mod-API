@@ -124,6 +124,7 @@ namespace SEModAPI.API.Internal
 			catch (Exception ex)
 			{
 				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(methodName);
 				return null;
 			}
 		}
