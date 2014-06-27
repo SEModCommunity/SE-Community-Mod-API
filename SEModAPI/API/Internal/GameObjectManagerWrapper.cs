@@ -503,9 +503,24 @@ namespace SEModAPI.API.Internal
 			try
 			{
 				m_nextEntityToUpdate = gameEntity;
+				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
+				m_nextEntityPosition = Vector3.Multiply(havokBody.Position, 1000);
 
-				Action action = InternalRemoveEntity;
+				Action action = InternalUpdateEntityPosition;
 				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+
+				//Slight pause to allow the position change to propagate to the clients
+				Thread.Sleep(1000);
+
+				//TODO - Shut off all reactors and solar panels
+
+				//Slight pause to allow reactor shutdown to propagate to the clients
+				Thread.Sleep(1000);
+
+				Action action2 = InternalRemoveEntity;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action2);
+
+				//TODO - Find a way to turn off all power on the ship as well so it is totally hidden and disabled
 
 				return true;
 			}
@@ -778,10 +793,6 @@ namespace SEModAPI.API.Internal
 
 				if (m_isDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Calling 'Close'");
-
-				//Move the ship far, far away as a temp fix to remove the 'ghost' ship on the clients
-				m_nextEntityPosition = m_nextEntityPosition * 1000;
-				InternalUpdateEntityPosition();
 
 				InvokeEntityMethod(m_nextEntityToUpdate, "Close");
 

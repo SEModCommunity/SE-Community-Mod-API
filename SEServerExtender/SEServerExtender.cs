@@ -192,17 +192,20 @@ namespace SEServerExtender
 				{
 					e.Node.Nodes.Add("Structural Blocks (0)");
 					e.Node.Nodes.Add("Container Blocks (0)");
+					e.Node.Nodes.Add("Reactor Blocks (0)");
 				}
 
 				CubeGrid cubeGrid = (CubeGrid)linkedObject;
 
 				List<CubeBlockEntity<MyObjectBuilder_CubeBlock>> structuralBlocks = CubeBlockInternalWrapper.GetInstance().GetStructuralBlocks(cubeGrid);
 				List<CargoContainerEntity> containerBlocks = CubeBlockInternalWrapper.GetInstance().GetCargoContainerBlocks(cubeGrid);
+				List<ReactorEntity> reactorBlocks = CubeBlockInternalWrapper.GetInstance().GetReactorBlocks(cubeGrid);
 
 				TRV_Entities.BeginUpdate();
 
 				UpdateNodeCubeBlockBranch<CubeBlockEntity<MyObjectBuilder_CubeBlock>, MyObjectBuilder_CubeBlock>(e.Node.Nodes[0], structuralBlocks, "Structural Blocks");
 				UpdateNodeCubeBlockBranch<CargoContainerEntity, MyObjectBuilder_CargoContainer>(e.Node.Nodes[1], containerBlocks, "Container Blocks");
+				UpdateNodeCubeBlockBranch<ReactorEntity, MyObjectBuilder_Reactor>(e.Node.Nodes[2], reactorBlocks, "Reactor Blocks");
 
 				TRV_Entities.EndUpdate();
 			}
@@ -373,6 +376,8 @@ namespace SEServerExtender
 		private void PG_Entities_Details_Click(object sender, EventArgs e)
 		{
 			TreeNode node = TRV_Entities.SelectedNode;
+			if (node == null)
+				return;
 			var linkedObject = node.Tag;
 			PG_Entities_Details.SelectedObject = linkedObject;
 		}

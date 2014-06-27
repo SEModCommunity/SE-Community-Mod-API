@@ -29,6 +29,8 @@ namespace SEModAPI.API.Internal
 
 		public static string CubeGridClass = "5BCAC68007431E61367F5B2CF24E2D6F.98262C3F38A1199E47F2B9338045794C";
 		public static string CubeGridIsStaticField = "";
+		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
+		public static string CubeGridSetDampenersEnabledMethod = "86B66668D555E1C1B744C17D2AFA77F7";
 
 		#endregion
 
@@ -86,12 +88,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}
@@ -107,12 +106,9 @@ namespace SEModAPI.API.Internal
 
 				return true;
 			}
-			catch (TargetInvocationException ex)
-			{
-				throw ex.InnerException;
-			}
 			catch (Exception ex)
 			{
+				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
 				throw ex;
 			}
 		}

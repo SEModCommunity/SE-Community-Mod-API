@@ -8,6 +8,8 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
+using SEModAPI.API.Internal;
+
 namespace SEModAPI.API.SaveData.Entity
 {
 	public class TerminalBlockEntity<T> : CubeBlockEntity<T> where T : MyObjectBuilder_TerminalBlock
@@ -33,6 +35,9 @@ namespace SEModAPI.API.SaveData.Entity
 				if (m_baseDefinition.CustomName == value) return;
 				m_baseDefinition.CustomName = value;
 				Changed = true;
+
+				if (BackingObject != null)
+					CubeBlockInternalWrapper.GetInstance().UpdateTerminalBlockCustomName(BackingObject, value);
 			}
 		}
 

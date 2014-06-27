@@ -8,6 +8,8 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
+using SEModAPI.API.Internal;
+
 namespace SEModAPI.API.SaveData.Entity
 {
 	public class FunctionalBlockEntity<T> : TerminalBlockEntity<T> where T : MyObjectBuilder_FunctionalBlock
@@ -33,6 +35,9 @@ namespace SEModAPI.API.SaveData.Entity
 				if (m_baseDefinition.Enabled == value) return;
 				m_baseDefinition.Enabled = value;
 				Changed = true;
+
+				if (BackingObject != null)
+					CubeBlockInternalWrapper.GetInstance().UpdateFunctionalBlockEnabled(BackingObject, value);
 			}
 		}
 
