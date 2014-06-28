@@ -13,6 +13,8 @@ using Sandbox.Common.ObjectBuilders.Voxels;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API;
+using SEModAPI.Support;
+
 using SEModAPIInternal.API;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
@@ -40,9 +42,24 @@ namespace SEServerExtender
 
 		public SEServerExtender()
 		{
-			InitializeComponent();
+			//Determine wether or not we could find the game installation
+			try
+			{
+				new GameInstallationInfo();
+			}
+			catch (AutoException)
+			{
+				string gamePath = GetGamePath();
+				if (gamePath == null || gamePath == "")
+				{
+					//If the game path was not found, we skip all initialisation
+					this.Visible = false;
+					return;
+				}
+				new GameInstallationInfo(gamePath);
+			}
 
-			new GameInstallationInfo();
+			InitializeComponent();
 
 			m_processWrapper = new ProcessWrapper();
 
@@ -60,6 +77,49 @@ namespace SEServerExtender
 		#endregion
 
 		#region "Methods"
+
+		/// <summary>
+		/// Try to find manually the SpaceEngineers game path
+		/// </summary>
+		/// <returns>The game path, or null if not found</returns>
+		private string GetGamePath()
+		{
+			bool continueLoad = true;
+
+			OpenFileDialog OFD_GamePath = new OpenFileDialog();
+
+			string steamPath = GameInstallationInfo.GetGameSteamPath();
+			if (steamPath != null)
+				OFD_GamePath.InitialDirectory = Path.Combine(steamPath, "SteamApps", "common");
+
+			while (continueLoad)
+			{
+				DialogResult resultOpen = OFD_GamePath.ShowDialog();
+				if (resultOpen == DialogResult.OK)
+				{
+					string selectedPath = Path.GetDirectoryName(OFD_GamePath.FileName);
+					string gamePath = Path.Combine(selectedPath, "..");
+					if (GameInstallationInfo.IsValidGamePath(gamePath))
+						return gamePath;
+					else
+					{
+						DialogResult resultRetry = MessageBox.Show("The selected location is an invalid SpaceEngineers installation.",
+							"Invalid installation", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+
+						if (resultRetry != DialogResult.Retry)
+							continueLoad = false;
+					}
+				}
+				else
+					continueLoad = false;
+			}
+
+			//If this point is reached, then the user must have cancelled it.
+			MessageBox.Show("The game installation location could not be found. The application can not run without it.",
+				"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+			return null;
+		}
 
 		void UpdateNodeCubeBlockBranch<T>(TreeNode node, List<T> source, string name)
 			where T : CubeBlockEntity

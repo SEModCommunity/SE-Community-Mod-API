@@ -96,10 +96,11 @@ namespace SEModAPI.API
 		{
 			if (string.IsNullOrEmpty(gamePath)) { return false; }
 			if (!Directory.Exists(gamePath)) return false;
-			if (!Directory.Exists(Path.Combine(gamePath, "Bin64"))) { return false; }
 			if (!Directory.Exists(Path.Combine(gamePath, "Content"))) { return false; }
 
-			// Skip checking for the .exe. Not required currently.
+			//Binaries folder check disabled until we can verify if checking for either of these is okay or if we need to check for something else
+			//if (!Directory.Exists(Path.Combine(gamePath, "Bin64")) && !Directory.Exists(Path.Combine(gamePath, "DedicatedServer64"))) { return false; }
+
 			return true;
 		}
 
@@ -151,7 +152,6 @@ namespace SEModAPI.API
 		{
 			// We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
 			var baseFilePath = Path.Combine(GamePath, "DedicatedServer64");
-
 			var appFilePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
 			foreach (var filename in CoreSpaceEngineersFiles)
