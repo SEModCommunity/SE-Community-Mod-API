@@ -8,9 +8,11 @@ using System.Windows.Forms;
 using Sandbox.Common.ObjectBuilders;
 
 using SEModAPI.API;
-using SEModAPI.API.Internal;
-using SEModAPI.API.SaveData;
-using SEModAPI.API.SaveData.Entity;
+
+using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Server;
+using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.API.Entity.Sector;
 
 using VRage.Common.Utils;
 
@@ -22,7 +24,7 @@ namespace SEServerExtender.API
 
 		private ServerAssemblyWrapper m_serverWrapper;
 		private SandboxGameAssemblyWrapper m_sandboxGameWrapper;
-		private GameObjectManagerWrapper m_gameObjectManagerWrapper;
+		private BaseEntityManagerWrapper m_gameObjectManagerWrapper;
 
 		private static Thread m_runServerThread;
 		private static Thread m_monitorServerThread;
@@ -49,7 +51,7 @@ namespace SEServerExtender.API
 				string basePath = Path.Combine(GameInstallationInfo.GamePath, "DedicatedServer64");
 				m_serverWrapper = ServerAssemblyWrapper.GetInstance(basePath);
 				m_sandboxGameWrapper = SandboxGameAssemblyWrapper.GetInstance(basePath);
-				m_gameObjectManagerWrapper = GameObjectManagerWrapper.GetInstance(basePath);
+				m_gameObjectManagerWrapper = BaseEntityManagerWrapper.GetInstance(basePath);
 
 				m_worldName = worldName;
 

@@ -10,9 +10,15 @@ using SEModAPI;
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
 using SEModAPI.API.Definitions.CubeBlocks;
-using SEModAPI.API.SaveData;
-using SEModAPI.API.SaveData.Entity;
 using SEModAPI.Support;
+
+using SEModAPIInternal.API;
+using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.API.Entity.Sector;
+using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
+using SEModAPIInternal.API.Server;
 
 using Sandbox.Common.Localization;
 using Sandbox.Common.ObjectBuilders;
@@ -158,7 +164,7 @@ namespace SEConfigTool
 			stopWatch.Start();
 
 			m_sectorManager.Load(saveFileInfo);
-			Sector sector = m_sectorManager.Sector;
+			SectorEntity sector = m_sectorManager.Sector;
 
 			TXT_SavedGame_Properties_Position.Text = sector.Position.ToString();
 			TXT_SavedGame_Properties_AppVersion.Text = sector.AppVersion.ToString();
@@ -182,7 +188,7 @@ namespace SEConfigTool
 			#region CubeGrids
 
 			//Add the cube grids
-			foreach (CubeGrid cubeGrid in sector.CubeGrids)
+			foreach (CubeGridEntity cubeGrid in sector.CubeGrids)
 			{
 				float x = cubeGrid.PositionAndOrientation.Position.x;
 				float y = cubeGrid.PositionAndOrientation.Position.y;
@@ -215,10 +221,11 @@ namespace SEConfigTool
 				foreach (var cubeBlockObject in cubeGrid.CubeBlocks)
 				{
 					TreeNode blockNode = null;
+					Type cubeType = cubeBlockObject.GetType();
 
-					if (cubeBlockObject is CubeBlockEntity<MyObjectBuilder_CubeBlock>)
+					if (cubeBlockObject is CubeBlockEntity)
 					{
-						CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)cubeBlockObject;
+						CubeBlockEntity cubeBlock = (CubeBlockEntity)cubeBlockObject;
 						string nodeName = cubeBlock.Name;
 						if (nodeName == "")
 							nodeName = cubeBlock.Id.ToString();
@@ -401,7 +408,7 @@ namespace SEConfigTool
 			#region UnknownObjects
 
 			//Add any unknown objects
-			foreach (SectorObject<MyObjectBuilder_EntityBase> unknown in sector.UnknownObjects)
+			foreach (BaseEntity unknown in sector.UnknownObjects)
 			{
 				float x = unknown.PositionAndOrientation.Position.x;
 				float y = unknown.PositionAndOrientation.Position.y;
@@ -847,7 +854,7 @@ namespace SEConfigTool
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show(this, ex.Message);
+						MessageBox.Show(this, ex.ToString());
 					}
 				}
 			}
@@ -870,7 +877,7 @@ namespace SEConfigTool
 		{
 			int index = LST_SavedGame_Events.SelectedIndex;
 
-			Sector sector = m_sectorManager.Sector;
+			SectorEntity sector = m_sectorManager.Sector;
 			Event sectorEvent = sector.Events[index];
 
 			sectorEvent.Enabled = CHK_SavedGame_Events_Enabled.CheckState == CheckState.Checked;
@@ -884,7 +891,7 @@ namespace SEConfigTool
 			m_currentlySelecting = true;
 			int index = LST_SavedGame_Events.SelectedIndex;
 
-			Sector sector = m_sectorManager.Sector;
+			SectorEntity sector = m_sectorManager.Sector;
 			Event sectorEvent = sector.Events[index];
 
 			TXT_SavedGame_Events_Type.Text = sectorEvent.DefinitionId.ToString();
@@ -910,9 +917,9 @@ namespace SEConfigTool
 
 			#region CubeBlocks
 
-			if (linkedObject is CubeBlockEntity<MyObjectBuilder_CubeBlock>)
+			if (linkedObject is CubeBlockEntity)
 			{
-				CubeBlockEntity<MyObjectBuilder_CubeBlock> cubeBlock = (CubeBlockEntity<MyObjectBuilder_CubeBlock>)linkedObject;
+				CubeBlockEntity cubeBlock = (CubeBlockEntity)linkedObject;
 
 				PG_Sector_Objects_Details.Visible = true;
 				PG_Sector_Objects_Details.SelectedObject = cubeBlock;
@@ -979,9 +986,9 @@ namespace SEConfigTool
 
 			#endregion
 
-			if (linkedObject is CubeGrid)
+			if (linkedObject is CubeGridEntity)
 			{
-				CubeGrid cubeGrid = (CubeGrid)linkedObject;
+				CubeGridEntity cubeGrid = (CubeGridEntity)linkedObject;
 
 				BTN_Sector_Objects_Delete.Enabled = true;
 
@@ -1068,9 +1075,9 @@ namespace SEConfigTool
 
 			Type linkedType = linkedObject.GetType();
 
-			if (linkedType.IsAssignableFrom(typeof(CubeGrid)))
+			if (linkedType.IsAssignableFrom(typeof(CubeGridEntity)))
 			{
-				CubeGrid cubeGrid = (CubeGrid)linkedObject;
+				CubeGridEntity cubeGrid = (CubeGridEntity)linkedObject;
 
 				bool result = m_sectorManager.Sector.DeleteEntry(cubeGrid);
 				if (result)
@@ -1146,14 +1153,12 @@ namespace SEConfigTool
 				if (linkedContainer == null)
 					return;
 
-				Type linkedContainerType = linkedContainer.GetType();
-
-				if (linkedContainerType.IsAssignableFrom(typeof(CargoContainerEntity)))
+				if (linkedContainer is CargoContainerEntity)
 				{
 					CargoContainerEntity containerBlock = (CargoContainerEntity)linkedContainer;
 
 					//Delete the item from the container
-					containerBlock.Inventory.DeleteEntry(itemEntity);
+					bool result = containerBlock.Inventory.DeleteEntry(itemEntity);
 
 					//Refresh the sub-item list on the container
 					parentNode.Nodes.Clear();

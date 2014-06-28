@@ -50,27 +50,13 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HavokWrapper">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>GameLibraries\HavokWrapper.dll</HintPath>
-    </Reference>
     <Reference Include="Sandbox.Common">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>GameLibraries\Sandbox.Common.dll</HintPath>
+      <HintPath>..\GameLibraries\Sandbox.Common.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Common.XmlSerializers">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
-    </Reference>
-    <Reference Include="Sandbox.Game">
-      <HintPath>GameLibraries\Sandbox.Game.dll</HintPath>
-    </Reference>
-    <Reference Include="SpaceEngineersDedicated">
-      <HintPath>GameLibraries\SpaceEngineersDedicated.exe</HintPath>
-    </Reference>
-    <Reference Include="SteamSDK, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>GameLibraries\SteamSDK.dll</HintPath>
+      <HintPath>..\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -83,28 +69,18 @@
     <Reference Include="System.Xml" />
     <Reference Include="VRage.Common">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>GameLibraries\VRage.Common.dll</HintPath>
+      <HintPath>..\GameLibraries\VRage.Common.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Library">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>GameLibraries\VRage.Library.dll</HintPath>
+      <HintPath>..\GameLibraries\VRage.Library.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Math">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>GameLibraries\VRage.Math.dll</HintPath>
-    </Reference>
-    <Reference Include="VRage.Render">
-      <HintPath>GameLibraries\VRage.Render.dll</HintPath>
+      <HintPath>..\GameLibraries\VRage.Math.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Internal\BaseEntity.cs" />
-    <Compile Include="API\Internal\BaseInternalWrapper.cs" />
-    <Compile Include="API\Internal\CharacterInternalWrapper.cs" />
-    <Compile Include="API\Internal\CubeBlockInternalWrapper.cs" />
-    <Compile Include="API\Internal\CubeGridInternalWrapper.cs" />
-    <Compile Include="API\Internal\GameObjectManagerWrapper.cs" />
-    <Compile Include="API\Internal\SandboxGameAssemblyWrapper.cs" />
     <Compile Include="API\Definitions\ConfigFileSerializer.cs" />
     <Compile Include="API\Definitions\CubeBlocks\ShipDrillDefinition.cs" />
     <Compile Include="API\Definitions\DefinitionOverLayer.cs" />
@@ -125,20 +101,6 @@
     <Compile Include="API\Definitions\CubeBlocks\SolarPanelDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\ThrustersDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\VirtualMassDefinition.cs" />
-    <Compile Include="API\Internal\ServerAssemblyWrapper.cs" />
-    <Compile Include="API\SaveData\BlockGroups.cs" />
-    <Compile Include="API\SaveData\ConveyorLines.cs" />
-    <Compile Include="API\SaveData\CubeBlockEntity.cs" />
-    <Compile Include="API\SaveData\Entity\BeaconEntity.cs" />
-    <Compile Include="API\SaveData\Entity\CargoContainerEntity.cs" />
-    <Compile Include="API\SaveData\Entity\CharacterEntity.cs" />
-    <Compile Include="API\SaveData\Entity\CockpitEntity.cs" />
-    <Compile Include="API\SaveData\Entity\FunctionalBlockEntity.cs" />
-    <Compile Include="API\SaveData\Entity\GravityGeneratorEntity.cs" />
-    <Compile Include="API\SaveData\Entity\InventoryEntity.cs" />
-    <Compile Include="API\SaveData\Entity\MedicalRoomEntity.cs" />
-    <Compile Include="API\SaveData\Entity\ReactorEntity.cs" />
-    <Compile Include="API\SaveData\CubeGrid.cs" />
     <Compile Include="API\Definitions\OverLayerDefinition.cs" />
     <Compile Include="API\Definitions\BlueprintsDefinition.cs" />
     <Compile Include="API\Definitions\ComponentsDefinition.cs" />
@@ -154,14 +116,6 @@
     <Compile Include="API\Definitions\TransparentMaterialsDefinition.cs" />
     <Compile Include="API\Definitions\VoxelMaterialsDefinition.cs" />
     <Compile Include="API\GameInstallation.cs" />
-    <Compile Include="API\SaveData\Entity\TerminalBlockEntity.cs" />
-    <Compile Include="API\SaveData\Event.cs" />
-    <Compile Include="API\SaveData\FloatingObject.cs" />
-    <Compile Include="API\SaveData\Meteor.cs" />
-    <Compile Include="API\SaveData\Sector.cs" />
-    <Compile Include="API\SaveData\SectorObject.cs" />
-    <Compile Include="API\SaveData\SerializableEntity.cs" />
-    <Compile Include="API\SaveData\VoxelMap.cs" />
     <Compile Include="API\SEModAPIExceptions.cs" />
     <Compile Include="API\TypeConverters.cs" />
     <Compile Include="Interop\ClassType.cs" />
@@ -176,26 +130,6 @@
     <EmbeddedResource Include="Support\NumericTextBox.resx">
       <DependentUpon>NumericTextBox.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="GameLibraries\HavokWrapper.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GameLibraries\Sandbox.Common.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GameLibraries\Sandbox.Common.XmlSerializers.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GameLibraries\VRage.Common.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GameLibraries\VRage.Library.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GameLibraries\VRage.Math.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -220,11 +154,4 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

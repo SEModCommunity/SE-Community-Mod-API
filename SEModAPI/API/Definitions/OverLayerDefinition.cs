@@ -375,6 +375,14 @@ namespace SEModAPI.API.Definitions
 			m_definitionsContainerField = GetMatchingDefinitionsContainerField();
 		}
 
+		protected SerializableDefinitionsManager(T[] baseDefinitions)
+			: base(baseDefinitions)
+		{
+			m_fileInfo = null;
+
+			m_definitionsContainerField = GetMatchingDefinitionsContainerField();
+		}
+
 		#endregion
 
 		#region "Properties"

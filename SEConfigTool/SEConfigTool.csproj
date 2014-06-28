@@ -40,11 +40,11 @@
   <ItemGroup>
     <Reference Include="Sandbox.Common">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SEModAPI\GameLibraries\Sandbox.Common.dll</HintPath>
+      <HintPath>..\GameLibraries\Sandbox.Common.dll</HintPath>
     </Reference>
     <Reference Include="Sandbox.Common.XmlSerializers">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SEModAPI\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
+      <HintPath>..\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,15 +58,15 @@
     <Reference Include="System.Xml" />
     <Reference Include="VRage.Common">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SEModAPI\GameLibraries\VRage.Common.dll</HintPath>
+      <HintPath>..\GameLibraries\VRage.Common.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Library">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SEModAPI\GameLibraries\VRage.Library.dll</HintPath>
+      <HintPath>..\GameLibraries\VRage.Library.dll</HintPath>
     </Reference>
     <Reference Include="VRage.Math">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SEModAPI\GameLibraries\VRage.Math.dll</HintPath>
+      <HintPath>..\GameLibraries\VRage.Math.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -107,17 +107,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SEModAPIInternal\SEModAPIInternal.csproj">
+      <Project>{8C4B07B6-0864-497A-ACAA-18BABE2F4168}</Project>
+      <Name>SEModAPIInternal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SEModAPI\SEModAPI.csproj">
       <Project>{94e6c913-9456-408d-bdee-56b48b5397d4}</Project>
       <Name>SEModAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -88,8 +88,8 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.statusStrip1);
-			this.splitContainer1.Size = new System.Drawing.Size(798, 656);
-			this.splitContainer1.SplitterDistance = 627;
+			this.splitContainer1.Size = new System.Drawing.Size(1001, 699);
+			this.splitContainer1.SplitterDistance = 670;
 			this.splitContainer1.TabIndex = 0;
 			// 
 			// TAB_MainTabs
@@ -100,7 +100,7 @@
 			this.TAB_MainTabs.Location = new System.Drawing.Point(0, 0);
 			this.TAB_MainTabs.Name = "TAB_MainTabs";
 			this.TAB_MainTabs.SelectedIndex = 0;
-			this.TAB_MainTabs.Size = new System.Drawing.Size(798, 627);
+			this.TAB_MainTabs.Size = new System.Drawing.Size(1001, 670);
 			this.TAB_MainTabs.TabIndex = 0;
 			// 
 			// TAB_Control_Page
@@ -109,7 +109,7 @@
 			this.TAB_Control_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_Control_Page.Name = "TAB_Control_Page";
 			this.TAB_Control_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_Control_Page.Size = new System.Drawing.Size(790, 601);
+			this.TAB_Control_Page.Size = new System.Drawing.Size(993, 644);
 			this.TAB_Control_Page.TabIndex = 0;
 			this.TAB_Control_Page.Text = "Control";
 			this.TAB_Control_Page.UseVisualStyleBackColor = true;
@@ -128,8 +128,8 @@
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-			this.splitContainer3.Size = new System.Drawing.Size(784, 595);
-			this.splitContainer3.SplitterDistance = 382;
+			this.splitContainer3.Size = new System.Drawing.Size(987, 638);
+			this.splitContainer3.SplitterDistance = 480;
 			this.splitContainer3.TabIndex = 4;
 			// 
 			// BTN_ServerControl_Start
@@ -169,7 +169,7 @@
 			// 
 			this.splitContainer4.Panel2.Controls.Add(this.CHK_Control_EnableFactions);
 			this.splitContainer4.Panel2.Controls.Add(this.CHK_Control_Debugging);
-			this.splitContainer4.Size = new System.Drawing.Size(398, 595);
+			this.splitContainer4.Size = new System.Drawing.Size(503, 638);
 			this.splitContainer4.SplitterDistance = 120;
 			this.splitContainer4.TabIndex = 0;
 			// 
@@ -217,7 +217,7 @@
 			this.TAB_Entities_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_Entities_Page.Name = "TAB_Entities_Page";
 			this.TAB_Entities_Page.Padding = new System.Windows.Forms.Padding(3);
-			this.TAB_Entities_Page.Size = new System.Drawing.Size(790, 601);
+			this.TAB_Entities_Page.Size = new System.Drawing.Size(993, 644);
 			this.TAB_Entities_Page.TabIndex = 1;
 			this.TAB_Entities_Page.Text = "Entities";
 			this.TAB_Entities_Page.UseVisualStyleBackColor = true;
@@ -232,13 +232,13 @@
 			// splitContainer2.Panel1
 			// 
 			this.splitContainer2.Panel1.Controls.Add(this.splitContainer5);
-			this.splitContainer2.Panel1MinSize = 250;
+			this.splitContainer2.Panel1MinSize = 300;
 			// 
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.PG_Entities_Details);
-			this.splitContainer2.Size = new System.Drawing.Size(784, 595);
-			this.splitContainer2.SplitterDistance = 250;
+			this.splitContainer2.Size = new System.Drawing.Size(987, 638);
+			this.splitContainer2.SplitterDistance = 300;
 			this.splitContainer2.TabIndex = 0;
 			// 
 			// splitContainer5
@@ -258,8 +258,8 @@
 			this.splitContainer5.Panel2.Controls.Add(this.BTN_Entities_Export);
 			this.splitContainer5.Panel2.Controls.Add(this.BTN_Entities_New);
 			this.splitContainer5.Panel2.Controls.Add(this.BTN_Entities_Delete);
-			this.splitContainer5.Size = new System.Drawing.Size(250, 595);
-			this.splitContainer5.SplitterDistance = 560;
+			this.splitContainer5.Size = new System.Drawing.Size(300, 638);
+			this.splitContainer5.SplitterDistance = 603;
 			this.splitContainer5.TabIndex = 0;
 			// 
 			// TRV_Entities
@@ -267,7 +267,7 @@
 			this.TRV_Entities.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TRV_Entities.Location = new System.Drawing.Point(0, 0);
 			this.TRV_Entities.Name = "TRV_Entities";
-			this.TRV_Entities.Size = new System.Drawing.Size(250, 560);
+			this.TRV_Entities.Size = new System.Drawing.Size(300, 603);
 			this.TRV_Entities.TabIndex = 0;
 			this.TRV_Entities.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_Entities_AfterSelect);
 			// 
@@ -309,17 +309,17 @@
 			this.PG_Entities_Details.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PG_Entities_Details.Location = new System.Drawing.Point(0, 0);
 			this.PG_Entities_Details.Name = "PG_Entities_Details";
-			this.PG_Entities_Details.Size = new System.Drawing.Size(530, 595);
+			this.PG_Entities_Details.Size = new System.Drawing.Size(683, 638);
 			this.PG_Entities_Details.TabIndex = 0;
-			this.PG_Entities_Details.SelectedGridItemChanged += new System.Windows.Forms.SelectedGridItemChangedEventHandler(this.PG_Entities_Details_Click);
 			this.PG_Entities_Details.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.PG_Entities_Details_Click);
+			this.PG_Entities_Details.SelectedGridItemChanged += new System.Windows.Forms.SelectedGridItemChangedEventHandler(this.PG_Entities_Details_Click);
 			this.PG_Entities_Details.Validated += new System.EventHandler(this.PG_Entities_Details_Click);
 			// 
 			// statusStrip1
 			// 
 			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
 			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(798, 22);
+			this.statusStrip1.Size = new System.Drawing.Size(1001, 22);
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
@@ -327,7 +327,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(798, 656);
+			this.ClientSize = new System.Drawing.Size(1001, 699);
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "SEServerExtender";
 			this.Text = "SEServerExtender";

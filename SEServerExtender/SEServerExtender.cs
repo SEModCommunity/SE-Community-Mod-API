@@ -13,9 +13,15 @@ using Sandbox.Common.ObjectBuilders.Voxels;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API;
-using SEModAPI.API.Internal;
-using SEModAPI.API.SaveData;
-using SEModAPI.API.SaveData.Entity;
+using SEModAPIInternal.API;
+using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.API.Entity.Sector;
+using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
+using SEModAPIInternal.API.Server;
+using SEModAPIInternal.Support;
 
 using SEServerExtender.API;
 
@@ -55,9 +61,8 @@ namespace SEServerExtender
 
 		#region "Methods"
 
-		void UpdateNodeCubeBlockBranch<T, TO>(TreeNode node, List<T> source, string name)
-			where TO : MyObjectBuilder_CubeBlock
-			where T : CubeBlockEntity<TO>
+		void UpdateNodeCubeBlockBranch<T>(TreeNode node, List<T> source, string name)
+			where T : CubeBlockEntity
 		{
 			try
 			{
@@ -89,13 +94,12 @@ namespace SEServerExtender
 			}
 			catch (Exception ex)
 			{
-				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
-		void UpdateNodeBranch<T, TO>(TreeNode node, List<T> source, string name)
-			where TO : MyObjectBuilder_EntityBase
-			where T : SectorObject<TO>
+		void UpdateNodeBranch<T>(TreeNode node, List<T> source, string name)
+			where T : BaseEntity
 		{
 			try
 			{
@@ -130,7 +134,7 @@ namespace SEServerExtender
 			}
 			catch (Exception ex)
 			{
-				SandboxGameAssemblyWrapper.GetMyLog().WriteLine(ex.ToString());
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
@@ -138,17 +142,17 @@ namespace SEServerExtender
 		{
 			TRV_Entities.BeginUpdate();
 
-			List<CubeGrid> cubeGrids = GameObjectManagerWrapper.GetInstance().GetCubeGrids();
-			List<CharacterEntity> characters = GameObjectManagerWrapper.GetInstance().GetCharacters();
-			List<VoxelMap> voxelMaps = GameObjectManagerWrapper.GetInstance().GetVoxelMaps();
-			List<FloatingObject> floatingObjects = GameObjectManagerWrapper.GetInstance().GetFloatingObjects();
-			List<Meteor> meteors = GameObjectManagerWrapper.GetInstance().GetMeteors();
+			List<CubeGridEntity> cubeGrids = BaseEntityManagerWrapper.GetInstance().GetCubeGrids();
+			List<CharacterEntity> characters = BaseEntityManagerWrapper.GetInstance().GetCharacters();
+			List<VoxelMap> voxelMaps = BaseEntityManagerWrapper.GetInstance().GetVoxelMaps();
+			List<FloatingObject> floatingObjects = BaseEntityManagerWrapper.GetInstance().GetFloatingObjects();
+			List<Meteor> meteors = BaseEntityManagerWrapper.GetInstance().GetMeteors();
 
-			UpdateNodeBranch<CubeGrid, MyObjectBuilder_CubeGrid>(TRV_Entities.Nodes[0], cubeGrids, "Cube Grids");
-			UpdateNodeBranch<CharacterEntity, MyObjectBuilder_Character>(TRV_Entities.Nodes[1], characters, "Characters");
-			UpdateNodeBranch<VoxelMap, MyObjectBuilder_VoxelMap>(TRV_Entities.Nodes[2], voxelMaps, "Voxel Maps");
-			UpdateNodeBranch<FloatingObject, MyObjectBuilder_FloatingObject>(TRV_Entities.Nodes[3], floatingObjects, "Floating Objects");
-			UpdateNodeBranch<Meteor, MyObjectBuilder_Meteor>(TRV_Entities.Nodes[4], meteors, "Meteors");
+			UpdateNodeBranch<CubeGridEntity>(TRV_Entities.Nodes[0], cubeGrids, "Cube Grids");
+			UpdateNodeBranch<CharacterEntity>(TRV_Entities.Nodes[1], characters, "Characters");
+			UpdateNodeBranch<VoxelMap>(TRV_Entities.Nodes[2], voxelMaps, "Voxel Maps");
+			UpdateNodeBranch<FloatingObject>(TRV_Entities.Nodes[3], floatingObjects, "Floating Objects");
+			UpdateNodeBranch<Meteor>(TRV_Entities.Nodes[4], meteors, "Meteors");
 
 			TRV_Entities.EndUpdate();
 		}
@@ -167,6 +171,8 @@ namespace SEServerExtender
 
 		private void TRV_Entities_AfterSelect(object sender, TreeViewEventArgs e)
 		{
+			if (e.Node == null)
+				return;
 			var linkedObject = e.Node.Tag;
 
 			PG_Entities_Details.SelectedObject = linkedObject;
@@ -183,7 +189,7 @@ namespace SEServerExtender
 				BTN_Entities_Delete.Enabled = true;
 			}
 
-			if (linkedObject is CubeGrid)
+			if (linkedObject is CubeGridEntity)
 			{
 				BTN_Entities_New.Enabled = true;
 				BTN_Entities_Export.Enabled = true;
@@ -195,17 +201,17 @@ namespace SEServerExtender
 					e.Node.Nodes.Add("Reactor Blocks (0)");
 				}
 
-				CubeGrid cubeGrid = (CubeGrid)linkedObject;
+				CubeGridEntity cubeGrid = (CubeGridEntity)linkedObject;
 
-				List<CubeBlockEntity<MyObjectBuilder_CubeBlock>> structuralBlocks = CubeBlockInternalWrapper.GetInstance().GetStructuralBlocks(cubeGrid);
+				List<CubeBlockEntity> structuralBlocks = CubeBlockInternalWrapper.GetInstance().GetStructuralBlocks(cubeGrid);
 				List<CargoContainerEntity> containerBlocks = CubeBlockInternalWrapper.GetInstance().GetCargoContainerBlocks(cubeGrid);
 				List<ReactorEntity> reactorBlocks = CubeBlockInternalWrapper.GetInstance().GetReactorBlocks(cubeGrid);
 
 				TRV_Entities.BeginUpdate();
 
-				UpdateNodeCubeBlockBranch<CubeBlockEntity<MyObjectBuilder_CubeBlock>, MyObjectBuilder_CubeBlock>(e.Node.Nodes[0], structuralBlocks, "Structural Blocks");
-				UpdateNodeCubeBlockBranch<CargoContainerEntity, MyObjectBuilder_CargoContainer>(e.Node.Nodes[1], containerBlocks, "Container Blocks");
-				UpdateNodeCubeBlockBranch<ReactorEntity, MyObjectBuilder_Reactor>(e.Node.Nodes[2], reactorBlocks, "Reactor Blocks");
+				UpdateNodeCubeBlockBranch<CubeBlockEntity>(e.Node.Nodes[0], structuralBlocks, "Structural Blocks");
+				UpdateNodeCubeBlockBranch<CargoContainerEntity>(e.Node.Nodes[1], containerBlocks, "Container Blocks");
+				UpdateNodeCubeBlockBranch<ReactorEntity>(e.Node.Nodes[2], reactorBlocks, "Reactor Blocks");
 
 				TRV_Entities.EndUpdate();
 			}
@@ -214,12 +220,12 @@ namespace SEServerExtender
 		private void BTN_Entities_Delete_Click(object sender, EventArgs e)
 		{
 			Object linkedObject = TRV_Entities.SelectedNode.Tag;
-			if(linkedObject is CubeGrid)
+			if (linkedObject is CubeGridEntity)
 			{
 				try
 				{
-					CubeGrid item = (CubeGrid)linkedObject;
-					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+					CubeGridEntity item = (CubeGridEntity)linkedObject;
+					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
 
 					PG_Entities_Details.SelectedObject = null;
 					TRV_Entities.SelectedNode.Tag = null;
@@ -236,7 +242,7 @@ namespace SEServerExtender
 				try
 				{
 					CharacterEntity item = (CharacterEntity)linkedObject;
-					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
 
 					PG_Entities_Details.SelectedObject = null;
 					TRV_Entities.SelectedNode.Tag = null;
@@ -253,7 +259,7 @@ namespace SEServerExtender
 				try
 				{
 					VoxelMap item = (VoxelMap)linkedObject;
-					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
 
 					PG_Entities_Details.SelectedObject = null;
 					TRV_Entities.SelectedNode.Tag = null;
@@ -270,7 +276,7 @@ namespace SEServerExtender
 				try
 				{
 					FloatingObject item = (FloatingObject)linkedObject;
-					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
 
 					PG_Entities_Details.SelectedObject = null;
 					TRV_Entities.SelectedNode.Tag = null;
@@ -287,7 +293,7 @@ namespace SEServerExtender
 				try
 				{
 					Meteor item = (Meteor)linkedObject;
-					GameObjectManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
 
 					PG_Entities_Details.SelectedObject = null;
 					TRV_Entities.SelectedNode.Tag = null;
@@ -303,7 +309,7 @@ namespace SEServerExtender
 
 		private void BTN_Entities_New_Click(object sender, EventArgs e)
 		{
-			if (TRV_Entities.SelectedNode.Text.Contains("Cube Grids") || TRV_Entities.SelectedNode.Tag is CubeGrid)
+			if (TRV_Entities.SelectedNode.Text.Contains("Cube Grids") || TRV_Entities.SelectedNode.Tag is CubeGridEntity)
 			{
 				OpenFileDialog openFileDialog = new OpenFileDialog
 				{
@@ -318,7 +324,7 @@ namespace SEServerExtender
 					{
 						try
 						{
-							CubeGrid cubeGrid = new CubeGrid(fileInfo);
+							CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
 							bool result = CubeGridInternalWrapper.AddCubeGrid(cubeGrid);
 						}
 						catch (Exception ex)
@@ -334,7 +340,7 @@ namespace SEServerExtender
 		{
 			ServerAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 			SandboxGameAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
-			GameObjectManagerWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+			BaseEntityManagerWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 			CubeGridInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 			CubeBlockInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 			CharacterInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
@@ -348,10 +354,10 @@ namespace SEServerExtender
 		private void BTN_Entities_Export_Click(object sender, EventArgs e)
 		{
 			Object linkedObject = TRV_Entities.SelectedNode.Tag;
-			if (linkedObject is CubeGrid)
+			if (linkedObject is CubeGridEntity)
 			{
-				CubeGrid item = (CubeGrid)linkedObject;
-				MyObjectBuilder_CubeGrid cubeGrid = item.BaseDefinition;
+				CubeGridEntity item = (CubeGridEntity)linkedObject;
+				MyObjectBuilder_CubeGrid cubeGrid = item.GetSubTypeEntity();
 
 				SaveFileDialog saveFileDialog = new SaveFileDialog();
 				saveFileDialog.Filter = "sbc file (*.sbc)|*.sbc|All files (*.*)|*.*";
