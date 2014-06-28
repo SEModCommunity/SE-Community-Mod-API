@@ -24,6 +24,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		private Object m_backingObject;
 		private long m_entityId;
+		protected CubeBlockEntity m_self;
+
+		public static string CubeBlockGetObjectBuilder_Method = "CBB75211A3B0B3188541907C9B1B0C5C";
+		public static string CubeBlockGetActualBlock_Method = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
 
 		#endregion
 
@@ -32,6 +36,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public CubeBlockEntity(MyObjectBuilder_CubeBlock definition)
 			: base(definition)
 		{
+			m_self = this;
+
 			m_entityId = definition.EntityId;
 		}
 
@@ -247,21 +253,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		private static Assembly m_assembly;
 
-		private static Object m_cubeBlockToUpdate;
-		private static string m_terminalBlockCustomName;
-		private static bool m_functionalBlockEnabled;
-
 		public static string CubeGridGetCubeBlocksHashSetMethod = "E38F3E9D7A76CD246B99F6AE91CC3E4A";
 
 		public static string CubeBlockGetObjectBuilderMethod = "CBB75211A3B0B3188541907C9B1B0C5C";
-		public static string CubeBlockGetSpecialBlockMethod = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
-
-		public static string TerminalBlockClass = "6DDCED906C852CFDABA0B56B84D0BD74.CCFD704C70C3F20F7E84E8EA42D7A730";
-		public static string TerminalBlockGetCustomNameMethod = "DE9705A29F3FE6F1E501595879B2E54F";
-		public static string TerminalBlockSetCustomNameMethod = "774FC8084C0899CEF5C8DAE867B847FE";
-
-		public static string FunctionalBlockClass = "6DDCED906C852CFDABA0B56B84D0BD74.7085736D64DCC58ED5DCA05FFEEA9664";
-		public static string FunctionalBlockSetEnabledMethod = "97EC0047E8B562F4590B905BD8571F51";
 
 		public static string ReactorBlockSetEnabledMethod = "E07EE72F25C9CA3C2EE6888D308A0E8D";
 
@@ -365,120 +359,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public List<ReactorEntity> GetReactorBlocks(CubeGridEntity cubeGrid)
 		{
 			return GetAPIEntityCubeBlockList<ReactorEntity, MyObjectBuilder_Reactor>(cubeGrid, MyObjectBuilderTypeEnum.Reactor);
-		}
-
-		#endregion
-
-		public static string GetTerminalBlockCustomName(Object cubeBlockEntity)
-		{
-			try
-			{
-				Object specialCubeObject = InvokeEntityMethod(m_cubeBlockToUpdate, CubeBlockGetSpecialBlockMethod);
-				StringBuilder customName = (StringBuilder)InvokeEntityMethod(specialCubeObject, TerminalBlockGetCustomNameMethod);
-
-				return customName.ToString();
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				return "";
-			}
-		}
-
-		#region Updates
-
-		public bool UpdateTerminalBlockCustomName(Object cubeBlockEntity, string customName)
-		{
-			try
-			{
-				m_terminalBlockCustomName = customName;
-				m_cubeBlockToUpdate = cubeBlockEntity;
-
-				Action action = InternalSetCustomName;
-				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				throw ex;
-			}
-		}
-
-		public bool UpdateFunctionalBlockEnabled(Object cubeBlockEntity, bool isBlockEnabled)
-		{
-			try
-			{
-				m_functionalBlockEnabled = isBlockEnabled;
-				m_cubeBlockToUpdate = cubeBlockEntity;
-
-				Action action = InternalSetFunctionalState;
-				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				throw ex;
-			}
-		}
-
-		#endregion
-
-		#region Internal
-
-		public static void InternalSetFunctionalState()
-		{
-			try
-			{
-				if (m_cubeBlockToUpdate == null)
-					return;
-
-				Object specialCubeObject = InvokeEntityMethod(m_cubeBlockToUpdate, CubeBlockGetSpecialBlockMethod);
-				string blockName = GetTerminalBlockCustomName(specialCubeObject);
-
-				if (m_isDebugging)
-				{
-					if (m_functionalBlockEnabled)
-						Console.WriteLine("FunctionalBlock '" + blockName + "': Enabling");
-					else
-						Console.WriteLine("FunctionalBlock '" + blockName + "': Disabling");
-				}
-
-				InvokeEntityMethod(specialCubeObject, FunctionalBlockSetEnabledMethod, new object[] { m_functionalBlockEnabled });
-				InvokeEntityMethod(specialCubeObject, ReactorBlockSetEnabledMethod, new object[] { m_functionalBlockEnabled });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
-		}
-
-		public static void InternalSetCustomName()
-		{
-			try
-			{
-				if (m_cubeBlockToUpdate == null)
-					return;
-
-				Object specialCubeObject = InvokeEntityMethod(m_cubeBlockToUpdate, CubeBlockGetSpecialBlockMethod);
-				string blockName = GetTerminalBlockCustomName(specialCubeObject);
-
-				if (m_isDebugging)
-				{
-					Console.WriteLine("TerminalBlock '" + blockName + "': Setting custom name to '" + m_terminalBlockCustomName + "'");
-				}
-
-				StringBuilder newCustomName = new StringBuilder(m_terminalBlockCustomName);
-
-				InvokeEntityMethod(specialCubeObject, TerminalBlockSetCustomNameMethod, new object[] { newCustomName });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
 		}
 
 		#endregion

@@ -72,6 +72,8 @@ namespace SEModAPIInternal.Support
 		{
 			get
 			{
+				GetInstance();
+
 				if (m_gameLog != null)
 					return m_gameLog;
 				else
@@ -83,6 +85,8 @@ namespace SEModAPIInternal.Support
 		{
 			get
 			{
+				GetInstance();
+
 				return m_apiLog;
 			}
 		}

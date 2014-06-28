@@ -213,11 +213,11 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Methods"
 
-		new public BaseEntity NewEntry(MyObjectBuilder_EntityBase source)
+		new public T NewEntry<T>(MyObjectBuilder_EntityBase source) where T : BaseEntity
 		{
-			if (!IsMutable) return default(BaseEntity);
+			if (!IsMutable) return default(T);
 
-			var newEntry = new BaseEntity(source);
+			var newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { source });
 			long entityId = newEntry.EntityId;
 			if (entityId == 0)
 				entityId = newEntry.GenerateEntityId();
@@ -274,7 +274,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string EntityEntityId = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
 		public static string EntityBool1 = "A0B28D2BCB46F916CFAD5C71B0B68717";	//Should be false for removal
 		public static string EntityBool2 = "781725BD1387DD32DE9B25B674FC0A2D";	//Should be false for removal
-		public static string EntityGetEntityIdMethod = "5DB62C4867731C9D7D397DCE5D232D81";
+		public static string EntityGetEntityIdMethod = "53C3FFA07960404AABBEAAF931E5487E";
 
 		public static string PhysicsObjectGetRigidBody = "634E5EC534E45874230868BD089055B1";
 
@@ -909,11 +909,12 @@ namespace SEModAPIInternal.API.Entity
 			{
 				if (m_nextEntityToUpdate == null)
 					return;
-				if (GetEntityId(m_nextEntityToUpdate) == 0)
+				long entityId = GetEntityId(m_nextEntityToUpdate);
+				if (entityId == 0)
 					return;
 
 				if (m_isDebugging)
-					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating velocity to " + m_nextEntityVelocity.ToString());
+					Console.WriteLine("Entity '" + entityId.ToString() + "': Updating velocity to " + m_nextEntityVelocity.ToString());
 
 				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
 				havokBody.LinearVelocity = m_nextEntityVelocity;

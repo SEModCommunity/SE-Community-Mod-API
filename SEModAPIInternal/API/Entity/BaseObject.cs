@@ -477,7 +477,6 @@ namespace SEModAPIInternal.API.Entity
 			if (!IsMutable) return default(T);
 
 			var newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { source });
-			//var newEntry = new BaseObject(source);
 			GetInternalData().Add(m_definitions.Count, newEntry);
 			m_changed = true;
 
@@ -489,7 +488,6 @@ namespace SEModAPIInternal.API.Entity
 			if (!IsMutable) return default(T);
 
 			var newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { source.GetSubTypeEntity() });
-			//var newEntry = new BaseObject(source.GetSubTypeEntity());
 			GetInternalData().Add(m_definitions.Count, newEntry);
 			m_changed = true;
 
