@@ -30,6 +30,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		private CubeBlockManager m_cubeBlockManager;
 
+		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
+		public static string CubeGridIsStaticField = "";
+		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
+		public static string CubeGridSetDampenersEnabledMethod = "86B66668D555E1C1B744C17D2AFA77F7";
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -127,6 +133,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		}
 
 		[Category("Cube Grid")]
+		[ReadOnly(true)]
 		public bool IsStatic
 		{
 			get { return GetSubTypeEntity().IsStatic; }
@@ -135,9 +142,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (GetSubTypeEntity().IsStatic == value) return;
 				GetSubTypeEntity().IsStatic = value;
 				Changed = true;
-
-				if (BackingObject != null)
-					CubeGridInternalWrapper.UpdateEntityIsStatic(BackingObject, value);
 			}
 		}
 
@@ -227,6 +231,47 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(GetSubTypeEntity(), fileInfo);
 		}
 
+		public bool AddCubeGrid()
+		{
+			try
+			{
+				Action action = InternalAddCubeGrid;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return false;
+			}
+		}
+
+		public void InternalAddCubeGrid()
+		{
+			try
+			{
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					Console.WriteLine("CubeGrid '" + Name + "' is being added ...");
+
+				Type backingType = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(CubeGridNamespace + "." + CubeGridClass);
+
+				//Create a blank instance of the base type
+				BackingObject = Activator.CreateInstance(backingType);
+
+				//Invoke 'Init' using the sub object of the grid which is the MyObjectBuilder_CubeGrid type
+				MethodInfo initMethod = BackingObject.GetType().GetMethod("Init", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+				initMethod.Invoke(BackingObject, new object[] { GetSubTypeEntity() });
+
+				//Add the entity to the scene
+				BaseEntityManagerWrapper.GetInstance().AddEntity(BackingObject);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
 		#endregion
 	}
 
@@ -244,139 +289,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 
 			return overLayer.Changed;
-		}
-
-		#endregion
-	}
-
-	public class CubeGridInternalWrapper : BaseInternalWrapper
-	{
-		#region "Attributes"
-
-		protected new static CubeGridInternalWrapper m_instance;
-
-		private static Assembly m_assembly;
-
-		private static CubeGridEntity m_cubeGridToUpdate;
-
-		private static Type m_baseCubeGridType;
-
-		public static string CubeGridClass = "5BCAC68007431E61367F5B2CF24E2D6F.98262C3F38A1199E47F2B9338045794C";
-		public static string CubeGridIsStaticField = "";
-		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
-		public static string CubeGridSetDampenersEnabledMethod = "86B66668D555E1C1B744C17D2AFA77F7";
-
-		#endregion
-
-		#region "Constructors and Initializers"
-
-		protected CubeGridInternalWrapper(string basePath)
-			: base(basePath)
-		{
-			m_instance = this;
-
-			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
-
-			m_baseCubeGridType = m_assembly.GetType(CubeGridClass);
-
-			Console.WriteLine("Finished loading CubeGridInternalWrapper");
-		}
-
-		new public static CubeGridInternalWrapper GetInstance(string basePath = "")
-		{
-			if (m_instance == null)
-			{
-				m_instance = new CubeGridInternalWrapper(basePath);
-			}
-			return (CubeGridInternalWrapper)m_instance;
-		}
-
-		#endregion
-
-		#region "Properties"
-
-		new public static bool IsDebugging
-		{
-			get
-			{
-				CubeGridInternalWrapper.GetInstance();
-				return m_isDebugging;
-			}
-			set
-			{
-				CubeGridInternalWrapper.GetInstance();
-				m_isDebugging = value;
-			}
-		}
-
-		#endregion
-
-		#region "Methods"
-
-		public static bool UpdateEntityIsStatic(Object gameEntity, bool isStatic)
-		{
-			try
-			{
-				FieldInfo isStaticField = GetEntityField(gameEntity, CubeGridIsStaticField);
-				isStaticField.SetValue(gameEntity, isStatic);
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				throw ex;
-			}
-		}
-
-		public static bool AddCubeGrid(CubeGridEntity cubeGrid)
-		{
-			try
-			{
-				m_cubeGridToUpdate = cubeGrid;
-
-				Action action = InternalAddCubeGrid;
-				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				throw ex;
-			}
-		}
-
-		public static void InternalAddCubeGrid()
-		{
-			try
-			{
-				if (m_cubeGridToUpdate == null)
-					return;
-
-				if (m_isDebugging)
-					Console.WriteLine("CubeGrid '" + m_cubeGridToUpdate.Name + "' is being added ...");
-
-				//Force the constructor to initialize before we continue
-				GetInstance();
-
-				m_baseCubeGridType = m_assembly.GetType(CubeGridClass);
-
-				//Create a blank instance of the base type
-				m_cubeGridToUpdate.BackingObject = Activator.CreateInstance(m_baseCubeGridType);
-
-				//Invoke 'Init' using the sub object of the grid which is the MyObjectBuilder_CubeGrid type
-				InvokeEntityMethod(m_cubeGridToUpdate.BackingObject, "Init", new object[] { m_cubeGridToUpdate.GetSubTypeEntity() });
-
-				//Add the entity to the scene
-				BaseEntityManagerWrapper.GetInstance().AddEntity(m_cubeGridToUpdate.BackingObject);
-
-				m_cubeGridToUpdate = null;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
 		}
 
 		#endregion

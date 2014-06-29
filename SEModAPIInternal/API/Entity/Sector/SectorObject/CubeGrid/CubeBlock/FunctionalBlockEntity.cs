@@ -16,7 +16,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
 	public class FunctionalBlockEntity : TerminalBlockEntity
 	{
-		#region
+		#region "Attributes"
 
 		public static string FunctionalBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string FunctionalBlockClass = "7085736D64DCC58ED5DCA05FFEEA9664";

@@ -385,11 +385,11 @@ namespace SEServerExtender
 						try
 						{
 							CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
-							bool result = CubeGridInternalWrapper.AddCubeGrid(cubeGrid);
+							bool result = cubeGrid.AddCubeGrid();
 						}
 						catch (Exception ex)
 						{
-							MessageBox.Show(this, ex.Message);
+							MessageBox.Show(this, ex.ToString());
 						}
 					}
 				}
@@ -401,7 +401,6 @@ namespace SEServerExtender
 			ServerAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 			SandboxGameAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 			BaseEntityManagerWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
-			CubeGridInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 			CubeBlockInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 			CharacterInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 		}

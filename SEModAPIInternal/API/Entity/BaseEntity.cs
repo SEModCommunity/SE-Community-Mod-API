@@ -1031,7 +1031,7 @@ namespace SEModAPIInternal.API.Entity
 				MethodInfo addEntityMethod = m_objectManagerType.GetMethod(ObjectManagerAddEntity, BindingFlags.Public | BindingFlags.Static);
 				addEntityMethod.Invoke(null, new object[] { m_nextEntityToUpdate, true });
 
-				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)InvokeEntityMethod(m_nextEntityToUpdate, "GetObjectBuilder", new object[] { });
+				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)InvokeEntityMethod(m_nextEntityToUpdate, "GetObjectBuilder", new object[] { false });
 				Type someManager = m_assembly.GetType(NetworkSerializerClass);
 				MethodInfo sendEntityMethod = someManager.GetMethod(NetworkSerializerSendEntity, BindingFlags.Public | BindingFlags.Static);
 				sendEntityMethod.Invoke(null, new object[] { baseEntity });

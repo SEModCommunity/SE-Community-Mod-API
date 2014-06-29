@@ -143,6 +143,11 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
+		public Assembly GameAssembly
+		{
+			get { return m_assembly; }
+		}
+
 		#endregion
 
 		#region "Methods"
