@@ -22,6 +22,7 @@ using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRage;
@@ -34,12 +35,6 @@ namespace SEModAPIInternal.API.Entity
 	/// </summary>
 	public class BaseEntity : BaseObject
 	{
-		#region "Attributes"
-
-		private Object m_backingObject;
-
-		#endregion
-
 		#region "Constructors and Initializers"
 
 		public BaseEntity(MyObjectBuilder_EntityBase baseEntity)
@@ -80,22 +75,6 @@ namespace SEModAPIInternal.API.Entity
 				if (GetSubTypeEntity().EntityId == value) return;
 				GetSubTypeEntity().EntityId = value;
 
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// Internal, in-game object that matches to this object
-		/// </summary>
-		[Category("Entity")]
-		[Browsable(false)]
-		[Description("Internal, in-game object that matches to this object")]
-		public Object BackingObject
-		{
-			get { return m_backingObject; }
-			set
-			{
-				m_backingObject = value;
 				Changed = true;
 			}
 		}
@@ -229,11 +208,11 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 	}
 
-	public class BaseEntityManagerWrapper : BaseInternalWrapper
+	public class BaseEntityManagerWrapper
 	{
 		#region "Attributes"
 
-		protected new static BaseEntityManagerWrapper m_instance;
+		protected static BaseEntityManagerWrapper m_instance;
 
 		private Thread m_mainGameThread;
 
@@ -283,11 +262,9 @@ namespace SEModAPIInternal.API.Entity
 		#region "Constructors and Initializers"
 
 		protected BaseEntityManagerWrapper(string basePath)
-			: base(basePath)
 		{
 			m_instance = this;
 
-			//string assemblyPath = Path.Combine(path, "Sandbox.Game.dll");
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
 			m_objectManagerType = m_assembly.GetType(ObjectManagerClass);
@@ -296,7 +273,7 @@ namespace SEModAPIInternal.API.Entity
 			Console.WriteLine("Finished loading GameObjectManagerWrapper");
 		}
 
-		new public static BaseEntityManagerWrapper GetInstance(string basePath = "")
+		public static BaseEntityManagerWrapper GetInstance(string basePath = "")
 		{
 			if (m_instance == null)
 			{
@@ -325,20 +302,6 @@ namespace SEModAPIInternal.API.Entity
 			set { m_mainGameThread = value; }
 		}
 
-		new public static bool IsDebugging
-		{
-			get
-			{
-				BaseEntityManagerWrapper.GetInstance();
-				return m_isDebugging;
-			}
-			set
-			{
-				BaseEntityManagerWrapper.GetInstance();
-				m_isDebugging = value;
-			}
-		}
-
 		#endregion
 
 		#region "Methods"
@@ -349,7 +312,7 @@ namespace SEModAPIInternal.API.Entity
 			{
 				MethodInfo getEntityHashSet = m_objectManagerType.GetMethod(ObjectManagerGetEntityHashSet, BindingFlags.Public | BindingFlags.Static);
 				var rawValue = getEntityHashSet.Invoke(null, new object[] { });
-				HashSet<Object> convertedSet = ConvertHashSet(rawValue);
+				HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
 
 				return convertedSet;
 			}
@@ -375,7 +338,7 @@ namespace SEModAPIInternal.API.Entity
 			{
 				try
 				{
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)InvokeEntityMethod(entity, "GetObjectBuilder", new object[] { false });
+					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseObject.InvokeEntityMethod(entity, "GetObjectBuilder", new object[] { false });
 
 					if (baseEntity.TypeId == type)
 					{
@@ -446,7 +409,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				MethodInfo getPhysicsObjectMethod = GetEntityMethod(gameEntity, EntityPhysicsObject);
+				MethodInfo getPhysicsObjectMethod = BaseObject.GetEntityMethod(gameEntity, EntityPhysicsObject);
 				Object physicsObject = getPhysicsObjectMethod.Invoke(gameEntity, new object[] { });
 
 				return physicsObject;
@@ -463,7 +426,7 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				Object physicsObject = GetEntityPhysicsObject(gameEntity);
-				MethodInfo getRigidBodyMethod = GetEntityMethod(physicsObject, PhysicsObjectGetRigidBody);
+				MethodInfo getRigidBodyMethod = BaseObject.GetEntityMethod(physicsObject, PhysicsObjectGetRigidBody);
 				HkRigidBody rigidBody = (HkRigidBody)getRigidBodyMethod.Invoke(physicsObject, new object[] { });
 
 				return rigidBody;
@@ -501,7 +464,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				long entityId = (long)InvokeEntityMethod(gameEntity, EntityGetEntityIdMethod);
+				long entityId = (long)BaseObject.InvokeEntityMethod(gameEntity, EntityGetEntityIdMethod);
 
 				return entityId;
 			}
@@ -544,23 +507,23 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction1);
+				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction1);
 				Action<Object> newAction = EntityOnPositionChanged;
 				actionField.SetValue(gameEntity, newAction);
 
-				FieldInfo actionField2 = GetEntityField(gameEntity, EntityAction2);
+				FieldInfo actionField2 = BaseObject.GetEntityField(gameEntity, EntityAction2);
 				Action<Object> newAction2 = EntityEvent2;
 				actionField2.SetValue(gameEntity, newAction2);
 
-				FieldInfo actionField3 = GetEntityField(gameEntity, EntityAction3);
+				FieldInfo actionField3 = BaseObject.GetEntityField(gameEntity, EntityAction3);
 				Action<Object> newAction3 = EntityEvent3;
 				actionField3.SetValue(gameEntity, newAction3);
 
-				FieldInfo actionField4 = GetEntityField(gameEntity, EntityAction4);
+				FieldInfo actionField4 = BaseObject.GetEntityField(gameEntity, EntityAction4);
 				Action<Object> newAction4 = EntityEvent4;
 				actionField4.SetValue(gameEntity, newAction4);
 				/*
-				FieldInfo actionField5 = GetEntityField(gameEntity, EntityAction5);
+				FieldInfo actionField5 = BaseObject.GetEntityField(gameEntity, EntityAction5);
 				Action<Object> newAction5 = EntityEvent5;
 				actionField5.SetValue(gameEntity, newAction5);
 				*/
@@ -582,7 +545,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				FieldInfo entityIdField = GetEntityField(gameEntity, EntityEntityId);
+				FieldInfo entityIdField = BaseObject.GetEntityField(gameEntity, EntityEntityId);
 				entityIdField.SetValue(gameEntity, entityId);
 
 				return true;
@@ -748,7 +711,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("ObjectManagerEvent - '1'");
 
 				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerAction1, BindingFlags.NonPublic | BindingFlags.Static);
@@ -765,7 +728,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': ObjectManagerEvent - Entity Closed");
 
 				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerEntityAction1, BindingFlags.NonPublic | BindingFlags.Static);
@@ -782,7 +745,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': ObjectManagerEvent - Entity Initialized");
 
 				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerEntityAction2, BindingFlags.NonPublic | BindingFlags.Static);
@@ -799,7 +762,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				//if(m_isDebugging)
+				//if(SandboxGameAssemblyWrapper.IsDebugging)
 				//Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event 'PositionChanged' triggered");
 
 				//Make sure the action is still tied to this event handler
@@ -817,10 +780,10 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '2' triggered");
 
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction2);
+				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction2);
 				Action<Object> newAction = EntityEvent2;
 				actionField.SetValue(gameEntity, newAction);
 			}
@@ -834,10 +797,10 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '3' triggered");
 
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction3);
+				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction3);
 				Action<Object> newAction = EntityEvent3;
 				actionField.SetValue(gameEntity, newAction);
 			}
@@ -851,10 +814,10 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '4' triggered");
 
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction4);
+				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction4);
 				Action<Object> newAction = EntityEvent4;
 				actionField.SetValue(gameEntity, newAction);
 			}
@@ -868,10 +831,10 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '5' triggered");
 
-				FieldInfo actionField = GetEntityField(gameEntity, EntityAction5);
+				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction5);
 				Action<Object> newAction = EntityEvent5;
 				actionField.SetValue(gameEntity, newAction);
 			}
@@ -890,7 +853,7 @@ namespace SEModAPIInternal.API.Entity
 				if (GetEntityId(m_nextEntityToUpdate) == 0)
 					return;
 
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating position to " + m_nextEntityPosition.ToString());
 
 				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
@@ -913,7 +876,7 @@ namespace SEModAPIInternal.API.Entity
 				if (entityId == 0)
 					return;
 
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + entityId.ToString() + "': Updating velocity to " + m_nextEntityVelocity.ToString());
 
 				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
@@ -935,7 +898,7 @@ namespace SEModAPIInternal.API.Entity
 				if (GetEntityId(m_nextEntityToUpdate) == 0)
 					return;
 
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating angular velocity to " + m_nextEntityAngularVelocity.ToString());
 
 				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
@@ -957,7 +920,7 @@ namespace SEModAPIInternal.API.Entity
 				if (GetEntityId(m_nextEntityToUpdate) == 0)
 					return;
 
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating 'up' to " + m_nextEntityUp.ToString());
 
 				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
@@ -979,7 +942,7 @@ namespace SEModAPIInternal.API.Entity
 				if (GetEntityId(m_nextEntityToUpdate) == 0)
 					return;
 
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Updating 'forward' to " + m_nextEntityForward.ToString());
 
 				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
@@ -1001,10 +964,10 @@ namespace SEModAPIInternal.API.Entity
 				if (GetEntityId(m_nextEntityToUpdate) == 0)
 					return;
 
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Calling 'Close'");
 
-				InvokeEntityMethod(m_nextEntityToUpdate, "Close");
+				BaseObject.InvokeEntityMethod(m_nextEntityToUpdate, "Close");
 
 				//TODO - Figure out what needs to be called to fully broadcast the removal to the clients
 
@@ -1025,13 +988,13 @@ namespace SEModAPIInternal.API.Entity
 				if (GetEntityId(m_nextEntityToUpdate) == 0)
 					return;
 
-				if (m_isDebugging)
+				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + GetEntityId(m_nextEntityToUpdate).ToString() + "': Adding to scene ...");
 
 				MethodInfo addEntityMethod = m_objectManagerType.GetMethod(ObjectManagerAddEntity, BindingFlags.Public | BindingFlags.Static);
 				addEntityMethod.Invoke(null, new object[] { m_nextEntityToUpdate, true });
 
-				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)InvokeEntityMethod(m_nextEntityToUpdate, "GetObjectBuilder", new object[] { false });
+				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseObject.InvokeEntityMethod(m_nextEntityToUpdate, "GetObjectBuilder", new object[] { false });
 				Type someManager = m_assembly.GetType(NetworkSerializerClass);
 				MethodInfo sendEntityMethod = someManager.GetMethod(NetworkSerializerSendEntity, BindingFlags.Public | BindingFlags.Static);
 				sendEntityMethod.Invoke(null, new object[] { baseEntity });

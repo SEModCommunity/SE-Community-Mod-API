@@ -8,6 +8,9 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
+using SEModAPIInternal.API.Common;
+using SEModAPIInternal.Support;
+
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
 	public class CargoContainerEntity : TerminalBlockEntity
@@ -15,6 +18,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Attributes"
 
 		private InventoryEntity m_Inventory;
+
+		public static string CargoContainerNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string CargoContainerClass = "0B52AF23069247D1A6D57F957ED070E3";
+
+		public static string CargoContainerGetInventoryMethod = "GetInventory";
 
 		#endregion
 
@@ -35,7 +43,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Browsable(false)]
 		public InventoryEntity Inventory
 		{
-			get { return m_Inventory; }
+			get
+			{
+				if(m_Inventory.BackingObject == null)
+					m_Inventory.BackingObject = InternalGetContainerInventory();
+
+				return m_Inventory;
+			}
 		}
 
 		[Category("Cargo Container")]
@@ -44,7 +58,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get
 			{
 				float count = 0;
-				foreach (var item in m_Inventory.Items)
+				foreach (var item in Inventory.Items)
 				{
 					count += item.Amount;
 				}
@@ -58,7 +72,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get
 			{
 				float mass = 0;
-				foreach (var item in m_Inventory.Items)
+				foreach (var item in Inventory.Items)
 				{
 					mass += item.Mass;
 				}
@@ -72,7 +86,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get
 			{
 				float volume = 0;
-				foreach (var item in m_Inventory.Items)
+				foreach (var item in Inventory.Items)
 				{
 					volume += item.Volume;
 				}
@@ -97,6 +111,27 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 			return container;
 		}
+
+		#region "Internal"
+
+		protected Object InternalGetContainerInventory()
+		{
+			try
+			{
+				Object baseObject = BackingObject;
+				Object actualObject = GetActualObject();
+				Object inventory = InvokeEntityMethod(actualObject, CargoContainerGetInventoryMethod, new object[] { 0 });
+
+				return inventory;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		#endregion
 
 		#endregion
 	}

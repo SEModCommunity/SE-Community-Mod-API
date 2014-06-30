@@ -23,11 +23,12 @@ using System.Net;
 
 namespace SEModAPIInternal.API.Common
 {
-	public class SandboxGameAssemblyWrapper : BaseInternalWrapper
+	public class SandboxGameAssemblyWrapper
 	{
 		#region "Attributes"
 
-		protected new static SandboxGameAssemblyWrapper m_instance;
+		protected static SandboxGameAssemblyWrapper m_instance;
+		protected static bool m_isDebugging;
 
 		private static Assembly m_assembly;
 
@@ -82,9 +83,9 @@ namespace SEModAPIInternal.API.Common
 		#region "Constructors and Initializers"
 
 		protected SandboxGameAssemblyWrapper(string path)
-			: base(path)
 		{
 			m_instance = this;
+			m_isDebugging = false;
 
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
@@ -113,7 +114,7 @@ namespace SEModAPIInternal.API.Common
 			Console.WriteLine("Finished loading SandboxGameAssemblyWrapper");
 		}
 
-		new public static SandboxGameAssemblyWrapper GetInstance(string basePath = "")
+		public static SandboxGameAssemblyWrapper GetInstance(string basePath = "")
 		{
 			if (m_instance == null)
 			{
@@ -136,7 +137,7 @@ namespace SEModAPIInternal.API.Common
 			get { return m_checkpointManagerType; }
 		}
 
-		new public static bool IsDebugging
+		public static bool IsDebugging
 		{
 			get
 			{

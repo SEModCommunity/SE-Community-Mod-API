@@ -126,6 +126,43 @@ namespace SEServerExtender
 			return null;
 		}
 
+		void UpdateNodeInventoryItemBranch<T>(TreeNode node, List<T> source, string name)
+			where T : InventoryItemEntity
+		{
+			try
+			{
+				bool entriesChanged = (node.Nodes.Count != source.Count);
+				if (entriesChanged)
+				{
+					node.Nodes.Clear();
+					node.Text = name + " (" + source.Count.ToString() + ")";
+				}
+
+				int index = 0;
+				foreach (var item in source)
+				{
+					TreeNode itemNode = null;
+					if (entriesChanged)
+					{
+						itemNode = node.Nodes.Add(item.Name);
+						itemNode.Tag = item;
+					}
+					else
+					{
+						itemNode = node.Nodes[index];
+						itemNode.Text = item.Name;
+						itemNode.Tag = item;
+					}
+
+					index++;
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
 		void UpdateNodeCubeBlockBranch<T>(TreeNode node, List<T> source, string name)
 			where T : CubeBlockEntity
 		{
@@ -312,6 +349,45 @@ namespace SEServerExtender
 
 				TRV_Entities.EndUpdate();
 			}
+
+			if (linkedObject is CharacterEntity)
+			{
+				CharacterEntity character = (CharacterEntity)linkedObject;
+
+				InventoryEntity inventory = character.Inventory;
+
+				TRV_Entities.BeginUpdate();
+
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items, e.Node.Text);
+
+				TRV_Entities.EndUpdate();
+			}
+
+			if (linkedObject is CargoContainerEntity)
+			{
+				CargoContainerEntity container = (CargoContainerEntity)linkedObject;
+
+				InventoryEntity inventory = container.Inventory;
+
+				TRV_Entities.BeginUpdate();
+
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items, e.Node.Text);
+
+				TRV_Entities.EndUpdate();
+			}
+
+			if (linkedObject is ReactorEntity)
+			{
+				ReactorEntity reactor = (ReactorEntity)linkedObject;
+
+				InventoryEntity inventory = reactor.Inventory;
+
+				TRV_Entities.BeginUpdate();
+
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items, e.Node.Text);
+
+				TRV_Entities.EndUpdate();
+			}
 		}
 
 		private void BTN_Entities_Delete_Click(object sender, EventArgs e)
@@ -435,11 +511,7 @@ namespace SEServerExtender
 
 		private void CHK_Control_Debugging_CheckedChanged(object sender, EventArgs e)
 		{
-			ServerAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 			SandboxGameAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
-			BaseEntityManagerWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
-			CubeBlockInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
-			CharacterInternalWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 		}
 
 		private void CHK_Control_EnableFactions_CheckedChanged(object sender, EventArgs e)

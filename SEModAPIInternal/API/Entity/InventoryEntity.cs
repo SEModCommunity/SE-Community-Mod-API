@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -11,6 +12,7 @@ using Sandbox.Common.ObjectBuilders.VRageData;
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
 
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity
@@ -20,6 +22,20 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private BaseObjectManager m_itemManager;
+
+		private bool m_isRefreshing;
+		private bool m_isRefreshingInternal;
+
+		public static string InventoryNamespace = "33FB6E717989660631E6772B99F502AD";
+		public static string InventoryClass = "DE48496EE9812E665B802D5FE9E7AD77";
+
+		public static string InventoryCalculateMassVolumeMethod = "166CC20258091AEA72B666F9EF9503F4";
+		public static string InventoryGetTotalVolumeMethod = "C8CB569A2F9A58A24BAC40AB0817AD6A";
+		public static string InventoryGetTotalMassMethod = "4E701A33F8803398A50F20D8BF2E5507";
+		public static string InventorySetFromObjectBuilderMethod = "D85F2B547D9197E27D0DB9D5305D624F";
+		public static string InventoryAddItemMethod = "613CEE8CCA77F473C2E9F6393B7F5FC8";
+		public static string InventoryGetObjectBuilder = "EFBD3CF8717682D7B59A5878FF97E0BB";
+		public static string InventoryCleanUpMethod = "476A04917356C2C5FFE23B1CBFC11450";
 
 		#endregion
 
@@ -32,9 +48,14 @@ namespace SEModAPIInternal.API.Entity
 			List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
 			foreach (MyObjectBuilder_InventoryItem item in definition.Items)
 			{
-				itemList.Add(new InventoryItemEntity(item));
+				InventoryItemEntity newItem = new InventoryItemEntity(item);
+				newItem.Container = this;
+				itemList.Add(newItem);
 			}
 			m_itemManager.Load(itemList.ToArray());
+
+			m_isRefreshing = false;
+			m_isRefreshingInternal = false;
 		}
 
 		#endregion
@@ -139,7 +160,7 @@ namespace SEModAPIInternal.API.Entity
 			return (MyObjectBuilder_Inventory)BaseEntity;
 		}
 
-		private void RefreshInventory()
+		public void RefreshInventory()
 		{
 			MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)BaseEntity;
 
@@ -150,7 +171,104 @@ namespace SEModAPIInternal.API.Entity
 			{
 				inventory.Items.Add(item.GetSubTypeEntity());
 			}
+
+			if (BackingObject != null && !m_isRefreshingInternal)
+			{
+				m_isRefreshingInternal = true;
+
+				Action action = InternalUpdateInventory;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+			}
 		}
+
+		#region "Internal"
+
+		protected Object GetInventoryNetworkManager()
+		{
+			FieldInfo inventoryNetworkManagerField = BackingObject.GetType().GetField("84CAF0B1E470C6C236DD00B4FCCBF095", BindingFlags.NonPublic | BindingFlags.Static);
+			Object inventoryNetworkManager = inventoryNetworkManagerField.GetValue(null);
+
+			return inventoryNetworkManager;
+		}
+
+		protected void InternalUpdateInventory()
+		{
+			try
+			{
+				/*
+				MyObjectBuilder_Inventory internalInventory = (MyObjectBuilder_Inventory)InvokeEntityMethod(BackingObject, InventoryGetObjectBuilder);
+				MyObjectBuilder_Inventory baseInventory = GetSubTypeEntity();
+
+				List<MyObjectBuilder_InventoryItem> itemsToUpdate = new List<MyObjectBuilder_InventoryItem>();
+
+				foreach (MyObjectBuilder_InventoryItem item in baseInventory.Items)
+				{
+
+					foreach (MyObjectBuilder_InventoryItem internalItem in internalInventory.Items)
+					{
+						if (internalItem.PhysicalContent.TypeId == item.PhysicalContent.TypeId && internalItem.PhysicalContent.SubtypeName == item.PhysicalContent.SubtypeName)
+						{
+							if (item.PhysicalContent.CanStack(internalItem.PhysicalContent))
+							{
+								if (item.AmountDecimal != internalItem.AmountDecimal)
+								{
+									itemsToUpdate.Add(item);
+
+									break;
+								}
+							}
+							else
+							{
+								//InvokeEntityMethod(BackingObject, InventoryAddItemMethod, new object[] { newItemAmount, newItem, containerPositionIndex, containerItemId });
+							}
+						}
+					}
+				}
+
+				if (itemsToUpdate.Count > 0)
+				{
+					InvokeEntityMethod(BackingObject, InventoryCleanUpMethod, new object[] { true });
+
+					foreach (MyObjectBuilder_InventoryItem item in itemsToUpdate)
+					{
+						Decimal newItemAmount = item.AmountDecimal;
+						MyObjectBuilder_PhysicalObject newItem = item.PhysicalContent;
+						int containerPositionIndex = -1;
+						uint? containerItemId = item.ItemId;
+
+						InvokeEntityMethod(BackingObject, InventoryAddItemMethod, new object[] { newItemAmount, newItem, containerPositionIndex, containerItemId });
+
+						LogManager.GameLog.WriteLine("Updating inventory item '" + item.PhysicalContent.ToString() + "' amount to '" + item.AmountDecimal.ToString() + "'");
+					}
+				}*/
+
+				InvokeEntityMethod(BackingObject, InventorySetFromObjectBuilderMethod, new object[] { (MyObjectBuilder_Inventory)BaseEntity });
+
+				MyObjectBuilder_Inventory internalInventory = (MyObjectBuilder_Inventory)InvokeEntityMethod(BackingObject, InventoryGetObjectBuilder);
+				List<InventoryItemEntity> itemList = new List<InventoryItemEntity>(); 
+				foreach (MyObjectBuilder_InventoryItem item in internalInventory.Items)
+				{
+					InventoryItemEntity newItem = new InventoryItemEntity(item);
+					newItem.Container = this;
+					itemList.Add(newItem);
+
+					Object netManager = GetInventoryNetworkManager();
+					MethodInfo networkUpdateInventory = netManager.GetType().GetMethod("18F69CB3FF811B5A608841DE822B8821");
+					networkUpdateInventory.Invoke(netManager, new object[] { BackingObject, item.AmountDecimal, item.ItemId, BackingObject, -1, false });
+				}
+				m_itemManager.Load(itemList.ToArray());
+				RefreshInventory();
+				//BaseEntity = internalInventory;
+
+				m_isRefreshingInternal = false;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		#endregion
 
 		#endregion
 	}
@@ -159,6 +277,8 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
+		private InventoryEntity m_parentContainer;
+
 		private static PhysicalItemDefinitionsManager m_physicalItemsManager;
 		private static ComponentDefinitionsManager m_componentsManager;
 		private static AmmoMagazinesDefinitionsManager m_ammoManager;
@@ -166,6 +286,9 @@ namespace SEModAPIInternal.API.Entity
 		private SerializableDefinitionId m_itemId;
 		private float m_itemMass = -1;
 		private float m_itemVolume = -1;
+
+		public static string InventoryItemNamespace = "33FB6E717989660631E6772B99F502AD";
+		public static string InventoryItemClass = "555069178719BB1B546FB026B906CE00";
 
 		#endregion
 
@@ -197,9 +320,19 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[Category("Container Item")]
+		[ReadOnly(true)]
 		public override string Name
 		{
 			get { return Id.SubtypeName; }
+		}
+
+		[Category("Container Item")]
+		[Browsable(false)]
+		public InventoryEntity Container
+		{
+			get { return m_parentContainer; }
+			set { m_parentContainer = value; }
 		}
 
 		[Category("Container Item")]
@@ -225,6 +358,7 @@ namespace SEModAPIInternal.API.Entity
 		}
 
 		[Category("Container Item")]
+		[ReadOnly(true)]
 		public uint ItemId
 		{
 			get { return GetSubTypeEntity().ItemId; }
@@ -245,6 +379,8 @@ namespace SEModAPIInternal.API.Entity
 				if (GetSubTypeEntity().Amount == value) return;
 				GetSubTypeEntity().Amount = value;
 				Changed = true;
+
+				Container.RefreshInventory();
 			}
 		}
 
@@ -262,12 +398,14 @@ namespace SEModAPIInternal.API.Entity
 		}
 
 		[Category("Container Item")]
+		[ReadOnly(true)]
 		public float TotalMass
 		{
 			get { return GetSubTypeEntity().Amount * m_itemMass; }
 		}
 
 		[Category("Container Item")]
+		[ReadOnly(true)]
 		public float TotalVolume
 		{
 			get { return GetSubTypeEntity().Amount * m_itemVolume; }

@@ -3,7 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 
@@ -14,8 +16,7 @@ using SEModAPI.API;
 using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Entity.Sector;
-using System.IO;
-using System.Reflection;
+using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity
 {
@@ -27,6 +28,7 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private MyObjectBuilder_Base m_baseEntity;
+		private Object m_backingObject;
 
 		#endregion
 
@@ -74,6 +76,22 @@ namespace SEModAPIInternal.API.Entity
 				if (m_baseEntity == value) return;
 				m_baseEntity = value;
 
+				Changed = true;
+			}
+		}
+
+		/// <summary>
+		/// Internal, in-game object that matches to this object
+		/// </summary>
+		[Category("Object")]
+		[Browsable(false)]
+		[Description("Internal, in-game object that matches to this object")]
+		public Object BackingObject
+		{
+			get { return m_backingObject; }
+			set
+			{
+				m_backingObject = value;
 				Changed = true;
 			}
 		}
@@ -149,6 +167,137 @@ namespace SEModAPIInternal.API.Entity
 		{
 			return (MyObjectBuilder_Base)m_baseEntity;
 		}
+
+		#region "Internal"
+
+		internal static FieldInfo GetStaticField(Type objectType, string fieldName)
+		{
+			try
+			{
+				FieldInfo field = objectType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (field == null)
+					field = objectType.BaseType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				return field;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to get static field '" + fieldName + "'");
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static FieldInfo GetEntityField(Object gameEntity, string fieldName)
+		{
+			try
+			{
+				FieldInfo field = gameEntity.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (field == null)
+					field = gameEntity.GetType().BaseType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				return field;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to get entity field '" + fieldName + "'");
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static MethodInfo GetStaticMethod(Type objectType, string methodName)
+		{
+			try
+			{
+				if (methodName == null || methodName.Length == 0)
+					throw new Exception("Method name was empty");
+				MethodInfo method = objectType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (method == null)
+					method = objectType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (method == null)
+					throw new Exception("Method not found");
+				return method;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to get static method '" + methodName + "'");
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static MethodInfo GetEntityMethod(Object gameEntity, string methodName)
+		{
+			try
+			{
+				if (gameEntity == null)
+					throw new Exception("Game entity was null");
+				if (methodName == null || methodName.Length == 0)
+					throw new Exception("Method name was empty");
+				Type entityType = gameEntity.GetType();
+				MethodInfo method = entityType.GetMethod(methodName);
+				if (method == null)
+					method = entityType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (method == null)
+					method = entityType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (method == null)
+					throw new Exception("Method not found");
+				return method;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "'");
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static Object InvokeStaticMethod(Type objectType, string methodName)
+		{
+			return InvokeStaticMethod(objectType, methodName, new object[] { });
+		}
+
+		internal static Object InvokeStaticMethod(Type objectType, string methodName, Object[] parameters)
+		{
+			try
+			{
+				MethodInfo method = GetStaticMethod(objectType, methodName);
+				Object result = method.Invoke(null, parameters);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to invoke static method '" + methodName + "'");
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static Object InvokeEntityMethod(Object gameEntity, string methodName)
+		{
+			return InvokeEntityMethod(gameEntity, methodName, new object[] { });
+		}
+
+		internal static Object InvokeEntityMethod(Object gameEntity, string methodName, Object[] parameters)
+		{
+			try
+			{
+				MethodInfo method = GetEntityMethod(gameEntity, methodName);
+				if (method == null)
+					throw new Exception("Method is empty");
+				Object result = method.Invoke(gameEntity, parameters);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "'");
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		#endregion
 
 		#endregion
 	}

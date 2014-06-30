@@ -53,10 +53,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="API\BaseInternalWrapper.cs" />
-    <Compile Include="API\Client\ClientAssemblyWrapper.cs" />
     <Compile Include="API\Entity\BaseEntity.cs" />
     <Compile Include="API\Entity\BaseObject.cs" />
+    <Compile Include="API\Utility\Utility.cs" />
     <Compile Include="Research\StructureResearch.cs" />
     <Compile Include="API\Entity\SectorEntity.cs" />
     <Compile Include="API\Entity\Sector\Event.cs" />
@@ -121,7 +120,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="API\Utility\" />
+    <Folder Include="API\Client\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

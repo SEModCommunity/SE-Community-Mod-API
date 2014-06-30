@@ -11,7 +11,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Server
 {
-	public class ServerAssemblyWrapper : BaseInternalWrapper
+	public class ServerAssemblyWrapper
 	{
 		#region "Attributes"
 
@@ -28,11 +28,9 @@ namespace SEModAPIInternal.API.Server
 		#region "Constructors and Initializers"
 
 		protected ServerAssemblyWrapper(string path)
-			: base(path)
 		{
 			m_instance = this;
 
-			//string assemblyPath = Path.Combine(path, "SpaceEngineersDedicated.exe");
 			m_assembly = Assembly.UnsafeLoadFrom("SpaceEngineersDedicated.exe");
 
 			Console.WriteLine("Finished loading ServerAssemblyWrapper");
@@ -50,20 +48,6 @@ namespace SEModAPIInternal.API.Server
 		#endregion
 
 		#region "Properties"
-
-		new public static bool IsDebugging
-		{
-			get
-			{
-				ServerAssemblyWrapper.GetInstance();
-				return m_isDebugging;
-			}
-			set
-			{
-				ServerAssemblyWrapper.GetInstance();
-				m_isDebugging = value;
-			}
-		}
 
 		#endregion
 

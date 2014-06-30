@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
@@ -13,8 +14,8 @@ using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
+using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
-using System.Text;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 {
@@ -191,6 +192,23 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			return (MyObjectBuilder_CubeBlock)BaseEntity;
 		}
 
+		protected Object GetActualObject()
+		{
+			try
+			{
+				Type backingType = BackingObject.GetType();
+				MethodInfo method = backingType.GetMethod(CubeBlockGetActualBlock_Method, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+				Object actualCubeObject = method.Invoke(m_self.BackingObject, new object[] { });
+
+				return actualCubeObject;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
 		#endregion
 	}
 
@@ -245,11 +263,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		#endregion
 	}
 
-	public class CubeBlockInternalWrapper : BaseInternalWrapper
+	public class CubeBlockInternalWrapper
 	{
 		#region "Attributes"
 
-		protected new static CubeBlockInternalWrapper m_instance;
+		protected static CubeBlockInternalWrapper m_instance;
 
 		private static Assembly m_assembly;
 
@@ -264,17 +282,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		#region "Constructors and Initializers"
 
 		protected CubeBlockInternalWrapper(string basePath)
-			: base(basePath)
 		{
 			m_instance = this;
 
-			//string assemblyPath = Path.Combine(path, "Sandbox.Game.dll");
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
 			Console.WriteLine("Finished loading CubeBlockInternalWrapper");
 		}
 
-		new public static CubeBlockInternalWrapper GetInstance(string basePath = "")
+		public static CubeBlockInternalWrapper GetInstance(string basePath = "")
 		{
 			if (m_instance == null)
 			{
@@ -287,20 +303,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Properties"
 
-		new public static bool IsDebugging
-		{
-			get
-			{
-				CubeBlockInternalWrapper.GetInstance();
-				return m_isDebugging;
-			}
-			set
-			{
-				CubeBlockInternalWrapper.GetInstance();
-				m_isDebugging = value;
-			}
-		}
-
 		#endregion
 
 		#region "Methods"
@@ -309,8 +311,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public HashSet<Object> GetCubeBlocksHashSet(CubeGridEntity cubeGrid)
 		{
-			var rawValue = InvokeEntityMethod(cubeGrid.BackingObject, CubeGridGetCubeBlocksHashSetMethod, new object[] { });
-			HashSet<Object> convertedSet = ConvertHashSet(rawValue);
+			var rawValue = CubeGridEntity.InvokeEntityMethod(cubeGrid.BackingObject, CubeGridGetCubeBlocksHashSetMethod, new object[] { });
+			HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
 
 			return convertedSet;
 		}
@@ -326,7 +328,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			{
 				try
 				{
-					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)InvokeEntityMethod(entity, CubeBlockGetObjectBuilderMethod, new object[] { });
+					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockGetObjectBuilderMethod, new object[] { });
 
 					if (baseEntity.TypeId == type)
 					{
