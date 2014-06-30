@@ -20,7 +20,6 @@ namespace SEModAPIInternal.Support
 		private static Assembly m_assembly;
 
 		private static MyLog m_gameLog;
-		private static MyLog m_fallbackLog;
 		private static MyLog m_apiLog;
 
 		public static string MainGameMyLogField = "1976E5D4FE6E8C1BD369273DEE0025AC";
@@ -33,20 +32,11 @@ namespace SEModAPIInternal.Support
 		{
 			m_instance = this;
 
-			try
-			{
-				m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
+			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
-				Type mainGameType = SandboxGameAssemblyWrapper.GetInstance().MainGameType;
-				FieldInfo myLogField = mainGameType.GetField(MainGameMyLogField, BindingFlags.Public | BindingFlags.Static);
-				m_gameLog = (MyLog)myLogField.GetValue(null);
-			}
-			catch (Exception ex)
-			{
-				m_fallbackLog = new MyLog();
-				StringBuilder appVersion = new StringBuilder("1.2.3.4");
-				m_fallbackLog.Init("SEModAPIInternal-Fallback.log", appVersion);
-			}
+			Type mainGameType = SandboxGameAssemblyWrapper.GetInstance().MainGameType;
+			FieldInfo myLogField = mainGameType.GetField(MainGameMyLogField, BindingFlags.Public | BindingFlags.Static);
+			m_gameLog = (MyLog)myLogField.GetValue(null);
 
 			m_apiLog = new MyLog();
 			StringBuilder internalAPIAppVersion = new StringBuilder(typeof(LogManager).Assembly.GetName().Version.ToString());
@@ -74,10 +64,7 @@ namespace SEModAPIInternal.Support
 			{
 				GetInstance();
 
-				if (m_gameLog != null)
-					return m_gameLog;
-				else
-					return m_fallbackLog;
+				return m_gameLog;
 			}
 		}
 

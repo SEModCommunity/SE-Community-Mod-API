@@ -60,21 +60,37 @@ namespace SEModAPIInternal.API
 
 		protected HashSet<Object> ConvertHashSet(Object source)
 		{
-			Type rawType = source.GetType();
-			Type[] genericArgs = rawType.GetGenericArguments();
-			MethodInfo conversion = this.GetType().GetMethod("ConvertEntityHashSet", BindingFlags.NonPublic | BindingFlags.Instance);
-			conversion = conversion.MakeGenericMethod(genericArgs[0]);
-			HashSet<Object> result = (HashSet<Object>)conversion.Invoke(this, new object[] { source });
+			try
+			{
+				Type rawType = source.GetType();
+				Type[] genericArgs = rawType.GetGenericArguments();
+				MethodInfo conversion = this.GetType().GetMethod("ConvertEntityHashSet", BindingFlags.NonPublic | BindingFlags.Instance);
+				conversion = conversion.MakeGenericMethod(genericArgs[0]);
+				HashSet<Object> result = (HashSet<Object>)conversion.Invoke(this, new object[] { source });
 
-			return result;
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return new HashSet<object>();
+			}
 		}
 
 		protected HashSet<Object> ConvertEntityHashSet<T>(IEnumerable<T> source)
 		{
 			HashSet<Object> dataSet = new HashSet<Object>();
-			foreach (var rawEntity in source)
+
+			try
 			{
-				dataSet.Add(rawEntity);
+				foreach (var rawEntity in source)
+				{
+					dataSet.Add(rawEntity);
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 
 			return dataSet;

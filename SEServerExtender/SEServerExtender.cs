@@ -35,6 +35,7 @@ namespace SEServerExtender
 
 		private ProcessWrapper m_processWrapper;
 		private Timer m_entityTreeRefreshTimer;
+		private Timer m_chatViewRefreshTimer;
 
 		#endregion
 
@@ -66,6 +67,10 @@ namespace SEServerExtender
 			m_entityTreeRefreshTimer = new Timer();
 			m_entityTreeRefreshTimer.Interval = 500;
 			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
+
+			m_chatViewRefreshTimer = new Timer();
+			m_chatViewRefreshTimer.Interval = 500;
+			m_chatViewRefreshTimer.Tick += new EventHandler(ChatViewRefresh);
 
 			TRV_Entities.Nodes.Add("Cube Grids (0)");
 			TRV_Entities.Nodes.Add("Characters (0)");
@@ -198,6 +203,37 @@ namespace SEServerExtender
 			}
 		}
 
+		void ChatViewRefresh(object sender, EventArgs e)
+		{
+			LST_Chat_Messages.BeginUpdate();
+
+			string[] chatMessages = SandboxGameAssemblyWrapper.GetInstance().ChatMessages.ToArray();
+			if (chatMessages.Length != LST_Chat_Messages.Items.Count)
+			{
+				LST_Chat_Messages.Items.Clear();
+				LST_Chat_Messages.Items.AddRange(chatMessages);
+
+				//Auto-scroll to the bottom of the list
+				LST_Chat_Messages.SelectedIndex = LST_Chat_Messages.Items.Count - 1;
+				LST_Chat_Messages.SelectedIndex = -1;
+			}
+			LST_Chat_Messages.EndUpdate();
+
+			LST_Chat_ConnectedPlayers.BeginUpdate();
+
+			List<ulong> connectedPlayers = SandboxGameAssemblyWrapper.GetInstance().GetConnectedPlayers();
+			if (connectedPlayers.Count != LST_Chat_ConnectedPlayers.Items.Count)
+			{
+				LST_Chat_ConnectedPlayers.Items.Clear();
+				foreach (ulong remoteUserId in connectedPlayers)
+				{
+					LST_Chat_ConnectedPlayers.Items.Add(remoteUserId.ToString());
+				}
+			}
+
+			LST_Chat_ConnectedPlayers.EndUpdate();
+		}
+
 		void TreeViewRefresh(object sender, EventArgs e)
 		{
 			TRV_Entities.BeginUpdate();
@@ -222,6 +258,7 @@ namespace SEServerExtender
 			m_processWrapper.StartGame("");
 
 			m_entityTreeRefreshTimer.Start();
+			m_chatViewRefreshTimer.Start();
 		}
 
 		private void BTN_ServerControl_Stop_Click(object sender, EventArgs e)
@@ -445,6 +482,29 @@ namespace SEServerExtender
 				return;
 			var linkedObject = node.Tag;
 			PG_Entities_Details.SelectedObject = linkedObject;
+		}
+
+		private void BTN_Chat_Send_Click(object sender, EventArgs e)
+		{
+			string message = TXT_Chat_Message.Text;
+			if (message != null && message != "")
+			{
+				SandboxGameAssemblyWrapper.GetInstance().SendPublicChatMessage(message);
+				TXT_Chat_Message.Text = "";
+			}
+		}
+
+		private void TXT_Chat_Message_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+				string message = TXT_Chat_Message.Text;
+				if (message != null && message != "")
+				{
+					SandboxGameAssemblyWrapper.GetInstance().SendPublicChatMessage(message);
+					TXT_Chat_Message.Text = "";
+				}
+			}
 		}
 
 		#endregion
