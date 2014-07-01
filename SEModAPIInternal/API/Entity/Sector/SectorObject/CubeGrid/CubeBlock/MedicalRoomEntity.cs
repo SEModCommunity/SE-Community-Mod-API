@@ -17,7 +17,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public MedicalRoomEntity(MyObjectBuilder_MedicalRoom definition)
 			: base(definition)
 		{
-			EntityId = definition.EntityId;
+		}
+
+		public MedicalRoomEntity(MyObjectBuilder_MedicalRoom definition, Object backingObject)
+			: base(definition, backingObject)
+		{
 		}
 
 		#endregion

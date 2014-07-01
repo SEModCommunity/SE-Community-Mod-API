@@ -22,9 +22,7 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private BaseObjectManager m_itemManager;
-
-		private bool m_isRefreshing;
-		private bool m_isRefreshingInternal;
+		private InventoryNetworkManager m_networkManager;
 
 		public static string InventoryNamespace = "33FB6E717989660631E6772B99F502AD";
 		public static string InventoryClass = "DE48496EE9812E665B802D5FE9E7AD77";
@@ -34,7 +32,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string InventoryGetTotalMassMethod = "4E701A33F8803398A50F20D8BF2E5507";
 		public static string InventorySetFromObjectBuilderMethod = "D85F2B547D9197E27D0DB9D5305D624F";
 		public static string InventoryAddItemMethod = "613CEE8CCA77F473C2E9F6393B7F5FC8";
-		public static string InventoryGetObjectBuilder = "EFBD3CF8717682D7B59A5878FF97E0BB";
+		public static string InventoryGetObjectBuilderMethod = "EFBD3CF8717682D7B59A5878FF97E0BB";
 		public static string InventoryCleanUpMethod = "476A04917356C2C5FFE23B1CBFC11450";
 
 		#endregion
@@ -53,9 +51,22 @@ namespace SEModAPIInternal.API.Entity
 				itemList.Add(newItem);
 			}
 			m_itemManager.Load(itemList.ToArray());
+		}
 
-			m_isRefreshing = false;
-			m_isRefreshingInternal = false;
+		public InventoryEntity(MyObjectBuilder_Inventory definition, Object backingObject)
+			: base(definition, backingObject)
+		{
+			m_itemManager = new BaseObjectManager();
+			List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
+			foreach (MyObjectBuilder_InventoryItem item in definition.Items)
+			{
+				InventoryItemEntity newItem = new InventoryItemEntity(item);
+				newItem.Container = this;
+				itemList.Add(newItem);
+			}
+			m_itemManager.Load(itemList.ToArray());
+
+			m_networkManager = new InventoryNetworkManager(this);
 		}
 
 		#endregion
@@ -171,100 +182,16 @@ namespace SEModAPIInternal.API.Entity
 			{
 				inventory.Items.Add(item.GetSubTypeEntity());
 			}
-
-			if (BackingObject != null && !m_isRefreshingInternal)
-			{
-				m_isRefreshingInternal = true;
-
-				Action action = InternalUpdateInventory;
-				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
-			}
 		}
 
 		#region "Internal"
 
-		protected Object GetInventoryNetworkManager()
+		public void InternalUpdateItemAmount(Decimal oldAmount, Decimal newAmount, uint itemId)
 		{
-			FieldInfo inventoryNetworkManagerField = BackingObject.GetType().GetField("84CAF0B1E470C6C236DD00B4FCCBF095", BindingFlags.NonPublic | BindingFlags.Static);
-			Object inventoryNetworkManager = inventoryNetworkManagerField.GetValue(null);
-
-			return inventoryNetworkManager;
-		}
-
-		protected void InternalUpdateInventory()
-		{
-			try
+			if (m_networkManager != null)
 			{
-				/*
-				MyObjectBuilder_Inventory internalInventory = (MyObjectBuilder_Inventory)InvokeEntityMethod(BackingObject, InventoryGetObjectBuilder);
-				MyObjectBuilder_Inventory baseInventory = GetSubTypeEntity();
-
-				List<MyObjectBuilder_InventoryItem> itemsToUpdate = new List<MyObjectBuilder_InventoryItem>();
-
-				foreach (MyObjectBuilder_InventoryItem item in baseInventory.Items)
-				{
-
-					foreach (MyObjectBuilder_InventoryItem internalItem in internalInventory.Items)
-					{
-						if (internalItem.PhysicalContent.TypeId == item.PhysicalContent.TypeId && internalItem.PhysicalContent.SubtypeName == item.PhysicalContent.SubtypeName)
-						{
-							if (item.PhysicalContent.CanStack(internalItem.PhysicalContent))
-							{
-								if (item.AmountDecimal != internalItem.AmountDecimal)
-								{
-									itemsToUpdate.Add(item);
-
-									break;
-								}
-							}
-							else
-							{
-								//InvokeEntityMethod(BackingObject, InventoryAddItemMethod, new object[] { newItemAmount, newItem, containerPositionIndex, containerItemId });
-							}
-						}
-					}
-				}
-
-				if (itemsToUpdate.Count > 0)
-				{
-					InvokeEntityMethod(BackingObject, InventoryCleanUpMethod, new object[] { true });
-
-					foreach (MyObjectBuilder_InventoryItem item in itemsToUpdate)
-					{
-						Decimal newItemAmount = item.AmountDecimal;
-						MyObjectBuilder_PhysicalObject newItem = item.PhysicalContent;
-						int containerPositionIndex = -1;
-						uint? containerItemId = item.ItemId;
-
-						InvokeEntityMethod(BackingObject, InventoryAddItemMethod, new object[] { newItemAmount, newItem, containerPositionIndex, containerItemId });
-
-						LogManager.GameLog.WriteLine("Updating inventory item '" + item.PhysicalContent.ToString() + "' amount to '" + item.AmountDecimal.ToString() + "'");
-					}
-				}*/
-
-				InvokeEntityMethod(BackingObject, InventorySetFromObjectBuilderMethod, new object[] { (MyObjectBuilder_Inventory)BaseEntity });
-
-				MyObjectBuilder_Inventory internalInventory = (MyObjectBuilder_Inventory)InvokeEntityMethod(BackingObject, InventoryGetObjectBuilder);
-				List<InventoryItemEntity> itemList = new List<InventoryItemEntity>(); 
-				foreach (MyObjectBuilder_InventoryItem item in internalInventory.Items)
-				{
-					InventoryItemEntity newItem = new InventoryItemEntity(item);
-					newItem.Container = this;
-					itemList.Add(newItem);
-
-					Object netManager = GetInventoryNetworkManager();
-					MethodInfo networkUpdateInventory = netManager.GetType().GetMethod("18F69CB3FF811B5A608841DE822B8821");
-					networkUpdateInventory.Invoke(netManager, new object[] { BackingObject, item.AmountDecimal, item.ItemId, BackingObject, -1, false });
-				}
-				m_itemManager.Load(itemList.ToArray());
-				RefreshInventory();
-				//BaseEntity = internalInventory;
-
-				m_isRefreshingInternal = false;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
+				Decimal delta = oldAmount - newAmount;
+				m_networkManager.UpdateItemAmount(delta, itemId);
 			}
 		}
 
@@ -377,10 +304,11 @@ namespace SEModAPIInternal.API.Entity
 			set
 			{
 				if (GetSubTypeEntity().Amount == value) return;
+
+				Container.InternalUpdateItemAmount((Decimal)GetSubTypeEntity().Amount, (Decimal)value, ItemId);
+
 				GetSubTypeEntity().Amount = value;
 				Changed = true;
-
-				Container.RefreshInventory();
 			}
 		}
 
@@ -500,6 +428,97 @@ namespace SEModAPIInternal.API.Entity
 		internal MyObjectBuilder_InventoryItem GetSubTypeEntity()
 		{
 			return (MyObjectBuilder_InventoryItem)BaseEntity;
+		}
+
+		#endregion
+	}
+
+	public class InventoryNetworkManager
+	{
+		#region "Attributes"
+
+		private InventoryEntity m_container;
+		private Object m_networkManager;
+
+		//Field in parent container that contains the network manager
+		public static string InventoryNetworkManagerField = "84CAF0B1E470C6C236DD00B4FCCBF095";
+
+		public static string InventoryNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string InventoryNetworkManagerClass = "98C1408628C42B9F7FDB1DE7B8FAE776";
+
+		//Source, Amount, ItemId, Destination, DestinationSlot = -1, SomeBool = false
+		public static string InventoryNetworkManagerTransferItemMethod = "18F69CB3FF811B5A608841DE822B8821";
+		//Source, Amount, ItemId, SomeBool = false
+		public static string InventoryNetworkManagerUpdateItemMethod = "DB1C87495038A9B539EE33337B3A4694";
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public InventoryNetworkManager(InventoryEntity container)
+		{
+			m_container = container;
+			m_networkManager = NetworkManager;
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		internal Object NetworkManager
+		{
+			get
+			{
+				if(m_networkManager == null)
+				{
+					try
+					{
+						FieldInfo inventoryNetworkManagerField = m_container.BackingObject.GetType().GetField(InventoryNetworkManagerField, BindingFlags.NonPublic | BindingFlags.Static);
+						Object inventoryNetworkManager = inventoryNetworkManagerField.GetValue(null);
+						m_networkManager = inventoryNetworkManager;
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+
+				return m_networkManager;
+			}
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		internal void TransferItems(Object destination, Decimal amount, uint itemId)
+		{
+			try
+			{
+				Object source = m_container.BackingObject;
+				Object networkManager = NetworkManager;
+				MethodInfo method = networkManager.GetType().GetMethod(InventoryNetworkManagerTransferItemMethod);
+				method.Invoke(networkManager, new object[] { source, amount, itemId, destination, -1, false });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		internal void UpdateItemAmount(Decimal amount, uint itemId)
+		{
+			try
+			{
+				Object source = m_container.BackingObject;
+				Object networkManager = NetworkManager;
+				MethodInfo method = networkManager.GetType().GetMethod(InventoryNetworkManagerUpdateItemMethod);
+				method.Invoke(networkManager, new object[] { source, amount, itemId, false});
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

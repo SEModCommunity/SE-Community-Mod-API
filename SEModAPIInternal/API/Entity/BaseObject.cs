@@ -16,6 +16,7 @@ using SEModAPI.API;
 using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Entity.Sector;
+using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity
@@ -37,6 +38,12 @@ namespace SEModAPIInternal.API.Entity
 		public BaseObject(MyObjectBuilder_Base baseEntity)
 		{
 			m_baseEntity = baseEntity;
+		}
+
+		public BaseObject(MyObjectBuilder_Base baseEntity, Object backingObject)
+		{
+			m_baseEntity = baseEntity;
+			m_backingObject = backingObject;
 		}
 
 		#endregion
@@ -306,11 +313,16 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
+		private Object m_backingObject;
+		private string m_backingSourceMethod;
+
 		private bool m_isMutable = true;
 		private bool m_changed = false;
+		private bool m_isDynamic = false;
 
 		//Use Long as key and BaseObject as value
 		private Dictionary<long, BaseObject> m_definitions = new Dictionary<long, BaseObject>();
+		private Dictionary<Object, BaseObject> m_backingDefinitions = new Dictionary<Object, BaseObject>();
 
 		private FileInfo m_fileInfo;
 		private readonly FieldInfo m_definitionsContainerField;
@@ -326,6 +338,19 @@ namespace SEModAPIInternal.API.Entity
 			m_isMutable = true;
 
 			m_definitionsContainerField = GetMatchingDefinitionsContainerField();
+		}
+
+		public BaseObjectManager(Object backingSource, string backingMethodName)
+		{
+			m_fileInfo = null;
+			m_changed = false;
+			m_isMutable = true;
+			m_isDynamic = true;
+
+			m_definitionsContainerField = GetMatchingDefinitionsContainerField();
+
+			m_backingObject = backingSource;
+			m_backingSourceMethod = backingMethodName;
 		}
 
 		public BaseObjectManager(MyObjectBuilder_Base[] baseDefinitions)
@@ -396,11 +421,14 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public BaseObject[] Definitions
+		public List<BaseObject> Definitions
 		{
 			get
 			{
-				return GetInternalData().Values.ToArray();
+				if (IsDynamic)
+					LoadDynamic();
+
+				return GetInternalData().Values.ToList();
 			}
 		}
 
@@ -410,14 +438,44 @@ namespace SEModAPIInternal.API.Entity
 			set { m_fileInfo = value; }
 		}
 
+		public bool IsDynamic
+		{
+			get { return m_isDynamic; }
+		}
+
 		#endregion
 
 		#region "Methods"
+
+		#region "DataSource"
 
 		protected virtual Dictionary<long, BaseObject> GetInternalData()
 		{
 			return m_definitions;
 		}
+
+		protected virtual Dictionary<Object, BaseObject> GetBackingInternalData()
+		{
+			return m_backingDefinitions;
+		}
+
+		protected HashSet<Object> GetBackingDataHashSet()
+		{
+			try
+			{
+				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod, new object[] { });
+				HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				return convertedSet;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return new HashSet<object>();
+			}
+		}
+
+		#endregion
 
 		#region "Static"
 
@@ -605,6 +663,9 @@ namespace SEModAPIInternal.API.Entity
 		
 		public List<T> GetTypedInternalData<T>() where T : BaseObject
 		{
+			if (IsDynamic)
+				LoadDynamic();
+
 			List<T> newList = new List<T>();
 			foreach(var def in GetInternalData().Values)
 			{
@@ -722,7 +783,7 @@ namespace SEModAPIInternal.API.Entity
 			Load(source.ToArray());
 		}
 
-		public void Load(BaseObject[] source)
+		public void Load<T>(T[] source) where T : BaseObject
 		{
 			//Copy the data into the manager
 			GetInternalData().Clear();
@@ -732,9 +793,14 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void Load(List<BaseObject> source)
+		public void Load<T>(List<T> source) where T : BaseObject
 		{
 			Load(source.ToArray());
+		}
+
+		public virtual void LoadDynamic()
+		{
+			throw new NotImplementedException();
 		}
 
 		public bool Save()

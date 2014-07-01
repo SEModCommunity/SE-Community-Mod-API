@@ -23,8 +23,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public ReactorEntity(MyObjectBuilder_Reactor definition)
 			: base(definition)
 		{
-			EntityId = definition.EntityId;
 			m_Inventory = new InventoryEntity(definition.Inventory);
+		}
+
+		public ReactorEntity(MyObjectBuilder_Reactor definition, Object backingObject)
+			: base(definition, backingObject)
+		{
+			m_Inventory = new InventoryEntity(definition.Inventory);	//TODO - Add a method to get the reactors backing inventory object
 		}
 
 		#endregion

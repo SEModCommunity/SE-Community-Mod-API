@@ -18,6 +18,7 @@ using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
+using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRageMath;
@@ -32,9 +33,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
+
+		public static string CubeGridSetDampenersEnabledMethod = "86B66668D555E1C1B744C17D2AFA77F7";
+		public static string CubeGridGetCubeBlocksHashSetMethod = "E38F3E9D7A76CD246B99F6AE91CC3E4A";
+
 		public static string CubeGridIsStaticField = "";
 		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
-		public static string CubeGridSetDampenersEnabledMethod = "86B66668D555E1C1B744C17D2AFA77F7";
 
 		#endregion
 
@@ -86,7 +90,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 						break;
 				}
 			}
-			m_cubeBlockManager.Load(cubeBlockList.ToArray());
+			m_cubeBlockManager.Load(cubeBlockList);
+		}
+
+		public CubeGridEntity(MyObjectBuilder_CubeGrid definition, Object backingObject)
+			: base(definition, backingObject)
+		{
+			m_cubeBlockManager = new CubeBlockManager(backingObject, CubeGridGetCubeBlocksHashSetMethod);
 		}
 
 		#endregion
@@ -181,15 +191,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Browsable(false)]
 		public List<CubeBlockEntity> CubeBlocks
 		{
-			get
-			{
-				List<CubeBlockEntity> newList = new List<CubeBlockEntity>();
-				foreach (var def in m_cubeBlockManager.Definitions)
-				{
-					newList.Add((CubeBlockEntity)def);
-				}
-				return newList;
-			}
+			get { return m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>(); }
 		}
 
 		[Category("Cube Grid")]
@@ -223,7 +225,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		/// <returns>The casted instance into the class type</returns>
 		new public MyObjectBuilder_CubeGrid GetSubTypeEntity()
 		{
+			RefreshCubeBlocks();
+
 			return (MyObjectBuilder_CubeGrid)BaseEntity;
+		}
+
+		public void RefreshCubeBlocks()
+		{
+			MyObjectBuilder_CubeGrid cubeGrid = (MyObjectBuilder_CubeGrid)BaseEntity;
+
+			//Refresh the cube blocks content in the cube grid from the cube blocks manager
+			cubeGrid.CubeBlocks.Clear();
+			foreach (var item in m_cubeBlockManager.Definitions)
+			{
+				cubeGrid.CubeBlocks.Add((MyObjectBuilder_CubeBlock)item.GetSubTypeEntity());
+			}
 		}
 
 		public void Export(FileInfo fileInfo)

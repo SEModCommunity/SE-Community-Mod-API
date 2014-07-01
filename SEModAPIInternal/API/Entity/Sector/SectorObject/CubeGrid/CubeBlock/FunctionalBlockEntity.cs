@@ -29,7 +29,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public FunctionalBlockEntity(MyObjectBuilder_FunctionalBlock definition)
 			: base(definition)
 		{
-			EntityId = definition.EntityId;
+		}
+
+		public FunctionalBlockEntity(MyObjectBuilder_FunctionalBlock definition, Object backingObject)
+			: base(definition, backingObject)
+		{
 		}
 
 		#endregion

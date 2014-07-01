@@ -126,7 +126,7 @@ namespace SEServerExtender
 			return null;
 		}
 
-		void UpdateNodeInventoryItemBranch<T>(TreeNode node, List<T> source, string name)
+		void UpdateNodeInventoryItemBranch<T>(TreeNode node, List<T> source)
 			where T : InventoryItemEntity
 		{
 			try
@@ -135,44 +135,7 @@ namespace SEServerExtender
 				if (entriesChanged)
 				{
 					node.Nodes.Clear();
-					node.Text = name + " (" + source.Count.ToString() + ")";
-				}
-
-				int index = 0;
-				foreach (var item in source)
-				{
-					TreeNode itemNode = null;
-					if (entriesChanged)
-					{
-						itemNode = node.Nodes.Add(item.Name);
-						itemNode.Tag = item;
-					}
-					else
-					{
-						itemNode = node.Nodes[index];
-						itemNode.Text = item.Name;
-						itemNode.Tag = item;
-					}
-
-					index++;
-				}
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		void UpdateNodeCubeBlockBranch<T>(TreeNode node, List<T> source, string name)
-			where T : CubeBlockEntity
-		{
-			try
-			{
-				bool entriesChanged = (node.Nodes.Count != source.Count);
-				if (entriesChanged)
-				{
-					node.Nodes.Clear();
-					node.Text = name + " (" + source.Count.ToString() + ")";
+					node.Text = node.Name + " (" + source.Count.ToString() + ")";
 				}
 
 				int index = 0;
@@ -290,6 +253,116 @@ namespace SEServerExtender
 			TRV_Entities.EndUpdate();
 		}
 
+		private void RenderCubeGridChildNodes(CubeGridEntity cubeGrid, TreeNode blocksNode)
+		{
+			TreeNode structuralBlocksNode;
+			TreeNode containerBlocksNode;
+			TreeNode productionBlocksNode;
+			TreeNode energyBlocksNode;
+			TreeNode conveyorBlocksNode;
+			TreeNode utilityBlocksNode;
+			TreeNode weaponBlocksNode;
+			TreeNode toolBlocksNode;
+			TreeNode miscBlocksNode;
+
+			if (blocksNode.Nodes.Count < 9)
+			{
+				structuralBlocksNode = blocksNode.Nodes.Add("Structural");
+				containerBlocksNode = blocksNode.Nodes.Add("Containers");
+				productionBlocksNode = blocksNode.Nodes.Add("Refinement and Production");
+				energyBlocksNode = blocksNode.Nodes.Add("Energy");
+				conveyorBlocksNode = blocksNode.Nodes.Add("Conveyor");
+				utilityBlocksNode = blocksNode.Nodes.Add("Utility");
+				weaponBlocksNode = blocksNode.Nodes.Add("Weapons");
+				toolBlocksNode = blocksNode.Nodes.Add("Tools");
+				miscBlocksNode = blocksNode.Nodes.Add("Misc");
+
+				structuralBlocksNode.Name = structuralBlocksNode.Text;
+				containerBlocksNode.Name = containerBlocksNode.Text;
+				productionBlocksNode.Name = productionBlocksNode.Text;
+				energyBlocksNode.Name = energyBlocksNode.Text;
+				conveyorBlocksNode.Name = conveyorBlocksNode.Text;
+				utilityBlocksNode.Name = utilityBlocksNode.Text;
+				weaponBlocksNode.Name = weaponBlocksNode.Text;
+				toolBlocksNode.Name = toolBlocksNode.Text;
+				miscBlocksNode.Name = miscBlocksNode.Text;
+			}
+			else
+			{
+				structuralBlocksNode = blocksNode.Nodes[0];
+				containerBlocksNode = blocksNode.Nodes[1];
+				productionBlocksNode = blocksNode.Nodes[2];
+				energyBlocksNode = blocksNode.Nodes[3];
+				conveyorBlocksNode = blocksNode.Nodes[4];
+				utilityBlocksNode = blocksNode.Nodes[5];
+				weaponBlocksNode = blocksNode.Nodes[6];
+				toolBlocksNode = blocksNode.Nodes[7];
+				miscBlocksNode = blocksNode.Nodes[8];
+
+				structuralBlocksNode.Nodes.Clear();
+				containerBlocksNode.Nodes.Clear();
+				productionBlocksNode.Nodes.Clear();
+				energyBlocksNode.Nodes.Clear();
+				conveyorBlocksNode.Nodes.Clear();
+				utilityBlocksNode.Nodes.Clear();
+				weaponBlocksNode.Nodes.Clear();
+				toolBlocksNode.Nodes.Clear();
+				miscBlocksNode.Nodes.Clear();
+			}
+
+			foreach (var cubeBlock in cubeGrid.CubeBlocks)
+			{
+				TreeNode newNode = new TreeNode(cubeBlock.Name);
+				newNode.Name = newNode.Text;
+				newNode.Tag = cubeBlock;
+
+				Type cubeBlockType = cubeBlock.GetType();
+
+				if (cubeBlockType == typeof(CubeBlockEntity))
+				{
+					structuralBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(CargoContainerEntity))
+				{
+					containerBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(ReactorEntity))
+				{
+					energyBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(BeaconEntity))
+				{
+					utilityBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(CockpitEntity))
+				{
+					utilityBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(GravityGeneratorEntity))
+				{
+					utilityBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(MedicalRoomEntity))
+				{
+					utilityBlocksNode.Nodes.Add(newNode);
+				}
+				else
+				{
+					miscBlocksNode.Nodes.Add(newNode);
+				}
+			}
+
+			structuralBlocksNode.Text = structuralBlocksNode.Name + " (" + structuralBlocksNode.Nodes.Count.ToString() + ")";
+			containerBlocksNode.Text = containerBlocksNode.Name + " (" + containerBlocksNode.Nodes.Count.ToString() + ")";
+			productionBlocksNode.Text = productionBlocksNode.Name + " (" + productionBlocksNode.Nodes.Count.ToString() + ")";
+			energyBlocksNode.Text = energyBlocksNode.Name + " (" + energyBlocksNode.Nodes.Count.ToString() + ")";
+			conveyorBlocksNode.Text = conveyorBlocksNode.Name + " (" + conveyorBlocksNode.Nodes.Count.ToString() + ")";
+			utilityBlocksNode.Text = utilityBlocksNode.Name + " (" + utilityBlocksNode.Nodes.Count.ToString() + ")";
+			weaponBlocksNode.Text = weaponBlocksNode.Name + " (" + weaponBlocksNode.Nodes.Count.ToString() + ")";
+			toolBlocksNode.Text = toolBlocksNode.Name + " (" + toolBlocksNode.Nodes.Count.ToString() + ")";
+			miscBlocksNode.Text = miscBlocksNode.Name + " (" + miscBlocksNode.Nodes.Count.ToString() + ")";
+		}
+
 		private void BTN_ServerControl_Start_Click(object sender, EventArgs e)
 		{
 			m_processWrapper.StartGame("");
@@ -303,62 +376,79 @@ namespace SEServerExtender
 			MessageBox.Show("Not yet implemented");
 		}
 
-		private void TRV_Entities_AfterSelect(object sender, TreeViewEventArgs e)
+		private void TRV_Entities_NodeRefresh(object sender, TreeNodeMouseClickEventArgs e)
 		{
+			if (e.Clicks < 2)
+				return;
 			if (e.Node == null)
 				return;
-			var linkedObject = e.Node.Tag;
-
-			PG_Entities_Details.SelectedObject = linkedObject;
-			BTN_Entities_New.Enabled = false;
-			BTN_Entities_Export.Enabled = false;
-
-			if (linkedObject == null)
-			{
-				BTN_Entities_Delete.Enabled = false;
+			if (e.Node.Tag == null)
 				return;
-			}
-			else
+
+			//Clear the child nodes
+			e.Node.Nodes.Clear();
+
+			//Call the main node select event handler to populate the node
+			TreeViewEventArgs newEvent = new TreeViewEventArgs(e.Node);
+			TRV_Entities_AfterSelect(sender, newEvent);
+		}
+
+		private void TRV_Entities_AfterSelect(object sender, TreeViewEventArgs e)
+		{
+			BTN_Entities_Export.Enabled = false;
+			BTN_Entities_New.Enabled = false;
+			BTN_Entities_Delete.Enabled = false;
+
+			if (e.Node == null)
+				return;
+			if (e.Node.Tag == null)
+				return;
+
+			var linkedObject = e.Node.Tag;
+			PG_Entities_Details.SelectedObject = linkedObject;
+
+			if (linkedObject is FloatingObject)
 			{
+				BTN_Entities_Export.Enabled = true;
+				BTN_Entities_Delete.Enabled = true;
+			}
+
+			if (linkedObject is VoxelMap)
+			{
+				BTN_Entities_Export.Enabled = true;
+				BTN_Entities_Delete.Enabled = true;
+			}
+
+			if (linkedObject is Meteor)
+			{
+				BTN_Entities_Export.Enabled = true;
 				BTN_Entities_Delete.Enabled = true;
 			}
 
 			if (linkedObject is CubeGridEntity)
 			{
-				BTN_Entities_New.Enabled = true;
 				BTN_Entities_Export.Enabled = true;
-
-				if (e.Node.Nodes.Count < 2)
-				{
-					e.Node.Nodes.Add("Structural Blocks (0)");
-					e.Node.Nodes.Add("Container Blocks (0)");
-					e.Node.Nodes.Add("Reactor Blocks (0)");
-				}
-
-				CubeGridEntity cubeGrid = (CubeGridEntity)linkedObject;
-
-				List<CubeBlockEntity> structuralBlocks = CubeBlockInternalWrapper.GetInstance().GetStructuralBlocks(cubeGrid);
-				List<CargoContainerEntity> containerBlocks = CubeBlockInternalWrapper.GetInstance().GetCargoContainerBlocks(cubeGrid);
-				List<ReactorEntity> reactorBlocks = CubeBlockInternalWrapper.GetInstance().GetReactorBlocks(cubeGrid);
+				BTN_Entities_New.Enabled = true;
+				BTN_Entities_Delete.Enabled = true;
 
 				TRV_Entities.BeginUpdate();
 
-				UpdateNodeCubeBlockBranch<CubeBlockEntity>(e.Node.Nodes[0], structuralBlocks, "Structural Blocks");
-				UpdateNodeCubeBlockBranch<CargoContainerEntity>(e.Node.Nodes[1], containerBlocks, "Container Blocks");
-				UpdateNodeCubeBlockBranch<ReactorEntity>(e.Node.Nodes[2], reactorBlocks, "Reactor Blocks");
+				RenderCubeGridChildNodes((CubeGridEntity)linkedObject, e.Node);
 
 				TRV_Entities.EndUpdate();
 			}
 
 			if (linkedObject is CharacterEntity)
 			{
+				BTN_Entities_Export.Enabled = true;
+
 				CharacterEntity character = (CharacterEntity)linkedObject;
 
 				InventoryEntity inventory = character.Inventory;
 
 				TRV_Entities.BeginUpdate();
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items, e.Node.Text);
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
 
 				TRV_Entities.EndUpdate();
 			}
@@ -371,7 +461,7 @@ namespace SEServerExtender
 
 				TRV_Entities.BeginUpdate();
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items, e.Node.Text);
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
 
 				TRV_Entities.EndUpdate();
 			}
@@ -384,7 +474,7 @@ namespace SEServerExtender
 
 				TRV_Entities.BeginUpdate();
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items, e.Node.Text);
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
 
 				TRV_Entities.EndUpdate();
 			}

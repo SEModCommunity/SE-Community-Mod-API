@@ -45,6 +45,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			m_Inventory = new InventoryEntity(definition.Inventory);
 		}
 
+		public CharacterEntity(MyObjectBuilder_Character definition, Object backingObject)
+			: base(definition, backingObject)
+		{
+			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetCharacterInventory());
+		}
+
 		#endregion
 
 		#region "Properties"

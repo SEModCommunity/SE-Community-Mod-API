@@ -17,7 +17,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public BeaconEntity(MyObjectBuilder_Beacon definition)
 			: base(definition)
 		{
-			EntityId = definition.EntityId;
+		}
+
+		public BeaconEntity(MyObjectBuilder_Beacon definition, Object backingObject)
+			: base(definition, backingObject)
+		{
 		}
 
 		#endregion

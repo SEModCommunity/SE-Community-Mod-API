@@ -15,7 +15,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public FloatingObject(MyObjectBuilder_FloatingObject definition)
 			: base(definition)
-		{}
+		{ }
+
+		public FloatingObject(MyObjectBuilder_FloatingObject definition, Object backingObject)
+			: base(definition, backingObject)
+		{ }
 
 		#endregion
 

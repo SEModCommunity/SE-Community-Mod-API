@@ -30,15 +30,18 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity
 {
-	/// <summary>
-	/// This class is only intended for easy data access and management. It is a wrapper around all MyObjectBuilder_EntityBase children sub type
-	/// </summary>
 	public class BaseEntity : BaseObject
 	{
 		#region "Constructors and Initializers"
 
 		public BaseEntity(MyObjectBuilder_EntityBase baseEntity)
 			: base(baseEntity)
+		{
+			BaseEntity = baseEntity;
+		}
+
+		public BaseEntity(MyObjectBuilder_EntityBase baseEntity, Object backingObject)
+			: base(baseEntity, backingObject)
 		{
 			BaseEntity = baseEntity;
 		}
@@ -332,8 +335,6 @@ namespace SEModAPIInternal.API.Entity
 			HashSet<Object> rawEntities = GetObjectManagerHashSetData();
 			List<T> list = new List<T>();
 
-			//SetupObjectManagerEventHandlers();
-
 			foreach (Object entity in rawEntities)
 			{
 				try
@@ -343,10 +344,7 @@ namespace SEModAPIInternal.API.Entity
 					if (baseEntity.TypeId == type)
 					{
 						TO objectBuilder = (TO)baseEntity;
-						T apiEntity = (T)Activator.CreateInstance(typeof(T), new object[] { objectBuilder });
-						apiEntity.BackingObject = entity;
-
-						//SetupEntityEventHandlers(entity);
+						T apiEntity = (T)Activator.CreateInstance(typeof(T), new object[] { objectBuilder, entity });
 
 						list.Add(apiEntity);
 					}
@@ -442,6 +440,8 @@ namespace SEModAPIInternal.API.Entity
 
 		#region EntityMethods
 
+		#region "Utility"
+
 		public static long GenerateEntityId()
 		{
 			try
@@ -473,67 +473,6 @@ namespace SEModAPIInternal.API.Entity
 				LogManager.GameLog.WriteLine("Failed to get entity id");
 				LogManager.GameLog.WriteLine(ex.ToString());
 				return 0;
-			}
-		}
-
-		#region "Setup"
-
-		public bool SetupObjectManagerEventHandlers()
-		{
-			try
-			{
-				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerEntityAction1, BindingFlags.NonPublic | BindingFlags.Static);
-				Action<Object> newAction1 = ObjectManagerEntityEvent1;
-				actionField.SetValue(null, newAction1);
-
-				actionField = m_objectManagerType.GetField(ObjectManagerEntityAction2, BindingFlags.NonPublic | BindingFlags.Static);
-				Action<Object, string, string> newAction2 = ObjectManagerEntityEvent2;
-				actionField.SetValue(null, newAction2);
-
-				FieldInfo actionField3 = m_objectManagerType.GetField(ObjectManagerAction1, BindingFlags.NonPublic | BindingFlags.Static);
-				Action newAction3 = ObjectManagerEvent1;
-				actionField3.SetValue(null, newAction3);
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				throw ex;
-			}
-		}
-
-		public bool SetupEntityEventHandlers(Object gameEntity)
-		{
-			try
-			{
-				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction1);
-				Action<Object> newAction = EntityOnPositionChanged;
-				actionField.SetValue(gameEntity, newAction);
-
-				FieldInfo actionField2 = BaseObject.GetEntityField(gameEntity, EntityAction2);
-				Action<Object> newAction2 = EntityEvent2;
-				actionField2.SetValue(gameEntity, newAction2);
-
-				FieldInfo actionField3 = BaseObject.GetEntityField(gameEntity, EntityAction3);
-				Action<Object> newAction3 = EntityEvent3;
-				actionField3.SetValue(gameEntity, newAction3);
-
-				FieldInfo actionField4 = BaseObject.GetEntityField(gameEntity, EntityAction4);
-				Action<Object> newAction4 = EntityEvent4;
-				actionField4.SetValue(gameEntity, newAction4);
-				/*
-				FieldInfo actionField5 = BaseObject.GetEntityField(gameEntity, EntityAction5);
-				Action<Object> newAction5 = EntityEvent5;
-				actionField5.SetValue(gameEntity, newAction5);
-				*/
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				throw ex;
 			}
 		}
 
@@ -706,143 +645,6 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 
 		#region "Actions"
-
-		public static void ObjectManagerEvent1()
-		{
-			try
-			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("ObjectManagerEvent - '1'");
-
-				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerAction1, BindingFlags.NonPublic | BindingFlags.Static);
-				Action newAction = ObjectManagerEvent1;
-				actionField.SetValue(null, newAction);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
-		}
-
-		public static void ObjectManagerEntityEvent1(Object gameEntity)
-		{
-			try
-			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': ObjectManagerEvent - Entity Closed");
-
-				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerEntityAction1, BindingFlags.NonPublic | BindingFlags.Static);
-				Action<Object> newAction = ObjectManagerEntityEvent1;
-				actionField.SetValue(null, newAction);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
-		}
-
-		public static void ObjectManagerEntityEvent2(Object gameEntity, string oldKey, string currentKey)
-		{
-			try
-			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': ObjectManagerEvent - Entity Initialized");
-
-				FieldInfo actionField = m_objectManagerType.GetField(ObjectManagerEntityAction2, BindingFlags.NonPublic | BindingFlags.Static);
-				Action<Object, string, string> newAction = ObjectManagerEntityEvent2;
-				actionField.SetValue(null, newAction);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
-		}
-
-		public static void EntityOnPositionChanged(Object gameEntity)
-		{
-			try
-			{
-				//if(SandboxGameAssemblyWrapper.IsDebugging)
-				//Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event 'PositionChanged' triggered");
-
-				//Make sure the action is still tied to this event handler
-				//FieldInfo actionField = GetEntityField(gameEntity, EntityAction1);
-				//Action<Object> newAction = EntityOnPositionChanged;
-				//actionField.SetValue(gameEntity, newAction);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
-		}
-
-		public static void EntityEvent2(Object gameEntity)
-		{
-			try
-			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '2' triggered");
-
-				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction2);
-				Action<Object> newAction = EntityEvent2;
-				actionField.SetValue(gameEntity, newAction);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
-		}
-
-		public static void EntityEvent3(Object gameEntity)
-		{
-			try
-			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '3' triggered");
-
-				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction3);
-				Action<Object> newAction = EntityEvent3;
-				actionField.SetValue(gameEntity, newAction);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
-		}
-
-		public static void EntityEvent4(Object gameEntity)
-		{
-			try
-			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '4' triggered");
-
-				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction4);
-				Action<Object> newAction = EntityEvent4;
-				actionField.SetValue(gameEntity, newAction);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
-		}
-
-		public static void EntityEvent5(Object gameEntity)
-		{
-			try
-			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + GetEntityId(gameEntity).ToString() + "': Event '5' triggered");
-
-				FieldInfo actionField = BaseObject.GetEntityField(gameEntity, EntityAction5);
-				Action<Object> newAction = EntityEvent5;
-				actionField.SetValue(gameEntity, newAction);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-			}
-		}
 
 		public static void InternalUpdateEntityPosition()
 		{

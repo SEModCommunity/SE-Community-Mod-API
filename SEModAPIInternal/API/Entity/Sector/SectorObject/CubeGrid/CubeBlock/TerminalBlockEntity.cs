@@ -30,7 +30,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public TerminalBlockEntity(MyObjectBuilder_TerminalBlock definition)
 			: base(definition)
 		{
-			EntityId = definition.EntityId;
+		}
+
+		public TerminalBlockEntity(MyObjectBuilder_TerminalBlock definition, Object backingObject)
+			: base(definition, backingObject)
+		{
 		}
 
 		#endregion
@@ -85,7 +89,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				Type backingType = BackingObject.GetType();
 				MethodInfo method = backingType.GetMethod(CubeBlockGetActualBlock_Method, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-				Object actualCubeObject = method.Invoke(m_self.BackingObject, new object[] { });
+				Object actualCubeObject = method.Invoke(BackingObject, new object[] { });
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{

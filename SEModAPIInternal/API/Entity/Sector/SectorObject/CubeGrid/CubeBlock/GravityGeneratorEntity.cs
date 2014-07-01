@@ -19,7 +19,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public GravityGeneratorEntity(MyObjectBuilder_GravityGenerator definition)
 			: base(definition)
 		{
-			EntityId = definition.EntityId;
+		}
+
+		public GravityGeneratorEntity(MyObjectBuilder_GravityGenerator definition, Object backingObject)
+			: base(definition, backingObject)
+		{
 		}
 
 		#endregion

@@ -28,6 +28,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			m_item = new InventoryItemEntity(definition.Item);
 		}
 
+		public Meteor(MyObjectBuilder_Meteor definition, Object backingObject)
+			: base(definition, backingObject)
+		{
+			m_item = new InventoryItemEntity(definition.Item);
+		}
+
 		#endregion
 
 		#region "Properties"

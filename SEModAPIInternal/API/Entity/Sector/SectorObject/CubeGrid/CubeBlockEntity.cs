@@ -23,9 +23,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 	{
 		#region "Attributes"
 
-		private Object m_backingObject;
-		private long m_entityId;
-		protected CubeBlockEntity m_self;
+		private bool m_hasGeneratedId;
 
 		public static string CubeBlockGetObjectBuilder_Method = "CBB75211A3B0B3188541907C9B1B0C5C";
 		public static string CubeBlockGetActualBlock_Method = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
@@ -37,26 +35,26 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public CubeBlockEntity(MyObjectBuilder_CubeBlock definition)
 			: base(definition)
 		{
-			m_self = this;
+			if (definition.EntityId == 0)
+			{
+				m_hasGeneratedId = true;
+				EntityId = GenerateEntityId();
+			}
+		}
 
-			m_entityId = definition.EntityId;
+		public CubeBlockEntity(MyObjectBuilder_CubeBlock definition, Object backingObject)
+			: base(definition, backingObject)
+		{
+			if (definition.EntityId == 0)
+			{
+				m_hasGeneratedId = true;
+				EntityId = GenerateEntityId();
+			}
 		}
 
 		#endregion
 
 		#region "Properties"
-
-		[Category("Cube Block")]
-		[Browsable(false)]
-		public Object BackingObject
-		{
-			get { return m_backingObject; }
-			set
-			{
-				m_backingObject = value;
-				Changed = true;
-			}
-		}
 
 		public override string Name
 		{
@@ -79,6 +77,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 				Changed = true;
 			}
+		}
+
+		[Category("Cube Block")]
+		[Browsable(true)]
+		[ReadOnly(true)]
+		public bool HasGeneratedId
+		{
+			get { return m_hasGeneratedId; }
 		}
 
 		[Category("Cube Block")]
@@ -198,7 +204,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			{
 				Type backingType = BackingObject.GetType();
 				MethodInfo method = backingType.GetMethod(CubeBlockGetActualBlock_Method, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-				Object actualCubeObject = method.Invoke(m_self.BackingObject, new object[] { });
+				Object actualCubeObject = method.Invoke(BackingObject, new object[] { });
 
 				return actualCubeObject;
 			}
@@ -220,13 +226,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 		}
 
-		public CubeBlockManager(CubeBlockEntity[] baseDefinitions)
-			: base(baseDefinitions)
-		{
-		}
-
-		public CubeBlockManager(List<CubeBlockEntity> baseDefinitions)
-			: base(baseDefinitions.ToArray())
+		public CubeBlockManager(Object backingSource, string backingSourceMethodName)
+			: base(backingSource, backingSourceMethodName)
 		{
 		}
 		
@@ -260,110 +261,77 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		#endregion
-	}
-
-	public class CubeBlockInternalWrapper
-	{
-		#region "Attributes"
-
-		protected static CubeBlockInternalWrapper m_instance;
-
-		private static Assembly m_assembly;
-
-		public static string CubeGridGetCubeBlocksHashSetMethod = "E38F3E9D7A76CD246B99F6AE91CC3E4A";
-
-		public static string CubeBlockGetObjectBuilderMethod = "CBB75211A3B0B3188541907C9B1B0C5C";
-
-		public static string ReactorBlockSetEnabledMethod = "E07EE72F25C9CA3C2EE6888D308A0E8D";
-
-		#endregion
-
-		#region "Constructors and Initializers"
-
-		protected CubeBlockInternalWrapper(string basePath)
+		public override void LoadDynamic()
 		{
-			m_instance = this;
+			HashSet<Object> rawEntities = GetBackingDataHashSet();
+			Dictionary<long, BaseObject> data = GetInternalData();
+			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
 
-			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
-
-			Console.WriteLine("Finished loading CubeBlockInternalWrapper");
-		}
-
-		public static CubeBlockInternalWrapper GetInstance(string basePath = "")
-		{
-			if (m_instance == null)
-			{
-				m_instance = new CubeBlockInternalWrapper(basePath);
-			}
-			return (CubeBlockInternalWrapper)m_instance;
-		}
-
-		#endregion
-
-		#region "Properties"
-
-		#endregion
-
-		#region "Methods"
-
-		#region APIEntityLists
-
-		public HashSet<Object> GetCubeBlocksHashSet(CubeGridEntity cubeGrid)
-		{
-			var rawValue = CubeGridEntity.InvokeEntityMethod(cubeGrid.BackingObject, CubeGridGetCubeBlocksHashSetMethod, new object[] { });
-			HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
-
-			return convertedSet;
-		}
-
-		private List<T> GetAPIEntityCubeBlockList<T, TO>(CubeGridEntity cubeGrid, MyObjectBuilderTypeEnum type)
-			where T : CubeBlockEntity
-			where TO : MyObjectBuilder_CubeBlock
-		{
-			HashSet<Object> rawEntities = GetCubeBlocksHashSet(cubeGrid);
-			List<T> list = new List<T>();
-
+			//Update the main data mapping
+			data.Clear();
 			foreach (Object entity in rawEntities)
 			{
 				try
 				{
-					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockGetObjectBuilderMethod, new object[] { });
+					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilder_Method, new object[] { });
 
-					if (baseEntity.TypeId == type)
+					CubeBlockEntity matchingCubeBlock = null;
+
+					//If the original data already contains an entry for this, skip creation
+					if (backingData.ContainsKey(entity))
 					{
-						TO objectBuilder = (TO)baseEntity;
-						T apiEntity = (T)Activator.CreateInstance(typeof(T), new object[] { objectBuilder });
-						apiEntity.BackingObject = entity;
-
-						list.Add(apiEntity);
+						matchingCubeBlock = (CubeBlockEntity)backingData[entity];
 					}
+					else
+					{
+						switch (baseEntity.TypeId)
+						{
+							case MyObjectBuilderTypeEnum.CubeBlock:
+								matchingCubeBlock = new CubeBlockEntity(baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.CargoContainer:
+								matchingCubeBlock = new CargoContainerEntity((MyObjectBuilder_CargoContainer)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Reactor:
+								matchingCubeBlock = new ReactorEntity((MyObjectBuilder_Reactor)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Beacon:
+								matchingCubeBlock = new BeaconEntity((MyObjectBuilder_Beacon)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Cockpit:
+								matchingCubeBlock = new CockpitEntity((MyObjectBuilder_Cockpit)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.GravityGenerator:
+								matchingCubeBlock = new GravityGeneratorEntity((MyObjectBuilder_GravityGenerator)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.MedicalRoom:
+								matchingCubeBlock = new MedicalRoomEntity((MyObjectBuilder_MedicalRoom)baseEntity, entity);
+								break;
+							default:
+								matchingCubeBlock = new CubeBlockEntity(baseEntity, entity);
+								break;
+						}
+					}
+
+					if (matchingCubeBlock == null)
+						throw new Exception("Failed to match/create cube block entity");
+
+					data.Add(matchingCubeBlock.EntityId, matchingCubeBlock);
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex.ToString());
+					LogManager.GameLog.WriteLine(ex);
 				}
 			}
 
-			return list;
+			//Update the backing data mapping
+			backingData.Clear();
+			foreach (var key in data.Keys)
+			{
+				var entry = data[key];
+				backingData.Add(entry.BackingObject, entry);
+			}
 		}
-
-		public List<CubeBlockEntity> GetStructuralBlocks(CubeGridEntity cubeGrid)
-		{
-			return GetAPIEntityCubeBlockList<CubeBlockEntity, MyObjectBuilder_CubeBlock>(cubeGrid, MyObjectBuilderTypeEnum.CubeBlock);
-		}
-
-		public List<CargoContainerEntity> GetCargoContainerBlocks(CubeGridEntity cubeGrid)
-		{
-			return GetAPIEntityCubeBlockList<CargoContainerEntity, MyObjectBuilder_CargoContainer>(cubeGrid, MyObjectBuilderTypeEnum.CargoContainer);
-		}
-
-		public List<ReactorEntity> GetReactorBlocks(CubeGridEntity cubeGrid)
-		{
-			return GetAPIEntityCubeBlockList<ReactorEntity, MyObjectBuilder_Reactor>(cubeGrid, MyObjectBuilderTypeEnum.Reactor);
-		}
-
-		#endregion
 
 		#endregion
 	}

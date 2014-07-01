@@ -17,7 +17,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public CockpitEntity(MyObjectBuilder_Cockpit definition)
 			: base(definition)
 		{
-			EntityId = definition.EntityId;
+		}
+
+		public CockpitEntity(MyObjectBuilder_Cockpit definition, Object backingObject)
+			: base(definition, backingObject)
+		{
 		}
 
 		#endregion

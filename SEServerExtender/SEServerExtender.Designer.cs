@@ -291,6 +291,7 @@
 			this.TRV_Entities.Name = "TRV_Entities";
 			this.TRV_Entities.Size = new System.Drawing.Size(300, 603);
 			this.TRV_Entities.TabIndex = 0;
+			this.TRV_Entities.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TRV_Entities_NodeRefresh);
 			this.TRV_Entities.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_Entities_AfterSelect);
 			// 
 			// BTN_Entities_Export

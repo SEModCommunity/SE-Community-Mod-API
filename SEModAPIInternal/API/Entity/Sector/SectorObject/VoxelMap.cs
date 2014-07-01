@@ -16,7 +16,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public VoxelMap(MyObjectBuilder_VoxelMap definition)
 			: base(definition)
-		{}
+		{ }
+
+		public VoxelMap(MyObjectBuilder_VoxelMap definition, Object backingObject)
+			: base(definition, backingObject)
+		{ }
 
 		#endregion
 

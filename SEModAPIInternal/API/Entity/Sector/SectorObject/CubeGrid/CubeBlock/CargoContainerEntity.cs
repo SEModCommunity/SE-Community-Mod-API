@@ -31,8 +31,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public CargoContainerEntity(MyObjectBuilder_CargoContainer definition)
 			: base(definition)
 		{
-			EntityId = definition.EntityId;
 			m_Inventory = new InventoryEntity(definition.Inventory);
+		}
+
+		public CargoContainerEntity(MyObjectBuilder_CargoContainer definition, Object backingObject)
+			: base(definition, backingObject)
+		{
+			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetContainerInventory());
 		}
 
 		#endregion
@@ -45,9 +50,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			get
 			{
-				if(m_Inventory.BackingObject == null)
-					m_Inventory.BackingObject = InternalGetContainerInventory();
-
 				return m_Inventory;
 			}
 		}
