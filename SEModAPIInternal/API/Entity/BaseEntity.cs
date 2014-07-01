@@ -676,7 +676,8 @@ namespace SEModAPIInternal.API.Entity
 			{
 				m_nextEntityToUpdate = gameEntity;
 				HkRigidBody havokBody = GetRigidBody(m_nextEntityToUpdate);
-				m_nextEntityPosition = Vector3.Multiply(havokBody.Position, 1000);
+                m_nextEntityPosition = Vector3.Add(havokBody.Position, new Vector3(100000,100000,100000));
+                m_nextEntityPosition = Vector3.Multiply(m_nextEntityPosition, 1000);
 
 				Action action = InternalUpdateEntityPosition;
 				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
