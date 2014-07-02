@@ -33,6 +33,7 @@ namespace SEModAPIInternal.API.Common
 
 		protected static SandboxGameAssemblyWrapper m_instance;
 		protected static bool m_isDebugging;
+		protected static bool m_isGameLoaded;
 
 		private static Assembly m_assembly;
 
@@ -76,6 +77,7 @@ namespace SEModAPIInternal.API.Common
 		public static string MainGameAction4 = "B43682C38AD089E0EE792C74E4503633";	//() Triggered by 'Ctrl+C'
 		public static string MainGameInitializeMethod = "2AA66FBD3F2C5EC250558B3136F3974A";
 		public static string MainGameExitMethod = "246E732EE67F7F6F88C4FF63B3901107";
+		public static string MainGameIsLoadedField = "76E577DA6C1683D13B1C0BE5D704C241";
 
 		public static string ConfigContainerGetConfigData = "4DD64FD1D45E514D01C925D07B69B3BE";
 		public static string ConfigContainerSetWorldName = "493E0E7BC7A617699C44A9A5FB8FF679";
@@ -166,35 +168,6 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Methods"
 
-		public static bool SetupMainGameEventHandlers(Object mainGame)
-		{
-			try
-			{
-				FieldInfo actionField = m_mainGameType.GetField(MainGameAction1, BindingFlags.NonPublic | BindingFlags.Static);
-				Action newAction1 = MainGameEvent1;
-				actionField.SetValue(null, newAction1);
-				
-				actionField = m_mainGameType.GetField(MainGameAction2, BindingFlags.NonPublic | BindingFlags.Instance);
-				Action<bool> newAction2 = MainGameEvent2;
-				actionField.SetValue(mainGame, newAction2);
-				
-				actionField = m_mainGameType.GetField(MainGameAction3, BindingFlags.NonPublic | BindingFlags.Static);
-				Action newAction3 = MainGameEvent3;
-				actionField.SetValue(null, newAction3);
-				/*
-				actionField = m_mainGameType.GetField(MainGameAction4, BindingFlags.NonPublic | BindingFlags.Static);
-				Action newAction4 = MainGameEvent4;
-				actionField.SetValue(null, newAction4);
-				*/
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				return false;
-			}
-		}
-
 		public static bool EnqueueMainGameAction(Action action)
 		{
 			try
@@ -249,11 +222,9 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				Console.WriteLine("MainGameEvent - '3'");
+				Console.WriteLine("MainGameEvent - Game loaded!");
 
-				FieldInfo actionField = m_mainGameType.GetField(MainGameAction3, BindingFlags.NonPublic | BindingFlags.Static);
-				Action newAction = MainGameEvent3;
-				actionField.SetValue(null, newAction);
+				m_isGameLoaded = true;
 			}
 			catch (Exception ex)
 			{
@@ -386,13 +357,11 @@ namespace SEModAPIInternal.API.Common
 				FieldInfo mainGameInstanceField = m_mainGameType.GetField(MainGameInstanceField, BindingFlags.Static | BindingFlags.Public);
 				Object mainGame = mainGameInstanceField.GetValue(null);
 
-				SetupMainGameEventHandlers(mainGame);
-
 				return mainGame;
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex.ToString());
+				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -444,10 +413,23 @@ namespace SEModAPIInternal.API.Common
 
 		public bool IsGameStarted()
 		{
-			//TODO - Find a better way to find out if the game has started than checking for the chat manager every time
-
-			if (GetMainGameInstance() == null || GetServerSteamManager() == null)
+			var mainGame = GetMainGameInstance();
+			if (mainGame == null)
 				return false;
+
+			if (!m_isGameLoaded)
+			{
+				FieldInfo gameLoadedField = MainGameType.BaseType.GetField(MainGameIsLoadedField, BindingFlags.NonPublic | BindingFlags.Instance);
+				bool someValue = (bool)gameLoadedField.GetValue(mainGame);
+				if (someValue)
+				{
+					m_isGameLoaded = true;
+
+					return true;
+				}
+
+				return false;
+			}
 
 			return true;
 		}

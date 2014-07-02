@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="API\Common\ChatManager.cs" />
+    <Compile Include="API\Common\PluginManager.cs" />
     <Compile Include="API\Entity\BaseEntity.cs" />
     <Compile Include="API\Entity\BaseObject.cs" />
     <Compile Include="API\Utility\Utility.cs" />
@@ -114,6 +115,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SEModAPIExtensions\SEModAPIExtensions.csproj">
+      <Project>{727B1141-2124-4A31-82FA-CAE218501215}</Project>
+      <Name>SEModAPIExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SEModAPI\SEModAPI.csproj">
       <Project>{94E6C913-9456-408D-BDEE-56B48B5397D4}</Project>
       <Name>SEModAPI</Name>

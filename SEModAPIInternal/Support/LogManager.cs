@@ -17,8 +17,6 @@ namespace SEModAPIInternal.Support
 
 		private static LogManager m_instance;
 
-		private static Assembly m_assembly;
-
 		private static MyLog m_gameLog;
 		private static MyLog m_apiLog;
 
@@ -31,12 +29,6 @@ namespace SEModAPIInternal.Support
 		protected LogManager()
 		{
 			m_instance = this;
-
-			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
-
-			Type mainGameType = SandboxGameAssemblyWrapper.GetInstance().MainGameType;
-			FieldInfo myLogField = mainGameType.GetField(MainGameMyLogField, BindingFlags.Public | BindingFlags.Static);
-			m_gameLog = (MyLog)myLogField.GetValue(null);
 
 			m_apiLog = new MyLog();
 			StringBuilder internalAPIAppVersion = new StringBuilder(typeof(LogManager).Assembly.GetName().Version.ToString());
@@ -63,6 +55,20 @@ namespace SEModAPIInternal.Support
 			get
 			{
 				GetInstance();
+
+				if (m_gameLog == null)
+				{
+					try
+					{
+						Type mainGameType = SandboxGameAssemblyWrapper.GetInstance().MainGameType;
+						FieldInfo myLogField = mainGameType.GetField(MainGameMyLogField, BindingFlags.Public | BindingFlags.Static);
+						m_gameLog = (MyLog)myLogField.GetValue(null);
+					}
+					catch (Exception ex)
+					{
+						LogManager.APILog.WriteLine(ex);
+					}
+				}
 
 				return m_gameLog;
 			}

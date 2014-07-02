@@ -36,6 +36,7 @@ namespace SEServerExtender
 		private ProcessWrapper m_processWrapper;
 		private Timer m_entityTreeRefreshTimer;
 		private Timer m_chatViewRefreshTimer;
+		private PluginManager m_pluginManager;
 
 		#endregion
 
@@ -71,6 +72,8 @@ namespace SEServerExtender
 			m_chatViewRefreshTimer = new Timer();
 			m_chatViewRefreshTimer.Interval = 500;
 			m_chatViewRefreshTimer.Tick += new EventHandler(ChatViewRefresh);
+
+			m_pluginManager = PluginManager.GetInstance();
 
 			TRV_Entities.Nodes.Add("Cube Grids (0)");
 			TRV_Entities.Nodes.Add("Characters (0)");
@@ -251,6 +254,19 @@ namespace SEServerExtender
 			UpdateNodeBranch<Meteor>(TRV_Entities.Nodes[4], meteors, "Meteors");
 
 			TRV_Entities.EndUpdate();
+
+			if (!m_pluginManager.Initialized)
+			{
+				if (SandboxGameAssemblyWrapper.GetInstance().IsGameStarted())
+				{
+					m_pluginManager.Init();
+				}
+			}
+			else
+			{
+				//TODO - Call this from somewhere in the main game thread eventually
+				m_pluginManager.Update();
+			}
 		}
 
 		private void RenderCubeGridChildNodes(CubeGridEntity cubeGrid, TreeNode blocksNode)
@@ -365,6 +381,8 @@ namespace SEServerExtender
 
 		private void BTN_ServerControl_Start_Click(object sender, EventArgs e)
 		{
+			m_pluginManager.LoadPlugins();
+
 			m_processWrapper.StartGame("");
 
 			m_entityTreeRefreshTimer.Start();

@@ -30,7 +30,7 @@ namespace SEModAPIInternal.API.Common
 			m_chatMessages = new List<string>();
 			m_chatHandlerSetup = false;
 
-			LogManager.APILog.WriteLineAndConsole("Finished loading ChatManager");
+			Console.WriteLine("Finished loading ChatManager");
 		}
 
 		public static ChatManager GetInstance()
