@@ -87,9 +87,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			try
 			{
-				Type backingType = BackingObject.GetType();
-				MethodInfo method = backingType.GetMethod(CubeBlockGetActualBlock_Method, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-				Object actualCubeObject = method.Invoke(BackingObject, new object[] { });
+				Object actualCubeObject = GetActualObject();
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{

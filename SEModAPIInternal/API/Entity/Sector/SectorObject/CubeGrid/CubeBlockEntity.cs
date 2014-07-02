@@ -25,8 +25,24 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		private bool m_hasGeneratedId;
 
+		public static string CubeBlockNamespace = "";
+		public static string CubeBlockClass = "";
+
 		public static string CubeBlockGetObjectBuilder_Method = "CBB75211A3B0B3188541907C9B1B0C5C";
 		public static string CubeBlockGetActualBlock_Method = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
+
+		public static string ActualCubeBlockNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string ActualCubeBlockClass = "4E262F069F7C0F85458881743E182B25";
+
+		public static string ActualCubeBlockGetObjectBuilderMethod = "GetObjectBuilderCubeBlock";
+		public static string ActualCubeBlockGetFactionsObjectMethod = "3E8AC70E5FAAA9C8C4992B71E12CDE28";
+
+		//This is a nested class in the ActualCubeBlockClass
+		public static string FactionsDataClass = "5E7155F8D5F1B9BC7559B9B1D6EB8016";
+
+		public static string FactionsDataOwnerField = "523945B334F76A614AFCED7F4D5EE8AC";
+		public static string FactionsDataSharedFactionField = "AA0E4CF10B7597F0CFA4C9FA1944E2FC";
+		public static string FactionsDataSharedAllField = "AE43B07154583A83CDC39A8D5C04AB36";
 
 		#endregion
 
@@ -172,6 +188,19 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			{
 				if (GetSubTypeEntity().ShareWithFaction == value) return;
 				GetSubTypeEntity().ShareWithFaction = value;
+				Changed = true;
+			}
+		}
+
+		[Category("Cube Block")]
+		[Description("Added as of 1.035.005")]
+		public bool ShareWithAll
+		{
+			get { return GetSubTypeEntity().ShareWithAll; }
+			set
+			{
+				if (GetSubTypeEntity().ShareWithAll == value) return;
+				GetSubTypeEntity().ShareWithAll = value;
 				Changed = true;
 			}
 		}

@@ -207,7 +207,7 @@ namespace SEServerExtender
 		{
 			LST_Chat_Messages.BeginUpdate();
 
-			string[] chatMessages = SandboxGameAssemblyWrapper.GetInstance().ChatMessages.ToArray();
+			string[] chatMessages = ChatManager.GetInstance().ChatMessages.ToArray();
 			if (chatMessages.Length != LST_Chat_Messages.Items.Count)
 			{
 				LST_Chat_Messages.Items.Clear();
@@ -583,7 +583,7 @@ namespace SEServerExtender
 			string message = TXT_Chat_Message.Text;
 			if (message != null && message != "")
 			{
-				SandboxGameAssemblyWrapper.GetInstance().SendPublicChatMessage(message);
+				ChatManager.GetInstance().SendPublicChatMessage(message);
 				TXT_Chat_Message.Text = "";
 			}
 		}
@@ -595,7 +595,7 @@ namespace SEServerExtender
 				string message = TXT_Chat_Message.Text;
 				if (message != null && message != "")
 				{
-					SandboxGameAssemblyWrapper.GetInstance().SendPublicChatMessage(message);
+					ChatManager.GetInstance().SendPublicChatMessage(message);
 					TXT_Chat_Message.Text = "";
 				}
 			}

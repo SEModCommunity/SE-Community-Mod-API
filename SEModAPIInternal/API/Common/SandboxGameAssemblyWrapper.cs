@@ -36,9 +36,6 @@ namespace SEModAPIInternal.API.Common
 
 		private static Assembly m_assembly;
 
-		private static List<string> m_chatMessages;
-		private static bool m_chatHandlerSetup;
-
 		private static Type m_mainGameType;
 		private Type m_checkpointManagerType;
 		private Type m_serverCoreType;
@@ -120,9 +117,6 @@ namespace SEModAPIInternal.API.Common
 			m_configContainerDedicatedDataField = m_configContainerType.GetField(ConfigContainerDedicatedDataField, BindingFlags.NonPublic | BindingFlags.Instance);
 			m_setConfigWorldName = m_configContainerType.GetMethod(ConfigContainerSetWorldName, BindingFlags.Public | BindingFlags.Instance);
 
-			m_chatMessages = new List<string>();
-			m_chatHandlerSetup = false;
-
 			Console.WriteLine("Finished loading SandboxGameAssemblyWrapper");
 		}
 
@@ -166,23 +160,6 @@ namespace SEModAPIInternal.API.Common
 		public Assembly GameAssembly
 		{
 			get { return m_assembly; }
-		}
-
-		public List<string> ChatMessages
-		{
-			get
-			{
-				if (!m_chatHandlerSetup)
-				{
-					if(IsGameStarted())
-					{
-						Action action = SetupChatHandlers;
-						EnqueueMainGameAction(action);
-					}
-				}
-
-				return m_chatMessages;
-			}
 		}
 
 		#endregion
@@ -465,13 +442,6 @@ namespace SEModAPIInternal.API.Common
 			return serverSteamManager;
 		}
 
-		public void RegisterChatReceiver(Action<ulong, string, ChatEntryTypeEnum> action)
-		{
-			Type serverSteamManagerType = GameAssembly.GetType("C42525D7DE28CE4CFB44651F3D03A50D.3B0B7A338600A7B9313DE1C3723DAD14");
-			MethodInfo registerChatHook = serverSteamManagerType.BaseType.GetMethod("8A73057A206BFCA00EC372183441891A");
-			registerChatHook.Invoke(GetServerSteamManager(), new object[] { action });
-		}
-
 		public bool IsGameStarted()
 		{
 			//TODO - Find a better way to find out if the game has started than checking for the chat manager every time
@@ -494,114 +464,23 @@ namespace SEModAPIInternal.API.Common
 			return connectedPlayers;
 		}
 
-		public void ReceiveChatMessage(ulong remoteUserId, string message, ChatEntryTypeEnum entryType)
-		{
-			if (entryType == ChatEntryTypeEnum.ChatMsg)
-			{
-				string playerName = remoteUserId.ToString();
-
-				//TODO - Find a way to do this without causing the server to freak out and crash
-				/*
-				try
-				{
-					if (SteamAPI.Instance != null)
-					{
-						SteamAPI api = SteamAPI.Instance;
-						if (api.Friends != null)
-						{
-							Friends friends = api.Friends;
-							if (friends.HasFriend(remoteUserId))
-							{
-								playerName = friends.GetPersonaName(remoteUserId);
-							}
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
-				*/
-
-				Console.WriteLine(playerName + ": " + message);
-				m_chatMessages.Add(playerName + ": " + message);
-			}
-
-			LogManager.APILog.WriteLine("Chat - Client '" + remoteUserId.ToString() + "' -> Server: " + message);
-		}
-
-		public void SendPrivateChatMessage(ulong remoteUserId, string message)
-		{
-			if (!IsGameStarted())
-				return;
-
-			try
-			{
-				Object serverSteamManager = GetServerSteamManager();
-				MethodInfo sendStructMethod = serverSteamManager.GetType().BaseType.GetMethod("6D24456D3649B6393BA2AF59E656E4BF", BindingFlags.NonPublic | BindingFlags.Instance);
-
-				Type chatMessageStructType = GameAssembly.GetType("C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668");
-				FieldInfo messageField = chatMessageStructType.GetField("EDCBEBB604B287DFA90A5A46DC7AD28D");
-
-				Object chatMessageStruct = Activator.CreateInstance(chatMessageStructType);
-				messageField.SetValue(chatMessageStruct, message);
-
-				sendStructMethod = sendStructMethod.MakeGenericMethod(chatMessageStructType);
-
-				sendStructMethod.Invoke(serverSteamManager, new object[] { remoteUserId, chatMessageStruct });
-
-				m_chatMessages.Add("Server: " + message);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		public void SendPublicChatMessage(string message)
-		{
-			if (!IsGameStarted())
-				return;
-
-			try
-			{
-				List<ulong> connectedPlayers = GetConnectedPlayers();
-				foreach (ulong remoteUserId in connectedPlayers)
-				{
-					SendPrivateChatMessage(remoteUserId, message);
-				}
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
 		public void PeerSessionRequest(ulong remoteUserId)
 		{
-			m_chatMessages.Add(remoteUserId.ToString() + " is connecting ...");
+			ChatManager.GetInstance().ChatMessages.Add(remoteUserId.ToString() + " is connecting ...");
 			LogManager.APILog.WriteLine("Steam user '" + remoteUserId.ToString() + "' submitted a p2p session request");
 		}
 
-		public void SetupChatHandlers()
+		public void SetupSessionRequestHandlers()
 		{
 			try
 			{
-				if (m_chatHandlerSetup == true)
-					return;
-
 				if (GetSteamInterface() == null)
 					return;
 
 				if (GetServerSteamManager() == null)
 					return;
 
-				Action<ulong, string, ChatEntryTypeEnum> chatHook = ReceiveChatMessage;
-				RegisterChatReceiver(chatHook);
-
 				Peer2Peer.SessionRequest += new SessionRequest(PeerSessionRequest);
-				
-				m_chatHandlerSetup = true;
 			}
 			catch (Exception ex)
 			{

@@ -53,6 +53,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="API\Common\ChatManager.cs" />
     <Compile Include="API\Entity\BaseEntity.cs" />
     <Compile Include="API\Entity\BaseObject.cs" />
     <Compile Include="API\Utility\Utility.cs" />
