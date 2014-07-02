@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
@@ -12,14 +13,17 @@ using SysUtils.Utils;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using Sandbox.Common.ObjectBuilders.Voxels;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using VRage;
 using VRage.Common.Utils;
 using VRageMath;
 
+using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
-using System.Net;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -50,6 +54,8 @@ namespace SEModAPIInternal.API.Common
 		private static FieldInfo m_configContainerDedicatedDataField;
 		private static FieldInfo m_serverCoreNullRender;
 
+		private static Object m_nextEntityToUpdate;
+
 		public static string GameConstantsClass = "00DD5482C0A3DF0D94B151167E77A6D9.5FBC15A83966C3D53201318E6F912741";
 		public static string GameConstantsFactionsEnabledField = "AE3FD6A65A631D2BF9835EE8E86F8110";
 
@@ -78,6 +84,12 @@ namespace SEModAPIInternal.API.Common
 		public static string ConfigContainerSetWorldName = "493E0E7BC7A617699C44A9A5FB8FF679";
 		public static string ConfigContainerDedicatedDataField = "44A1510B70FC1BBE3664969D47820439";
 
+		public static string ObjectManagerClass = "5BCAC68007431E61367F5B2CF24E2D6F.CAF1EB435F77C7B77580E2E16F988BED";
+		public static string ObjectManagerGetEntityHashSet = "84C54760C0F0DDDA50B0BE27B7116ED8";
+		public static string ObjectManagerAddEntity = "E5E18F5CAD1F62BB276DF991F20AE6AF";
+
+		public static string NetworkSerializerClass = "5F381EA9388E0A32A8C817841E192BE8.8EFE49A46AB934472427B7D117FD3C64";
+		public static string NetworkSerializerSendEntity = "A6B585C993B43E72219511726BBB0649";
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -646,6 +658,124 @@ namespace SEModAPIInternal.API.Common
 			Vector3? nullableResult = new Vector3?(MyVRageUtils.GetRandomBorderPosition(ref box));
 
 			return nullableResult;
+		}
+
+		public static HashSet<Object> GetObjectManagerHashSetData()
+		{
+			try
+			{
+				Type objectManagerType = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(ObjectManagerClass);
+				MethodInfo getEntityHashSet = objectManagerType.GetMethod(ObjectManagerGetEntityHashSet, BindingFlags.Public | BindingFlags.Static);
+				var rawValue = getEntityHashSet.Invoke(null, new object[] { });
+				HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				return convertedSet;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex.ToString());
+				return null;
+			}
+		}
+
+		private static List<T> GetAPIEntityList<T, TO>(MyObjectBuilderTypeEnum type)
+			where T : BaseEntity
+			where TO : MyObjectBuilder_EntityBase
+		{
+			HashSet<Object> rawEntities = GetObjectManagerHashSetData();
+			List<T> list = new List<T>();
+
+			foreach (Object entity in rawEntities)
+			{
+				try
+				{
+					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
+
+					if (baseEntity.TypeId == type)
+					{
+						TO objectBuilder = (TO)baseEntity;
+						T apiEntity = (T)Activator.CreateInstance(typeof(T), new object[] { objectBuilder, entity });
+
+						list.Add(apiEntity);
+					}
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex.ToString());
+				}
+			}
+
+			return list;
+		}
+
+		public static List<CubeGridEntity> GetCubeGrids()
+		{
+			return GetAPIEntityList<CubeGridEntity, MyObjectBuilder_CubeGrid>(MyObjectBuilderTypeEnum.CubeGrid);
+		}
+
+		public static List<CharacterEntity> GetCharacters()
+		{
+			return GetAPIEntityList<CharacterEntity, MyObjectBuilder_Character>(MyObjectBuilderTypeEnum.Character);
+		}
+
+		public static List<VoxelMap> GetVoxelMaps()
+		{
+			return GetAPIEntityList<VoxelMap, MyObjectBuilder_VoxelMap>(MyObjectBuilderTypeEnum.VoxelMap);
+		}
+
+		public static List<FloatingObject> GetFloatingObjects()
+		{
+			return GetAPIEntityList<FloatingObject, MyObjectBuilder_FloatingObject>(MyObjectBuilderTypeEnum.FloatingObject);
+		}
+
+		public static List<Meteor> GetMeteors()
+		{
+			return GetAPIEntityList<Meteor, MyObjectBuilder_Meteor>(MyObjectBuilderTypeEnum.Meteor);
+		}
+
+		public static void AddEntity(Object gameEntity)
+		{
+			try
+			{
+				m_nextEntityToUpdate = gameEntity;
+
+				Action action = InternalAddEntity;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public static void InternalAddEntity()
+		{
+			try
+			{
+				if (m_nextEntityToUpdate == null)
+					return;
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					Console.WriteLine("Entity '': Adding to scene ...");
+
+				Assembly assembly = SandboxGameAssemblyWrapper.GetInstance().GameAssembly;
+				Type objectManagerType = assembly.GetType(ObjectManagerClass);
+
+				MethodInfo addEntityMethod = objectManagerType.GetMethod(ObjectManagerAddEntity, BindingFlags.Public | BindingFlags.Static);
+				addEntityMethod.Invoke(null, new object[] { m_nextEntityToUpdate, true });
+
+				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
+				Type someManager = assembly.GetType(NetworkSerializerClass);
+				MethodInfo sendEntityMethod = someManager.GetMethod(NetworkSerializerSendEntity, BindingFlags.Public | BindingFlags.Static);
+				sendEntityMethod.Invoke(null, new object[] { baseEntity });
+
+				m_nextEntityToUpdate = null;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLineAndConsole("Failed to add new entity");
+				LogManager.GameLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

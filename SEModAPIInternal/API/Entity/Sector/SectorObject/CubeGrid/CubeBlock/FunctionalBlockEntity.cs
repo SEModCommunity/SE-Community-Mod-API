@@ -20,7 +20,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public static string FunctionalBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string FunctionalBlockClass = "7085736D64DCC58ED5DCA05FFEEA9664";
+
 		public static string FunctionalBlockSetEnabledMethod = "97EC0047E8B562F4590B905BD8571F51";
+
+		public static string FunctionalBlockEnabledField = "E709223DC3967197963301DC85A6DE75";
 
 		#endregion
 
@@ -92,7 +95,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex.ToString());
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 

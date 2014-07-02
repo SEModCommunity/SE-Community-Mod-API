@@ -4,10 +4,12 @@ using System.ComponentModel;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
 
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Server;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
@@ -45,7 +47,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		[Category("Meteor")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public VRageMath.Vector3 LinearVelocity
+		public override SerializableVector3 LinearVelocity
 		{
 			get { return GetSubTypeEntity().LinearVelocity; }
 			set
@@ -53,14 +55,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (GetSubTypeEntity().LinearVelocity == value) return;
 				GetSubTypeEntity().LinearVelocity = value;
 				Changed = true;
+
 				if (BackingObject != null)
-					BaseEntityManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
+				{
+					Action action = InternalUpdateEntityLinearVelocity;
+					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
 		[Category("Meteor")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public VRageMath.Vector3 AngularVelocity
+		public override SerializableVector3 AngularVelocity
 		{
 			get { return GetSubTypeEntity().AngularVelocity; }
 			set
@@ -70,7 +76,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				Changed = true;
 
 				if (BackingObject != null)
-					BaseEntityManagerWrapper.GetInstance().UpdateEntityAngularVelocity(BackingObject, value);
+				{
+					Action action = InternalUpdateEntityAngularVelocity;
+					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				}
 			}
 		}
 

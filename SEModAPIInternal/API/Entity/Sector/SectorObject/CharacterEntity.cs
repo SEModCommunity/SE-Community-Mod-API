@@ -57,7 +57,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		[Category("Character")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public SerializableVector3 LinearVelocity
+		public override SerializableVector3 LinearVelocity
 		{
 			get { return GetSubTypeEntity().LinearVelocity; }
 			set
@@ -67,7 +67,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				Changed = true;
 
 				if (BackingObject != null)
-					BaseEntityManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
+				{
+					Action action = InternalUpdateEntityLinearVelocity;
+					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				}
 			}
 		}
 

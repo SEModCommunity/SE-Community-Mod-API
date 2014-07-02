@@ -21,9 +21,6 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity
 {
-	/// <summary>
-	/// This class is only intended for easy data access and management. It is a wrapper around all MyObjectBuilder_Base children sub type
-	/// </summary>
 	public class BaseObject
 	{
 		#region "Attributes"

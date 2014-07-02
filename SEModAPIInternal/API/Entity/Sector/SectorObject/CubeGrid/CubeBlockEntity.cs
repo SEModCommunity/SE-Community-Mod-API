@@ -186,14 +186,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		/// <returns></returns>
 		public long GenerateEntityId()
 		{
-			return BaseEntityManagerWrapper.GenerateEntityId();
+			return UtilityFunctions.GenerateEntityId();
 		}
 
 		/// <summary>
 		/// Method to get the casted instance from parent signature
 		/// </summary>
 		/// <returns>The casted instance into the class type</returns>
-		internal MyObjectBuilder_CubeBlock GetSubTypeEntity()
+		new internal MyObjectBuilder_CubeBlock GetSubTypeEntity()
 		{
 			return (MyObjectBuilder_CubeBlock)BaseEntity;
 		}

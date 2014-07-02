@@ -238,11 +238,11 @@ namespace SEServerExtender
 		{
 			TRV_Entities.BeginUpdate();
 
-			List<CubeGridEntity> cubeGrids = BaseEntityManagerWrapper.GetInstance().GetCubeGrids();
-			List<CharacterEntity> characters = BaseEntityManagerWrapper.GetInstance().GetCharacters();
-			List<VoxelMap> voxelMaps = BaseEntityManagerWrapper.GetInstance().GetVoxelMaps();
-			List<FloatingObject> floatingObjects = BaseEntityManagerWrapper.GetInstance().GetFloatingObjects();
-			List<Meteor> meteors = BaseEntityManagerWrapper.GetInstance().GetMeteors();
+			List<CubeGridEntity> cubeGrids = SandboxGameAssemblyWrapper.GetCubeGrids();
+			List<CharacterEntity> characters = SandboxGameAssemblyWrapper.GetCharacters();
+			List<VoxelMap> voxelMaps = SandboxGameAssemblyWrapper.GetVoxelMaps();
+			List<FloatingObject> floatingObjects = SandboxGameAssemblyWrapper.GetFloatingObjects();
+			List<Meteor> meteors = SandboxGameAssemblyWrapper.GetMeteors();
 
 			UpdateNodeBranch<CubeGridEntity>(TRV_Entities.Nodes[0], cubeGrids, "Cube Grids");
 			UpdateNodeBranch<CharacterEntity>(TRV_Entities.Nodes[1], characters, "Characters");
@@ -483,80 +483,12 @@ namespace SEServerExtender
 		private void BTN_Entities_Delete_Click(object sender, EventArgs e)
 		{
 			Object linkedObject = TRV_Entities.SelectedNode.Tag;
-			if (linkedObject is CubeGridEntity)
+			if (linkedObject is BaseEntity)
 			{
 				try
 				{
-					CubeGridEntity item = (CubeGridEntity)linkedObject;
-					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
-
-					PG_Entities_Details.SelectedObject = null;
-					TRV_Entities.SelectedNode.Tag = null;
-					TRV_Entities.SelectedNode.Remove();
-					BTN_Entities_Delete.Enabled = false;
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.ToString());
-				}
-			}
-			if (linkedObject is CharacterEntity)
-			{
-				try
-				{
-					CharacterEntity item = (CharacterEntity)linkedObject;
-					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
-
-					PG_Entities_Details.SelectedObject = null;
-					TRV_Entities.SelectedNode.Tag = null;
-					TRV_Entities.SelectedNode.Remove();
-					BTN_Entities_Delete.Enabled = false;
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.ToString());
-				}
-			}
-			if (linkedObject is VoxelMap)
-			{
-				try
-				{
-					VoxelMap item = (VoxelMap)linkedObject;
-					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
-
-					PG_Entities_Details.SelectedObject = null;
-					TRV_Entities.SelectedNode.Tag = null;
-					TRV_Entities.SelectedNode.Remove();
-					BTN_Entities_Delete.Enabled = false;
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.ToString());
-				}
-			}
-			if (linkedObject is FloatingObject)
-			{
-				try
-				{
-					FloatingObject item = (FloatingObject)linkedObject;
-					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
-
-					PG_Entities_Details.SelectedObject = null;
-					TRV_Entities.SelectedNode.Tag = null;
-					TRV_Entities.SelectedNode.Remove();
-					BTN_Entities_Delete.Enabled = false;
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.ToString());
-				}
-			}
-			if (linkedObject is Meteor)
-			{
-				try
-				{
-					Meteor item = (Meteor)linkedObject;
-					BaseEntityManagerWrapper.GetInstance().RemoveEntity(item.BackingObject);
+					BaseEntity item = (BaseEntity)linkedObject;
+					item.Dispose();
 
 					PG_Entities_Details.SelectedObject = null;
 					TRV_Entities.SelectedNode.Tag = null;

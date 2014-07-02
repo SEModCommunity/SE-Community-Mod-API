@@ -26,7 +26,7 @@ namespace SEModAPIInternal.API.Entity
 		private BaseObjectManager m_eventManager;
 
 		//Sector Objects
-		private CubeGridManager m_cubeGridManager;
+		private BaseObjectManager m_cubeGridManager;
 		private BaseObjectManager m_voxelMapManager;
 		private BaseObjectManager m_floatingObjectManager;
 		private BaseObjectManager m_meteorManager;
@@ -40,7 +40,7 @@ namespace SEModAPIInternal.API.Entity
 			: base(definition)
 		{
 			m_eventManager = new BaseObjectManager();
-			m_cubeGridManager = new CubeGridManager();
+			m_cubeGridManager = new BaseObjectManager();
 			m_voxelMapManager = new BaseObjectManager();
 			m_floatingObjectManager = new BaseObjectManager();
 			m_meteorManager = new BaseObjectManager();

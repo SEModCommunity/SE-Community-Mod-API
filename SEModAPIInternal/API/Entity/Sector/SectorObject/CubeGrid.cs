@@ -157,7 +157,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		[Category("Cube Grid")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public SerializableVector3 LinearVelocity
+		public override SerializableVector3 LinearVelocity
 		{
 			get { return GetSubTypeEntity().LinearVelocity; }
 			set
@@ -167,13 +167,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				Changed = true;
 
 				if (BackingObject != null)
-					BaseEntityManagerWrapper.GetInstance().UpdateEntityVelocity(BackingObject, value);
+				{
+					Action action = InternalUpdateEntityLinearVelocity;
+					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
 		[Category("Cube Grid")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public SerializableVector3 AngularVelocity
+		public override SerializableVector3 AngularVelocity
 		{
 			get { return GetSubTypeEntity().AngularVelocity; }
 			set
@@ -183,7 +186,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				Changed = true;
 
 				if (BackingObject != null)
-					BaseEntityManagerWrapper.GetInstance().UpdateEntityAngularVelocity(BackingObject, value);
+				{
+					Action action = InternalUpdateEntityAngularVelocity;
+					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -280,31 +286,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				initMethod.Invoke(BackingObject, new object[] { GetSubTypeEntity() });
 
 				//Add the entity to the scene
-				BaseEntityManagerWrapper.GetInstance().AddEntity(BackingObject);
+				SandboxGameAssemblyWrapper.AddEntity(BackingObject);
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
 			}
-		}
-
-		#endregion
-	}
-
-	public class CubeGridManager : BaseEntityManager
-	{
-		#region "Methods"
-
-		new protected bool GetChangedState(CubeGridEntity overLayer)
-		{
-			foreach (var def in overLayer.CubeBlocks)
-			{
-				CubeBlockEntity cubeBlock = (CubeBlockEntity)def;
-				if (cubeBlock.Changed)
-					return true;
-			}
-
-			return overLayer.Changed;
 		}
 
 		#endregion
