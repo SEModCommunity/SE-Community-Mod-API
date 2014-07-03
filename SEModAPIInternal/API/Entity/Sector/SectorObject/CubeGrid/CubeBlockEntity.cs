@@ -167,8 +167,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		}
 
 		[Category("Cube Block")]
-		[Description("Added as of 1.035.005")]
-		public ulong Owner
+		public long Owner
 		{
 			get { return GetSubTypeEntity().Owner; }
 			set
@@ -180,27 +179,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		}
 
 		[Category("Cube Block")]
-		[Description("Added as of 1.035.005")]
-		public bool ShareWithFaction
+		[Description("Added as of 1.037.000")]
+		public MyOwnershipShareModeEnum ShareMode
 		{
-			get { return GetSubTypeEntity().ShareWithFaction; }
+			get { return GetSubTypeEntity().ShareMode; }
 			set
 			{
-				if (GetSubTypeEntity().ShareWithFaction == value) return;
-				GetSubTypeEntity().ShareWithFaction = value;
-				Changed = true;
-			}
-		}
-
-		[Category("Cube Block")]
-		[Description("Added as of 1.035.005")]
-		public bool ShareWithAll
-		{
-			get { return GetSubTypeEntity().ShareWithAll; }
-			set
-			{
-				if (GetSubTypeEntity().ShareWithAll == value) return;
-				GetSubTypeEntity().ShareWithAll = value;
+				if (GetSubTypeEntity().ShareMode == value) return;
+				GetSubTypeEntity().ShareMode = value;
 				Changed = true;
 			}
 		}

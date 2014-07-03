@@ -35,9 +35,7 @@
 			this.BTN_ServerControl_Start = new System.Windows.Forms.Button();
 			this.BTN_ServerControl_Stop = new System.Windows.Forms.Button();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-			this.LBL_Control_EnableFactions = new System.Windows.Forms.Label();
 			this.LBL_Control_Debugging = new System.Windows.Forms.Label();
-			this.CHK_Control_EnableFactions = new System.Windows.Forms.CheckBox();
 			this.CHK_Control_Debugging = new System.Windows.Forms.CheckBox();
 			this.TAB_Entities_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -183,26 +181,15 @@
 			// 
 			// splitContainer4.Panel1
 			// 
-			this.splitContainer4.Panel1.Controls.Add(this.LBL_Control_EnableFactions);
 			this.splitContainer4.Panel1.Controls.Add(this.LBL_Control_Debugging);
 			this.splitContainer4.Panel1MinSize = 120;
 			// 
 			// splitContainer4.Panel2
 			// 
-			this.splitContainer4.Panel2.Controls.Add(this.CHK_Control_EnableFactions);
 			this.splitContainer4.Panel2.Controls.Add(this.CHK_Control_Debugging);
 			this.splitContainer4.Size = new System.Drawing.Size(478, 638);
 			this.splitContainer4.SplitterDistance = 120;
 			this.splitContainer4.TabIndex = 0;
-			// 
-			// LBL_Control_EnableFactions
-			// 
-			this.LBL_Control_EnableFactions.AutoSize = true;
-			this.LBL_Control_EnableFactions.Location = new System.Drawing.Point(3, 26);
-			this.LBL_Control_EnableFactions.Name = "LBL_Control_EnableFactions";
-			this.LBL_Control_EnableFactions.Size = new System.Drawing.Size(86, 13);
-			this.LBL_Control_EnableFactions.TabIndex = 1;
-			this.LBL_Control_EnableFactions.Text = "Enable Factions:";
 			// 
 			// LBL_Control_Debugging
 			// 
@@ -212,16 +199,6 @@
 			this.LBL_Control_Debugging.Size = new System.Drawing.Size(98, 13);
 			this.LBL_Control_Debugging.TabIndex = 0;
 			this.LBL_Control_Debugging.Text = "Enable Debugging:";
-			// 
-			// CHK_Control_EnableFactions
-			// 
-			this.CHK_Control_EnableFactions.AutoSize = true;
-			this.CHK_Control_EnableFactions.Location = new System.Drawing.Point(3, 26);
-			this.CHK_Control_EnableFactions.Name = "CHK_Control_EnableFactions";
-			this.CHK_Control_EnableFactions.Size = new System.Drawing.Size(15, 14);
-			this.CHK_Control_EnableFactions.TabIndex = 1;
-			this.CHK_Control_EnableFactions.UseVisualStyleBackColor = true;
-			this.CHK_Control_EnableFactions.CheckedChanged += new System.EventHandler(this.CHK_Control_EnableFactions_CheckedChanged);
 			// 
 			// CHK_Control_Debugging
 			// 
@@ -291,8 +268,8 @@
 			this.TRV_Entities.Name = "TRV_Entities";
 			this.TRV_Entities.Size = new System.Drawing.Size(300, 603);
 			this.TRV_Entities.TabIndex = 0;
-			this.TRV_Entities.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TRV_Entities_NodeRefresh);
 			this.TRV_Entities.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_Entities_AfterSelect);
+			this.TRV_Entities.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TRV_Entities_NodeRefresh);
 			// 
 			// BTN_Entities_Export
 			// 
@@ -521,8 +498,6 @@
 		private System.Windows.Forms.Button BTN_Entities_Delete;
 		private System.Windows.Forms.Label LBL_Control_Debugging;
 		private System.Windows.Forms.CheckBox CHK_Control_Debugging;
-		private System.Windows.Forms.Label LBL_Control_EnableFactions;
-		private System.Windows.Forms.CheckBox CHK_Control_EnableFactions;
 		private System.Windows.Forms.Button BTN_Entities_Export;
 		private System.Windows.Forms.TabPage TAB_Chat_Page;
 		private System.Windows.Forms.SplitContainer splitContainer6;

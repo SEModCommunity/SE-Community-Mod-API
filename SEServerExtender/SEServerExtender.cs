@@ -556,11 +556,6 @@ namespace SEServerExtender
 			SandboxGameAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
 		}
 
-		private void CHK_Control_EnableFactions_CheckedChanged(object sender, EventArgs e)
-		{
-			SandboxGameAssemblyWrapper.EnableFactions(CHK_Control_EnableFactions.CheckState == CheckState.Checked);
-		}
-
 		private void BTN_Entities_Export_Click(object sender, EventArgs e)
 		{
 			Object linkedObject = TRV_Entities.SelectedNode.Tag;

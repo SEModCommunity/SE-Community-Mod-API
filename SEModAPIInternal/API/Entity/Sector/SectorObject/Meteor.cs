@@ -46,6 +46,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		}
 
 		[Category("Meteor")]
+		[Browsable(true)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public override SerializableVector3 LinearVelocity
 		{
@@ -65,6 +66,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		}
 
 		[Category("Meteor")]
+		[Browsable(true)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public override SerializableVector3 AngularVelocity
 		{

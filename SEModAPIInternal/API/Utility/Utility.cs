@@ -86,7 +86,7 @@ namespace SEModAPIInternal.API.Utility
 			{
 				Type utilityType = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(UtilityClass);
 				MethodInfo generateIdMethod = utilityType.GetMethod(UtilityGenerateEntityId, BindingFlags.Public | BindingFlags.Static);
-				long entityId = (long)generateIdMethod.Invoke(null, new object[] { });
+				long entityId = (long)generateIdMethod.Invoke(null, new object[] { Type.Missing });
 
 				return entityId;
 			}

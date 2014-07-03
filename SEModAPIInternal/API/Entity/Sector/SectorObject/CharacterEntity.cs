@@ -56,6 +56,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#region "Properties"
 
 		[Category("Character")]
+		[Browsable(true)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public override SerializableVector3 LinearVelocity
 		{
