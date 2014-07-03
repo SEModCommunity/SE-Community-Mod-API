@@ -296,4 +296,64 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#endregion
 	}
+
+	public class CubeGridNetworkManager
+	{
+		public enum CubeGridPacketIds
+		{
+			CubeBlockHashSet = 14,				//..AAC558DB3CA968D0D3B965EA00DF05D4
+			Packet1_2 = 15,
+			Packet1_3 = 16,
+			Packet1_4 = 17,
+			Packet1_5 = 18,
+			Packet1_6 = 19,
+
+			Packet2_1 = 24,
+			Packet2_2 = 25,
+			Packet2_3 = 26,
+			Packet2_4 = 27,
+			Packet2_5 = 28,
+			Packet2_6 = 29,
+
+			Packet3_1 = 15262,
+			Packet3_2 = 15263,
+			Packet3_3 = 15264,
+			Packet3_4 = 15265,
+			Packet3_5 = 15266,
+
+			Packet4_1 = 15271,
+		}
+
+		#region "Attributes"
+
+		private CubeGridEntity m_cubeGrid;
+		private Object m_netManager;
+
+		public static string CubeGridGetNetManagerMethod = "AF2DACDED0370C8DBA03A53FDA4E2C47";
+
+		//18 Packet Types
+		public static string CubeGridNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string CubeGridNetManagerClass = "E727876839B1C8FFEE302CD2A1948CDA";
+
+		public static string CubeGridNetManagerCubeBlocksToDestroyField = "8E76EFAC4EED3B61D48795B2CD5AF989";
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public CubeGridNetworkManager(CubeGridEntity cubeGrid)
+		{
+			var entity = cubeGrid.BackingObject;
+			m_netManager = BaseObject.InvokeEntityMethod(entity, CubeGridGetNetManagerMethod);
+		}
+
+		#endregion
+
+		#region "Properties"
+		#endregion
+
+		#region "Methods"
+
+		#endregion
+	}
 }

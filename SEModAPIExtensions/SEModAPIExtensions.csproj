@@ -37,17 +37,39 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="API\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Plugin\IPlugin.cs" />
-    <Compile Include="Plugin\ExamplePlugin.cs" />
-    <Compile Include="Plugin\PluginBase.cs" />
+    <Compile Include="API\ChatManager.cs" />
+    <Compile Include="API\Plugin\Events\ICubeGridHandler.cs" />
+    <Compile Include="API\Plugin\Events\IPlayerEventHandler.cs" />
+    <Compile Include="API\Plugin\IPlugin.cs" />
+    <Compile Include="API\Plugin\ExamplePlugin.cs" />
+    <Compile Include="API\Plugin\PluginBase.cs" />
+    <Compile Include="API\PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Sandbox.Common.XmlSerializers">
+      <HintPath>..\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="SteamSDK">
+      <HintPath>..\GameLibraries\SteamSDK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="VRage.Common">
+      <HintPath>..\GameLibraries\VRage.Common.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SEModAPIInternal\SEModAPIInternal.csproj">
+      <Project>{8C4B07B6-0864-497A-ACAA-18BABE2F4168}</Project>
+      <Name>SEModAPIInternal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SEModAPI\SEModAPI.csproj">
+      <Project>{94E6C913-9456-408D-BDEE-56B48B5397D4}</Project>
+      <Name>SEModAPI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

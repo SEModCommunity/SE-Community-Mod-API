@@ -6,9 +6,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
+using SEModAPIInternal.API.Server;
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 
-namespace SEModAPIInternal.API.Common
+namespace SEModAPIExtensions.API
 {
 	public class ChatManager
 	{
@@ -18,6 +20,9 @@ namespace SEModAPIInternal.API.Common
 
 		private static List<string> m_chatMessages;
 		private static bool m_chatHandlerSetup;
+
+		public static string ChatMessageStruct = "C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668";
+		public static string ChatMessageMessageField = "EDCBEBB604B287DFA90A5A46DC7AD28D";
 
 		#endregion
 
@@ -33,18 +38,21 @@ namespace SEModAPIInternal.API.Common
 			Console.WriteLine("Finished loading ChatManager");
 		}
 
-		public static ChatManager GetInstance()
-		{
-			if (m_instance == null)
-			{
-				m_instance = new ChatManager();
-			}
-			return (ChatManager)m_instance;
-		}
-
 		#endregion
 
 		#region "Properties"
+
+		public static ChatManager Instance
+		{
+			get
+			{
+				if (m_instance == null)
+				{
+					m_instance = new ChatManager();
+				}
+				return m_instance;
+			}
+		}
 
 		public List<string> ChatMessages
 		{
@@ -71,19 +79,15 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				var sandboxGame = SandboxGameAssemblyWrapper.GetInstance();
-
 				if (m_chatHandlerSetup == true)
 					return;
 
-				if (sandboxGame.GetSteamInterface() == null)
-					return;
-
-				if (sandboxGame.GetServerSteamManager() == null)
+				var netManager = ServerNetworkManager.GetNetworkManager();
+				if (netManager == null)
 					return;
 
 				Action<ulong, string, ChatEntryTypeEnum> chatHook = ReceiveChatMessage;
-				RegisterChatReceiver(chatHook);
+				ServerNetworkManager.Instance.RegisterChatReceiver(chatHook);
 
 				m_chatHandlerSetup = true;
 			}
@@ -93,43 +97,12 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public void RegisterChatReceiver(Action<ulong, string, ChatEntryTypeEnum> action)
-		{
-			var sandboxGame = SandboxGameAssemblyWrapper.GetInstance();
-			Type serverSteamManagerType = sandboxGame.GameAssembly.GetType("C42525D7DE28CE4CFB44651F3D03A50D.3B0B7A338600A7B9313DE1C3723DAD14");
-			MethodInfo registerChatHook = serverSteamManagerType.BaseType.GetMethod("8A73057A206BFCA00EC372183441891A");
-			registerChatHook.Invoke(sandboxGame.GetServerSteamManager(), new object[] { action });
-		}
-
 		public void ReceiveChatMessage(ulong remoteUserId, string message, ChatEntryTypeEnum entryType)
 		{
 			string playerName = remoteUserId.ToString();
 
 			if (entryType == ChatEntryTypeEnum.ChatMsg)
 			{
-				//TODO - Find a way to do this without causing the server to freak out and crash
-				/*
-				try
-				{
-					if (SteamAPI.Instance != null)
-					{
-						SteamAPI api = SteamAPI.Instance;
-						if (api.Friends != null)
-						{
-							Friends friends = api.Friends;
-							if (friends.HasFriend(remoteUserId))
-							{
-								playerName = friends.GetPersonaName(remoteUserId);
-							}
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
-				*/
-
 				m_chatMessages.Add(playerName + ": " + message);
 			}
 
@@ -145,18 +118,13 @@ namespace SEModAPIInternal.API.Common
 
 			try
 			{
-				Object serverSteamManager = sandboxGame.GetServerSteamManager();
-				MethodInfo sendStructMethod = serverSteamManager.GetType().BaseType.GetMethod("6D24456D3649B6393BA2AF59E656E4BF", BindingFlags.NonPublic | BindingFlags.Instance);
-
-				Type chatMessageStructType = sandboxGame.GameAssembly.GetType("C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668");
-				FieldInfo messageField = chatMessageStructType.GetField("EDCBEBB604B287DFA90A5A46DC7AD28D");
+				Type chatMessageStructType = sandboxGame.GameAssembly.GetType(ChatMessageStruct);
+				FieldInfo messageField = chatMessageStructType.GetField(ChatMessageMessageField);
 
 				Object chatMessageStruct = Activator.CreateInstance(chatMessageStructType);
 				messageField.SetValue(chatMessageStruct, message);
 
-				sendStructMethod = sendStructMethod.MakeGenericMethod(chatMessageStructType);
-
-				sendStructMethod.Invoke(serverSteamManager, new object[] { remoteUserId, chatMessageStruct });
+				ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStructType);
 
 				m_chatMessages.Add("Server: " + message);
 			}
@@ -175,7 +143,7 @@ namespace SEModAPIInternal.API.Common
 
 			try
 			{
-				List<ulong> connectedPlayers = sandboxGame.GetConnectedPlayers();
+				List<ulong> connectedPlayers = ServerNetworkManager.Instance.GetConnectedPlayers();
 				foreach (ulong remoteUserId in connectedPlayers)
 				{
 					SendPrivateChatMessage(remoteUserId, message);

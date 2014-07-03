@@ -89,6 +89,12 @@ namespace SEModAPIInternal.API.Common
 
 		public static string NetworkSerializerClass = "5F381EA9388E0A32A8C817841E192BE8.8EFE49A46AB934472427B7D117FD3C64";
 		public static string NetworkSerializerSendEntity = "A6B585C993B43E72219511726BBB0649";
+
+		public static string ObjectFactoryNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string ObjectFactoryClass = "E825333D6467D99DD83FB850C600395C";
+		public static string ObjectFactoryCreateEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
+		public static string ObjectFactoryCreateTypedEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -138,11 +144,6 @@ namespace SEModAPIInternal.API.Common
 		public Type MainGameType
 		{
 			get { return m_mainGameType; }
-		}
-
-		public Type CheckpointManagerType
-		{
-			get { return m_checkpointManagerType; }
 		}
 
 		public static bool IsDebugging
@@ -389,92 +390,40 @@ namespace SEModAPIInternal.API.Common
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex.ToString());
+				LogManager.GameLog.WriteLine(ex);
 				return;
 			}
 		}
 
-		public Object GetSteamInterface()
-		{
-			MethodInfo getSteamInterface = MainGameType.GetMethod("B2BA465BE723C583AB344246B0272095", BindingFlags.Public | BindingFlags.Static);
-			Object steamInterface = getSteamInterface.Invoke(null, new object[] { });
-
-			return steamInterface;
-		}
-
-		public Object GetServerSteamManager()
-		{
-			Type networkManagerWrapper = GameAssembly.GetType("C42525D7DE28CE4CFB44651F3D03A50D.8920513CC2D9F0BEBCDC74DBD637049F");
-			FieldInfo networkManagerField = networkManagerWrapper.GetField("8E8199A1194065205F01051DC8B72DE7", BindingFlags.NonPublic | BindingFlags.Static);
-			Object serverSteamManager = networkManagerField.GetValue(null);
-
-			return serverSteamManager;
-		}
-
 		public bool IsGameStarted()
-		{
-			var mainGame = GetMainGameInstance();
-			if (mainGame == null)
-				return false;
-
-			if (!m_isGameLoaded)
-			{
-				FieldInfo gameLoadedField = MainGameType.BaseType.GetField(MainGameIsLoadedField, BindingFlags.NonPublic | BindingFlags.Instance);
-				bool someValue = (bool)gameLoadedField.GetValue(mainGame);
-				if (someValue)
-				{
-					m_isGameLoaded = true;
-
-					return true;
-				}
-
-				return false;
-			}
-
-			return true;
-		}
-
-		public List<ulong> GetConnectedPlayers()
-		{
-			Object steamServerManager = GetServerSteamManager();
-			if (steamServerManager == null)
-				return new List<ulong>();
-
-			FieldInfo connectedPlayersField = steamServerManager.GetType().GetField("89E92B070228A8BC746EFB57A3F6D2E5", BindingFlags.NonPublic | BindingFlags.Instance);
-			List<ulong> connectedPlayers = (List<ulong>)connectedPlayersField.GetValue(steamServerManager);
-
-			return connectedPlayers;
-		}
-
-		public void PeerSessionRequest(ulong remoteUserId)
-		{
-			ChatManager.GetInstance().ChatMessages.Add(remoteUserId.ToString() + " is connecting ...");
-			LogManager.APILog.WriteLine("Steam user '" + remoteUserId.ToString() + "' submitted a p2p session request");
-		}
-
-		public void SetupSessionRequestHandlers()
 		{
 			try
 			{
-				if (GetSteamInterface() == null)
-					return;
+				var mainGame = GetMainGameInstance();
+				if (mainGame == null)
+					return false;
 
-				if (GetServerSteamManager() == null)
-					return;
+				if (!m_isGameLoaded)
+				{
+					FieldInfo gameLoadedField = MainGameType.BaseType.GetField(MainGameIsLoadedField, BindingFlags.NonPublic | BindingFlags.Instance);
+					bool someValue = (bool)gameLoadedField.GetValue(mainGame);
+					if (someValue)
+					{
+						m_isGameLoaded = true;
 
-				Peer2Peer.SessionRequest += new SessionRequest(PeerSessionRequest);
+						return true;
+					}
+
+					return false;
+				}
+
+				return true;
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
+				return false;
 			}
-		}
-
-		public void SetPlayerBan(ulong remoteUserId, bool isBanned)
-		{
-			Object steamServerManager = GetServerSteamManager();
-			MethodInfo banPlayerMethod = steamServerManager.GetType().GetMethod("E65F4CDD9FACA817DB685540E98F318C");
-			banPlayerMethod.Invoke(steamServerManager, new object[] { remoteUserId, isBanned });
 		}
 
 		public static void KickPlayer(ulong steamId)
@@ -534,8 +483,8 @@ namespace SEModAPIInternal.API.Common
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				return null;
+				LogManager.GameLog.WriteLine(ex);
+				return new HashSet<Object>();
 			}
 		}
 
@@ -562,7 +511,7 @@ namespace SEModAPIInternal.API.Common
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex.ToString());
+					LogManager.GameLog.WriteLine(ex);
 				}
 			}
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SEModAPIExtensions.Plugin
+namespace SEModAPIExtensions.API.Plugin
 {
 	public class ExamplePlugin : PluginBase
 	{

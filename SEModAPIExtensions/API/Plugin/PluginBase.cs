@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace SEModAPIExtensions.Plugin
+namespace SEModAPIExtensions.API.Plugin
 {
 	public abstract class PluginBase : IPlugin
 	{

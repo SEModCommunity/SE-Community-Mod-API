@@ -82,6 +82,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SEModAPIExtensions\SEModAPIExtensions.csproj">
+      <Project>{727B1141-2124-4A31-82FA-CAE218501215}</Project>
+      <Name>SEModAPIExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SEModAPIInternal\SEModAPIInternal.csproj">
       <Project>{8C4B07B6-0864-497A-ACAA-18BABE2F4168}</Project>
       <Name>SEModAPIInternal</Name>

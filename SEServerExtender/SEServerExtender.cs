@@ -15,6 +15,8 @@ using Sandbox.Common.ObjectBuilders.VRageData;
 using SEModAPI.API;
 using SEModAPI.Support;
 
+using SEModAPIExtensions.API;
+
 using SEModAPIInternal.API;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
@@ -210,7 +212,7 @@ namespace SEServerExtender
 		{
 			LST_Chat_Messages.BeginUpdate();
 
-			string[] chatMessages = ChatManager.GetInstance().ChatMessages.ToArray();
+			string[] chatMessages = ChatManager.Instance.ChatMessages.ToArray();
 			if (chatMessages.Length != LST_Chat_Messages.Items.Count)
 			{
 				LST_Chat_Messages.Items.Clear();
@@ -224,7 +226,7 @@ namespace SEServerExtender
 
 			LST_Chat_ConnectedPlayers.BeginUpdate();
 
-			List<ulong> connectedPlayers = SandboxGameAssemblyWrapper.GetInstance().GetConnectedPlayers();
+			List<ulong> connectedPlayers = ServerNetworkManager.Instance.GetConnectedPlayers();
 			if (connectedPlayers.Count != LST_Chat_ConnectedPlayers.Items.Count)
 			{
 				LST_Chat_ConnectedPlayers.Items.Clear();
@@ -601,7 +603,7 @@ namespace SEServerExtender
 			string message = TXT_Chat_Message.Text;
 			if (message != null && message != "")
 			{
-				ChatManager.GetInstance().SendPublicChatMessage(message);
+				ChatManager.Instance.SendPublicChatMessage(message);
 				TXT_Chat_Message.Text = "";
 			}
 		}
@@ -613,7 +615,7 @@ namespace SEServerExtender
 				string message = TXT_Chat_Message.Text;
 				if (message != null && message != "")
 				{
-					ChatManager.GetInstance().SendPublicChatMessage(message);
+					ChatManager.Instance.SendPublicChatMessage(message);
 					TXT_Chat_Message.Text = "";
 				}
 			}

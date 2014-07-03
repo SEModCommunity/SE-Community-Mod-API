@@ -8,6 +8,8 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
+using SEModAPIInternal.Support;
+
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
 	public class ReactorEntity : FunctionalBlockEntity
@@ -15,6 +17,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Attributes"
 
 		private InventoryEntity m_Inventory;
+
+		public static string ReactorNamespace = "";
+		public static string ReactorClass = "";
+
+		public static string ReactorGetInventoryMethod = "GetInventory";
 
 		#endregion
 
@@ -29,7 +36,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public ReactorEntity(MyObjectBuilder_Reactor definition, Object backingObject)
 			: base(definition, backingObject)
 		{
-			m_Inventory = new InventoryEntity(definition.Inventory);	//TODO - Add a method to get the reactors backing inventory object
+			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetCharacterInventory());
 		}
 
 		#endregion
@@ -40,7 +47,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Browsable(false)]
 		public InventoryEntity Inventory
 		{
-			get { return m_Inventory; }
+			get
+			{
+				if (m_Inventory.BackingObject == null)
+					m_Inventory.BackingObject = InternalGetCharacterInventory();
+				return m_Inventory;
+			}
 		}
 
 		[Category("Reactor")]
@@ -51,7 +63,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				float fuelMass = 0;
 				foreach (var item in m_Inventory.Items)
 				{
-					fuelMass += item.Mass;
+					fuelMass += item.Mass * item.Amount;
 				}
 				return fuelMass;
 			}
@@ -67,8 +79,34 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		/// <returns>The casted instance into the class type</returns>
 		new internal MyObjectBuilder_Reactor GetSubTypeEntity()
 		{
-			return (MyObjectBuilder_Reactor)BaseEntity;
+			MyObjectBuilder_Reactor reactor = (MyObjectBuilder_Reactor)BaseEntity;
+
+			//Make sure the inventory is up-to-date
+			reactor.Inventory = Inventory.GetSubTypeEntity();
+
+			return reactor;
 		}
+
+		#region "Internal"
+
+		protected Object InternalGetCharacterInventory()
+		{
+			try
+			{
+				Object baseObject = BackingObject;
+				Object actualObject = GetActualObject();
+				Object inventory = InvokeEntityMethod(actualObject, ReactorGetInventoryMethod, new object[] { 0 });
+
+				return inventory;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		#endregion
 
 		#endregion
 	}

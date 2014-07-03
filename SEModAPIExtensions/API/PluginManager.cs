@@ -6,13 +6,14 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using SEModAPIExtensions.Plugin;
+using SEModAPIExtensions.API.Plugin;
 
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
 
-namespace SEModAPIInternal.API.Common
+namespace SEModAPIExtensions.API
 {
 	public class PluginManager
 	{
