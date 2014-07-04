@@ -223,7 +223,7 @@ namespace SEConfigTool
 					TreeNode blockNode = null;
 					Type cubeType = cubeBlockObject.GetType();
 
-					if (cubeBlockObject is CubeBlockEntity)
+					if (cubeType == typeof(CubeBlockEntity))
 					{
 						CubeBlockEntity cubeBlock = (CubeBlockEntity)cubeBlockObject;
 						string nodeName = cubeBlock.Name;
@@ -284,7 +284,7 @@ namespace SEConfigTool
 						}
 					}
 
-					if (cubeBlockObject is CargoContainerEntity)
+					if (cubeType == typeof(CargoContainerEntity))
 					{
 						CargoContainerEntity cargoContainer = (CargoContainerEntity)cubeBlockObject;
 
@@ -297,7 +297,7 @@ namespace SEConfigTool
 						}
 					}
 
-					if (cubeBlockObject is ReactorEntity)
+					if (cubeType == typeof(ReactorEntity))
 					{
 						ReactorEntity reactorBlock = (ReactorEntity)cubeBlockObject;
 
@@ -310,28 +310,28 @@ namespace SEConfigTool
 						}
 					}
 
-					if (cubeBlockObject is MedicalRoomEntity)
+					if (cubeType == typeof(MedicalRoomEntity))
 					{
 						MedicalRoomEntity medicalBlock = (MedicalRoomEntity)cubeBlockObject;
 
 						blockNode = utilityBlocksNode.Nodes.Add(medicalBlock.EntityId.ToString(), medicalBlock.Name);
 					}
 
-					if (cubeBlockObject is CockpitEntity)
+					if (cubeType == typeof(CockpitEntity))
 					{
 						CockpitEntity cockpitBlock = (CockpitEntity)cubeBlockObject;
 
 						blockNode = utilityBlocksNode.Nodes.Add(cockpitBlock.EntityId.ToString(), cockpitBlock.Name);
 					}
 
-					if (cubeBlockObject is BeaconEntity)
+					if (cubeType == typeof(BeaconEntity))
 					{
 						BeaconEntity beaconBlock = (BeaconEntity)cubeBlockObject;
 
 						blockNode = utilityBlocksNode.Nodes.Add(beaconBlock.EntityId.ToString(), beaconBlock.Name);
 					}
 
-					if (cubeBlockObject is GravityGeneratorEntity)
+					if (cubeType == typeof(GravityGeneratorEntity))
 					{
 						GravityGeneratorEntity gravityGenerator = (GravityGeneratorEntity)cubeBlockObject;
 

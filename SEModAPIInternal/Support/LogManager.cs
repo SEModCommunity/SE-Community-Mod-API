@@ -30,10 +30,6 @@ namespace SEModAPIInternal.Support
 		{
 			m_instance = this;
 
-			m_apiLog = new MyLog();
-			StringBuilder internalAPIAppVersion = new StringBuilder(typeof(LogManager).Assembly.GetName().Version.ToString());
-			m_apiLog.Init("SEModAPIInternal.log", internalAPIAppVersion);
-
 			Console.WriteLine("Finished loading LogManager");
 		}
 
@@ -79,6 +75,20 @@ namespace SEModAPIInternal.Support
 			get
 			{
 				GetInstance();
+
+				if (m_apiLog == null)
+				{
+					try
+					{
+						m_apiLog = new MyLog();
+						StringBuilder internalAPIAppVersion = new StringBuilder(typeof(LogManager).Assembly.GetName().Version.ToString());
+						m_apiLog.Init("SEModAPIInternal.log", internalAPIAppVersion);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.ToString());
+					}
+				}
 
 				return m_apiLog;
 			}
