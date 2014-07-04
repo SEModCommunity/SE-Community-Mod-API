@@ -22,8 +22,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string FunctionalBlockClass = "7085736D64DCC58ED5DCA05FFEEA9664";
 
 		public static string FunctionalBlockSetEnabledMethod = "97EC0047E8B562F4590B905BD8571F51";
-
-		public static string FunctionalBlockEnabledField = "E709223DC3967197963301DC85A6DE75";
+		public static string FunctionalBlockBroadcastEnabledMethod = "D979DB9AA474782929587EC7DE5E53AA";
 
 		#endregion
 
@@ -90,8 +89,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				{
 					actualType = actualType.BaseType;
 				}
-				MethodInfo method2 = actualType.GetMethod(FunctionalBlockSetEnabledMethod, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+				MethodInfo method2 = actualType.GetMethod(FunctionalBlockSetEnabledMethod);
 				method2.Invoke(actualCubeObject, new object[] { Enabled });
+				MethodInfo method3 = actualType.GetMethod(FunctionalBlockBroadcastEnabledMethod);
+				method3.Invoke(actualCubeObject, new object[] { Enabled });
 			}
 			catch (Exception ex)
 			{

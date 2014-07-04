@@ -36,6 +36,8 @@ namespace SEModAPIInternal.API.Common
 		FloatingObjectAltPositionOrientation = 10150,	//..564E654F19DA5C21E7869B4744304993
 		FloatingObjectContents = 10151,					//..0008E59AE36FA0F2E7ED91037507E4E8
 		ChatMessage = 13872,							//C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668
+		TerminalFunctionalBlockEnabled = 15268,			//..7F2B3C2BC4F8C6F50583C135CA112213
+		TerminalFunctionalBlockName = 15269,			//..721B404F9CB193B34D5353A019A57DAB
 	}
 
 	public abstract class NetworkManager
@@ -95,6 +97,10 @@ namespace SEModAPIInternal.API.Common
 		//5 Packet Types
 		public static string CharacterNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string CharacterNetManagerClass = "FA70B722FFD1F55F5A5019DA2499E60B";
+
+		//2 Packet Types
+		public static string TerminalFunctionalBlocksNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string TerminalFunctionalBlocksNetManagerClass = "850F199A13F4F6D5ED23E89E7F8D99CD";
 
 		#endregion
 
@@ -211,12 +217,12 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		protected Dictionary<Type, ushort> GetRegisteredPacketTypes()
+		public Dictionary<Type, ushort> GetRegisteredPacketTypes()
 		{
 			try
 			{
 				Object packetRegistry = GetPacketRegistry();
-				FieldInfo typeIdMapField = packetRegistry.GetType().GetField(PacketRegistryTypeIdMapField);
+				FieldInfo typeIdMapField = packetRegistry.GetType().GetField(PacketRegistryTypeIdMapField, BindingFlags.NonPublic | BindingFlags.Static);
 				Dictionary<Type, ushort> packetTypeIdMap = (Dictionary<Type, ushort>)typeIdMapField.GetValue(packetRegistry);
 
 				return packetTypeIdMap;

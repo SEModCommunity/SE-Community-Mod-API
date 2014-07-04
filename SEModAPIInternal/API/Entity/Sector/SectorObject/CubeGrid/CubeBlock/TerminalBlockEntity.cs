@@ -22,6 +22,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string TerminalBlockClass = "CCFD704C70C3F20F7E84E8EA42D7A730";
 		public static string TerminalBlockGetCustomNameMethod = "DE9705A29F3FE6F1E501595879B2E54F";
 		public static string TerminalBlockSetCustomNameMethod = "774FC8084C0899CEF5C8DAE867B847FE";
+		public static string TerminalBlockBroadcastCustomNameMethod = "97B2C51E83D10649FBF8E598D77C8BF8";
 
 		#endregion
 
@@ -103,6 +104,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				}
 				MethodInfo method2 = actualType.GetMethod(TerminalBlockSetCustomNameMethod, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 				method2.Invoke(actualCubeObject, new object[] { newCustomName });
+				MethodInfo method3 = actualType.GetMethod(TerminalBlockBroadcastCustomNameMethod, BindingFlags.NonPublic | BindingFlags.Static);
+				method3.Invoke(null, new object[] { actualCubeObject, newCustomName.ToString() });
 			}
 			catch (Exception ex)
 			{
