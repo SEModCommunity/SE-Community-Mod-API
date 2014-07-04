@@ -36,7 +36,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public ReactorEntity(MyObjectBuilder_Reactor definition, Object backingObject)
 			: base(definition, backingObject)
 		{
-			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetCharacterInventory());
+			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetReactorInventory());
 		}
 
 		#endregion
@@ -52,7 +52,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				if (BackingObject != null)
 				{
 					if (m_Inventory.BackingObject == null)
-						m_Inventory.BackingObject = InternalGetCharacterInventory();
+						m_Inventory.BackingObject = InternalGetReactorInventory();
 				}
 				return m_Inventory;
 			}
@@ -92,7 +92,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Internal"
 
-		protected Object InternalGetCharacterInventory()
+		protected Object InternalGetReactorInventory()
 		{
 			try
 			{

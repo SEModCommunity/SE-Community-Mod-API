@@ -74,7 +74,17 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public override string Name
 		{
-			get { return Subtype; }
+			get
+			{
+				String name = Subtype;
+				if (name == null || name == "" )
+					name = TypeId.ToString();
+				if (name == null || name == "")
+					name = EntityId.ToString();
+				if (name == null || name == "")
+					name = "Cube Block";
+				return name;
+			}
 		}
 
 		/// <summary>
