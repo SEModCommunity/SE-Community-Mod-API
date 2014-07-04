@@ -49,6 +49,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			: base(definition, backingObject)
 		{
 			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetCharacterInventory());
+
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnPlayerJoined;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			EntityEventManager.Instance.EntityEvents.Add(newEvent);
 		}
 
 		#endregion
@@ -157,6 +163,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 
 		#region "Methods"
+
+		new public void Dispose()
+		{
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnPlayerLeft;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			EntityEventManager.Instance.EntityEvents.Add(newEvent);
+		}
 
 		/// <summary>
 		/// Method to get the casted instance from parent signature

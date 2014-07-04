@@ -30,7 +30,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity
 {
-	public class BaseEntity : BaseObject, IDisposable
+	public class BaseEntity : BaseObject
 	{
 		#region "Attributes"
 
@@ -59,7 +59,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 		}
 
-		public void Dispose()
+		new public void Dispose()
 		{
 			if (BackingObject != null)
 			{

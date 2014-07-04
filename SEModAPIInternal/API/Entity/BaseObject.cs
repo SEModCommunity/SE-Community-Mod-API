@@ -21,7 +21,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity
 {
-	public class BaseObject
+	public class BaseObject : IDisposable
 	{
 		#region "Attributes"
 
@@ -162,6 +162,14 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 
 		#region "Methods"
+
+		public void Dispose()
+		{
+			if (BackingObject != null)
+			{
+				//Do stuff
+			}
+		}
 
 		/// <summary>
 		/// Method to get the casted instance from parent signature

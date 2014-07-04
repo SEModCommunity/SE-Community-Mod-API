@@ -177,6 +177,38 @@ namespace SEModAPIExtensions.API
 
 			foreach (var plugin in m_plugins.Values)
 			{
+				List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
+				foreach (EntityEventManager.EntityEvent entityEvent in events)
+				{
+					switch (entityEvent.type)
+					{
+						case EntityEventManager.EntityEventType.OnPlayerJoined:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerJoined");
+								//TODO - Get the right remote user Id here
+								updateMethod.Invoke(plugin, new object[] { (ulong)0, entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
+						case EntityEventManager.EntityEventType.OnPlayerLeft:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerLeft");
+								//TODO - Get the right remote user Id here
+								updateMethod.Invoke(plugin, new object[] { (ulong)0, entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
+					}
+				}
+
 				try
 				{
 					MethodInfo updateMethod = plugin.GetType().GetMethod("Update");
@@ -187,6 +219,8 @@ namespace SEModAPIExtensions.API
 					LogManager.APILog.WriteLine(ex);
 				}
 			}
+
+			EntityEventManager.Instance.EntityEvents.Clear();
 		}
 
 		#endregion
