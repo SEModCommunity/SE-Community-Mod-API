@@ -14,13 +14,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Constructors and Initializers"
 
-		public CockpitEntity(MyObjectBuilder_Cockpit definition)
-			: base(definition)
+		public CockpitEntity(CubeGridEntity parent, MyObjectBuilder_Cockpit definition)
+			: base(parent, definition)
 		{
 		}
 
-		public CockpitEntity(MyObjectBuilder_Cockpit definition, Object backingObject)
-			: base(definition, backingObject)
+		public CockpitEntity(CubeGridEntity parent, MyObjectBuilder_Cockpit definition, Object backingObject)
+			: base(parent, definition, backingObject)
 		{
 		}
 

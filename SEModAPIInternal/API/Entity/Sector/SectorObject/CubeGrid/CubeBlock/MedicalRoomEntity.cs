@@ -14,13 +14,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Constructors and Initializers"
 
-		public MedicalRoomEntity(MyObjectBuilder_MedicalRoom definition)
-			: base(definition)
+		public MedicalRoomEntity(CubeGridEntity parent, MyObjectBuilder_MedicalRoom definition)
+			: base(parent, definition)
 		{
 		}
 
-		public MedicalRoomEntity(MyObjectBuilder_MedicalRoom definition, Object backingObject)
-			: base(definition, backingObject)
+		public MedicalRoomEntity(CubeGridEntity parent, MyObjectBuilder_MedicalRoom definition, Object backingObject)
+			: base(parent, definition, backingObject)
 		{
 		}
 

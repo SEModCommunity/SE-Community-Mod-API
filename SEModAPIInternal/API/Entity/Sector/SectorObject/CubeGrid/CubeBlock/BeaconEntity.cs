@@ -14,13 +14,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Constructors and Initializers"
 
-		public BeaconEntity(MyObjectBuilder_Beacon definition)
-			: base(definition)
+		public BeaconEntity(CubeGridEntity parent, MyObjectBuilder_Beacon definition)
+			: base(parent, definition)
 		{
 		}
 
-		public BeaconEntity(MyObjectBuilder_Beacon definition, Object backingObject)
-			: base(definition, backingObject)
+		public BeaconEntity(CubeGridEntity parent, MyObjectBuilder_Beacon definition, Object backingObject)
+			: base(parent, definition, backingObject)
 		{
 		}
 

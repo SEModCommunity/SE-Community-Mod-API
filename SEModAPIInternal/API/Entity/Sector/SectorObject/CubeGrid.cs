@@ -30,6 +30,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#region "Attributes"
 
 		private CubeBlockManager m_cubeBlockManager;
+		private CubeGridNetworkManager m_networkManager;
 
 		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
@@ -49,11 +50,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			BaseEntity = BaseEntityManager.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile);
 
-			m_cubeBlockManager = new CubeBlockManager();
+			m_cubeBlockManager = new CubeBlockManager(this);
 			List<CubeBlockEntity> cubeBlockList = new List<CubeBlockEntity>();
 			foreach (var cubeBlock in ((MyObjectBuilder_CubeGrid)BaseEntity).CubeBlocks)
 			{
-				cubeBlockList.Add(new CubeBlockEntity(cubeBlock));
+				cubeBlockList.Add(new CubeBlockEntity(this, cubeBlock));
 			}
 			m_cubeBlockManager.Load(cubeBlockList.ToArray());
 		}
@@ -61,32 +62,32 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public CubeGridEntity(MyObjectBuilder_CubeGrid definition)
 			: base(definition)
 		{
-			m_cubeBlockManager = new CubeBlockManager();
+			m_cubeBlockManager = new CubeBlockManager(this);
 			List<CubeBlockEntity> cubeBlockList = new List<CubeBlockEntity>();
 			foreach (var cubeBlock in ((MyObjectBuilder_CubeGrid)BaseEntity).CubeBlocks)
 			{
 				switch (cubeBlock.TypeId)
 				{
 					case MyObjectBuilderTypeEnum.CargoContainer:
-						cubeBlockList.Add(new CargoContainerEntity((MyObjectBuilder_CargoContainer)cubeBlock));
+						cubeBlockList.Add(new CargoContainerEntity(this, (MyObjectBuilder_CargoContainer)cubeBlock));
 						break;
 					case MyObjectBuilderTypeEnum.Reactor:
-						cubeBlockList.Add(new ReactorEntity((MyObjectBuilder_Reactor)cubeBlock));
+						cubeBlockList.Add(new ReactorEntity(this, (MyObjectBuilder_Reactor)cubeBlock));
 						break;
 					case MyObjectBuilderTypeEnum.MedicalRoom:
-						cubeBlockList.Add(new MedicalRoomEntity((MyObjectBuilder_MedicalRoom)cubeBlock));
+						cubeBlockList.Add(new MedicalRoomEntity(this, (MyObjectBuilder_MedicalRoom)cubeBlock));
 						break;
 					case MyObjectBuilderTypeEnum.Cockpit:
-						cubeBlockList.Add(new CockpitEntity((MyObjectBuilder_Cockpit)cubeBlock));
+						cubeBlockList.Add(new CockpitEntity(this, (MyObjectBuilder_Cockpit)cubeBlock));
 						break;
 					case MyObjectBuilderTypeEnum.Beacon:
-						cubeBlockList.Add(new BeaconEntity((MyObjectBuilder_Beacon)cubeBlock));
+						cubeBlockList.Add(new BeaconEntity(this, (MyObjectBuilder_Beacon)cubeBlock));
 						break;
 					case MyObjectBuilderTypeEnum.GravityGenerator:
-						cubeBlockList.Add(new GravityGeneratorEntity((MyObjectBuilder_GravityGenerator)cubeBlock));
+						cubeBlockList.Add(new GravityGeneratorEntity(this, (MyObjectBuilder_GravityGenerator)cubeBlock));
 						break;
 					default:
-						cubeBlockList.Add(new CubeBlockEntity(cubeBlock));
+						cubeBlockList.Add(new CubeBlockEntity(this, cubeBlock));
 						break;
 				}
 			}
@@ -96,7 +97,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public CubeGridEntity(MyObjectBuilder_CubeGrid definition, Object backingObject)
 			: base(definition, backingObject)
 		{
-			m_cubeBlockManager = new CubeBlockManager(backingObject, CubeGridGetCubeBlocksHashSetMethod);
+			m_cubeBlockManager = new CubeBlockManager(this, backingObject, CubeGridGetCubeBlocksHashSetMethod);
+			m_networkManager = new CubeGridNetworkManager(this);
 		}
 
 		#endregion
@@ -223,6 +225,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return GetSubTypeEntity().BlockGroups; }
 		}
 
+		[Category("Cube Grid")]
+		[Browsable(false)]
+		public CubeGridNetworkManager NetworkManager
+		{
+			get { return m_networkManager; }
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -321,7 +330,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			Packet3_2 = 15263,
 			Packet3_3 = 15264,
 			Packet3_4 = 15265,
-			Packet3_5 = 15266,
+			CubeBlockFactionData = 15266,		//..090EFC311778552F418C0835D1248D60
 
 			Packet4_1 = 15271,
 		}
@@ -336,8 +345,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		//18 Packet Types
 		public static string CubeGridNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string CubeGridNetManagerClass = "E727876839B1C8FFEE302CD2A1948CDA";
-
 		public static string CubeGridNetManagerCubeBlocksToDestroyField = "8E76EFAC4EED3B61D48795B2CD5AF989";
+		public static string CubeGridNetManagerBroadcastCubeBlockFactionDataMethod = "EF45C83059E3CD5A2C5354ABB687D861";
 
 		#endregion
 
@@ -345,16 +354,49 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public CubeGridNetworkManager(CubeGridEntity cubeGrid)
 		{
-			var entity = cubeGrid.BackingObject;
+			m_cubeGrid = cubeGrid;
+			var entity = m_cubeGrid.BackingObject;
 			m_netManager = BaseObject.InvokeEntityMethod(entity, CubeGridGetNetManagerMethod);
 		}
 
 		#endregion
 
 		#region "Properties"
+
+		public static Type NetManagerType
+		{
+			get
+			{
+				try
+				{
+					Assembly assembly = SandboxGameAssemblyWrapper.GetInstance().GameAssembly;
+					Type type = assembly.GetType(CubeGridNetManagerNamespace + "." + CubeGridNetManagerClass);
+					return type;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+					return typeof(Object);
+				}
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
+
+		public void BroadcastCubeBlockFactionData(CubeBlockEntity cubeBlock)
+		{
+			try
+			{
+				MethodInfo method = NetManagerType.GetMethod(CubeGridNetManagerBroadcastCubeBlockFactionDataMethod, BindingFlags.NonPublic | BindingFlags.Instance);
+				method.Invoke(m_netManager, new object[] { cubeBlock.GetParentCubeGrid(), cubeBlock.GetActualObject(), cubeBlock.Owner, cubeBlock.ShareMode });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
 
 		#endregion
 	}

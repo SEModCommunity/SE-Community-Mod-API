@@ -27,14 +27,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Constructors and Initializers"
 
-		public ReactorEntity(MyObjectBuilder_Reactor definition)
-			: base(definition)
+		public ReactorEntity(CubeGridEntity parent, MyObjectBuilder_Reactor definition)
+			: base(parent, definition)
 		{
 			m_Inventory = new InventoryEntity(definition.Inventory);
 		}
 
-		public ReactorEntity(MyObjectBuilder_Reactor definition, Object backingObject)
-			: base(definition, backingObject)
+		public ReactorEntity(CubeGridEntity parent, MyObjectBuilder_Reactor definition, Object backingObject)
+			: base(parent, definition, backingObject)
 		{
 			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetReactorInventory());
 		}

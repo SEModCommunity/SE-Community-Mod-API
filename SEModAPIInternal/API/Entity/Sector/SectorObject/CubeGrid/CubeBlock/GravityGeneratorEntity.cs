@@ -16,13 +16,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Constructors and Initializers"
 
-		public GravityGeneratorEntity(MyObjectBuilder_GravityGenerator definition)
-			: base(definition)
+		public GravityGeneratorEntity(CubeGridEntity parent, MyObjectBuilder_GravityGenerator definition)
+			: base(parent, definition)
 		{
 		}
 
-		public GravityGeneratorEntity(MyObjectBuilder_GravityGenerator definition, Object backingObject)
-			: base(definition, backingObject)
+		public GravityGeneratorEntity(CubeGridEntity parent, MyObjectBuilder_GravityGenerator definition, Object backingObject)
+			: base(parent, definition, backingObject)
 		{
 		}
 

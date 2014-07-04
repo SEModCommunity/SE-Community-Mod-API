@@ -28,14 +28,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Constructors and Initializers"
 
-		public CargoContainerEntity(MyObjectBuilder_CargoContainer definition)
-			: base(definition)
+		public CargoContainerEntity(CubeGridEntity parent, MyObjectBuilder_CargoContainer definition)
+			: base(parent, definition)
 		{
 			m_Inventory = new InventoryEntity(definition.Inventory);
 		}
 
-		public CargoContainerEntity(MyObjectBuilder_CargoContainer definition, Object backingObject)
-			: base(definition, backingObject)
+		public CargoContainerEntity(CubeGridEntity parent, MyObjectBuilder_CargoContainer definition, Object backingObject)
+			: base(parent, definition, backingObject)
 		{
 			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetContainerInventory());
 		}

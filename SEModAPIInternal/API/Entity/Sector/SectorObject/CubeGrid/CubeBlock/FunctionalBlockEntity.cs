@@ -28,13 +28,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Constructors and Initializers"
 
-		public FunctionalBlockEntity(MyObjectBuilder_FunctionalBlock definition)
-			: base(definition)
+		public FunctionalBlockEntity(CubeGridEntity parent, MyObjectBuilder_FunctionalBlock definition)
+			: base(parent, definition)
 		{
 		}
 
-		public FunctionalBlockEntity(MyObjectBuilder_FunctionalBlock definition, Object backingObject)
-			: base(definition, backingObject)
+		public FunctionalBlockEntity(CubeGridEntity parent, MyObjectBuilder_FunctionalBlock definition, Object backingObject)
+			: base(parent, definition, backingObject)
 		{
 		}
 

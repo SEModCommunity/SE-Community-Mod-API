@@ -28,13 +28,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Constructors and Initializers"
 
-		public TerminalBlockEntity(MyObjectBuilder_TerminalBlock definition)
-			: base(definition)
+		public TerminalBlockEntity(CubeGridEntity parent, MyObjectBuilder_TerminalBlock definition)
+			: base(parent, definition)
 		{
 		}
 
-		public TerminalBlockEntity(MyObjectBuilder_TerminalBlock definition, Object backingObject)
-			: base(definition, backingObject)
+		public TerminalBlockEntity(CubeGridEntity parent, MyObjectBuilder_TerminalBlock definition, Object backingObject)
+			: base(parent, definition, backingObject)
 		{
 		}
 

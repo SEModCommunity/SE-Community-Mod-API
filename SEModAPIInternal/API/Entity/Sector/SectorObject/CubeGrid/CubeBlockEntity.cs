@@ -23,34 +23,34 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 	{
 		#region "Attributes"
 
+		private CubeGridEntity m_parent;
 		private bool m_hasGeneratedId;
 
-		public static string CubeBlockNamespace = "";
-		public static string CubeBlockClass = "";
-
+		public static string CubeBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
+		public static string CubeBlockClass = "54A8BE425EAC4A11BFF922CFB5FF89D0";
 		public static string CubeBlockGetObjectBuilder_Method = "CBB75211A3B0B3188541907C9B1B0C5C";
 		public static string CubeBlockGetActualBlock_Method = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
+		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 
 		public static string ActualCubeBlockNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ActualCubeBlockClass = "4E262F069F7C0F85458881743E182B25";
-
 		public static string ActualCubeBlockGetObjectBuilderMethod = "GetObjectBuilderCubeBlock";
 		public static string ActualCubeBlockGetFactionsObjectMethod = "3E8AC70E5FAAA9C8C4992B71E12CDE28";
+		public static string ActualCubeBlockSetFactionsDataMethod = "7161368A8164DF15904DC82476F7EBBA";
 
-		//This is a nested class in the ActualCubeBlockClass
-		public static string FactionsDataClass = "5E7155F8D5F1B9BC7559B9B1D6EB8016";
-
-		public static string FactionsDataOwnerField = "523945B334F76A614AFCED7F4D5EE8AC";
-		public static string FactionsDataSharedFactionField = "AA0E4CF10B7597F0CFA4C9FA1944E2FC";
-		public static string FactionsDataSharedAllField = "AE43B07154583A83CDC39A8D5C04AB36";
+		public static string FactionsDataNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string FactionsDataClass = "0428A90CA95B1CE381A027F8E935681A";
+		public static string FactionsDataOwnerField = "9A0535F68700D4E48674829975E95CAB";
+		public static string FactionsDataShareModeField = "0436783F3C7FB6B04C88AB4F9097380F";
 
 		#endregion
 
 		#region "Constructors and Initializers"
 
-		public CubeBlockEntity(MyObjectBuilder_CubeBlock definition)
+		public CubeBlockEntity(CubeGridEntity parent, MyObjectBuilder_CubeBlock definition)
 			: base(definition)
 		{
+			m_parent = parent;
 			if (definition.EntityId == 0)
 			{
 				m_hasGeneratedId = true;
@@ -58,9 +58,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public CubeBlockEntity(MyObjectBuilder_CubeBlock definition, Object backingObject)
+		public CubeBlockEntity(CubeGridEntity parent, MyObjectBuilder_CubeBlock definition, Object backingObject)
 			: base(definition, backingObject)
 		{
+			m_parent = parent;
 			if (definition.EntityId == 0)
 			{
 				m_hasGeneratedId = true;
@@ -185,6 +186,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (GetSubTypeEntity().Owner == value) return;
 				GetSubTypeEntity().Owner = value;
 				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalSetOwner;
+					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -198,6 +205,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (GetSubTypeEntity().ShareMode == value) return;
 				GetSubTypeEntity().ShareMode = value;
 				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalSetShareMode;
+					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -223,7 +236,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			return (MyObjectBuilder_CubeBlock)BaseEntity;
 		}
 
-		protected Object GetActualObject()
+		#region "Internal"
+
+		public Object GetActualObject()
 		{
 			try
 			{
@@ -240,20 +255,116 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		public Object GetParentCubeGrid()
+		{
+			try
+			{
+				FieldInfo parentGridField = BackingObject.GetType().GetField(CubeBlockParentCubeGridField);
+				Object parentGrid = parentGridField.GetValue(BackingObject);
+
+				return parentGrid;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		public Object GetFactionData()
+		{
+			try
+			{
+				Object actualCubeObject = GetActualObject();
+
+				Type actualType = actualCubeObject.GetType();
+				while (actualType.Name != ActualCubeBlockClass && actualType.Name != "" && actualType.Name != "Object")
+				{
+					actualType = actualType.BaseType;
+				}
+
+				MethodInfo updateFactionsData = actualType.GetMethod(ActualCubeBlockGetFactionsObjectMethod);
+				Object factionData = updateFactionsData.Invoke(actualCubeObject, new object[] { });
+
+				return factionData;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		protected void InternalSetOwner()
+		{
+			try
+			{
+				Object actualCubeObject = GetActualObject();
+
+				Type actualType = actualCubeObject.GetType();
+				while (actualType.Name != ActualCubeBlockClass && actualType.Name != "" && actualType.Name != "Object")
+				{
+					actualType = actualType.BaseType;
+				}
+
+				MethodInfo updateFactionsData = actualType.GetMethod(ActualCubeBlockSetFactionsDataMethod, BindingFlags.NonPublic | BindingFlags.Instance);
+				updateFactionsData.Invoke(actualCubeObject, new object[] { Owner, ShareMode });
+
+				m_parent.NetworkManager.BroadcastCubeBlockFactionData(this);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		protected void InternalSetShareMode()
+		{
+			try
+			{
+				Object actualCubeObject = GetActualObject();
+
+				Type actualType = actualCubeObject.GetType();
+				while (actualType.Name != ActualCubeBlockClass && actualType.Name != "" && actualType.Name != "Object")
+				{
+					actualType = actualType.BaseType;
+				}
+
+				MethodInfo updateFactionsData = actualType.GetMethod(ActualCubeBlockSetFactionsDataMethod, BindingFlags.NonPublic | BindingFlags.Instance);
+				updateFactionsData.Invoke(actualCubeObject, new object[] { Owner, ShareMode });
+
+				m_parent.NetworkManager.BroadcastCubeBlockFactionData(this);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		#endregion
+
 		#endregion
 	}
 
 	public class CubeBlockManager : BaseObjectManager
 	{
+		#region "Attributes"
+
+		private CubeGridEntity m_parent;
+
+		#endregion
+
 		#region "Constructors and Initializers"
 
-		public CubeBlockManager()
+		public CubeBlockManager(CubeGridEntity parent)
 		{
+			m_parent = parent;
 		}
 
-		public CubeBlockManager(Object backingSource, string backingSourceMethodName)
+		public CubeBlockManager(CubeGridEntity parent, Object backingSource, string backingSourceMethodName)
 			: base(backingSource, backingSourceMethodName)
 		{
+			m_parent = parent;
 		}
 		
 		#endregion
@@ -312,28 +423,28 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						switch (baseEntity.TypeId)
 						{
 							case MyObjectBuilderTypeEnum.CubeBlock:
-								matchingCubeBlock = new CubeBlockEntity(baseEntity, entity);
+								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 								break;
 							case MyObjectBuilderTypeEnum.CargoContainer:
-								matchingCubeBlock = new CargoContainerEntity((MyObjectBuilder_CargoContainer)baseEntity, entity);
+								matchingCubeBlock = new CargoContainerEntity(m_parent, (MyObjectBuilder_CargoContainer)baseEntity, entity);
 								break;
 							case MyObjectBuilderTypeEnum.Reactor:
-								matchingCubeBlock = new ReactorEntity((MyObjectBuilder_Reactor)baseEntity, entity);
+								matchingCubeBlock = new ReactorEntity(m_parent, (MyObjectBuilder_Reactor)baseEntity, entity);
 								break;
 							case MyObjectBuilderTypeEnum.Beacon:
-								matchingCubeBlock = new BeaconEntity((MyObjectBuilder_Beacon)baseEntity, entity);
+								matchingCubeBlock = new BeaconEntity(m_parent, (MyObjectBuilder_Beacon)baseEntity, entity);
 								break;
 							case MyObjectBuilderTypeEnum.Cockpit:
-								matchingCubeBlock = new CockpitEntity((MyObjectBuilder_Cockpit)baseEntity, entity);
+								matchingCubeBlock = new CockpitEntity(m_parent, (MyObjectBuilder_Cockpit)baseEntity, entity);
 								break;
 							case MyObjectBuilderTypeEnum.GravityGenerator:
-								matchingCubeBlock = new GravityGeneratorEntity((MyObjectBuilder_GravityGenerator)baseEntity, entity);
+								matchingCubeBlock = new GravityGeneratorEntity(m_parent, (MyObjectBuilder_GravityGenerator)baseEntity, entity);
 								break;
 							case MyObjectBuilderTypeEnum.MedicalRoom:
-								matchingCubeBlock = new MedicalRoomEntity((MyObjectBuilder_MedicalRoom)baseEntity, entity);
+								matchingCubeBlock = new MedicalRoomEntity(m_parent, (MyObjectBuilder_MedicalRoom)baseEntity, entity);
 								break;
 							default:
-								matchingCubeBlock = new CubeBlockEntity(baseEntity, entity);
+								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 								break;
 						}
 					}
