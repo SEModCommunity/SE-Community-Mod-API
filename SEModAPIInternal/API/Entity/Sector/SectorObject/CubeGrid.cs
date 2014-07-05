@@ -201,7 +201,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Browsable(false)]
 		public List<CubeBlockEntity> CubeBlocks
 		{
-			get { return m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>(); }
+			get
+			{
+				RefreshCubeBlocks();
+
+				return m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>();
+			}
 		}
 
 		[Category("Cube Grid")]
@@ -242,8 +247,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		/// <returns>The casted instance into the class type</returns>
 		new public MyObjectBuilder_CubeGrid GetSubTypeEntity()
 		{
-			RefreshCubeBlocks();
-
 			return (MyObjectBuilder_CubeGrid)BaseEntity;
 		}
 
@@ -261,6 +264,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public void Export(FileInfo fileInfo)
 		{
+			RefreshCubeBlocks();
+
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(GetSubTypeEntity(), fileInfo);
 		}
 
@@ -297,7 +302,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				initMethod.Invoke(BackingObject, new object[] { GetSubTypeEntity() });
 
 				//Add the entity to the scene
-				SandboxGameAssemblyWrapper.AddEntity(BackingObject);
+				SectorObjectManager.Instance.AddEntity(BackingObject);
 			}
 			catch (Exception ex)
 			{

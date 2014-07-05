@@ -56,6 +56,11 @@ namespace SEModAPIExtensions.API
 			get { return m_initialized; }
 		}
 
+		public Dictionary<Guid, Object> Plugins
+		{
+			get { return m_plugins; }
+		}
+
 		#endregion
 
 		#region "Methods"

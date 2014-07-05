@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -12,8 +13,10 @@ using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API.Definitions;
 
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity.Sector;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity
@@ -264,6 +267,191 @@ namespace SEModAPIInternal.API.Entity
 			return baseSector;
 		}
 
+		#endregion
+	}
+
+	public class SectorObjectManager : BaseObjectManager
+	{
+		#region "Attributes"
+
+		private static SectorObjectManager m_instance;
+		private static Object m_nextEntityToUpdate;
+
+		public static string ObjectManagerClass = "5BCAC68007431E61367F5B2CF24E2D6F.CAF1EB435F77C7B77580E2E16F988BED";
+		public static string ObjectManagerGetEntityHashSet = "84C54760C0F0DDDA50B0BE27B7116ED8";
+		public static string ObjectManagerAddEntity = "E5E18F5CAD1F62BB276DF991F20AE6AF";
+
+		public static string ObjectFactoryNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string ObjectFactoryClass = "E825333D6467D99DD83FB850C600395C";
+		public static string ObjectFactoryCreateEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
+		public static string ObjectFactoryCreateTypedEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
+
+		//2 Packet Types
+		public static string EntityBaseNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string EntityBaseNetManagerClass = "8EFE49A46AB934472427B7D117FD3C64";
+		public static string EntityBaseNetManagerSendEntity = "A6B585C993B43E72219511726BBB0649";
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public SectorObjectManager()
+		{
+			IsDynamic = true;
+			m_instance = this;
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		public static SectorObjectManager Instance
+		{
+			get
+			{
+				if (m_instance == null)
+					m_instance = new SectorObjectManager();
+
+				return m_instance;
+			}
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		new protected HashSet<Object> GetBackingDataHashSet()
+		{
+			try
+			{
+				Type objectManagerType = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(ObjectManagerClass);
+				MethodInfo getEntityHashSet = objectManagerType.GetMethod(ObjectManagerGetEntityHashSet, BindingFlags.Public | BindingFlags.Static);
+				var rawValue = getEntityHashSet.Invoke(null, new object[] { });
+				HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				return convertedSet;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return new HashSet<object>();
+			}
+		}
+
+		public override void LoadDynamic()
+		{
+			HashSet<Object> rawEntities = GetBackingDataHashSet();
+			Dictionary<long, BaseObject> data = GetInternalData();
+			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
+
+			//Update the main data mapping
+			data.Clear();
+			foreach (Object entity in rawEntities)
+			{
+				try
+				{
+					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+
+					BaseEntity matchingEntity = null;
+
+					//If the original data already contains an entry for this, skip creation
+					if (backingData.ContainsKey(entity))
+					{
+						matchingEntity = (BaseEntity)backingData[entity];
+
+						//Update the base entity (not the same as BackingObject which is the internal object)
+						matchingEntity.BaseEntity = baseEntity;
+					}
+					else
+					{
+						switch (baseEntity.TypeId)
+						{
+							case MyObjectBuilderTypeEnum.Character:
+								matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.CubeGrid:
+								matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.FloatingObject:
+								matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Meteor:
+								matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.VoxelMap:
+								matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
+								break;
+							default:
+								matchingEntity = new BaseEntity(baseEntity, entity);
+								break;
+						}
+					}
+
+					if (matchingEntity == null)
+						throw new Exception("Failed to match/create sector object entity");
+
+					data.Add(matchingEntity.EntityId, matchingEntity);
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
+			}
+
+			//Update the backing data mapping
+			backingData.Clear();
+			foreach (var key in data.Keys)
+			{
+				var entry = data[key];
+				backingData.Add(entry.BackingObject, entry);
+			}
+		}
+
+		public void AddEntity(Object gameEntity)
+		{
+			try
+			{
+				m_nextEntityToUpdate = gameEntity;
+
+				Action action = InternalAddEntity;
+				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalAddEntity()
+		{
+			try
+			{
+				if (m_nextEntityToUpdate == null)
+					return;
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					Console.WriteLine("Entity '': Adding to scene ...");
+
+				Assembly assembly = SandboxGameAssemblyWrapper.GetInstance().GameAssembly;
+				Type objectManagerType = assembly.GetType(ObjectManagerClass);
+
+				MethodInfo addEntityMethod = objectManagerType.GetMethod(ObjectManagerAddEntity, BindingFlags.Public | BindingFlags.Static);
+				addEntityMethod.Invoke(null, new object[] { m_nextEntityToUpdate, true });
+
+				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+				Type someManager = assembly.GetType(EntityBaseNetManagerNamespace + "." + EntityBaseNetManagerClass);
+				MethodInfo sendEntityMethod = someManager.GetMethod(EntityBaseNetManagerSendEntity, BindingFlags.Public | BindingFlags.Static);
+				sendEntityMethod.Invoke(null, new object[] { baseEntity });
+
+				m_nextEntityToUpdate = null;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLineAndConsole("Failed to add new entity");
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+	
 		#endregion
 	}
 

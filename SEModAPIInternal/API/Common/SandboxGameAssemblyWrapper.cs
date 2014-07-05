@@ -83,18 +83,6 @@ namespace SEModAPIInternal.API.Common
 		public static string ConfigContainerSetWorldName = "493E0E7BC7A617699C44A9A5FB8FF679";
 		public static string ConfigContainerDedicatedDataField = "44A1510B70FC1BBE3664969D47820439";
 
-		public static string ObjectManagerClass = "5BCAC68007431E61367F5B2CF24E2D6F.CAF1EB435F77C7B77580E2E16F988BED";
-		public static string ObjectManagerGetEntityHashSet = "84C54760C0F0DDDA50B0BE27B7116ED8";
-		public static string ObjectManagerAddEntity = "E5E18F5CAD1F62BB276DF991F20AE6AF";
-
-		public static string NetworkSerializerClass = "5F381EA9388E0A32A8C817841E192BE8.8EFE49A46AB934472427B7D117FD3C64";
-		public static string NetworkSerializerSendEntity = "A6B585C993B43E72219511726BBB0649";
-
-		public static string ObjectFactoryNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
-		public static string ObjectFactoryClass = "E825333D6467D99DD83FB850C600395C";
-		public static string ObjectFactoryCreateEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
-		public static string ObjectFactoryCreateTypedEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
-
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -169,22 +157,6 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Methods"
 
-		public static bool EnqueueMainGameAction(Action action)
-		{
-			try
-			{
-				MethodInfo enqueue = m_mainGameType.GetMethod(MainGameEnqueueActionMethod);
-				enqueue.Invoke(GetMainGameInstance(), new object[] { action });
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				return false;
-			}
-		}
-
 		#region "Actions"
 
 		public static void MainGameEvent1()
@@ -250,6 +222,22 @@ namespace SEModAPIInternal.API.Common
 		}
 
 		#endregion
+
+		public static bool EnqueueMainGameAction(Action action)
+		{
+			try
+			{
+				MethodInfo enqueue = m_mainGameType.GetMethod(MainGameEnqueueActionMethod);
+				enqueue.Invoke(GetMainGameInstance(), new object[] { action });
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex.ToString());
+				return false;
+			}
+		}
 
 		private string GetLookupString(MethodInfo method, int key, int start, int length)
 		{
@@ -468,124 +456,6 @@ namespace SEModAPIInternal.API.Common
 			Vector3? nullableResult = new Vector3?(MyVRageUtils.GetRandomBorderPosition(ref box));
 
 			return nullableResult;
-		}
-
-		public static HashSet<Object> GetObjectManagerHashSetData()
-		{
-			try
-			{
-				Type objectManagerType = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(ObjectManagerClass);
-				MethodInfo getEntityHashSet = objectManagerType.GetMethod(ObjectManagerGetEntityHashSet, BindingFlags.Public | BindingFlags.Static);
-				var rawValue = getEntityHashSet.Invoke(null, new object[] { });
-				HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
-
-				return convertedSet;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				return new HashSet<Object>();
-			}
-		}
-
-		private static List<T> GetAPIEntityList<T, TO>(MyObjectBuilderTypeEnum type)
-			where T : BaseEntity
-			where TO : MyObjectBuilder_EntityBase
-		{
-			HashSet<Object> rawEntities = GetObjectManagerHashSetData();
-			List<T> list = new List<T>();
-
-			foreach (Object entity in rawEntities)
-			{
-				try
-				{
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
-
-					if (baseEntity.TypeId == type)
-					{
-						TO objectBuilder = (TO)baseEntity;
-						T apiEntity = (T)Activator.CreateInstance(typeof(T), new object[] { objectBuilder, entity });
-
-						list.Add(apiEntity);
-					}
-				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
-			}
-
-			return list;
-		}
-
-		public static List<CubeGridEntity> GetCubeGrids()
-		{
-			return GetAPIEntityList<CubeGridEntity, MyObjectBuilder_CubeGrid>(MyObjectBuilderTypeEnum.CubeGrid);
-		}
-
-		public static List<CharacterEntity> GetCharacters()
-		{
-			return GetAPIEntityList<CharacterEntity, MyObjectBuilder_Character>(MyObjectBuilderTypeEnum.Character);
-		}
-
-		public static List<VoxelMap> GetVoxelMaps()
-		{
-			return GetAPIEntityList<VoxelMap, MyObjectBuilder_VoxelMap>(MyObjectBuilderTypeEnum.VoxelMap);
-		}
-
-		public static List<FloatingObject> GetFloatingObjects()
-		{
-			return GetAPIEntityList<FloatingObject, MyObjectBuilder_FloatingObject>(MyObjectBuilderTypeEnum.FloatingObject);
-		}
-
-		public static List<Meteor> GetMeteors()
-		{
-			return GetAPIEntityList<Meteor, MyObjectBuilder_Meteor>(MyObjectBuilderTypeEnum.Meteor);
-		}
-
-		public static void AddEntity(Object gameEntity)
-		{
-			try
-			{
-				m_nextEntityToUpdate = gameEntity;
-
-				Action action = InternalAddEntity;
-				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		public static void InternalAddEntity()
-		{
-			try
-			{
-				if (m_nextEntityToUpdate == null)
-					return;
-
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '': Adding to scene ...");
-
-				Assembly assembly = SandboxGameAssemblyWrapper.GetInstance().GameAssembly;
-				Type objectManagerType = assembly.GetType(ObjectManagerClass);
-
-				MethodInfo addEntityMethod = objectManagerType.GetMethod(ObjectManagerAddEntity, BindingFlags.Public | BindingFlags.Static);
-				addEntityMethod.Invoke(null, new object[] { m_nextEntityToUpdate, true });
-
-				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
-				Type someManager = assembly.GetType(NetworkSerializerClass);
-				MethodInfo sendEntityMethod = someManager.GetMethod(NetworkSerializerSendEntity, BindingFlags.Public | BindingFlags.Static);
-				sendEntityMethod.Invoke(null, new object[] { baseEntity });
-
-				m_nextEntityToUpdate = null;
-			}
-			catch (Exception ex)
-			{
-				LogManager.APILog.WriteLineAndConsole("Failed to add new entity");
-				LogManager.GameLog.WriteLine(ex);
-			}
 		}
 
 		#endregion

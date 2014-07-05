@@ -370,19 +370,6 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		new public T NewEntry<T>(MyObjectBuilder_EntityBase source) where T : BaseEntity
-		{
-			if (!IsMutable) return default(T);
-
-			var newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { source });
-			long entityId = newEntry.EntityId;
-			if (entityId == 0)
-				entityId = newEntry.GenerateEntityId();
-			GetInternalData().Add(entityId, newEntry);
-
-			return newEntry;
-		}
-
 		public override void LoadDynamic()
 		{
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
@@ -403,6 +390,9 @@ namespace SEModAPIInternal.API.Entity
 					if (backingData.ContainsKey(entity))
 					{
 						matchingEntity = (BaseEntity)backingData[entity];
+
+						//Update the base entity (not the same as BackingObject which is the internal object)
+						matchingEntity.BaseEntity = baseEntity;
 					}
 					else
 					{

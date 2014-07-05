@@ -405,11 +405,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 			//Update the main data mapping
 			data.Clear();
+			int entityCount = 0;
 			foreach (Object entity in rawEntities)
 			{
+				entityCount++;
+
 				try
 				{
 					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilder_Method, new object[] { });
+
+					if (data.ContainsKey(baseEntity.EntityId))
+					{
+						//We should not be here!
+						continue;
+					}
 
 					CubeBlockEntity matchingCubeBlock = null;
 
@@ -417,6 +426,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					if (backingData.ContainsKey(entity))
 					{
 						matchingCubeBlock = (CubeBlockEntity)backingData[entity];
+
+						//Update the base entity (not the same as BackingObject which is the internal object)
+						matchingCubeBlock.BaseEntity = baseEntity;
 					}
 					else
 					{

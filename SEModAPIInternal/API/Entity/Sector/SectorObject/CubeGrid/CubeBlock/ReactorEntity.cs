@@ -85,6 +85,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			MyObjectBuilder_Reactor reactor = (MyObjectBuilder_Reactor)BaseEntity;
 
 			//Make sure the inventory is up-to-date
+			Inventory.RefreshInventory();
 			reactor.Inventory = Inventory.GetSubTypeEntity();
 
 			return reactor;

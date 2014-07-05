@@ -72,7 +72,7 @@ namespace SEModAPIInternal.API.Entity
 		[Browsable(false)]
 		[ReadOnly(true)]
 		[Description("Internal data of the object")]
-		protected MyObjectBuilder_Base BaseEntity
+		internal MyObjectBuilder_Base BaseEntity
 		{
 			get { return m_baseEntity; }
 			set
@@ -446,6 +446,7 @@ namespace SEModAPIInternal.API.Entity
 		public bool IsDynamic
 		{
 			get { return m_isDynamic; }
+			set { m_isDynamic = value; }
 		}
 
 		#endregion

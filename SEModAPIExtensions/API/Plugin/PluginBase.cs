@@ -12,6 +12,8 @@ namespace SEModAPIExtensions.API.Plugin
 		#region "Attributes"
 
 		protected Guid m_pluginId;
+		protected string m_name = "";
+		protected string m_version = "";
 
 		#endregion
 
@@ -19,8 +21,11 @@ namespace SEModAPIExtensions.API.Plugin
 
 		public PluginBase()
 		{
-			GuidAttribute attr = (GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), true)[0];
-			m_pluginId = new Guid(attr.Value);
+			GuidAttribute guidAttr = (GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), true)[0];
+			m_pluginId = new Guid(guidAttr.Value);
+			AssemblyName asmName = Assembly.GetExecutingAssembly().GetName();
+			m_name = asmName.Name;
+			m_version = asmName.Version.ToString();
 		}
 
 		#endregion
@@ -30,6 +35,16 @@ namespace SEModAPIExtensions.API.Plugin
 		public Guid Id
 		{
 			get { return m_pluginId; }
+		}
+
+		public string Name
+		{
+			get { return m_name; }
+		}
+
+		public string Version
+		{
+			get { return m_version; }
 		}
 
 		#endregion

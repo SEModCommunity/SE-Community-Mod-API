@@ -39,6 +39,7 @@ namespace SEServerExtender
 		private Timer m_entityTreeRefreshTimer;
 		private Timer m_chatViewRefreshTimer;
 		private PluginManager m_pluginManager;
+		private Timer m_pluginManagerRefreshTimer;
 
 		#endregion
 
@@ -75,13 +76,13 @@ namespace SEServerExtender
 			m_chatViewRefreshTimer.Interval = 500;
 			m_chatViewRefreshTimer.Tick += new EventHandler(ChatViewRefresh);
 
+			m_pluginManagerRefreshTimer = new Timer();
+			m_pluginManagerRefreshTimer.Interval = 250;
+			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
+
 			m_pluginManager = PluginManager.GetInstance();
 
-			TRV_Entities.Nodes.Add("Cube Grids (0)");
-			TRV_Entities.Nodes.Add("Characters (0)");
-			TRV_Entities.Nodes.Add("Voxel Maps (0)");
-			TRV_Entities.Nodes.Add("Floating Objects (0)");
-			TRV_Entities.Nodes.Add("Meteors (0)");
+			SandboxGameAssemblyWrapper.GetInstance();
 		}
 
 		#endregion
@@ -168,46 +169,6 @@ namespace SEServerExtender
 			}
 		}
 
-		void UpdateNodeBranch<T>(TreeNode node, List<T> source, string name)
-			where T : BaseEntity
-		{
-			try
-			{
-				bool entriesChanged = (node.Nodes.Count != source.Count);
-				if (entriesChanged)
-				{
-					node.Nodes.Clear();
-					node.Text = name + " (" + source.Count.ToString() + ")";
-				}
-
-				int index = 0;
-				foreach (var item in source)
-				{
-					SerializableVector3 rawPosition = item.Position;
-					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-
-					TreeNode itemNode = null;
-					if (entriesChanged)
-					{
-						itemNode = node.Nodes.Add(item.Name + " | Dist: " + distance.ToString() + "m");
-						itemNode.Tag = item;
-					}
-					else
-					{
-						itemNode = node.Nodes[index];
-						itemNode.Text = item.Name + " | Dist: " + distance.ToString() + "m";
-						itemNode.Tag = item;
-					}
-
-					index++;
-				}
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
 		void ChatViewRefresh(object sender, EventArgs e)
 		{
 			LST_Chat_Messages.BeginUpdate();
@@ -243,25 +204,39 @@ namespace SEServerExtender
 		{
 			TRV_Entities.BeginUpdate();
 
-			List<CubeGridEntity> cubeGrids = SandboxGameAssemblyWrapper.GetCubeGrids();
-			List<CharacterEntity> characters = SandboxGameAssemblyWrapper.GetCharacters();
-			List<VoxelMap> voxelMaps = SandboxGameAssemblyWrapper.GetVoxelMaps();
-			List<FloatingObject> floatingObjects = SandboxGameAssemblyWrapper.GetFloatingObjects();
-			List<Meteor> meteors = SandboxGameAssemblyWrapper.GetMeteors();
+			TreeNode sectorObjectsNode;
+			TreeNode sectorEventsNode;
 
-			UpdateNodeBranch<CubeGridEntity>(TRV_Entities.Nodes[0], cubeGrids, "Cube Grids");
-			UpdateNodeBranch<CharacterEntity>(TRV_Entities.Nodes[1], characters, "Characters");
-			UpdateNodeBranch<VoxelMap>(TRV_Entities.Nodes[2], voxelMaps, "Voxel Maps");
-			UpdateNodeBranch<FloatingObject>(TRV_Entities.Nodes[3], floatingObjects, "Floating Objects");
-			UpdateNodeBranch<Meteor>(TRV_Entities.Nodes[4], meteors, "Meteors");
+			if(TRV_Entities.Nodes.Count < 2)
+			{
+				sectorObjectsNode = TRV_Entities.Nodes.Add("Sector Objects");
+				sectorEventsNode = TRV_Entities.Nodes.Add("Sector Events");
+
+				sectorObjectsNode.Name = sectorObjectsNode.Text;
+				sectorEventsNode.Name = sectorEventsNode.Text;
+			} else {
+				sectorObjectsNode = TRV_Entities.Nodes[0];
+				sectorEventsNode = TRV_Entities.Nodes[1];
+			}
+
+			RenderSectorObjectChildNodes(sectorObjectsNode);
+			sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.Definitions.Count.ToString() + ")";
 
 			TRV_Entities.EndUpdate();
+		}
 
+		private void PluginManagerRefresh(object sender, EventArgs e)
+		{
 			if (!m_pluginManager.Initialized)
 			{
 				if (SandboxGameAssemblyWrapper.GetInstance().IsGameStarted())
 				{
 					m_pluginManager.Init();
+
+					foreach (var key in m_pluginManager.Plugins.Keys)
+					{
+						LST_Plugins.Items.Add(key);
+					}
 				}
 			}
 			else
@@ -269,6 +244,124 @@ namespace SEServerExtender
 				//TODO - Call this from somewhere in the main game thread eventually
 				m_pluginManager.Update();
 			}
+		}
+
+		private void RenderSectorObjectChildNodes(TreeNode objectsNode)
+		{
+			TreeNode cubeGridsNode;
+			TreeNode charactersNode;
+			TreeNode voxelMapsNode;
+			TreeNode floatingObjectsNode;
+			TreeNode meteorsNode;
+			TreeNode unknownsNode;
+
+			if (objectsNode.Nodes.Count < 6)
+			{
+				objectsNode.Nodes.Clear();
+
+				cubeGridsNode = objectsNode.Nodes.Add("Cube Grids");
+				charactersNode = objectsNode.Nodes.Add("Characters");
+				voxelMapsNode = objectsNode.Nodes.Add("Voxel Maps");
+				floatingObjectsNode = objectsNode.Nodes.Add("Floating Objects");
+				meteorsNode = objectsNode.Nodes.Add("Meteors");
+				unknownsNode = objectsNode.Nodes.Add("Unknowns");
+
+				cubeGridsNode.Name = cubeGridsNode.Text;
+				charactersNode.Name = charactersNode.Text;
+				voxelMapsNode.Name = voxelMapsNode.Text;
+				floatingObjectsNode.Name = floatingObjectsNode.Text;
+				meteorsNode.Name = meteorsNode.Text;
+				unknownsNode.Name = unknownsNode.Text;
+			}
+			else
+			{
+				cubeGridsNode = objectsNode.Nodes[0];
+				charactersNode = objectsNode.Nodes[1];
+				voxelMapsNode = objectsNode.Nodes[2];
+				floatingObjectsNode = objectsNode.Nodes[3];
+				meteorsNode = objectsNode.Nodes[4];
+				unknownsNode = objectsNode.Nodes[5];
+			}
+
+			//Update matching nodes and remove obsolete nodes
+			List<BaseEntity> entityList = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+			TreeNode[] nodeArray = new TreeNode[cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count + voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count + meteorsNode.Nodes.Count + unknownsNode.Nodes.Count];
+			cubeGridsNode.Nodes.CopyTo(nodeArray, 0);
+			charactersNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count);
+			voxelMapsNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count);
+			floatingObjectsNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count + voxelMapsNode.Nodes.Count);
+			meteorsNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count + voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count);
+			unknownsNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count + voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count + meteorsNode.Nodes.Count);
+			foreach(TreeNode node in nodeArray)
+			{
+				if (node.Tag != null && entityList.Contains(node.Tag))
+				{
+					BaseEntity item = (BaseEntity)node.Tag;
+					SerializableVector3 rawPosition = item.Position;
+					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+					node.Text = item.Name + " | Dist: " + distance.ToString() + "m";
+
+					entityList.Remove(item);
+				}
+				else
+				{
+					node.Remove();
+				}
+			}
+
+			//Add new nodes
+			foreach (var sectorObject in entityList)
+			{
+				SerializableVector3 rawPosition = sectorObject.Position;
+				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+
+				Type sectorObjectType = sectorObject.GetType();
+				string nodeKey = sectorObject.EntityId.ToString();
+
+				if (sectorObjectType == typeof(CubeGridEntity))
+				{
+					TreeNode newNode = cubeGridsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = sectorObject.Name;
+					newNode.Tag = sectorObject;
+				}
+				else if (sectorObjectType == typeof(CharacterEntity))
+				{
+					TreeNode newNode = charactersNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = sectorObject.Name;
+					newNode.Tag = sectorObject;
+				}
+				else if (sectorObjectType == typeof(VoxelMap))
+				{
+					TreeNode newNode = voxelMapsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = sectorObject.Name;
+					newNode.Tag = sectorObject;
+				}
+				else if (sectorObjectType == typeof(FloatingObject))
+				{
+					TreeNode newNode = floatingObjectsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = sectorObject.Name;
+					newNode.Tag = sectorObject;
+				}
+				else if (sectorObjectType == typeof(Meteor))
+				{
+					TreeNode newNode = meteorsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = sectorObject.Name;
+					newNode.Tag = sectorObject;
+				}
+				else
+				{
+					TreeNode newNode = unknownsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = sectorObject.Name;
+					newNode.Tag = sectorObject;
+				}
+			}
+
+			cubeGridsNode.Text = cubeGridsNode.Name + " (" + cubeGridsNode.Nodes.Count.ToString() + ")";
+			charactersNode.Text = charactersNode.Name + " (" + charactersNode.Nodes.Count.ToString() + ")";
+			voxelMapsNode.Text = voxelMapsNode.Name + " (" + voxelMapsNode.Nodes.Count.ToString() + ")";
+			floatingObjectsNode.Text = floatingObjectsNode.Name + " (" + floatingObjectsNode.Nodes.Count.ToString() + ")";
+			meteorsNode.Text = meteorsNode.Name + " (" + meteorsNode.Nodes.Count.ToString() + ")";
+			unknownsNode.Text = unknownsNode.Name + " (" + unknownsNode.Nodes.Count.ToString() + ")";
 		}
 
 		private void RenderCubeGridChildNodes(CubeGridEntity cubeGrid, TreeNode blocksNode)
@@ -389,6 +482,7 @@ namespace SEServerExtender
 
 			m_entityTreeRefreshTimer.Start();
 			m_chatViewRefreshTimer.Start();
+			m_pluginManagerRefreshTimer.Start();
 		}
 
 		private void BTN_ServerControl_Stop_Click(object sender, EventArgs e)
@@ -562,7 +656,6 @@ namespace SEServerExtender
 			if (linkedObject is CubeGridEntity)
 			{
 				CubeGridEntity item = (CubeGridEntity)linkedObject;
-				MyObjectBuilder_CubeGrid cubeGrid = item.GetSubTypeEntity();
 
 				SaveFileDialog saveFileDialog = new SaveFileDialog();
 				saveFileDialog.Filter = "sbc file (*.sbc)|*.sbc|All files (*.*)|*.*";
@@ -614,6 +707,14 @@ namespace SEServerExtender
 					TXT_Chat_Message.Text = "";
 				}
 			}
+		}
+
+		private void LST_Plugins_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+			Object plugin = m_pluginManager.Plugins[selectedItem];
+
+			PG_Plugins.SelectedObject = plugin;
 		}
 
 		#endregion

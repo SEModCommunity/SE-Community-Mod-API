@@ -53,7 +53,17 @@
 			this.splitContainer7 = new System.Windows.Forms.SplitContainer();
 			this.TXT_Chat_Message = new System.Windows.Forms.TextBox();
 			this.BTN_Chat_Send = new System.Windows.Forms.Button();
+			this.TAB_Factions_Page = new System.Windows.Forms.TabPage();
+			this.splitContainer9 = new System.Windows.Forms.SplitContainer();
+			this.splitContainer10 = new System.Windows.Forms.SplitContainer();
+			this.TRV_Factions = new System.Windows.Forms.TreeView();
+			this.TAB_Plugins_Page = new System.Windows.Forms.TabPage();
+			this.splitContainer11 = new System.Windows.Forms.SplitContainer();
+			this.splitContainer12 = new System.Windows.Forms.SplitContainer();
+			this.LST_Plugins = new System.Windows.Forms.ListBox();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.PG_Factions = new System.Windows.Forms.PropertyGrid();
+			this.PG_Plugins = new System.Windows.Forms.PropertyGrid();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -90,6 +100,22 @@
 			this.splitContainer7.Panel1.SuspendLayout();
 			this.splitContainer7.Panel2.SuspendLayout();
 			this.splitContainer7.SuspendLayout();
+			this.TAB_Factions_Page.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer9)).BeginInit();
+			this.splitContainer9.Panel1.SuspendLayout();
+			this.splitContainer9.Panel2.SuspendLayout();
+			this.splitContainer9.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer10)).BeginInit();
+			this.splitContainer10.Panel1.SuspendLayout();
+			this.splitContainer10.SuspendLayout();
+			this.TAB_Plugins_Page.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer11)).BeginInit();
+			this.splitContainer11.Panel1.SuspendLayout();
+			this.splitContainer11.Panel2.SuspendLayout();
+			this.splitContainer11.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer12)).BeginInit();
+			this.splitContainer12.Panel1.SuspendLayout();
+			this.splitContainer12.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -116,6 +142,8 @@
 			this.TAB_MainTabs.Controls.Add(this.TAB_Control_Page);
 			this.TAB_MainTabs.Controls.Add(this.TAB_Entities_Page);
 			this.TAB_MainTabs.Controls.Add(this.TAB_Chat_Page);
+			this.TAB_MainTabs.Controls.Add(this.TAB_Factions_Page);
+			this.TAB_MainTabs.Controls.Add(this.TAB_Plugins_Page);
 			this.TAB_MainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TAB_MainTabs.Location = new System.Drawing.Point(0, 0);
 			this.TAB_MainTabs.Name = "TAB_MainTabs";
@@ -419,6 +447,114 @@
 			this.BTN_Chat_Send.UseVisualStyleBackColor = true;
 			this.BTN_Chat_Send.Click += new System.EventHandler(this.BTN_Chat_Send_Click);
 			// 
+			// TAB_Factions_Page
+			// 
+			this.TAB_Factions_Page.Controls.Add(this.splitContainer9);
+			this.TAB_Factions_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_Factions_Page.Name = "TAB_Factions_Page";
+			this.TAB_Factions_Page.Padding = new System.Windows.Forms.Padding(3);
+			this.TAB_Factions_Page.Size = new System.Drawing.Size(943, 644);
+			this.TAB_Factions_Page.TabIndex = 3;
+			this.TAB_Factions_Page.Text = "Factions";
+			this.TAB_Factions_Page.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer9
+			// 
+			this.splitContainer9.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer9.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer9.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer9.Name = "splitContainer9";
+			// 
+			// splitContainer9.Panel1
+			// 
+			this.splitContainer9.Panel1.Controls.Add(this.splitContainer10);
+			this.splitContainer9.Panel1MinSize = 300;
+			// 
+			// splitContainer9.Panel2
+			// 
+			this.splitContainer9.Panel2.Controls.Add(this.PG_Factions);
+			this.splitContainer9.Size = new System.Drawing.Size(937, 638);
+			this.splitContainer9.SplitterDistance = 300;
+			this.splitContainer9.TabIndex = 0;
+			// 
+			// splitContainer10
+			// 
+			this.splitContainer10.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer10.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			this.splitContainer10.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer10.Name = "splitContainer10";
+			this.splitContainer10.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer10.Panel1
+			// 
+			this.splitContainer10.Panel1.Controls.Add(this.TRV_Factions);
+			this.splitContainer10.Size = new System.Drawing.Size(300, 638);
+			this.splitContainer10.SplitterDistance = 603;
+			this.splitContainer10.TabIndex = 0;
+			// 
+			// TRV_Factions
+			// 
+			this.TRV_Factions.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TRV_Factions.Location = new System.Drawing.Point(0, 0);
+			this.TRV_Factions.Name = "TRV_Factions";
+			this.TRV_Factions.Size = new System.Drawing.Size(300, 603);
+			this.TRV_Factions.TabIndex = 0;
+			// 
+			// TAB_Plugins_Page
+			// 
+			this.TAB_Plugins_Page.Controls.Add(this.splitContainer11);
+			this.TAB_Plugins_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_Plugins_Page.Name = "TAB_Plugins_Page";
+			this.TAB_Plugins_Page.Padding = new System.Windows.Forms.Padding(3);
+			this.TAB_Plugins_Page.Size = new System.Drawing.Size(943, 644);
+			this.TAB_Plugins_Page.TabIndex = 4;
+			this.TAB_Plugins_Page.Text = "Plugins";
+			this.TAB_Plugins_Page.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer11
+			// 
+			this.splitContainer11.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer11.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer11.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer11.Name = "splitContainer11";
+			// 
+			// splitContainer11.Panel1
+			// 
+			this.splitContainer11.Panel1.Controls.Add(this.splitContainer12);
+			this.splitContainer11.Panel1MinSize = 300;
+			// 
+			// splitContainer11.Panel2
+			// 
+			this.splitContainer11.Panel2.Controls.Add(this.PG_Plugins);
+			this.splitContainer11.Size = new System.Drawing.Size(937, 638);
+			this.splitContainer11.SplitterDistance = 300;
+			this.splitContainer11.TabIndex = 0;
+			// 
+			// splitContainer12
+			// 
+			this.splitContainer12.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer12.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			this.splitContainer12.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer12.Name = "splitContainer12";
+			this.splitContainer12.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer12.Panel1
+			// 
+			this.splitContainer12.Panel1.Controls.Add(this.LST_Plugins);
+			this.splitContainer12.Size = new System.Drawing.Size(300, 638);
+			this.splitContainer12.SplitterDistance = 603;
+			this.splitContainer12.TabIndex = 0;
+			// 
+			// LST_Plugins
+			// 
+			this.LST_Plugins.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_Plugins.FormattingEnabled = true;
+			this.LST_Plugins.Location = new System.Drawing.Point(0, 0);
+			this.LST_Plugins.Name = "LST_Plugins";
+			this.LST_Plugins.Size = new System.Drawing.Size(300, 603);
+			this.LST_Plugins.TabIndex = 0;
+			this.LST_Plugins.SelectedIndexChanged += new System.EventHandler(this.LST_Plugins_SelectedIndexChanged);
+			// 
 			// statusStrip1
 			// 
 			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
@@ -426,6 +562,22 @@
 			this.statusStrip1.Size = new System.Drawing.Size(951, 22);
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// PG_Factions
+			// 
+			this.PG_Factions.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PG_Factions.Location = new System.Drawing.Point(0, 0);
+			this.PG_Factions.Name = "PG_Factions";
+			this.PG_Factions.Size = new System.Drawing.Size(633, 638);
+			this.PG_Factions.TabIndex = 0;
+			// 
+			// PG_Plugins
+			// 
+			this.PG_Plugins.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PG_Plugins.Location = new System.Drawing.Point(0, 0);
+			this.PG_Plugins.Name = "PG_Plugins";
+			this.PG_Plugins.Size = new System.Drawing.Size(633, 638);
+			this.PG_Plugins.TabIndex = 0;
 			// 
 			// SEServerExtender
 			// 
@@ -475,6 +627,22 @@
 			this.splitContainer7.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).EndInit();
 			this.splitContainer7.ResumeLayout(false);
+			this.TAB_Factions_Page.ResumeLayout(false);
+			this.splitContainer9.Panel1.ResumeLayout(false);
+			this.splitContainer9.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer9)).EndInit();
+			this.splitContainer9.ResumeLayout(false);
+			this.splitContainer10.Panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer10)).EndInit();
+			this.splitContainer10.ResumeLayout(false);
+			this.TAB_Plugins_Page.ResumeLayout(false);
+			this.splitContainer11.Panel1.ResumeLayout(false);
+			this.splitContainer11.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer11)).EndInit();
+			this.splitContainer11.ResumeLayout(false);
+			this.splitContainer12.Panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer12)).EndInit();
+			this.splitContainer12.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -507,5 +675,15 @@
 		private System.Windows.Forms.Button BTN_Chat_Send;
 		private System.Windows.Forms.SplitContainer splitContainer8;
 		private System.Windows.Forms.ListBox LST_Chat_ConnectedPlayers;
+		private System.Windows.Forms.TabPage TAB_Factions_Page;
+		private System.Windows.Forms.SplitContainer splitContainer9;
+		private System.Windows.Forms.SplitContainer splitContainer10;
+		private System.Windows.Forms.TreeView TRV_Factions;
+		private System.Windows.Forms.TabPage TAB_Plugins_Page;
+		private System.Windows.Forms.SplitContainer splitContainer11;
+		private System.Windows.Forms.SplitContainer splitContainer12;
+		private System.Windows.Forms.ListBox LST_Plugins;
+		private System.Windows.Forms.PropertyGrid PG_Factions;
+		private System.Windows.Forms.PropertyGrid PG_Plugins;
 	}
 }

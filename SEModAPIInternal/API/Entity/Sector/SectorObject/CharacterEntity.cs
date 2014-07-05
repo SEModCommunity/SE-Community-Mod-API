@@ -182,6 +182,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			MyObjectBuilder_Character character = (MyObjectBuilder_Character)BaseEntity;
 
 			//Make sure the inventory is up-to-date
+			Inventory.RefreshInventory();
 			character.Inventory = Inventory.GetSubTypeEntity();
 
 			return character;

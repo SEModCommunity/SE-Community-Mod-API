@@ -109,6 +109,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			MyObjectBuilder_CargoContainer container = (MyObjectBuilder_CargoContainer)BaseEntity;
 
 			//Make sure the inventory is up-to-date
+			Inventory.RefreshInventory();
 			container.Inventory = Inventory.GetSubTypeEntity();
 
 			return container;

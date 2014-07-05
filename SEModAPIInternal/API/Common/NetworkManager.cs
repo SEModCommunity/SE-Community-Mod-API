@@ -70,10 +70,6 @@ namespace SEModAPIInternal.API.Common
 
 		/////////////////////////////////////////////////
 
-		//2 Packet Types
-		public static string EntityBaseNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
-		public static string EntityBaseNetManagerClass = "8EFE49A46AB934472427B7D117FD3C64";
-
 		//2+ Packet Types
 		public static string InventoryNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string InventoryNetManagerClass = "98C1408628C42B9F7FDB1DE7B8FAE776";

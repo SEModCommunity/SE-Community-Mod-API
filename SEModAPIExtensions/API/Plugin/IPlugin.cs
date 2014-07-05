@@ -11,5 +11,9 @@ namespace SEModAPIExtensions.API.Plugin
 		void Update();
 		Guid Id
 		{ get; }
+		string Name
+		{ get; }
+		string Version
+		{ get; }
 	}
 }

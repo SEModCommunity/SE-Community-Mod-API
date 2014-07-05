@@ -21,7 +21,7 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
-		private BaseObjectManager m_itemManager;
+		private BaseEntityManager m_itemManager;
 		private InventoryNetworkManager m_networkManager;
 
 		public static string InventoryNamespace = "33FB6E717989660631E6772B99F502AD";
@@ -42,7 +42,7 @@ namespace SEModAPIInternal.API.Entity
 		public InventoryEntity(MyObjectBuilder_Inventory definition)
 			: base(definition)
 		{
-			m_itemManager = new BaseObjectManager();
+			m_itemManager = new BaseEntityManager();
 			List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
 			foreach (MyObjectBuilder_InventoryItem item in definition.Items)
 			{
@@ -56,7 +56,7 @@ namespace SEModAPIInternal.API.Entity
 		public InventoryEntity(MyObjectBuilder_Inventory definition, Object backingObject)
 			: base(definition, backingObject)
 		{
-			m_itemManager = new BaseObjectManager();
+			m_itemManager = new BaseEntityManager();
 			List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
 			foreach (MyObjectBuilder_InventoryItem item in definition.Items)
 			{
@@ -98,6 +98,8 @@ namespace SEModAPIInternal.API.Entity
 			{
 				try
 				{
+					RefreshInventory();
+
 					List<InventoryItemEntity> newList = m_itemManager.GetTypedInternalData<InventoryItemEntity>();
 					return newList;
 				}
@@ -166,25 +168,48 @@ namespace SEModAPIInternal.API.Entity
 		/// <returns>The casted instance into the class type</returns>
 		new internal MyObjectBuilder_Inventory GetSubTypeEntity()
 		{
-			RefreshInventory();
-
 			return (MyObjectBuilder_Inventory)BaseEntity;
 		}
 
 		public void RefreshInventory()
 		{
-			MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)BaseEntity;
-
-			//Refresh the items content in the inventory from the items manager
-			List<InventoryItemEntity> items = m_itemManager.GetTypedInternalData<InventoryItemEntity>();
-			inventory.Items.Clear();
-			foreach (var item in items)
+			try
 			{
-				inventory.Items.Add(item.GetSubTypeEntity());
+				if (BackingObject != null)
+					InternalRefreshInventory();
+
+				//Update the item manager
+				List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
+				foreach (MyObjectBuilder_InventoryItem item in GetSubTypeEntity().Items)
+				{
+					InventoryItemEntity newItem = new InventoryItemEntity(item);
+					newItem.Container = this;
+					itemList.Add(newItem);
+				}
+				m_itemManager.Load(itemList);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
 		#region "Internal"
+
+		public void InternalRefreshInventory()
+		{
+			try
+			{
+				//Update the base entity
+				MethodInfo getObjectBuilder = BackingObject.GetType().GetMethod(InventoryGetObjectBuilderMethod);
+				MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)getObjectBuilder.Invoke(BackingObject, new object[] { });
+				BaseEntity = inventory;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
 
 		public void InternalUpdateItemAmount(Decimal oldAmount, Decimal newAmount, uint itemId)
 		{
