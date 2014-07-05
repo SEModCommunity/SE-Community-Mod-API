@@ -66,7 +66,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				if (BackingObject != null)
 				{
 					Action action = InternalSetCustomName;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
 		}

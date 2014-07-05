@@ -57,13 +57,13 @@
 			this.splitContainer9 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer10 = new System.Windows.Forms.SplitContainer();
 			this.TRV_Factions = new System.Windows.Forms.TreeView();
+			this.PG_Factions = new System.Windows.Forms.PropertyGrid();
 			this.TAB_Plugins_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer11 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer12 = new System.Windows.Forms.SplitContainer();
 			this.LST_Plugins = new System.Windows.Forms.ListBox();
-			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.PG_Factions = new System.Windows.Forms.PropertyGrid();
 			this.PG_Plugins = new System.Windows.Forms.PropertyGrid();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -499,6 +499,15 @@
 			this.TRV_Factions.Name = "TRV_Factions";
 			this.TRV_Factions.Size = new System.Drawing.Size(300, 603);
 			this.TRV_Factions.TabIndex = 0;
+			this.TRV_Factions.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_Factions_AfterSelect);
+			// 
+			// PG_Factions
+			// 
+			this.PG_Factions.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PG_Factions.Location = new System.Drawing.Point(0, 0);
+			this.PG_Factions.Name = "PG_Factions";
+			this.PG_Factions.Size = new System.Drawing.Size(633, 638);
+			this.PG_Factions.TabIndex = 0;
 			// 
 			// TAB_Plugins_Page
 			// 
@@ -555,22 +564,6 @@
 			this.LST_Plugins.TabIndex = 0;
 			this.LST_Plugins.SelectedIndexChanged += new System.EventHandler(this.LST_Plugins_SelectedIndexChanged);
 			// 
-			// statusStrip1
-			// 
-			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
-			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(951, 22);
-			this.statusStrip1.TabIndex = 0;
-			this.statusStrip1.Text = "statusStrip1";
-			// 
-			// PG_Factions
-			// 
-			this.PG_Factions.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PG_Factions.Location = new System.Drawing.Point(0, 0);
-			this.PG_Factions.Name = "PG_Factions";
-			this.PG_Factions.Size = new System.Drawing.Size(633, 638);
-			this.PG_Factions.TabIndex = 0;
-			// 
 			// PG_Plugins
 			// 
 			this.PG_Plugins.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -578,6 +571,14 @@
 			this.PG_Plugins.Name = "PG_Plugins";
 			this.PG_Plugins.Size = new System.Drawing.Size(633, 638);
 			this.PG_Plugins.TabIndex = 0;
+			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(951, 22);
+			this.statusStrip1.TabIndex = 0;
+			this.statusStrip1.Text = "statusStrip1";
 			// 
 			// SEServerExtender
 			// 

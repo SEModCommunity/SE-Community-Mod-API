@@ -1,28 +1,11 @@
-﻿using SteamSDK;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Resources;
-using System.Runtime.InteropServices;
 using System.Text;
 
-using SysUtils.Utils;
-
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Common.ObjectBuilders.Voxels;
-using Sandbox.Common.ObjectBuilders.VRageData;
 
-using VRage;
-using VRage.Common.Utils;
-using VRageMath;
-
-using SEModAPIInternal.API.Entity;
-using SEModAPIInternal.API.Entity.Sector.SectorObject;
-using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Common
@@ -33,34 +16,23 @@ namespace SEModAPIInternal.API.Common
 
 		protected static SandboxGameAssemblyWrapper m_instance;
 		protected static bool m_isDebugging;
-		protected static bool m_isGameLoaded;
+		protected bool m_isGameLoaded;
 
-		private static Assembly m_assembly;
+		private Assembly m_assembly;
 
-		private static Type m_mainGameType;
-		private Type m_checkpointManagerType;
+		private Type m_mainGameType;
 		private Type m_serverCoreType;
-		private static Type m_configContainerType;
+		private Type m_configContainerType;
 
-		private MethodInfo m_saveCheckpoint;
-		private MethodInfo m_getServerSector;
-		private MethodInfo m_getServerCheckpoint;
-		private static MethodInfo m_setConfigWorldName;
+		private MethodInfo m_setConfigWorldName;
 
 		private FieldInfo m_mainGameInstanceField;
-		private static FieldInfo m_configContainerField;
-		private static FieldInfo m_configContainerDedicatedDataField;
-		private static FieldInfo m_serverCoreNullRender;
-
-		private static Object m_nextEntityToUpdate;
+		private FieldInfo m_configContainerField;
+		private FieldInfo m_configContainerDedicatedDataField;
+		private FieldInfo m_serverCoreNullRender;
 
 		public static string GameConstantsClass = "00DD5482C0A3DF0D94B151167E77A6D9.5FBC15A83966C3D53201318E6F912741";
 		public static string GameConstantsFactionsEnabledField = "AE3FD6A65A631D2BF9835EE8E86F8110";
-
-		public static string CheckpointManagerClass = "36CC7CE820B9BBBE4B3FECFEEFE4AE86.828574590CB1B1AE5A5659D4B9659548";
-		public static string CheckpointManagerSaveCheckpointMethod = "03AA898C5E9A48425F2CB4FFB2A49A82";
-		public static string CheckpointManagerGetServerSectorMethod = "B6D13C37B0C7FDBF469AB93D18E4444A";
-		public static string CheckpointManagerGetServerCheckpointMethod = "825106F82475488A49F8184C627DADEB";
 
 		public static string ServerCoreClass = "168638249D29224100DB50BB468E7C07.7BAD4AFD06B91BCD63EA57F7C0D4F408";
 		public static string ServerCoreNullRenderField = "53A34747D8E8EDA65E601C194BECE141";
@@ -87,7 +59,7 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Constructors and Initializers"
 
-		protected SandboxGameAssemblyWrapper(string path)
+		protected SandboxGameAssemblyWrapper()
 		{
 			m_instance = this;
 			m_isDebugging = false;
@@ -95,15 +67,7 @@ namespace SEModAPIInternal.API.Common
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
 			m_mainGameType = m_assembly.GetType(MainGameNamespace + "." + MainGameClass);
-			m_checkpointManagerType = m_assembly.GetType(CheckpointManagerClass);
 			m_serverCoreType = m_assembly.GetType(ServerCoreClass);
-
-			Type[] argTypes = new Type[2];
-			argTypes[0] = typeof(MyObjectBuilder_Checkpoint);
-			argTypes[1] = typeof(string);
-			m_saveCheckpoint = m_checkpointManagerType.GetMethod(CheckpointManagerSaveCheckpointMethod, argTypes);
-			m_getServerSector = m_checkpointManagerType.GetMethod(CheckpointManagerGetServerSectorMethod, BindingFlags.Static | BindingFlags.Public);
-			m_getServerCheckpoint = m_checkpointManagerType.GetMethod(CheckpointManagerGetServerCheckpointMethod, BindingFlags.Static | BindingFlags.Public);
 
 			m_mainGameInstanceField = m_mainGameType.GetField(MainGameInstanceField, BindingFlags.Static | BindingFlags.Public);
 			m_configContainerField = m_mainGameType.GetField(MainGameConfigContainerField, BindingFlags.Static | BindingFlags.Public);
@@ -116,41 +80,79 @@ namespace SEModAPIInternal.API.Common
 			Console.WriteLine("Finished loading SandboxGameAssemblyWrapper");
 		}
 
-		public static SandboxGameAssemblyWrapper GetInstance(string basePath = "")
-		{
-			if (m_instance == null)
-			{
-				m_instance = new SandboxGameAssemblyWrapper(basePath);
-			}
-			return (SandboxGameAssemblyWrapper)m_instance;
-		}
-
 		#endregion
 
 		#region "Properties"
 
-		public Type MainGameType
+		public static SandboxGameAssemblyWrapper Instance
 		{
-			get { return m_mainGameType; }
+			get
+			{
+				if (m_instance == null)
+				{
+					m_instance = new SandboxGameAssemblyWrapper();
+				}
+
+				return m_instance;
+			}
 		}
 
 		public static bool IsDebugging
 		{
 			get
 			{
-				SandboxGameAssemblyWrapper.GetInstance();
+				var inst = SandboxGameAssemblyWrapper.Instance;
 				return m_isDebugging;
 			}
 			set
 			{
-				SandboxGameAssemblyWrapper.GetInstance();
+				var inst = SandboxGameAssemblyWrapper.Instance;
 				m_isDebugging = value;
 			}
+		}
+
+		public Type MainGameType
+		{
+			get { return m_mainGameType; }
 		}
 
 		public Assembly GameAssembly
 		{
 			get { return m_assembly; }
+		}
+
+		public bool IsGameStarted
+		{
+			get
+			{
+				try
+				{
+					var mainGame = GetMainGameInstance();
+					if (mainGame == null)
+						return false;
+
+					if (!m_isGameLoaded)
+					{
+						FieldInfo gameLoadedField = MainGameType.BaseType.GetField(MainGameIsLoadedField, BindingFlags.NonPublic | BindingFlags.Instance);
+						bool someValue = (bool)gameLoadedField.GetValue(mainGame);
+						if (someValue)
+						{
+							m_isGameLoaded = true;
+
+							return true;
+						}
+
+						return false;
+					}
+
+					return true;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+					return false;
+				}
+			}
 		}
 
 		#endregion
@@ -159,7 +161,7 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Actions"
 
-		public static void MainGameEvent1()
+		public void MainGameEvent1()
 		{
 			try
 			{
@@ -175,7 +177,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public static void MainGameEvent2(bool param0)
+		public void MainGameEvent2(bool param0)
 		{
 			try
 			{
@@ -191,7 +193,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public static void MainGameEvent3()
+		public void MainGameEvent3()
 		{
 			try
 			{
@@ -205,7 +207,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public static void MainGameEvent4()
+		public void MainGameEvent4()
 		{
 			try
 			{
@@ -223,7 +225,7 @@ namespace SEModAPIInternal.API.Common
 
 		#endregion
 
-		public static bool EnqueueMainGameAction(Action action)
+		public bool EnqueueMainGameAction(Action action)
 		{
 			try
 			{
@@ -234,26 +236,12 @@ namespace SEModAPIInternal.API.Common
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex.ToString());
+				LogManager.GameLog.WriteLine(ex);
 				return false;
 			}
 		}
 
-		private string GetLookupString(MethodInfo method, int key, int start, int length)
-		{
-			try
-			{
-				string result = (string)method.Invoke(null, new object[] { key, start, length });
-				return result;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				return null;
-			}
-		}
-
-		public static Object GetServerConfigContainer()
+		public Object GetServerConfigContainer()
 		{
 			try
 			{
@@ -268,7 +256,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public static MyConfigDedicatedData GetServerConfig()
+		public MyConfigDedicatedData GetServerConfig()
 		{
 			try
 			{
@@ -290,56 +278,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public bool SaveCheckpoint(MyObjectBuilder_Checkpoint checkpoint, string worldName)
-		{
-			try
-			{
-				return (bool)m_saveCheckpoint.Invoke(null, new object[] { checkpoint, worldName });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				return false;
-			}
-		}
-
-		public MyObjectBuilder_Sector GetServerSector(string worldName, Vector3I sectorLocation, out ulong sectorId)
-		{
-			try
-			{
-				object[] parameters = new object[] { worldName, sectorLocation, null };
-				MyObjectBuilder_Sector result = (MyObjectBuilder_Sector)m_getServerSector.Invoke(null, parameters);
-				sectorId = (ulong)parameters[1];
-
-				return result;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				sectorId = 0;
-				return null;
-			}
-		}
-
-		public MyObjectBuilder_Checkpoint GetServerCheckpoint(string worldName, out ulong worldId)
-		{
-			try
-			{
-				object[] parameters = new object[] { worldName, null };
-				MyObjectBuilder_Checkpoint result = (MyObjectBuilder_Checkpoint)m_getServerCheckpoint.Invoke(null, parameters);
-				worldId = (ulong)parameters[1];
-
-				return result;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex.ToString());
-				worldId = 0;
-				return null;
-			}
-		}
-
-		public static Object GetMainGameInstance()
+		public Object GetMainGameInstance()
 		{
 			try
 			{
@@ -355,7 +294,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public static void SetNullRender(bool nullRender)
+		public void SetNullRender(bool nullRender)
 		{
 			try
 			{
@@ -368,7 +307,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public static void SetConfigWorld(string worldName)
+		public void SetConfigWorld(string worldName)
 		{
 			try
 			{
@@ -381,81 +320,6 @@ namespace SEModAPIInternal.API.Common
 				LogManager.GameLog.WriteLine(ex);
 				return;
 			}
-		}
-
-		public bool IsGameStarted()
-		{
-			try
-			{
-				var mainGame = GetMainGameInstance();
-				if (mainGame == null)
-					return false;
-
-				if (!m_isGameLoaded)
-				{
-					FieldInfo gameLoadedField = MainGameType.BaseType.GetField(MainGameIsLoadedField, BindingFlags.NonPublic | BindingFlags.Instance);
-					bool someValue = (bool)gameLoadedField.GetValue(mainGame);
-					if (someValue)
-					{
-						m_isGameLoaded = true;
-
-						return true;
-					}
-
-					return false;
-				}
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				return false;
-			}
-		}
-
-		public static void KickPlayer(ulong steamId)
-		{
-			try
-			{
-				SteamServerAPI serverAPI = SteamServerAPI.Instance;
-				serverAPI.GameServer.SendUserDisconnect(steamId);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				return;
-			}
-		}
-
-		public static void EnableFactions(bool enabled = true)
-		{
-			try
-			{
-				//Force initialization just in case because this method can be called from the UI
-				GetInstance();
-
-				Type gameConstantsType = m_assembly.GetType(GameConstantsClass);
-				FieldInfo factionsEnabledField = gameConstantsType.GetField(GameConstantsFactionsEnabledField, BindingFlags.Public | BindingFlags.Static);
-				bool currentValue = (bool)factionsEnabledField.GetValue(null);
-
-				Console.WriteLine("Changing 'Factions' enabled from '" + currentValue.ToString() + "' to '" + enabled.ToString() + "'");
-
-				factionsEnabledField.SetValue(null, enabled);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				return;
-			}
-		}
-
-		public Vector3? GenerateRandomBorderPosition(Vector3 borderStart, Vector3 borderEnd)
-		{
-			BoundingBox box = new BoundingBox(borderStart, borderEnd);
-			Vector3? nullableResult = new Vector3?(MyVRageUtils.GetRandomBorderPosition(ref box));
-
-			return nullableResult;
 		}
 
 		#endregion

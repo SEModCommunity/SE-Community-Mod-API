@@ -105,6 +105,8 @@ namespace SEModAPIInternal.API.Common
 		protected NetworkManager()
 		{
 			m_instance = this;
+
+			Console.WriteLine("Finished loading NetworkManager");
 		}
 
 		#endregion
@@ -120,7 +122,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			get
 			{
-				Type netManagerType = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(NetworkManagerNamespace + "." + NetworkManagerClass);
+				Type netManagerType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(NetworkManagerNamespace + "." + NetworkManagerClass);
 				return netManagerType;
 			}
 		}
@@ -133,7 +135,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				Type networkManagerWrapper = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(NetworkManagerWrapperNamespace + "." + NetworkManagerWrapperClass);
+				Type networkManagerWrapper = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(NetworkManagerWrapperNamespace + "." + NetworkManagerWrapperClass);
 				FieldInfo networkManagerField = networkManagerWrapper.GetField(NetworkManagerWrapperManagerInstanceField, BindingFlags.NonPublic | BindingFlags.Static);
 				Object networkManager = networkManagerField.GetValue(null);
 

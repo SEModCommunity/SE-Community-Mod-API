@@ -56,7 +56,7 @@ namespace SEModAPIInternal.Support
 				{
 					try
 					{
-						Type mainGameType = SandboxGameAssemblyWrapper.GetInstance().MainGameType;
+						Type mainGameType = SandboxGameAssemblyWrapper.Instance.MainGameType;
 						FieldInfo myLogField = mainGameType.GetField(MainGameMyLogField, BindingFlags.Public | BindingFlags.Static);
 						m_gameLog = (MyLog)myLogField.GetValue(null);
 					}

@@ -76,7 +76,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (BackingObject != null)
 				{
 					Action action = InternalUpdateEntityLinearVelocity;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
 		}
@@ -114,7 +114,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (BackingObject != null)
 				{
 					Action action = InternalUpdateBatteryLevel;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
 		}
@@ -137,7 +137,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (BackingObject != null)
 				{
 					Action action = InternalDamageCharacter;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 
 				GetSubTypeEntity().Health = value;

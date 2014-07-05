@@ -190,7 +190,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (BackingObject != null)
 				{
 					Action action = InternalSetOwner;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
 		}
@@ -209,7 +209,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (BackingObject != null)
 				{
 					Action action = InternalSetShareMode;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
 		}

@@ -68,12 +68,12 @@ namespace SEModAPIInternal.API.Entity
 				Position = currentPosition;
 
 				Action action = InternalUpdateEntityPosition;
-				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
 				Thread.Sleep(250);
 
 				Action action2 = InternalRemoveEntity;
-				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action2);
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
 			}
 		}
 
@@ -141,7 +141,7 @@ namespace SEModAPIInternal.API.Entity
 				if (BackingObject != null)
 				{
 					Action action = InternalUpdateEntityPosition;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
 		}
@@ -161,7 +161,7 @@ namespace SEModAPIInternal.API.Entity
 				if (BackingObject != null)
 				{
 					Action action = InternalUpdateEntityPosition;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
 		}

@@ -177,7 +177,7 @@ namespace SEModAPIExtensions.API
 
 		public void Update()
 		{
-			if (!SandboxGameAssemblyWrapper.GetInstance().IsGameStarted())
+			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
 
 			foreach (var plugin in m_plugins.Values)

@@ -60,10 +60,10 @@ namespace SEModAPIExtensions.API
 			{
 				if (!m_chatHandlerSetup)
 				{
-					if (SandboxGameAssemblyWrapper.GetInstance().IsGameStarted())
+					if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 					{
 						Action action = SetupChatHandlers;
-						SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+						SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 					}
 				}
 
@@ -111,9 +111,9 @@ namespace SEModAPIExtensions.API
 
 		public void SendPrivateChatMessage(ulong remoteUserId, string message)
 		{
-			var sandboxGame = SandboxGameAssemblyWrapper.GetInstance();
+			var sandboxGame = SandboxGameAssemblyWrapper.Instance;
 
-			if (!sandboxGame.IsGameStarted())
+			if (!sandboxGame.IsGameStarted)
 				return;
 
 			try
@@ -136,9 +136,9 @@ namespace SEModAPIExtensions.API
 
 		public void SendPublicChatMessage(string message)
 		{
-			var sandboxGame = SandboxGameAssemblyWrapper.GetInstance();
+			var sandboxGame = SandboxGameAssemblyWrapper.Instance;
 
-			if (!sandboxGame.IsGameStarted())
+			if (!sandboxGame.IsGameStarted)
 				return;
 
 			try

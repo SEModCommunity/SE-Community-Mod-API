@@ -57,7 +57,7 @@ namespace SEModAPIInternal.API.Server
 		{
 			try
 			{
-				SandboxGameAssemblyWrapper.SetNullRender(true);
+				SandboxGameAssemblyWrapper.Instance.SetNullRender(true);
 
 				MyFileSystem.Reset();
 				object[] methodParams = new object[]

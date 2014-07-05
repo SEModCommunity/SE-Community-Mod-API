@@ -172,7 +172,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (BackingObject != null)
 				{
 					Action action = InternalUpdateEntityLinearVelocity;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
 		}
@@ -192,7 +192,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (BackingObject != null)
 				{
 					Action action = InternalUpdateEntityAngularVelocity;
-					SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
 		}
@@ -274,7 +274,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			try
 			{
 				Action action = InternalAddCubeGrid;
-				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
 				return true;
 			}
@@ -292,7 +292,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("CubeGrid '" + Name + "' is being added ...");
 
-				Type backingType = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(CubeGridNamespace + "." + CubeGridClass);
+				Type backingType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(CubeGridNamespace + "." + CubeGridClass);
 
 				//Create a blank instance of the base type
 				BackingObject = Activator.CreateInstance(backingType);
@@ -374,7 +374,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			{
 				try
 				{
-					Assembly assembly = SandboxGameAssemblyWrapper.GetInstance().GameAssembly;
+					Assembly assembly = SandboxGameAssemblyWrapper.Instance.GameAssembly;
 					Type type = assembly.GetType(CubeGridNetManagerNamespace + "." + CubeGridNetManagerClass);
 					return type;
 				}

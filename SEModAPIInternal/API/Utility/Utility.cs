@@ -7,6 +7,9 @@ using System.Text;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 
+using VRage.Common.Utils;
+using VRageMath;
+
 namespace SEModAPIInternal.API.Utility
 {
 	public class UtilityFunctions
@@ -84,7 +87,7 @@ namespace SEModAPIInternal.API.Utility
 		{
 			try
 			{
-				Type utilityType = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(UtilityClass);
+				Type utilityType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(UtilityClass);
 				MethodInfo generateIdMethod = utilityType.GetMethod(UtilityGenerateEntityId, BindingFlags.Public | BindingFlags.Static);
 				long entityId = (long)generateIdMethod.Invoke(null, new object[] { Type.Missing });
 
@@ -96,6 +99,14 @@ namespace SEModAPIInternal.API.Utility
 				LogManager.GameLog.WriteLine(ex);
 				return 0;
 			}
+		}
+
+		public static Vector3? GenerateRandomBorderPosition(Vector3 borderStart, Vector3 borderEnd)
+		{
+			BoundingBox box = new BoundingBox(borderStart, borderEnd);
+			Vector3? nullableResult = new Vector3?(MyVRageUtils.GetRandomBorderPosition(ref box));
+
+			return nullableResult;
 		}
 
 		#endregion

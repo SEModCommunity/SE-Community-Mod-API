@@ -34,6 +34,10 @@ namespace SEModAPIInternal.API.Common
 		protected EntityEventManager()
 		{
 			m_entityEvents = new List<EntityEvent>();
+
+			m_instance = this;
+
+			Console.WriteLine("Finished loading EntityEventManager");
 		}
 
 		#endregion

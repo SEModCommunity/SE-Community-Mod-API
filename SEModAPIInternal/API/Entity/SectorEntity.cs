@@ -324,7 +324,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				Type objectManagerType = SandboxGameAssemblyWrapper.GetInstance().GameAssembly.GetType(ObjectManagerClass);
+				Type objectManagerType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(ObjectManagerClass);
 				MethodInfo getEntityHashSet = objectManagerType.GetMethod(ObjectManagerGetEntityHashSet, BindingFlags.Public | BindingFlags.Static);
 				var rawValue = getEntityHashSet.Invoke(null, new object[] { });
 				HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
@@ -414,7 +414,7 @@ namespace SEModAPIInternal.API.Entity
 				m_nextEntityToUpdate = gameEntity;
 
 				Action action = InternalAddEntity;
-				SandboxGameAssemblyWrapper.EnqueueMainGameAction(action);
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 			}
 			catch (Exception ex)
 			{
@@ -432,7 +432,7 @@ namespace SEModAPIInternal.API.Entity
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '': Adding to scene ...");
 
-				Assembly assembly = SandboxGameAssemblyWrapper.GetInstance().GameAssembly;
+				Assembly assembly = SandboxGameAssemblyWrapper.Instance.GameAssembly;
 				Type objectManagerType = assembly.GetType(ObjectManagerClass);
 
 				MethodInfo addEntityMethod = objectManagerType.GetMethod(ObjectManagerAddEntity, BindingFlags.Public | BindingFlags.Static);
