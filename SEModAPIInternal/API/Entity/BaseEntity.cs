@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 
@@ -34,14 +35,20 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
+		private Type m_internalBaseEntityType;
+
+		protected bool m_isDisposed = false;
+
 		public static string BaseEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string BaseEntityClass = "F6DF01EE4159339113BB9650DEEE1913";
 
 		public static string BaseEntityGetObjectBuilderMethod = "GetObjectBuilder";
 		public static string BaseEntityGetPhysicsManagerMethod = "691FA4830C80511C934826203A251981";
 		public static string BaseEntityGetEntityIdMethod = "53C3FFA07960404AABBEAAF931E5487E";
+		public static string BaseEntityCombineOnMovedEventMethod = "04F6493DF187FBA38C2B379BA9484304";
 
 		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
+		public static string BaseEntityOnMovedEventField = "8CAF5306D8DF29E8140056369D0F1FC1";
 
 		public static string PhysicsManagerGetRigidBodyMethod = "634E5EC534E45874230868BD089055B1";
 
@@ -57,23 +64,21 @@ namespace SEModAPIInternal.API.Entity
 		public BaseEntity(MyObjectBuilder_EntityBase baseEntity, Object backingObject)
 			: base(baseEntity, backingObject)
 		{
-		}
-
-		new public void Dispose()
-		{
-			if (BackingObject != null)
+			try
 			{
-				Vector3 currentPosition = Position;
-				currentPosition = Vector3.Add(currentPosition, new Vector3(100000, 100000, 100000));
-				Position = currentPosition;
+				//AssemblyName aName = new AssemblyName("BaseEntityAssembly");
+				//AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly(aName, AssemblyBuilderAccess.RunAndSave);
+				//ModuleBuilder mb = ab.DefineDynamicModule(aName.Name, aName.Name + ".dll");
+				//TypeBuilder tb = mb.DefineType("InternalBaseEntity", TypeAttributes.Public, backingObject.GetType());
+				//m_internalBaseEntityType = tb.CreateType();
+				//ab.Save(aName.Name + ".dll");
 
-				Action action = InternalUpdateEntityPosition;
+				Action action = InternalRegisterEntityMovedEvent;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-
-				Thread.Sleep(250);
-
-				Action action2 = InternalRemoveEntity;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
@@ -206,9 +211,39 @@ namespace SEModAPIInternal.API.Entity
 		public virtual SerializableVector3 AngularVelocity
 		{ get; set; }
 
+		[Category("Entity")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		public bool IsDisposed
+		{
+			get { return m_isDisposed; }
+		}
+
 		#endregion
 
 		#region "Methods"
+
+		new public void Dispose()
+		{
+			if (BackingObject != null)
+			{
+				Vector3 currentPosition = Position;
+				currentPosition = Vector3.Add(currentPosition, new Vector3(100000, 100000, 100000));
+				Position = currentPosition;
+
+				Action action = InternalUpdateEntityPosition;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+
+				Thread.Sleep(250);
+
+				Action action2 = InternalRemoveEntity;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
+
+				m_isDisposed = true;
+
+				base.Dispose();
+			}
+		}
 
 		/// <summary>
 		/// Generates a new in-game entity ID
@@ -344,6 +379,38 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLineAndConsole("Failed to remove entity '" + EntityId.ToString() + "'");
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalRegisterEntityMovedEvent()
+		{
+			try
+			{
+				Action<Object> action = InternalEntityMovedEvent;
+				//action = (Action<Object>)UtilityFunctions.ChangeObjectGeneric(action, BackingObject.GetType());
+
+				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnMovedEventMethod);
+				method.Invoke(BackingObject, new object[] { action });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalEntityMovedEvent(Object entity)
+		{
+			try
+			{
+				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+				newEvent.type = EntityEventManager.EntityEventType.OnBaseEntityMoved;
+				newEvent.timestamp = DateTime.Now;
+				newEvent.entity = this;
+				EntityEventManager.Instance.AddEvent(newEvent);
+			}
+			catch (Exception ex)
+			{
 				LogManager.GameLog.WriteLine(ex);
 			}
 		}

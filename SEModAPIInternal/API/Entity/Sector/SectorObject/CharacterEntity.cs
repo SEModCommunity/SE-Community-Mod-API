@@ -54,7 +54,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.type = EntityEventManager.EntityEventType.OnPlayerJoined;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
-			EntityEventManager.Instance.EntityEvents.Add(newEvent);
+			EntityEventManager.Instance.AddEvent(newEvent);
 		}
 
 		#endregion
@@ -170,7 +170,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.type = EntityEventManager.EntityEventType.OnPlayerLeft;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
-			EntityEventManager.Instance.EntityEvents.Add(newEvent);
+			EntityEventManager.Instance.AddEvent(newEvent);
 		}
 
 		/// <summary>

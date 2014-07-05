@@ -278,12 +278,23 @@ namespace SEServerExtender
 			{
 				if (node.Tag != null && entityList.Contains(node.Tag))
 				{
-					BaseEntity item = (BaseEntity)node.Tag;
-					SerializableVector3 rawPosition = item.Position;
-					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-					node.Text = item.Name + " | Dist: " + distance.ToString() + "m";
+					try
+					{
+						BaseEntity item = (BaseEntity)node.Tag;
 
-					entityList.Remove(item);
+						if (!item.IsDisposed)
+						{
+							SerializableVector3 rawPosition = item.Position;
+							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
+							node.Text = newNodeText;
+						}
+						entityList.Remove(item);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
 				}
 				else
 				{

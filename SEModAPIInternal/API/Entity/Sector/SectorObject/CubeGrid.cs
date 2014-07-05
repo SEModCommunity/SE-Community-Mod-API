@@ -99,6 +99,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			m_cubeBlockManager = new CubeBlockManager(this, backingObject, CubeGridGetCubeBlocksHashSetMethod);
 			m_networkManager = new CubeGridNetworkManager(this);
+
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridCreated;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			EntityEventManager.Instance.AddEvent(newEvent);
 		}
 
 		#endregion
@@ -241,6 +247,17 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Methods"
 
+		new public void Dispose()
+		{
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridDeleted;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			EntityEventManager.Instance.AddEvent(newEvent);
+
+			base.Dispose();
+		}
+
 		/// <summary>
 		/// Method to get the casted instance from parent signature
 		/// </summary>
@@ -268,6 +285,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(GetSubTypeEntity(), fileInfo);
 		}
+
+		#region "Internal"
 
 		public bool AddCubeGrid()
 		{
@@ -309,6 +328,24 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				LogManager.GameLog.WriteLine(ex);
 			}
 		}
+
+		public void InternalCubeGridMovedEvent(Object entity)
+		{
+			try
+			{
+				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+				newEvent.type = EntityEventManager.EntityEventType.OnCubeGridMoved;
+				newEvent.timestamp = DateTime.Now;
+				newEvent.entity = this;
+				EntityEventManager.Instance.AddEvent(newEvent);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		#endregion
 
 		#endregion
 	}

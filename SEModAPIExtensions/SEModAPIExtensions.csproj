@@ -40,6 +40,7 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="API\ChatManager.cs" />
+    <Compile Include="API\Plugin\Events\IBaseEntityHandler.cs" />
     <Compile Include="API\Plugin\Events\ICubeGridHandler.cs" />
     <Compile Include="API\Plugin\Events\IPlayerEventHandler.cs" />
     <Compile Include="API\Plugin\IPlugin.cs" />
@@ -49,6 +50,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Sandbox.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\GameLibraries\Sandbox.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Sandbox.Common.XmlSerializers">
       <HintPath>..\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
@@ -59,6 +64,10 @@
     <Reference Include="System.XML" />
     <Reference Include="VRage.Common">
       <HintPath>..\GameLibraries\VRage.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="VRage.Math, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\GameLibraries\VRage.Math.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -83,6 +83,22 @@ namespace SEModAPIInternal.API.Utility
 			return (T)source;
 		}
 
+		public static Object ChangeObjectGeneric(Object source, Type newGenericType)
+		{
+			try
+			{
+				Type newType = source.GetType().MakeGenericType(newGenericType);
+				Object result = ChangeObjectType(source, newType);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return source;
+			}
+		}
+
 		public static long GenerateEntityId()
 		{
 			try

@@ -180,6 +180,7 @@ namespace SEModAPIExtensions.API
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
 
+			EntityEventManager.Instance.ResourceLocked = true;
 			foreach (var plugin in m_plugins.Values)
 			{
 				List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
@@ -211,6 +212,50 @@ namespace SEModAPIExtensions.API
 								//Do nothing
 							}
 							break;
+						case EntityEventManager.EntityEventType.OnBaseEntityMoved:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnBaseEntityMoved");
+								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
+						case EntityEventManager.EntityEventType.OnCubeGridMoved:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeGridMoved");
+								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
+						case EntityEventManager.EntityEventType.OnCubeGridCreated:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeGridCreated");
+								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
+						case EntityEventManager.EntityEventType.OnCubeGridDeleted:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeGridDeleted");
+								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
 					}
 				}
 
@@ -225,7 +270,8 @@ namespace SEModAPIExtensions.API
 				}
 			}
 
-			EntityEventManager.Instance.EntityEvents.Clear();
+			EntityEventManager.Instance.ClearEvents();
+			EntityEventManager.Instance.ResourceLocked = false;
 		}
 
 		#endregion

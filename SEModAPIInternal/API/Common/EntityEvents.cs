@@ -13,6 +13,10 @@ namespace SEModAPIInternal.API.Common
 		{
 			OnPlayerJoined,
 			OnPlayerLeft,
+			OnBaseEntityMoved,
+			OnCubeGridMoved,
+			OnCubeGridCreated,
+			OnCubeGridDeleted,
 		}
 
 		public struct EntityEvent
@@ -26,6 +30,8 @@ namespace SEModAPIInternal.API.Common
 
 		private static EntityEventManager m_instance;
 		private List<EntityEvent> m_entityEvents;
+		private List<EntityEvent> m_entityEventsBuffer;
+		private bool m_isResourceLocked;
 
 		#endregion
 
@@ -34,6 +40,8 @@ namespace SEModAPIInternal.API.Common
 		protected EntityEventManager()
 		{
 			m_entityEvents = new List<EntityEvent>();
+			m_entityEventsBuffer = new List<EntityEvent>();
+			m_isResourceLocked = false;
 
 			m_instance = this;
 
@@ -57,12 +65,43 @@ namespace SEModAPIInternal.API.Common
 
 		public List<EntityEvent> EntityEvents
 		{
-			get { return m_entityEvents; }
+			get
+			{
+				List<EntityEvent> copy = new List<EntityEvent>(m_entityEvents.ToArray());
+				return copy;
+			}
+		}
+
+		public bool ResourceLocked
+		{
+			get { return m_isResourceLocked; }
+			set
+			{
+				if (value == false)
+				{
+					m_entityEvents.AddList(m_entityEventsBuffer);
+				}
+
+				m_isResourceLocked = value;
+			}
 		}
 
 		#endregion
 
 		#region "Methods"
+
+		public void AddEvent(EntityEvent newEvent)
+		{
+			if (ResourceLocked)
+				m_entityEventsBuffer.Add(newEvent);
+			else
+				m_entityEvents.Add(newEvent);
+		}
+
+		public void ClearEvents()
+		{
+			m_entityEvents.Clear();
+		}
 
 		#endregion
 	}
