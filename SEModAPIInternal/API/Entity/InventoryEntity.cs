@@ -22,9 +22,8 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
-		private BaseEntityManager m_itemManager;
+		private InventoryItemManager m_itemManager;
 		private InventoryNetworkManager m_networkManager;
-		private bool m_isRefreshing;
 
 		protected InventoryItemEntity m_itemToUpdate;
 		protected Decimal m_oldItemAmount;
@@ -37,9 +36,12 @@ namespace SEModAPIInternal.API.Entity
 		public static string InventoryGetTotalVolumeMethod = "C8CB569A2F9A58A24BAC40AB0817AD6A";
 		public static string InventoryGetTotalMassMethod = "4E701A33F8803398A50F20D8BF2E5507";
 		public static string InventorySetFromObjectBuilderMethod = "D85F2B547D9197E27D0DB9D5305D624F";
-		public static string InventoryAddItemMethod = "613CEE8CCA77F473C2E9F6393B7F5FC8";
 		public static string InventoryGetObjectBuilderMethod = "EFBD3CF8717682D7B59A5878FF97E0BB";
 		public static string InventoryCleanUpMethod = "476A04917356C2C5FFE23B1CBFC11450";
+		public static string InventoryGetItemListMethod = "C43E297C0F568726D4BDD5D71B901911";
+
+		public static string InventoryAddItemAmountMethod = "FB009222ACFCEACDC546801B06DDACB6";
+		public static string InventoryRemoveItemAmountMethod = "623B0AC0E7D9C30410680C76A55F0C6B";
 
 		#endregion
 
@@ -48,9 +50,8 @@ namespace SEModAPIInternal.API.Entity
 		public InventoryEntity(MyObjectBuilder_Inventory definition)
 			: base(definition)
 		{
-			m_itemManager = new BaseEntityManager();
+			m_itemManager = new InventoryItemManager(this);
 
-			m_isRefreshing = true;
 			List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
 			foreach (MyObjectBuilder_InventoryItem item in definition.Items)
 			{
@@ -59,24 +60,12 @@ namespace SEModAPIInternal.API.Entity
 				itemList.Add(newItem);
 			}
 			m_itemManager.Load(itemList);
-			m_isRefreshing = false;
 		}
 
 		public InventoryEntity(MyObjectBuilder_Inventory definition, Object backingObject)
 			: base(definition, backingObject)
 		{
-			m_itemManager = new BaseEntityManager();
-
-			m_isRefreshing = true;
-			List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
-			foreach (MyObjectBuilder_InventoryItem item in definition.Items)
-			{
-				InventoryItemEntity newItem = new InventoryItemEntity(item);
-				newItem.Container = this;
-				itemList.Add(newItem);
-			}
-			m_itemManager.Load(itemList);
-			m_isRefreshing = false;
+			m_itemManager = new InventoryItemManager(this, backingObject, InventoryGetItemListMethod);
 
 			m_networkManager = new InventoryNetworkManager(this);
 		}
@@ -110,14 +99,6 @@ namespace SEModAPIInternal.API.Entity
 			{
 				try
 				{
-					//RefreshInventory();
-
-					//Wait for the refresh to complete
-					//while (m_isRefreshing)
-					//{
-					//	Thread.Sleep(100);
-					//}
-
 					List<InventoryItemEntity> newList = m_itemManager.GetTypedInternalData<InventoryItemEntity>();
 					return newList;
 				}
@@ -186,6 +167,8 @@ namespace SEModAPIInternal.API.Entity
 		/// <returns>The casted instance into the class type</returns>
 		new internal MyObjectBuilder_Inventory GetSubTypeEntity()
 		{
+			RefreshInventory();
+
 			return (MyObjectBuilder_Inventory)BaseEntity;
 		}
 
@@ -193,32 +176,30 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				m_isRefreshing = true;
-
 				if (BackingObject != null)
 				{
-					Action action = InternalRefreshInventory;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+					//Update the base entity
+					MethodInfo getObjectBuilder = BackingObject.GetType().GetMethod(InventoryGetObjectBuilderMethod);
+					MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)getObjectBuilder.Invoke(BackingObject, new object[] { });
+					BaseEntity = inventory;
 				}
 				else
 				{
 					//Update the item manager
+					MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)BaseEntity;
 					List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
-					foreach (MyObjectBuilder_InventoryItem item in GetSubTypeEntity().Items)
+					foreach (MyObjectBuilder_InventoryItem item in inventory.Items)
 					{
 						InventoryItemEntity newItem = new InventoryItemEntity(item);
 						newItem.Container = this;
 						itemList.Add(newItem);
 					}
 					m_itemManager.Load(itemList);
-
-					m_isRefreshing = false;
 				}
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
-				m_isRefreshing = false;
 			}
 		}
 
@@ -234,34 +215,6 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Internal"
 
-		protected void InternalRefreshInventory()
-		{
-			try
-			{
-				//Update the base entity
-				MethodInfo getObjectBuilder = BackingObject.GetType().GetMethod(InventoryGetObjectBuilderMethod);
-				MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)getObjectBuilder.Invoke(BackingObject, new object[] { });
-				BaseEntity = inventory;
-
-				//Update the item manager
-				List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
-				foreach (MyObjectBuilder_InventoryItem item in GetSubTypeEntity().Items)
-				{
-					InventoryItemEntity newItem = new InventoryItemEntity(item);
-					newItem.Container = this;
-					itemList.Add(newItem);
-				}
-				m_itemManager.Load(itemList);
-
-				m_isRefreshing = false;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				m_isRefreshing = false;
-			}
-		}
-
 		protected void InternalUpdateItemAmount()
 		{
 			try
@@ -270,28 +223,34 @@ namespace SEModAPIInternal.API.Entity
 					return;
 
 				Decimal delta = m_newItemAmount - m_oldItemAmount;
-				
-				MethodInfo method = BackingObject.GetType().GetMethod(InventoryAddItemMethod);
-				MyObjectBuilder_PhysicalObject physicalObject = m_itemToUpdate.GetSubTypeEntity().PhysicalContent;
-				Object[] parameters = new object[] {
-					delta,
-					physicalObject,
-					Type.Missing,
-					Type.Missing
-				};
-				method.Invoke(BackingObject, parameters);
-				
-				if (m_networkManager != null)
+
+				MethodInfo method;
+				Object[] parameters;
+				if (delta > 0)
 				{
-					m_networkManager.UpdateItemAmount(-delta, m_itemToUpdate.ItemId);
+					method = BackingObject.GetType().GetMethod(InventoryAddItemAmountMethod);
+					parameters = new object[] {
+						delta,
+						m_itemToUpdate.GetSubTypeEntity().PhysicalContent,
+						Type.Missing
+					};
+				}
+				else
+				{
+					Type[] argTypes = new Type[3];
+					argTypes[0] = typeof(Decimal);
+					argTypes[1] = typeof(MyObjectBuilder_PhysicalObject);
+					argTypes[2] = typeof(bool);
+
+					method = BackingObject.GetType().GetMethod(InventoryRemoveItemAmountMethod, argTypes);
+					parameters = new object[] {
+						-delta,
+						m_itemToUpdate.GetSubTypeEntity().PhysicalContent,
+						Type.Missing
+					};
 				}
 
-				MyObjectBuilder_Inventory baseInventory = GetSubTypeEntity();
-				baseInventory.Items.Clear();
-				foreach (var item in m_itemManager.GetTypedInternalData<InventoryItemEntity>())
-				{
-					baseInventory.Items.Add(item.GetSubTypeEntity());
-				}
+				method.Invoke(BackingObject, parameters);
 
 				m_itemToUpdate = null;
 				m_oldItemAmount = 0;
@@ -325,12 +284,36 @@ namespace SEModAPIInternal.API.Entity
 		public static string InventoryItemNamespace = "33FB6E717989660631E6772B99F502AD";
 		public static string InventoryItemClass = "555069178719BB1B546FB026B906CE00";
 
+		public static string InventoryItemGetObjectBuilderMethod = "B45B0C201826847F0E087D82F9AD3DF1";
+
 		#endregion
 
 		#region "Constructors and Initializers"
 
 		public InventoryItemEntity(MyObjectBuilder_InventoryItem definition)
 			: base(definition)
+		{
+			if (m_physicalItemsManager == null)
+			{
+				m_physicalItemsManager = new PhysicalItemDefinitionsManager();
+				m_physicalItemsManager.Load(PhysicalItemDefinitionsManager.GetContentDataFile("PhysicalItems.sbc"));
+			}
+			if (m_componentsManager == null)
+			{
+				m_componentsManager = new ComponentDefinitionsManager();
+				m_componentsManager.Load(ComponentDefinitionsManager.GetContentDataFile("Components.sbc"));
+			}
+			if (m_ammoManager == null)
+			{
+				m_ammoManager = new AmmoMagazinesDefinitionsManager();
+				m_ammoManager.Load(AmmoMagazinesDefinitionsManager.GetContentDataFile("AmmoMagazines.sbc"));
+			}
+
+			FindMatchingItem();
+		}
+
+		public InventoryItemEntity(MyObjectBuilder_InventoryItem definition, Object backingObject)
+			: base(definition, backingObject)
 		{
 			if (m_physicalItemsManager == null)
 			{
@@ -537,6 +520,100 @@ namespace SEModAPIInternal.API.Entity
 		internal MyObjectBuilder_InventoryItem GetSubTypeEntity()
 		{
 			return (MyObjectBuilder_InventoryItem)BaseEntity;
+		}
+
+		#endregion
+	}
+
+	public class InventoryItemManager : BaseEntityManager
+	{
+		#region "Attributes"
+
+		private InventoryEntity m_parent;
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public InventoryItemManager(InventoryEntity parent)
+		{
+			m_parent = parent;
+		}
+
+		public InventoryItemManager(InventoryEntity parent, Object backingSource, string backingSourceMethodName)
+			: base(backingSource, backingSourceMethodName)
+		{
+			m_parent = parent;
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		public override void LoadDynamic()
+		{
+			List<Object> rawEntities = GetBackingDataList();
+			Dictionary<long, BaseObject> data = GetInternalData();
+			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
+
+			//Update the main data mapping
+			data.Clear();
+			int entityCount = 0;
+			foreach (Object entity in rawEntities)
+			{
+				entityCount++;
+
+				try
+				{
+					MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)BaseEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod, new object[] { });
+
+					if (data.ContainsKey(baseEntity.ItemId))
+					{
+						//We should not be here!
+						continue;
+					}
+
+					InventoryItemEntity matchingItem = null;
+
+					//If the original data already contains an entry for this, skip creation
+					if (backingData.ContainsKey(entity))
+					{
+						matchingItem = (InventoryItemEntity)backingData[entity];
+
+						//Update the base entity (not the same as BackingObject which is the internal object)
+						matchingItem.BaseEntity = baseEntity;
+					}
+					else
+					{
+						matchingItem = new InventoryItemEntity(baseEntity, entity);
+						matchingItem.Container = m_parent;
+					}
+
+					if (matchingItem == null)
+						throw new Exception("Failed to match/create inventory item entity");
+
+					data.Add(matchingItem.ItemId, matchingItem);
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
+			}
+
+			//Update the backing data mapping
+			backingData.Clear();
+			foreach (var key in data.Keys)
+			{
+				try
+				{
+					var entry = data[key];
+					backingData.Add(entry.BackingObject, entry);
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
+			}
 		}
 
 		#endregion

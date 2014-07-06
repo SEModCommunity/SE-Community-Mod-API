@@ -376,32 +376,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Methods"
 
-		public CubeBlockEntity NewEntry<T, V>(T source)
-			where T : MyObjectBuilder_CubeBlock
-			where V : CubeBlockEntity
-		{
-			try
-			{
-				if (!IsMutable) return default(CubeBlockEntity);
-
-				var newEntryType = typeof(V);
-
-				var newEntry = (V)Activator.CreateInstance(newEntryType, new object[] { source });
-
-				long entityId = newEntry.EntityId;
-				if (entityId == 0)
-					entityId = newEntry.GenerateEntityId();
-				GetInternalData().Add(entityId, newEntry);
-
-				return newEntry;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				return null;
-			}
-		}
-
 		public override void LoadDynamic()
 		{
 			HashSet<Object> rawEntities = GetBackingDataHashSet();

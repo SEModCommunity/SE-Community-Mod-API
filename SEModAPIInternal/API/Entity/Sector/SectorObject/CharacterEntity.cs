@@ -152,11 +152,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				if (BackingObject != null)
-				{
-					if (m_Inventory.BackingObject == null)
-						m_Inventory.BackingObject = InternalGetCharacterInventory();
-				}
 				return m_Inventory;
 			}
 		}

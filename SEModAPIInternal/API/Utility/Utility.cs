@@ -42,9 +42,47 @@ namespace SEModAPIInternal.API.Utility
 			}
 		}
 
+		public static List<Object> ConvertList(Object source)
+		{
+			try
+			{
+				Type rawType = source.GetType();
+				Type[] genericArgs = rawType.GetGenericArguments();
+				MethodInfo conversion = typeof(UtilityFunctions).GetMethod("ConvertEntityList", BindingFlags.Public | BindingFlags.Static);
+				conversion = conversion.MakeGenericMethod(genericArgs[0]);
+				List<Object> result = (List<Object>)conversion.Invoke(null, new object[] { source });
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return new List<object>();
+			}
+		}
+
 		public static HashSet<Object> ConvertEntityHashSet<T>(IEnumerable<T> source)
 		{
 			HashSet<Object> dataSet = new HashSet<Object>();
+
+			try
+			{
+				foreach (var rawEntity in source)
+				{
+					dataSet.Add(rawEntity);
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+
+			return dataSet;
+		}
+
+		public static List<Object> ConvertEntityList<T>(IEnumerable<T> source)
+		{
+			List<Object> dataSet = new List<Object>();
 
 			try
 			{

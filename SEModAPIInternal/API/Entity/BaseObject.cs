@@ -481,6 +481,22 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		protected List<Object> GetBackingDataList()
+		{
+			try
+			{
+				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod, new object[] { });
+				List<Object> list = UtilityFunctions.ConvertList(rawValue);
+
+				return list;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return new List<object>();
+			}
+		}
+
 		#endregion
 
 		#region "Static"
