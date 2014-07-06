@@ -36,6 +36,7 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private Type m_internalBaseEntityType;
+		private float m_maxLinearVelocity;
 
 		protected bool m_isDisposed = false;
 
@@ -75,6 +76,8 @@ namespace SEModAPIInternal.API.Entity
 
 				Action action = InternalRegisterEntityMovedEvent;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+
+				m_maxLinearVelocity = GetRigidBody().MaxLinearVelocity;
 			}
 			catch (Exception ex)
 			{
@@ -219,6 +222,19 @@ namespace SEModAPIInternal.API.Entity
 			get { return m_isDisposed; }
 		}
 
+		[Category("Entity")]
+		public float MaxLinearVelocity
+		{
+			get { return m_maxLinearVelocity; }
+			set
+			{
+				m_maxLinearVelocity = value;
+
+				Action action = InternalUpdateEntityMaxLinearVelocity;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -281,7 +297,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex.ToString());
+				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -291,6 +307,8 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				Object physicsObject = GetEntityPhysicsObject();
+				if (physicsObject == null)
+					return null;
 				MethodInfo getRigidBodyMethod = BaseObject.GetEntityMethod(physicsObject, PhysicsManagerGetRigidBodyMethod);
 				HkRigidBody rigidBody = (HkRigidBody)getRigidBodyMethod.Invoke(physicsObject, new object[] { });
 
@@ -298,7 +316,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex.ToString());
+				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -403,11 +421,30 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
+				if (IsDisposed)
+					return;
+
 				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 				newEvent.type = EntityEventManager.EntityEventType.OnBaseEntityMoved;
 				newEvent.timestamp = DateTime.Now;
 				newEvent.entity = this;
 				EntityEventManager.Instance.AddEvent(newEvent);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalUpdateEntityMaxLinearVelocity()
+		{
+			try
+			{
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating max linear velocity to " + MaxLinearVelocity.ToString());
+
+				HkRigidBody body = GetRigidBody();
+				body.MaxLinearVelocity = m_maxLinearVelocity;
 			}
 			catch (Exception ex)
 			{

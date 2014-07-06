@@ -88,9 +88,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		/// <summary>
-		/// Entity ID of the object
-		/// </summary>
 		[Category("Entity")]
 		[Browsable(true)]
 		[Description("The unique entity ID representing a functional entity in-game")]
@@ -212,6 +209,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
+		}
+
+		[Category("Cube Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		public CubeGridEntity Parent
+		{
+			get { return m_parent; }
 		}
 
 		#endregion

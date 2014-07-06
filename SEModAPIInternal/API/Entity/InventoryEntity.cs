@@ -211,12 +211,30 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalUpdateItemAmount(Decimal oldAmount, Decimal newAmount, uint itemId)
+		public void InternalUpdateItemAmount(InventoryItemEntity item, Decimal newAmount)
 		{
-			if (m_networkManager != null)
+			try
 			{
-				Decimal delta = oldAmount - newAmount;
-				m_networkManager.UpdateItemAmount(delta, itemId);
+				Decimal delta = newAmount - (Decimal)item.Amount;
+
+				MethodInfo method = BackingObject.GetType().GetMethod(InventoryAddItemMethod);
+				MyObjectBuilder_PhysicalObject physicalObject = item.GetSubTypeEntity().PhysicalContent;
+				Object[] parameters = new object[] {
+					delta,
+					physicalObject,
+					Type.Missing,
+					Type.Missing
+				};
+				method.Invoke(BackingObject, parameters);
+
+				if (m_networkManager != null)
+				{
+					m_networkManager.UpdateItemAmount(-delta, item.ItemId);
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
@@ -330,7 +348,7 @@ namespace SEModAPIInternal.API.Entity
 			{
 				if (GetSubTypeEntity().Amount == value) return;
 
-				Container.InternalUpdateItemAmount((Decimal)GetSubTypeEntity().Amount, (Decimal)value, ItemId);
+				Container.InternalUpdateItemAmount(this, (Decimal)value);
 
 				GetSubTypeEntity().Amount = value;
 				Changed = true;

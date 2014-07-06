@@ -21,9 +21,10 @@ namespace SEModAPIExtensions.API.Plugin
 
 		public PluginBase()
 		{
-			GuidAttribute guidAttr = (GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), true)[0];
+			Assembly assembly = Assembly.GetCallingAssembly();
+			GuidAttribute guidAttr = (GuidAttribute)assembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
 			m_pluginId = new Guid(guidAttr.Value);
-			AssemblyName asmName = Assembly.GetExecutingAssembly().GetName();
+			AssemblyName asmName = assembly.GetName();
 			m_name = asmName.Name;
 			m_version = asmName.Version.ToString();
 		}

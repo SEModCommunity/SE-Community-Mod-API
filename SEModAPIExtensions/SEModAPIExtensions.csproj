@@ -44,7 +44,6 @@
     <Compile Include="API\Plugin\Events\ICubeGridHandler.cs" />
     <Compile Include="API\Plugin\Events\IPlayerEventHandler.cs" />
     <Compile Include="API\Plugin\IPlugin.cs" />
-    <Compile Include="API\Plugin\ExamplePlugin.cs" />
     <Compile Include="API\Plugin\PluginBase.cs" />
     <Compile Include="API\PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
