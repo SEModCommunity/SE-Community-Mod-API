@@ -24,6 +24,7 @@ namespace SEModAPIInternal.API.Common
 			public EntityEventType type;
 			public DateTime timestamp;
 			public BaseObject entity;
+			public ushort priority;
 		}
 
 		#region "Attributes"
@@ -93,7 +94,11 @@ namespace SEModAPIInternal.API.Common
 		public void AddEvent(EntityEvent newEvent)
 		{
 			if (ResourceLocked)
-				m_entityEventsBuffer.Add(newEvent);
+			{
+				//Only add priority 0 and 1 events to the buffer while the list is locked
+				if(newEvent.priority < 2)
+					m_entityEventsBuffer.Add(newEvent);
+			}
 			else
 				m_entityEvents.Add(newEvent);
 		}

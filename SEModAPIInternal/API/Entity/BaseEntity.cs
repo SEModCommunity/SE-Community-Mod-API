@@ -235,6 +235,32 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[Category("Entity")]
+		[ReadOnly(true)]
+		public float Mass
+		{
+			get
+			{
+				if (BackingObject == null)
+					return 0;
+
+				try
+				{
+					HkRigidBody body = GetRigidBody();
+					if (body == null)
+						return 0;
+
+					float mass = body.Mass;
+					return mass;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+					return 0;
+				}
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -302,7 +328,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		private HkRigidBody GetRigidBody()
+		protected HkRigidBody GetRigidBody()
 		{
 			try
 			{
@@ -428,6 +454,7 @@ namespace SEModAPIInternal.API.Entity
 				newEvent.type = EntityEventManager.EntityEventType.OnBaseEntityMoved;
 				newEvent.timestamp = DateTime.Now;
 				newEvent.entity = this;
+				newEvent.priority = 10;
 				EntityEventManager.Instance.AddEvent(newEvent);
 			}
 			catch (Exception ex)

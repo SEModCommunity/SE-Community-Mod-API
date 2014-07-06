@@ -54,6 +54,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.type = EntityEventManager.EntityEventType.OnPlayerJoined;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
+			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
 		}
 
@@ -170,6 +171,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.type = EntityEventManager.EntityEventType.OnPlayerLeft;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
+			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
 		}
 

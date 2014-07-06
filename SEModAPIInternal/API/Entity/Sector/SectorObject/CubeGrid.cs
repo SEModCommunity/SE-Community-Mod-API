@@ -104,6 +104,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridCreated;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
+			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
 		}
 
@@ -251,6 +252,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridDeleted;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
+			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
 
 			base.Dispose();
@@ -335,6 +337,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				newEvent.type = EntityEventManager.EntityEventType.OnCubeGridMoved;
 				newEvent.timestamp = DateTime.Now;
 				newEvent.entity = this;
+				newEvent.priority = 9;
 				EntityEventManager.Instance.AddEvent(newEvent);
 			}
 			catch (Exception ex)
