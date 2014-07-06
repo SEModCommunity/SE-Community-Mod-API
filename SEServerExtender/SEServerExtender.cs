@@ -276,6 +276,9 @@ namespace SEServerExtender
 			unknownsNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count + voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count + meteorsNode.Nodes.Count);
 			foreach (TreeNode node in nodeArray)
 			{
+				if (TRV_Entities.IsDisposed)
+					return;
+
 				if (node.Tag != null && entityList.Contains(node.Tag))
 				{
 					try

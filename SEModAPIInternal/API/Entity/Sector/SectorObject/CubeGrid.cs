@@ -209,8 +209,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				RefreshCubeBlocks();
-
 				return m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>();
 			}
 		}

@@ -77,7 +77,7 @@ namespace SEModAPIInternal.API.Entity
 				Action action = InternalRegisterEntityMovedEvent;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
-				m_maxLinearVelocity = GetRigidBody().MaxLinearVelocity;
+				m_maxLinearVelocity = (float)104.7;
 			}
 			catch (Exception ex)
 			{

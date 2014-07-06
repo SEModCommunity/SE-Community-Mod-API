@@ -64,9 +64,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get
 			{
 				float fuelMass = 0;
-				foreach (var item in m_Inventory.Items)
+				MyObjectBuilder_Inventory inventory = m_Inventory.GetSubTypeEntity();
+				foreach (var item in inventory.Items)
 				{
-					fuelMass += item.Mass * item.Amount;
+					fuelMass += item.Amount;
 				}
 				return fuelMass;
 			}

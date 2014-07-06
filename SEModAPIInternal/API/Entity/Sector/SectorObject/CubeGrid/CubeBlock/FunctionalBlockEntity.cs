@@ -18,6 +18,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Attributes"
 
+		protected bool m_enabledToSet;
+
 		public static string FunctionalBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string FunctionalBlockClass = "7085736D64DCC58ED5DCA05FFEEA9664";
 
@@ -48,12 +50,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get { return GetSubTypeEntity().Enabled; }
 			set
 			{
-				if (GetSubTypeEntity().Enabled == value) return;
-				GetSubTypeEntity().Enabled = value;
+				var baseEntity = GetSubTypeEntity();
+				if (baseEntity.Enabled == value) return;
+				baseEntity.Enabled = value;
 				Changed = true;
 
 				if (BackingObject != null)
 				{
+					m_enabledToSet = value;
+
 					Action action = InternalSetEnabled;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
@@ -81,18 +86,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					Console.WriteLine("FunctionalBlock '" + Name + "': Setting enabled/disabled to '" + (Enabled ? "enabled" : "disabled") + "'");
+					Console.WriteLine("FunctionalBlock '" + Name + "': Setting enabled/disabled to '" + (m_enabledToSet ? "enabled" : "disabled") + "'");
 				}
 
 				Type actualType = actualCubeObject.GetType();
-				while (actualType.Name != FunctionalBlockClass && actualType.Name != "" && actualType.Name != "Object")
+				int iterationCutoff = 5;
+				while (actualType.Name != FunctionalBlockClass && actualType.Name != "" && actualType.Name != "Object" && iterationCutoff > 0)
 				{
 					actualType = actualType.BaseType;
+					iterationCutoff--;
 				}
 				MethodInfo method2 = actualType.GetMethod(FunctionalBlockSetEnabledMethod);
-				method2.Invoke(actualCubeObject, new object[] { Enabled });
+				method2.Invoke(actualCubeObject, new object[] { m_enabledToSet });
 				MethodInfo method3 = actualType.GetMethod(FunctionalBlockBroadcastEnabledMethod);
-				method3.Invoke(actualCubeObject, new object[] { Enabled });
+				method3.Invoke(actualCubeObject, new object[] { m_enabledToSet });
 			}
 			catch (Exception ex)
 			{

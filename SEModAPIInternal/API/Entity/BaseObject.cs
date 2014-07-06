@@ -669,15 +669,23 @@ namespace SEModAPIInternal.API.Entity
 		
 		public List<T> GetTypedInternalData<T>() where T : BaseObject
 		{
-			if (IsDynamic)
-				LoadDynamic();
-
-			List<T> newList = new List<T>();
-			foreach(var def in GetInternalData().Values)
+			try
 			{
-				newList.Add((T)def);
+				if (IsDynamic)
+					LoadDynamic();
+
+				List<T> newList = new List<T>();
+				foreach (var def in GetInternalData().Values)
+				{
+					newList.Add((T)def);
+				}
+				return newList;
 			}
-			return newList;
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return new List<T>();
+			}
 		}
 
 		public T NewEntry<T>() where T : BaseObject
