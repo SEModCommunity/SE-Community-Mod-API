@@ -397,7 +397,8 @@ namespace SEModAPIInternal.API.Entity
 				var baseEntity = GetSubTypeEntity();
 				if (baseEntity.Amount == value) return;
 
-				Container.UpdateItemAmount(this, (Decimal)value);
+				if(Container != null)
+					Container.UpdateItemAmount(this, (Decimal)value);
 
 				baseEntity.Amount = value;
 				Changed = true;

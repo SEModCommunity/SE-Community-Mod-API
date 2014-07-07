@@ -274,6 +274,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			return (MyObjectBuilder_CubeGrid)BaseEntity;
 		}
 
+		public CubeBlockEntity GetCubeBlock(Vector3I cubePosition)
+		{
+			long packedBlockCoordinates = cubePosition.X + cubePosition.Y * 1000 + cubePosition.Z * 1000000;
+
+			return (CubeBlockEntity)m_cubeBlockManager.GetEntry(packedBlockCoordinates);
+		}
+
 		public void RefreshCubeBlocks()
 		{
 			MyObjectBuilder_CubeGrid cubeGrid = (MyObjectBuilder_CubeGrid)BaseEntity;

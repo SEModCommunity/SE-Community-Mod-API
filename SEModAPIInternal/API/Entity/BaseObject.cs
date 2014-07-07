@@ -659,6 +659,14 @@ namespace SEModAPIInternal.API.Entity
 
 		#endregion
 
+		public BaseObject GetEntry(long key)
+		{
+			if (!GetInternalData().ContainsKey(key))
+				return null;
+
+			return GetInternalData()[key];
+		}
+
 		protected bool GetChangedState(BaseObject overLayer)
 		{
 			return overLayer.Changed;

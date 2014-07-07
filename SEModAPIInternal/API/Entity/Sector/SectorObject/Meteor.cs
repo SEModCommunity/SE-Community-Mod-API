@@ -20,6 +20,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		private InventoryItemEntity m_item;
 
+		public static string MeteorNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string MeteorClass = "E5A0E3F04CC6DEFB7410825523C63704";
+
 		#endregion
 
 		#region "Constructors and Initializers"

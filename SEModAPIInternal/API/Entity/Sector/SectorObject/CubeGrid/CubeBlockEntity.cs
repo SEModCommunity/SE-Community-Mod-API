@@ -17,6 +17,9 @@ using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
+using VRageMath;
+using VRageMath.PackedVector;
+
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 {
 	public class CubeBlockEntity : BaseObject
@@ -443,7 +446,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					if (matchingCubeBlock == null)
 						throw new Exception("Failed to match/create cube block entity");
 
-					data.Add(matchingCubeBlock.EntityId, matchingCubeBlock);
+					Vector3I cubePosition = matchingCubeBlock.Min;
+					long packedBlockCoordinates = cubePosition.X + cubePosition.Y * 1000 + cubePosition.Z * 1000000;
+					data.Add(packedBlockCoordinates, matchingCubeBlock);
 				}
 				catch (Exception ex)
 				{
