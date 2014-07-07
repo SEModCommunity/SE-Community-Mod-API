@@ -370,6 +370,7 @@ namespace SEServerExtender
 			TreeNode utilityBlocksNode;
 			TreeNode weaponBlocksNode;
 			TreeNode toolBlocksNode;
+			TreeNode lightBlocksNode;
 			TreeNode miscBlocksNode;
 
 			if (blocksNode.Nodes.Count < 9)
@@ -382,6 +383,7 @@ namespace SEServerExtender
 				utilityBlocksNode = blocksNode.Nodes.Add("Utility");
 				weaponBlocksNode = blocksNode.Nodes.Add("Weapons");
 				toolBlocksNode = blocksNode.Nodes.Add("Tools");
+				lightBlocksNode = blocksNode.Nodes.Add("Lights");
 				miscBlocksNode = blocksNode.Nodes.Add("Misc");
 
 				structuralBlocksNode.Name = structuralBlocksNode.Text;
@@ -392,6 +394,7 @@ namespace SEServerExtender
 				utilityBlocksNode.Name = utilityBlocksNode.Text;
 				weaponBlocksNode.Name = weaponBlocksNode.Text;
 				toolBlocksNode.Name = toolBlocksNode.Text;
+				lightBlocksNode.Name = lightBlocksNode.Text;
 				miscBlocksNode.Name = miscBlocksNode.Text;
 			}
 			else
@@ -404,7 +407,8 @@ namespace SEServerExtender
 				utilityBlocksNode = blocksNode.Nodes[5];
 				weaponBlocksNode = blocksNode.Nodes[6];
 				toolBlocksNode = blocksNode.Nodes[7];
-				miscBlocksNode = blocksNode.Nodes[8];
+				lightBlocksNode = blocksNode.Nodes[8];
+				miscBlocksNode = blocksNode.Nodes[9];
 
 				structuralBlocksNode.Nodes.Clear();
 				containerBlocksNode.Nodes.Clear();
@@ -414,6 +418,7 @@ namespace SEServerExtender
 				utilityBlocksNode.Nodes.Clear();
 				weaponBlocksNode.Nodes.Clear();
 				toolBlocksNode.Nodes.Clear();
+				lightBlocksNode.Nodes.Clear();
 				miscBlocksNode.Nodes.Clear();
 			}
 
@@ -453,6 +458,14 @@ namespace SEServerExtender
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
+				else if (cubeBlockType == typeof(InteriorLightEntity))
+				{
+					lightBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(ReflectorLightEntity))
+				{
+					lightBlocksNode.Nodes.Add(newNode);
+				}
 				else
 				{
 					miscBlocksNode.Nodes.Add(newNode);
@@ -467,6 +480,7 @@ namespace SEServerExtender
 			utilityBlocksNode.Text = utilityBlocksNode.Name + " (" + utilityBlocksNode.Nodes.Count.ToString() + ")";
 			weaponBlocksNode.Text = weaponBlocksNode.Name + " (" + weaponBlocksNode.Nodes.Count.ToString() + ")";
 			toolBlocksNode.Text = toolBlocksNode.Name + " (" + toolBlocksNode.Nodes.Count.ToString() + ")";
+			lightBlocksNode.Text = lightBlocksNode.Name + " (" + lightBlocksNode.Nodes.Count.ToString() + ")";
 			miscBlocksNode.Text = miscBlocksNode.Name + " (" + miscBlocksNode.Nodes.Count.ToString() + ")";
 		}
 
