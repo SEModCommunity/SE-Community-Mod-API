@@ -307,9 +307,9 @@ namespace SEModAPIInternal.API.Entity
 			return (MyObjectBuilder_EntityBase)BaseEntity;
 		}
 
-		public void Export<TS>(FileInfo fileInfo) where TS : XmlSerializer1
+		new public void Export(FileInfo fileInfo)
 		{
-			BaseEntityManager.SaveContentFile<MyObjectBuilder_EntityBase, TS>(GetSubTypeEntity(), fileInfo);
+			BaseEntityManager.SaveContentFile<MyObjectBuilder_EntityBase, MyObjectBuilder_EntityBaseSerializer>(GetSubTypeEntity(), fileInfo);
 		}
 
 		#region "Internal"

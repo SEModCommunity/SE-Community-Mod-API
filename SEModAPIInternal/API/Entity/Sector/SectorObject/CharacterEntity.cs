@@ -247,6 +247,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			return character;
 		}
 
+		public void Export(FileInfo fileInfo)
+		{
+			BaseEntityManager.SaveContentFile<MyObjectBuilder_Character, MyObjectBuilder_CharacterSerializer>(GetSubTypeEntity(), fileInfo);
+		}
+
 		#region "Internal"
 
 		protected string InternalGetDisplayName()
@@ -364,11 +369,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			{
 				LogManager.GameLog.WriteLine(ex);
 			}
-		}
-
-		public void Export(FileInfo fileInfo)
-		{
-			BaseEntityManager.SaveContentFile<MyObjectBuilder_Character, MyObjectBuilder_CharacterSerializer>(GetSubTypeEntity(), fileInfo);
 		}
 
 		#endregion

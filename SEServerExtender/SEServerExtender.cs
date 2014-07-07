@@ -501,19 +501,8 @@ namespace SEServerExtender
 			var linkedObject = e.Node.Tag;
 			PG_Entities_Details.SelectedObject = linkedObject;
 
-			if (linkedObject is FloatingObject)
-			{
-				BTN_Entities_Export.Enabled = true;
-				BTN_Entities_Delete.Enabled = true;
-			}
-
-			if (linkedObject is VoxelMap)
-			{
-				BTN_Entities_Export.Enabled = true;
-				BTN_Entities_Delete.Enabled = true;
-			}
-
-			if (linkedObject is Meteor)
+			//Enable export and delete for all objects that inherit from BaseObject
+			if (linkedObject is BaseObject)
 			{
 				BTN_Entities_Export.Enabled = true;
 				BTN_Entities_Delete.Enabled = true;
@@ -521,9 +510,7 @@ namespace SEServerExtender
 
 			if (linkedObject is CubeGridEntity)
 			{
-				BTN_Entities_Export.Enabled = true;
 				BTN_Entities_New.Enabled = true;
-				BTN_Entities_Delete.Enabled = true;
 
 				TRV_Entities.BeginUpdate();
 
@@ -534,8 +521,6 @@ namespace SEServerExtender
 
 			if (linkedObject is CharacterEntity)
 			{
-				BTN_Entities_Export.Enabled = true;
-
 				CharacterEntity character = (CharacterEntity)linkedObject;
 
 				InventoryEntity inventory = character.Inventory;
@@ -627,28 +612,31 @@ namespace SEServerExtender
 
 		private void BTN_Entities_Export_Click(object sender, EventArgs e)
 		{
+			if (TRV_Entities.SelectedNode == null)
+				return;
 			Object linkedObject = TRV_Entities.SelectedNode.Tag;
-			if (linkedObject is CubeGridEntity)
+			if (linkedObject == null)
+				return;
+			if (!(linkedObject is BaseObject))
+				return;
+
+			BaseObject objectToExport = (BaseObject)linkedObject;
+
+			SaveFileDialog saveFileDialog = new SaveFileDialog();
+			saveFileDialog.Filter = "sbc file (*.sbc)|*.sbc|All files (*.*)|*.*";
+			saveFileDialog.InitialDirectory = GameInstallationInfo.GamePath;
+
+			if (saveFileDialog.ShowDialog() == DialogResult.OK)
 			{
-				CubeGridEntity item = (CubeGridEntity)linkedObject;
-
-				SaveFileDialog saveFileDialog = new SaveFileDialog();
-				saveFileDialog.Filter = "sbc file (*.sbc)|*.sbc|All files (*.*)|*.*";
-				saveFileDialog.InitialDirectory = GameInstallationInfo.GamePath;
-
-				if (saveFileDialog.ShowDialog() == DialogResult.OK)
+				FileInfo fileInfo = new FileInfo(saveFileDialog.FileName);
+				try
 				{
-					FileInfo fileInfo = new FileInfo(saveFileDialog.FileName);
-					try
-					{
-						item.Export(fileInfo);
-					}
-					catch (Exception ex)
-					{
-						MessageBox.Show(this, ex.Message);
-					}
+					objectToExport.Export(fileInfo);
 				}
-
+				catch (Exception ex)
+				{
+					MessageBox.Show(this, ex.Message);
+				}
 			}
 		}
 

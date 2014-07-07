@@ -180,6 +180,11 @@ namespace SEModAPIInternal.API.Entity
 			return (MyObjectBuilder_Base)m_baseEntity;
 		}
 
+		public void Export(FileInfo fileInfo)
+		{
+			BaseEntityManager.SaveContentFile<MyObjectBuilder_Base, MyObjectBuilder_BaseSerializer>(GetSubTypeEntity(), fileInfo);
+		}
+
 		#region "Internal"
 
 		internal static FieldInfo GetStaticField(Type objectType, string fieldName)

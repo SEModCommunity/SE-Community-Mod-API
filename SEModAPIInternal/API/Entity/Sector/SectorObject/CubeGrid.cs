@@ -168,6 +168,24 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		}
 
 		[Category("Cube Grid")]
+		public bool IsDampenersEnabled
+		{
+			get { return GetSubTypeEntity().DampenersEnabled; }
+			set
+			{
+				if (GetSubTypeEntity().DampenersEnabled == value) return;
+				GetSubTypeEntity().DampenersEnabled = value;
+				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateDampenersEnabled;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
+			}
+		}
+
+		[Category("Cube Grid")]
 		[Browsable(true)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public override SerializableVector3 LinearVelocity
@@ -293,7 +311,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		public void Export(FileInfo fileInfo)
+		new public void Export(FileInfo fileInfo)
 		{
 			RefreshCubeBlocks();
 
@@ -383,6 +401,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 					return;
 
 				Dispose();
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalUpdateDampenersEnabled()
+		{
+			try
+			{
+				InvokeEntityMethod(BackingObject, CubeGridSetDampenersEnabledMethod, new object[] { IsDampenersEnabled });
 			}
 			catch (Exception ex)
 			{

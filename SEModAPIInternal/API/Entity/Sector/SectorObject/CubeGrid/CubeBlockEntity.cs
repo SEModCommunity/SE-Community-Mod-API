@@ -8,6 +8,7 @@ using System.Threading;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
+using Sandbox.Game.Weapons;
 
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
@@ -34,6 +35,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string CubeBlockGetObjectBuilder_Method = "CBB75211A3B0B3188541907C9B1B0C5C";
 		public static string CubeBlockGetActualBlock_Method = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
 		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
+		public static string CubeBlockDamageBlockMethod = "165EAAEA972A8C5D69F391D030C48869";
+		public static string CubeBlockGetBuildPercentMethod = "BE3EB9D9351E3CB273327FB522FD60E1";
+		public static string CubeBlockGetIntegrityPercentMethod = "get_Integrity";
 
 		public static string ActualCubeBlockNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ActualCubeBlockClass = "4E262F069F7C0F85458881743E182B25";
@@ -76,6 +80,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Properties"
 
+		[Category("Entity")]
 		public override string Name
 		{
 			get
@@ -115,6 +120,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		}
 
 		[Category("Cube Block")]
+		[ReadOnly(true)]
 		[TypeConverter(typeof(Vector3ITypeConverter))]
 		public SerializableVector3I Min
 		{
@@ -128,6 +134,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		}
 
 		[Category("Cube Block")]
+		[ReadOnly(true)]
 		[Browsable(false)]
 		public SerializableBlockOrientation BlockOrientation
 		{
@@ -150,6 +157,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (GetSubTypeEntity().ColorMaskHSV.Equals(value)) return;
 				GetSubTypeEntity().ColorMaskHSV = value;
 				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdate;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -162,6 +175,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (GetSubTypeEntity().BuildPercent == value) return;
 				GetSubTypeEntity().BuildPercent = value;
 				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdate;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -174,6 +193,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (GetSubTypeEntity().IntegrityPercent == value) return;
 				GetSubTypeEntity().IntegrityPercent = value;
 				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdate;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -349,6 +374,59 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		protected void InternalUpdate()
+		{
+			try
+			{
+				//TODO - Finish this
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		protected float InternalGetBuildPercent()
+		{
+			try
+			{
+				float result = (float)InvokeEntityMethod(BackingObject, CubeBlockGetBuildPercentMethod);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return 1;
+			}
+		}
+
+		protected float InternalGetIntegrityPercent()
+		{
+			try
+			{
+				float result = (float)InvokeEntityMethod(BackingObject, CubeBlockGetIntegrityPercentMethod);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return 1;
+			}
+		}
+
+		protected void InternalDamageBlock()
+		{
+			try
+			{
+				float damage = InternalGetIntegrityPercent() - IntegrityPercent;
+				InvokeEntityMethod(BackingObject, CubeBlockDamageBlockMethod, new object[] { damage, MyDamageType.Environment });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
 		#endregion
 
 		#endregion
@@ -436,6 +514,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 								break;
 							case MyObjectBuilderTypeEnum.MedicalRoom:
 								matchingCubeBlock = new MedicalRoomEntity(m_parent, (MyObjectBuilder_MedicalRoom)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.InteriorLight:
+								matchingCubeBlock = new InteriorLightEntity(m_parent, (MyObjectBuilder_InteriorLight)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.ReflectorLight:
+								matchingCubeBlock = new ReflectorLightEntity(m_parent, (MyObjectBuilder_ReflectorLight)baseEntity, entity);
 								break;
 							default:
 								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
