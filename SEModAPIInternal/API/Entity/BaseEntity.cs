@@ -262,7 +262,7 @@ namespace SEModAPIInternal.API.Entity
 
 		new public void Dispose()
 		{
-			if (BackingObject != null)
+			if (!IsDisposed && BackingObject != null)
 			{
 				Vector3 currentPosition = Position;
 				currentPosition = Vector3.Add(currentPosition, new Vector3(100000, 100000, 100000));
@@ -275,16 +275,16 @@ namespace SEModAPIInternal.API.Entity
 
 				Action action2 = InternalRemoveEntity;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
+
+				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+				newEvent.type = EntityEventManager.EntityEventType.OnBaseEntityDeleted;
+				newEvent.timestamp = DateTime.Now;
+				newEvent.entity = this;
+				newEvent.priority = 1;
+				EntityEventManager.Instance.AddEvent(newEvent);
+
+				m_isDisposed = true;
 			}
-
-			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
-			newEvent.type = EntityEventManager.EntityEventType.OnBaseEntityDeleted;
-			newEvent.timestamp = DateTime.Now;
-			newEvent.entity = this;
-			newEvent.priority = 1;
-			EntityEventManager.Instance.AddEvent(newEvent);
-
-			m_isDisposed = true;
 
 			base.Dispose();
 		}

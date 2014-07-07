@@ -260,6 +260,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
 
+			m_isDisposed = true;
+
 			base.Dispose();
 		}
 

@@ -351,6 +351,8 @@ namespace SEModAPIInternal.API.Entity
 				try
 				{
 					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+					if (baseEntity == null)
+						continue;
 
 					BaseEntity matchingEntity = null;
 
@@ -358,11 +360,14 @@ namespace SEModAPIInternal.API.Entity
 					if (backingData.ContainsKey(entity))
 					{
 						matchingEntity = (BaseEntity)backingData[entity];
+						if (matchingEntity.IsDisposed)
+							continue;
 
 						//Update the base entity (not the same as BackingObject which is the internal object)
 						matchingEntity.BaseEntity = baseEntity;
 					}
-					else
+
+					if(matchingEntity == null)
 					{
 						switch (baseEntity.TypeId)
 						{
