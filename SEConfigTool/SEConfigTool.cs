@@ -49,6 +49,7 @@ namespace SEConfigTool
 		private TransparentMaterialsDefinitionManager m_transparentMaterialsDefinitionManager;
 		private ConfigurationDefinition m_configurationDefinitionManager;
 		private EnvironmentDefinition m_environmentDefinitionManager;
+		private HandItemsDefinitionManager m_handItemsDefinitionManager;
 
 		private bool m_currentlyFillingConfigurationListBox;
 		private bool m_currentlySelecting;
@@ -102,6 +103,7 @@ namespace SEConfigTool
 			m_transparentMaterialsDefinitionManager = new TransparentMaterialsDefinitionManager();
 			m_configurationDefinitionManager = new ConfigurationDefinition();
 			m_environmentDefinitionManager = new EnvironmentDefinition();
+			m_handItemsDefinitionManager = new HandItemsDefinitionManager();
 		}
 
 		#endregion
@@ -693,6 +695,8 @@ namespace SEConfigTool
 
 		#endregion
 
+		#region Voxel Material Config
+
 		private void FillVoxelMaterialConfigurationListBox(bool loadFromFile = true)
 		{
 			m_currentlyFillingConfigurationListBox = true;
@@ -708,6 +712,8 @@ namespace SEConfigTool
 
 			m_currentlyFillingConfigurationListBox = false;
 		}
+
+		#endregion
 
 		private void FillScenariosConfigurationListBox()
 		{
@@ -803,6 +809,25 @@ namespace SEConfigTool
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		private void FillHandItemsConfigurationListBox()
+		{
+			m_currentlyFillingConfigurationListBox = true;
+
+			m_handItemsDefinitionManager.Load(GetContentDataFile("HandItems.sbc"));
+
+			LST_HandItemsConfig.Items.Clear();
+			foreach (var definition in m_handItemsDefinitionManager.Definitions)
+			{
+				LST_HandItemsConfig.Items.Add(definition.Name);
+			}
+
+			m_currentlyFillingConfigurationListBox = false;
+		}
+
+
 		#endregion
 
 		#endregion
@@ -831,6 +856,7 @@ namespace SEConfigTool
 			FillScenariosConfigurationListBox();
 			FillTransparentMaterialsConfigurationListBox();
 			FillEnvironmentConfigurationInfo();
+			FillHandItemsConfigurationListBox();
 		}
 
 		#region SavedGame
@@ -2830,6 +2856,16 @@ namespace SEConfigTool
 		}
 
 		#endregion
+
+		#region HandItems
+
+		private void LST_handItemsConfig_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			PG_HandItemConfig_Details_Properties.SelectedObject = m_handItemsDefinitionManager.DefinitionOf(LST_HandItemsConfig.SelectedIndex);
+		}
+
+		#endregion
+
 		#endregion
 	}
 }

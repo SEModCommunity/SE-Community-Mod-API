@@ -389,4 +389,8 @@ namespace SEModAPI.API.Definitions
 
 		#endregion
 	}
+
+	public class HandItemsDefinitionManager : SerializableDefinitionsManager<MyObjectBuilder_HandItemDefinition, HandItemsDefinition>
+	{ }
+
 }
