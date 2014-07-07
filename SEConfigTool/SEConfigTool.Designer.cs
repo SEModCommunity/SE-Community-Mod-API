@@ -463,6 +463,14 @@ namespace SEConfigTool
 			this.TXT_EnvironmentConfig_EnvironmentTexture = new System.Windows.Forms.TextBox();
 			this.button3 = new System.Windows.Forms.Button();
 			this.OFD_GamePath = new System.Windows.Forms.OpenFileDialog();
+			this.TAB_HandItemConfig_Page = new System.Windows.Forms.TabPage();
+			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.button1 = new System.Windows.Forms.Button();
+			this.button2 = new System.Windows.Forms.Button();
+			this.GRP_HandItemConfig = new System.Windows.Forms.GroupBox();
+			this.splitContainer53 = new System.Windows.Forms.SplitContainer();
+			this.PG_HandItemConfig_Details_Properties = new System.Windows.Forms.PropertyGrid();
+			this.LST_HandItemsConfig = new System.Windows.Forms.ListBox();
 			this.STS_Status.SuspendLayout();
 			this.TAB_ScenariosConfig_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer37)).BeginInit();
@@ -741,6 +749,16 @@ namespace SEConfigTool
 			this.splitContainer52.Panel1.SuspendLayout();
 			this.splitContainer52.Panel2.SuspendLayout();
 			this.splitContainer52.SuspendLayout();
+			this.TAB_HandItemConfig_Page.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+			this.splitContainer2.Panel1.SuspendLayout();
+			this.splitContainer2.Panel2.SuspendLayout();
+			this.splitContainer2.SuspendLayout();
+			this.GRP_HandItemConfig.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer53)).BeginInit();
+			this.splitContainer53.Panel1.SuspendLayout();
+			this.splitContainer53.Panel2.SuspendLayout();
+			this.splitContainer53.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// STS_Status
@@ -4907,6 +4925,7 @@ namespace SEConfigTool
 			this.TAB_LayoutPages.Controls.Add(this.TAB_VoxelMaterialConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_ScenariosConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_TransparentMaterialsConfig_Page);
+			this.TAB_LayoutPages.Controls.Add(this.TAB_HandItemConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_ConfigurationConfig_Page);
 			this.TAB_LayoutPages.Controls.Add(this.TAB_EnvironmentConfig_Page);
 			this.TAB_LayoutPages.Location = new System.Drawing.Point(0, 0);
@@ -5606,6 +5625,104 @@ namespace SEConfigTool
 			this.OFD_GamePath.FileName = "SpaceEngineers.exe";
 			this.OFD_GamePath.Filter = "Game executable|*.exe";
 			// 
+			// TAB_HandItemConfig_Page
+			// 
+			this.TAB_HandItemConfig_Page.Controls.Add(this.splitContainer2);
+			this.TAB_HandItemConfig_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_HandItemConfig_Page.Name = "TAB_HandItemConfig_Page";
+			this.TAB_HandItemConfig_Page.Padding = new System.Windows.Forms.Padding(3);
+			this.TAB_HandItemConfig_Page.Size = new System.Drawing.Size(1026, 436);
+			this.TAB_HandItemConfig_Page.TabIndex = 17;
+			this.TAB_HandItemConfig_Page.Text = "Hand Items";
+			this.TAB_HandItemConfig_Page.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer2
+			// 
+			this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer2.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer2.Name = "splitContainer2";
+			this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer2.Panel1
+			// 
+			this.splitContainer2.Panel1.Controls.Add(this.button1);
+			this.splitContainer2.Panel1.Controls.Add(this.button2);
+			// 
+			// splitContainer2.Panel2
+			// 
+			this.splitContainer2.Panel2.Controls.Add(this.GRP_HandItemConfig);
+			this.splitContainer2.Size = new System.Drawing.Size(1020, 430);
+			this.splitContainer2.SplitterDistance = 25;
+			this.splitContainer2.TabIndex = 1;
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(3, 0);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(116, 23);
+			this.button1.TabIndex = 2;
+			this.button1.Text = "Reload Configuration";
+			this.button1.UseVisualStyleBackColor = true;
+			// 
+			// button2
+			// 
+			this.button2.Location = new System.Drawing.Point(122, 0);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(105, 23);
+			this.button2.TabIndex = 0;
+			this.button2.Text = "Save Configuration";
+			this.button2.UseVisualStyleBackColor = true;
+			// 
+			// GRP_HandItemConfig
+			// 
+			this.GRP_HandItemConfig.Controls.Add(this.splitContainer53);
+			this.GRP_HandItemConfig.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.GRP_HandItemConfig.Location = new System.Drawing.Point(0, 0);
+			this.GRP_HandItemConfig.Name = "GRP_HandItemConfig";
+			this.GRP_HandItemConfig.Size = new System.Drawing.Size(1020, 401);
+			this.GRP_HandItemConfig.TabIndex = 2;
+			this.GRP_HandItemConfig.TabStop = false;
+			this.GRP_HandItemConfig.Text = "Blocks";
+			// 
+			// splitContainer53
+			// 
+			this.splitContainer53.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer53.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer53.Location = new System.Drawing.Point(3, 16);
+			this.splitContainer53.Name = "splitContainer53";
+			// 
+			// splitContainer53.Panel1
+			// 
+			this.splitContainer53.Panel1.Controls.Add(this.LST_HandItemsConfig);
+			// 
+			// splitContainer53.Panel2
+			// 
+			this.splitContainer53.Panel2.AutoScroll = true;
+			this.splitContainer53.Panel2.AutoScrollMinSize = new System.Drawing.Size(150, 0);
+			this.splitContainer53.Panel2.Controls.Add(this.PG_HandItemConfig_Details_Properties);
+			this.splitContainer53.Size = new System.Drawing.Size(1014, 382);
+			this.splitContainer53.SplitterDistance = 361;
+			this.splitContainer53.TabIndex = 4;
+			// 
+			// PG_HandItemConfig_Details_Properties
+			// 
+			this.PG_HandItemConfig_Details_Properties.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PG_HandItemConfig_Details_Properties.Location = new System.Drawing.Point(0, 0);
+			this.PG_HandItemConfig_Details_Properties.Name = "PG_HandItemConfig_Details_Properties";
+			this.PG_HandItemConfig_Details_Properties.Size = new System.Drawing.Size(649, 382);
+			this.PG_HandItemConfig_Details_Properties.TabIndex = 0;
+			// 
+			// LST_HandItemsConfig
+			// 
+			this.LST_HandItemsConfig.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_HandItemsConfig.FormattingEnabled = true;
+			this.LST_HandItemsConfig.Location = new System.Drawing.Point(0, 0);
+			this.LST_HandItemsConfig.Name = "LST_HandItemsConfig";
+			this.LST_HandItemsConfig.Size = new System.Drawing.Size(361, 382);
+			this.LST_HandItemsConfig.TabIndex = 2;
+			this.LST_HandItemsConfig.SelectedIndexChanged += new System.EventHandler(this.LST_handItemsConfig_SelectedIndexChanged);
+			// 
 			// SEConfigTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5934,6 +6051,16 @@ namespace SEConfigTool
 			this.splitContainer52.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer52)).EndInit();
 			this.splitContainer52.ResumeLayout(false);
+			this.TAB_HandItemConfig_Page.ResumeLayout(false);
+			this.splitContainer2.Panel1.ResumeLayout(false);
+			this.splitContainer2.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+			this.splitContainer2.ResumeLayout(false);
+			this.GRP_HandItemConfig.ResumeLayout(false);
+			this.splitContainer53.Panel1.ResumeLayout(false);
+			this.splitContainer53.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer53)).EndInit();
+			this.splitContainer53.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -6375,6 +6502,14 @@ namespace SEConfigTool
 		private System.Windows.Forms.ListBox LST_ConfigBlock_VirtualMasses;
 		private System.Windows.Forms.TabPage CargoContainers;
 		private System.Windows.Forms.ListBox LST_ConfigBlock_CargoContainers;
+		private System.Windows.Forms.TabPage TAB_HandItemConfig_Page;
+		private System.Windows.Forms.SplitContainer splitContainer2;
+		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.GroupBox GRP_HandItemConfig;
+		private System.Windows.Forms.SplitContainer splitContainer53;
+		private System.Windows.Forms.ListBox LST_HandItemsConfig;
+		private System.Windows.Forms.PropertyGrid PG_HandItemConfig_Details_Properties;
 
     }
 }

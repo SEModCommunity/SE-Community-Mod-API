@@ -15,6 +15,8 @@ using SEModAPI.API;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.Support;
+using System.IO;
+using Microsoft.Xml.Serialization.GeneratedAssembly;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
@@ -22,7 +24,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 	{
 		#region "Attributes"
 
-		private InventoryEntity m_Inventory;
+		private InventoryEntity m_inventory;
 
 		public static string CharacterNamespace = "F79C930F3AD8FDAF31A59E2702EECE70";
 		public static string CharacterClass = "3B71F31E6039CAE9D8706B5F32FE468D";
@@ -41,16 +43,25 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Constructors and Initializers"
 
+		public CharacterEntity(FileInfo characterFile)
+			: base(null)
+		{
+			MyObjectBuilder_Character character = BaseEntityManager.LoadContentFile<MyObjectBuilder_Character, MyObjectBuilder_CharacterSerializer>(characterFile);
+			BaseEntity = character;
+
+			m_inventory = new InventoryEntity(character.Inventory);
+		}
+
 		public CharacterEntity(MyObjectBuilder_Character definition)
 			: base(definition)
 		{
-			m_Inventory = new InventoryEntity(definition.Inventory);
+			m_inventory = new InventoryEntity(definition.Inventory);
 		}
 
 		public CharacterEntity(MyObjectBuilder_Character definition, Object backingObject)
 			: base(definition, backingObject)
 		{
-			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetCharacterInventory());
+			m_inventory = new InventoryEntity(definition.Inventory, InternalGetCharacterInventory());
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnPlayerJoined;
@@ -176,7 +187,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				return m_Inventory;
+				return m_inventory;
 			}
 		}
 
@@ -353,6 +364,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			{
 				LogManager.GameLog.WriteLine(ex);
 			}
+		}
+
+		public void Export(FileInfo fileInfo)
+		{
+			BaseEntityManager.SaveContentFile<MyObjectBuilder_Character, MyObjectBuilder_CharacterSerializer>(GetSubTypeEntity(), fileInfo);
 		}
 
 		#endregion
