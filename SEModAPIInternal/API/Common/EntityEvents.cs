@@ -14,6 +14,8 @@ namespace SEModAPIInternal.API.Common
 			OnPlayerJoined,
 			OnPlayerLeft,
 			OnBaseEntityMoved,
+			OnBaseEntityCreated,
+			OnBaseEntityDeleted,
 			OnCubeGridMoved,
 			OnCubeGridCreated,
 			OnCubeGridDeleted,

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -32,6 +33,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CharacterGetBatteryCapacityMethod = "CF72A89940254CB8F535F177150FC743";
 		public static string CharacterSetBatteryCapacityMethod = "C3BF60F3540A8A48CB8FEE0CDD3A95C6";
 		public static string CharacterGetInventoryMethod = "GetInventory";
+		public static string CharacterGetDisplayNameMethod = "DB913685BC5152DC19A4796E9E8CF659";
 
 		public static string CharacterItemListField = "02F6468D864F3203482135334BEB58AD";
 
@@ -56,11 +58,33 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.entity = this;
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
+
+			Action action = InternalRegisterCharacterClosedEvent;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		#endregion
 
 		#region "Properties"
+
+		[Category("Character")]
+		[Browsable(true)]
+		[ReadOnly(true)]
+		public override string Name
+		{
+			get
+			{
+				string name = base.Name;
+				if (BackingObject != null)
+				{
+					string internalName = InternalGetDisplayName();
+					if (internalName != "")
+						name = internalName;
+				}
+
+				return base.Name;
+			}
+		}
 
 		[Category("Character")]
 		[Browsable(true)]
@@ -156,18 +180,43 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[Category("Character")]
+		[Browsable(true)]
+		public bool DampenersEnabled
+		{
+			get { return GetSubTypeEntity().DampenersEnabled; }
+		}
+
+		[Category("Character")]
+		[Browsable(true)]
+		public bool JetpackEnabled
+		{
+			get { return GetSubTypeEntity().JetpackEnabled; }
+		}
+
+		[Category("Character")]
+		[Browsable(true)]
+		public bool LightEnabled
+		{
+			get { return GetSubTypeEntity().LightEnabled; }
+		}
+
 		#endregion
 
 		#region "Methods"
 
 		new public void Dispose()
 		{
+			LogManager.APILog.WriteLine("Disposing CharacterEntity '" + Name + "'");
+
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnPlayerLeft;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
+
+			base.Dispose();
 		}
 
 		/// <summary>
@@ -186,6 +235,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		}
 
 		#region "Internal"
+
+		protected string InternalGetDisplayName()
+		{
+			try
+			{
+				string name = (string)InvokeEntityMethod(BackingObject, CharacterGetDisplayNameMethod, new object[] { });
+
+				return name;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return "";
+			}
+		}
 
 		protected float InternalGetCharacterHealth()
 		{
@@ -256,6 +320,36 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			{
 				LogManager.GameLog.WriteLine(ex);
 				return null;
+			}
+		}
+
+		public void InternalRegisterCharacterClosedEvent()
+		{
+			try
+			{
+				Action<Object> action = InternalCharacterClosedEvent;
+
+				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnClosedEventMethod);
+				method.Invoke(BackingObject, new object[] { action });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalCharacterClosedEvent(Object entity)
+		{
+			try
+			{
+				if (IsDisposed)
+					return;
+
+				Dispose();
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 

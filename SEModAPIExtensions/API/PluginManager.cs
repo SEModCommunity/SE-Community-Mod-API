@@ -223,6 +223,28 @@ namespace SEModAPIExtensions.API
 								//Do nothing
 							}
 							break;
+						case EntityEventManager.EntityEventType.OnBaseEntityCreated:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnBaseEntityCreated");
+								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
+						case EntityEventManager.EntityEventType.OnBaseEntityDeleted:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnBaseEntityDeleted");
+								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
 						case EntityEventManager.EntityEventType.OnCubeGridMoved:
 							try
 							{

@@ -106,6 +106,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.entity = this;
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
+
+			Action action = InternalRegisterCubeGridClosedEvent;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		#endregion
@@ -248,6 +251,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		new public void Dispose()
 		{
+			LogManager.APILog.WriteLine("Disposing CubeGridEntity '" + Name + "'");
+
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridDeleted;
 			newEvent.timestamp = DateTime.Now;
@@ -339,6 +344,36 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				newEvent.entity = this;
 				newEvent.priority = 9;
 				EntityEventManager.Instance.AddEvent(newEvent);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalRegisterCubeGridClosedEvent()
+		{
+			try
+			{
+				Action<Object> action = InternalCubeGridClosedEvent;
+
+				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnClosedEventMethod);
+				method.Invoke(BackingObject, new object[] { action });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalCubeGridClosedEvent(Object entity)
+		{
+			try
+			{
+				if (IsDisposed)
+					return;
+
+				Dispose();
 			}
 			catch (Exception ex)
 			{

@@ -12,6 +12,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
 	public class MedicalRoomEntity : CubeBlockEntity
 	{
+		#region "Attributes"
+
+		public static string MedicalRoomNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
+		public static string MedicalRoomClass = "1497FAB5CDC67F0A1CD4BC2BA9AFF5D7";
+
+		#endregion
+
 		#region "Constructors and Initializers"
 
 		public MedicalRoomEntity(CubeGridEntity parent, MyObjectBuilder_MedicalRoom definition)
@@ -32,12 +39,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public ulong SteamUserId
 		{
 			get { return GetSubTypeEntity().SteamUserId; }
-			set
-			{
-				if (GetSubTypeEntity().SteamUserId == value) return;
-				GetSubTypeEntity().SteamUserId = value;
-				Changed = true;
-			}
 		}
 
 		#endregion

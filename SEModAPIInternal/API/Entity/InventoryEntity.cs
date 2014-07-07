@@ -692,21 +692,6 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		internal void UpdateItemAmount(Decimal amount, uint itemId)
-		{
-			try
-			{
-				Object source = m_container.BackingObject;
-				Object networkManager = NetworkManager;
-				MethodInfo method = networkManager.GetType().GetMethod(InventoryNetworkManagerUpdateItemMethod);
-				method.Invoke(networkManager, new object[] { source, amount, itemId, false});
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
 		#endregion
 	}
 }

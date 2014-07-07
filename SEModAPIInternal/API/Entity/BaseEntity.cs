@@ -47,9 +47,9 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityGetPhysicsManagerMethod = "691FA4830C80511C934826203A251981";
 		public static string BaseEntityGetEntityIdMethod = "53C3FFA07960404AABBEAAF931E5487E";
 		public static string BaseEntityCombineOnMovedEventMethod = "04F6493DF187FBA38C2B379BA9484304";
+		public static string BaseEntityCombineOnClosedEventMethod = "C1704F26C9D5D7EBE19DC78AB8923F4E";
 
 		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
-		public static string BaseEntityOnMovedEventField = "8CAF5306D8DF29E8140056369D0F1FC1";
 
 		public static string PhysicsManagerGetRigidBodyMethod = "634E5EC534E45874230868BD089055B1";
 
@@ -67,15 +67,10 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				//AssemblyName aName = new AssemblyName("BaseEntityAssembly");
-				//AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly(aName, AssemblyBuilderAccess.RunAndSave);
-				//ModuleBuilder mb = ab.DefineDynamicModule(aName.Name, aName.Name + ".dll");
-				//TypeBuilder tb = mb.DefineType("InternalBaseEntity", TypeAttributes.Public, backingObject.GetType());
-				//m_internalBaseEntityType = tb.CreateType();
-				//ab.Save(aName.Name + ".dll");
-
 				Action action = InternalRegisterEntityMovedEvent;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				Action action2 = InternalRegisterEntityClosedEvent;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
 
 				m_maxLinearVelocity = (float)104.7;
 			}
@@ -280,11 +275,18 @@ namespace SEModAPIInternal.API.Entity
 
 				Action action2 = InternalRemoveEntity;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
-
-				m_isDisposed = true;
-
-				base.Dispose();
 			}
+
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnBaseEntityDeleted;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			newEvent.priority = 1;
+			EntityEventManager.Instance.AddEvent(newEvent);
+
+			m_isDisposed = true;
+
+			base.Dispose();
 		}
 
 		/// <summary>
@@ -366,9 +368,11 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating position to " + Position.ToString());
+					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating position to " + ((Vector3)Position).ToString());
 
 				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
 				havokBody.Position = Position;
 			}
 			catch (Exception ex)
@@ -382,9 +386,11 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating velocity to " + LinearVelocity.ToString());
+					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating velocity to " + ((Vector3)LinearVelocity).ToString());
 
 				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
 				havokBody.LinearVelocity = LinearVelocity;
 			}
 			catch (Exception ex)
@@ -398,9 +404,11 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating angular velocity to " + AngularVelocity.ToString());
+					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating angular velocity to " + ((Vector3)AngularVelocity).ToString());
 
 				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
 				havokBody.AngularVelocity = AngularVelocity;
 			}
 			catch (Exception ex)
@@ -432,10 +440,40 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				Action<Object> action = InternalEntityMovedEvent;
-				//action = (Action<Object>)UtilityFunctions.ChangeObjectGeneric(action, BackingObject.GetType());
 
 				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnMovedEventMethod);
 				method.Invoke(BackingObject, new object[] { action });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalRegisterEntityClosedEvent()
+		{
+			try
+			{
+				Action<Object> action = InternalEntityClosedEvent;
+
+				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnClosedEventMethod);
+				method.Invoke(BackingObject, new object[] { action });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalEntityClosedEvent(Object entity)
+		{
+			try
+			{
+				if (IsDisposed)
+					return;
+
+				//This is disabled until we find a way to get the delegates in class heirarchy order instead of sequential order
+				//Dispose();
 			}
 			catch (Exception ex)
 			{
@@ -470,8 +508,10 @@ namespace SEModAPIInternal.API.Entity
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating max linear velocity to " + MaxLinearVelocity.ToString());
 
-				HkRigidBody body = GetRigidBody();
-				body.MaxLinearVelocity = m_maxLinearVelocity;
+				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
+				havokBody.MaxLinearVelocity = m_maxLinearVelocity;
 			}
 			catch (Exception ex)
 			{
