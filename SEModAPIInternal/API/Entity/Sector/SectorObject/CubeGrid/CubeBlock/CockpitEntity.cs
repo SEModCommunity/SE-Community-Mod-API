@@ -29,6 +29,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Properties"
 
 		[Category("Cockpit")]
+		public bool ControlThrusters
+		{
+			get { return GetSubTypeEntity().ControlThrusters; }
+		}
+
+		[Category("Cockpit")]
+		public bool ControlWheels
+		{
+			get { return GetSubTypeEntity().ControlWheels; }
+		}
+
+		[Category("Cockpit")]
 		public MyObjectBuilder_AutopilotBase Autopilot
 		{
 			get { return GetSubTypeEntity().Autopilot; }
@@ -38,6 +50,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public MyObjectBuilder_Character Pilot
 		{
 			get { return GetSubTypeEntity().Pilot; }
+		}
+
+		[Category("Cockpit")]
+		public bool IsPassengerSeat
+		{
+			get
+			{
+				if (GetSubTypeEntity().SubtypeName == "PassengerSeatLarge")
+					return true;
+
+				if (GetSubTypeEntity().SubtypeName == "PassengerSeatSmall")
+					return true;
+
+				return false;
+			}
 		}
 
 		#endregion
