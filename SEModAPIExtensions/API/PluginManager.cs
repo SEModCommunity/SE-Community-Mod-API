@@ -193,7 +193,8 @@ namespace SEModAPIExtensions.API
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerJoined");
 								//TODO - Get the right remote user Id here
-								updateMethod.Invoke(plugin, new object[] { (ulong)0, entityEvent.entity });
+								if(updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { (ulong)0, entityEvent.entity });
 							}
 							catch (Exception ex)
 							{
@@ -205,7 +206,8 @@ namespace SEModAPIExtensions.API
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerLeft");
 								//TODO - Get the right remote user Id here
-								updateMethod.Invoke(plugin, new object[] { (ulong)0, entityEvent.entity });
+								if (updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { (ulong)0, entityEvent.entity });
 							}
 							catch (Exception ex)
 							{
@@ -216,7 +218,8 @@ namespace SEModAPIExtensions.API
 							try
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnBaseEntityMoved");
-								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+								if (updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
 							}
 							catch (Exception ex)
 							{
@@ -227,7 +230,8 @@ namespace SEModAPIExtensions.API
 							try
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnBaseEntityCreated");
-								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+								if (updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
 							}
 							catch (Exception ex)
 							{
@@ -238,7 +242,8 @@ namespace SEModAPIExtensions.API
 							try
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnBaseEntityDeleted");
-								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+								if (updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
 							}
 							catch (Exception ex)
 							{
@@ -249,7 +254,8 @@ namespace SEModAPIExtensions.API
 							try
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeGridMoved");
-								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+								if (updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
 							}
 							catch (Exception ex)
 							{
@@ -260,7 +266,8 @@ namespace SEModAPIExtensions.API
 							try
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeGridCreated");
-								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+								if (updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
 							}
 							catch (Exception ex)
 							{
@@ -271,7 +278,8 @@ namespace SEModAPIExtensions.API
 							try
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeGridDeleted");
-								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+								if (updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
 							}
 							catch (Exception ex)
 							{

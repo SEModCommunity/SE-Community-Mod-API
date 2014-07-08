@@ -6,6 +6,7 @@ using System.Text;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
+using SEModAPIInternal.Support;
 
 using VRageMath;
 
@@ -17,6 +18,7 @@ namespace SEModAPIExtensions.API
 
 		protected static Dictionary<Vector3I, Type> m_definition;
 		protected List<CubeBlockEntity> m_blocks;
+		protected CubeBlockEntity m_anchor;
 		protected CubeGridEntity m_parent;
 
 		#endregion
@@ -44,12 +46,8 @@ namespace SEModAPIExtensions.API
 			{
 				bool isFunctional = true;
 
-				CubeBlockEntity anchorBlock = null;
 				foreach (CubeBlockEntity cubeBlock in m_blocks)
 				{
-					if (cubeBlock.Min == Vector3I.Zero)
-						anchorBlock = cubeBlock;
-
 					if (cubeBlock.IntegrityPercent < 0.75)
 					{
 						isFunctional = false;
@@ -75,7 +73,7 @@ namespace SEModAPIExtensions.API
 					CubeBlockEntity matchingBlock = null;
 					foreach (CubeBlockEntity cubeBlock in m_blocks)
 					{
-						Vector3I relativePosition = (Vector3I)cubeBlock.Min - (Vector3I)anchorBlock.Min;
+						Vector3I relativePosition = (Vector3I)cubeBlock.Min - (Vector3I)m_anchor.Min;
 						if (cubeBlock.GetType() == type && relativePosition == key)
 						{
 							matchingBlock = cubeBlock;
@@ -125,7 +123,8 @@ namespace SEModAPIExtensions.API
 
 		public void LoadBlocksFromAnchor(Vector3I anchor)
 		{
-			m_blocks.Add(Parent.GetCubeBlock(anchor));
+			m_anchor = Parent.GetCubeBlock(anchor);
+			m_blocks.Add(m_anchor);
 
 			var def = GetMultiblockDefinition();
 			foreach (Vector3I key in def.Keys)
@@ -138,28 +137,40 @@ namespace SEModAPIExtensions.API
 		{
 			List<Vector3I> anchorList = new List<Vector3I>();
 
-			foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+			try
 			{
-				if (cubeBlock is CargoContainerEntity)
+				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
 				{
-					bool isMatch = true;
-					Dictionary<Vector3I, Type> def = GetMultiblockDefinition();
-					foreach (Vector3I key in def.Keys)
+					if (cubeBlock is CargoContainerEntity)
 					{
-						Type entry = def[key];
-						CubeBlockEntity posCubeBlock = cubeGrid.GetCubeBlock(key);
-						if (!posCubeBlock.GetType().IsAssignableFrom(entry))
+						bool isMatch = true;
+						Dictionary<Vector3I, Type> def = GetMultiblockDefinition();
+						foreach (Vector3I key in def.Keys)
 						{
-							isMatch = false;
-							break;
+							Type entry = def[key];
+							CubeBlockEntity posCubeBlock = cubeGrid.GetCubeBlock(cubeBlock.Min + key);
+							if (posCubeBlock == null)
+							{
+								isMatch = false;
+								break;
+							}
+							if (posCubeBlock.GetType() != entry)
+							{
+								isMatch = false;
+								break;
+							}
+						}
+
+						if (isMatch)
+						{
+							anchorList.Add(cubeBlock.Min);
 						}
 					}
-
-					if (isMatch)
-					{
-						anchorList.Add(cubeBlock.Min);
-					}
 				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 
 			return anchorList;
