@@ -42,6 +42,7 @@
     <Compile Include="API\ChatManager.cs" />
     <Compile Include="API\MultiblockStructure.cs" />
     <Compile Include="API\Plugin\Events\IBaseEntityHandler.cs" />
+    <Compile Include="API\Plugin\Events\ICubeBlockEventHandler.cs" />
     <Compile Include="API\Plugin\Events\ICubeGridHandler.cs" />
     <Compile Include="API\Plugin\Events\IPlayerEventHandler.cs" />
     <Compile Include="API\Plugin\IPlugin.cs" />

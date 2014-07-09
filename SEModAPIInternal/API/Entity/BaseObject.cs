@@ -28,6 +28,8 @@ namespace SEModAPIInternal.API.Entity
 		private MyObjectBuilder_Base m_baseEntity;
 		private Object m_backingObject;
 
+		protected bool m_isDisposed = false;
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -159,16 +161,29 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[Category("Object")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		public bool IsDisposed
+		{
+			get { return m_isDisposed; }
+		}
+
 		#endregion
 
 		#region "Methods"
 
 		public void Dispose()
 		{
+			if (m_isDisposed)
+				return;
+
 			if (BackingObject != null)
 			{
 				//Do stuff
 			}
+
+			m_isDisposed = true;
 		}
 
 		/// <summary>
