@@ -31,8 +31,9 @@ namespace SEModAPIInternal.API.Common
 		private FieldInfo m_configContainerDedicatedDataField;
 		private FieldInfo m_serverCoreNullRender;
 
-		public static string GameConstantsClass = "00DD5482C0A3DF0D94B151167E77A6D9.5FBC15A83966C3D53201318E6F912741";
-		public static string GameConstantsFactionsEnabledField = "AE3FD6A65A631D2BF9835EE8E86F8110";
+		public static string GameConstantsNamespace = "00DD5482C0A3DF0D94B151167E77A6D9";
+		public static string GameConstantsClass = "5FBC15A83966C3D53201318E6F912741";
+		public static string GameConstantsGamePausedField = "6F202682A23A6CD845931A94886C4872";
 
 		public static string ServerCoreClass = "168638249D29224100DB50BB468E7C07.7BAD4AFD06B91BCD63EA57F7C0D4F408";
 		public static string ServerCoreNullRenderField = "53A34747D8E8EDA65E601C194BECE141";
@@ -50,6 +51,7 @@ namespace SEModAPIInternal.API.Common
 		public static string MainGameInitializeMethod = "2AA66FBD3F2C5EC250558B3136F3974A";
 		public static string MainGameExitMethod = "246E732EE67F7F6F88C4FF63B3901107";
 		public static string MainGameIsLoadedField = "76E577DA6C1683D13B1C0BE5D704C241";
+		public static string MainGameGetTimeMillisMethod = "676C50EDDF93A0D8452B6BAFE7A33F32";
 
 		public static string ConfigContainerGetConfigData = "4DD64FD1D45E514D01C925D07B69B3BE";
 		public static string ConfigContainerSetWorldName = "493E0E7BC7A617699C44A9A5FB8FF679";
@@ -319,6 +321,37 @@ namespace SEModAPIInternal.API.Common
 			{
 				LogManager.GameLog.WriteLine(ex);
 				return;
+			}
+		}
+
+		public Type GetAssemblyType(string namespaceName, string className)
+		{
+			try
+			{
+				Type type = GameAssembly.GetType(namespaceName + "." + className);
+
+				return type;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		public int GetMainGameMilliseconds()
+		{
+			try
+			{
+				MethodInfo getTimeMillisMethod = MainGameType.GetMethod(MainGameGetTimeMillisMethod);
+				int gameTimeMillis = (int)getTimeMillisMethod.Invoke(null, new object[] { });
+
+				return gameTimeMillis;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return 0;
 			}
 		}
 

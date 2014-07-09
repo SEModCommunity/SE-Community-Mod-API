@@ -38,8 +38,6 @@ namespace SEModAPIInternal.API.Entity
 		private Type m_internalBaseEntityType;
 		private float m_maxLinearVelocity;
 
-		protected bool m_isDisposed = false;
-
 		public static string BaseEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string BaseEntityClass = "F6DF01EE4159339113BB9650DEEE1913";
 
@@ -208,14 +206,6 @@ namespace SEModAPIInternal.API.Entity
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public virtual SerializableVector3 AngularVelocity
 		{ get; set; }
-
-		[Category("Entity")]
-		[Browsable(false)]
-		[ReadOnly(true)]
-		public bool IsDisposed
-		{
-			get { return m_isDisposed; }
-		}
 
 		[Category("Entity")]
 		public float MaxLinearVelocity

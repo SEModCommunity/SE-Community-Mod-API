@@ -286,6 +286,30 @@ namespace SEModAPIExtensions.API
 								//Do nothing
 							}
 							break;
+						case EntityEventManager.EntityEventType.OnCubeBlockCreated:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeBlockCreated");
+								if (updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
+						case EntityEventManager.EntityEventType.OnCubeBlockDeleted:
+							try
+							{
+								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeBlockDeleted");
+								if (updateMethod != null)
+									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+							break;
 					}
 				}
 

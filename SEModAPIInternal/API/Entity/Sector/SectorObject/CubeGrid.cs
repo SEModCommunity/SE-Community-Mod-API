@@ -31,12 +31,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		private CubeBlockManager m_cubeBlockManager;
 		private CubeGridNetworkManager m_networkManager;
+		private PowerManager m_powerManager;
 
 		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
 
 		public static string CubeGridSetDampenersEnabledMethod = "86B66668D555E1C1B744C17D2AFA77F7";
 		public static string CubeGridGetCubeBlocksHashSetMethod = "E38F3E9D7A76CD246B99F6AE91CC3E4A";
+		public static string CubeGridGetPowerManagerMethod = "D92A57E3478304C8F8F780A554C6D6C4";
 
 		public static string CubeGridIsStaticField = "";
 		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
@@ -99,6 +101,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			m_cubeBlockManager = new CubeBlockManager(this, backingObject, CubeGridGetCubeBlocksHashSetMethod);
 			m_networkManager = new CubeGridNetworkManager(this);
+
+			Object powerManager = InvokeEntityMethod(BackingObject, CubeGridGetPowerManagerMethod);
+			m_powerManager = new PowerManager(powerManager);
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridCreated;
@@ -261,6 +266,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public CubeGridNetworkManager NetworkManager
 		{
 			get { return m_networkManager; }
+		}
+
+		[Category("Cube Grid")]
+		[Browsable(false)]
+		public PowerManager PowerManager
+		{
+			get { return m_powerManager; }
 		}
 
 		#endregion

@@ -7,6 +7,7 @@ using System.Text;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
+using Sandbox.Definitions;
 
 using SEModAPIInternal.Support;
 
@@ -18,8 +19,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		private InventoryEntity m_Inventory;
 
-		public static string ReactorNamespace = "";
-		public static string ReactorClass = "";
+		public static string ReactorNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string ReactorClass = "714451095FE0D12C399607EAC612A6FE";
 
 		public static string ReactorGetInventoryMethod = "GetInventory";
 

@@ -14,6 +14,7 @@ using SEModAPI.API;
 using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
@@ -83,6 +84,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				m_hasGeneratedId = true;
 				EntityId = GenerateEntityId();
 			}
+
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockCreated;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			newEvent.priority = 1;
+			EntityEventManager.Instance.AddEvent(newEvent);
+
+			Action action = InternalRegisterCubeBlockClosedEvent;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		#endregion
@@ -259,6 +270,22 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		#endregion
 
 		#region "Methods"
+
+		new public void Dispose()
+		{
+			LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
+
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockDeleted;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			newEvent.priority = 1;
+			EntityEventManager.Instance.AddEvent(newEvent);
+
+			m_isDisposed = true;
+
+			base.Dispose();
+		}
 
 		/// <summary>
 		/// Generates a new in-game entity ID
@@ -469,6 +496,37 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				float damage = InternalGetIntegrityPercent() - IntegrityPercent;
 				damage /= 2.0f - InternalGetIntegrityPercent();		//Counteracts internal damage scaling
 				InvokeEntityMethod(BackingObject, CubeBlockDamageBlockMethod, new object[] { damage, MyDamageType.Environment });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalRegisterCubeBlockClosedEvent()
+		{
+			try
+			{
+				Action<Object> action = InternalCubeBlockClosedEvent;
+
+				Object actualObject = GetActualObject();
+				MethodInfo method = actualObject.GetType().GetMethod(SEModAPIInternal.API.Entity.BaseEntity.BaseEntityCombineOnClosedEventMethod);
+				method.Invoke(actualObject, new object[] { action });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void InternalCubeBlockClosedEvent(Object entity)
+		{
+			try
+			{
+				if (IsDisposed)
+					return;
+
+				Dispose();
 			}
 			catch (Exception ex)
 			{
