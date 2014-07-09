@@ -124,7 +124,6 @@ namespace SEModAPIExtensions.API
 		public void LoadBlocksFromAnchor(Vector3I anchor)
 		{
 			m_anchor = Parent.GetCubeBlock(anchor);
-			m_blocks.Add(m_anchor);
 
 			var def = GetMultiblockDefinition();
 			foreach (Vector3I key in def.Keys)
@@ -141,10 +140,11 @@ namespace SEModAPIExtensions.API
 			{
 				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
 				{
-					if (cubeBlock is CargoContainerEntity)
+					Dictionary<Vector3I, Type> def = GetMultiblockDefinition();
+					Type anchorType = def[Vector3I.Zero];
+					if (cubeBlock.GetType() == anchorType)
 					{
 						bool isMatch = true;
-						Dictionary<Vector3I, Type> def = GetMultiblockDefinition();
 						foreach (Vector3I key in def.Keys)
 						{
 							Type entry = def[key];
