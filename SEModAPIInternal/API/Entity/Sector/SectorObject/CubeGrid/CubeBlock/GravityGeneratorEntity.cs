@@ -58,7 +58,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateGravityGenerator;
+					Action action = InternalUpdateFieldSize;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -76,7 +76,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateGravityGenerator;
+					Action action = InternalUpdateGravityAcceleration;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -95,15 +95,23 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			return (MyObjectBuilder_GravityGenerator)BaseEntity;
 		}
 
-		protected void InternalUpdateGravityGenerator()
+		protected void InternalUpdateGravityAcceleration()
 		{
 			try
 			{
-				Object baseObject = BackingObject;
-				Object actualObject = GetActualObject();
+				InvokeEntityMethod(ActualObject, GravityGeneratorSetAccelerationMethod, new object[] { GravityAcceleration });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
 
-				InvokeEntityMethod(actualObject, GravityGeneratorSetAccelerationMethod, new object[] { GravityAcceleration });
-				InvokeEntityMethod(actualObject, GravityGeneratorSetFieldSizeMethod, new object[] { (Vector3)FieldSize });
+		protected void InternalUpdateFieldSize()
+		{
+			try
+			{
+				InvokeEntityMethod(ActualObject, GravityGeneratorSetFieldSizeMethod, new object[] { (Vector3)FieldSize });
 			}
 			catch (Exception ex)
 			{

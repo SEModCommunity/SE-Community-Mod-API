@@ -266,6 +266,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			get { return m_parent; }
 		}
 
+		[Category("Cube Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal Object ActualObject
+		{
+			get { return GetActualObject(); }
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -306,7 +314,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Internal"
 
-		public Object GetActualObject()
+		protected Object GetActualObject()
 		{
 			try
 			{
@@ -321,7 +329,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public Object GetParentCubeGrid()
+		protected Object GetParentCubeGrid()
 		{
 			try
 			{
@@ -337,7 +345,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public Object GetFactionData()
+		protected Object GetFactionData()
 		{
 			try
 			{
@@ -361,7 +369,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public Object GetConstructionManager()
+		protected Object GetConstructionManager()
 		{
 			try
 			{
@@ -500,7 +508,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public void InternalRegisterCubeBlockClosedEvent()
+		protected void InternalRegisterCubeBlockClosedEvent()
 		{
 			try
 			{
@@ -520,7 +528,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public void InternalCubeBlockClosedEvent(Object entity)
+		protected void InternalCubeBlockClosedEvent(Object entity)
 		{
 			try
 			{

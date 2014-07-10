@@ -66,6 +66,7 @@ namespace SEModAPIInternal.API.Entity
 			: base(definition, backingObject)
 		{
 			m_itemManager = new InventoryItemManager(this, backingObject, InventoryGetItemListMethod);
+			m_itemManager.LoadDynamic();
 
 			m_networkManager = new InventoryNetworkManager(this);
 		}
@@ -74,6 +75,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[Category("Container Inventory")]
 		public override string Name
 		{
 			get { return "Inventory"; }

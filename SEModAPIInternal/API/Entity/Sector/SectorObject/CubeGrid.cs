@@ -332,25 +332,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(GetSubTypeEntity(), fileInfo);
 		}
 
-		#region "Internal"
-
-		public bool AddCubeGrid()
+		public void AddCubeGrid()
 		{
-			try
-			{
-				Action action = InternalAddCubeGrid;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				return false;
-			}
+			Action action = InternalAddCubeGrid;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
-		public void InternalAddCubeGrid()
+		#region "Internal"
+
+		protected void InternalAddCubeGrid()
 		{
 			try
 			{
@@ -375,7 +365,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		public void InternalCubeGridMovedEvent(Object entity)
+		protected void InternalCubeGridMovedEvent(Object entity)
 		{
 			try
 			{
@@ -392,7 +382,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		public void InternalRegisterCubeGridClosedEvent()
+		protected void InternalRegisterCubeGridClosedEvent()
 		{
 			try
 			{
@@ -407,7 +397,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		public void InternalCubeGridClosedEvent(Object entity)
+		protected void InternalCubeGridClosedEvent(Object entity)
 		{
 			try
 			{
@@ -422,7 +412,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		public void InternalUpdateDampenersEnabled()
+		protected void InternalUpdateDampenersEnabled()
 		{
 			try
 			{
@@ -520,8 +510,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			try
 			{
-				MethodInfo method = NetManagerType.GetMethod(CubeGridNetManagerBroadcastCubeBlockFactionDataMethod, BindingFlags.NonPublic | BindingFlags.Instance);
-				method.Invoke(m_netManager, new object[] { cubeBlock.GetParentCubeGrid(), cubeBlock.GetActualObject(), cubeBlock.Owner, cubeBlock.ShareMode });
+				BaseObject.InvokeEntityMethod(m_netManager, CubeGridNetManagerBroadcastCubeBlockFactionDataMethod, new object[] { m_cubeGrid.BackingObject, cubeBlock.ActualObject, cubeBlock.Owner, cubeBlock.ShareMode });
 			}
 			catch (Exception ex)
 			{

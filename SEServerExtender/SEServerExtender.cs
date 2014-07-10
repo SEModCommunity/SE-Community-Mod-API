@@ -668,7 +668,7 @@ namespace SEServerExtender
 						try
 						{
 							CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
-							bool result = cubeGrid.AddCubeGrid();
+							cubeGrid.AddCubeGrid();
 						}
 						catch (Exception ex)
 						{
