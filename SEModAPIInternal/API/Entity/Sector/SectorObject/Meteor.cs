@@ -64,7 +64,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateMeteor;
+					Action action = InternalUpdateLinearVelocity;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -84,7 +84,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateMeteor;
+					Action action = InternalUpdateAngularVelocity;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}

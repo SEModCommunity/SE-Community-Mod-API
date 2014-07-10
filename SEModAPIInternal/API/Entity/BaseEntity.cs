@@ -134,8 +134,10 @@ namespace SEModAPIInternal.API.Entity
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateBaseEntity;
+					Action action = InternalUpdatePosition;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+					Action action2 = InternalUpdateOrientation;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
 				}
 			}
 		}
@@ -154,7 +156,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateBaseEntity;
+					Action action = InternalUpdatePosition;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -174,7 +176,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateBaseEntity;
+					Action action = InternalUpdateOrientation;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -194,7 +196,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateBaseEntity;
+					Action action = InternalUpdateOrientation;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -268,7 +270,7 @@ namespace SEModAPIInternal.API.Entity
 				currentPosition = Vector3.Add(currentPosition, new Vector3(100000, 100000, 100000));
 				Position = currentPosition;
 
-				Action action = InternalUpdateBaseEntity;
+				Action action = InternalUpdatePosition;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
 				Thread.Sleep(250);
@@ -358,10 +360,68 @@ namespace SEModAPIInternal.API.Entity
 				HkRigidBody havokBody = GetRigidBody();
 				if (havokBody == null)
 					return;
-				havokBody.Position = Position;
-				havokBody.LinearVelocity = LinearVelocity;
-				havokBody.AngularVelocity = AngularVelocity;
 				havokBody.MaxLinearVelocity = MaxLinearVelocity;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		protected void InternalUpdatePosition()
+		{
+			try
+			{
+				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
+				havokBody.Position = Position;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		protected void InternalUpdateOrientation()
+		{
+			try
+			{
+				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
+				
+				//TODO - Finish this
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		protected void InternalUpdateLinearVelocity()
+		{
+			try
+			{
+				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
+				havokBody.LinearVelocity = LinearVelocity;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		protected void InternalUpdateAngularVelocity()
+		{
+			try
+			{
+				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
+				havokBody.AngularVelocity = AngularVelocity;
 			}
 			catch (Exception ex)
 			{
