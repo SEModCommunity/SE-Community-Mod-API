@@ -35,18 +35,15 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
-		private Type m_internalBaseEntityType;
 		private float m_maxLinearVelocity;
 
 		public static string BaseEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string BaseEntityClass = "F6DF01EE4159339113BB9650DEEE1913";
-
 		public static string BaseEntityGetObjectBuilderMethod = "GetObjectBuilder";
 		public static string BaseEntityGetPhysicsManagerMethod = "691FA4830C80511C934826203A251981";
 		public static string BaseEntityGetEntityIdMethod = "53C3FFA07960404AABBEAAF931E5487E";
 		public static string BaseEntityCombineOnMovedEventMethod = "04F6493DF187FBA38C2B379BA9484304";
 		public static string BaseEntityCombineOnClosedEventMethod = "C1704F26C9D5D7EBE19DC78AB8923F4E";
-
 		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
 
 		public static string PhysicsManagerGetRigidBodyMethod = "634E5EC534E45874230868BD089055B1";
@@ -67,8 +64,6 @@ namespace SEModAPIInternal.API.Entity
 			{
 				Action action = InternalRegisterEntityMovedEvent;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				//Action action2 = InternalRegisterEntityClosedEvent;
-				//SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
 
 				m_maxLinearVelocity = (float)104.7;
 			}
@@ -110,6 +105,12 @@ namespace SEModAPIInternal.API.Entity
 				if (GetSubTypeEntity().EntityId == value) return;
 				GetSubTypeEntity().EntityId = value;
 				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateBaseEntity;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -118,14 +119,6 @@ namespace SEModAPIInternal.API.Entity
 		public MyPersistentEntityFlags2 PersistentFlags
 		{
 			get { return GetSubTypeEntity().PersistentFlags; }
-			set
-			{
-				if (GetSubTypeEntity().PersistentFlags == value) return;
-				GetSubTypeEntity().PersistentFlags = value;
-				Changed = true;
-
-				//TODO - Find what the backing field is for this
-			}
 		}
 
 		[Category("Entity")]
@@ -141,8 +134,10 @@ namespace SEModAPIInternal.API.Entity
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateEntityPosition;
+					Action action = InternalUpdatePosition;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+					Action action2 = InternalUpdateOrientation;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
 				}
 			}
 		}
@@ -161,7 +156,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateEntityPosition;
+					Action action = InternalUpdatePosition;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -178,6 +173,12 @@ namespace SEModAPIInternal.API.Entity
 				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(Position, Forward, value);
 				GetSubTypeEntity().PositionAndOrientation = positionOrientation;
 				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateOrientation;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -192,6 +193,12 @@ namespace SEModAPIInternal.API.Entity
 				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(Position, value, Up);
 				GetSubTypeEntity().PositionAndOrientation = positionOrientation;
 				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateOrientation;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -213,10 +220,15 @@ namespace SEModAPIInternal.API.Entity
 			get { return m_maxLinearVelocity; }
 			set
 			{
+				if (m_maxLinearVelocity == value) return;
 				m_maxLinearVelocity = value;
+				Changed = true;
 
-				Action action = InternalUpdateEntityMaxLinearVelocity;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateBaseEntity;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -258,7 +270,7 @@ namespace SEModAPIInternal.API.Entity
 				currentPosition = Vector3.Add(currentPosition, new Vector3(100000, 100000, 100000));
 				Position = currentPosition;
 
-				Action action = InternalUpdateEntityPosition;
+				Action action = InternalUpdatePosition;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
 				Thread.Sleep(250);
@@ -308,8 +320,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				MethodInfo getPhysicsObjectMethod = BaseObject.GetEntityMethod(BackingObject, BaseEntityGetPhysicsManagerMethod);
-				Object physicsObject = getPhysicsObjectMethod.Invoke(BackingObject, new object[] { });
+				Object physicsObject = InvokeEntityMethod(BackingObject, BaseEntityGetPhysicsManagerMethod);
 
 				return physicsObject;
 			}
@@ -327,8 +338,7 @@ namespace SEModAPIInternal.API.Entity
 				Object physicsObject = GetEntityPhysicsObject();
 				if (physicsObject == null)
 					return null;
-				MethodInfo getRigidBodyMethod = BaseObject.GetEntityMethod(physicsObject, PhysicsManagerGetRigidBodyMethod);
-				HkRigidBody rigidBody = (HkRigidBody)getRigidBodyMethod.Invoke(physicsObject, new object[] { });
+				HkRigidBody rigidBody = (HkRigidBody)InvokeEntityMethod(physicsObject, PhysicsManagerGetRigidBodyMethod);
 
 				return rigidBody;
 			}
@@ -339,13 +349,18 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalUpdateEntityId()
+		protected void InternalUpdateBaseEntity()
 		{
 			try
 			{
 				//TODO - Change this to a method to set the entity id instead of just setting the field
-				FieldInfo entityIdField = BaseObject.GetEntityField(BackingObject, BaseEntityEntityIdField);
+				FieldInfo entityIdField = GetEntityField(BackingObject, BaseEntityEntityIdField);
 				entityIdField.SetValue(BackingObject, EntityId);
+
+				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
+				havokBody.MaxLinearVelocity = MaxLinearVelocity;
 			}
 			catch (Exception ex)
 			{
@@ -353,13 +368,10 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalUpdateEntityPosition()
+		protected void InternalUpdatePosition()
 		{
 			try
 			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating position to " + ((Vector3)Position).ToString());
-
 				HkRigidBody havokBody = GetRigidBody();
 				if (havokBody == null)
 					return;
@@ -371,13 +383,26 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalUpdateEntityLinearVelocity()
+		protected void InternalUpdateOrientation()
 		{
 			try
 			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating velocity to " + ((Vector3)LinearVelocity).ToString());
+				HkRigidBody havokBody = GetRigidBody();
+				if (havokBody == null)
+					return;
+				
+				//TODO - Finish this
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
 
+		protected void InternalUpdateLinearVelocity()
+		{
+			try
+			{
 				HkRigidBody havokBody = GetRigidBody();
 				if (havokBody == null)
 					return;
@@ -389,13 +414,10 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalUpdateEntityAngularVelocity()
+		protected void InternalUpdateAngularVelocity()
 		{
 			try
 			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating angular velocity to " + ((Vector3)AngularVelocity).ToString());
-
 				HkRigidBody havokBody = GetRigidBody();
 				if (havokBody == null)
 					return;
@@ -407,7 +429,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalRemoveEntity()
+		protected void InternalRemoveEntity()
 		{
 			try
 			{
@@ -425,7 +447,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalRegisterEntityMovedEvent()
+		protected void InternalRegisterEntityMovedEvent()
 		{
 			try
 			{
@@ -440,7 +462,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalRegisterEntityClosedEvent()
+		protected void InternalRegisterEntityClosedEvent()
 		{
 			try
 			{
@@ -455,23 +477,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalEntityClosedEvent(Object entity)
-		{
-			try
-			{
-				if (IsDisposed)
-					return;
-
-				//This is disabled until we find a way to get the delegates in class heirarchy order instead of sequential order
-				//Dispose();
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		public void InternalEntityMovedEvent(Object entity)
+		protected void InternalEntityMovedEvent(Object entity)
 		{
 			try
 			{
@@ -491,17 +497,15 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalUpdateEntityMaxLinearVelocity()
+		protected void InternalEntityClosedEvent(Object entity)
 		{
 			try
 			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + EntityId.ToString() + "': Updating max linear velocity to " + MaxLinearVelocity.ToString());
-
-				HkRigidBody havokBody = GetRigidBody();
-				if (havokBody == null)
+				if (IsDisposed)
 					return;
-				havokBody.MaxLinearVelocity = m_maxLinearVelocity;
+
+				//This is disabled until we find a way to get the delegates in class heirarchy order instead of sequential order
+				//Dispose();
 			}
 			catch (Exception ex)
 			{

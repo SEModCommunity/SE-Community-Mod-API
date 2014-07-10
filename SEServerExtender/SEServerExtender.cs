@@ -509,6 +509,10 @@ namespace SEServerExtender
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
+				else if (cubeBlockType == typeof(DoorEntity))
+				{
+					utilityBlocksNode.Nodes.Add(newNode);
+				}
 				else if (cubeBlockType == typeof(InteriorLightEntity))
 				{
 					lightBlocksNode.Nodes.Add(newNode);

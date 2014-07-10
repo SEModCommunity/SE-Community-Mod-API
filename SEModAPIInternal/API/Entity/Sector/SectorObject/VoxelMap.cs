@@ -8,10 +8,20 @@ using Sandbox.Common.ObjectBuilders.Voxels;
 
 using SEModAPI.API.Definitions;
 
+using SEModAPIInternal.API.Common;
+using SEModAPIInternal.Support;
+
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
 	public class VoxelMap : BaseEntity
 	{
+		#region "Attributes"
+
+		public static string VoxelMapNamespace = "";
+		public static string VoxelMapClass = "";
+
+		#endregion
+
 		#region "Constructors and Initializers"
 
 		public VoxelMap(MyObjectBuilder_VoxelMap definition)
@@ -26,6 +36,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[Category("Voxel Map")]
+		[Browsable(true)]
 		public override string Name
 		{
 			get { return Filename; }
@@ -41,7 +53,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				GetSubTypeEntity().Filename = value;
 				Changed = true;
 
-				//TODO - Adding backing object functionality for this property
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateVoxelMap;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -56,6 +72,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		new internal MyObjectBuilder_VoxelMap GetSubTypeEntity()
 		{
 			return (MyObjectBuilder_VoxelMap)BaseEntity;
+		}
+
+		protected void InternalUpdateVoxelMap()
+		{
+			try
+			{
+				InternalUpdateBaseEntity();
+
+				//TODO - Add methods to re-load voxel map if file name changes
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

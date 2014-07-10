@@ -629,6 +629,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							case MyObjectBuilderTypeEnum.BatteryBlock:
 								matchingCubeBlock = new BatteryBlockEntity(m_parent, (MyObjectBuilder_BatteryBlock)baseEntity, entity);
 								break;
+							case MyObjectBuilderTypeEnum.Door:
+								matchingCubeBlock = new DoorEntity(m_parent, (MyObjectBuilder_Door)baseEntity, entity);
+								break;
 							default:
 								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 								break;
