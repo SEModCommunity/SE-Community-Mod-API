@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 using Sandbox.Common.ObjectBuilders;
@@ -28,7 +29,7 @@ using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.Support;
 
-using SEServerExtender.API;
+using VRage.Common.Utils;
 
 namespace SEServerExtender
 {
@@ -36,15 +37,19 @@ namespace SEServerExtender
 	{
 		#region "Attributes"
 
-		private Timer m_entityTreeRefreshTimer;
-		private Timer m_chatViewRefreshTimer;
-		private Timer m_factionRefreshTimer;
-		private Timer m_pluginManagerRefreshTimer;
+		private System.Windows.Forms.Timer m_entityTreeRefreshTimer;
+		private System.Windows.Forms.Timer m_chatViewRefreshTimer;
+		private System.Windows.Forms.Timer m_factionRefreshTimer;
+		private System.Windows.Forms.Timer m_pluginManagerRefreshTimer;
 
-		private ProcessWrapper m_processWrapper;
 		private PluginManager m_pluginManager;
 		private SandboxGameAssemblyWrapper m_gameAssemblyWrapper;
 		private FactionsManager m_factionsManager;
+		private ServerAssemblyWrapper m_serverWrapper;
+
+		private static Thread m_runServerThread;
+		private static bool m_serverRunning;
+		private static string m_worldName;
 
 		#endregion
 
@@ -71,23 +76,22 @@ namespace SEServerExtender
 
 			InitializeComponent();
 
-			m_entityTreeRefreshTimer = new Timer();
+			m_entityTreeRefreshTimer = new System.Windows.Forms.Timer();
 			m_entityTreeRefreshTimer.Interval = 500;
 			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
 
-			m_chatViewRefreshTimer = new Timer();
+			m_chatViewRefreshTimer = new System.Windows.Forms.Timer();
 			m_chatViewRefreshTimer.Interval = 500;
 			m_chatViewRefreshTimer.Tick += new EventHandler(ChatViewRefresh);
 
-			m_factionRefreshTimer = new Timer();
+			m_factionRefreshTimer = new System.Windows.Forms.Timer();
 			m_factionRefreshTimer.Interval = 5000;
 			m_factionRefreshTimer.Tick += new EventHandler(FactionRefresh);
 
-			m_pluginManagerRefreshTimer = new Timer();
+			m_pluginManagerRefreshTimer = new System.Windows.Forms.Timer();
 			m_pluginManagerRefreshTimer.Interval = 100;
 			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
 
-			m_processWrapper = new ProcessWrapper();
 			m_pluginManager = PluginManager.GetInstance();
 			m_gameAssemblyWrapper = SandboxGameAssemblyWrapper.Instance;
 			m_factionsManager = FactionsManager.Instance;
@@ -96,6 +100,44 @@ namespace SEServerExtender
 		#endregion
 
 		#region "Methods"
+
+		private void StartGame(string worldName)
+		{
+			try
+			{
+				if (m_serverRunning)
+					return;
+
+				string basePath = Path.Combine(GameInstallationInfo.GamePath, "DedicatedServer64");
+				m_serverWrapper = ServerAssemblyWrapper.GetInstance(basePath);
+
+				m_worldName = worldName;
+
+				MyFileSystem.Reset();
+
+				string contentPath = Path.Combine(new FileInfo(MyFileSystem.ExePath).Directory.FullName, "Content");
+				MyFileSystem.Init(contentPath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated"));
+				MyFileSystem.InitUserSpecific((string)null);
+
+				m_runServerThread = new Thread(new ThreadStart(this.RunServer));
+				m_runServerThread.Start();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.ToString());
+			}
+		}
+
+		private void StopGame()
+		{
+			m_runServerThread.Abort();
+		}
+
+		private void RunServer()
+		{
+			m_serverRunning = true;
+			m_serverWrapper.StartServer(m_worldName);
+		}
 
 		private string GetGamePath()
 		{
@@ -142,7 +184,7 @@ namespace SEServerExtender
 		{
 			m_pluginManager.LoadPlugins();
 
-			m_processWrapper.StartGame("");
+			StartGame("");
 
 			m_entityTreeRefreshTimer.Start();
 			m_chatViewRefreshTimer.Start();
@@ -152,7 +194,12 @@ namespace SEServerExtender
 
 		private void BTN_ServerControl_Stop_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show("Not yet implemented");
+			StopGame();
+
+			m_entityTreeRefreshTimer.Stop();
+			m_chatViewRefreshTimer.Stop();
+			m_factionRefreshTimer.Stop();
+			m_pluginManagerRefreshTimer.Stop();
 		}
 
 		private void CHK_Control_Debugging_CheckedChanged(object sender, EventArgs e)
@@ -439,6 +486,10 @@ namespace SEServerExtender
 					containerBlocksNode.Nodes.Add(newNode);
 				}
 				else if (cubeBlockType == typeof(ReactorEntity))
+				{
+					energyBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(BatteryBlockEntity))
 				{
 					energyBlocksNode.Nodes.Add(newNode);
 				}
