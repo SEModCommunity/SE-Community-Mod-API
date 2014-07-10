@@ -34,7 +34,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string CubeBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string CubeBlockClass = "54A8BE425EAC4A11BFF922CFB5FF89D0";
 		public static string CubeBlockGetObjectBuilder_Method = "CBB75211A3B0B3188541907C9B1B0C5C";
-		public static string CubeBlockGetActualBlock_Method = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
+		public static string CubeBlockGetActualBlockMethod = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
 		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 		public static string CubeBlockDamageBlockMethod = "165EAAEA972A8C5D69F391D030C48869";
 		public static string CubeBlockGetBuildPercentMethod = "BE3EB9D9351E3CB273327FB522FD60E1";
@@ -79,21 +79,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			: base(definition, backingObject)
 		{
 			m_parent = parent;
-			if (definition.EntityId == 0)
+
+			//Only enable events for non-structural blocks, for now
+			if (definition.EntityId != 0)
 			{
-				m_hasGeneratedId = true;
-				EntityId = GenerateEntityId();
+				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+				newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockCreated;
+				newEvent.timestamp = DateTime.Now;
+				newEvent.entity = this;
+				newEvent.priority = 1;
+				EntityEventManager.Instance.AddEvent(newEvent);
+
+				Action action = InternalRegisterCubeBlockClosedEvent;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 			}
-
-			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
-			newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockCreated;
-			newEvent.timestamp = DateTime.Now;
-			newEvent.entity = this;
-			newEvent.priority = 1;
-			EntityEventManager.Instance.AddEvent(newEvent);
-
-			Action action = InternalRegisterCubeBlockClosedEvent;
-			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		#endregion
@@ -311,9 +310,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
-				Type backingType = BackingObject.GetType();
-				MethodInfo method = backingType.GetMethod(CubeBlockGetActualBlock_Method, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-				Object actualCubeObject = method.Invoke(BackingObject, new object[] { });
+				Object actualCubeObject = InvokeEntityMethod(BackingObject, CubeBlockGetActualBlockMethod);
 
 				return actualCubeObject;
 			}
@@ -510,7 +507,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				Action<Object> action = InternalCubeBlockClosedEvent;
 
 				Object actualObject = GetActualObject();
+				if (actualObject == null)
+					return;
 				MethodInfo method = actualObject.GetType().GetMethod(SEModAPIInternal.API.Entity.BaseEntity.BaseEntityCombineOnClosedEventMethod);
+				if (method == null)
+					return;
 				method.Invoke(actualObject, new object[] { action });
 			}
 			catch (Exception ex)
@@ -601,9 +602,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					{
 						switch (baseEntity.TypeId)
 						{
-							case MyObjectBuilderTypeEnum.CubeBlock:
-								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
-								break;
 							case MyObjectBuilderTypeEnum.CargoContainer:
 								matchingCubeBlock = new CargoContainerEntity(m_parent, (MyObjectBuilder_CargoContainer)baseEntity, entity);
 								break;
@@ -627,6 +625,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 								break;
 							case MyObjectBuilderTypeEnum.ReflectorLight:
 								matchingCubeBlock = new ReflectorLightEntity(m_parent, (MyObjectBuilder_ReflectorLight)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.BatteryBlock:
+								matchingCubeBlock = new BatteryBlockEntity(m_parent, (MyObjectBuilder_BatteryBlock)baseEntity, entity);
 								break;
 							default:
 								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);

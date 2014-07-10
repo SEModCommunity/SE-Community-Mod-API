@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="API\Definitions\ConfigFileSerializer.cs" />
     <Compile Include="API\Definitions\CubeBlocks\ShipDrillDefinition.cs" />
+    <Compile Include="API\Definitions\DedicatedConfigDefinition.cs" />
     <Compile Include="API\Definitions\DefinitionOverLayer.cs" />
     <Compile Include="API\Definitions\AmmoMagazinesDefinition.cs" />
     <Compile Include="API\Definitions\CubeBlocks\AssemblerDefinition.cs" />

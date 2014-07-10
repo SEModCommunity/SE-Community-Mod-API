@@ -12,11 +12,11 @@ using VRageMath;
 
 namespace SEModAPIExtensions.API
 {
-	public class MultiblockStructure
+	public abstract class MultiblockStructure
 	{
 		#region "Attributes"
 
-		protected static Dictionary<Vector3I, Type> m_definition;
+		protected Dictionary<Vector3I, Type> m_definition;
 		protected List<CubeBlockEntity> m_blocks;
 		protected CubeBlockEntity m_anchor;
 		protected CubeGridEntity m_parent;
@@ -28,6 +28,7 @@ namespace SEModAPIExtensions.API
 		public MultiblockStructure(CubeGridEntity parent)
 		{
 			m_parent = parent;
+			m_definition = new Dictionary<Vector3I, Type>();
 			m_blocks = new List<CubeBlockEntity>();
 		}
 
@@ -132,16 +133,16 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
-		public static List<Vector3I> GetDefinitionMatches(CubeGridEntity cubeGrid)
+		public List<Vector3I> GetDefinitionMatches(CubeGridEntity cubeGrid)
 		{
-			List<Vector3I> anchorList = new List<Vector3I>();
-
 			try
 			{
+				List<Vector3I> anchorList = new List<Vector3I>();
+
+				Dictionary<Vector3I, Type> def = GetMultiblockDefinition();
+				Type anchorType = def[Vector3I.Zero];
 				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
 				{
-					Dictionary<Vector3I, Type> def = GetMultiblockDefinition();
-					Type anchorType = def[Vector3I.Zero];
 					if (cubeBlock.GetType() == anchorType)
 					{
 						bool isMatch = true;
@@ -154,7 +155,7 @@ namespace SEModAPIExtensions.API
 								isMatch = false;
 								break;
 							}
-							if (posCubeBlock.GetType() != entry)
+							if (!entry.IsAssignableFrom(posCubeBlock.GetType()))
 							{
 								isMatch = false;
 								break;
@@ -167,19 +168,17 @@ namespace SEModAPIExtensions.API
 						}
 					}
 				}
+
+				return anchorList;
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
+				return new List<Vector3I>();
 			}
-
-			return anchorList;
 		}
 
-		public static Dictionary<Vector3I, Type> GetMultiblockDefinition()
-		{
-			return m_definition;
-		}
+		public abstract Dictionary<Vector3I, Type> GetMultiblockDefinition();
 
 		#endregion
 	}

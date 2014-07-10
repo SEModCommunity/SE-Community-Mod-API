@@ -100,6 +100,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			: base(definition, backingObject)
 		{
 			m_cubeBlockManager = new CubeBlockManager(this, backingObject, CubeGridGetCubeBlocksHashSetMethod);
+			m_cubeBlockManager.LoadDynamic();
+
 			m_networkManager = new CubeGridNetworkManager(this);
 
 			Object powerManager = InvokeEntityMethod(BackingObject, CubeGridGetPowerManagerMethod);

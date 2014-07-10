@@ -24,6 +24,8 @@ namespace SEModAPIInternal.API.Entity.Sector
 		protected float m_powerInputRate;	//in MW (megawatts)
 		protected float m_powerOutputRate;	//in MW (megawatts)
 		protected float m_powerMaxCapacity;	//in MJ (megajoules)
+		protected float m_currentCapacity;	//in MJ (megajoules)
+		protected bool m_producerEnabled;
 
 		//Battery Type
 		public static string BatteryNamespace = "FB8C11741B7126BD9C97FE76747E087F";
@@ -33,7 +35,7 @@ namespace SEModAPIInternal.API.Entity.Sector
 		public static string BatteryUpdateMethod = "27608CF8A780F418515861FE13FC7CAC";
 		public static string BatteryInitFromObjectBuilderMethod = "ACB2C225540B096AAF057FD35CF2E87D";
 		public static string BatteryGetCurrentCapacityMethod = "E80F74B7BDC457CEBD0E61DDCAB57398";
-		public static string BatterySetCurrentCapacityMethod = "DF68FCA120D54CC1EC18AF7F06B426CF";
+		public static string BatterySetCurrentCapacityMethod = "C3BF60F3540A8A48CB8FEE0CDD3A95C6";
 		public static string BatteryGetProducerEnabledMethod = "4A1669EF365B3728E3D8D8651474C170";
 		public static string BatterySetProducerEnabledMethod = "18C96C726F64BAF2B00697AD4436C42C";
 		public static string BatteryGetPowerOutputMethod = "083A16BEA16C103A875FE1F35AF145A5";
@@ -65,9 +67,13 @@ namespace SEModAPIInternal.API.Entity.Sector
 		//Power Receiver Fields
 		public static string PowerReceiverMaxRequiredInputField = "59318896499727A72FF42D624ECE3084";
 
-		//3 - Door, 5 - Battery
+		//3 - Door, 4 - Gravity Generator, 5 - Battery
 		public static string PowerReceiverTypeEnumNamespace = "FB8C11741B7126BD9C97FE76747E087F";
 		public static string PowerReceiverTypeEnumClass = "0CAE5E7398171101A465139DC3A8A6A4";
+		
+		//0 - Solar Panel, 1 - Reactor, 2 - Battery
+		public static string PowerProducerTypeEnumNamespace = "FB8C11741B7126BD9C97FE76747E087F";
+		public static string PowerProducerTypeEnumClass = "4A6D842A6ACB931992C3C36C49CD7544";
 
 		#endregion
 
@@ -81,6 +87,8 @@ namespace SEModAPIInternal.API.Entity.Sector
 			m_powerInputRate = inputRate;
 			m_powerOutputRate = outputRate;
 			m_powerMaxCapacity = maxCapacity;
+			m_currentCapacity = battery.CurrentCapacity;
+			m_producerEnabled = battery.ProducerEnabled;
 
 			Action action = InternalSetupBattery;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
@@ -113,17 +121,11 @@ namespace SEModAPIInternal.API.Entity.Sector
 		[Description("Current capacity of the battery in megajoules")]
 		public float CurrentCapacity
 		{
-			get
-			{
-				if(BackingObject != null)
-					GetSubTypeEntity().CurrentCapacity = InternalGetCurrentCapacity();
-
-				return GetSubTypeEntity().CurrentCapacity;
-			}
+			get { return m_currentCapacity; }
 			set
 			{
-				//if (GetSubTypeEntity().CurrentCapacity == value) return;
-				GetSubTypeEntity().CurrentCapacity = value;
+				//if (m_currentCapacity == value) return;
+				m_currentCapacity = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -138,17 +140,11 @@ namespace SEModAPIInternal.API.Entity.Sector
 		[Description("Whether or not the output (aka producer) of the battery is enabled")]
 		public bool ProducerEnabled
 		{
-			get
-			{
-				if (BackingObject != null)
-					GetSubTypeEntity().ProducerEnabled = InternalGetProducerEnabled();
-
-				return GetSubTypeEntity().ProducerEnabled;
-			}
+			get { return m_producerEnabled; }
 			set
 			{
 				//if (GetSubTypeEntity().ProducerEnabled == value) return;
-				GetSubTypeEntity().ProducerEnabled = value;
+				m_producerEnabled = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -206,7 +202,9 @@ namespace SEModAPIInternal.API.Entity.Sector
 			{
 				try
 				{
-					m_powerReceiver = InvokeEntityMethod(BackingObject, BatteryGetPowerReceiverMethod);
+					Object currentReceiver = InvokeEntityMethod(BackingObject, BatteryGetPowerReceiverMethod);
+					if (currentReceiver != null)
+						m_powerReceiver = currentReceiver;
 
 					return m_powerReceiver;
 				}
@@ -238,6 +236,7 @@ namespace SEModAPIInternal.API.Entity.Sector
 		public void Update()
 		{
 			if (BackingObject == null) return;
+			if (PowerReceiver == null) return;
 
 			try
 			{
@@ -245,8 +244,8 @@ namespace SEModAPIInternal.API.Entity.Sector
 				Type someType2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("AAC05F537A6F0F6775339593FBDFC564", "D580AE7552E79DAB03A3D64B1F7B67F9");
 
 				bool someStaticValue1 = (bool)InvokeStaticMethod(someType1, "75DC57D5A6FF72BADC5278AC0A138D97");
-				Object someType2Instance = (float)InvokeStaticMethod(someType2, "93A33C4F0F6620ACAFCD191E8A26832E");
-				bool isGlobalPowerEnabled = (bool)InvokeEntityMethod(someType2Instance, "AA5487FAD57571EA60A3EB79E8B16322");
+				Object someType2Instance = InvokeStaticMethod(someType2, "93A33C4F0F6620ACAFCD191E8A26832E");
+				bool isGlobalPowerDisabled = (bool)InvokeEntityMethod(someType2Instance, "AA5487FAD57571EA60A3EB79E8B16322");
 
 				int gameTimeMillis = SandboxGameAssemblyWrapper.Instance.GetMainGameMilliseconds();
 				float powerReceiverRate = (float)InvokeEntityMethod(PowerReceiver, PowerReceiverGetCurrentRateMethod);
@@ -265,15 +264,15 @@ namespace SEModAPIInternal.API.Entity.Sector
 
 					//Calculate time-scaled power outputs as megawatts per millisecond
 					float producerOutput = (float)timeSinceLastUpdate * (InternalGetPowerOutput() / 3600000f);	//This is typically a positive value
-					float receiverOutput = (float)timeSinceLastUpdate * (powerReceiverRate / 3600000f);			//This is typically a negative value
+					float receiverOutput = (float)timeSinceLastUpdate * (-powerReceiverRate / 3600000f);			//This is typically a negative value
 
 					//Update current capacity
-					CurrentCapacity = MathHelper.Clamp(CurrentCapacity - (isGlobalPowerEnabled ? 0.0f : (producerOutput + receiverOutput)), 0.0f, MaxCapacity);
+					CurrentCapacity = MathHelper.Clamp(CurrentCapacity - (isGlobalPowerDisabled ? 0.0f : (producerOutput + receiverOutput)), 0.0f, MaxCapacity);
 				}
 
 				InvokeEntityMethod(BackingObject, BatteryUpdateHasPowerMethod);
 
-				InvokeEntityMethod(BackingObject, BatteryRefreshPowerSystemsMethod);
+				//TODO - Find out what we need to broadcast here to push the power updates out
 			}
 			catch(Exception ex)
 			{
@@ -291,7 +290,13 @@ namespace SEModAPIInternal.API.Entity.Sector
 
 				BackingObject = Activator.CreateInstance(batteryType, new object[] { null });
 
-				InternalInit();
+				m_powerReceiver = CreatePowerReceiver();
+				InvokeEntityMethod(BackingObject, BatterySetPowerReceiverMethod, new object[] { m_powerReceiver });
+				InvokeEntityMethod(PowerReceiver, PowerReceiverRunPowerRateCallbackMethod);
+
+				InternalUpdateBattery();
+
+				InvokeEntityMethod(BackingObject, BatteryUpdateHasPowerMethod);
 
 				m_powerOutputRate = InternalGetPowerOutput();
 
@@ -340,23 +345,6 @@ namespace SEModAPIInternal.API.Entity.Sector
 				return 0.0f;
 			else
 				return m_powerInputRate;
-		}
-
-		protected void InternalInit()
-		{
-			try
-			{
-				PowerReceiver = CreatePowerReceiver();
-				InvokeEntityMethod(BackingObject, BatterySetPowerReceiverMethod, new object[] { PowerReceiver });
-				InvokeEntityMethod(PowerReceiver, PowerReceiverRunPowerRateCallbackMethod);
-
-				ProducerEnabled = false;
-				CurrentCapacity = 0;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
 		}
 
 		protected void InternalUpdateBattery()
