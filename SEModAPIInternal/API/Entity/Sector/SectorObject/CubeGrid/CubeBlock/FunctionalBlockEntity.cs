@@ -18,8 +18,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Attributes"
 
-		protected bool m_enabledToSet;
-
 		public static string FunctionalBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string FunctionalBlockClass = "7085736D64DCC58ED5DCA05FFEEA9664";
 
@@ -57,9 +55,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 				if (BackingObject != null)
 				{
-					m_enabledToSet = value;
-
-					Action action = InternalSetEnabled;
+					Action action = InternalUpdateFunctionalBlock;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -78,7 +74,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			return (MyObjectBuilder_FunctionalBlock)BaseEntity;
 		}
 
-		public void InternalSetEnabled()
+		public void InternalUpdateFunctionalBlock()
 		{
 			try
 			{
@@ -86,7 +82,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					Console.WriteLine("FunctionalBlock '" + Name + "': Setting enabled/disabled to '" + (m_enabledToSet ? "enabled" : "disabled") + "'");
+					Console.WriteLine("FunctionalBlock '" + Name + "': Setting enabled/disabled to '" + (Enabled ? "enabled" : "disabled") + "'");
 				}
 
 				Type actualType = actualCubeObject.GetType();
@@ -97,9 +93,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 					iterationCutoff--;
 				}
 				MethodInfo method2 = actualType.GetMethod(FunctionalBlockSetEnabledMethod);
-				method2.Invoke(actualCubeObject, new object[] { m_enabledToSet });
+				method2.Invoke(actualCubeObject, new object[] { Enabled });
 				MethodInfo method3 = actualType.GetMethod(FunctionalBlockBroadcastEnabledMethod);
-				method3.Invoke(actualCubeObject, new object[] { m_enabledToSet });
+				method3.Invoke(actualCubeObject, new object[] { Enabled });
 			}
 			catch (Exception ex)
 			{

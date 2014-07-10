@@ -602,9 +602,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					{
 						switch (baseEntity.TypeId)
 						{
-							case MyObjectBuilderTypeEnum.CubeBlock:
-								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
-								break;
 							case MyObjectBuilderTypeEnum.CargoContainer:
 								matchingCubeBlock = new CargoContainerEntity(m_parent, (MyObjectBuilder_CargoContainer)baseEntity, entity);
 								break;
@@ -628,6 +625,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 								break;
 							case MyObjectBuilderTypeEnum.ReflectorLight:
 								matchingCubeBlock = new ReflectorLightEntity(m_parent, (MyObjectBuilder_ReflectorLight)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.BatteryBlock:
+								matchingCubeBlock = new BatteryBlockEntity(m_parent, (MyObjectBuilder_BatteryBlock)baseEntity, entity);
 								break;
 							default:
 								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);

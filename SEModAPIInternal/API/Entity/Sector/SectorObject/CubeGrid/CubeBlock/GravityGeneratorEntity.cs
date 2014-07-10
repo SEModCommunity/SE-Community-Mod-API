@@ -102,11 +102,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				Object baseObject = BackingObject;
 				Object actualObject = GetActualObject();
 
-				MethodInfo updateAcceleration = actualObject.GetType().GetMethod(GravityGeneratorSetAccelerationMethod);
-				updateAcceleration.Invoke(actualObject, new object[] { GravityAcceleration });
-
-				MethodInfo updateFieldSize = actualObject.GetType().GetMethod(GravityGeneratorSetFieldSizeMethod);
-				updateFieldSize.Invoke(actualObject, new object[] { (Vector3)FieldSize });
+				InvokeEntityMethod(actualObject, GravityGeneratorSetAccelerationMethod, new object[] { GravityAcceleration });
+				InvokeEntityMethod(actualObject, GravityGeneratorSetFieldSizeMethod, new object[] { (Vector3)FieldSize });
 			}
 			catch (Exception ex)
 			{
