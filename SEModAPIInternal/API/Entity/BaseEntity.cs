@@ -67,8 +67,8 @@ namespace SEModAPIInternal.API.Entity
 			{
 				Action action = InternalRegisterEntityMovedEvent;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				Action action2 = InternalRegisterEntityClosedEvent;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
+				//Action action2 = InternalRegisterEntityClosedEvent;
+				//SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
 
 				m_maxLinearVelocity = (float)104.7;
 			}

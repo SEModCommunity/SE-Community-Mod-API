@@ -84,7 +84,7 @@ namespace SEServerExtender
 			m_factionRefreshTimer.Tick += new EventHandler(FactionRefresh);
 
 			m_pluginManagerRefreshTimer = new Timer();
-			m_pluginManagerRefreshTimer.Interval = 250;
+			m_pluginManagerRefreshTimer.Interval = 100;
 			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
 
 			m_processWrapper = new ProcessWrapper();
@@ -727,42 +727,49 @@ namespace SEServerExtender
 
 		private void FactionRefresh(object sender, EventArgs e)
 		{
-			if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+			try
 			{
-				if (!m_factionsManager.IsInitialized)
+				if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				{
-					string worldPath = m_gameAssemblyWrapper.GetServerConfig().LoadWorld;
-					string[] directories = worldPath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
-					string worldName = directories[directories.Length - 1];
-					m_factionsManager.Init(worldName);
-					List<Faction> factions = m_factionsManager.Factions;
-
-					TRV_Factions.BeginUpdate();
-					TRV_Factions.Nodes.Clear();
-					foreach (Faction faction in factions)
+					if (!m_factionsManager.IsInitialized)
 					{
-						TreeNode factionNode = TRV_Factions.Nodes.Add(faction.Id.ToString(), faction.Name);
-						factionNode.Name = faction.Name;
-						factionNode.Tag = faction;
+						string worldPath = m_gameAssemblyWrapper.GetServerConfig().LoadWorld;
+						string[] directories = worldPath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
+						string worldName = directories[directories.Length - 1];
+						m_factionsManager.Init(worldName);
+						List<Faction> factions = m_factionsManager.Factions;
 
-						TreeNode membersNode = factionNode.Nodes.Add("Members");
-						TreeNode joinRequestsNode = factionNode.Nodes.Add("Join Requests");
+						TRV_Factions.BeginUpdate();
+						TRV_Factions.Nodes.Clear();
+						foreach (Faction faction in factions)
+						{
+							TreeNode factionNode = TRV_Factions.Nodes.Add(faction.Id.ToString(), faction.Name);
+							factionNode.Name = faction.Name;
+							factionNode.Tag = faction;
 
-						foreach (MyObjectBuilder_FactionMember member in faction.Members)
-						{
-							TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
-							memberNode.Name = member.PlayerId.ToString();
-							memberNode.Tag = member;
+							TreeNode membersNode = factionNode.Nodes.Add("Members");
+							TreeNode joinRequestsNode = factionNode.Nodes.Add("Join Requests");
+
+							foreach (MyObjectBuilder_FactionMember member in faction.Members)
+							{
+								TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
+								memberNode.Name = member.PlayerId.ToString();
+								memberNode.Tag = member;
+							}
+							foreach (MyObjectBuilder_FactionMember member in faction.JoinRequests)
+							{
+								TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
+								memberNode.Name = member.PlayerId.ToString();
+								memberNode.Tag = member;
+							}
 						}
-						foreach (MyObjectBuilder_FactionMember member in faction.JoinRequests)
-						{
-							TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
-							memberNode.Name = member.PlayerId.ToString();
-							memberNode.Tag = member;
-						}
+						TRV_Factions.EndUpdate();
 					}
-					TRV_Factions.EndUpdate();
 				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
