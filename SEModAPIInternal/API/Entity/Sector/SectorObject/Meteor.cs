@@ -10,7 +10,7 @@ using SEModAPI.API;
 using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
-using SEModAPIInternal.API.Server;
+using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
@@ -43,6 +43,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[Category("Meteor")]
+		[Browsable(true)]
 		public override string Name
 		{
 			get { return GetSubTypeEntity().Item.PhysicalContent.SubtypeName; }
@@ -62,7 +64,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateEntityLinearVelocity;
+					Action action = InternalUpdateMeteor;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -82,7 +84,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateEntityAngularVelocity;
+					Action action = InternalUpdateMeteor;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -98,7 +100,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				GetSubTypeEntity().Integrity = value;
 				Changed = true;
 
-				//TODO - Add functionality for backing object for this property
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateMeteor;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -112,6 +118,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (m_item == value) return;
 				m_item = value;
 				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateMeteor;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -126,6 +138,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		new internal MyObjectBuilder_Meteor GetSubTypeEntity()
 		{
 			return (MyObjectBuilder_Meteor)BaseEntity;
+		}
+
+		protected void InternalUpdateMeteor()
+		{
+			try
+			{
+				InternalUpdateBaseEntity();
+
+				//TODO - Add methods to set integrity and item of the meteor
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

@@ -11,6 +11,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
 	public class FloatingObject : BaseEntity
 	{
+		#region "Attributes"
+
+		public static string FloatingObjectNamespace = "";
+		public static string FloatingObjectClass = "";
+
+		#endregion
+
 		#region "Constructors and Initializers"
 
 		public FloatingObject(MyObjectBuilder_FloatingObject definition)
@@ -25,6 +32,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[Category("Floating Object")]
+		[Browsable(true)]
 		public override string Name
 		{
 			get { return GetSubTypeEntity().Item.PhysicalContent.SubtypeName; }
