@@ -79,6 +79,8 @@ namespace SEModAPIExtensions.API
 
 			try
 			{
+				//MyFSPath fsPath = new MyFSPath(MyFSLocationEnum.Mod, "");
+				//string modsPath = MyFileSystem.GetAbsolutePath(fsPath);
 				string modsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated", "Mods");
 				if (!Directory.Exists(modsPath))
 					return;
@@ -92,7 +94,7 @@ namespace SEModAPIExtensions.API
 						try
 						{
 							FileInfo fileInfo = new FileInfo(file);
-							if (fileInfo.Name != "plugin.dll")
+							if (!fileInfo.Extension.ToLower().Equals("dll"))
 								continue;
 
 							//Load the assembly
@@ -102,7 +104,7 @@ namespace SEModAPIExtensions.API
 							GuidAttribute guid = (GuidAttribute)pluginAssembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
 							Guid guidValue = new Guid(guid.Value);
 
-							//Look through the exported types to find the one that implements ModPlugin
+							//Look through the exported types to find the one that implements PluginBase
 							Type[] types = pluginAssembly.GetExportedTypes();
 							foreach (Type type in types)
 							{
@@ -214,94 +216,10 @@ namespace SEModAPIExtensions.API
 								//Do nothing
 							}
 							break;
-						case EntityEventManager.EntityEventType.OnBaseEntityMoved:
+						default:
 							try
 							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnBaseEntityMoved");
-								if (updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
-							}
-							catch (Exception ex)
-							{
-								//Do nothing
-							}
-							break;
-						case EntityEventManager.EntityEventType.OnBaseEntityCreated:
-							try
-							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnBaseEntityCreated");
-								if (updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
-							}
-							catch (Exception ex)
-							{
-								//Do nothing
-							}
-							break;
-						case EntityEventManager.EntityEventType.OnBaseEntityDeleted:
-							try
-							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnBaseEntityDeleted");
-								if (updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
-							}
-							catch (Exception ex)
-							{
-								//Do nothing
-							}
-							break;
-						case EntityEventManager.EntityEventType.OnCubeGridMoved:
-							try
-							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeGridMoved");
-								if (updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
-							}
-							catch (Exception ex)
-							{
-								//Do nothing
-							}
-							break;
-						case EntityEventManager.EntityEventType.OnCubeGridCreated:
-							try
-							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeGridCreated");
-								if (updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
-							}
-							catch (Exception ex)
-							{
-								//Do nothing
-							}
-							break;
-						case EntityEventManager.EntityEventType.OnCubeGridDeleted:
-							try
-							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeGridDeleted");
-								if (updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
-							}
-							catch (Exception ex)
-							{
-								//Do nothing
-							}
-							break;
-						case EntityEventManager.EntityEventType.OnCubeBlockCreated:
-							try
-							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeBlockCreated");
-								if (updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
-							}
-							catch (Exception ex)
-							{
-								//Do nothing
-							}
-							break;
-						case EntityEventManager.EntityEventType.OnCubeBlockDeleted:
-							try
-							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnCubeBlockDeleted");
+								MethodInfo updateMethod = plugin.GetType().GetMethod(entityEvent.type.ToString());
 								if (updateMethod != null)
 									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
 							}

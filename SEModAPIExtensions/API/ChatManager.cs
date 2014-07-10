@@ -75,7 +75,7 @@ namespace SEModAPIExtensions.API
 
 		#region "Methods"
 
-		public void SetupChatHandlers()
+		private void SetupChatHandlers()
 		{
 			try
 			{
@@ -97,7 +97,18 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
-		public void ReceiveChatMessage(ulong remoteUserId, string message, ChatEntryTypeEnum entryType)
+		protected Object CreateChatMessageStruct(string message)
+		{
+			Type chatMessageStructType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(ChatMessageStruct);
+			FieldInfo messageField = chatMessageStructType.GetField(ChatMessageMessageField);
+
+			Object chatMessageStruct = Activator.CreateInstance(chatMessageStructType);
+			messageField.SetValue(chatMessageStruct, message);
+
+			return chatMessageStruct;
+		}
+
+		protected void ReceiveChatMessage(ulong remoteUserId, string message, ChatEntryTypeEnum entryType)
 		{
 			string playerName = remoteUserId.ToString();
 
@@ -111,20 +122,14 @@ namespace SEModAPIExtensions.API
 
 		public void SendPrivateChatMessage(ulong remoteUserId, string message)
 		{
-			var sandboxGame = SandboxGameAssemblyWrapper.Instance;
-
-			if (!sandboxGame.IsGameStarted)
+			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
 
 			try
 			{
-				Type chatMessageStructType = sandboxGame.GameAssembly.GetType(ChatMessageStruct);
-				FieldInfo messageField = chatMessageStructType.GetField(ChatMessageMessageField);
+				Object chatMessageStruct = CreateChatMessageStruct(message);
 
-				Object chatMessageStruct = Activator.CreateInstance(chatMessageStructType);
-				messageField.SetValue(chatMessageStruct, message);
-
-				ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStructType);
+				ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
 
 				m_chatMessages.Add("Server: " + message);
 			}
@@ -136,18 +141,18 @@ namespace SEModAPIExtensions.API
 
 		public void SendPublicChatMessage(string message)
 		{
-			var sandboxGame = SandboxGameAssemblyWrapper.Instance;
-
-			if (!sandboxGame.IsGameStarted)
+			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
 
 			try
 			{
+				Object chatMessageStruct = CreateChatMessageStruct(message);
 				List<ulong> connectedPlayers = ServerNetworkManager.Instance.GetConnectedPlayers();
 				foreach (ulong remoteUserId in connectedPlayers)
 				{
-					SendPrivateChatMessage(remoteUserId, message);
+					ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
 				}
+				m_chatMessages.Add("Server: " + message);
 			}
 			catch (Exception ex)
 			{
