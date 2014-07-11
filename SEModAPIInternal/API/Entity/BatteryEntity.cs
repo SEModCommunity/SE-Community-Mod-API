@@ -32,18 +32,22 @@ namespace SEModAPIInternal.API.Entity.Sector
 		public static string BatteryClass = "328929D5EC05DF770D51383F6FC0B025";
 
 		//Battery Methods
-		public static string BatteryGetCurrentCapacityMethod =	"9B8FAE84FB9D0425A1972F1E3532107E";
+		public static string BatteryGetCurrentCapacityMethod =	"C039735A461FE5B2A1B15E3E64C0B182";
 		public static string BatterySetCurrentCapacityMethod =	"C3BF60F3540A8A48CB8FEE0CDD3A95C6";
-		public static string BatteryGetProducerEnabledMethod =	"063E3A2D4177C05C2F0246008DCA8C2D";
-		public static string BatterySetProducerEnabledMethod =	"F3A3DC0B051F64A2367236FF51C38FC3";
-		public static string BatteryGetPowerOutputMethod =		"37AC6231D08650CB8CB1E0EFD33D2E13";
-		public static string BatterySetPowerOutputMethod =		"4B8C21AB68F45BB74057DCE11F21AB45";
+		public static string BatteryGetProducerEnabledMethod =	"CAE965B9044E66DDE3D37732C7016829";
+		public static string BatterySetProducerEnabledMethod =	"2CA1CC44FD889DE688E240B449C91327";
+		public static string BatteryGetPowerOutputMethod =		"94A581644BA2FE208B8F28BB42698AC4";
+		public static string BatterySetPowerOutputMethod =		"66DD52AFBD694F8CA8584587C60C8A42";
 		public static string BatteryGetPowerReceiverMethod =	"get_PowerReceiver";
 		public static string BatterySetPowerReceiverMethod =	"976FC090F0BE88CB4342C1084A962B3D";
 		public static string BatteryUpdateHasPowerMethod =		"A91C16B3A7E55EA805F02F7530C6BC8A";
-		public static string BatteryHasPowerMethod =			"02FF9125F779E2C3AEF485EE4523E2C9";
+		public static string BatteryHasPowerMethod =			"241617E8B1B0C927D0852E128336E816";
 
 		//Battery Fields
+		public static string BatteryCurrentCapacityField = "0BAEC0F968A4BEAE30E7C46D9406765C";
+		public static string BatteryProducerEnabledField = "F5E407B2BB6524F07CCC1C043CC38BCF";
+		public static string BatteryPowerOutputField = "84560E0035B8892361F434CE17311D11";
+		public static string BatteryHasPowerField = "1FE8C047D525A7A32AE9E02979FA46C9";
 		public static string BatteryPowerReceiverField = "6059CCFDAE1F9677267A15EB7F5B520D";
 		public static string BatteryNetworkManagerField = "2F5B63E5862CA37D1924667D787601A3";
 		public static string BatteryLastUpdateMillisecondsField = "71122D8FFE2A1E5B86AAE33427F12A5E";

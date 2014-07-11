@@ -35,7 +35,11 @@
 			this.BTN_ServerControl_Start = new System.Windows.Forms.Button();
 			this.BTN_ServerControl_Stop = new System.Windows.Forms.Button();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.LBL_Control_Debugging = new System.Windows.Forms.Label();
+			this.CMB_Control_CommonInstanceList = new System.Windows.Forms.ComboBox();
+			this.CHK_Control_CommonDataPath = new System.Windows.Forms.CheckBox();
 			this.CHK_Control_Debugging = new System.Windows.Forms.CheckBox();
 			this.TAB_Entities_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -209,15 +213,37 @@
 			// 
 			// splitContainer4.Panel1
 			// 
+			this.splitContainer4.Panel1.Controls.Add(this.label2);
+			this.splitContainer4.Panel1.Controls.Add(this.label1);
 			this.splitContainer4.Panel1.Controls.Add(this.LBL_Control_Debugging);
 			this.splitContainer4.Panel1MinSize = 120;
 			// 
 			// splitContainer4.Panel2
 			// 
+			this.splitContainer4.Panel2.Controls.Add(this.CMB_Control_CommonInstanceList);
+			this.splitContainer4.Panel2.Controls.Add(this.CHK_Control_CommonDataPath);
 			this.splitContainer4.Panel2.Controls.Add(this.CHK_Control_Debugging);
 			this.splitContainer4.Size = new System.Drawing.Size(478, 638);
-			this.splitContainer4.SplitterDistance = 120;
+			this.splitContainer4.SplitterDistance = 140;
 			this.splitContainer4.TabIndex = 0;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(3, 70);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(115, 13);
+			this.label2.TabIndex = 3;
+			this.label2.Text = "Common data instance";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(3, 35);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(134, 13);
+			this.label1.TabIndex = 2;
+			this.label1.Text = "Use common program data";
 			// 
 			// LBL_Control_Debugging
 			// 
@@ -227,6 +253,25 @@
 			this.LBL_Control_Debugging.Size = new System.Drawing.Size(98, 13);
 			this.LBL_Control_Debugging.TabIndex = 0;
 			this.LBL_Control_Debugging.Text = "Enable Debugging:";
+			// 
+			// CMB_Control_CommonInstanceList
+			// 
+			this.CMB_Control_CommonInstanceList.Enabled = false;
+			this.CMB_Control_CommonInstanceList.FormattingEnabled = true;
+			this.CMB_Control_CommonInstanceList.Location = new System.Drawing.Point(3, 67);
+			this.CMB_Control_CommonInstanceList.Name = "CMB_Control_CommonInstanceList";
+			this.CMB_Control_CommonInstanceList.Size = new System.Drawing.Size(150, 21);
+			this.CMB_Control_CommonInstanceList.TabIndex = 3;
+			// 
+			// CHK_Control_CommonDataPath
+			// 
+			this.CHK_Control_CommonDataPath.AutoSize = true;
+			this.CHK_Control_CommonDataPath.Location = new System.Drawing.Point(3, 35);
+			this.CHK_Control_CommonDataPath.Name = "CHK_Control_CommonDataPath";
+			this.CHK_Control_CommonDataPath.Size = new System.Drawing.Size(15, 14);
+			this.CHK_Control_CommonDataPath.TabIndex = 1;
+			this.CHK_Control_CommonDataPath.UseVisualStyleBackColor = true;
+			this.CHK_Control_CommonDataPath.CheckedChanged += new System.EventHandler(this.CHK_Control_CommonDataPath_CheckedChanged);
 			// 
 			// CHK_Control_Debugging
 			// 
@@ -686,5 +731,9 @@
 		private System.Windows.Forms.ListBox LST_Plugins;
 		private System.Windows.Forms.PropertyGrid PG_Factions;
 		private System.Windows.Forms.PropertyGrid PG_Plugins;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.CheckBox CHK_Control_CommonDataPath;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.ComboBox CMB_Control_CommonInstanceList;
 	}
 }

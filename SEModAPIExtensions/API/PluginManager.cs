@@ -73,23 +73,16 @@ namespace SEModAPIExtensions.API
 				return false;
 		}
 
-		public void LoadPlugins(string basePath = "")
+		public void LoadPlugins(string basePath = "", string instanceName = "")
 		{
 			Console.WriteLine("Loading plugins ...");
 
 			try
 			{
-				string contentPath = Path.Combine(new FileInfo(MyFileSystem.ExePath).Directory.FullName, "Content");
-				string userDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated");
-				if (!Directory.Exists(userDataPath))
-					userDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "SpaceEngineersDedicated");
-
-				MyFileSystem.Init(contentPath, userDataPath);
-				MyFileSystem.InitUserSpecific((string)null);
+				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
 
 				MyFSPath fsPath = new MyFSPath(MyFSLocationEnum.Mod, "");
 				string modsPath = MyFileSystem.GetAbsolutePath(fsPath);
-				//string modsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated", "Mods");
 				if (!Directory.Exists(modsPath))
 					return;
 

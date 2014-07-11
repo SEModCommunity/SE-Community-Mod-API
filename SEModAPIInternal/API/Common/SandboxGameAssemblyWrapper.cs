@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -8,15 +9,13 @@ using Sandbox.Common.ObjectBuilders;
 
 using SEModAPIInternal.Support;
 
+using VRage.Common.Utils;
+
 namespace SEModAPIInternal.API.Common
 {
 	public class SandboxGameAssemblyWrapper
 	{
 		#region "Attributes"
-
-		protected static SandboxGameAssemblyWrapper m_instance;
-		protected static bool m_isDebugging;
-		protected bool m_isGameLoaded;
 
 		private Assembly m_assembly;
 
@@ -30,6 +29,12 @@ namespace SEModAPIInternal.API.Common
 		private FieldInfo m_configContainerField;
 		private FieldInfo m_configContainerDedicatedDataField;
 		private FieldInfo m_serverCoreNullRender;
+
+		protected static SandboxGameAssemblyWrapper m_instance;
+		protected static bool m_isDebugging;
+		protected static bool m_isUsingCommonProgramData;
+
+		protected bool m_isGameLoaded;
 
 		public static string GameConstantsNamespace = "00DD5482C0A3DF0D94B151167E77A6D9";
 		public static string GameConstantsClass = "5FBC15A83966C3D53201318E6F912741";
@@ -57,6 +62,10 @@ namespace SEModAPIInternal.API.Common
 		public static string ConfigContainerSetWorldName = "493E0E7BC7A617699C44A9A5FB8FF679";
 		public static string ConfigContainerDedicatedDataField = "44A1510B70FC1BBE3664969D47820439";
 
+		public static string CubeBlockObjectFactoryNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
+		public static string CubeBlockObjectFactoryClass = "8E009F375CE3CE0A06E67CA053084252";
+		public static string CubeBlockObjectFactoryGetBuilderFromEntityMethod = "967C934A80A75642EADF86455E924134";
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -65,6 +74,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			m_instance = this;
 			m_isDebugging = false;
+			m_isUsingCommonProgramData = false;
 
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
@@ -113,9 +123,32 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
+		public static bool UseCommonProgramData
+		{
+			get
+			{
+				var inst = SandboxGameAssemblyWrapper.Instance;
+				return m_isUsingCommonProgramData;
+			}
+			set
+			{
+				var inst = SandboxGameAssemblyWrapper.Instance;
+				m_isUsingCommonProgramData = value;
+			}
+		}
+
 		public Type MainGameType
 		{
 			get { return m_mainGameType; }
+		}
+
+		public Type ObjectFactoryType
+		{
+			get
+			{
+				Type objectBuilderFactoryType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeBlockObjectFactoryNamespace, CubeBlockObjectFactoryClass);
+				return objectBuilderFactoryType;
+			}
 		}
 
 		public Assembly GameAssembly
@@ -226,6 +259,14 @@ namespace SEModAPIInternal.API.Common
 		}
 
 		#endregion
+
+		public MyObjectBuilder_CubeBlock GetCubeBlockObjectBuilderFromEntity(Object entity)
+		{
+			MethodInfo method = ObjectFactoryType.GetMethod(CubeBlockObjectFactoryGetBuilderFromEntityMethod);
+			MyObjectBuilder_CubeBlock newObjectBuilder = (MyObjectBuilder_CubeBlock)method.Invoke(null, new object[] { entity });
+
+			return newObjectBuilder;
+		}
 
 		public bool EnqueueMainGameAction(Action action)
 		{
@@ -353,6 +394,31 @@ namespace SEModAPIInternal.API.Common
 				LogManager.GameLog.WriteLine(ex);
 				return 0;
 			}
+		}
+
+		public String GetUserDataPath(string instanceName = "")
+		{
+			string userDataPath = "";
+			if (SandboxGameAssemblyWrapper.UseCommonProgramData && instanceName != "")
+			{
+				userDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "SpaceEngineersDedicated", instanceName);
+			}
+			else
+			{
+				userDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated");
+			}
+
+			return userDataPath;
+		}
+
+		public void InitMyFileSystem(string instanceName = "")
+		{
+			string contentPath = Path.Combine(new FileInfo(MyFileSystem.ExePath).Directory.FullName, "Content");
+			string userDataPath = SandboxGameAssemblyWrapper.Instance.GetUserDataPath(instanceName);
+
+			MyFileSystem.Reset();
+			MyFileSystem.Init(contentPath, userDataPath);
+			MyFileSystem.InitUserSpecific((string)null);
 		}
 
 		#endregion

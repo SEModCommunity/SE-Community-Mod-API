@@ -277,7 +277,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "'");
+				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "': " + ex.Message);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
@@ -323,7 +323,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "'");
+				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "': " + ex.Message);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}

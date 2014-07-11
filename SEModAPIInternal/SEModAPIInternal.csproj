@@ -63,8 +63,10 @@
     <Compile Include="API\Entity\BaseEntity.cs" />
     <Compile Include="API\Entity\BaseObject.cs" />
     <Compile Include="API\Entity\BatteryEntity.cs" />
+    <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\AssemblerEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\BatteryBlockEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\DoorEntity.cs" />
+    <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\RefineryEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\ReflectorLightEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\InteriorLightEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\LightEntity.cs" />

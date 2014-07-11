@@ -95,13 +95,26 @@ namespace SEServerExtender
 			m_pluginManager = PluginManager.GetInstance();
 			m_gameAssemblyWrapper = SandboxGameAssemblyWrapper.Instance;
 			m_factionsManager = FactionsManager.Instance;
+
+			string commonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "SpaceEngineersDedicated");
+			if (Directory.Exists(commonPath))
+			{
+				string[] subDirectories = Directory.GetDirectories(commonPath);
+				foreach (string fullInstancePath in subDirectories)
+				{
+					string[] directories = fullInstancePath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
+					string instanceName = directories[directories.Length - 1];
+
+					CMB_Control_CommonInstanceList.Items.Add(instanceName);
+				}
+			}
 		}
 
 		#endregion
 
 		#region "Methods"
 
-		private void StartGame(string worldName)
+		private void StartGame(string worldName = "", string instanceName = "")
 		{
 			try
 			{
@@ -113,11 +126,7 @@ namespace SEServerExtender
 
 				m_worldName = worldName;
 
-				MyFileSystem.Reset();
-
-				string contentPath = Path.Combine(new FileInfo(MyFileSystem.ExePath).Directory.FullName, "Content");
-				MyFileSystem.Init(contentPath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated"));
-				MyFileSystem.InitUserSpecific((string)null);
+				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
 
 				m_runServerThread = new Thread(new ThreadStart(this.RunServer));
 				m_runServerThread.Start();
@@ -184,7 +193,17 @@ namespace SEServerExtender
 		{
 			m_pluginManager.LoadPlugins();
 
-			StartGame("");
+			if (SandboxGameAssemblyWrapper.UseCommonProgramData)
+			{
+				string instanceName = CMB_Control_CommonInstanceList.SelectedText;
+				m_pluginManager.LoadPlugins("", instanceName);
+				StartGame("", instanceName);
+			}
+			else
+			{
+				m_pluginManager.LoadPlugins();
+				StartGame();
+			}
 
 			m_entityTreeRefreshTimer.Start();
 			m_chatViewRefreshTimer.Start();
@@ -205,6 +224,20 @@ namespace SEServerExtender
 		private void CHK_Control_Debugging_CheckedChanged(object sender, EventArgs e)
 		{
 			SandboxGameAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+		}
+
+		private void CHK_Control_CommonDataPath_CheckedChanged(object sender, EventArgs e)
+		{
+			SandboxGameAssemblyWrapper.UseCommonProgramData = CHK_Control_CommonDataPath.CheckState == CheckState.Checked;
+
+			if (SandboxGameAssemblyWrapper.UseCommonProgramData)
+			{
+				CMB_Control_CommonInstanceList.Enabled = true;
+			}
+			else
+			{
+				CMB_Control_CommonInstanceList.Enabled = false;
+			}
 		}
 
 		#endregion
@@ -520,6 +553,14 @@ namespace SEServerExtender
 				else if (cubeBlockType == typeof(ReflectorLightEntity))
 				{
 					lightBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(RefineryEntity))
+				{
+					productionBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(AssemblerEntity))
+				{
+					productionBlocksNode.Nodes.Add(newNode);
 				}
 				else
 				{

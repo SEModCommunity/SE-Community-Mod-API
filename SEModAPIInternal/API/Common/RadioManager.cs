@@ -22,14 +22,14 @@ namespace SEModAPIInternal.API.Common
 
 		public static string RadioManagerNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string RadioManagerClass = "994372BD682BE5E79F2F32E79BE318F5";
-		public static string RadioManagerGetBroadcastRadiusMethod = "7998FEB2D57573ECB1A09263B5243A34";
+		public static string RadioManagerGetBroadcastRadiusMethod = "8A5396D04D8A6103090509A66A7DC73A";
 		public static string RadioManagerSetBroadcastRadiusMethod = "C42CAA2B50B8705C7F36262BCE8E60EA";
 		public static string RadioManagerGetLinkedEntityMethod = "7DE57FDDF37DD6219A990596E0283F01";
 		public static string RadioManagerSetLinkedEntityMethod = "1C653F74AF87659F7AA9B39E35D789CE";
 		public static string RadioManagerGetEnabledMethod = "78F34EF54782BBB097110F15BB3F5CC7";
 		public static string RadioManagerSetEnabledMethod = "5DCB378F714DC1A82AF40135BBE08BE1";
-		public static string RadioManagerGetAABBTreeIdMethod = "4BE9BD6DA9E869B7B205D3E74BABCF0E";
-		public static string RadioManagerSetAABBTreeIdMethod = "E3C85E0440253C9C33C6875C28A72158";
+		public static string RadioManagerGetAABBTreeIdMethod = "55F1050DBEFA4A4E59B9AC694273FCBF";
+		public static string RadioManagerSetAABBTreeIdMethod = "0DF08FF73DEEA410137C12A887AAB469";
 
 		#endregion
 
@@ -37,12 +37,19 @@ namespace SEModAPIInternal.API.Common
 
 		public RadioManager(Object backingObject)
 		{
-			m_backingObject = backingObject;
+			try
+			{
+				m_backingObject = backingObject;
 
-			m_broadcastRadius = (float)BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetBroadcastRadiusMethod);
-			m_linkedEntity = BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetLinkedEntityMethod);
-			m_isEnabled = (bool)BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetEnabledMethod);
-			m_aabbTreeId = (int)BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetAABBTreeIdMethod);
+				m_broadcastRadius = (float)BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetBroadcastRadiusMethod);
+				m_linkedEntity = BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetLinkedEntityMethod);
+				m_isEnabled = (bool)BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetEnabledMethod);
+				m_aabbTreeId = (int)BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetAABBTreeIdMethod);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
 		}
 
 		#endregion
@@ -67,7 +74,7 @@ namespace SEModAPIInternal.API.Common
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateRadioManager;
+					Action action = InternalUpdateBroadcastRadius;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -85,7 +92,7 @@ namespace SEModAPIInternal.API.Common
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateRadioManager;
+					Action action = InternalUpdateLinkedEntity;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -102,7 +109,7 @@ namespace SEModAPIInternal.API.Common
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateRadioManager;
+					Action action = InternalUpdateEnabled;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -119,7 +126,7 @@ namespace SEModAPIInternal.API.Common
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateRadioManager;
+					Action action = InternalUpdateTreeId;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -129,19 +136,32 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Methods"
 
+		protected void InternalUpdateBroadcastRadius()
+		{
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetBroadcastRadiusMethod, new object[] { BroadcastRadius });
+		}
+
+		protected void InternalUpdateLinkedEntity()
+		{
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetLinkedEntityMethod, new object[] { LinkedEntity });
+		}
+
+		protected void InternalUpdateEnabled()
+		{
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetEnabledMethod, new object[] { Enabled });
+		}
+
+		protected void InternalUpdateTreeId()
+		{
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetAABBTreeIdMethod, new object[] { TreeId });
+		}
+
 		protected void InternalUpdateRadioManager()
 		{
-			try
-			{
-				BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetBroadcastRadiusMethod, new object[] { BroadcastRadius });
-				BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetLinkedEntityMethod, new object[] { LinkedEntity });
-				BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetEnabledMethod, new object[] { Enabled });
-				BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetAABBTreeIdMethod, new object[] { TreeId });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetBroadcastRadiusMethod, new object[] { BroadcastRadius });
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetLinkedEntityMethod, new object[] { LinkedEntity });
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetEnabledMethod, new object[] { Enabled });
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetAABBTreeIdMethod, new object[] { TreeId });
 		}
 
 		#endregion
