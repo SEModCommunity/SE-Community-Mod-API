@@ -29,11 +29,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		#region "Attributes"
 
 		private CubeGridEntity m_parent;
-		private bool m_hasGeneratedId;
 
 		public static string CubeBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string CubeBlockClass = "54A8BE425EAC4A11BFF922CFB5FF89D0";
-		public static string CubeBlockGetObjectBuilder_Method = "CBB75211A3B0B3188541907C9B1B0C5C";
+		public static string CubeBlockGetObjectBuilderMethod = "CBB75211A3B0B3188541907C9B1B0C5C";
 		public static string CubeBlockGetActualBlockMethod = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
 		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 		public static string CubeBlockDamageBlockMethod = "165EAAEA972A8C5D69F391D030C48869";
@@ -68,11 +67,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			: base(definition)
 		{
 			m_parent = parent;
-			if (definition.EntityId == 0)
-			{
-				m_hasGeneratedId = true;
-				EntityId = GenerateEntityId();
-			}
 		}
 
 		public CubeBlockEntity(CubeGridEntity parent, MyObjectBuilder_CubeBlock definition, Object backingObject)
@@ -128,14 +122,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 				Changed = true;
 			}
-		}
-
-		[Category("Cube Block")]
-		[Browsable(true)]
-		[ReadOnly(true)]
-		public bool HasGeneratedId
-		{
-			get { return m_hasGeneratedId; }
 		}
 
 		[Category("Cube Block")]
@@ -266,6 +252,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			get { return m_parent; }
 		}
 
+		[Category("Cube Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal Object ActualObject
+		{
+			get { return GetActualObject(); }
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -274,12 +268,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
 
-			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
-			newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockDeleted;
-			newEvent.timestamp = DateTime.Now;
-			newEvent.entity = this;
-			newEvent.priority = 1;
-			EntityEventManager.Instance.AddEvent(newEvent);
+			//Only enable events for non-structural blocks, for now
+			if (GetSubTypeEntity().EntityId != 0)
+			{
+				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+				newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockDeleted;
+				newEvent.timestamp = DateTime.Now;
+				newEvent.entity = this;
+				newEvent.priority = 1;
+				EntityEventManager.Instance.AddEvent(newEvent);
+			}
 
 			m_isDisposed = true;
 
@@ -306,7 +304,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Internal"
 
-		public Object GetActualObject()
+		protected Object GetActualObject()
 		{
 			try
 			{
@@ -321,7 +319,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public Object GetParentCubeGrid()
+		protected Object GetParentCubeGrid()
 		{
 			try
 			{
@@ -337,7 +335,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public Object GetFactionData()
+		protected Object GetFactionData()
 		{
 			try
 			{
@@ -361,7 +359,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public Object GetConstructionManager()
+		protected Object GetConstructionManager()
 		{
 			try
 			{
@@ -500,19 +498,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public void InternalRegisterCubeBlockClosedEvent()
+		protected void InternalRegisterCubeBlockClosedEvent()
 		{
 			try
 			{
+				//Something is broken with the on-close delegate registration for beacons
+				if (this is BeaconEntity)
+					return;
+
 				Action<Object> action = InternalCubeBlockClosedEvent;
 
-				Object actualObject = GetActualObject();
-				if (actualObject == null)
-					return;
-				MethodInfo method = actualObject.GetType().GetMethod(SEModAPIInternal.API.Entity.BaseEntity.BaseEntityCombineOnClosedEventMethod);
+				MethodInfo method = GetEntityMethod(ActualObject, SEModAPIInternal.API.Entity.BaseEntity.BaseEntityCombineOnClosedEventMethod);
 				if (method == null)
 					return;
-				method.Invoke(actualObject, new object[] { action });
+				method.Invoke(ActualObject, new object[] { action });
 			}
 			catch (Exception ex)
 			{
@@ -520,7 +519,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public void InternalCubeBlockClosedEvent(Object entity)
+		protected void InternalCubeBlockClosedEvent(Object entity)
 		{
 			try
 			{
@@ -580,13 +579,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 				try
 				{
-					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilder_Method, new object[] { });
-
-					if (data.ContainsKey(baseEntity.EntityId))
-					{
-						//We should not be here!
+					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
+					if (baseEntity == null)
 						continue;
-					}
+
+					Vector3I cubePosition = baseEntity.Min;
+					long packedBlockCoordinates = cubePosition.X + cubePosition.Y * 1000 + cubePosition.Z * 1000000;
+
+					if (data.ContainsKey(packedBlockCoordinates))
+						continue;
 
 					CubeBlockEntity matchingCubeBlock = null;
 
@@ -641,8 +642,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					if (matchingCubeBlock == null)
 						throw new Exception("Failed to match/create cube block entity");
 
-					Vector3I cubePosition = matchingCubeBlock.Min;
-					long packedBlockCoordinates = cubePosition.X + cubePosition.Y * 1000 + cubePosition.Z * 1000000;
 					data.Add(packedBlockCoordinates, matchingCubeBlock);
 				}
 				catch (Exception ex)

@@ -95,7 +95,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			try
 			{
-				Object result = InvokeEntityMethod(BackingObject, BeaconGetRadioManagerMethod);
+				Object result = InvokeEntityMethod(ActualObject, BeaconGetRadioManagerMethod);
 				return result;
 			}
 			catch (Exception ex)

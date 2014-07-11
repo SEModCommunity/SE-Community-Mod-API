@@ -547,7 +547,13 @@ namespace SEModAPIInternal.API.Entity
 			{
 				try
 				{
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
+					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+
+					if (baseEntity == null)
+						continue;
+
+					if (data.ContainsKey(baseEntity.EntityId))
+						continue;
 
 					BaseEntity matchingEntity = null;
 

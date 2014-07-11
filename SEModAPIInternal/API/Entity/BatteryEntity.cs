@@ -32,19 +32,16 @@ namespace SEModAPIInternal.API.Entity.Sector
 		public static string BatteryClass = "328929D5EC05DF770D51383F6FC0B025";
 
 		//Battery Methods
-		public static string BatteryUpdateMethod = "27608CF8A780F418515861FE13FC7CAC";
-		public static string BatteryInitFromObjectBuilderMethod = "ACB2C225540B096AAF057FD35CF2E87D";
-		public static string BatteryGetCurrentCapacityMethod = "E80F74B7BDC457CEBD0E61DDCAB57398";
-		public static string BatterySetCurrentCapacityMethod = "C3BF60F3540A8A48CB8FEE0CDD3A95C6";
-		public static string BatteryGetProducerEnabledMethod = "4A1669EF365B3728E3D8D8651474C170";
-		public static string BatterySetProducerEnabledMethod = "18C96C726F64BAF2B00697AD4436C42C";
-		public static string BatteryGetPowerOutputMethod = "083A16BEA16C103A875FE1F35AF145A5";
-		public static string BatterySetPowerOutputMethod = "E68168DF3F1F7FB98C70A800772301D6";
-		public static string BatteryGetPowerReceiverMethod = "get_PowerReceiver";
-		public static string BatterySetPowerReceiverMethod = "976FC090F0BE88CB4342C1084A962B3D";
-		public static string BatteryUpdateHasPowerMethod = "A91C16B3A7E55EA805F02F7530C6BC8A";
-		public static string BatteryHasPowerMethod = "16280FA311FD54C02A173DC7DC972007";
-		public static string BatteryRefreshPowerSystemsMethod = "CD67A77C3A9A5FA0AFAABF41FC04064E";
+		public static string BatteryGetCurrentCapacityMethod =	"9B8FAE84FB9D0425A1972F1E3532107E";
+		public static string BatterySetCurrentCapacityMethod =	"C3BF60F3540A8A48CB8FEE0CDD3A95C6";
+		public static string BatteryGetProducerEnabledMethod =	"063E3A2D4177C05C2F0246008DCA8C2D";
+		public static string BatterySetProducerEnabledMethod =	"F3A3DC0B051F64A2367236FF51C38FC3";
+		public static string BatteryGetPowerOutputMethod =		"37AC6231D08650CB8CB1E0EFD33D2E13";
+		public static string BatterySetPowerOutputMethod =		"4B8C21AB68F45BB74057DCE11F21AB45";
+		public static string BatteryGetPowerReceiverMethod =	"get_PowerReceiver";
+		public static string BatterySetPowerReceiverMethod =	"976FC090F0BE88CB4342C1084A962B3D";
+		public static string BatteryUpdateHasPowerMethod =		"A91C16B3A7E55EA805F02F7530C6BC8A";
+		public static string BatteryHasPowerMethod =			"02FF9125F779E2C3AEF485EE4523E2C9";
 
 		//Battery Fields
 		public static string BatteryPowerReceiverField = "6059CCFDAE1F9677267A15EB7F5B520D";
@@ -67,11 +64,11 @@ namespace SEModAPIInternal.API.Entity.Sector
 		//Power Receiver Fields
 		public static string PowerReceiverMaxRequiredInputField = "59318896499727A72FF42D624ECE3084";
 
-		//3 - Door, 4 - Gravity Generator, 5 - Battery
+		//3 - Door, 4 - Gravity Generator, 5 - Battery, 8 - BatteryBlock
 		public static string PowerReceiverTypeEnumNamespace = "FB8C11741B7126BD9C97FE76747E087F";
 		public static string PowerReceiverTypeEnumClass = "0CAE5E7398171101A465139DC3A8A6A4";
 		
-		//0 - Solar Panel, 1 - Reactor, 2 - Battery
+		//0 - Solar Panel, 1 - Reactor, 2 - Battery, 3 - BatteryBlock
 		public static string PowerProducerTypeEnumNamespace = "FB8C11741B7126BD9C97FE76747E087F";
 		public static string PowerProducerTypeEnumClass = "4A6D842A6ACB931992C3C36C49CD7544";
 

@@ -42,6 +42,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[Category("Terminal Block")]
 		public override string Name
 		{
 			get
@@ -84,7 +85,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			return (MyObjectBuilder_TerminalBlock)BaseEntity;
 		}
 
-		public void InternalSetCustomName()
+		protected void InternalSetCustomName()
 		{
 			try
 			{

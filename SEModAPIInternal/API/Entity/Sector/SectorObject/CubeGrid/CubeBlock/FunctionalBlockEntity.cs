@@ -74,7 +74,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			return (MyObjectBuilder_FunctionalBlock)BaseEntity;
 		}
 
-		public void InternalUpdateFunctionalBlock()
+		protected void InternalUpdateFunctionalBlock()
 		{
 			try
 			{
