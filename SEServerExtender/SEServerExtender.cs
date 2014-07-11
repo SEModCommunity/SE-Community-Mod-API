@@ -672,6 +672,7 @@ namespace SEServerExtender
 						}
 						catch (Exception ex)
 						{
+							LogManager.GameLog.WriteLine(ex);
 							MessageBox.Show(this, ex.ToString());
 						}
 					}

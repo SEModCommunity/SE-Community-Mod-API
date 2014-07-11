@@ -309,7 +309,7 @@ namespace SEModAPIInternal.API.Entity
 			return (MyObjectBuilder_EntityBase)BaseEntity;
 		}
 
-		new public void Export(FileInfo fileInfo)
+		public override void Export(FileInfo fileInfo)
 		{
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_EntityBase, MyObjectBuilder_EntityBaseSerializer>(GetSubTypeEntity(), fileInfo);
 		}

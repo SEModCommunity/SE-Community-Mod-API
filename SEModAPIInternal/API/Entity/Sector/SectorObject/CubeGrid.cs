@@ -325,7 +325,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		new public void Export(FileInfo fileInfo)
+		public override void Export(FileInfo fileInfo)
 		{
 			RefreshCubeBlocks();
 

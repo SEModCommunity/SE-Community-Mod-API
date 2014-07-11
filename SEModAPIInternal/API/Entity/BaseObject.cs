@@ -195,7 +195,7 @@ namespace SEModAPIInternal.API.Entity
 			return (MyObjectBuilder_Base)m_baseEntity;
 		}
 
-		public void Export(FileInfo fileInfo)
+		public virtual void Export(FileInfo fileInfo)
 		{
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_Base, MyObjectBuilder_BaseSerializer>(GetSubTypeEntity(), fileInfo);
 		}
@@ -548,8 +548,9 @@ namespace SEModAPIInternal.API.Entity
 			{
 				fileContent = ReadSpaceEngineersFile<T, TS>(filePath);
 			}
-			catch
+			catch(Exception ex)
 			{
+				LogManager.GameLog.WriteLine(ex);
 				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileCorrupted, filePath);
 			}
 
@@ -607,7 +608,7 @@ namespace SEModAPIInternal.API.Entity
 
 			if (File.Exists(filename))
 			{
-				using (var xmlReader = XmlReader.Create(filename, settings))
+				using(var xmlReader = XmlReader.Create(filename, settings))
 				{
 					var serializer = (TS)Activator.CreateInstance(typeof(TS));
 					obj = serializer.Deserialize(xmlReader);
