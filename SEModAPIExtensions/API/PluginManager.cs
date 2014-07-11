@@ -79,9 +79,17 @@ namespace SEModAPIExtensions.API
 
 			try
 			{
-				//MyFSPath fsPath = new MyFSPath(MyFSLocationEnum.Mod, "");
-				//string modsPath = MyFileSystem.GetAbsolutePath(fsPath);
-				string modsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated", "Mods");
+				string contentPath = Path.Combine(new FileInfo(MyFileSystem.ExePath).Directory.FullName, "Content");
+				string userDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated");
+				if (!Directory.Exists(userDataPath))
+					userDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "SpaceEngineersDedicated");
+
+				MyFileSystem.Init(contentPath, userDataPath);
+				MyFileSystem.InitUserSpecific((string)null);
+
+				MyFSPath fsPath = new MyFSPath(MyFSLocationEnum.Mod, "");
+				string modsPath = MyFileSystem.GetAbsolutePath(fsPath);
+				//string modsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated", "Mods");
 				if (!Directory.Exists(modsPath))
 					return;
 
@@ -94,7 +102,7 @@ namespace SEModAPIExtensions.API
 						try
 						{
 							FileInfo fileInfo = new FileInfo(file);
-							if (!fileInfo.Extension.ToLower().Equals("dll"))
+							if (!fileInfo.Extension.ToLower().Equals(".dll"))
 								continue;
 
 							//Load the assembly
@@ -219,7 +227,8 @@ namespace SEModAPIExtensions.API
 						default:
 							try
 							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod(entityEvent.type.ToString());
+								string methodName = entityEvent.type.ToString();
+								MethodInfo updateMethod = plugin.GetType().GetMethod(methodName);
 								if (updateMethod != null)
 									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
 							}
