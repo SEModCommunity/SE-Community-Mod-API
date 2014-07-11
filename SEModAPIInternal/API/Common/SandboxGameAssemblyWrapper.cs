@@ -66,6 +66,10 @@ namespace SEModAPIInternal.API.Common
 		public static string CubeBlockObjectFactoryClass = "8E009F375CE3CE0A06E67CA053084252";
 		public static string CubeBlockObjectFactoryGetBuilderFromEntityMethod = "967C934A80A75642EADF86455E924134";
 
+		public static string EntityBaseObjectFactoryNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string EntityBaseObjectFactoryClass = "E825333D6467D99DD83FB850C600395C";
+		public static string EntityBaseObjectFactoryGetBuilderFromEntityMethod = "85DD00A89AFE64DF0A1B3FD4A5139A04";
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -142,12 +146,21 @@ namespace SEModAPIInternal.API.Common
 			get { return m_mainGameType; }
 		}
 
-		public Type ObjectFactoryType
+		public Type CubeBlockObjectFactoryType
 		{
 			get
 			{
-				Type objectBuilderFactoryType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeBlockObjectFactoryNamespace, CubeBlockObjectFactoryClass);
-				return objectBuilderFactoryType;
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeBlockObjectFactoryNamespace, CubeBlockObjectFactoryClass);
+				return type;
+			}
+		}
+
+		public Type EntityBaseObjectFactoryType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(EntityBaseObjectFactoryNamespace, EntityBaseObjectFactoryClass);
+				return type;
 			}
 		}
 
@@ -262,10 +275,34 @@ namespace SEModAPIInternal.API.Common
 
 		public MyObjectBuilder_CubeBlock GetCubeBlockObjectBuilderFromEntity(Object entity)
 		{
-			MethodInfo method = ObjectFactoryType.GetMethod(CubeBlockObjectFactoryGetBuilderFromEntityMethod);
-			MyObjectBuilder_CubeBlock newObjectBuilder = (MyObjectBuilder_CubeBlock)method.Invoke(null, new object[] { entity });
+			try
+			{
+				MethodInfo method = CubeBlockObjectFactoryType.GetMethod(CubeBlockObjectFactoryGetBuilderFromEntityMethod);
+				MyObjectBuilder_CubeBlock newObjectBuilder = (MyObjectBuilder_CubeBlock)method.Invoke(null, new object[] { entity });
 
-			return newObjectBuilder;
+				return newObjectBuilder;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		public MyObjectBuilder_EntityBase GetEntityBaseObjectBuilderFromEntity(Object entity)
+		{
+			try
+			{
+				MethodInfo method = EntityBaseObjectFactoryType.GetMethod(EntityBaseObjectFactoryGetBuilderFromEntityMethod);
+				MyObjectBuilder_EntityBase newObjectBuilder = (MyObjectBuilder_EntityBase)method.Invoke(null, new object[] { entity });
+
+				return newObjectBuilder;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
 		}
 
 		public bool EnqueueMainGameAction(Action action)

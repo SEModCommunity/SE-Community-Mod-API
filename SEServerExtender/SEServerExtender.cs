@@ -562,6 +562,14 @@ namespace SEServerExtender
 				{
 					productionBlocksNode.Nodes.Add(newNode);
 				}
+				else if (cubeBlockType == typeof(ConveyorBlockEntity))
+				{
+					conveyorBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlockType == typeof(ConveyorTubeEntity))
+				{
+					conveyorBlocksNode.Nodes.Add(newNode);
+				}
 				else
 				{
 					miscBlocksNode.Nodes.Add(newNode);

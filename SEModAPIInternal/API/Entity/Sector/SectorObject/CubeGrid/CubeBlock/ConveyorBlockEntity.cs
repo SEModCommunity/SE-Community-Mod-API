@@ -11,23 +11,23 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
-	public class RefineryEntity : FunctionalBlockEntity
+	public class ConveyorBlockEntity : CubeBlockEntity
 	{
 		#region "Attributes"
 
-		public static string RefineryNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
-		public static string RefineryClass = "D213D513B024AA8BF8DAC576FC59CB54";
+		public static string ConveyorBlockNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string ConveyorBlockClass = "D995E2F0C72D87529534369061DB78CF";
 
 		#endregion
 
 		#region "Constructors and Intializers"
 
-		public RefineryEntity(CubeGridEntity parent, MyObjectBuilder_Refinery definition)
+		public ConveyorBlockEntity(CubeGridEntity parent, MyObjectBuilder_Conveyor definition)
 			: base(parent, definition)
 		{
 		}
 
-		public RefineryEntity(CubeGridEntity parent, MyObjectBuilder_Refinery definition, Object backingObject)
+		public ConveyorBlockEntity(CubeGridEntity parent, MyObjectBuilder_Conveyor definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
 		}
@@ -43,9 +43,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		/// Method to get the casted instance from parent signature
 		/// </summary>
 		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Refinery GetSubTypeEntity()
+		new internal MyObjectBuilder_Conveyor GetSubTypeEntity()
 		{
-			return (MyObjectBuilder_Refinery)BaseEntity;
+			return (MyObjectBuilder_Conveyor)BaseEntity;
 		}
 
 		#endregion

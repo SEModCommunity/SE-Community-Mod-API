@@ -11,23 +11,23 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
-	public class RefineryEntity : FunctionalBlockEntity
+	public class MergeBlockEntity : FunctionalBlockEntity
 	{
 		#region "Attributes"
 
-		public static string RefineryNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
-		public static string RefineryClass = "D213D513B024AA8BF8DAC576FC59CB54";
+		public static string MergeBlockNamespace = "AAD9061F948E6A3635200145188D64A9";
+		public static string MergeBlockClass = "D6D88AF33E0073B53DC2A3445C9F12EC";
 
 		#endregion
 
 		#region "Constructors and Intializers"
 
-		public RefineryEntity(CubeGridEntity parent, MyObjectBuilder_Refinery definition)
+		public MergeBlockEntity(CubeGridEntity parent, MyObjectBuilder_MergeBlock definition)
 			: base(parent, definition)
 		{
 		}
 
-		public RefineryEntity(CubeGridEntity parent, MyObjectBuilder_Refinery definition, Object backingObject)
+		public MergeBlockEntity(CubeGridEntity parent, MyObjectBuilder_MergeBlock definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
 		}
@@ -43,9 +43,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		/// Method to get the casted instance from parent signature
 		/// </summary>
 		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Refinery GetSubTypeEntity()
+		new internal MyObjectBuilder_MergeBlock GetSubTypeEntity()
 		{
-			return (MyObjectBuilder_Refinery)BaseEntity;
+			return (MyObjectBuilder_MergeBlock)BaseEntity;
 		}
 
 		#endregion

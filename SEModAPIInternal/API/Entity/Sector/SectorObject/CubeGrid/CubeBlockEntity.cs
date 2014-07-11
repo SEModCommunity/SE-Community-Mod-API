@@ -668,6 +668,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							case MyObjectBuilderTypeEnum.Assembler:
 								matchingCubeBlock = new AssemblerEntity(m_parent, (MyObjectBuilder_Assembler)baseEntity, entity);
 								break;
+							case MyObjectBuilderTypeEnum.Thrust:
+								matchingCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.MergeBlock:
+								matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.LandingGear:
+								matchingCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Conveyor:
+								matchingCubeBlock = new ConveyorBlockEntity(m_parent, (MyObjectBuilder_Conveyor)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.ConveyorConnector:
+								matchingCubeBlock = new ConveyorTubeEntity(m_parent, (MyObjectBuilder_ConveyorConnector)baseEntity, entity);
+								break;
 							default:
 								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 								break;
