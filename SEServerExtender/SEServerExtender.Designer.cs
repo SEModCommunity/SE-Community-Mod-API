@@ -32,6 +32,9 @@
 			this.TAB_MainTabs = new System.Windows.Forms.TabControl();
 			this.TAB_Control_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+			this.label2 = new System.Windows.Forms.Label();
+			this.CMB_Control_CommonInstanceList = new System.Windows.Forms.ComboBox();
+			this.CHK_Control_CommonDataPath = new System.Windows.Forms.CheckBox();
 			this.CHK_Control_Debugging = new System.Windows.Forms.CheckBox();
 			this.BTN_ServerControl_Start = new System.Windows.Forms.Button();
 			this.BTN_ServerControl_Stop = new System.Windows.Forms.Button();
@@ -169,6 +172,9 @@
 			// 
 			// splitContainer3.Panel1
 			// 
+			this.splitContainer3.Panel1.Controls.Add(this.label2);
+			this.splitContainer3.Panel1.Controls.Add(this.CMB_Control_CommonInstanceList);
+			this.splitContainer3.Panel1.Controls.Add(this.CHK_Control_CommonDataPath);
 			this.splitContainer3.Panel1.Controls.Add(this.CHK_Control_Debugging);
 			this.splitContainer3.Panel1.Controls.Add(this.BTN_ServerControl_Start);
 			this.splitContainer3.Panel1.Controls.Add(this.BTN_ServerControl_Stop);
@@ -177,8 +183,39 @@
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.GRP_Control_Server);
 			this.splitContainer3.Size = new System.Drawing.Size(937, 537);
-			this.splitContainer3.SplitterDistance = 101;
+			this.splitContainer3.SplitterDistance = 164;
 			this.splitContainer3.TabIndex = 4;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(5, 116);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(115, 13);
+			this.label2.TabIndex = 6;
+			this.label2.Text = "Common data instance";
+			// 
+			// CMB_Control_CommonInstanceList
+			// 
+			this.CMB_Control_CommonInstanceList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.CMB_Control_CommonInstanceList.Enabled = false;
+			this.CMB_Control_CommonInstanceList.FormattingEnabled = true;
+			this.CMB_Control_CommonInstanceList.Location = new System.Drawing.Point(5, 132);
+			this.CMB_Control_CommonInstanceList.Name = "CMB_Control_CommonInstanceList";
+			this.CMB_Control_CommonInstanceList.Size = new System.Drawing.Size(150, 21);
+			this.CMB_Control_CommonInstanceList.TabIndex = 5;
+			this.CMB_Control_CommonInstanceList.SelectedIndexChanged += new System.EventHandler(this.CMB_Control_CommonInstanceList_SelectedIndexChanged);
+			// 
+			// CHK_Control_CommonDataPath
+			// 
+			this.CHK_Control_CommonDataPath.AutoSize = true;
+			this.CHK_Control_CommonDataPath.Location = new System.Drawing.Point(5, 96);
+			this.CHK_Control_CommonDataPath.Name = "CHK_Control_CommonDataPath";
+			this.CHK_Control_CommonDataPath.Size = new System.Drawing.Size(153, 17);
+			this.CHK_Control_CommonDataPath.TabIndex = 4;
+			this.CHK_Control_CommonDataPath.Text = "Use common program data";
+			this.CHK_Control_CommonDataPath.UseVisualStyleBackColor = true;
+			this.CHK_Control_CommonDataPath.CheckedChanged += new System.EventHandler(this.CHK_Control_CommonDataPath_CheckedChanged);
 			// 
 			// CHK_Control_Debugging
 			// 
@@ -219,7 +256,7 @@
 			this.GRP_Control_Server.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.GRP_Control_Server.Location = new System.Drawing.Point(0, 0);
 			this.GRP_Control_Server.Name = "GRP_Control_Server";
-			this.GRP_Control_Server.Size = new System.Drawing.Size(832, 537);
+			this.GRP_Control_Server.Size = new System.Drawing.Size(769, 537);
 			this.GRP_Control_Server.TabIndex = 2;
 			this.GRP_Control_Server.TabStop = false;
 			this.GRP_Control_Server.Text = "Server properties";
@@ -227,7 +264,7 @@
 			// BTN_Control_Server_Reset
 			// 
 			this.BTN_Control_Server_Reset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.BTN_Control_Server_Reset.Location = new System.Drawing.Point(637, 511);
+			this.BTN_Control_Server_Reset.Location = new System.Drawing.Point(574, 511);
 			this.BTN_Control_Server_Reset.Name = "BTN_Control_Server_Reset";
 			this.BTN_Control_Server_Reset.Size = new System.Drawing.Size(75, 23);
 			this.BTN_Control_Server_Reset.TabIndex = 3;
@@ -238,7 +275,7 @@
 			// BTN_Control_Server_Save
 			// 
 			this.BTN_Control_Server_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.BTN_Control_Server_Save.Location = new System.Drawing.Point(718, 511);
+			this.BTN_Control_Server_Save.Location = new System.Drawing.Point(655, 511);
 			this.BTN_Control_Server_Save.Name = "BTN_Control_Server_Save";
 			this.BTN_Control_Server_Save.Size = new System.Drawing.Size(108, 23);
 			this.BTN_Control_Server_Save.TabIndex = 2;
@@ -253,7 +290,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.PG_Control_Server_Properties.Location = new System.Drawing.Point(6, 19);
 			this.PG_Control_Server_Properties.Name = "PG_Control_Server_Properties";
-			this.PG_Control_Server_Properties.Size = new System.Drawing.Size(820, 486);
+			this.PG_Control_Server_Properties.Size = new System.Drawing.Size(757, 486);
 			this.PG_Control_Server_Properties.TabIndex = 1;
 			this.PG_Control_Server_Properties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.PG_Control_Server_Properties_PropertyValueChanged);
 			// 
@@ -702,6 +739,9 @@
         private System.Windows.Forms.PropertyGrid PG_Control_Server_Properties;
         private System.Windows.Forms.GroupBox GRP_Control_Server;
         private System.Windows.Forms.Button BTN_Control_Server_Reset;
-        private System.Windows.Forms.Button BTN_Control_Server_Save;
+		private System.Windows.Forms.Button BTN_Control_Server_Save;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.ComboBox CMB_Control_CommonInstanceList;
+		private System.Windows.Forms.CheckBox CHK_Control_CommonDataPath;
 	}
 }
