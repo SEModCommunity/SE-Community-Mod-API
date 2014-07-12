@@ -342,6 +342,7 @@ namespace SEServerExtender
 			PG_Entities_Details.Enabled = m_serverRunning;
 			PG_Factions.Enabled = m_serverRunning;
 			PG_Plugins.Enabled = m_serverRunning;
+			PG_Control_Server_Properties.Enabled = !m_serverRunning;
 
 			BTN_Control_Server_Save.Enabled = m_dedicatedConfigDefinition.Changed;
 			BTN_Control_Server_Reset.Enabled = m_dedicatedConfigDefinition.Changed;
