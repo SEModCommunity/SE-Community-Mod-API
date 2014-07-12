@@ -309,7 +309,7 @@ namespace SEModAPIInternal.API.Entity
 			return (MyObjectBuilder_EntityBase)BaseEntity;
 		}
 
-		new public void Export(FileInfo fileInfo)
+		public override void Export(FileInfo fileInfo)
 		{
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_EntityBase, MyObjectBuilder_EntityBaseSerializer>(GetSubTypeEntity(), fileInfo);
 		}
@@ -375,7 +375,15 @@ namespace SEModAPIInternal.API.Entity
 				HkRigidBody havokBody = GetRigidBody();
 				if (havokBody == null)
 					return;
-				havokBody.Position = Position;
+
+				Vector3 newPosition = (Vector3)Position;
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+				{
+					LogManager.APILog.WriteLineAndConsole("Entity - Changing position of '" + Name + "' from '" + havokBody.Position.ToString() + "' to '" + newPosition.ToString() + "'");
+				}
+
+				havokBody.Position = newPosition;
 			}
 			catch (Exception ex)
 			{
@@ -406,7 +414,15 @@ namespace SEModAPIInternal.API.Entity
 				HkRigidBody havokBody = GetRigidBody();
 				if (havokBody == null)
 					return;
-				havokBody.LinearVelocity = LinearVelocity;
+
+				Vector3 newVelocity = (Vector3)LinearVelocity;
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+				{
+					LogManager.APILog.WriteLineAndConsole("Entity - Changing linear velocity of '" + Name + "' from '" + havokBody.LinearVelocity.ToString() + "' to '" + newVelocity.ToString() + "'");
+				}
+
+				havokBody.LinearVelocity = newVelocity;
 			}
 			catch (Exception ex)
 			{
@@ -421,7 +437,15 @@ namespace SEModAPIInternal.API.Entity
 				HkRigidBody havokBody = GetRigidBody();
 				if (havokBody == null)
 					return;
-				havokBody.AngularVelocity = AngularVelocity;
+
+				Vector3 newVelocity = (Vector3)AngularVelocity;
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+				{
+					LogManager.APILog.WriteLineAndConsole("Entity - Changing angular velocity of '" + Name + "' from '" + havokBody.AngularVelocity.ToString() + "' to '" + newVelocity.ToString() + "'");
+				}
+
+				havokBody.AngularVelocity = newVelocity;
 			}
 			catch (Exception ex)
 			{

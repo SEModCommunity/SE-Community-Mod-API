@@ -555,6 +555,11 @@ namespace SEModAPIInternal.API.Entity
 
 		public override void LoadDynamic()
 		{
+			if (m_isResourceLocked)
+				return;
+
+			m_isResourceLocked = true;
+
 			List<Object> rawEntities = GetBackingDataList();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
@@ -569,12 +574,6 @@ namespace SEModAPIInternal.API.Entity
 				try
 				{
 					MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)BaseEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod, new object[] { });
-
-					if (data.ContainsKey(baseEntity.ItemId))
-					{
-						//We should not be here!
-						continue;
-					}
 
 					InventoryItemEntity matchingItem = null;
 
@@ -607,16 +606,11 @@ namespace SEModAPIInternal.API.Entity
 			backingData.Clear();
 			foreach (var key in data.Keys)
 			{
-				try
-				{
-					var entry = data[key];
-					backingData.Add(entry.BackingObject, entry);
-				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
+				var entry = data[key];
+				backingData.Add(entry.BackingObject, entry);
 			}
+
+			m_isResourceLocked = false;
 		}
 
 		#endregion

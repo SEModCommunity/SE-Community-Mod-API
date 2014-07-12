@@ -340,6 +340,11 @@ namespace SEModAPIInternal.API.Entity
 
 		public override void LoadDynamic()
 		{
+			if (m_isResourceLocked)
+				return;
+
+			m_isResourceLocked = true;
+
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
@@ -350,12 +355,23 @@ namespace SEModAPIInternal.API.Entity
 			{
 				try
 				{
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
-					
-					if (baseEntity == null)
-						continue;
+					MyObjectBuilder_EntityBase newObjectBuilder = (MyObjectBuilder_EntityBase)SandboxGameAssemblyWrapper.Instance.GetEntityBaseObjectBuilderFromEntity(entity);
 
-					if (data.ContainsKey(baseEntity.EntityId))
+					MyObjectBuilder_EntityBase baseEntity = null;
+					if (newObjectBuilder != null)
+					{
+						baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+						if (baseEntity == null)
+							LogManager.APILog.WriteLine("Failed to load entity '" + newObjectBuilder.TypeId.ToString() + "/" + newObjectBuilder.SubtypeName + "'");
+					}
+					else
+					{
+						baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+						if (baseEntity == null)
+							LogManager.APILog.WriteLine("Failed to load entity '" + entity.ToString() + "'");
+					}
+
+					if (baseEntity == null)
 						continue;
 
 					BaseEntity matchingEntity = null;
@@ -414,6 +430,8 @@ namespace SEModAPIInternal.API.Entity
 				var entry = data[key];
 				backingData.Add(entry.BackingObject, entry);
 			}
+
+			m_isResourceLocked = false;
 		}
 
 		public void AddEntity(Object gameEntity)

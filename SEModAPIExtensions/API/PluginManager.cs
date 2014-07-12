@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Timers;
 
 using SEModAPIExtensions.API.Plugin;
 
@@ -73,23 +74,19 @@ namespace SEModAPIExtensions.API
 				return false;
 		}
 
-		public void LoadPlugins(string basePath = "")
+		public void LoadPlugins(string instanceName = "")
 		{
 			Console.WriteLine("Loading plugins ...");
 
 			try
 			{
-				string contentPath = Path.Combine(new FileInfo(MyFileSystem.ExePath).Directory.FullName, "Content");
-				string userDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated");
-				if (!Directory.Exists(userDataPath))
-					userDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "SpaceEngineersDedicated");
+				m_plugins.Clear();
+				m_initialized = false;
 
-				MyFileSystem.Init(contentPath, userDataPath);
-				MyFileSystem.InitUserSpecific((string)null);
+				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
 
 				MyFSPath fsPath = new MyFSPath(MyFSLocationEnum.Mod, "");
 				string modsPath = MyFileSystem.GetAbsolutePath(fsPath);
-				//string modsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated", "Mods");
 				if (!Directory.Exists(modsPath))
 					return;
 
@@ -208,7 +205,7 @@ namespace SEModAPIExtensions.API
 							}
 							catch (Exception ex)
 							{
-								//Do nothing
+								LogManager.GameLog.WriteLine(ex);
 							}
 							break;
 						case EntityEventManager.EntityEventType.OnPlayerLeft:
@@ -221,7 +218,7 @@ namespace SEModAPIExtensions.API
 							}
 							catch (Exception ex)
 							{
-								//Do nothing
+								LogManager.GameLog.WriteLine(ex);
 							}
 							break;
 						default:
@@ -234,7 +231,7 @@ namespace SEModAPIExtensions.API
 							}
 							catch (Exception ex)
 							{
-								//Do nothing
+								LogManager.GameLog.WriteLine(ex);
 							}
 							break;
 					}

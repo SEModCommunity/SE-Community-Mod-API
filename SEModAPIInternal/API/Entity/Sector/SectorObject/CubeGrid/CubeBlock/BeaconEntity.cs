@@ -35,7 +35,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public BeaconEntity(CubeGridEntity parent, MyObjectBuilder_Beacon definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
-			m_radioManager = new RadioManager(InternalGetRadioManager());
+			Object internalRadioManager = InternalGetRadioManager();
+			m_radioManager = new RadioManager(internalRadioManager);
 		}
 
 		#endregion

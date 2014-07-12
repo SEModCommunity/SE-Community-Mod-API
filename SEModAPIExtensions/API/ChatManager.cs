@@ -14,12 +14,30 @@ namespace SEModAPIExtensions.API
 {
 	public class ChatManager
 	{
+		public enum ChatEventType
+		{
+			OnChatReceived,
+			OnChatSent,
+		}
+
+		public struct ChatEvent
+		{
+			public ChatEventType type;
+			public DateTime timestamp;
+			public ulong sourceUserId;
+			public ulong remoteUserId;
+			public string message;
+			public ushort priority;
+		}
+
 		#region "Attributes"
 
 		private static ChatManager m_instance;
 
 		private static List<string> m_chatMessages;
 		private static bool m_chatHandlerSetup;
+
+		private List<ChatEvent> m_chatEvents;
 
 		public static string ChatMessageStruct = "C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668";
 		public static string ChatMessageMessageField = "EDCBEBB604B287DFA90A5A46DC7AD28D";
@@ -34,6 +52,7 @@ namespace SEModAPIExtensions.API
 
 			m_chatMessages = new List<string>();
 			m_chatHandlerSetup = false;
+			m_chatEvents = new List<ChatEvent>();
 
 			Console.WriteLine("Finished loading ChatManager");
 		}
@@ -68,6 +87,15 @@ namespace SEModAPIExtensions.API
 				}
 
 				return m_chatMessages;
+			}
+		}
+
+		public List<ChatEvent> ChatEvents
+		{
+			get
+			{
+				List<ChatEvent> copy = new List<ChatEvent>(m_chatEvents.ToArray());
+				return copy;
 			}
 		}
 
@@ -118,6 +146,15 @@ namespace SEModAPIExtensions.API
 			}
 
 			LogManager.APILog.WriteLineAndConsole("Chat - Client '" + playerName + "': " + message);
+
+			ChatEvent chatEvent = new ChatEvent();
+			chatEvent.type = ChatEventType.OnChatReceived;
+			chatEvent.timestamp = DateTime.Now;
+			chatEvent.sourceUserId = remoteUserId;
+			chatEvent.remoteUserId = 0;
+			chatEvent.message = message;
+			chatEvent.priority = 0;
+			ChatManager.Instance.AddEvent(chatEvent);
 		}
 
 		public void SendPrivateChatMessage(ulong remoteUserId, string message)
@@ -132,6 +169,15 @@ namespace SEModAPIExtensions.API
 				ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
 
 				m_chatMessages.Add("Server: " + message);
+
+				ChatEvent chatEvent = new ChatEvent();
+				chatEvent.type = ChatEventType.OnChatSent;
+				chatEvent.timestamp = DateTime.Now;
+				chatEvent.sourceUserId = 0;
+				chatEvent.remoteUserId = remoteUserId;
+				chatEvent.message = message;
+				chatEvent.priority = 0;
+				ChatManager.Instance.AddEvent(chatEvent);
 			}
 			catch (Exception ex)
 			{
@@ -151,6 +197,15 @@ namespace SEModAPIExtensions.API
 				foreach (ulong remoteUserId in connectedPlayers)
 				{
 					ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
+
+					ChatEvent chatEvent = new ChatEvent();
+					chatEvent.type = ChatEventType.OnChatSent;
+					chatEvent.timestamp = DateTime.Now;
+					chatEvent.sourceUserId = 0;
+					chatEvent.remoteUserId = remoteUserId;
+					chatEvent.message = message;
+					chatEvent.priority = 0;
+					ChatManager.Instance.AddEvent(chatEvent);
 				}
 				m_chatMessages.Add("Server: " + message);
 			}
@@ -158,6 +213,16 @@ namespace SEModAPIExtensions.API
 			{
 				LogManager.GameLog.WriteLine(ex);
 			}
+		}
+
+		public void AddEvent(ChatEvent newEvent)
+		{
+			m_chatEvents.Add(newEvent);
+		}
+
+		public void ClearEvents()
+		{
+			m_chatEvents.Clear();
 		}
 
 		#endregion

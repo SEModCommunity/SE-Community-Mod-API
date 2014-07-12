@@ -266,7 +266,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		new public void Dispose()
 		{
-			LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
+			if(SandboxGameAssemblyWrapper.IsDebugging)
+				LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
 
 			//Only enable events for non-structural blocks, for now
 			if (GetSubTypeEntity().EntityId != 0)
@@ -566,6 +567,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public override void LoadDynamic()
 		{
+			if (m_isResourceLocked)
+				return;
+
+			m_isResourceLocked = true;
+
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
@@ -579,15 +585,40 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 				try
 				{
-					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
+					Object actualCubeObject = CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetActualBlockMethod);
+					MyObjectBuilder_CubeBlock baseEntity = null;
+					if (actualCubeObject == null)
+					{
+						baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
+						if(baseEntity == null)
+							LogManager.APILog.WriteLine("Failed to load entity '" + entity.ToString() + "'");
+					}
+					else
+					{
+						MyObjectBuilder_CubeBlock newObjectBuilder = SandboxGameAssemblyWrapper.Instance.GetCubeBlockObjectBuilderFromEntity(actualCubeObject);
+
+						if (newObjectBuilder != null)
+						{
+							//baseEntity = newObjectBuilder;
+							baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
+							//baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(actualCubeObject, CubeBlockEntity.ActualCubeBlockGetObjectBuilderMethod, new object[] { Type.Missing });
+							if (baseEntity == null)
+								LogManager.APILog.WriteLine("Failed to load entity '" + newObjectBuilder.TypeId.ToString() + "/" + newObjectBuilder.SubtypeName + "' from actual entity '" + actualCubeObject.ToString() + "'");
+						}
+						else
+						{
+							baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
+							if (baseEntity == null)
+								LogManager.APILog.WriteLine("Failed to load entity '" + entity.ToString() + "'");
+						}
+					}
 					if (baseEntity == null)
+					{
 						continue;
+					}
 
 					Vector3I cubePosition = baseEntity.Min;
 					long packedBlockCoordinates = cubePosition.X + cubePosition.Y * 1000 + cubePosition.Z * 1000000;
-
-					if (data.ContainsKey(packedBlockCoordinates))
-						continue;
 
 					CubeBlockEntity matchingCubeBlock = null;
 
@@ -633,6 +664,48 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							case MyObjectBuilderTypeEnum.Door:
 								matchingCubeBlock = new DoorEntity(m_parent, (MyObjectBuilder_Door)baseEntity, entity);
 								break;
+							case MyObjectBuilderTypeEnum.Refinery:
+								matchingCubeBlock = new RefineryEntity(m_parent, (MyObjectBuilder_Refinery)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Assembler:
+								matchingCubeBlock = new AssemblerEntity(m_parent, (MyObjectBuilder_Assembler)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Thrust:
+								matchingCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.MergeBlock:
+								matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.LandingGear:
+								matchingCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Conveyor:
+								matchingCubeBlock = new ConveyorBlockEntity(m_parent, (MyObjectBuilder_Conveyor)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.ConveyorConnector:
+								matchingCubeBlock = new ConveyorTubeEntity(m_parent, (MyObjectBuilder_ConveyorConnector)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.SolarPanel:
+								matchingCubeBlock = new SolarPanelEntity(m_parent, (MyObjectBuilder_SolarPanel)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Gyro:
+								matchingCubeBlock = new GyroEntity(m_parent, (MyObjectBuilder_Gyro)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.LargeGatlingTurret:
+								matchingCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.LargeMissileTurret:
+								matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.ShipGrinder:
+								matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.ShipWelder:
+								matchingCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Drill:
+								matchingCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
+								break;
 							default:
 								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 								break;
@@ -657,6 +730,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				var entry = data[key];
 				backingData.Add(entry.BackingObject, entry);
 			}
+
+			m_isResourceLocked = false;
 		}
 
 		#endregion

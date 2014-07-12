@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -15,6 +16,7 @@ using Sandbox.Common.ObjectBuilders.Voxels;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API;
+using SEModAPI.API.Definitions;
 using SEModAPI.Support;
 
 using SEModAPIExtensions.API;
@@ -37,51 +39,48 @@ namespace SEServerExtender
 	{
 		#region "Attributes"
 
+		//General
+		private static SEServerExtender m_instance;
+		private Server m_server;
+
+		//Timers
 		private System.Windows.Forms.Timer m_entityTreeRefreshTimer;
 		private System.Windows.Forms.Timer m_chatViewRefreshTimer;
 		private System.Windows.Forms.Timer m_factionRefreshTimer;
 		private System.Windows.Forms.Timer m_pluginManagerRefreshTimer;
-
-		private PluginManager m_pluginManager;
-		private SandboxGameAssemblyWrapper m_gameAssemblyWrapper;
-		private FactionsManager m_factionsManager;
-		private ServerAssemblyWrapper m_serverWrapper;
-
-		private static Thread m_runServerThread;
-		private static bool m_serverRunning;
-		private static string m_worldName;
+		private System.Windows.Forms.Timer m_statusCheckTimer;
 
 		#endregion
 
 		#region "Constructors and Initializers"
 
-		public SEServerExtender()
+		public SEServerExtender(Server server)
 		{
-			//Determine wether or not we could find the game installation
-			try
-			{
-				new GameInstallationInfo();
-			}
-			catch (AutoException)
-			{
-				string gamePath = GetGamePath();
-				if (gamePath == null || gamePath == "")
-				{
-					//If the game path was not found, we skip all initialisation
-					this.Visible = false;
-					return;
-				}
-				new GameInstallationInfo(gamePath);
-			}
+			m_instance = this;
+			m_server = server;
 
+			//Run init functions
 			InitializeComponent();
+			if (!SetupTimers())
+				Close();
+			if (!SetupControls())
+				Close();
+			m_server.LoadServerConfig();
+			UpdateControls();
+			PG_Control_Server_Properties.SelectedObject = m_server.Config;
 
+			//Update the title bar text with the assembly version
+			this.Text = "SEServerExtender " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+		}
+
+		private bool SetupTimers()
+		{
 			m_entityTreeRefreshTimer = new System.Windows.Forms.Timer();
 			m_entityTreeRefreshTimer.Interval = 500;
 			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
 
 			m_chatViewRefreshTimer = new System.Windows.Forms.Timer();
-			m_chatViewRefreshTimer.Interval = 500;
+			m_chatViewRefreshTimer.Interval = 1000;
 			m_chatViewRefreshTimer.Tick += new EventHandler(ChatViewRefresh);
 
 			m_factionRefreshTimer = new System.Windows.Forms.Timer();
@@ -89,54 +88,65 @@ namespace SEServerExtender
 			m_factionRefreshTimer.Tick += new EventHandler(FactionRefresh);
 
 			m_pluginManagerRefreshTimer = new System.Windows.Forms.Timer();
-			m_pluginManagerRefreshTimer.Interval = 100;
+			m_pluginManagerRefreshTimer.Interval = 1000;
 			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
 
-			m_pluginManager = PluginManager.GetInstance();
-			m_gameAssemblyWrapper = SandboxGameAssemblyWrapper.Instance;
-			m_factionsManager = FactionsManager.Instance;
+			m_statusCheckTimer = new System.Windows.Forms.Timer();
+			m_statusCheckTimer.Interval = 750;
+			m_statusCheckTimer.Tick += new EventHandler(StatusCheckRefresh);
+			m_statusCheckTimer.Start();
+
+			return true;
+		}
+
+		private bool SetupControls()
+		{
+			try
+			{
+				List<String> instanceList = SandboxGameAssemblyWrapper.Instance.GetCommonInstanceList();
+				CMB_Control_CommonInstanceList.BeginUpdate();
+				CMB_Control_CommonInstanceList.Items.AddRange(instanceList.ToArray());
+				if (CMB_Control_CommonInstanceList.Items.Count > 0)
+					CMB_Control_CommonInstanceList.SelectedIndex = 0;
+				CMB_Control_CommonInstanceList.EndUpdate();
+			}
+			catch (AutoException)
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		#endregion
 
 		#region "Methods"
 
-		private void StartGame(string worldName)
+		#region "General"
+
+		private void StatusCheckRefresh(object sender, EventArgs e)
 		{
-			try
+			UpdateControls();
+
+			if (!m_server.IsRunning && m_server.CommandLineArgs.autoStart)
 			{
-				if (m_serverRunning)
-					return;
-
-				string basePath = Path.Combine(GameInstallationInfo.GamePath, "DedicatedServer64");
-				m_serverWrapper = ServerAssemblyWrapper.GetInstance(basePath);
-
-				m_worldName = worldName;
-
-				MyFileSystem.Reset();
-
-				string contentPath = Path.Combine(new FileInfo(MyFileSystem.ExePath).Directory.FullName, "Content");
-				MyFileSystem.Init(contentPath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpaceEngineersDedicated"));
-				MyFileSystem.InitUserSpecific((string)null);
-
-				m_runServerThread = new Thread(new ThreadStart(this.RunServer));
-				m_runServerThread.Start();
+				if (m_server.CommandLineArgs.noGUI)
+					BTN_ServerControl_Start_Click(null, null);
+				else
+					BTN_ServerControl_Start.PerformClick();
 			}
-			catch (Exception ex)
+
+			if (m_server.IsRunning)
 			{
-				MessageBox.Show(ex.ToString());
+				if(!m_entityTreeRefreshTimer.Enabled)
+					m_entityTreeRefreshTimer.Start();
+				if (!m_chatViewRefreshTimer.Enabled)
+					m_chatViewRefreshTimer.Start();
+				if (!m_factionRefreshTimer.Enabled)
+					m_factionRefreshTimer.Start();
+				if (!m_pluginManagerRefreshTimer.Enabled)
+					m_pluginManagerRefreshTimer.Start();
 			}
-		}
-
-		private void StopGame()
-		{
-			m_runServerThread.Abort();
-		}
-
-		private void RunServer()
-		{
-			m_serverRunning = true;
-			m_serverWrapper.StartServer(m_worldName);
 		}
 
 		private string GetGamePath()
@@ -178,33 +188,135 @@ namespace SEServerExtender
 			return null;
 		}
 
+		#endregion
+
 		#region "Control"
 
 		private void BTN_ServerControl_Start_Click(object sender, EventArgs e)
 		{
-			m_pluginManager.LoadPlugins();
-
-			StartGame("");
-
 			m_entityTreeRefreshTimer.Start();
 			m_chatViewRefreshTimer.Start();
 			m_factionRefreshTimer.Start();
 			m_pluginManagerRefreshTimer.Start();
+
+			if (m_server.IsRunning)
+				return;
+
+			if (m_server.Config != null && m_server.Config.Changed)
+				m_server.SaveServerConfig();
+
+			m_server.StartServer();
 		}
 
 		private void BTN_ServerControl_Stop_Click(object sender, EventArgs e)
 		{
-			StopGame();
-
 			m_entityTreeRefreshTimer.Stop();
 			m_chatViewRefreshTimer.Stop();
 			m_factionRefreshTimer.Stop();
 			m_pluginManagerRefreshTimer.Stop();
+
+			m_server.StopServer();
 		}
 
 		private void CHK_Control_Debugging_CheckedChanged(object sender, EventArgs e)
 		{
 			SandboxGameAssemblyWrapper.IsDebugging = CHK_Control_Debugging.CheckState == CheckState.Checked;
+		}
+
+		private void CHK_Control_CommonDataPath_CheckedChanged(object sender, EventArgs e)
+		{
+			SandboxGameAssemblyWrapper.UseCommonProgramData = CHK_Control_CommonDataPath.CheckState == CheckState.Checked;
+			CMB_Control_CommonInstanceList.Enabled = SandboxGameAssemblyWrapper.UseCommonProgramData;
+
+			if (SandboxGameAssemblyWrapper.UseCommonProgramData)
+				m_server.InstanceName = CMB_Control_CommonInstanceList.Text;
+			else
+				m_server.InstanceName = "";
+
+			m_server.LoadServerConfig();
+
+			PG_Control_Server_Properties.SelectedObject = m_server.Config;
+		}
+
+		private void BTN_Control_Server_Reset_Click(object sender, EventArgs e)
+		{
+			//Refresh the loaded config
+			m_server.LoadServerConfig();
+			UpdateControls();
+
+			PG_Control_Server_Properties.SelectedObject = m_server.Config;
+		}
+
+		private void BTN_Control_Server_Save_Click(object sender, EventArgs e)
+		{
+			//Save the loaded config
+			m_server.SaveServerConfig();
+			UpdateControls();
+		}
+
+		private void PG_Control_Server_Properties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+		{
+			UpdateControls();
+		}
+
+		private void CMB_Control_CommonInstanceList_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (!CMB_Control_CommonInstanceList.Enabled || CMB_Control_CommonInstanceList.SelectedIndex == -1) return;
+
+			m_server.InstanceName = CMB_Control_CommonInstanceList.Text;
+			SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(CMB_Control_CommonInstanceList.Text);
+
+			m_server.LoadServerConfig();
+
+			PG_Control_Server_Properties.SelectedObject = m_server.Config;
+		}
+
+		private void UpdateControls()
+		{
+			if (m_server.Config == null)
+				SandboxGameAssemblyWrapper.UseCommonProgramData = true;
+
+			if (m_server.CommandLineArgs.instanceName.Length != 0)
+			{
+				CHK_Control_CommonDataPath.Checked = true;
+				foreach (var item in CMB_Control_CommonInstanceList.Items)
+				{
+					if (item.ToString().Equals(m_server.CommandLineArgs.instanceName))
+					{
+						CMB_Control_CommonInstanceList.SelectedItem = item;
+						break;
+					}
+				}
+			}
+
+			BTN_ServerControl_Stop.Enabled = m_server.IsRunning;
+			BTN_ServerControl_Start.Enabled = !m_server.IsRunning;
+			BTN_Chat_Send.Enabled = m_server.IsRunning;
+			BTN_Entities_New.Enabled = m_server.IsRunning;
+
+			CMB_Control_CommonInstanceList.Enabled = !m_server.IsRunning;
+
+			TXT_Chat_Message.Enabled = m_server.IsRunning;
+
+			PG_Entities_Details.Enabled = m_server.IsRunning;
+			PG_Factions.Enabled = m_server.IsRunning;
+			PG_Plugins.Enabled = m_server.IsRunning;
+			PG_Control_Server_Properties.Enabled = !m_server.IsRunning;
+
+			if (m_server.Config != null)
+			{
+				CHK_Control_CommonDataPath.Enabled = !m_server.IsRunning;
+
+				BTN_Control_Server_Save.Enabled = m_server.Config.Changed;
+				BTN_Control_Server_Reset.Enabled = m_server.Config.Changed;
+			}
+			else
+			{
+				CHK_Control_CommonDataPath.Checked = true;
+
+				BTN_Control_Server_Save.Enabled = false;
+				BTN_Control_Server_Reset.Enabled = false;
+			}
 		}
 
 		#endregion
@@ -250,6 +362,9 @@ namespace SEServerExtender
 
 		private void TreeViewRefresh(object sender, EventArgs e)
 		{
+			if (m_server.CommandLineArgs.noGUI)
+				return;
+
 			TRV_Entities.BeginUpdate();
 
 			TreeNode sectorObjectsNode;
@@ -481,45 +596,85 @@ namespace SEServerExtender
 				{
 					structuralBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(CargoContainerEntity))
+				else if (cubeBlock is CargoContainerEntity)
 				{
 					containerBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(ReactorEntity))
+				else if (cubeBlock is ReactorEntity)
 				{
 					energyBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(BatteryBlockEntity))
+				else if (cubeBlock is BatteryBlockEntity)
 				{
 					energyBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(BeaconEntity))
+				else if (cubeBlock is BeaconEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(CockpitEntity))
+				else if (cubeBlock is CockpitEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(GravityGeneratorEntity))
+				else if (cubeBlock is GravityGeneratorEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(MedicalRoomEntity))
+				else if (cubeBlock is MedicalRoomEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(DoorEntity))
+				else if (cubeBlock is DoorEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(InteriorLightEntity))
+				else if (cubeBlock is InteriorLightEntity)
 				{
 					lightBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(ReflectorLightEntity))
+				else if (cubeBlock is ReflectorLightEntity)
 				{
 					lightBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is RefineryEntity)
+				{
+					productionBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is AssemblerEntity)
+				{
+					productionBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is ConveyorBlockEntity)
+				{
+					conveyorBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is ConveyorTubeEntity)
+				{
+					conveyorBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is SolarPanelEntity)
+				{
+					energyBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is GatlingTurretEntity)
+				{
+					weaponBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is MissileTurretEntity)
+				{
+					weaponBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is ShipGrinderEntity)
+				{
+					toolBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is ShipWelderEntity)
+				{
+					toolBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is ShipDrillEntity)
+				{
+					toolBlocksNode.Nodes.Add(newNode);
 				}
 				else
 				{
@@ -559,7 +714,6 @@ namespace SEServerExtender
 		private void TRV_Entities_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			BTN_Entities_Export.Enabled = false;
-			BTN_Entities_New.Enabled = false;
 			BTN_Entities_Delete.Enabled = false;
 
 			if (e.Node == null)
@@ -579,8 +733,6 @@ namespace SEServerExtender
 
 			if (linkedObject is CubeGridEntity)
 			{
-				BTN_Entities_New.Enabled = true;
-
 				TRV_Entities.BeginUpdate();
 
 				RenderCubeGridChildNodes((CubeGridEntity)linkedObject, e.Node);
@@ -652,28 +804,26 @@ namespace SEServerExtender
 
 		private void BTN_Entities_New_Click(object sender, EventArgs e)
 		{
-			if (TRV_Entities.SelectedNode.Text.Contains("Cube Grids") || TRV_Entities.SelectedNode.Tag is CubeGridEntity)
+			OpenFileDialog openFileDialog = new OpenFileDialog
 			{
-				OpenFileDialog openFileDialog = new OpenFileDialog
-				{
-					InitialDirectory = GameInstallationInfo.GamePath,
-					DefaultExt = "sbc file (*.sbc)"
-				};
+				InitialDirectory = GameInstallationInfo.GamePath,
+				DefaultExt = "sbc file (*.sbc)"
+			};
 
-				if (openFileDialog.ShowDialog() == DialogResult.OK)
+			if (openFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
+				if (fileInfo.Exists)
 				{
-					FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
-					if (fileInfo.Exists)
+					try
 					{
-						try
-						{
-							CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
-							cubeGrid.AddCubeGrid();
-						}
-						catch (Exception ex)
-						{
-							MessageBox.Show(this, ex.ToString());
-						}
+						CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
+						cubeGrid.AddCubeGrid();
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+						MessageBox.Show(this, ex.ToString());
 					}
 				}
 			}
@@ -724,6 +874,9 @@ namespace SEServerExtender
 
 		private void ChatViewRefresh(object sender, EventArgs e)
 		{
+			if (m_server.CommandLineArgs.noGUI)
+				return;
+
 			LST_Chat_Messages.BeginUpdate();
 
 			string[] chatMessages = ChatManager.Instance.ChatMessages.ToArray();
@@ -786,39 +939,42 @@ namespace SEServerExtender
 			{
 				if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				{
-					if (!m_factionsManager.IsInitialized)
+					if (!FactionsManager.Instance.IsInitialized)
 					{
-						string worldPath = m_gameAssemblyWrapper.GetServerConfig().LoadWorld;
+						string worldPath = SandboxGameAssemblyWrapper.Instance.GetServerConfig().LoadWorld;
 						string[] directories = worldPath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
 						string worldName = directories[directories.Length - 1];
-						m_factionsManager.Init(worldName);
-						List<Faction> factions = m_factionsManager.Factions;
+						FactionsManager.Instance.Init(worldName);
+						List<Faction> factions = FactionsManager.Instance.Factions;
 
-						TRV_Factions.BeginUpdate();
-						TRV_Factions.Nodes.Clear();
-						foreach (Faction faction in factions)
+						if (!m_server.CommandLineArgs.noGUI)
 						{
-							TreeNode factionNode = TRV_Factions.Nodes.Add(faction.Id.ToString(), faction.Name);
-							factionNode.Name = faction.Name;
-							factionNode.Tag = faction;
-
-							TreeNode membersNode = factionNode.Nodes.Add("Members");
-							TreeNode joinRequestsNode = factionNode.Nodes.Add("Join Requests");
-
-							foreach (MyObjectBuilder_FactionMember member in faction.Members)
+							TRV_Factions.BeginUpdate();
+							TRV_Factions.Nodes.Clear();
+							foreach (Faction faction in factions)
 							{
-								TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
-								memberNode.Name = member.PlayerId.ToString();
-								memberNode.Tag = member;
+								TreeNode factionNode = TRV_Factions.Nodes.Add(faction.Id.ToString(), faction.Name);
+								factionNode.Name = faction.Name;
+								factionNode.Tag = faction;
+
+								TreeNode membersNode = factionNode.Nodes.Add("Members");
+								TreeNode joinRequestsNode = factionNode.Nodes.Add("Join Requests");
+
+								foreach (MyObjectBuilder_FactionMember member in faction.Members)
+								{
+									TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
+									memberNode.Name = member.PlayerId.ToString();
+									memberNode.Tag = member;
+								}
+								foreach (MyObjectBuilder_FactionMember member in faction.JoinRequests)
+								{
+									TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
+									memberNode.Name = member.PlayerId.ToString();
+									memberNode.Tag = member;
+								}
 							}
-							foreach (MyObjectBuilder_FactionMember member in faction.JoinRequests)
-							{
-								TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
-								memberNode.Name = member.PlayerId.ToString();
-								memberNode.Tag = member;
-							}
+							TRV_Factions.EndUpdate();
 						}
-						TRV_Factions.EndUpdate();
 					}
 				}
 			}
@@ -846,29 +1002,24 @@ namespace SEServerExtender
 
 		private void PluginManagerRefresh(object sender, EventArgs e)
 		{
-			if (!m_pluginManager.Initialized)
+			if (PluginManager.GetInstance().Initialized)
 			{
-				if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+				LST_Plugins.BeginUpdate();
+				int selectedIndex = LST_Plugins.SelectedIndex;
+				LST_Plugins.Items.Clear();
+				foreach (var key in PluginManager.GetInstance().Plugins.Keys)
 				{
-					m_pluginManager.Init();
-
-					foreach (var key in m_pluginManager.Plugins.Keys)
-					{
-						LST_Plugins.Items.Add(key);
-					}
+					LST_Plugins.Items.Add(key);
 				}
-			}
-			else
-			{
-				//TODO - Call this from somewhere in the main game thread eventually
-				m_pluginManager.Update();
+				LST_Plugins.SelectedIndex = selectedIndex;
+				LST_Plugins.EndUpdate();
 			}
 		}
 
 		private void LST_Plugins_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
-			Object plugin = m_pluginManager.Plugins[selectedItem];
+			Object plugin = PluginManager.GetInstance().Plugins[selectedItem];
 
 			PG_Plugins.SelectedObject = plugin;
 		}

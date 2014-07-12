@@ -247,7 +247,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			return character;
 		}
 
-		public void Export(FileInfo fileInfo)
+		public override void Export(FileInfo fileInfo)
 		{
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_Character, MyObjectBuilder_CharacterSerializer>(GetSubTypeEntity(), fileInfo);
 		}

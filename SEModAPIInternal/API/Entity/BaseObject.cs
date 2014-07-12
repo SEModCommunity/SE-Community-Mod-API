@@ -18,6 +18,7 @@ using SEModAPI.API.Definitions;
 using SEModAPIInternal.API.Entity.Sector;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
+using System.Diagnostics;
 
 namespace SEModAPIInternal.API.Entity
 {
@@ -195,7 +196,7 @@ namespace SEModAPIInternal.API.Entity
 			return (MyObjectBuilder_Base)m_baseEntity;
 		}
 
-		public void Export(FileInfo fileInfo)
+		public virtual void Export(FileInfo fileInfo)
 		{
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_Base, MyObjectBuilder_BaseSerializer>(GetSubTypeEntity(), fileInfo);
 		}
@@ -277,7 +278,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "'");
+				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "': " + ex.Message);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
@@ -323,7 +324,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "'");
+				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "': " + ex.Message);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
@@ -351,6 +352,8 @@ namespace SEModAPIInternal.API.Entity
 
 		private FileInfo m_fileInfo;
 		private readonly FieldInfo m_definitionsContainerField;
+
+		protected bool m_isResourceLocked = false;
 
 		#endregion
 
@@ -548,8 +551,9 @@ namespace SEModAPIInternal.API.Entity
 			{
 				fileContent = ReadSpaceEngineersFile<T, TS>(filePath);
 			}
-			catch
+			catch(Exception ex)
 			{
+				LogManager.GameLog.WriteLine(ex);
 				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileCorrupted, filePath);
 			}
 
@@ -607,7 +611,7 @@ namespace SEModAPIInternal.API.Entity
 
 			if (File.Exists(filename))
 			{
-				using (var xmlReader = XmlReader.Create(filename, settings))
+				using(var xmlReader = XmlReader.Create(filename, settings))
 				{
 					var serializer = (TS)Activator.CreateInstance(typeof(TS));
 					obj = serializer.Deserialize(xmlReader);
@@ -715,18 +719,25 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (IsDynamic)
+				if (IsDynamic && !m_isResourceLocked)
 					LoadDynamic();
 
 				List<T> newList = new List<T>();
-				foreach (var def in GetInternalData().Values)
+				if (!m_isResourceLocked)
 				{
-					newList.Add((T)def);
+					foreach (var def in GetInternalData().Values)
+					{
+						newList.Add((T)def);
+					}
 				}
 				return newList;
 			}
 			catch (Exception ex)
 			{
+				StackFrame frame = new StackFrame(1);
+				var method = frame.GetMethod();
+				var callerName = method.Name;
+				LogManager.GameLog.WriteLine("Call from '" + callerName + "': ");
 				LogManager.GameLog.WriteLine(ex);
 				return new List<T>();
 			}
