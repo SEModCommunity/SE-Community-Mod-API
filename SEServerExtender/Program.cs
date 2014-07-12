@@ -13,13 +13,27 @@ namespace SEServerExtender
 		/// Main entry point of the application
 		/// </summary>
 		[STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
 			try
 			{
+				bool autoStart = false;
+				bool autoStop = false;
+				foreach (string arg in args)
+				{
+					if (arg.ToLower().Equals("autostart"))
+					{
+						autoStart = true;
+					}
+					if (arg.ToLower().Equals("autostop"))
+					{
+						autoStop = true;
+					}
+				}
+
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new SEServerExtender());
+				Application.Run(new SEServerExtender(autoStart, autoStop));
 			}
 			catch (AutoException eEx)
 			{

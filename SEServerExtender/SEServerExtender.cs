@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -38,6 +39,8 @@ namespace SEServerExtender
 	{
 		#region "Attributes"
 
+		private static SEServerExtender m_instance;
+
 		private System.Windows.Forms.Timer m_entityTreeRefreshTimer;
 		private System.Windows.Forms.Timer m_chatViewRefreshTimer;
 		private System.Windows.Forms.Timer m_factionRefreshTimer;
@@ -47,19 +50,25 @@ namespace SEServerExtender
 		private SandboxGameAssemblyWrapper m_gameAssemblyWrapper;
 		private FactionsManager m_factionsManager;
 		private ServerAssemblyWrapper m_serverWrapper;
+		private LogManager m_logManager;
 
 		private DedicatedConfigDefinition m_dedicatedConfigDefinition;
 
 		private static Thread m_runServerThread;
 		private static bool m_serverRunning;
 		private static string m_worldName;
+		private static bool m_serverStopped;
+		private bool m_autoStart;
+		private bool m_autoStop;
 
 		#endregion
 
 		#region "Constructors and Initializers"
 
-		public SEServerExtender()
+		public SEServerExtender(bool autoStart = false, bool autoStop = false)
 		{
+			m_instance = this;
+
 			//Determine wether or not we could find the game installation
 			try
 			{
@@ -98,6 +107,7 @@ namespace SEServerExtender
 			m_pluginManager = PluginManager.GetInstance();
 			m_gameAssemblyWrapper = SandboxGameAssemblyWrapper.Instance;
 			m_factionsManager = FactionsManager.Instance;
+			m_logManager = LogManager.GetInstance();
 
 			string commonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "SpaceEngineersDedicated");
 			if (Directory.Exists(commonPath))
@@ -116,8 +126,19 @@ namespace SEServerExtender
 					CMB_Control_CommonInstanceList.SelectedIndex = 0;
 			}
 
+			m_serverStopped = true;
+			m_serverRunning = false;
 			GetServerConfig();
 			UpdateControls();
+
+			m_autoStart = autoStart;
+			m_autoStop = autoStop;
+			if (m_autoStart)
+			{
+				BTN_ServerControl_Start_Click(this, null);
+			}
+
+			this.Text = "SEServerExtender " + Assembly.GetCallingAssembly().GetName().Version.ToString();
 		}
 
 		#endregion
@@ -155,7 +176,18 @@ namespace SEServerExtender
 		private void RunServer()
 		{
 			m_serverRunning = true;
+			m_serverStopped = false;
 			m_serverWrapper.StartServer(m_worldName);
+			m_serverRunning = false;
+			m_serverStopped = true;
+
+			Console.WriteLine("Server has stopped running");
+
+			if (m_autoStop)
+			{
+				BTN_ServerControl_Stop_Click(null, null);
+				m_instance.Close();
+			}
 		}
 
 		private string GetGamePath()
@@ -574,61 +606,65 @@ namespace SEServerExtender
 				{
 					structuralBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(CargoContainerEntity))
+				else if (cubeBlock is CargoContainerEntity)
 				{
 					containerBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(ReactorEntity))
+				else if (cubeBlock is ReactorEntity)
 				{
 					energyBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(BatteryBlockEntity))
+				else if (cubeBlock is BatteryBlockEntity)
 				{
 					energyBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(BeaconEntity))
+				else if (cubeBlock is BeaconEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(CockpitEntity))
+				else if (cubeBlock is CockpitEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(GravityGeneratorEntity))
+				else if (cubeBlock is GravityGeneratorEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(MedicalRoomEntity))
+				else if (cubeBlock is MedicalRoomEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(DoorEntity))
+				else if (cubeBlock is DoorEntity)
 				{
 					utilityBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(InteriorLightEntity))
+				else if (cubeBlock is InteriorLightEntity)
 				{
 					lightBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(ReflectorLightEntity))
+				else if (cubeBlock is ReflectorLightEntity)
 				{
 					lightBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(RefineryEntity))
+				else if (cubeBlock is RefineryEntity)
 				{
 					productionBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(AssemblerEntity))
+				else if (cubeBlock is AssemblerEntity)
 				{
 					productionBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(ConveyorBlockEntity))
+				else if (cubeBlock is ConveyorBlockEntity)
 				{
 					conveyorBlocksNode.Nodes.Add(newNode);
 				}
-				else if (cubeBlockType == typeof(ConveyorTubeEntity))
+				else if (cubeBlock is ConveyorTubeEntity)
 				{
 					conveyorBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is SolarPanelEntity)
+				{
+					energyBlocksNode.Nodes.Add(newNode);
 				}
 				else
 				{
@@ -954,17 +990,18 @@ namespace SEServerExtender
 			{
 				if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				{
-					m_pluginManager.Init();
-
 					foreach (var key in m_pluginManager.Plugins.Keys)
 					{
 						LST_Plugins.Items.Add(key);
 					}
+
+					m_pluginManager.Init();
+
+					m_pluginManagerRefreshTimer.Stop();
 				}
 			}
 			else
 			{
-				//TODO - Call this from somewhere in the main game thread eventually
 				m_pluginManager.Update();
 			}
 		}

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Timers;
 
 using SEModAPIExtensions.API.Plugin;
 
@@ -201,7 +202,7 @@ namespace SEModAPIExtensions.API
 							}
 							catch (Exception ex)
 							{
-								//Do nothing
+								LogManager.GameLog.WriteLine(ex);
 							}
 							break;
 						case EntityEventManager.EntityEventType.OnPlayerLeft:
@@ -214,7 +215,7 @@ namespace SEModAPIExtensions.API
 							}
 							catch (Exception ex)
 							{
-								//Do nothing
+								LogManager.GameLog.WriteLine(ex);
 							}
 							break;
 						default:
@@ -227,7 +228,7 @@ namespace SEModAPIExtensions.API
 							}
 							catch (Exception ex)
 							{
-								//Do nothing
+								LogManager.GameLog.WriteLine(ex);
 							}
 							break;
 					}
