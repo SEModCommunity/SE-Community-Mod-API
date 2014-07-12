@@ -16,6 +16,7 @@ using Sandbox.Common.ObjectBuilders.Voxels;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API;
+using SEModAPI.API.Definitions;
 using SEModAPI.Support;
 
 using SEModAPIExtensions.API;
@@ -50,6 +51,8 @@ namespace SEServerExtender
 		private FactionsManager m_factionsManager;
 		private ServerAssemblyWrapper m_serverWrapper;
 		private LogManager m_logManager;
+
+		private DedicatedConfigDefinition m_dedicatedConfigDefinition;
 
 		private static Thread m_runServerThread;
 		private static bool m_serverRunning;
@@ -109,6 +112,7 @@ namespace SEServerExtender
 			string commonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "SpaceEngineersDedicated");
 			if (Directory.Exists(commonPath))
 			{
+
 				string[] subDirectories = Directory.GetDirectories(commonPath);
 				foreach (string fullInstancePath in subDirectories)
 				{
@@ -117,10 +121,15 @@ namespace SEServerExtender
 
 					CMB_Control_CommonInstanceList.Items.Add(instanceName);
 				}
+
+				if (CMB_Control_CommonInstanceList.Items.Count > 0)
+					CMB_Control_CommonInstanceList.SelectedIndex = 0;
 			}
 
 			m_serverStopped = true;
 			m_serverRunning = false;
+			GetServerConfig();
+			UpdateControls();
 
 			m_autoStart = autoStart;
 			m_autoStop = autoStop;
@@ -154,7 +163,7 @@ namespace SEServerExtender
 
 				m_worldName = worldName;
 
-				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
+				//SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
 
 				m_runServerThread = new Thread(new ThreadStart(this.RunServer));
 				m_runServerThread.Start();
@@ -227,6 +236,21 @@ namespace SEServerExtender
 			return null;
 		}
 
+		private void GetServerConfig()
+		{
+			string appdata = m_gameAssemblyWrapper.GetUserDataPath(CMB_Control_CommonInstanceList.Text);
+			MyConfigDedicatedData config = DedicatedConfigDefinition.Load(new FileInfo(appdata + @"\SpaceEngineers-Dedicated.cfg"));
+			m_dedicatedConfigDefinition = new DedicatedConfigDefinition(config);
+
+			PG_Control_Server_Properties.SelectedObject = m_dedicatedConfigDefinition;
+		}
+
+		private void SaveServerConfig()
+		{
+			string appdata = m_gameAssemblyWrapper.GetUserDataPath(CMB_Control_CommonInstanceList.Text);
+			m_dedicatedConfigDefinition.Save(new FileInfo(appdata + @"\SpaceEngineers-Dedicated.cfg"));
+		}
+
 		#region "Control"
 
 		private void BTN_ServerControl_Start_Click(object sender, EventArgs e)
@@ -235,7 +259,7 @@ namespace SEServerExtender
 
 			if (SandboxGameAssemblyWrapper.UseCommonProgramData)
 			{
-				string instanceName = CMB_Control_CommonInstanceList.SelectedText;
+				string instanceName = CMB_Control_CommonInstanceList.Text;
 				m_pluginManager.LoadPlugins("", instanceName);
 				StartGame("", instanceName);
 			}
@@ -249,6 +273,11 @@ namespace SEServerExtender
 			m_chatViewRefreshTimer.Start();
 			m_factionRefreshTimer.Start();
 			m_pluginManagerRefreshTimer.Start();
+
+			if (m_dedicatedConfigDefinition.Changed)
+				SaveServerConfig();
+
+			UpdateControls();
 		}
 
 		private void BTN_ServerControl_Stop_Click(object sender, EventArgs e)
@@ -259,6 +288,8 @@ namespace SEServerExtender
 			m_chatViewRefreshTimer.Stop();
 			m_factionRefreshTimer.Stop();
 			m_pluginManagerRefreshTimer.Stop();
+
+			UpdateControls();
 		}
 
 		private void CHK_Control_Debugging_CheckedChanged(object sender, EventArgs e)
@@ -270,14 +301,42 @@ namespace SEServerExtender
 		{
 			SandboxGameAssemblyWrapper.UseCommonProgramData = CHK_Control_CommonDataPath.CheckState == CheckState.Checked;
 
-			if (SandboxGameAssemblyWrapper.UseCommonProgramData)
-			{
-				CMB_Control_CommonInstanceList.Enabled = true;
-			}
-			else
-			{
-				CMB_Control_CommonInstanceList.Enabled = false;
-			}
+			CMB_Control_CommonInstanceList.Enabled = SandboxGameAssemblyWrapper.UseCommonProgramData;
+			GetServerConfig();
+		}
+
+		private void BTN_Control_Server_Reset_Click(object sender, EventArgs e)
+		{
+			GetServerConfig();
+			UpdateControls();
+		}
+
+		private void BTN_Control_Server_Save_Click(object sender, EventArgs e)
+		{
+			SaveServerConfig();
+			UpdateControls();
+		}
+
+		private void PG_Control_Server_Properties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+		{
+			UpdateControls();
+		}
+
+		private void UpdateControls()
+		{
+			BTN_ServerControl_Stop.Enabled = m_serverRunning;
+			BTN_ServerControl_Start.Enabled = !m_serverRunning;
+			BTN_Chat_Send.Enabled = m_serverRunning;
+			BTN_Entities_New.Enabled = m_serverRunning;
+
+			TXT_Chat_Message.Enabled = m_serverRunning;
+
+			PG_Entities_Details.Enabled = m_serverRunning;
+			PG_Factions.Enabled = m_serverRunning;
+			PG_Plugins.Enabled = m_serverRunning;
+
+			BTN_Control_Server_Save.Enabled = m_dedicatedConfigDefinition.Changed;
+			BTN_Control_Server_Reset.Enabled = m_dedicatedConfigDefinition.Changed;
 		}
 
 		#endregion
@@ -672,7 +731,6 @@ namespace SEServerExtender
 		private void TRV_Entities_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			BTN_Entities_Export.Enabled = false;
-			BTN_Entities_New.Enabled = false;
 			BTN_Entities_Delete.Enabled = false;
 
 			if (e.Node == null)
@@ -692,8 +750,6 @@ namespace SEServerExtender
 
 			if (linkedObject is CubeGridEntity)
 			{
-				BTN_Entities_New.Enabled = true;
-
 				TRV_Entities.BeginUpdate();
 
 				RenderCubeGridChildNodes((CubeGridEntity)linkedObject, e.Node);
@@ -765,29 +821,26 @@ namespace SEServerExtender
 
 		private void BTN_Entities_New_Click(object sender, EventArgs e)
 		{
-			if (TRV_Entities.SelectedNode.Text.Contains("Cube Grids") || TRV_Entities.SelectedNode.Tag is CubeGridEntity)
+			OpenFileDialog openFileDialog = new OpenFileDialog
 			{
-				OpenFileDialog openFileDialog = new OpenFileDialog
-				{
-					InitialDirectory = GameInstallationInfo.GamePath,
-					DefaultExt = "sbc file (*.sbc)"
-				};
+				InitialDirectory = GameInstallationInfo.GamePath,
+				DefaultExt = "sbc file (*.sbc)"
+			};
 
-				if (openFileDialog.ShowDialog() == DialogResult.OK)
+			if (openFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
+				if (fileInfo.Exists)
 				{
-					FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
-					if (fileInfo.Exists)
+					try
 					{
-						try
-						{
-							CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
-							cubeGrid.AddCubeGrid();
-						}
-						catch (Exception ex)
-						{
-							LogManager.GameLog.WriteLine(ex);
-							MessageBox.Show(this, ex.ToString());
-						}
+						CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
+						cubeGrid.AddCubeGrid();
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+						MessageBox.Show(this, ex.ToString());
 					}
 				}
 			}
@@ -989,6 +1042,16 @@ namespace SEServerExtender
 		}
 
 		#endregion
+
+		private void CMB_Control_CommonInstanceList_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (!CMB_Control_CommonInstanceList.Enabled || CMB_Control_CommonInstanceList.SelectedIndex == -1) return;
+
+			SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(CMB_Control_CommonInstanceList.Text);
+			GetServerConfig();
+		}
+
+
 
 		#endregion
 	}
