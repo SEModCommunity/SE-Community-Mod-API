@@ -67,6 +67,7 @@ namespace SEServerExtender
 				Close();
 			m_server.LoadServerConfig();
 			UpdateControls();
+			PG_Control_Server_Properties.SelectedObject = m_server.Config;
 
 			//Update the title bar text with the assembly version
 			this.Text = "SEServerExtender " + Assembly.GetExecutingAssembly().GetName().Version.ToString();

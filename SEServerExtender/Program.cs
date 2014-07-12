@@ -34,7 +34,7 @@ namespace SEServerExtender
 				CommandLineArgs extenderArgs = new CommandLineArgs();
 				extenderArgs.autoStart = false;
 				extenderArgs.worldName = "";
-				extenderArgs.instanceName = "TestService";
+				extenderArgs.instanceName = "";
 				extenderArgs.noGUI = false;
 				extenderArgs.debug = false;
 				extenderArgs.gamePath = "";
