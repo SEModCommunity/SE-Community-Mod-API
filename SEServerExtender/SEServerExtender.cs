@@ -124,9 +124,15 @@ namespace SEServerExtender
 
 			m_autoStart = autoStart;
 			m_autoStop = autoStop;
+
 			if (m_autoStart)
 			{
 				BTN_ServerControl_Start_Click(this, null);
+				Console.WriteLine("Auto-Start enabled");
+			}
+			if (m_autoStop)
+			{
+				Console.WriteLine("Auto-Stop enabled");
 			}
 
 			this.Text = "SEServerExtender " + Assembly.GetCallingAssembly().GetName().Version.ToString();
@@ -174,6 +180,7 @@ namespace SEServerExtender
 
 			Console.WriteLine("Server has stopped running");
 
+			//TODO - Get this working, can't seem to close the form from this external thread
 			if (m_autoStop)
 			{
 				BTN_ServerControl_Stop_Click(null, null);
@@ -606,6 +613,26 @@ namespace SEServerExtender
 				else if (cubeBlock is SolarPanelEntity)
 				{
 					energyBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is GatlingTurretEntity)
+				{
+					weaponBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is MissileTurretEntity)
+				{
+					weaponBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is ShipGrinderEntity)
+				{
+					toolBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is ShipWelderEntity)
+				{
+					toolBlocksNode.Nodes.Add(newNode);
+				}
+				else if (cubeBlock is ShipDrillEntity)
+				{
+					toolBlocksNode.Nodes.Add(newNode);
 				}
 				else
 				{

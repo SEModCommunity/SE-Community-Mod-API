@@ -689,6 +689,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							case MyObjectBuilderTypeEnum.Gyro:
 								matchingCubeBlock = new GyroEntity(m_parent, (MyObjectBuilder_Gyro)baseEntity, entity);
 								break;
+							case MyObjectBuilderTypeEnum.LargeGatlingTurret:
+								matchingCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.LargeMissileTurret:
+								matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.ShipGrinder:
+								matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.ShipWelder:
+								matchingCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
+								break;
+							case MyObjectBuilderTypeEnum.Drill:
+								matchingCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
+								break;
 							default:
 								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 								break;
