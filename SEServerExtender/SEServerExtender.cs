@@ -322,6 +322,14 @@ namespace SEServerExtender
 			UpdateControls();
 		}
 
+		private void CMB_Control_CommonInstanceList_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (!CMB_Control_CommonInstanceList.Enabled || CMB_Control_CommonInstanceList.SelectedIndex == -1) return;
+
+			SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(CMB_Control_CommonInstanceList.Text);
+			GetServerConfig();
+		}
+
 		private void UpdateControls()
 		{
 			BTN_ServerControl_Stop.Enabled = m_serverRunning;
@@ -1042,16 +1050,6 @@ namespace SEServerExtender
 		}
 
 		#endregion
-
-		private void CMB_Control_CommonInstanceList_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (!CMB_Control_CommonInstanceList.Enabled || CMB_Control_CommonInstanceList.SelectedIndex == -1) return;
-
-			SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(CMB_Control_CommonInstanceList.Text);
-			GetServerConfig();
-		}
-
-
 
 		#endregion
 	}
