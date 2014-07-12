@@ -19,21 +19,37 @@ namespace SEServerExtender
 			{
 				bool autoStart = false;
 				bool autoStop = false;
+				string instanceName = "";
 				foreach (string arg in args)
 				{
-					if (arg.ToLower().Equals("autostart"))
+					if (arg.Split('=').Length > 1)
 					{
-						autoStart = true;
+						string argName = arg.Split('=')[0];
+						string argValue = arg.Split('=')[1];
+
+						Console.WriteLine("Name-Value Arg: name='" + argName + "' value='" + argValue + "'");
+
+						if (argName.ToLower().Equals("instance"))
+						{
+							instanceName = argValue;
+						}
 					}
-					if (arg.ToLower().Equals("autostop"))
+					else
 					{
-						autoStop = true;
+						if (arg.ToLower().Equals("autostart"))
+						{
+							autoStart = true;
+						}
+						if (arg.ToLower().Equals("autostop"))
+						{
+							autoStop = true;
+						}
 					}
 				}
 
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new SEServerExtender(autoStart, autoStop));
+				Application.Run(new SEServerExtender(autoStart, autoStop, instanceName));
 			}
 			catch (AutoException eEx)
 			{

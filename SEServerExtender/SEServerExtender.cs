@@ -68,7 +68,7 @@ namespace SEServerExtender
 
 		#region "Constructors and Initializers"
 
-		public SEServerExtender(bool autoStart = false, bool autoStop = false)
+		public SEServerExtender(bool autoStart = false, bool autoStop = false, string instanceName = "")
 		{
 			m_instance = this;
 
@@ -132,11 +132,27 @@ namespace SEServerExtender
 
 			m_autoStart = autoStart;
 			m_autoStop = autoStop;
+			m_instanceName = instanceName;
 
 			if (m_autoStart)
 			{
 				Console.WriteLine("Auto-Start enabled");
-				BTN_ServerControl_Start_Click(this, null);
+
+				if(m_instanceName != "")
+				{
+					Console.WriteLine("Auto-starting common instance '" + m_instanceName + "'");
+
+					CHK_Control_CommonDataPath.Checked = true;
+					foreach (var item in CMB_Control_CommonInstanceList.Items)
+					{
+						if (item.ToString().Equals(m_instanceName))
+						{
+							CMB_Control_CommonInstanceList.SelectedItem = item;
+							break;
+						}
+					}
+				}
+				BTN_ServerControl_Start.PerformClick();
 			}
 			if (m_autoStop)
 			{
