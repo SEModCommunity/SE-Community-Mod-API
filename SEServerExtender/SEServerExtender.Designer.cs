@@ -209,6 +209,7 @@
 			// CHK_Control_CommonDataPath
 			// 
 			this.CHK_Control_CommonDataPath.AutoSize = true;
+			this.CHK_Control_CommonDataPath.Enabled = false;
 			this.CHK_Control_CommonDataPath.Location = new System.Drawing.Point(5, 96);
 			this.CHK_Control_CommonDataPath.Name = "CHK_Control_CommonDataPath";
 			this.CHK_Control_CommonDataPath.Size = new System.Drawing.Size(153, 17);
@@ -285,9 +286,9 @@
 			// 
 			// PG_Control_Server_Properties
 			// 
-			this.PG_Control_Server_Properties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.PG_Control_Server_Properties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.PG_Control_Server_Properties.Location = new System.Drawing.Point(6, 19);
 			this.PG_Control_Server_Properties.Name = "PG_Control_Server_Properties";
 			this.PG_Control_Server_Properties.Size = new System.Drawing.Size(757, 486);

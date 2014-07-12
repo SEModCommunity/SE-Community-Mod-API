@@ -7,8 +7,21 @@ using SEModAPIInternal.Support;
 
 namespace SEServerExtender
 {
-	static class Program
+	public static class Program
 	{
+		public struct CommandLineArgs
+		{
+			public bool autoStart;
+			public string worldName;
+			public string instanceName;
+			public bool noGUI;
+			public bool debug;
+			public string gamePath;
+		}
+
+		static SEServerExtender m_serverExtenderForm;
+		static Server m_server;
+
 		/// <summary>
 		/// Main entry point of the application
 		/// </summary>
@@ -17,9 +30,16 @@ namespace SEServerExtender
 		{
 			try
 			{
-				bool autoStart = false;
-				bool autoStop = false;
-				string instanceName = "";
+				//Setup the default args
+				CommandLineArgs extenderArgs = new CommandLineArgs();
+				extenderArgs.autoStart = false;
+				extenderArgs.worldName = "";
+				extenderArgs.instanceName = "TestService";
+				extenderArgs.noGUI = false;
+				extenderArgs.debug = false;
+				extenderArgs.gamePath = "";
+
+				//Process the args
 				foreach (string arg in args)
 				{
 					if (arg.Split('=').Length > 1)
@@ -31,43 +51,58 @@ namespace SEServerExtender
 
 						if (argName.ToLower().Equals("instance"))
 						{
-							instanceName = argValue;
+							extenderArgs.instanceName = argValue;
+						}
+						if (argName.ToLower().Equals("gamepath"))
+						{
+							extenderArgs.gamePath = argValue;
 						}
 					}
 					else
 					{
 						if (arg.ToLower().Equals("autostart"))
 						{
-							autoStart = true;
+							extenderArgs.autoStart = true;
 						}
-						if (arg.ToLower().Equals("autostop"))
+						if (arg.ToLower().Equals("nogui"))
 						{
-							autoStop = true;
+							extenderArgs.noGUI = true;
+
+							//Implies autostart
+							extenderArgs.autoStart = true;
+						}
+						if (arg.ToLower().Equals("debug"))
+						{
+							extenderArgs.debug = true;
 						}
 					}
 				}
 
-				Application.EnableVisualStyles();
-				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new SEServerExtender(autoStart, autoStop, instanceName));
+				m_server = new Server(extenderArgs);
+				if (extenderArgs.autoStart)
+				{
+					m_server.StartServer();
+				}
+
+				if (!extenderArgs.noGUI)
+				{
+					Application.EnableVisualStyles();
+					Application.SetCompatibleTextRenderingDefault(false);
+					m_serverExtenderForm = new SEServerExtender(m_server);
+					Application.Run(m_serverExtenderForm);
+				}
 			}
 			catch (AutoException eEx)
 			{
 				MessageBox.Show(eEx.AdditionnalInfo + "\n\r" + eEx.GetDebugString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				LogManager.GameLog.WriteLine(eEx);
-				//throw;
 			}
 			catch (TargetInvocationException ex)
 			{
 				MessageBox.Show(ex.ToString() + "\n\r" + ex.InnerException.ToString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				LogManager.GameLog.WriteLine(ex);
-				//throw;
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.ToString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				LogManager.GameLog.WriteLine(ex);
-				//throw;
 			}
 		}
 	}

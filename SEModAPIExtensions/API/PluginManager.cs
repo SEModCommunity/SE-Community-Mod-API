@@ -74,7 +74,7 @@ namespace SEModAPIExtensions.API
 				return false;
 		}
 
-		public void LoadPlugins(string basePath = "", string instanceName = "")
+		public void LoadPlugins(string instanceName = "")
 		{
 			Console.WriteLine("Loading plugins ...");
 

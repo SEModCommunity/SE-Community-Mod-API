@@ -18,6 +18,7 @@ using SEModAPI.API.Definitions;
 using SEModAPIInternal.API.Entity.Sector;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
+using System.Diagnostics;
 
 namespace SEModAPIInternal.API.Entity
 {
@@ -351,6 +352,8 @@ namespace SEModAPIInternal.API.Entity
 
 		private FileInfo m_fileInfo;
 		private readonly FieldInfo m_definitionsContainerField;
+
+		protected bool m_isResourceLocked = false;
 
 		#endregion
 
@@ -716,18 +719,25 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (IsDynamic)
+				if (IsDynamic && !m_isResourceLocked)
 					LoadDynamic();
 
 				List<T> newList = new List<T>();
-				foreach (var def in GetInternalData().Values)
+				if (!m_isResourceLocked)
 				{
-					newList.Add((T)def);
+					foreach (var def in GetInternalData().Values)
+					{
+						newList.Add((T)def);
+					}
 				}
 				return newList;
 			}
 			catch (Exception ex)
 			{
+				StackFrame frame = new StackFrame(1);
+				var method = frame.GetMethod();
+				var callerName = method.Name;
+				LogManager.GameLog.WriteLine("Call from '" + callerName + "': ");
 				LogManager.GameLog.WriteLine(ex);
 				return new List<T>();
 			}
