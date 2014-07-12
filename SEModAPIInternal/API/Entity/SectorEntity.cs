@@ -340,6 +340,11 @@ namespace SEModAPIInternal.API.Entity
 
 		public override void LoadDynamic()
 		{
+			if (m_isResourceLocked)
+				return;
+
+			m_isResourceLocked = true;
+
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
@@ -367,9 +372,6 @@ namespace SEModAPIInternal.API.Entity
 					}
 
 					if (baseEntity == null)
-						continue;
-
-					if (data.ContainsKey(baseEntity.EntityId))
 						continue;
 
 					BaseEntity matchingEntity = null;
@@ -428,6 +430,8 @@ namespace SEModAPIInternal.API.Entity
 				var entry = data[key];
 				backingData.Add(entry.BackingObject, entry);
 			}
+
+			m_isResourceLocked = false;
 		}
 
 		public void AddEntity(Object gameEntity)

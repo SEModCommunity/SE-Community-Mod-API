@@ -620,9 +620,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					Vector3I cubePosition = baseEntity.Min;
 					long packedBlockCoordinates = cubePosition.X + cubePosition.Y * 1000 + cubePosition.Z * 1000000;
 
-					if (data.ContainsKey(packedBlockCoordinates))
-						continue;
-
 					CubeBlockEntity matchingCubeBlock = null;
 
 					//If the original data already contains an entry for this, skip creation
