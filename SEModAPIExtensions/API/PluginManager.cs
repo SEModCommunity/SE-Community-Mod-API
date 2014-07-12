@@ -190,6 +190,7 @@ namespace SEModAPIExtensions.API
 			EntityEventManager.Instance.ResourceLocked = true;
 			foreach (var plugin in m_plugins.Values)
 			{
+				//Run entity events
 				List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
 				foreach (EntityEventManager.EntityEvent entityEvent in events)
 				{
@@ -237,6 +238,24 @@ namespace SEModAPIExtensions.API
 					}
 				}
 
+				//Run chat events
+				List<ChatManager.ChatEvent> chatEvents = ChatManager.Instance.ChatEvents;
+				foreach (ChatManager.ChatEvent chatEvent in chatEvents)
+				{
+					try
+					{
+						string methodName = chatEvent.type.ToString();
+						MethodInfo updateMethod = plugin.GetType().GetMethod(methodName);
+						if (updateMethod != null)
+							updateMethod.Invoke(plugin, new object[] { chatEvent });
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+
+				//Run update
 				try
 				{
 					MethodInfo updateMethod = plugin.GetType().GetMethod("Update");
@@ -250,6 +269,7 @@ namespace SEModAPIExtensions.API
 
 			EntityEventManager.Instance.ClearEvents();
 			EntityEventManager.Instance.ResourceLocked = false;
+			ChatManager.Instance.ClearEvents();
 		}
 
 		#endregion
