@@ -33,27 +33,29 @@ namespace SEModAPIInternal.Support
 			Console.WriteLine("Finished loading LogManager");
 		}
 
-		public static LogManager GetInstance()
-		{
-			if (m_instance == null)
-			{
-				m_instance = new LogManager();
-			}
-			return (LogManager)m_instance;
-		}
-
 		#endregion
 
 		#region "Properties"
+
+		public static LogManager Instance
+		{
+			get
+			{
+				if (m_instance == null)
+					m_instance = new LogManager();
+
+				return m_instance;
+			}
+		}
 
 		public static MyLog GameLog
 		{
 			get
 			{
-				GetInstance();
-
 				if (m_gameLog == null)
 				{
+					var temp = Instance;
+
 					try
 					{
 						Type mainGameType = SandboxGameAssemblyWrapper.Instance.MainGameType;
@@ -74,10 +76,10 @@ namespace SEModAPIInternal.Support
 		{
 			get
 			{
-				GetInstance();
-
 				if (m_apiLog == null)
 				{
+					var temp = Instance;
+
 					try
 					{
 						m_apiLog = new MyLog();

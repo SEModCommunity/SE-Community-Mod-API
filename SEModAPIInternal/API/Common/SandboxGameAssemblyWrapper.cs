@@ -456,6 +456,36 @@ namespace SEModAPIInternal.API.Common
 			MyFileSystem.Reset();
 			MyFileSystem.Init(contentPath, userDataPath);
 			MyFileSystem.InitUserSpecific((string)null);
+
+			string debugContentPath = MyFileSystem.ContentPath;
+			string debugUserDataPath = MyFileSystem.UserDataPath;
+		}
+
+		public List<string> GetCommonInstanceList()
+		{
+			List<string> result = new List<string>();
+
+			try
+			{
+				string commonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "SpaceEngineersDedicated");
+				if (Directory.Exists(commonPath))
+				{
+					string[] subDirectories = Directory.GetDirectories(commonPath);
+					foreach (string fullInstancePath in subDirectories)
+					{
+						string[] directories = fullInstancePath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
+						string instanceName = directories[directories.Length - 1];
+
+						result.Add(instanceName);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
+
+			return result;
 		}
 
 		#endregion

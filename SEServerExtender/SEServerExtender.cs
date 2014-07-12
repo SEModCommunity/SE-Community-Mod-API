@@ -45,19 +45,22 @@ namespace SEServerExtender
 		private System.Windows.Forms.Timer m_chatViewRefreshTimer;
 		private System.Windows.Forms.Timer m_factionRefreshTimer;
 		private System.Windows.Forms.Timer m_pluginManagerRefreshTimer;
+		private System.Windows.Forms.Timer m_statusCheckTimer;
 
 		private PluginManager m_pluginManager;
 		private SandboxGameAssemblyWrapper m_gameAssemblyWrapper;
 		private FactionsManager m_factionsManager;
 		private ServerAssemblyWrapper m_serverWrapper;
 		private LogManager m_logManager;
+		private EntityEventManager m_entityEventManager;
+		private ChatManager m_chatManager;
 
 		private DedicatedConfigDefinition m_dedicatedConfigDefinition;
 
 		private static Thread m_runServerThread;
 		private static bool m_serverRunning;
 		private static string m_worldName;
-		private static bool m_serverStopped;
+		private static string m_instanceName;
 		private bool m_autoStart;
 		private bool m_autoStop;
 
@@ -93,7 +96,7 @@ namespace SEServerExtender
 			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
 
 			m_chatViewRefreshTimer = new System.Windows.Forms.Timer();
-			m_chatViewRefreshTimer.Interval = 500;
+			m_chatViewRefreshTimer.Interval = 1000;
 			m_chatViewRefreshTimer.Tick += new EventHandler(ChatViewRefresh);
 
 			m_factionRefreshTimer = new System.Windows.Forms.Timer();
@@ -104,30 +107,26 @@ namespace SEServerExtender
 			m_pluginManagerRefreshTimer.Interval = 100;
 			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
 
+			m_statusCheckTimer = new System.Windows.Forms.Timer();
+			m_statusCheckTimer.Interval = 750;
+			m_statusCheckTimer.Tick += new EventHandler(StatusCheckRefresh);
+			m_statusCheckTimer.Start();
+
+			m_serverWrapper = ServerAssemblyWrapper.GetInstance();
 			m_pluginManager = PluginManager.GetInstance();
 			m_gameAssemblyWrapper = SandboxGameAssemblyWrapper.Instance;
 			m_factionsManager = FactionsManager.Instance;
-			m_logManager = LogManager.GetInstance();
+			m_logManager = LogManager.Instance;
+			m_entityEventManager = EntityEventManager.Instance;
+			m_chatManager = ChatManager.Instance;
 
-			string commonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "SpaceEngineersDedicated");
-			if (Directory.Exists(commonPath))
-			{
+			List<String> instanceList = SandboxGameAssemblyWrapper.Instance.GetCommonInstanceList();
+			CMB_Control_CommonInstanceList.Items.AddRange(instanceList.ToArray());
+			if (CMB_Control_CommonInstanceList.Items.Count > 0)
+				CMB_Control_CommonInstanceList.SelectedIndex = 0;
 
-				string[] subDirectories = Directory.GetDirectories(commonPath);
-				foreach (string fullInstancePath in subDirectories)
-				{
-					string[] directories = fullInstancePath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
-					string instanceName = directories[directories.Length - 1];
-
-					CMB_Control_CommonInstanceList.Items.Add(instanceName);
-				}
-
-				if (CMB_Control_CommonInstanceList.Items.Count > 0)
-					CMB_Control_CommonInstanceList.SelectedIndex = 0;
-			}
-
-			m_serverStopped = true;
 			m_serverRunning = false;
+
 			GetServerConfig();
 			UpdateControls();
 
@@ -136,8 +135,8 @@ namespace SEServerExtender
 
 			if (m_autoStart)
 			{
-				BTN_ServerControl_Start_Click(this, null);
 				Console.WriteLine("Auto-Start enabled");
+				BTN_ServerControl_Start_Click(this, null);
 			}
 			if (m_autoStop)
 			{
@@ -151,6 +150,8 @@ namespace SEServerExtender
 
 		#region "Methods"
 
+		#region "General"
+
 		private void StartGame(string worldName = "", string instanceName = "")
 		{
 			try
@@ -158,12 +159,12 @@ namespace SEServerExtender
 				if (m_serverRunning)
 					return;
 
-				string basePath = Path.Combine(GameInstallationInfo.GamePath, "DedicatedServer64");
-				m_serverWrapper = ServerAssemblyWrapper.GetInstance(basePath);
-
 				m_worldName = worldName;
+				m_instanceName = instanceName;
 
-				//SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
+				m_serverRunning = true;
+
+				UpdateControls();
 
 				m_runServerThread = new Thread(new ThreadStart(this.RunServer));
 				m_runServerThread.Start();
@@ -177,23 +178,26 @@ namespace SEServerExtender
 		private void StopGame()
 		{
 			m_runServerThread.Abort();
+
+			m_serverRunning = false;
 		}
 
 		private void RunServer()
 		{
-			m_serverRunning = true;
-			m_serverStopped = false;
-			m_serverWrapper.StartServer(m_worldName);
+			m_serverWrapper.StartServer(m_worldName, m_instanceName);
+
 			m_serverRunning = false;
-			m_serverStopped = true;
 
 			Console.WriteLine("Server has stopped running");
+		}
 
-			//TODO - Get this working, can't seem to close the form from this external thread
-			if (m_autoStop)
+		private void StatusCheckRefresh(object sender, EventArgs e)
+		{
+			UpdateControls();
+
+			if (!m_serverRunning && m_autoStart)
 			{
-				BTN_ServerControl_Stop_Click(null, null);
-				m_instance.Close();
+				BTN_ServerControl_Start.PerformClick();
 			}
 		}
 
@@ -251,11 +255,19 @@ namespace SEServerExtender
 			m_dedicatedConfigDefinition.Save(new FileInfo(appdata + @"\SpaceEngineers-Dedicated.cfg"));
 		}
 
+		#endregion
+
 		#region "Control"
 
 		private void BTN_ServerControl_Start_Click(object sender, EventArgs e)
 		{
-			m_pluginManager.LoadPlugins();
+			m_entityTreeRefreshTimer.Start();
+			m_chatViewRefreshTimer.Start();
+			m_factionRefreshTimer.Start();
+			m_pluginManagerRefreshTimer.Start();
+
+			if (m_dedicatedConfigDefinition.Changed)
+				SaveServerConfig();
 
 			if (SandboxGameAssemblyWrapper.UseCommonProgramData)
 			{
@@ -268,28 +280,16 @@ namespace SEServerExtender
 				m_pluginManager.LoadPlugins();
 				StartGame();
 			}
-
-			m_entityTreeRefreshTimer.Start();
-			m_chatViewRefreshTimer.Start();
-			m_factionRefreshTimer.Start();
-			m_pluginManagerRefreshTimer.Start();
-
-			if (m_dedicatedConfigDefinition.Changed)
-				SaveServerConfig();
-
-			UpdateControls();
 		}
 
 		private void BTN_ServerControl_Stop_Click(object sender, EventArgs e)
 		{
-			StopGame();
-
 			m_entityTreeRefreshTimer.Stop();
 			m_chatViewRefreshTimer.Stop();
 			m_factionRefreshTimer.Stop();
 			m_pluginManagerRefreshTimer.Stop();
 
-			UpdateControls();
+			StopGame();
 		}
 
 		private void CHK_Control_Debugging_CheckedChanged(object sender, EventArgs e)

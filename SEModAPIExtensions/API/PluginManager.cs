@@ -80,6 +80,9 @@ namespace SEModAPIExtensions.API
 
 			try
 			{
+				m_plugins.Clear();
+				m_initialized = false;
+
 				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
 
 				MyFSPath fsPath = new MyFSPath(MyFSLocationEnum.Mod, "");

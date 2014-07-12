@@ -53,19 +53,25 @@ namespace SEModAPIInternal.API.Server
 
 		#region "Methods"
 
-		public bool StartServer(string worldName)
+		public bool StartServer(string worldName = "", string instanceName = "", bool useConsole = true)
 		{
 			try
 			{
 				SandboxGameAssemblyWrapper.Instance.SetNullRender(true);
 
+				bool isUsingInstance = false;
+				if (instanceName != "")
+				{
+					isUsingInstance = true;
+				}
+
 				MyFileSystem.Reset();
 				object[] methodParams = new object[]
 				{
-					"",
+					instanceName,
 					(string) null,
-					false,
-					true
+					isUsingInstance,
+					useConsole
 				};
 				Type dedicatedServerType = m_assembly.GetType(DedicatedServerNamespace + "." + DedicatedServerClass);
 				MethodInfo serverStartupMethod = dedicatedServerType.GetMethod(DedicatedServerStartupBaseMethod, BindingFlags.Static | BindingFlags.NonPublic);
