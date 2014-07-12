@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using Microsoft.Xml.Serialization.GeneratedAssembly; 
+using Microsoft.Xml.Serialization.GeneratedAssembly;
 using System.Xml;
 using System.ComponentModel;
 
@@ -469,6 +469,7 @@ namespace SEModAPI.API.Definitions
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the path of the world to load")]
+		[EditorAttribute(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
 		/// <summary>
 		/// Get or set the path of the world to load
 		/// </summary>
@@ -618,10 +619,10 @@ namespace SEModAPI.API.Definitions
 				};
 
 				using (var xmlReader = XmlReader.Create(filePath, settings))
-					{
-						var serializer = (MyConfigDedicatedDataSerializer)Activator.CreateInstance(typeof(MyConfigDedicatedDataSerializer));
-						fileContent = serializer.Deserialize(xmlReader);
-					}
+				{
+					var serializer = (MyConfigDedicatedDataSerializer)Activator.CreateInstance(typeof(MyConfigDedicatedDataSerializer));
+					fileContent = serializer.Deserialize(xmlReader);
+				}
 			}
 			catch
 			{
@@ -635,6 +636,39 @@ namespace SEModAPI.API.Definitions
 
 			return (MyConfigDedicatedData)fileContent;
 		}
+
+		public bool Save(FileInfo fileInfo)
+		{
+			if (!this.Changed) return false;
+			if (fileInfo == null) return false;
+
+			//Save the definitions container out to the file
+			try
+			{
+				using (var xmlTextWriter = new XmlTextWriter(fileInfo.FullName, null))
+				{
+					xmlTextWriter.Formatting = Formatting.Indented;
+					xmlTextWriter.Indentation = 2;
+					xmlTextWriter.IndentChar = ' ';
+					MyConfigDedicatedDataSerializer serializer = (MyConfigDedicatedDataSerializer)Activator.CreateInstance(typeof(MyConfigDedicatedDataSerializer));
+					serializer.Serialize(xmlTextWriter, m_definition);
+				}
+			}
+			catch
+			{
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileCorrupted, fileInfo.FullName);
+			}
+
+			if (m_definition == null)
+			{
+				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileEmpty, fileInfo.FullName);
+			}
+
+			Changed = false;
+
+			return true;
+		}
+
 
 		#endregion
 	}
