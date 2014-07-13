@@ -348,7 +348,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				Action<Object> action = InternalCharacterClosedEvent;
 
 				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnClosedEventMethod);
-				method.Invoke(BackingObject, new object[] { action });
+				if (method == null)
+					return;
+				//method.Invoke(BackingObject, new object[] { action });
 			}
 			catch (Exception ex)
 			{

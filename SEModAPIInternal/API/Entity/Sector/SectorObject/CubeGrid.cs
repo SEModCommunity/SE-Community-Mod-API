@@ -308,7 +308,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public CubeBlockEntity GetCubeBlock(Vector3I cubePosition)
 		{
-			long packedBlockCoordinates = cubePosition.X + cubePosition.Y * 1000 + cubePosition.Z * 1000000;
+			long packedBlockCoordinates = (long)cubePosition.X + (long)cubePosition.Y * 10000 + (long)cubePosition.Z * 100000000;
 
 			return (CubeBlockEntity)m_cubeBlockManager.GetEntry(packedBlockCoordinates);
 		}
