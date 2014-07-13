@@ -512,7 +512,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				MethodInfo method = GetEntityMethod(ActualObject, SEModAPIInternal.API.Entity.BaseEntity.BaseEntityCombineOnClosedEventMethod);
 				if (method == null)
 					return;
-				method.Invoke(ActualObject, new object[] { action });
+				//method.Invoke(ActualObject, new object[] { action });
 			}
 			catch (Exception ex)
 			{
@@ -618,7 +618,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					}
 
 					Vector3I cubePosition = baseEntity.Min;
-					long packedBlockCoordinates = cubePosition.X + cubePosition.Y * 1000 + cubePosition.Z * 1000000;
+					long packedBlockCoordinates = (long)cubePosition.X + (long)cubePosition.Y * 10000 + (long)cubePosition.Z * 100000000;
+
+					if (data.ContainsKey(packedBlockCoordinates))
+						continue;
 
 					CubeBlockEntity matchingCubeBlock = null;
 
@@ -691,12 +694,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							case MyObjectBuilderTypeEnum.Gyro:
 								matchingCubeBlock = new GyroEntity(m_parent, (MyObjectBuilder_Gyro)baseEntity, entity);
 								break;
-							case MyObjectBuilderTypeEnum.LargeGatlingTurret:
-								matchingCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.LargeMissileTurret:
-								matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
-								break;
+							//case MyObjectBuilderTypeEnum.LargeGatlingTurret:
+								//matchingCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
+								//break;
+							//case MyObjectBuilderTypeEnum.LargeMissileTurret:
+								//matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
+								//break;
 							case MyObjectBuilderTypeEnum.ShipGrinder:
 								matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
 								break;

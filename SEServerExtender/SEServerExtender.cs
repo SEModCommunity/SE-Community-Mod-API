@@ -1004,6 +1004,9 @@ namespace SEServerExtender
 		{
 			if (PluginManager.GetInstance().Initialized)
 			{
+				if (PluginManager.GetInstance().Plugins.Count == LST_Plugins.Items.Count)
+					return;
+
 				LST_Plugins.BeginUpdate();
 				int selectedIndex = LST_Plugins.SelectedIndex;
 				LST_Plugins.Items.Clear();
