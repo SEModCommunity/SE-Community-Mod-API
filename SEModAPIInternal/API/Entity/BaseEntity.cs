@@ -281,13 +281,13 @@ namespace SEModAPIInternal.API.Entity
 			if (!IsDisposed && BackingObject != null)
 			{
 				Vector3 currentPosition = Position;
-				currentPosition = Vector3.Add(currentPosition, new Vector3(100000, 100000, 100000));
+				currentPosition = Vector3.Add(currentPosition, new Vector3(10000000, 10000000, 10000000));
 				Position = currentPosition;
 
 				Action action = InternalUpdatePosition;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
-				Thread.Sleep(250);
+				Thread.Sleep(100);
 
 				Action action2 = InternalRemoveEntity;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
@@ -500,21 +500,6 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		protected void InternalRegisterEntityClosedEvent()
-		{
-			try
-			{
-				Action<Object> action = InternalEntityClosedEvent;
-
-				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnClosedEventMethod);
-				method.Invoke(BackingObject, new object[] { action });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
 		protected void InternalEntityMovedEvent(Object entity)
 		{
 			try
@@ -528,22 +513,6 @@ namespace SEModAPIInternal.API.Entity
 				newEvent.entity = this;
 				newEvent.priority = 10;
 				EntityEventManager.Instance.AddEvent(newEvent);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalEntityClosedEvent(Object entity)
-		{
-			try
-			{
-				if (IsDisposed)
-					return;
-
-				//This is disabled until we find a way to get the delegates in class heirarchy order instead of sequential order
-				//Dispose();
 			}
 			catch (Exception ex)
 			{

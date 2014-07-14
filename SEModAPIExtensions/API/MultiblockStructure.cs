@@ -53,7 +53,9 @@ namespace SEModAPIExtensions.API
 
 					foreach (CubeBlockEntity cubeBlock in m_blocks)
 					{
-						if (cubeBlock == null || cubeBlock.IsDisposed)
+						if (cubeBlock == null)
+							return false;
+						if (cubeBlock.IsDisposed)
 							return false;
 
 						if (cubeBlock.IntegrityPercent < 0.75)
@@ -74,6 +76,9 @@ namespace SEModAPIExtensions.API
 					}
 
 					var def = GetMultiblockDefinition();
+					if (def == null || def.Count == 0)
+						return false;
+
 					foreach (Vector3I key in def.Keys)
 					{
 						Type type = def[key];
@@ -81,6 +86,9 @@ namespace SEModAPIExtensions.API
 						CubeBlockEntity matchingBlock = null;
 						foreach (CubeBlockEntity cubeBlock in m_blocks)
 						{
+							if (cubeBlock == null)
+								return false;
+
 							Vector3I relativePosition = (Vector3I)cubeBlock.Min - (Vector3I)m_anchor.Min;
 							if (cubeBlock.GetType() == type && relativePosition == key)
 							{
