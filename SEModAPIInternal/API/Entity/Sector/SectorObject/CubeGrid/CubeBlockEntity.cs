@@ -84,9 +84,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				newEvent.entity = this;
 				newEvent.priority = 1;
 				EntityEventManager.Instance.AddEvent(newEvent);
-
-				Action action = InternalRegisterCubeBlockClosedEvent;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 			}
 		}
 
@@ -512,42 +509,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		protected void InternalRegisterCubeBlockClosedEvent()
-		{
-			try
-			{
-				//Something is broken with the on-close delegate registration for beacons
-				if (this is BeaconEntity)
-					return;
-
-				Action<Object> action = InternalCubeBlockClosedEvent;
-
-				MethodInfo method = GetEntityMethod(ActualObject, SEModAPIInternal.API.Entity.BaseEntity.BaseEntityCombineOnClosedEventMethod);
-				if (method == null)
-					return;
-				//method.Invoke(ActualObject, new object[] { action });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalCubeBlockClosedEvent(Object entity)
-		{
-			try
-			{
-				if (IsDisposed)
-					return;
-
-				Dispose();
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
 		#endregion
 
 		#endregion
@@ -675,9 +636,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							case MyObjectBuilderTypeEnum.Thrust:
 								matchingCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
 								break;
-							case MyObjectBuilderTypeEnum.MergeBlock:
-								matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
-								break;
+							//case MyObjectBuilderTypeEnum.MergeBlock:
+								//matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
+								//break;
 							case MyObjectBuilderTypeEnum.LandingGear:
 								matchingCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
 								break;

@@ -47,50 +47,61 @@ namespace SEModAPIExtensions.API
 		{
 			get
 			{
-				bool isFunctional = true;
-
-				foreach (CubeBlockEntity cubeBlock in m_blocks)
+				try
 				{
-					if (cubeBlock.IntegrityPercent < 0.75)
+					bool isFunctional = true;
+
+					foreach (CubeBlockEntity cubeBlock in m_blocks)
 					{
-						isFunctional = false;
-						break;
+						if (cubeBlock == null || cubeBlock.IsDisposed)
+							return false;
+
+						if (cubeBlock.IntegrityPercent < 0.75)
+						{
+							isFunctional = false;
+							break;
+						}
+
+						if (cubeBlock is FunctionalBlockEntity)
+						{
+							FunctionalBlockEntity functionalBlock = (FunctionalBlockEntity)cubeBlock;
+							if (!functionalBlock.Enabled)
+							{
+								isFunctional = false;
+								break;
+							}
+						}
 					}
 
-					if (cubeBlock is FunctionalBlockEntity)
+					var def = GetMultiblockDefinition();
+					foreach (Vector3I key in def.Keys)
 					{
-						FunctionalBlockEntity functionalBlock = (FunctionalBlockEntity)cubeBlock;
-						if (!functionalBlock.Enabled)
+						Type type = def[key];
+
+						CubeBlockEntity matchingBlock = null;
+						foreach (CubeBlockEntity cubeBlock in m_blocks)
+						{
+							Vector3I relativePosition = (Vector3I)cubeBlock.Min - (Vector3I)m_anchor.Min;
+							if (cubeBlock.GetType() == type && relativePosition == key)
+							{
+								matchingBlock = cubeBlock;
+								break;
+							}
+						}
+						if (matchingBlock == null)
 						{
 							isFunctional = false;
 							break;
 						}
 					}
-				}
 
-				var def = GetMultiblockDefinition();
-				foreach (Vector3I key in def.Keys)
+					return isFunctional;
+				}
+				catch (Exception ex)
 				{
-					Type type = def[key];
-
-					CubeBlockEntity matchingBlock = null;
-					foreach (CubeBlockEntity cubeBlock in m_blocks)
-					{
-						Vector3I relativePosition = (Vector3I)cubeBlock.Min - (Vector3I)m_anchor.Min;
-						if (cubeBlock.GetType() == type && relativePosition == key)
-						{
-							matchingBlock = cubeBlock;
-							break;
-						}
-					}
-					if (matchingBlock == null)
-					{
-						isFunctional = false;
-						break;
-					}
+					LogManager.GameLog.WriteLine(ex);
+					return false;
 				}
-
-				return isFunctional;
 			}
 		}
 

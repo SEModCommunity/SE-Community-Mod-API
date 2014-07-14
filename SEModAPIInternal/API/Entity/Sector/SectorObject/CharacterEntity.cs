@@ -70,9 +70,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.entity = this;
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
-
-			Action action = InternalRegisterCharacterClosedEvent;
-			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		#endregion
@@ -351,38 +348,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			{
 				LogManager.GameLog.WriteLine(ex);
 				return null;
-			}
-		}
-
-		protected void InternalRegisterCharacterClosedEvent()
-		{
-			try
-			{
-				Action<Object> action = InternalCharacterClosedEvent;
-
-				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnClosedEventMethod);
-				if (method == null)
-					return;
-				//method.Invoke(BackingObject, new object[] { action });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalCharacterClosedEvent(Object entity)
-		{
-			try
-			{
-				if (IsDisposed)
-					return;
-
-				Dispose();
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
