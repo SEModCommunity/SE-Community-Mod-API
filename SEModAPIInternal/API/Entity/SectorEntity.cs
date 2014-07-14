@@ -358,9 +358,14 @@ namespace SEModAPIInternal.API.Entity
 
 				try
 				{
-					//Skip floating and meteor for now until we get the bugs sorted out with the other types
+					//Skip unknowns for now until we get the bugs sorted out with the other types
 					Type entityType = entity.GetType();
-					if (entityType != CharacterEntity.InternalType && entityType != CubeGridEntity.InternalType && entityType != VoxelMap.InternalType)
+					if (entityType != CharacterEntity.InternalType &&
+						entityType != CubeGridEntity.InternalType &&
+						entityType != VoxelMap.InternalType &&
+						entityType != FloatingObject.InternalType &&
+						entityType != Meteor.InternalType
+						)
 						continue;
 
 					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });

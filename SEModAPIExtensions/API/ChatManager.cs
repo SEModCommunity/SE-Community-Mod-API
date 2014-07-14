@@ -246,6 +246,10 @@ namespace SEModAPIExtensions.API
 						{
 							if (entity is CubeGridEntity)
 							{
+								//Skip static cube grids
+								if (((CubeGridEntity)entity).IsStatic)
+									continue;
+
 								if (entity.Name.Equals(entity.EntityId.ToString()))
 								{
 									entity.Dispose();

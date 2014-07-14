@@ -17,8 +17,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		private static Type m_internalType;
 
-		public static string FloatingObjectNamespace = "";
-		public static string FloatingObjectClass = "";
+		public static string FloatingObjectNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string FloatingObjectClass = "60663B6C2E735862064C925471BD4138";
 
 		#endregion
 
