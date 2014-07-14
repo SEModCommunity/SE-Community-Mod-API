@@ -351,27 +351,23 @@ namespace SEModAPIInternal.API.Entity
 
 			//Update the main data mapping
 			data.Clear();
+			int entityCount = 0;
 			foreach (Object entity in rawEntities)
 			{
+				entityCount++;
+
 				try
 				{
-					MyObjectBuilder_EntityBase newObjectBuilder = (MyObjectBuilder_EntityBase)SandboxGameAssemblyWrapper.Instance.GetEntityBaseObjectBuilderFromEntity(entity);
+					//Skip floating and meteor for now until we get the bugs sorted out with the other types
+					Type entityType = entity.GetType();
+					if (entityType != CharacterEntity.InternalType && entityType != CubeGridEntity.InternalType && entityType != VoxelMap.InternalType)
+						continue;
 
-					MyObjectBuilder_EntityBase baseEntity = null;
-					if (newObjectBuilder != null)
-					{
-						baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
-						if (baseEntity == null)
-							LogManager.APILog.WriteLine("Failed to load entity '" + newObjectBuilder.TypeId.ToString() + "/" + newObjectBuilder.SubtypeName + "'");
-					}
-					else
-					{
-						baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
-						if (baseEntity == null)
-							LogManager.APILog.WriteLine("Failed to load entity '" + entity.ToString() + "'");
-					}
+					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
 
 					if (baseEntity == null)
+						continue;
+					if (data.ContainsKey(baseEntity.EntityId))
 						continue;
 
 					BaseEntity matchingEntity = null;
@@ -424,6 +420,14 @@ namespace SEModAPIInternal.API.Entity
 			}
 
 			//Update the backing data mapping
+			foreach (var key in backingData.Keys)
+			{
+				var entry = backingData[key];
+				if (!data.ContainsValue(entry))
+				{
+					entry.Dispose();
+				}
+			}
 			backingData.Clear();
 			foreach (var key in data.Keys)
 			{

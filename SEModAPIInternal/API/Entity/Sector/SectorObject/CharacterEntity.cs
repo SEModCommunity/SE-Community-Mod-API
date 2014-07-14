@@ -25,6 +25,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#region "Attributes"
 
 		private InventoryEntity m_inventory;
+		private static Type m_internalType;
 
 		public static string CharacterNamespace = "F79C930F3AD8FDAF31A59E2702EECE70";
 		public static string CharacterClass = "3B71F31E6039CAE9D8706B5F32FE468D";
@@ -77,6 +78,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 
 		#region "Properties"
+
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				if (m_internalType == null)
+					m_internalType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CharacterNamespace, CharacterClass);
+				return m_internalType;
+			}
+		}
 
 		[Category("Character")]
 		[Browsable(true)]

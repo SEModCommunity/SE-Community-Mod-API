@@ -63,10 +63,11 @@ namespace SEServerExtender
 			ProcessCommandLineArgs();
 
 			m_pluginMainLoop = new System.Timers.Timer();
-			m_pluginMainLoop.Interval = 100;
+			m_pluginMainLoop.Interval = 200;
 			m_pluginMainLoop.Elapsed += PluginManagerMain;
 
-			PluginManager.GetInstance().LoadPlugins(m_commandLineArgs.instanceName);
+			if(m_commandLineArgs.instanceName != "")
+				PluginManager.GetInstance().LoadPlugins(m_commandLineArgs.instanceName);
 		}
 
 		private bool SetupGameInstallation()

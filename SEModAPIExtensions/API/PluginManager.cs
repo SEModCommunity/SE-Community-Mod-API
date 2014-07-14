@@ -10,6 +10,9 @@ using System.Timers;
 using SEModAPIExtensions.API.Plugin;
 
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
@@ -80,7 +83,7 @@ namespace SEModAPIExtensions.API
 
 			try
 			{
-				m_plugins.Clear();
+				//m_plugins.Clear();
 				m_initialized = false;
 
 				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
@@ -184,6 +187,8 @@ namespace SEModAPIExtensions.API
 
 		public void Update()
 		{
+			if (!Initialized)
+				return;
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
 
@@ -194,6 +199,17 @@ namespace SEModAPIExtensions.API
 				List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
 				foreach (EntityEventManager.EntityEvent entityEvent in events)
 				{
+					//If this is a cube block created event and the parent cube grid is still loading then defer the event
+					if (entityEvent.type == EntityEventManager.EntityEventType.OnCubeBlockCreated)
+					{
+						CubeBlockEntity cubeBlock = (CubeBlockEntity)entityEvent.entity;
+						if (cubeBlock.Parent.IsLoading)
+						{
+							EntityEventManager.Instance.AddEvent(entityEvent);
+							continue;
+						}
+					}
+
 					switch (entityEvent.type)
 					{
 						case EntityEventManager.EntityEventType.OnPlayerJoined:

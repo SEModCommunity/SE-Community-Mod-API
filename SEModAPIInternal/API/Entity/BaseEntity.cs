@@ -36,6 +36,7 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private float m_maxLinearVelocity;
+		private static Type m_internalType;
 
 		public static string BaseEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string BaseEntityClass = "F6DF01EE4159339113BB9650DEEE1913";
@@ -77,9 +78,22 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				if (m_internalType == null)
+					m_internalType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(BaseEntityNamespace, BaseEntityClass);
+				return m_internalType;
+			}
+		}
+
 		/// <summary>
 		/// Gets the formatted name of an entity
 		/// </summary>
+		[Category("Entity")]
 		[Browsable(true)]
 		[ReadOnly(true)]
 		[Description("Formatted Name of an entity")]
@@ -561,6 +575,11 @@ namespace SEModAPIInternal.API.Entity
 
 		public override void LoadDynamic()
 		{
+			if (m_isResourceLocked)
+				return;
+
+			m_isResourceLocked = true;
+
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
@@ -593,21 +612,6 @@ namespace SEModAPIInternal.API.Entity
 					{
 						switch (baseEntity.TypeId)
 						{
-							case MyObjectBuilderTypeEnum.CubeGrid:
-								matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Character:
-								matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.FloatingObject:
-								matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Meteor:
-								matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.VoxelMap:
-								matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
-								break;
 							default:
 								matchingEntity = new BaseEntity(baseEntity, entity);
 								break;
@@ -632,6 +636,8 @@ namespace SEModAPIInternal.API.Entity
 				var entry = data[key];
 				backingData.Add(entry.BackingObject, entry);
 			}
+
+			m_isResourceLocked = false;
 		}
 
 		#endregion
