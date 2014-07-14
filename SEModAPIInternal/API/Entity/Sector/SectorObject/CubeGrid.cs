@@ -32,6 +32,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		private CubeBlockManager m_cubeBlockManager;
 		private CubeGridNetworkManager m_networkManager;
 		private PowerManager m_powerManager;
+		private static Type m_internalType;
 
 		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
@@ -113,14 +114,23 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.entity = this;
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
-
-			Action action = InternalRegisterCubeGridClosedEvent;
-			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		#endregion
 
 		#region "Properties"
+
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				if (m_internalType == null)
+					m_internalType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridNamespace, CubeGridClass);
+				return m_internalType;
+			}
+		}
 
 		[Category("Cube Grid")]
 		[ReadOnly(true)]
@@ -238,7 +248,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				return m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>();
+				List<CubeBlockEntity> cubeBlocks = m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>();
+				return cubeBlocks;
 			}
 		}
 
@@ -277,6 +288,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return m_powerManager; }
 		}
 
+		public bool IsLoading
+		{
+			get
+			{
+				bool isLoading = true;
+
+				isLoading = isLoading && m_cubeBlockManager.IsLoading;
+
+				return isLoading;
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -308,9 +331,29 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public CubeBlockEntity GetCubeBlock(Vector3I cubePosition)
 		{
-			long packedBlockCoordinates = (long)cubePosition.X + (long)cubePosition.Y * 10000 + (long)cubePosition.Z * 100000000;
+			try
+			{
+				long packedBlockCoordinates = (long)cubePosition.X + (long)cubePosition.Y * 10000 + (long)cubePosition.Z * 100000000;
+				CubeBlockEntity cubeBlock = (CubeBlockEntity)m_cubeBlockManager.GetEntry(packedBlockCoordinates);
 
-			return (CubeBlockEntity)m_cubeBlockManager.GetEntry(packedBlockCoordinates);
+				if (cubeBlock == null)
+				{
+					foreach (var entry in GetSubTypeEntity().CubeBlocks)
+					{
+						if (entry.Min == cubePosition)
+						{
+							cubeBlock = new CubeBlockEntity(this, entry);
+						}
+					}
+				}
+
+				return cubeBlock;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
 		}
 
 		public void RefreshCubeBlocks()
@@ -375,36 +418,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				newEvent.entity = this;
 				newEvent.priority = 9;
 				EntityEventManager.Instance.AddEvent(newEvent);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalRegisterCubeGridClosedEvent()
-		{
-			try
-			{
-				Action<Object> action = InternalCubeGridClosedEvent;
-
-				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnClosedEventMethod);
-				method.Invoke(BackingObject, new object[] { action });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalCubeGridClosedEvent(Object entity)
-		{
-			try
-			{
-				if (IsDisposed)
-					return;
-
-				Dispose();
 			}
 			catch (Exception ex)
 			{

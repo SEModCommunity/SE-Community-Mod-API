@@ -7,14 +7,18 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 
 using SEModAPI.API.Definitions;
 
+using SEModAPIInternal.API.Common;
+
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
 	public class FloatingObject : BaseEntity
 	{
 		#region "Attributes"
 
-		public static string FloatingObjectNamespace = "";
-		public static string FloatingObjectClass = "";
+		private static Type m_internalType;
+
+		public static string FloatingObjectNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string FloatingObjectClass = "60663B6C2E735862064C925471BD4138";
 
 		#endregion
 
@@ -31,6 +35,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 
 		#region "Properties"
+
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				if (m_internalType == null)
+					m_internalType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FloatingObjectNamespace, FloatingObjectClass);
+				return m_internalType;
+			}
+		}
 
 		[Category("Floating Object")]
 		[Browsable(true)]

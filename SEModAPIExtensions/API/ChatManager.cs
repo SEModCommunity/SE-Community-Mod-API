@@ -8,6 +8,8 @@ using System.Text;
 
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.Support;
 
 namespace SEModAPIExtensions.API
@@ -190,6 +192,10 @@ namespace SEModAPIExtensions.API
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
 
+			bool commandParsed = ParseChatCommands(message);
+			if (commandParsed)
+				return;
+
 			try
 			{
 				Object chatMessageStruct = CreateChatMessageStruct(message);
@@ -213,6 +219,48 @@ namespace SEModAPIExtensions.API
 			{
 				LogManager.GameLog.WriteLine(ex);
 			}
+		}
+
+		protected bool ParseChatCommands(string message)
+		{
+			string[] commandParts = message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+			if (paramCount < 1)
+				return false;
+
+			string command = commandParts[0].ToLower();
+			if(command[0] != '/')
+				return false;
+
+			//Delete
+			if (command.Equals("/delete"))
+			{
+				//All cube grids
+				if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
+				{
+					//That have no beacon or only a beacon with no name
+					if (commandParts[2].ToLower().Equals("nobeacon"))
+					{
+						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+						foreach (BaseEntity entity in entities)
+						{
+							if (entity is CubeGridEntity)
+							{
+								//Skip static cube grids
+								if (((CubeGridEntity)entity).IsStatic)
+									continue;
+
+								if (entity.Name.Equals(entity.EntityId.ToString()))
+								{
+									entity.Dispose();
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return true;
 		}
 
 		public void AddEvent(ChatEvent newEvent)

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
@@ -45,50 +47,69 @@ namespace SEModAPIExtensions.API
 		{
 			get
 			{
-				bool isFunctional = true;
-
-				foreach (CubeBlockEntity cubeBlock in m_blocks)
+				try
 				{
-					if (cubeBlock.IntegrityPercent < 0.75)
+					bool isFunctional = true;
+
+					foreach (CubeBlockEntity cubeBlock in m_blocks)
 					{
-						isFunctional = false;
-						break;
+						if (cubeBlock == null)
+							return false;
+						if (cubeBlock.IsDisposed)
+							return false;
+
+						if (cubeBlock.IntegrityPercent < 0.75)
+						{
+							isFunctional = false;
+							break;
+						}
+
+						if (cubeBlock is FunctionalBlockEntity)
+						{
+							FunctionalBlockEntity functionalBlock = (FunctionalBlockEntity)cubeBlock;
+							if (!functionalBlock.Enabled)
+							{
+								isFunctional = false;
+								break;
+							}
+						}
 					}
 
-					if (cubeBlock is FunctionalBlockEntity)
+					var def = GetMultiblockDefinition();
+					if (def == null || def.Count == 0)
+						return false;
+
+					foreach (Vector3I key in def.Keys)
 					{
-						FunctionalBlockEntity functionalBlock = (FunctionalBlockEntity)cubeBlock;
-						if (!functionalBlock.Enabled)
+						Type type = def[key];
+
+						CubeBlockEntity matchingBlock = null;
+						foreach (CubeBlockEntity cubeBlock in m_blocks)
+						{
+							if (cubeBlock == null)
+								return false;
+
+							Vector3I relativePosition = (Vector3I)cubeBlock.Min - (Vector3I)m_anchor.Min;
+							if (cubeBlock.GetType() == type && relativePosition == key)
+							{
+								matchingBlock = cubeBlock;
+								break;
+							}
+						}
+						if (matchingBlock == null)
 						{
 							isFunctional = false;
 							break;
 						}
 					}
-				}
 
-				var def = GetMultiblockDefinition();
-				foreach (Vector3I key in def.Keys)
+					return isFunctional;
+				}
+				catch (Exception ex)
 				{
-					Type type = def[key];
-
-					CubeBlockEntity matchingBlock = null;
-					foreach (CubeBlockEntity cubeBlock in m_blocks)
-					{
-						Vector3I relativePosition = (Vector3I)cubeBlock.Min - (Vector3I)m_anchor.Min;
-						if (cubeBlock.GetType() == type && relativePosition == key)
-						{
-							matchingBlock = cubeBlock;
-							break;
-						}
-					}
-					if (matchingBlock == null)
-					{
-						isFunctional = false;
-						break;
-					}
+					LogManager.GameLog.WriteLine(ex);
+					return false;
 				}
-
-				return isFunctional;
 			}
 		}
 
@@ -133,6 +154,85 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
+		public bool IsDefinitionMatch(CubeBlockEntity cubeToCheck, int recurseDepth = 0)
+		{
+			if (cubeToCheck == null)
+				return false;
+			if (cubeToCheck.IsDisposed)
+				return false;
+			if (cubeToCheck.Parent == null)
+				return false;
+			if (cubeToCheck.Parent.IsDisposed)
+				return false;
+			if (recurseDepth < 0 || recurseDepth > 2)
+				return false;
+
+			bool isMatch = true;
+			Vector3I cubePos = cubeToCheck.Min;
+			Type cubeType = cubeToCheck.GetType();
+
+			while (cubeToCheck.Parent.IsLoading)
+			{
+				Thread.Sleep(15);
+			}
+
+			Dictionary<Vector3I, Type> def = GetMultiblockDefinition();
+			Type anchorType = def[Vector3I.Zero];
+
+			//Check if this block isn't the anchor type
+			if (cubeType != anchorType)
+			{
+				//Check if this block is anywhere in the definition
+				if (!def.ContainsValue(cubeType))
+					return false;
+
+				//Recursively search through possible anchor blocks
+				isMatch = false;
+				foreach (Vector3I key in def.Keys)
+				{
+					Type entry = def[key];
+					if (key == Vector3I.Zero)
+						continue;
+
+					if (cubeType == entry)
+					{
+						Vector3I possibleAnchorPos = cubePos - key;
+						CubeBlockEntity posCubeBlock = cubeToCheck.Parent.GetCubeBlock(possibleAnchorPos);
+						isMatch = IsDefinitionMatch(posCubeBlock, recurseDepth + 1);
+						if (isMatch)
+							break;
+					}
+				}
+			}
+			else
+			{
+				isMatch = true;
+				foreach (Vector3I key in def.Keys)
+				{
+					Type entry = def[key];
+					Vector3I defPos = cubePos + key;
+					CubeBlockEntity posCubeBlock = cubeToCheck.Parent.GetCubeBlock(defPos);
+					if (posCubeBlock == null)
+					{
+						isMatch = false;
+						break;
+					}
+					if (!entry.IsAssignableFrom(posCubeBlock.GetType()))
+					{
+						isMatch = false;
+						break;
+					}
+				}
+			}
+
+			if (isMatch && SandboxGameAssemblyWrapper.IsDebugging)
+			{
+				LogManager.APILog.WriteLineAndConsole("Found multiblock match in cube grid '" + cubeToCheck.Parent.Name + "' at " + cubePos.ToString());
+			}
+
+			return isMatch;
+		}
+
 		public List<Vector3I> GetDefinitionMatches(CubeGridEntity cubeGrid)
 		{
 			try
@@ -143,30 +243,8 @@ namespace SEModAPIExtensions.API
 				Type anchorType = def[Vector3I.Zero];
 				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
 				{
-					if (cubeBlock.GetType() == anchorType)
-					{
-						bool isMatch = true;
-						foreach (Vector3I key in def.Keys)
-						{
-							Type entry = def[key];
-							CubeBlockEntity posCubeBlock = cubeGrid.GetCubeBlock(cubeBlock.Min + key);
-							if (posCubeBlock == null)
-							{
-								isMatch = false;
-								break;
-							}
-							if (!entry.IsAssignableFrom(posCubeBlock.GetType()))
-							{
-								isMatch = false;
-								break;
-							}
-						}
-
-						if (isMatch)
-						{
-							anchorList.Add(cubeBlock.Min);
-						}
-					}
+					if(IsDefinitionMatch(cubeBlock))
+						anchorList.Add(cubeBlock.Min);
 				}
 
 				return anchorList;

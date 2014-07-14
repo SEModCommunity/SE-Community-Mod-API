@@ -35,6 +35,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Properties"
+
 		#endregion
 
 		#region "Methods"

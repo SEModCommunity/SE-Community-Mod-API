@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,10 +16,10 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
 
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity.Sector;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
-using System.Diagnostics;
 
 namespace SEModAPIInternal.API.Entity
 {
@@ -341,6 +342,7 @@ namespace SEModAPIInternal.API.Entity
 
 		private Object m_backingObject;
 		private string m_backingSourceMethod;
+		private DateTime m_lastDynamicLoadTime;
 
 		private bool m_isMutable = true;
 		private bool m_changed = false;
@@ -470,6 +472,11 @@ namespace SEModAPIInternal.API.Entity
 		{
 			get { return m_isDynamic; }
 			set { m_isDynamic = value; }
+		}
+
+		public bool IsResourceLocked
+		{
+			get { return m_isResourceLocked; }
 		}
 
 		#endregion
@@ -719,17 +726,23 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (IsDynamic && !m_isResourceLocked)
+				TimeSpan timeSinceLastLoad = DateTime.Now - m_lastDynamicLoadTime;
+
+				if (IsDynamic && timeSinceLastLoad.TotalMilliseconds > 50)
+				{
+					m_lastDynamicLoadTime = DateTime.Now;
 					LoadDynamic();
+				}
 
 				List<T> newList = new List<T>();
-				if (!m_isResourceLocked)
+				if(!m_isResourceLocked)
 				{
 					foreach (var def in GetInternalData().Values)
 					{
 						newList.Add((T)def);
 					}
 				}
+
 				return newList;
 			}
 			catch (Exception ex)

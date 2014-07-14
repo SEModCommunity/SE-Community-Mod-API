@@ -36,6 +36,7 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private float m_maxLinearVelocity;
+		private static Type m_internalType;
 
 		public static string BaseEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string BaseEntityClass = "F6DF01EE4159339113BB9650DEEE1913";
@@ -77,9 +78,22 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				if (m_internalType == null)
+					m_internalType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(BaseEntityNamespace, BaseEntityClass);
+				return m_internalType;
+			}
+		}
+
 		/// <summary>
 		/// Gets the formatted name of an entity
 		/// </summary>
+		[Category("Entity")]
 		[Browsable(true)]
 		[ReadOnly(true)]
 		[Description("Formatted Name of an entity")]
@@ -267,13 +281,13 @@ namespace SEModAPIInternal.API.Entity
 			if (!IsDisposed && BackingObject != null)
 			{
 				Vector3 currentPosition = Position;
-				currentPosition = Vector3.Add(currentPosition, new Vector3(100000, 100000, 100000));
+				currentPosition = Vector3.Add(currentPosition, new Vector3(10000000, 10000000, 10000000));
 				Position = currentPosition;
 
 				Action action = InternalUpdatePosition;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
-				Thread.Sleep(250);
+				Thread.Sleep(100);
 
 				Action action2 = InternalRemoveEntity;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action2);
@@ -486,21 +500,6 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		protected void InternalRegisterEntityClosedEvent()
-		{
-			try
-			{
-				Action<Object> action = InternalEntityClosedEvent;
-
-				MethodInfo method = BackingObject.GetType().GetMethod(BaseEntityCombineOnClosedEventMethod);
-				method.Invoke(BackingObject, new object[] { action });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
 		protected void InternalEntityMovedEvent(Object entity)
 		{
 			try
@@ -514,22 +513,6 @@ namespace SEModAPIInternal.API.Entity
 				newEvent.entity = this;
 				newEvent.priority = 10;
 				EntityEventManager.Instance.AddEvent(newEvent);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalEntityClosedEvent(Object entity)
-		{
-			try
-			{
-				if (IsDisposed)
-					return;
-
-				//This is disabled until we find a way to get the delegates in class heirarchy order instead of sequential order
-				//Dispose();
 			}
 			catch (Exception ex)
 			{
@@ -561,6 +544,11 @@ namespace SEModAPIInternal.API.Entity
 
 		public override void LoadDynamic()
 		{
+			if (m_isResourceLocked)
+				return;
+
+			m_isResourceLocked = true;
+
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
@@ -593,21 +581,6 @@ namespace SEModAPIInternal.API.Entity
 					{
 						switch (baseEntity.TypeId)
 						{
-							case MyObjectBuilderTypeEnum.CubeGrid:
-								matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Character:
-								matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.FloatingObject:
-								matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Meteor:
-								matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.VoxelMap:
-								matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
-								break;
 							default:
 								matchingEntity = new BaseEntity(baseEntity, entity);
 								break;
@@ -632,6 +605,8 @@ namespace SEModAPIInternal.API.Entity
 				var entry = data[key];
 				backingData.Add(entry.BackingObject, entry);
 			}
+
+			m_isResourceLocked = false;
 		}
 
 		#endregion

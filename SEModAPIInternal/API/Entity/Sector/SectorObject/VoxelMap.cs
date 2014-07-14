@@ -17,8 +17,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 	{
 		#region "Attributes"
 
-		public static string VoxelMapNamespace = "";
-		public static string VoxelMapClass = "";
+		private static Type m_internalType;
+
+		public static string VoxelMapNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string VoxelMapClass = "6EC806B54BA319767DA878841A56ECD8";
 
 		#endregion
 
@@ -35,6 +37,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 
 		#region "Properties"
+
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				if (m_internalType == null)
+					m_internalType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(VoxelMapNamespace, VoxelMapClass);
+				return m_internalType;
+			}
+		}
 
 		[Category("Voxel Map")]
 		[Browsable(true)]

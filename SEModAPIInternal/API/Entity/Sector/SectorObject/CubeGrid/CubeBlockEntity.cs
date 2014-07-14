@@ -29,15 +29,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		#region "Attributes"
 
 		private CubeGridEntity m_parent;
+		private static Type m_internalType;
 
 		public static string CubeBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string CubeBlockClass = "54A8BE425EAC4A11BFF922CFB5FF89D0";
 		public static string CubeBlockGetObjectBuilderMethod = "CBB75211A3B0B3188541907C9B1B0C5C";
 		public static string CubeBlockGetActualBlockMethod = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
-		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 		public static string CubeBlockDamageBlockMethod = "165EAAEA972A8C5D69F391D030C48869";
 		public static string CubeBlockGetBuildPercentMethod = "BE3EB9D9351E3CB273327FB522FD60E1";
 		public static string CubeBlockGetIntegrityPercentMethod = "get_Integrity";
+		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 		public static string CubeBlockColorMaskHSVField = "80392678992D8667596D700F61290E02";
 		public static string CubeBlockConstructionManagerField = "C7EFFDDD3AD38830FE93363F3327C724";
 
@@ -83,15 +84,24 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				newEvent.entity = this;
 				newEvent.priority = 1;
 				EntityEventManager.Instance.AddEvent(newEvent);
-
-				Action action = InternalRegisterCubeBlockClosedEvent;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 			}
 		}
 
 		#endregion
 
 		#region "Properties"
+
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				if (m_internalType == null)
+					m_internalType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeBlockNamespace, CubeBlockClass);
+				return m_internalType;
+			}
+		}
 
 		[Category("Entity")]
 		public override string Name
@@ -499,42 +509,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		protected void InternalRegisterCubeBlockClosedEvent()
-		{
-			try
-			{
-				//Something is broken with the on-close delegate registration for beacons
-				if (this is BeaconEntity)
-					return;
-
-				Action<Object> action = InternalCubeBlockClosedEvent;
-
-				MethodInfo method = GetEntityMethod(ActualObject, SEModAPIInternal.API.Entity.BaseEntity.BaseEntityCombineOnClosedEventMethod);
-				if (method == null)
-					return;
-				//method.Invoke(ActualObject, new object[] { action });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalCubeBlockClosedEvent(Object entity)
-		{
-			try
-			{
-				if (IsDisposed)
-					return;
-
-				Dispose();
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
 		#endregion
 
 		#endregion
@@ -545,6 +519,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		#region "Attributes"
 
 		private CubeGridEntity m_parent;
+		private bool m_isLoading;
 
 		#endregion
 
@@ -558,9 +533,19 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public CubeBlockManager(CubeGridEntity parent, Object backingSource, string backingSourceMethodName)
 			: base(backingSource, backingSourceMethodName)
 		{
+			m_isLoading = true;
 			m_parent = parent;
 		}
 		
+		#endregion
+
+		#region "Properties"
+
+		public bool IsLoading
+		{
+			get { return m_isLoading; }
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -585,37 +570,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 				try
 				{
-					Object actualCubeObject = CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetActualBlockMethod);
-					MyObjectBuilder_CubeBlock baseEntity = null;
-					if (actualCubeObject == null)
-					{
-						baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
-						if(baseEntity == null)
-							LogManager.APILog.WriteLine("Failed to load entity '" + entity.ToString() + "'");
-					}
-					else
-					{
-						MyObjectBuilder_CubeBlock newObjectBuilder = SandboxGameAssemblyWrapper.Instance.GetCubeBlockObjectBuilderFromEntity(actualCubeObject);
+					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
 
-						if (newObjectBuilder != null)
-						{
-							//baseEntity = newObjectBuilder;
-							baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
-							//baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(actualCubeObject, CubeBlockEntity.ActualCubeBlockGetObjectBuilderMethod, new object[] { Type.Missing });
-							if (baseEntity == null)
-								LogManager.APILog.WriteLine("Failed to load entity '" + newObjectBuilder.TypeId.ToString() + "/" + newObjectBuilder.SubtypeName + "' from actual entity '" + actualCubeObject.ToString() + "'");
-						}
-						else
-						{
-							baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
-							if (baseEntity == null)
-								LogManager.APILog.WriteLine("Failed to load entity '" + entity.ToString() + "'");
-						}
-					}
 					if (baseEntity == null)
-					{
 						continue;
-					}
 
 					Vector3I cubePosition = baseEntity.Min;
 					long packedBlockCoordinates = (long)cubePosition.X + (long)cubePosition.Y * 10000 + (long)cubePosition.Z * 100000000;
@@ -629,6 +587,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					if (backingData.ContainsKey(entity))
 					{
 						matchingCubeBlock = (CubeBlockEntity)backingData[entity];
+						if (matchingCubeBlock.IsDisposed)
+							continue;
 
 						//Update the base entity (not the same as BackingObject which is the internal object)
 						matchingCubeBlock.BaseEntity = baseEntity;
@@ -676,9 +636,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							case MyObjectBuilderTypeEnum.Thrust:
 								matchingCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
 								break;
-							case MyObjectBuilderTypeEnum.MergeBlock:
-								matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
-								break;
+							//case MyObjectBuilderTypeEnum.MergeBlock:
+								//matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
+								//break;
 							case MyObjectBuilderTypeEnum.LandingGear:
 								matchingCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
 								break;
@@ -727,6 +687,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 
 			//Update the backing data mapping
+			foreach (var key in backingData.Keys)
+			{
+				var entry = backingData[key];
+				if (!data.ContainsValue(entry))
+				{
+					entry.Dispose();
+				}
+			}
 			backingData.Clear();
 			foreach (var key in data.Keys)
 			{
@@ -735,6 +703,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 
 			m_isResourceLocked = false;
+			m_isLoading = false;
 		}
 
 		#endregion

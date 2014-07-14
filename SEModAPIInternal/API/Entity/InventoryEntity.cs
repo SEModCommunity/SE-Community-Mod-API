@@ -75,6 +75,17 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(InventoryNamespace, InventoryClass);
+				return type;
+			}
+		}
+
 		[Category("Container Inventory")]
 		public override string Name
 		{
@@ -340,6 +351,17 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(InventoryItemNamespace, InventoryItemClass);
+				return type;
+			}
+		}
+
 		[Category("Container Item")]
 		[ReadOnly(true)]
 		public override string Name
@@ -573,7 +595,12 @@ namespace SEModAPIInternal.API.Entity
 
 				try
 				{
-					MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)BaseEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod, new object[] { });
+					MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
+
+					if (baseEntity == null)
+						continue;
+					if (data.ContainsKey(baseEntity.ItemId))
+						continue;
 
 					InventoryItemEntity matchingItem = null;
 
@@ -603,6 +630,14 @@ namespace SEModAPIInternal.API.Entity
 			}
 
 			//Update the backing data mapping
+			foreach (var key in backingData.Keys)
+			{
+				var entry = backingData[key];
+				if (!data.ContainsValue(entry))
+				{
+					entry.Dispose();
+				}
+			}
 			backingData.Clear();
 			foreach (var key in data.Keys)
 			{

@@ -19,6 +19,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#region "Attributes"
 
 		private InventoryItemEntity m_item;
+		private static Type m_internalType;
 
 		public static string MeteorNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string MeteorClass = "E5A0E3F04CC6DEFB7410825523C63704";
@@ -42,6 +43,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 
 		#region "Properties"
+
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal static Type InternalType
+		{
+			get
+			{
+				if (m_internalType == null)
+					m_internalType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(MeteorNamespace, MeteorClass);
+				return m_internalType;
+			}
+		}
 
 		[Category("Meteor")]
 		[Browsable(true)]
