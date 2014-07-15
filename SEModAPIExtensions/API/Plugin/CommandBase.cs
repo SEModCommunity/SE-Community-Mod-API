@@ -11,7 +11,45 @@ namespace SEModAPIExtensions.API.Plugin
 	{
 	        #region "Attributes"
 	        
+	        protected Object m_owner;
+	        protected Object m_executor;
 	        
-	
+		#endregion
+		
+		#region "Constructors and Initializers"
+		
+		public CommandBase(Object owner)
+		{
+			this.m_owner = owner;
+			this.m_executor = owner;
+		}
+		
+		#endregion
+		
+		#region "Properties"
+		
+		public Object Owner
+		{
+			get
+			{
+				return m_owner;
+			}
+		}
+		
+		public Object Executor
+		{
+			get
+			{
+				return m_executor;
+			}
+		}
+		
+		#endregion
+		
+		#region "Methods"
+		
+		public abstract bool execute(string cmd, string[] args);
+		
+		#endregion
 	}
 }
