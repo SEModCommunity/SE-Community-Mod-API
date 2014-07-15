@@ -12,7 +12,5 @@ namespace SEModAPIExtensions.API.Plugin
 		{ get; }
 		Object Executor
 		{ get; }
-		Permission
-		{ get; }
 	}
 }
