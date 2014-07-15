@@ -40,6 +40,8 @@ namespace SEModAPIExtensions.API
 		private static bool m_chatHandlerSetup;
 
 		private List<ChatEvent> m_chatEvents;
+		
+		private List<CommandBase> m_commands;
 
 		public static string ChatMessageStruct = "C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668";
 		public static string ChatMessageMessageField = "EDCBEBB604B287DFA90A5A46DC7AD28D";
@@ -97,6 +99,15 @@ namespace SEModAPIExtensions.API
 			get
 			{
 				List<ChatEvent> copy = new List<ChatEvent>(m_chatEvents.ToArray());
+				return copy;
+			}
+		}
+		
+		public List<CommandBase> Commands
+		{
+			get
+			{
+				List<CommandBase> copy = new List<CommandBase>(m_commands.ToArray());
 				return copy;
 			}
 		}
@@ -231,6 +242,16 @@ namespace SEModAPIExtensions.API
 			string command = commandParts[0].ToLower();
 			if(command[0] != '/')
 				return false;
+				
+			string cmds = command.TrimStart("/"); 
+			string[] args = commandParts;
+			args.RemoveAt(0);
+				
+			foreach (CommandBase cmd in m_commands)
+			{
+				if (cmd.execute(cmds, args))
+					return true;
+			}
 
 			//Delete
 			if (command.Equals("/delete"))
