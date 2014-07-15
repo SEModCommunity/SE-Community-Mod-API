@@ -49,6 +49,10 @@ namespace SEServerExtender
 		private System.Windows.Forms.Timer m_factionRefreshTimer;
 		private System.Windows.Forms.Timer m_pluginManagerRefreshTimer;
 		private System.Windows.Forms.Timer m_statusCheckTimer;
+		private System.Windows.Forms.Timer m_utilitiesCleanFloatingObjectsTimer;
+
+		//Utilities Page
+		private int m_floatingObjectsCount;
 
 		#endregion
 
@@ -95,6 +99,10 @@ namespace SEServerExtender
 			m_statusCheckTimer.Interval = 750;
 			m_statusCheckTimer.Tick += new EventHandler(StatusCheckRefresh);
 			m_statusCheckTimer.Start();
+
+			m_utilitiesCleanFloatingObjectsTimer = new System.Windows.Forms.Timer();
+			m_utilitiesCleanFloatingObjectsTimer.Interval = 1000;
+			m_utilitiesCleanFloatingObjectsTimer.Tick += new EventHandler(UtilitiesCleanFloatingObjects);
 
 			return true;
 		}
@@ -214,6 +222,7 @@ namespace SEServerExtender
 			m_chatViewRefreshTimer.Stop();
 			m_factionRefreshTimer.Stop();
 			m_pluginManagerRefreshTimer.Stop();
+			m_utilitiesCleanFloatingObjectsTimer.Stop();
 
 			m_server.StopServer();
 		}
@@ -294,6 +303,7 @@ namespace SEServerExtender
 			BTN_Chat_Send.Enabled = m_server.IsRunning;
 			if(!m_server.IsRunning)
 				BTN_Entities_New.Enabled = false;
+			BTN_Utilities_ClearFloatingObjectsNow.Enabled = m_server.IsRunning;
 
 			CMB_Control_CommonInstanceList.Enabled = !m_server.IsRunning;
 
@@ -515,6 +525,9 @@ namespace SEServerExtender
 			floatingObjectsNode.Text = floatingObjectsNode.Name + " (" + floatingObjectsNode.Nodes.Count.ToString() + ")";
 			meteorsNode.Text = meteorsNode.Name + " (" + meteorsNode.Nodes.Count.ToString() + ")";
 			unknownsNode.Text = unknownsNode.Name + " (" + unknownsNode.Nodes.Count.ToString() + ")";
+
+			// Update a var for the Utilities Floating object cleaner.
+			m_floatingObjectsCount = floatingObjectsNode.Nodes.Count;
 		}
 
 		private void RenderCubeGridNodes(TreeNode cubeGridsNode)
@@ -1137,6 +1150,72 @@ namespace SEServerExtender
 			Object plugin = PluginManager.Instance.Plugins[selectedItem];
 
 			PG_Plugins.SelectedObject = plugin;
+		}
+
+		#endregion
+
+		#region "Utilities"
+
+		// Get all floating objects and dispose of them.
+		private void BeginClearObjects()
+		{
+			List<BaseEntity> entityList = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+
+			try
+			{
+				BTN_Utilities_ClearFloatingObjectsNow.Enabled = false;
+				Console.WriteLine("[{0}] Clearing floating objects...", DateTime.Now.ToString());
+				foreach (var sectorObject in entityList)
+				{
+					if (sectorObject is FloatingObject)
+					{
+						if (sectorObject is BaseEntity)
+						{
+							BaseEntity item = (BaseEntity)sectorObject;
+							item.Dispose();
+						}
+					}
+				}
+				BTN_Utilities_ClearFloatingObjectsNow.Enabled = true;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(this, ex.ToString());
+			}
+			Console.WriteLine("[{0}] Floating objects cleared!", DateTime.Now.ToString());
+		}
+
+		// Start the Auto Clean timer if user checks the auto clean checkbox.
+		private void CHK_Utilities_FloatingObjectAutoClean_CheckedChanged(object sender, EventArgs e)
+		{
+			if (CHK_Utilities_FloatingObjectAutoClean.Checked == true)
+			{
+				m_utilitiesCleanFloatingObjectsTimer.Start();
+			}
+			else
+			{
+				if (m_utilitiesCleanFloatingObjectsTimer.Enabled == true)
+				{
+					m_utilitiesCleanFloatingObjectsTimer.Enabled = false;
+					m_utilitiesCleanFloatingObjectsTimer.Stop();
+				}
+			}
+		}
+
+		// Delete all floating objects when the count reaches the amount set.
+		private void UtilitiesCleanFloatingObjects(object sender, EventArgs e)
+		{
+			if (m_floatingObjectsCount > TXT_Utilities_FloatingObjectAmount.IntValue)
+			{
+				BTN_Utilities_ClearFloatingObjectsNow_Click(null, null);
+			}
+		}
+
+		// Delete all floating objects now
+		private void BTN_Utilities_ClearFloatingObjectsNow_Click(object sender, EventArgs e)
+		{
+			// Start the floating object cleaner on a seperate thread to avoid hanging the UI.
+			System.Threading.Tasks.Task.Factory.StartNew(() => BeginClearObjects());
 		}
 
 		#endregion
