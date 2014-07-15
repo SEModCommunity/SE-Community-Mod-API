@@ -68,6 +68,13 @@
 			this.splitContainer12 = new System.Windows.Forms.SplitContainer();
 			this.LST_Plugins = new System.Windows.Forms.ListBox();
 			this.PG_Plugins = new System.Windows.Forms.PropertyGrid();
+			this.TAB_Utilities_Page = new System.Windows.Forms.TabPage();
+			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.TXT_Utilities_FloatingObjectAmount = new SEModAPI.Support.NumericTextBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.BTN_Utilities_ClearFloatingObjectsNow = new System.Windows.Forms.Button();
+			this.CHK_Utilities_FloatingObjectAutoClean = new System.Windows.Forms.CheckBox();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -118,6 +125,11 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer12)).BeginInit();
 			this.splitContainer12.Panel1.SuspendLayout();
 			this.splitContainer12.SuspendLayout();
+			this.TAB_Utilities_Page.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+			this.splitContainer4.Panel1.SuspendLayout();
+			this.splitContainer4.SuspendLayout();
+			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -146,6 +158,7 @@
 			this.TAB_MainTabs.Controls.Add(this.TAB_Chat_Page);
 			this.TAB_MainTabs.Controls.Add(this.TAB_Factions_Page);
 			this.TAB_MainTabs.Controls.Add(this.TAB_Plugins_Page);
+			this.TAB_MainTabs.Controls.Add(this.TAB_Utilities_Page);
 			this.TAB_MainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TAB_MainTabs.Location = new System.Drawing.Point(0, 0);
 			this.TAB_MainTabs.Name = "TAB_MainTabs";
@@ -287,8 +300,8 @@
 			// PG_Control_Server_Properties
 			// 
 			this.PG_Control_Server_Properties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.PG_Control_Server_Properties.Location = new System.Drawing.Point(6, 19);
 			this.PG_Control_Server_Properties.Name = "PG_Control_Server_Properties";
 			this.PG_Control_Server_Properties.Size = new System.Drawing.Size(757, 486);
@@ -629,6 +642,81 @@
 			this.PG_Plugins.Size = new System.Drawing.Size(633, 537);
 			this.PG_Plugins.TabIndex = 0;
 			// 
+			// TAB_Utilities_Page
+			// 
+			this.TAB_Utilities_Page.Controls.Add(this.splitContainer4);
+			this.TAB_Utilities_Page.Location = new System.Drawing.Point(4, 22);
+			this.TAB_Utilities_Page.Name = "TAB_Utilities_Page";
+			this.TAB_Utilities_Page.Size = new System.Drawing.Size(943, 543);
+			this.TAB_Utilities_Page.TabIndex = 5;
+			this.TAB_Utilities_Page.Text = "Utilities";
+			this.TAB_Utilities_Page.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer4
+			// 
+			this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer4.Name = "splitContainer4";
+			// 
+			// splitContainer4.Panel1
+			// 
+			this.splitContainer4.Panel1.Controls.Add(this.groupBox1);
+			this.splitContainer4.Size = new System.Drawing.Size(943, 543);
+			this.splitContainer4.SplitterDistance = 240;
+			this.splitContainer4.TabIndex = 0;
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.TXT_Utilities_FloatingObjectAmount);
+			this.groupBox1.Controls.Add(this.label1);
+			this.groupBox1.Controls.Add(this.BTN_Utilities_ClearFloatingObjectsNow);
+			this.groupBox1.Controls.Add(this.CHK_Utilities_FloatingObjectAutoClean);
+			this.groupBox1.Location = new System.Drawing.Point(3, 17);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(211, 152);
+			this.groupBox1.TabIndex = 5;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Floating Object Control";
+			// 
+			// TXT_Utilities_FloatingObjectAmount
+			// 
+			this.TXT_Utilities_FloatingObjectAmount.AllowSpace = false;
+			this.TXT_Utilities_FloatingObjectAmount.Location = new System.Drawing.Point(132, 96);
+			this.TXT_Utilities_FloatingObjectAmount.Name = "TXT_Utilities_FloatingObjectAmount";
+			this.TXT_Utilities_FloatingObjectAmount.Size = new System.Drawing.Size(63, 20);
+			this.TXT_Utilities_FloatingObjectAmount.TabIndex = 6;
+			this.TXT_Utilities_FloatingObjectAmount.Text = "512";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(14, 60);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(185, 26);
+			this.label1.TabIndex = 2;
+			this.label1.Text = "Check \"Auto Clean\" to clear floating \r\nobjects after they reach a set amount.";
+			// 
+			// BTN_Utilities_ClearFloatingObjectsNow
+			// 
+			this.BTN_Utilities_ClearFloatingObjectsNow.Location = new System.Drawing.Point(17, 19);
+			this.BTN_Utilities_ClearFloatingObjectsNow.Name = "BTN_Utilities_ClearFloatingObjectsNow";
+			this.BTN_Utilities_ClearFloatingObjectsNow.Size = new System.Drawing.Size(178, 23);
+			this.BTN_Utilities_ClearFloatingObjectsNow.TabIndex = 0;
+			this.BTN_Utilities_ClearFloatingObjectsNow.Text = "Clear Floating Objects Now";
+			this.BTN_Utilities_ClearFloatingObjectsNow.UseVisualStyleBackColor = true;
+			this.BTN_Utilities_ClearFloatingObjectsNow.Click += new System.EventHandler(this.BTN_Utilities_ClearFloatingObjectsNow_Click);
+			// 
+			// CHK_Utilities_FloatingObjectAutoClean
+			// 
+			this.CHK_Utilities_FloatingObjectAutoClean.AutoSize = true;
+			this.CHK_Utilities_FloatingObjectAutoClean.Location = new System.Drawing.Point(17, 99);
+			this.CHK_Utilities_FloatingObjectAutoClean.Name = "CHK_Utilities_FloatingObjectAutoClean";
+			this.CHK_Utilities_FloatingObjectAutoClean.Size = new System.Drawing.Size(109, 17);
+			this.CHK_Utilities_FloatingObjectAutoClean.TabIndex = 1;
+			this.CHK_Utilities_FloatingObjectAutoClean.Text = "Auto Clean After :";
+			this.CHK_Utilities_FloatingObjectAutoClean.UseVisualStyleBackColor = true;
+			this.CHK_Utilities_FloatingObjectAutoClean.CheckedChanged += new System.EventHandler(this.CHK_Utilities_FloatingObjectAutoClean_CheckedChanged);
+			// 
 			// statusStrip1
 			// 
 			this.statusStrip1.Location = new System.Drawing.Point(0, 3);
@@ -697,6 +785,12 @@
 			this.splitContainer12.Panel1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer12)).EndInit();
 			this.splitContainer12.ResumeLayout(false);
+			this.TAB_Utilities_Page.ResumeLayout(false);
+			this.splitContainer4.Panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
+			this.splitContainer4.ResumeLayout(false);
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -713,10 +807,10 @@
 		private System.Windows.Forms.PropertyGrid PG_Entities_Details;
 		private System.Windows.Forms.Button BTN_ServerControl_Stop;
 		private System.Windows.Forms.TreeView TRV_Entities;
-        private System.Windows.Forms.SplitContainer splitContainer3;
+		private System.Windows.Forms.SplitContainer splitContainer3;
 		private System.Windows.Forms.SplitContainer splitContainer5;
 		private System.Windows.Forms.Button BTN_Entities_New;
-        private System.Windows.Forms.Button BTN_Entities_Delete;
+		private System.Windows.Forms.Button BTN_Entities_Delete;
 		private System.Windows.Forms.CheckBox CHK_Control_Debugging;
 		private System.Windows.Forms.Button BTN_Entities_Export;
 		private System.Windows.Forms.TabPage TAB_Chat_Page;
@@ -737,12 +831,19 @@
 		private System.Windows.Forms.ListBox LST_Plugins;
 		private System.Windows.Forms.PropertyGrid PG_Factions;
 		private System.Windows.Forms.PropertyGrid PG_Plugins;
-        private System.Windows.Forms.PropertyGrid PG_Control_Server_Properties;
-        private System.Windows.Forms.GroupBox GRP_Control_Server;
-        private System.Windows.Forms.Button BTN_Control_Server_Reset;
+		private System.Windows.Forms.PropertyGrid PG_Control_Server_Properties;
+		private System.Windows.Forms.GroupBox GRP_Control_Server;
+		private System.Windows.Forms.Button BTN_Control_Server_Reset;
 		private System.Windows.Forms.Button BTN_Control_Server_Save;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.ComboBox CMB_Control_CommonInstanceList;
 		private System.Windows.Forms.CheckBox CHK_Control_CommonDataPath;
+		private System.Windows.Forms.TabPage TAB_Utilities_Page;
+		private System.Windows.Forms.SplitContainer splitContainer4;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private SEModAPI.Support.NumericTextBox TXT_Utilities_FloatingObjectAmount;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Button BTN_Utilities_ClearFloatingObjectsNow;
+		private System.Windows.Forms.CheckBox CHK_Utilities_FloatingObjectAutoClean;
 	}
 }
