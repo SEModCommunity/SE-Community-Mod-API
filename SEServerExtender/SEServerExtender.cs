@@ -446,46 +446,63 @@ namespace SEServerExtender
 
 		private void RenderCubeGridNodes(TreeNode rootNode)
 		{
+			if (rootNode == null)
+				return;
+
 			//Get cube grids from sector object manager
 			List<CubeGridEntity> list = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
 
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
 			{
-				if (node == null)
-					continue;
-
-				if (node.Tag != null && list.Contains(node.Tag))
+				try
 				{
-					CubeGridEntity item = (CubeGridEntity)node.Tag;
+					if (node == null)
+						continue;
 
-					if (!item.IsDisposed)
+					if (node.Tag != null && list.Contains(node.Tag))
 					{
-						SerializableVector3 rawPosition = item.Position;
-						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-						string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
-						node.Text = newNodeText;
+						CubeGridEntity item = (CubeGridEntity)node.Tag;
+
+						if (!item.IsDisposed)
+						{
+							SerializableVector3 rawPosition = item.Position;
+							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
+							node.Text = newNodeText;
+						}
+						list.Remove(item);
 					}
-					list.Remove(item);
+					else
+					{
+						node.Remove();
+					}
 				}
-				else
+				catch (Exception ex)
 				{
-					node.Remove();
+					LogManager.GameLog.WriteLine(ex);
 				}
 			}
 
 			//Add new nodes
 			foreach (var item in list)
 			{
-				SerializableVector3 rawPosition = item.Position;
-				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+				try
+				{
+					SerializableVector3 rawPosition = item.Position;
+					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
 
-				Type sectorObjectType = item.GetType();
-				string nodeKey = item.EntityId.ToString();
+					Type sectorObjectType = item.GetType();
+					string nodeKey = item.EntityId.ToString();
 
-				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
-				newNode.Name = item.Name;
-				newNode.Tag = item;
+					TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
+					newNode.Name = item.Name;
+					newNode.Tag = item;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
 			}
 
 			//Update node text
@@ -494,43 +511,60 @@ namespace SEServerExtender
 
 		private void RenderCharacterNodes(TreeNode rootNode)
 		{
+			if (rootNode == null)
+				return;
+
 			//Get entities from sector object manager
 			List<CharacterEntity> list = SectorObjectManager.Instance.GetTypedInternalData<CharacterEntity>();
 
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
 			{
-				if (node.Tag != null && list.Contains(node.Tag))
+				try
 				{
-					CharacterEntity item = (CharacterEntity)node.Tag;
-
-					if (!item.IsDisposed)
+					if (node.Tag != null && list.Contains(node.Tag))
 					{
-						SerializableVector3 rawPosition = item.Position;
-						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-						string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
-						node.Text = newNodeText;
+						CharacterEntity item = (CharacterEntity)node.Tag;
+
+						if (!item.IsDisposed)
+						{
+							SerializableVector3 rawPosition = item.Position;
+							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
+							node.Text = newNodeText;
+						}
+						list.Remove(item);
 					}
-					list.Remove(item);
+					else
+					{
+						node.Remove();
+					}
 				}
-				else
+				catch (Exception ex)
 				{
-					node.Remove();
+					LogManager.GameLog.WriteLine(ex);
 				}
 			}
 
 			//Add new nodes
 			foreach (var item in list)
 			{
-				SerializableVector3 rawPosition = item.Position;
-				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+				try
+				{
+					SerializableVector3 rawPosition = item.Position;
+					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
 
-				Type sectorObjectType = item.GetType();
-				string nodeKey = item.EntityId.ToString();
+					Type sectorObjectType = item.GetType();
+					string nodeKey = item.EntityId.ToString();
 
-				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
-				newNode.Name = item.Name;
-				newNode.Tag = item;
+					TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
+					newNode.Name = item.Name;
+					newNode.Tag = item;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
 			}
 
 			//Update node text
@@ -545,37 +579,51 @@ namespace SEServerExtender
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
 			{
-				if (node.Tag != null && list.Contains(node.Tag))
+				try
 				{
-					VoxelMap item = (VoxelMap)node.Tag;
-
-					if (!item.IsDisposed)
+					if (node.Tag != null && list.Contains(node.Tag))
 					{
-						SerializableVector3 rawPosition = item.Position;
-						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-						string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
-						node.Text = newNodeText;
+						VoxelMap item = (VoxelMap)node.Tag;
+
+						if (!item.IsDisposed)
+						{
+							SerializableVector3 rawPosition = item.Position;
+							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
+							node.Text = newNodeText;
+						}
+						list.Remove(item);
 					}
-					list.Remove(item);
+					else
+					{
+						node.Remove();
+					}
 				}
-				else
+				catch (Exception ex)
 				{
-					node.Remove();
+					LogManager.GameLog.WriteLine(ex);
 				}
 			}
 
 			//Add new nodes
 			foreach (var item in list)
 			{
-				SerializableVector3 rawPosition = item.Position;
-				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+				try
+				{
+					SerializableVector3 rawPosition = item.Position;
+					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
 
-				Type sectorObjectType = item.GetType();
-				string nodeKey = item.EntityId.ToString();
+					Type sectorObjectType = item.GetType();
+					string nodeKey = item.EntityId.ToString();
 
-				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Dist: " + distance.ToString() + "m");
-				newNode.Name = item.Name;
-				newNode.Tag = item;
+					TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = item.Name;
+					newNode.Tag = item;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
 			}
 
 			//Update node text
@@ -590,37 +638,51 @@ namespace SEServerExtender
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
 			{
-				if (node.Tag != null && list.Contains(node.Tag))
+				try
 				{
-					FloatingObject item = (FloatingObject)node.Tag;
-
-					if (!item.IsDisposed)
+					if (node.Tag != null && list.Contains(node.Tag))
 					{
-						SerializableVector3 rawPosition = item.Position;
-						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-						string newNodeText = item.Name + " | Amount: " + item.Item.Amount.ToString() + " | Dist: " + distance.ToString() + "m";
-						node.Text = newNodeText;
+						FloatingObject item = (FloatingObject)node.Tag;
+
+						if (!item.IsDisposed)
+						{
+							SerializableVector3 rawPosition = item.Position;
+							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							string newNodeText = item.Name + " | Amount: " + item.Item.Amount.ToString() + " | Dist: " + distance.ToString() + "m";
+							node.Text = newNodeText;
+						}
+						list.Remove(item);
 					}
-					list.Remove(item);
+					else
+					{
+						node.Remove();
+					}
 				}
-				else
+				catch (Exception ex)
 				{
-					node.Remove();
+					LogManager.GameLog.WriteLine(ex);
 				}
 			}
 
 			//Add new nodes
 			foreach (var item in list)
 			{
-				SerializableVector3 rawPosition = item.Position;
-				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+				try
+				{
+					SerializableVector3 rawPosition = item.Position;
+					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
 
-				Type sectorObjectType = item.GetType();
-				string nodeKey = item.EntityId.ToString();
+					Type sectorObjectType = item.GetType();
+					string nodeKey = item.EntityId.ToString();
 
-				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Amount: " + item.Item.Amount.ToString() + " | Dist: " + distance.ToString() + "m");
-				newNode.Name = item.Name;
-				newNode.Tag = item;
+					TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Amount: " + item.Item.Amount.ToString() + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = item.Name;
+					newNode.Tag = item;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
 			}
 
 			//Update node text
@@ -638,37 +700,51 @@ namespace SEServerExtender
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
 			{
-				if (node.Tag != null && list.Contains(node.Tag))
+				try
 				{
-					Meteor item = (Meteor)node.Tag;
-
-					if (!item.IsDisposed)
+					if (node.Tag != null && list.Contains(node.Tag))
 					{
-						SerializableVector3 rawPosition = item.Position;
-						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-						string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
-						node.Text = newNodeText;
+						Meteor item = (Meteor)node.Tag;
+
+						if (!item.IsDisposed)
+						{
+							SerializableVector3 rawPosition = item.Position;
+							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
+							node.Text = newNodeText;
+						}
+						list.Remove(item);
 					}
-					list.Remove(item);
+					else
+					{
+						node.Remove();
+					}
 				}
-				else
+				catch (Exception ex)
 				{
-					node.Remove();
+					LogManager.GameLog.WriteLine(ex);
 				}
 			}
 
 			//Add new nodes
 			foreach (var item in list)
 			{
-				SerializableVector3 rawPosition = item.Position;
-				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+				try
+				{
+					SerializableVector3 rawPosition = item.Position;
+					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
 
-				Type sectorObjectType = item.GetType();
-				string nodeKey = item.EntityId.ToString();
+					Type sectorObjectType = item.GetType();
+					string nodeKey = item.EntityId.ToString();
 
-				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Dist: " + distance.ToString() + "m");
-				newNode.Name = item.Name;
-				newNode.Tag = item;
+					TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = item.Name;
+					newNode.Tag = item;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
 			}
 
 			//Update node text

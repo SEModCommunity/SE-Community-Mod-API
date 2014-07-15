@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Timers;
@@ -37,6 +38,8 @@ namespace SEServerExtender
 		private static Program.CommandLineArgs m_commandLineArgs;
 		private DedicatedConfigDefinition m_dedicatedConfigDefinition;
 		private GameInstallationInfo m_gameInstallationInfo;
+		private DateTime m_lastRestart;
+		private static int m_restartLimit;
 
 		//Managers
 		private PluginManager m_pluginManager;
@@ -57,6 +60,9 @@ namespace SEServerExtender
 		public Server(Program.CommandLineArgs args)
 		{
 			m_commandLineArgs = args;
+
+			m_lastRestart = DateTime.Now;
+			m_restartLimit = 3;
 
 			SetupGameInstallation();
 			SetupManagers();
@@ -185,11 +191,42 @@ namespace SEServerExtender
 
 		private void RunServer()
 		{
-			m_serverWrapper.StartServer(m_commandLineArgs.worldName, m_commandLineArgs.instanceName);
+			if (m_restartLimit < 0)
+				return;
 
-			m_isServerRunning = false;
+			m_lastRestart = DateTime.Now;
 
-			Console.WriteLine("Server has stopped running");
+			try
+			{
+				bool result = m_serverWrapper.StartServer(m_commandLineArgs.worldName, m_commandLineArgs.instanceName, !m_commandLineArgs.noConsole);
+			
+				m_isServerRunning = false;
+
+				Console.WriteLine("Server has stopped running");
+				/*
+				if (!result)
+				{
+					LogManager.APILog.WriteLineAndConsole("Server crashed, attempting auto-restart ...");
+
+					TimeSpan timeSinceLastRestart = DateTime.Now - m_lastRestart;
+
+					//Reset the restart limit if the server has been running for more than 5 minutes before the crash
+					if (timeSinceLastRestart.TotalMinutes > 5)
+						m_restartLimit = 3;
+
+					m_restartLimit--;
+
+					m_isServerRunning = true;
+					SectorObjectManager.Instance.IsShutDown = false;
+
+					m_runServerThread = new Thread(new ThreadStart(this.RunServer));
+					m_runServerThread.Start();
+				}*/
+			}
+			catch(Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
 		}
 
 		public void StartServer()
@@ -219,9 +256,12 @@ namespace SEServerExtender
 			m_pluginMainLoop.Stop();
 			SectorObjectManager.Instance.IsShutDown = true;
 
-			m_runServerThread.Abort();
+			//m_serverWrapper.StopServer();
+			m_runServerThread.Interrupt();
 
 			m_isServerRunning = false;
+
+			Console.WriteLine("Server has been stopped");
 		}
 
 		public void LoadServerConfig()

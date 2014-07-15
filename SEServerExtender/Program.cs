@@ -15,6 +15,7 @@ namespace SEServerExtender
 			public string worldName;
 			public string instanceName;
 			public bool noGUI;
+			public bool noConsole;
 			public bool debug;
 			public string gamePath;
 		}
@@ -36,6 +37,7 @@ namespace SEServerExtender
 				extenderArgs.worldName = "";
 				extenderArgs.instanceName = "";
 				extenderArgs.noGUI = false;
+				extenderArgs.noConsole = false;
 				extenderArgs.debug = false;
 				extenderArgs.gamePath = "";
 
@@ -69,6 +71,14 @@ namespace SEServerExtender
 							extenderArgs.noGUI = true;
 
 							//Implies autostart
+							extenderArgs.autoStart = true;
+						}
+						if (arg.ToLower().Equals("noconsole"))
+						{
+							extenderArgs.noGUI = true;
+
+							//Implies nogui and autostart
+							extenderArgs.noGUI = true;
 							extenderArgs.autoStart = true;
 						}
 						if (arg.ToLower().Equals("debug"))
