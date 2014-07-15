@@ -552,10 +552,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public override void LoadDynamic()
 		{
-			if (m_isResourceLocked)
+			if (IsResourceLocked)
 				return;
 
-			m_isResourceLocked = true;
+			IsResourceLocked = true;
 
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
@@ -702,7 +702,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				backingData.Add(entry.BackingObject, entry);
 			}
 
-			m_isResourceLocked = false;
+			IsResourceLocked = false;
 			m_isLoading = false;
 		}
 

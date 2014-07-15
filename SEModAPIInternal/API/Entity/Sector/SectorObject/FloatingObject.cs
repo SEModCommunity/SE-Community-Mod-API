@@ -8,6 +8,7 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
@@ -16,6 +17,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#region "Attributes"
 
 		private static Type m_internalType;
+		private InventoryItemEntity m_item;
 
 		public static string FloatingObjectNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string FloatingObjectClass = "60663B6C2E735862064C925471BD4138";
@@ -26,11 +28,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public FloatingObject(MyObjectBuilder_FloatingObject definition)
 			: base(definition)
-		{ }
+		{
+			m_item = new InventoryItemEntity(definition.Item);
+		}
 
 		public FloatingObject(MyObjectBuilder_FloatingObject definition, Object backingObject)
 			: base(definition, backingObject)
-		{ }
+		{
+			m_item = new InventoryItemEntity(definition.Item);
+		}
 
 		#endregion
 
@@ -55,6 +61,25 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return GetSubTypeEntity().Item.PhysicalContent.SubtypeName; }
 		}
 
+		[Category("Floating Object")]
+		[Browsable(false)]
+		public InventoryItemEntity Item
+		{
+			get { return m_item; }
+			set
+			{
+				if (m_item == value) return;
+				m_item = value;
+				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateItem;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
+			}
+		}
+		
 		#endregion
 
 		#region "Methods"
@@ -66,6 +91,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		new internal MyObjectBuilder_FloatingObject GetSubTypeEntity()
 		{
 			return (MyObjectBuilder_FloatingObject)BaseEntity;
+		}
+
+		protected void InternalUpdateItem()
+		{
+			try
+			{
+				//TODO - Add methods to set item of the floating object
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

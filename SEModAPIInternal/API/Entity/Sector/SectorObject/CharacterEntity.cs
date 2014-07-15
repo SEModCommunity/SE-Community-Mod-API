@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xml.Serialization.GeneratedAssembly;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -15,8 +18,8 @@ using SEModAPI.API;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.Support;
-using System.IO;
-using Microsoft.Xml.Serialization.GeneratedAssembly;
+
+using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
@@ -110,7 +113,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Character")]
 		[Browsable(true)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override SerializableVector3 LinearVelocity
+		public override Vector3Wrapper LinearVelocity
 		{
 			get { return GetSubTypeEntity().LinearVelocity; }
 			set

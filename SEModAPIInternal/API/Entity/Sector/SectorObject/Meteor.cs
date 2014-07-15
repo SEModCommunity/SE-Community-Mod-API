@@ -12,6 +12,8 @@ using SEModAPI.API.Definitions;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 
+using VRageMath;
+
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
 	public class Meteor : BaseEntity
@@ -66,7 +68,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Meteor")]
 		[Browsable(true)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override SerializableVector3 LinearVelocity
+		public override Vector3Wrapper LinearVelocity
 		{
 			get { return GetSubTypeEntity().LinearVelocity; }
 			set
@@ -86,7 +88,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Meteor")]
 		[Browsable(true)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override SerializableVector3 AngularVelocity
+		public override Vector3Wrapper AngularVelocity
 		{
 			get { return GetSubTypeEntity().AngularVelocity; }
 			set

@@ -52,11 +52,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			: base(null)
 		{
 			BaseEntity = BaseEntityManager.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile);
+			GetSubTypeEntity().EntityId = 0;
 
 			m_cubeBlockManager = new CubeBlockManager(this);
 			List<CubeBlockEntity> cubeBlockList = new List<CubeBlockEntity>();
 			foreach (var cubeBlock in ((MyObjectBuilder_CubeGrid)BaseEntity).CubeBlocks)
 			{
+				cubeBlock.EntityId = 0;
 				cubeBlockList.Add(new CubeBlockEntity(this, cubeBlock));
 			}
 			m_cubeBlockManager.Load(cubeBlockList.ToArray());
@@ -205,7 +207,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Cube Grid")]
 		[Browsable(true)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override SerializableVector3 LinearVelocity
+		public override Vector3Wrapper LinearVelocity
 		{
 			get { return GetSubTypeEntity().LinearVelocity; }
 			set
@@ -225,7 +227,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Cube Grid")]
 		[Browsable(true)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override SerializableVector3 AngularVelocity
+		public override Vector3Wrapper AngularVelocity
 		{
 			get { return GetSubTypeEntity().AngularVelocity; }
 			set
@@ -288,6 +290,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return m_powerManager; }
 		}
 
+		[Category("Cube Grid")]
+		[Browsable(false)]
 		public bool IsLoading
 		{
 			get
@@ -308,16 +312,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			LogManager.APILog.WriteLine("Disposing CubeGridEntity '" + Name + "'");
 
+			base.Dispose();
+
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridDeleted;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
-
-			m_isDisposed = true;
-
-			base.Dispose();
 		}
 
 		/// <summary>
@@ -375,38 +377,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			BaseEntityManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(GetSubTypeEntity(), fileInfo);
 		}
 
-		public void AddCubeGrid()
-		{
-			Action action = InternalAddCubeGrid;
-			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-		}
-
 		#region "Internal"
-
-		protected void InternalAddCubeGrid()
-		{
-			try
-			{
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("CubeGrid '" + Name + "' is being added ...");
-
-				Type backingType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(CubeGridNamespace + "." + CubeGridClass);
-
-				//Create a blank instance of the base type
-				BackingObject = Activator.CreateInstance(backingType);
-
-				//Invoke 'Init' using the sub object of the grid which is the MyObjectBuilder_CubeGrid type
-				MethodInfo initMethod = BackingObject.GetType().GetMethod("Init", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-				initMethod.Invoke(BackingObject, new object[] { GetSubTypeEntity() });
-
-				//Add the entity to the scene
-				SectorObjectManager.Instance.AddEntity(BackingObject);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
 
 		protected void InternalCubeGridMovedEvent(Object entity)
 		{

@@ -577,10 +577,10 @@ namespace SEModAPIInternal.API.Entity
 
 		public override void LoadDynamic()
 		{
-			if (m_isResourceLocked)
+			if (IsResourceLocked)
 				return;
 
-			m_isResourceLocked = true;
+			IsResourceLocked = true;
 
 			List<Object> rawEntities = GetBackingDataList();
 			Dictionary<long, BaseObject> data = GetInternalData();
@@ -645,7 +645,7 @@ namespace SEModAPIInternal.API.Entity
 				backingData.Add(entry.BackingObject, entry);
 			}
 
-			m_isResourceLocked = false;
+			IsResourceLocked = false;
 		}
 
 		#endregion

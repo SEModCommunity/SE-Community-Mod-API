@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -275,9 +276,11 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private static SectorObjectManager m_instance;
-		private static Object m_nextEntityToUpdate;
+		private static BaseEntity m_nextEntityToUpdate;
+		private bool m_isShutDown;
 
-		public static string ObjectManagerClass = "5BCAC68007431E61367F5B2CF24E2D6F.CAF1EB435F77C7B77580E2E16F988BED";
+		public static string ObjectManagerNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string ObjectManagerClass = "CAF1EB435F77C7B77580E2E16F988BED";
 		public static string ObjectManagerGetEntityHashSet = "84C54760C0F0DDDA50B0BE27B7116ED8";
 		public static string ObjectManagerAddEntity = "E5E18F5CAD1F62BB276DF991F20AE6AF";
 
@@ -299,6 +302,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			IsDynamic = true;
 			m_instance = this;
+			m_isShutDown = false;
 		}
 
 		#endregion
@@ -316,34 +320,46 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		public static Type InternalType
+		{
+			get
+			{
+				Type objectManagerType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ObjectManagerNamespace, ObjectManagerClass);
+				return objectManagerType;
+			}
+		}
+
+		public bool IsShutDown
+		{
+			get { return m_isShutDown; }
+			set { m_isShutDown = value; }
+		}
+
 		#endregion
 
 		#region "Methods"
 
-		new protected HashSet<Object> GetBackingDataHashSet()
+		protected override void InternalGetBackingDataHashSet()
 		{
 			try
 			{
-				Type objectManagerType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(ObjectManagerClass);
-				MethodInfo getEntityHashSet = objectManagerType.GetMethod(ObjectManagerGetEntityHashSet, BindingFlags.Public | BindingFlags.Static);
-				var rawValue = getEntityHashSet.Invoke(null, new object[] { });
-				HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
-
-				return convertedSet;
+				var rawValue = BaseObject.InvokeStaticMethod(InternalType, ObjectManagerGetEntityHashSet);
+				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
-				return new HashSet<object>();
 			}
 		}
 
 		public override void LoadDynamic()
 		{
-			if (m_isResourceLocked)
+			if (IsResourceLocked)
+				return;
+			if (IsShutDown)
 				return;
 
-			m_isResourceLocked = true;
+			IsResourceLocked = true;
 
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
@@ -358,6 +374,11 @@ namespace SEModAPIInternal.API.Entity
 
 				try
 				{
+					//Skip disposed entities
+					bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
+					if (isDisposed)
+						continue;
+
 					//Skip unknowns for now until we get the bugs sorted out with the other types
 					Type entityType = entity.GetType();
 					if (entityType != CharacterEntity.InternalType &&
@@ -440,14 +461,17 @@ namespace SEModAPIInternal.API.Entity
 				backingData.Add(entry.BackingObject, entry);
 			}
 
-			m_isResourceLocked = false;
+			IsResourceLocked = false;
 		}
 
-		public void AddEntity(Object gameEntity)
+		public void AddEntity(BaseEntity entity)
 		{
 			try
 			{
-				m_nextEntityToUpdate = gameEntity;
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					Console.WriteLine("Entity '" + entity.Name + "' is being added ...");
+
+				m_nextEntityToUpdate = entity;
 
 				Action action = InternalAddEntity;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
@@ -458,7 +482,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public void InternalAddEntity()
+		protected void InternalAddEntity()
 		{
 			try
 			{
@@ -466,19 +490,27 @@ namespace SEModAPIInternal.API.Entity
 					return;
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '': Adding to scene ...");
+					Console.WriteLine("Entity '" + m_nextEntityToUpdate.GetType().Name + "': Adding to scene ...");
 
-				Assembly assembly = SandboxGameAssemblyWrapper.Instance.GameAssembly;
-				Type objectManagerType = assembly.GetType(ObjectManagerClass);
+				//Create the backing object
+				Type entityType = m_nextEntityToUpdate.GetType();
+				Type internalType = (Type)BaseEntity.InvokeStaticMethod(entityType, "get_InternalType");
+				if (internalType == null)
+					throw new Exception("Could not get internal type of entity");
+				m_nextEntityToUpdate.BackingObject = Activator.CreateInstance(internalType);
 
-				MethodInfo addEntityMethod = objectManagerType.GetMethod(ObjectManagerAddEntity, BindingFlags.Public | BindingFlags.Static);
-				addEntityMethod.Invoke(null, new object[] { m_nextEntityToUpdate, true });
+				//Initialize the backing object
+				BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate.BackingObject, "Init", new object[] { m_nextEntityToUpdate.GetSubTypeEntity() });
 
-				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
-				Type someManager = assembly.GetType(EntityBaseNetManagerNamespace + "." + EntityBaseNetManagerClass);
-				MethodInfo sendEntityMethod = someManager.GetMethod(EntityBaseNetManagerSendEntity, BindingFlags.Public | BindingFlags.Static);
-				sendEntityMethod.Invoke(null, new object[] { baseEntity });
+				//Add the backing object to the main game object manager
+				BaseEntity.InvokeStaticMethod(InternalType, ObjectManagerAddEntity, new object[] { m_nextEntityToUpdate.BackingObject, true });
 
+				//Broadcast the new entity to the clients
+				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate.BackingObject, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+				Type someManager = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(EntityBaseNetManagerNamespace, EntityBaseNetManagerClass);
+				BaseEntity.InvokeStaticMethod(someManager, EntityBaseNetManagerSendEntity, new object[] { baseEntity });
+
+				m_nextEntityToUpdate.BaseEntity = baseEntity;
 				m_nextEntityToUpdate = null;
 			}
 			catch (Exception ex)

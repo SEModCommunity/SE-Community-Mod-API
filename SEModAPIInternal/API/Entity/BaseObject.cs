@@ -216,6 +216,8 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLine("Failed to get static field '" + fieldName + "'");
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.GameLog.WriteLine(Environment.StackTrace);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
@@ -233,6 +235,8 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLine("Failed to get entity field '" + fieldName + "'");
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.GameLog.WriteLine(Environment.StackTrace);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
@@ -254,6 +258,8 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLine("Failed to get static method '" + methodName + "'");
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.GameLog.WriteLine(Environment.StackTrace);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
@@ -280,6 +286,8 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "': " + ex.Message);
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.GameLog.WriteLine(Environment.StackTrace);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
@@ -295,13 +303,17 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				MethodInfo method = GetStaticMethod(objectType, methodName);
+				if (method == null)
+					throw new Exception("Method is empty");
 				Object result = method.Invoke(null, parameters);
 
 				return result;
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine("Failed to invoke static method '" + methodName + "'");
+				LogManager.APILog.WriteLine("Failed to invoke static method '" + methodName + "': " + ex.Message);
+				if(SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.GameLog.WriteLine(Environment.StackTrace);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
@@ -326,6 +338,8 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "': " + ex.Message);
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.GameLog.WriteLine(Environment.StackTrace);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
@@ -342,20 +356,24 @@ namespace SEModAPIInternal.API.Entity
 
 		private Object m_backingObject;
 		private string m_backingSourceMethod;
-		private DateTime m_lastDynamicLoadTime;
-
-		private bool m_isMutable = true;
-		private bool m_changed = false;
-		private bool m_isDynamic = false;
-
-		//Use Long as key and BaseObject as value
-		private Dictionary<long, BaseObject> m_definitions = new Dictionary<long, BaseObject>();
-		private Dictionary<Object, BaseObject> m_backingDefinitions = new Dictionary<Object, BaseObject>();
-
 		private FileInfo m_fileInfo;
 		private readonly FieldInfo m_definitionsContainerField;
 
-		protected bool m_isResourceLocked = false;
+		protected DateTime m_lastDynamicLoadTime;
+
+		//Flags
+		private bool m_isMutable = true;
+		private bool m_changed = false;
+		private bool m_isDynamic = false;
+		private bool m_isResourceLocked = false;
+
+		//Raw data stores
+		protected HashSet<Object> m_rawDataHashSet = new HashSet<object>();
+		protected List<Object> m_rawDataList = new List<object>();
+
+		//Clean data stores
+		private Dictionary<long, BaseObject> m_definitions = new Dictionary<long, BaseObject>();
+		private Dictionary<Object, BaseObject> m_backingDefinitions = new Dictionary<Object, BaseObject>();
 
 		#endregion
 
@@ -477,13 +495,14 @@ namespace SEModAPIInternal.API.Entity
 		public bool IsResourceLocked
 		{
 			get { return m_isResourceLocked; }
+			protected set { m_isResourceLocked = value; }
 		}
 
 		#endregion
 
 		#region "Methods"
 
-		#region "DataSource"
+		#region "GetDataSource"
 
 		protected virtual Dictionary<long, BaseObject> GetInternalData()
 		{
@@ -499,10 +518,10 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod, new object[] { });
-				HashSet<Object> convertedSet = UtilityFunctions.ConvertHashSet(rawValue);
+				Action action = InternalGetBackingDataHashSet;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
-				return convertedSet;
+				return m_rawDataHashSet;
 			}
 			catch (Exception ex)
 			{
@@ -511,19 +530,53 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		protected virtual void InternalGetBackingDataHashSet()
+		{
+			try
+			{
+				if (m_backingObject == null)
+					return;
+				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
+				if (rawValue == null)
+					return;
+				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
 		protected List<Object> GetBackingDataList()
 		{
 			try
 			{
-				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod, new object[] { });
-				List<Object> list = UtilityFunctions.ConvertList(rawValue);
+				Action action = InternalGetBackingDataList;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
-				return list;
+				return m_rawDataList;
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
 				return new List<object>();
+			}
+		}
+
+		protected virtual void InternalGetBackingDataList()
+		{
+			try
+			{
+				if (m_backingObject == null)
+					return;
+				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
+				if (rawValue == null)
+					return;
+				m_rawDataList = UtilityFunctions.ConvertList(rawValue);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
@@ -690,6 +743,8 @@ namespace SEModAPIInternal.API.Entity
 
 		#endregion
 
+		#region "GetContent"
+
 		public BaseObject GetEntry(long key)
 		{
 			if (!GetInternalData().ContainsKey(key))
@@ -722,7 +777,7 @@ namespace SEModAPIInternal.API.Entity
 			return matchingField;
 		}
 		
-		public List<T> GetTypedInternalData<T>() where T : BaseObject
+		public virtual List<T> GetTypedInternalData<T>() where T : BaseObject
 		{
 			try
 			{
@@ -739,6 +794,9 @@ namespace SEModAPIInternal.API.Entity
 				{
 					foreach (var def in GetInternalData().Values)
 					{
+						if (!(def is T))
+							continue;
+
 						newList.Add((T)def);
 					}
 				}
@@ -747,14 +805,14 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				StackFrame frame = new StackFrame(1);
-				var method = frame.GetMethod();
-				var callerName = method.Name;
-				LogManager.GameLog.WriteLine("Call from '" + callerName + "': ");
 				LogManager.GameLog.WriteLine(ex);
 				return new List<T>();
 			}
 		}
+
+		#endregion
+
+		#region "NewContent"
 
 		public T NewEntry<T>() where T : BaseObject
 		{
@@ -785,6 +843,10 @@ namespace SEModAPIInternal.API.Entity
 
 			return newEntry;
 		}
+
+		#endregion
+
+		#region "DeleteContent"
 
 		public bool DeleteEntry(long id)
 		{
@@ -833,6 +895,10 @@ namespace SEModAPIInternal.API.Entity
 
 			return false;
 		}
+
+		#endregion
+
+		#region "LoadContent"
 
 		public void Load(FileInfo sourceFile)
 		{
@@ -885,6 +951,10 @@ namespace SEModAPIInternal.API.Entity
 			throw new NotImplementedException();
 		}
 
+		#endregion
+
+		#region "SaveContent"
+
 		public bool Save()
 		{
 			if (!this.Changed) return false;
@@ -910,6 +980,8 @@ namespace SEModAPIInternal.API.Entity
 
 			return true;
 		}
+
+		#endregion
 
 		#endregion
 	}

@@ -292,7 +292,8 @@ namespace SEServerExtender
 			BTN_ServerControl_Stop.Enabled = m_server.IsRunning;
 			BTN_ServerControl_Start.Enabled = !m_server.IsRunning;
 			BTN_Chat_Send.Enabled = m_server.IsRunning;
-			BTN_Entities_New.Enabled = m_server.IsRunning;
+			if(!m_server.IsRunning)
+				BTN_Entities_New.Enabled = false;
 
 			CMB_Control_CommonInstanceList.Enabled = !m_server.IsRunning;
 
@@ -392,6 +393,9 @@ namespace SEServerExtender
 
 		private void RenderSectorObjectChildNodes(TreeNode objectsNode)
 		{
+			if (TRV_Entities.IsDisposed)
+				return;
+
 			TreeNode cubeGridsNode;
 			TreeNode charactersNode;
 			TreeNode voxelMapsNode;
@@ -427,15 +431,16 @@ namespace SEServerExtender
 				unknownsNode = objectsNode.Nodes[5];
 			}
 
+			RenderCubeGridNodes(cubeGridsNode);
+			RenderCharacterNodes(charactersNode);
+
 			//Update matching nodes and remove obsolete nodes
 			List<BaseEntity> entityList = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-			TreeNode[] nodeArray = new TreeNode[cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count + voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count + meteorsNode.Nodes.Count + unknownsNode.Nodes.Count];
-			cubeGridsNode.Nodes.CopyTo(nodeArray, 0);
-			charactersNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count);
-			voxelMapsNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count);
-			floatingObjectsNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count + voxelMapsNode.Nodes.Count);
-			meteorsNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count + voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count);
-			unknownsNode.Nodes.CopyTo(nodeArray, cubeGridsNode.Nodes.Count + charactersNode.Nodes.Count + voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count + meteorsNode.Nodes.Count);
+			TreeNode[] nodeArray = new TreeNode[voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count + meteorsNode.Nodes.Count + unknownsNode.Nodes.Count];
+			voxelMapsNode.Nodes.CopyTo(nodeArray, 0);
+			floatingObjectsNode.Nodes.CopyTo(nodeArray, voxelMapsNode.Nodes.Count);
+			meteorsNode.Nodes.CopyTo(nodeArray, voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count);
+			unknownsNode.Nodes.CopyTo(nodeArray, voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count + meteorsNode.Nodes.Count);
 			foreach (TreeNode node in nodeArray)
 			{
 				if (TRV_Entities.IsDisposed)
@@ -467,6 +472,10 @@ namespace SEServerExtender
 				}
 			}
 
+			List<VoxelMap> voxelMapList = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
+			List<FloatingObject> floatingObjectList = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+			List<Meteor> meteorList = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
+
 			//Add new nodes
 			foreach (var sectorObject in entityList)
 			{
@@ -476,19 +485,7 @@ namespace SEServerExtender
 				Type sectorObjectType = sectorObject.GetType();
 				string nodeKey = sectorObject.EntityId.ToString();
 
-				if (sectorObjectType == typeof(CubeGridEntity))
-				{
-					TreeNode newNode = cubeGridsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
-					newNode.Name = sectorObject.Name;
-					newNode.Tag = sectorObject;
-				}
-				else if (sectorObjectType == typeof(CharacterEntity))
-				{
-					TreeNode newNode = charactersNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
-					newNode.Name = sectorObject.Name;
-					newNode.Tag = sectorObject;
-				}
-				else if (sectorObjectType == typeof(VoxelMap))
+				if (sectorObjectType == typeof(VoxelMap))
 				{
 					TreeNode newNode = voxelMapsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
 					newNode.Name = sectorObject.Name;
@@ -514,12 +511,103 @@ namespace SEServerExtender
 				}
 			}
 
-			cubeGridsNode.Text = cubeGridsNode.Name + " (" + cubeGridsNode.Nodes.Count.ToString() + ")";
-			charactersNode.Text = charactersNode.Name + " (" + charactersNode.Nodes.Count.ToString() + ")";
 			voxelMapsNode.Text = voxelMapsNode.Name + " (" + voxelMapsNode.Nodes.Count.ToString() + ")";
 			floatingObjectsNode.Text = floatingObjectsNode.Name + " (" + floatingObjectsNode.Nodes.Count.ToString() + ")";
 			meteorsNode.Text = meteorsNode.Name + " (" + meteorsNode.Nodes.Count.ToString() + ")";
 			unknownsNode.Text = unknownsNode.Name + " (" + unknownsNode.Nodes.Count.ToString() + ")";
+		}
+
+		private void RenderCubeGridNodes(TreeNode cubeGridsNode)
+		{
+			//Get cube grids from sector object manager
+			List<CubeGridEntity> list = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+
+			//Cleanup and update the existing nodes
+			foreach (TreeNode node in cubeGridsNode.Nodes)
+			{
+				if (node == null)
+					continue;
+
+				if (node.Tag != null && list.Contains(node.Tag))
+				{
+					CubeGridEntity item = (CubeGridEntity)node.Tag;
+
+					if (!item.IsDisposed)
+					{
+						SerializableVector3 rawPosition = item.Position;
+						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+						string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
+						node.Text = newNodeText;
+					}
+					list.Remove(item);
+				}
+				else
+				{
+					node.Remove();
+				}
+			}
+
+			//Add new nodes
+			foreach (var item in list)
+			{
+				SerializableVector3 rawPosition = item.Position;
+				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+
+				Type sectorObjectType = item.GetType();
+				string nodeKey = item.EntityId.ToString();
+
+				TreeNode newNode = cubeGridsNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
+				newNode.Name = item.Name;
+				newNode.Tag = item;
+			}
+
+			//Update node text
+			cubeGridsNode.Text = cubeGridsNode.Name + " (" + cubeGridsNode.Nodes.Count.ToString() + ")";
+		}
+
+		private void RenderCharacterNodes(TreeNode charactersNode)
+		{
+			//Get entities from sector object manager
+			List<CharacterEntity> list = SectorObjectManager.Instance.GetTypedInternalData<CharacterEntity>();
+
+			//Cleanup and update the existing nodes
+			foreach (TreeNode node in charactersNode.Nodes)
+			{
+				if (node.Tag != null && list.Contains(node.Tag))
+				{
+					CharacterEntity item = (CharacterEntity)node.Tag;
+
+					if (!item.IsDisposed)
+					{
+						SerializableVector3 rawPosition = item.Position;
+						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+						string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
+						node.Text = newNodeText;
+					}
+					list.Remove(item);
+				}
+				else
+				{
+					node.Remove();
+				}
+			}
+
+			//Add new nodes
+			foreach (var item in list)
+			{
+				SerializableVector3 rawPosition = item.Position;
+				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+
+				Type sectorObjectType = item.GetType();
+				string nodeKey = item.EntityId.ToString();
+
+				TreeNode newNode = charactersNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
+				newNode.Name = item.Name;
+				newNode.Tag = item;
+			}
+
+			//Update node text
+			charactersNode.Text = charactersNode.Name + " (" + charactersNode.Nodes.Count.ToString() + ")";
 		}
 
 		private void RenderCubeGridChildNodes(CubeGridEntity cubeGrid, TreeNode blocksNode)
@@ -714,6 +802,7 @@ namespace SEServerExtender
 		private void TRV_Entities_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			BTN_Entities_Export.Enabled = false;
+			BTN_Entities_New.Enabled = false;
 			BTN_Entities_Delete.Enabled = false;
 
 			if (e.Node == null)
@@ -724,15 +813,22 @@ namespace SEServerExtender
 			var linkedObject = e.Node.Tag;
 			PG_Entities_Details.SelectedObject = linkedObject;
 
-			//Enable export and delete for all objects that inherit from BaseObject
+			//Enable export for all objects that inherit from BaseObject
 			if (linkedObject is BaseObject)
 			{
 				BTN_Entities_Export.Enabled = true;
+			}
+
+			//Enable new and delete for all objects that inherit from BaseEntity
+			if (linkedObject is BaseEntity)
+			{
 				BTN_Entities_Delete.Enabled = true;
 			}
 
 			if (linkedObject is CubeGridEntity)
 			{
+				BTN_Entities_New.Enabled = true;
+
 				TRV_Entities.BeginUpdate();
 
 				RenderCubeGridChildNodes((CubeGridEntity)linkedObject, e.Node);
@@ -742,6 +838,8 @@ namespace SEServerExtender
 
 			if (linkedObject is CharacterEntity)
 			{
+				BTN_Entities_New.Enabled = true;
+
 				CharacterEntity character = (CharacterEntity)linkedObject;
 
 				InventoryEntity inventory = character.Inventory;
@@ -790,10 +888,12 @@ namespace SEServerExtender
 					BaseEntity item = (BaseEntity)linkedObject;
 					item.Dispose();
 
-					PG_Entities_Details.SelectedObject = null;
+					TreeNode parentNode = TRV_Entities.SelectedNode.Parent;
 					TRV_Entities.SelectedNode.Tag = null;
 					TRV_Entities.SelectedNode.Remove();
-					BTN_Entities_Delete.Enabled = false;
+					TRV_Entities.SelectedNode = parentNode.FirstNode;
+					if(parentNode.FirstNode != null)
+						PG_Entities_Details.SelectedObject = parentNode.FirstNode.Tag;
 				}
 				catch (Exception ex)
 				{
@@ -817,8 +917,20 @@ namespace SEServerExtender
 				{
 					try
 					{
-						CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
-						cubeGrid.AddCubeGrid();
+						BaseEntity newEntity = null;
+
+						if (TRV_Entities.SelectedNode != null && TRV_Entities.SelectedNode.Tag != null && TRV_Entities.SelectedNode.Tag is BaseEntity)
+						{
+							BaseEntity selectedEntity = (BaseEntity)TRV_Entities.SelectedNode.Tag;
+
+							if (selectedEntity is CubeGridEntity)
+								newEntity = new CubeGridEntity(fileInfo);
+							else if (selectedEntity is CharacterEntity)
+								newEntity = new CharacterEntity(fileInfo);
+						}
+
+						if(newEntity != null)
+							SectorObjectManager.Instance.AddEntity(newEntity);
 					}
 					catch (Exception ex)
 					{
@@ -1002,15 +1114,15 @@ namespace SEServerExtender
 
 		private void PluginManagerRefresh(object sender, EventArgs e)
 		{
-			if (PluginManager.GetInstance().Initialized)
+			if (PluginManager.Instance.Initialized)
 			{
-				if (PluginManager.GetInstance().Plugins.Count == LST_Plugins.Items.Count)
+				if (PluginManager.Instance.Plugins.Count == LST_Plugins.Items.Count)
 					return;
 
 				LST_Plugins.BeginUpdate();
 				int selectedIndex = LST_Plugins.SelectedIndex;
 				LST_Plugins.Items.Clear();
-				foreach (var key in PluginManager.GetInstance().Plugins.Keys)
+				foreach (var key in PluginManager.Instance.Plugins.Keys)
 				{
 					LST_Plugins.Items.Add(key);
 				}
@@ -1022,7 +1134,7 @@ namespace SEServerExtender
 		private void LST_Plugins_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
-			Object plugin = PluginManager.GetInstance().Plugins[selectedItem];
+			Object plugin = PluginManager.Instance.Plugins[selectedItem];
 
 			PG_Plugins.SelectedObject = plugin;
 		}

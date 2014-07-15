@@ -42,18 +42,20 @@ namespace SEModAPIExtensions.API
 			Console.WriteLine("Finished loading PluginManager");
 		}
 
-		public static PluginManager GetInstance()
-		{
-			if (m_instance == null)
-			{
-				m_instance = new PluginManager();
-			}
-			return (PluginManager)m_instance;
-		}
-
 		#endregion
 
 		#region "Properties"
+
+		public static PluginManager Instance
+		{
+			get
+			{
+				if (m_instance == null)
+					m_instance = new PluginManager();
+
+				return m_instance;
+			}
+		}
 
 		public bool Initialized
 		{

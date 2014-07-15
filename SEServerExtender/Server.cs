@@ -67,7 +67,7 @@ namespace SEServerExtender
 			m_pluginMainLoop.Elapsed += PluginManagerMain;
 
 			if(m_commandLineArgs.instanceName != "")
-				PluginManager.GetInstance().LoadPlugins(m_commandLineArgs.instanceName);
+				PluginManager.Instance.LoadPlugins(m_commandLineArgs.instanceName);
 		}
 
 		private bool SetupGameInstallation()
@@ -94,8 +94,8 @@ namespace SEServerExtender
 
 		private bool SetupManagers()
 		{
-			m_serverWrapper = ServerAssemblyWrapper.GetInstance();
-			m_pluginManager = PluginManager.GetInstance();
+			m_serverWrapper = ServerAssemblyWrapper.Instance;
+			m_pluginManager = PluginManager.Instance;
 			m_gameAssemblyWrapper = SandboxGameAssemblyWrapper.Instance;
 			m_factionsManager = FactionsManager.Instance;
 			m_logManager = LogManager.Instance;
@@ -199,10 +199,11 @@ namespace SEServerExtender
 				if (m_isServerRunning)
 					return;
 
-				PluginManager.GetInstance().LoadPlugins(m_commandLineArgs.instanceName);
+				PluginManager.Instance.LoadPlugins(m_commandLineArgs.instanceName);
 				m_pluginMainLoop.Start();
 
 				m_isServerRunning = true;
+				SectorObjectManager.Instance.IsShutDown = false;
 
 				m_runServerThread = new Thread(new ThreadStart(this.RunServer));
 				m_runServerThread.Start();
@@ -216,6 +217,7 @@ namespace SEServerExtender
 		public void StopServer()
 		{
 			m_pluginMainLoop.Stop();
+			SectorObjectManager.Instance.IsShutDown = true;
 
 			m_runServerThread.Abort();
 

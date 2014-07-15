@@ -45,6 +45,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityGetEntityIdMethod = "53C3FFA07960404AABBEAAF931E5487E";
 		public static string BaseEntityCombineOnMovedEventMethod = "04F6493DF187FBA38C2B379BA9484304";
 		public static string BaseEntityCombineOnClosedEventMethod = "C1704F26C9D5D7EBE19DC78AB8923F4E";
+		public static string BaseEntityGetIsDisposedMethod = "6D8F627C1C0F9F166031C3B600FEDA60";
 		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
 
 		public static string PhysicsManagerGetRigidBodyMethod = "634E5EC534E45874230868BD089055B1";
@@ -158,7 +159,7 @@ namespace SEModAPIInternal.API.Entity
 
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public SerializableVector3 Position
+		public Vector3Wrapper Position
 		{
 			get { return GetSubTypeEntity().PositionAndOrientation.GetValueOrDefault().Position; }
 			set
@@ -178,7 +179,7 @@ namespace SEModAPIInternal.API.Entity
 
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public SerializableVector3 Up
+		public Vector3Wrapper Up
 		{
 			get { return GetSubTypeEntity().PositionAndOrientation.GetValueOrDefault().Up; }
 			set
@@ -198,7 +199,7 @@ namespace SEModAPIInternal.API.Entity
 
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public SerializableVector3 Forward
+		public Vector3Wrapper Forward
 		{
 			get { return GetSubTypeEntity().PositionAndOrientation.GetValueOrDefault().Forward; }
 			set
@@ -219,13 +220,13 @@ namespace SEModAPIInternal.API.Entity
 		[Category("Entity")]
 		[Browsable(false)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public virtual SerializableVector3 LinearVelocity
+		public virtual Vector3Wrapper LinearVelocity
 		{ get; set; }
 
 		[Category("Entity")]
 		[Browsable(false)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public virtual SerializableVector3 AngularVelocity
+		public virtual Vector3Wrapper AngularVelocity
 		{ get; set; }
 
 		[Category("Entity")]
@@ -280,6 +281,8 @@ namespace SEModAPIInternal.API.Entity
 		{
 			if (!IsDisposed && BackingObject != null)
 			{
+				m_isDisposed = true;
+
 				Vector3 currentPosition = Position;
 				currentPosition = Vector3.Add(currentPosition, new Vector3(10000000, 10000000, 10000000));
 				Position = currentPosition;
@@ -298,8 +301,6 @@ namespace SEModAPIInternal.API.Entity
 				newEvent.entity = this;
 				newEvent.priority = 1;
 				EntityEventManager.Instance.AddEvent(newEvent);
-
-				m_isDisposed = true;
 			}
 
 			base.Dispose();
@@ -544,10 +545,10 @@ namespace SEModAPIInternal.API.Entity
 
 		public override void LoadDynamic()
 		{
-			if (m_isResourceLocked)
+			if (IsResourceLocked)
 				return;
 
-			m_isResourceLocked = true;
+			IsResourceLocked = true;
 
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
@@ -606,7 +607,7 @@ namespace SEModAPIInternal.API.Entity
 				backingData.Add(entry.BackingObject, entry);
 			}
 
-			m_isResourceLocked = false;
+			IsResourceLocked = false;
 		}
 
 		#endregion

@@ -4,9 +4,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
+using SysUtils.Utils;
+
 using VRage.Common.Utils;
 
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Server
@@ -15,9 +18,9 @@ namespace SEModAPIInternal.API.Server
 	{
 		#region "Attributes"
 
-		protected new static ServerAssemblyWrapper m_instance;
-
-		private Assembly m_assembly;
+		private static ServerAssemblyWrapper m_instance;
+		private static Assembly m_assembly;
+		private DateTime m_lastRestart;
 
 		public static string DedicatedServerNamespace = "83BCBFA49B3A2A6EC1BC99583DA2D399";
 		public static string DedicatedServerClass = "49BCFF86BA276A9C7C0D269C2924DE2D";
@@ -27,45 +30,63 @@ namespace SEModAPIInternal.API.Server
 
 		#region "Constructors and Initializers"
 
-		protected ServerAssemblyWrapper(string path)
+		protected ServerAssemblyWrapper()
 		{
 			m_instance = this;
+
+			m_lastRestart = DateTime.Now;
 
 			m_assembly = Assembly.UnsafeLoadFrom("SpaceEngineersDedicated.exe");
 
 			Console.WriteLine("Finished loading ServerAssemblyWrapper");
 		}
 
-		new public static ServerAssemblyWrapper GetInstance(string basePath = "")
-		{
-			if (m_instance == null)
-			{
-				m_instance = new ServerAssemblyWrapper(basePath);
-			}
-			return (ServerAssemblyWrapper)m_instance;
-		}
-
 		#endregion
 
 		#region "Properties"
+
+		public static ServerAssemblyWrapper Instance
+		{
+			get
+			{
+				if (m_instance == null)
+					m_instance = new ServerAssemblyWrapper();
+
+				return m_instance;
+			}
+		}
+
+		public static Type InternalType
+		{
+			get
+			{
+				Type dedicatedServerType = m_assembly.GetType(DedicatedServerNamespace + "." + DedicatedServerClass);
+				return dedicatedServerType;
+			}
+		}
 
 		#endregion
 
 		#region "Methods"
 
-		public bool StartServer(string worldName = "", string instanceName = "", bool useConsole = true)
+		public bool StartServer(string worldName = "", string instanceName = "", bool useConsole = true, int restartLimit = 3)
 		{
+			if (restartLimit < 0)
+				return false;
+
 			try
 			{
-				SandboxGameAssemblyWrapper.Instance.SetNullRender(true);
+				//Make sure the log, if running, is closed out before we begin
+				if (MyLog.Default != null)
+					MyLog.Default.Close();
 
+				SandboxGameAssemblyWrapper.Instance.SetNullRender(true);
+				MyFileSystem.Reset();
+
+				//Prepare the parameters
 				bool isUsingInstance = false;
 				if (instanceName != "")
-				{
 					isUsingInstance = true;
-				}
-
-				MyFileSystem.Reset();
 				object[] methodParams = new object[]
 				{
 					instanceName,
@@ -73,16 +94,47 @@ namespace SEModAPIInternal.API.Server
 					isUsingInstance,
 					useConsole
 				};
-				Type dedicatedServerType = m_assembly.GetType(DedicatedServerNamespace + "." + DedicatedServerClass);
-				MethodInfo serverStartupMethod = dedicatedServerType.GetMethod(DedicatedServerStartupBaseMethod, BindingFlags.Static | BindingFlags.NonPublic);
+
+				//Start the server
+				MethodInfo serverStartupMethod = InternalType.GetMethod(DedicatedServerStartupBaseMethod, BindingFlags.Static | BindingFlags.NonPublic);
 				serverStartupMethod.Invoke(null, methodParams);
+
+				//Close out the log since the server has stopped running
+				if (MyLog.Default != null)
+					MyLog.Default.Close();
 
 				return false;
 			}
 			catch (Exception ex)
 			{
+				LogManager.APILog.WriteLineAndConsole("Server crashed, attempting auto-restart ...");
 				LogManager.GameLog.WriteLine(ex);
-				return false;
+
+				TimeSpan timeSinceLastRestart = DateTime.Now - m_lastRestart;
+				m_lastRestart = DateTime.Now;
+
+				//Reset the restart limit if the server has been running for more than 5 minutes before the crash
+				if (timeSinceLastRestart.TotalMinutes > 5)
+					restartLimit = 3;
+
+				//Close out the log since the server has stopped running
+				if(MyLog.Default != null)
+					MyLog.Default.Close();
+
+				//Recursively start the server again
+				return StartServer(worldName, instanceName, useConsole, restartLimit - 1);
+			}
+		}
+
+		public void StopServer()
+		{
+			try
+			{
+				//TODO - Find the right method to use for shut down
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
