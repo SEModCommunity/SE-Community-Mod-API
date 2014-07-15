@@ -127,6 +127,18 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
+//#if DEBUG
+		private void ServerCrashTest()
+		{
+			if (!SandboxGameAssemblyWrapper.IsDebugging)
+				return;
+
+			Type mainGameType = SandboxGameAssemblyWrapper.Instance.MainGameType;
+			FieldInfo mainGameField = mainGameType.GetField("392503BDB6F8C1E34A232489E2A0C6D4", BindingFlags.Public | BindingFlags.Static);
+			mainGameField.SetValue(null, null);
+		}
+//#endif
+
 		protected Object CreateChatMessageStruct(string message)
 		{
 			Type chatMessageStructType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(ChatMessageStruct);
@@ -147,7 +159,7 @@ namespace SEModAPIExtensions.API
 				m_chatMessages.Add(playerName + ": " + message);
 			}
 
-			LogManager.APILog.WriteLineAndConsole("Chat - Client '" + playerName + "': " + message);
+			LogManager.ChatLog.WriteLineAndConsole("Chat - Client '" + playerName + "': " + message);
 
 			ChatEvent chatEvent = new ChatEvent();
 			chatEvent.type = ChatEventType.OnChatReceived;
@@ -171,6 +183,8 @@ namespace SEModAPIExtensions.API
 				ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
 
 				m_chatMessages.Add("Server: " + message);
+
+				LogManager.ChatLog.WriteLineAndConsole("Chat - Server: " + message);
 
 				ChatEvent chatEvent = new ChatEvent();
 				chatEvent.type = ChatEventType.OnChatSent;
@@ -214,6 +228,8 @@ namespace SEModAPIExtensions.API
 					ChatManager.Instance.AddEvent(chatEvent);
 				}
 				m_chatMessages.Add("Server: " + message);
+
+				LogManager.ChatLog.WriteLineAndConsole("Chat - Server: " + message);
 			}
 			catch (Exception ex)
 			{
@@ -259,7 +275,20 @@ namespace SEModAPIExtensions.API
 					}
 				}
 			}
-
+//#if DEBUG
+			//Debug
+			if (SandboxGameAssemblyWrapper.IsDebugging)
+			{
+				if (command.Equals("/crash"))
+				{
+					if (paramCount == 1 && commandParts[1].ToLower().Equals("server"))
+					{
+						Action action = ServerCrashTest;
+						SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+					}
+				}
+			}
+//#endif
 			return true;
 		}
 

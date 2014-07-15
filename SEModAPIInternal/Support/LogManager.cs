@@ -19,6 +19,7 @@ namespace SEModAPIInternal.Support
 
 		private static MyLog m_gameLog;
 		private static MyLog m_apiLog;
+		private static MyLog m_chatLog;
 
 		public static string MainGameMyLogField = "1976E5D4FE6E8C1BD369273DEE0025AC";
 
@@ -93,6 +94,30 @@ namespace SEModAPIInternal.Support
 				}
 
 				return m_apiLog;
+			}
+		}
+
+		public static MyLog ChatLog
+		{
+			get
+			{
+				if (m_chatLog == null)
+				{
+					var temp = Instance;
+
+					try
+					{
+						m_chatLog = new MyLog();
+						StringBuilder internalAPIAppVersion = new StringBuilder(typeof(LogManager).Assembly.GetName().Version.ToString());
+						m_chatLog.Init("SEModAPIInternal_Chat.log", internalAPIAppVersion);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.ToString());
+					}
+				}
+
+				return m_chatLog;
 			}
 		}
 
