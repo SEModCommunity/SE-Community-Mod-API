@@ -411,9 +411,8 @@ namespace SEServerExtender
 			TreeNode voxelMapsNode;
 			TreeNode floatingObjectsNode;
 			TreeNode meteorsNode;
-			TreeNode unknownsNode;
 
-			if (objectsNode.Nodes.Count < 6)
+			if (objectsNode.Nodes.Count < 5)
 			{
 				objectsNode.Nodes.Clear();
 
@@ -422,14 +421,12 @@ namespace SEServerExtender
 				voxelMapsNode = objectsNode.Nodes.Add("Voxel Maps");
 				floatingObjectsNode = objectsNode.Nodes.Add("Floating Objects");
 				meteorsNode = objectsNode.Nodes.Add("Meteors");
-				unknownsNode = objectsNode.Nodes.Add("Unknowns");
 
 				cubeGridsNode.Name = cubeGridsNode.Text;
 				charactersNode.Name = charactersNode.Text;
 				voxelMapsNode.Name = voxelMapsNode.Text;
 				floatingObjectsNode.Name = floatingObjectsNode.Text;
 				meteorsNode.Name = meteorsNode.Text;
-				unknownsNode.Name = unknownsNode.Text;
 			}
 			else
 			{
@@ -438,105 +435,22 @@ namespace SEServerExtender
 				voxelMapsNode = objectsNode.Nodes[2];
 				floatingObjectsNode = objectsNode.Nodes[3];
 				meteorsNode = objectsNode.Nodes[4];
-				unknownsNode = objectsNode.Nodes[5];
 			}
 
 			RenderCubeGridNodes(cubeGridsNode);
 			RenderCharacterNodes(charactersNode);
-
-			//Update matching nodes and remove obsolete nodes
-			List<BaseEntity> entityList = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-			TreeNode[] nodeArray = new TreeNode[voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count + meteorsNode.Nodes.Count + unknownsNode.Nodes.Count];
-			voxelMapsNode.Nodes.CopyTo(nodeArray, 0);
-			floatingObjectsNode.Nodes.CopyTo(nodeArray, voxelMapsNode.Nodes.Count);
-			meteorsNode.Nodes.CopyTo(nodeArray, voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count);
-			unknownsNode.Nodes.CopyTo(nodeArray, voxelMapsNode.Nodes.Count + floatingObjectsNode.Nodes.Count + meteorsNode.Nodes.Count);
-			foreach (TreeNode node in nodeArray)
-			{
-				if (TRV_Entities.IsDisposed)
-					return;
-
-				if (node.Tag != null && entityList.Contains(node.Tag))
-				{
-					try
-					{
-						BaseEntity item = (BaseEntity)node.Tag;
-
-						if (!item.IsDisposed)
-						{
-							SerializableVector3 rawPosition = item.Position;
-							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
-							node.Text = newNodeText;
-						}
-						entityList.Remove(item);
-					}
-					catch (Exception ex)
-					{
-						LogManager.GameLog.WriteLine(ex);
-					}
-				}
-				else
-				{
-					node.Remove();
-				}
-			}
-
-			List<VoxelMap> voxelMapList = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
-			List<FloatingObject> floatingObjectList = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
-			List<Meteor> meteorList = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
-
-			//Add new nodes
-			foreach (var sectorObject in entityList)
-			{
-				SerializableVector3 rawPosition = sectorObject.Position;
-				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-
-				Type sectorObjectType = sectorObject.GetType();
-				string nodeKey = sectorObject.EntityId.ToString();
-
-				if (sectorObjectType == typeof(VoxelMap))
-				{
-					TreeNode newNode = voxelMapsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
-					newNode.Name = sectorObject.Name;
-					newNode.Tag = sectorObject;
-				}
-				else if (sectorObjectType == typeof(FloatingObject))
-				{
-					TreeNode newNode = floatingObjectsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
-					newNode.Name = sectorObject.Name;
-					newNode.Tag = sectorObject;
-				}
-				else if (sectorObjectType == typeof(Meteor))
-				{
-					TreeNode newNode = meteorsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
-					newNode.Name = sectorObject.Name;
-					newNode.Tag = sectorObject;
-				}
-				else
-				{
-					TreeNode newNode = unknownsNode.Nodes.Add(nodeKey, sectorObject.Name + " | Dist: " + distance.ToString() + "m");
-					newNode.Name = sectorObject.Name;
-					newNode.Tag = sectorObject;
-				}
-			}
-
-			voxelMapsNode.Text = voxelMapsNode.Name + " (" + voxelMapsNode.Nodes.Count.ToString() + ")";
-			floatingObjectsNode.Text = floatingObjectsNode.Name + " (" + floatingObjectsNode.Nodes.Count.ToString() + ")";
-			meteorsNode.Text = meteorsNode.Name + " (" + meteorsNode.Nodes.Count.ToString() + ")";
-			unknownsNode.Text = unknownsNode.Name + " (" + unknownsNode.Nodes.Count.ToString() + ")";
-
-			// Update a var for the Utilities Floating object cleaner.
-			m_floatingObjectsCount = floatingObjectsNode.Nodes.Count;
+			RenderVoxelMapNodes(voxelMapsNode);
+			RenderFloatingObjectNodes(floatingObjectsNode);
+			RenderMeteorNodes(meteorsNode);
 		}
 
-		private void RenderCubeGridNodes(TreeNode cubeGridsNode)
+		private void RenderCubeGridNodes(TreeNode rootNode)
 		{
 			//Get cube grids from sector object manager
 			List<CubeGridEntity> list = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
 
 			//Cleanup and update the existing nodes
-			foreach (TreeNode node in cubeGridsNode.Nodes)
+			foreach (TreeNode node in rootNode.Nodes)
 			{
 				if (node == null)
 					continue;
@@ -569,22 +483,22 @@ namespace SEServerExtender
 				Type sectorObjectType = item.GetType();
 				string nodeKey = item.EntityId.ToString();
 
-				TreeNode newNode = cubeGridsNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
+				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
 				newNode.Name = item.Name;
 				newNode.Tag = item;
 			}
 
 			//Update node text
-			cubeGridsNode.Text = cubeGridsNode.Name + " (" + cubeGridsNode.Nodes.Count.ToString() + ")";
+			rootNode.Text = rootNode.Name + " (" + rootNode.Nodes.Count.ToString() + ")";
 		}
 
-		private void RenderCharacterNodes(TreeNode charactersNode)
+		private void RenderCharacterNodes(TreeNode rootNode)
 		{
 			//Get entities from sector object manager
 			List<CharacterEntity> list = SectorObjectManager.Instance.GetTypedInternalData<CharacterEntity>();
 
 			//Cleanup and update the existing nodes
-			foreach (TreeNode node in charactersNode.Nodes)
+			foreach (TreeNode node in rootNode.Nodes)
 			{
 				if (node.Tag != null && list.Contains(node.Tag))
 				{
@@ -614,13 +528,151 @@ namespace SEServerExtender
 				Type sectorObjectType = item.GetType();
 				string nodeKey = item.EntityId.ToString();
 
-				TreeNode newNode = charactersNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
+				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
 				newNode.Name = item.Name;
 				newNode.Tag = item;
 			}
 
 			//Update node text
-			charactersNode.Text = charactersNode.Name + " (" + charactersNode.Nodes.Count.ToString() + ")";
+			rootNode.Text = rootNode.Name + " (" + rootNode.Nodes.Count.ToString() + ")";
+		}
+
+		private void RenderVoxelMapNodes(TreeNode rootNode)
+		{
+			//Get entities from sector object manager
+			List<VoxelMap> list = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
+
+			//Cleanup and update the existing nodes
+			foreach (TreeNode node in rootNode.Nodes)
+			{
+				if (node.Tag != null && list.Contains(node.Tag))
+				{
+					VoxelMap item = (VoxelMap)node.Tag;
+
+					if (!item.IsDisposed)
+					{
+						SerializableVector3 rawPosition = item.Position;
+						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+						string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
+						node.Text = newNodeText;
+					}
+					list.Remove(item);
+				}
+				else
+				{
+					node.Remove();
+				}
+			}
+
+			//Add new nodes
+			foreach (var item in list)
+			{
+				SerializableVector3 rawPosition = item.Position;
+				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+
+				Type sectorObjectType = item.GetType();
+				string nodeKey = item.EntityId.ToString();
+
+				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Dist: " + distance.ToString() + "m");
+				newNode.Name = item.Name;
+				newNode.Tag = item;
+			}
+
+			//Update node text
+			rootNode.Text = rootNode.Name + " (" + rootNode.Nodes.Count.ToString() + ")";
+		}
+
+		private void RenderFloatingObjectNodes(TreeNode rootNode)
+		{
+			//Get entities from sector object manager
+			List<FloatingObject> list = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+
+			//Cleanup and update the existing nodes
+			foreach (TreeNode node in rootNode.Nodes)
+			{
+				if (node.Tag != null && list.Contains(node.Tag))
+				{
+					FloatingObject item = (FloatingObject)node.Tag;
+
+					if (!item.IsDisposed)
+					{
+						SerializableVector3 rawPosition = item.Position;
+						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+						string newNodeText = item.Name + " | Amount: " + item.Item.Amount.ToString() + " | Dist: " + distance.ToString() + "m";
+						node.Text = newNodeText;
+					}
+					list.Remove(item);
+				}
+				else
+				{
+					node.Remove();
+				}
+			}
+
+			//Add new nodes
+			foreach (var item in list)
+			{
+				SerializableVector3 rawPosition = item.Position;
+				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+
+				Type sectorObjectType = item.GetType();
+				string nodeKey = item.EntityId.ToString();
+
+				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Amount: " + item.Item.Amount.ToString() + " | Dist: " + distance.ToString() + "m");
+				newNode.Name = item.Name;
+				newNode.Tag = item;
+			}
+
+			//Update node text
+			rootNode.Text = rootNode.Name + " (" + rootNode.Nodes.Count.ToString() + ")";
+
+			// Update a var for the Utilities Floating object cleaner.
+			m_floatingObjectsCount = rootNode.Nodes.Count;
+		}
+
+		private void RenderMeteorNodes(TreeNode rootNode)
+		{
+			//Get entities from sector object manager
+			List<Meteor> list = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
+
+			//Cleanup and update the existing nodes
+			foreach (TreeNode node in rootNode.Nodes)
+			{
+				if (node.Tag != null && list.Contains(node.Tag))
+				{
+					Meteor item = (Meteor)node.Tag;
+
+					if (!item.IsDisposed)
+					{
+						SerializableVector3 rawPosition = item.Position;
+						double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+						string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
+						node.Text = newNodeText;
+					}
+					list.Remove(item);
+				}
+				else
+				{
+					node.Remove();
+				}
+			}
+
+			//Add new nodes
+			foreach (var item in list)
+			{
+				SerializableVector3 rawPosition = item.Position;
+				double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+
+				Type sectorObjectType = item.GetType();
+				string nodeKey = item.EntityId.ToString();
+
+				TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Dist: " + distance.ToString() + "m");
+				newNode.Name = item.Name;
+				newNode.Tag = item;
+			}
+
+			//Update node text
+			rootNode.Text = rootNode.Name + " (" + rootNode.Nodes.Count.ToString() + ")";
 		}
 
 		private void RenderCubeGridChildNodes(CubeGridEntity cubeGrid, TreeNode blocksNode)
