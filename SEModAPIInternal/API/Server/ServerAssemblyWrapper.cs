@@ -4,9 +4,12 @@ using SteamSDK;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 
 using Sandbox.Input;
 
@@ -109,6 +112,19 @@ namespace SEModAPIInternal.API.Server
 				MyInput.Static.UnloadData();
 		}
 
+		private void PhysicsReset()
+		{
+			try
+			{
+				//TODO - Find out the proper way to get Havok to clean everything up so we don't get pointer errors on the next start
+				//HkBaseSystem.Quit();
+			}
+			catch (Exception ex)
+			{
+				//Do nothing for now
+			}
+		}
+
 		private void Reset()
 		{
 			SteamReset();
@@ -117,7 +133,7 @@ namespace SEModAPIInternal.API.Server
 
 			InputReset();
 
-			//HkBaseSystem.Quit();
+			PhysicsReset();
 		}
 
 		public bool StartServer(string worldName = "", string instanceName = "", bool useConsole = true)
@@ -149,9 +165,47 @@ namespace SEModAPIInternal.API.Server
 
 				return true;
 			}
+			catch (Win32Exception ex)
+			{
+				LogManager.APILog.WriteLine("Win32Exception - Server crashed");
+
+				LogManager.APILog.WriteLine(ex);
+				LogManager.APILog.WriteLine(Environment.StackTrace);
+				LogManager.GameLog.WriteLine(ex);
+				LogManager.GameLog.WriteLine(Environment.StackTrace);
+
+				return false;
+			}
+			catch (ExternalException ex)
+			{
+				LogManager.APILog.WriteLine("ExternalException - Server crashed");
+
+				LogManager.APILog.WriteLine(ex);
+				LogManager.APILog.WriteLine(Environment.StackTrace);
+				LogManager.GameLog.WriteLine(ex);
+				LogManager.GameLog.WriteLine(Environment.StackTrace);
+
+				return false;
+			}
+			catch (TargetInvocationException ex)
+			{
+				LogManager.APILog.WriteLine("TargetInvocationException - Server crashed");
+
+				LogManager.APILog.WriteLine(ex);
+				LogManager.APILog.WriteLine(Environment.StackTrace);
+				LogManager.GameLog.WriteLine(ex);
+				LogManager.GameLog.WriteLine(Environment.StackTrace);
+
+				return false;
+			}
 			catch (Exception ex)
 			{
+				LogManager.APILog.WriteLine("Exception - Server crashed");
+
+				LogManager.APILog.WriteLine(ex);
+				LogManager.APILog.WriteLine(Environment.StackTrace);
 				LogManager.GameLog.WriteLine(ex);
+				LogManager.GameLog.WriteLine(Environment.StackTrace);
 
 				return false;
 			}
@@ -169,11 +223,11 @@ namespace SEModAPIInternal.API.Server
 				}
 				TimeSpan cleanupTime = DateTime.Now - startedEntityCleanup;
 				Console.WriteLine("Took " + cleanupTime.TotalSeconds.ToString() + " seconds to clean up entities");
-
+				*/
 				Object mainGame = SandboxGameAssemblyWrapper.Instance.GetMainGameInstance();
 				BaseObject.InvokeEntityMethod(mainGame, "Dispose");
 
-				Reset();*/
+				//Reset();
 			}
 			catch (Exception ex)
 			{

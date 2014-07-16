@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -97,14 +98,24 @@ namespace SEModAPIInternal.API.Common
 
 		public void AddEvent(EntityEvent newEvent)
 		{
-			if (ResourceLocked)
+			try
 			{
-				//Only add priority 0 and 1 events to the buffer while the list is locked
-				if(newEvent.priority < 2)
-					m_entityEventsBuffer.Add(newEvent);
+				if (ResourceLocked)
+				{
+					//Only add priority 0 and 1 events to the buffer while the list is locked
+					if (newEvent.priority < 2)
+						m_entityEventsBuffer.Add(newEvent);
+				}
+				else
+				{
+					m_entityEvents.Add(newEvent);
+				}
 			}
-			else
-				m_entityEvents.Add(newEvent);
+			catch (Exception ex)
+			{
+				if(SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.GameLog.WriteLine(ex);
+			}
 		}
 
 		public void ClearEvents()
