@@ -9,7 +9,7 @@ namespace SEModAPIExtensions.API.Plugin
 	{
 		void Init();
 		void Update();
-		void AddCommandExecutor();
+		void Shutdown();
 		Guid Id
 		{ get; }
 		string Name
