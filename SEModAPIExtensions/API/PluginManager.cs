@@ -26,6 +26,7 @@ namespace SEModAPIExtensions.API
 		private static PluginManager m_instance;
 
 		private Dictionary<Guid, Object> m_plugins;
+		private Dictionary<Guid, bool> m_pluginState;
 		private bool m_initialized;
 		
 		private APIExtensionsUtils m_utils;
@@ -39,6 +40,7 @@ namespace SEModAPIExtensions.API
 			m_instance = this;
 
 			m_plugins = new Dictionary<Guid, Object>();
+			m_pluginState = new Dictionary<Guid, bool>();
 			m_initialized = false;
 
 			Console.WriteLine("Finished loading PluginManager");
@@ -126,17 +128,9 @@ namespace SEModAPIExtensions.API
 		{
 			Console.WriteLine("Initializing plugins ...");
 
-			foreach (var plugin in m_plugins.Values)
+			foreach (var key in m_plugins.Keys)
 			{
-				try
-				{
-					MethodInfo initMethod = plugin.GetType().GetMethod("Init");
-					initMethod.Invoke(plugin, new object[] { });
-				}
-				catch (Exception ex)
-				{
-					LogManager.APILog.WriteLine(ex);
-				}
+				InitPlugin(key);
 			}
 
 			Console.WriteLine("Finished initializing plugins");
@@ -152,8 +146,14 @@ namespace SEModAPIExtensions.API
 				return;
 
 			EntityEventManager.Instance.ResourceLocked = true;
-			foreach (var plugin in m_plugins.Values)
+			foreach (var key in m_plugins.Keys)
 			{
+				var plugin = m_plugins[key];
+				
+				//Skip un-initialized plugins
+				if (!m_pluginState.ContainsKey(key))
+					continue;
+					
 				//Run entity events
 				List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
 				foreach (EntityEventManager.EntityEvent entityEvent in events)
@@ -245,6 +245,64 @@ namespace SEModAPIExtensions.API
 			EntityEventManager.Instance.ClearEvents();
 			EntityEventManager.Instance.ResourceLocked = false;
 			ChatManager.Instance.ClearEvents();
+		}
+		
+		public void InitPlugin(Guid key)
+		{
+			if (m_pluginState.ContainsKey(key))
+				return;
+
+			LogManager.APILog.WriteLineAndConsole("Initializing plugin '" + key.ToString() + "' ...");
+
+			try
+			{
+				var plugin = m_plugins[key];
+				MethodInfo initMethod = plugin.GetType().GetMethod("Init");
+				initMethod.Invoke(plugin, new object[] { });
+
+				m_pluginState.Add(key, true);
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+			}
+		}
+
+		public void UnloadPlugin(Guid key)
+		{
+			if (key == null)
+				return;
+
+			//Skip if the plugin doesn't exist
+			if (!m_plugins.ContainsKey(key))
+				return;
+
+			//Skip if the pluing is already unloaded
+			if (!m_pluginState.ContainsKey(key))
+				return;
+
+			LogManager.APILog.WriteLineAndConsole("Unloading plugin '" + key.ToString() + "'");
+
+			var plugin = m_plugins[key];
+			try
+			{
+				MethodInfo initMethod = plugin.GetType().GetMethod("Shutdown");
+				initMethod.Invoke(plugin, new object[] { });
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+			}
+
+			m_pluginState.Remove(key);
+		}
+
+		public bool GetPluginState(Guid key)
+		{
+			if (!m_pluginState.ContainsKey(key))
+				return false;
+
+			return m_pluginState[key];
 		}
 
 		#endregion
