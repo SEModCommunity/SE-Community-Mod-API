@@ -105,7 +105,7 @@ namespace SEModAPIExtensions.API
 			Console.WriteLine("Finished loading commands");
 		}
 		
-		public static List<CommandBase> DictionaryCommandsToList()
+		public static List<CommandBase> ListCommands()
 		{
 			List<CommandBase> cmds = new List<CommandBase>;
 			foreach(CommandBase cmd in m_commands)
