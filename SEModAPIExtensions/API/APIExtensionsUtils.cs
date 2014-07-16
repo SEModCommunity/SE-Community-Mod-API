@@ -55,6 +55,8 @@ namespace SEModAPIExtensions.API
 		
 		public CheckFileTypes(Type lookfor, Dictionary<Guid, Object> check)
 		{
+			List<Type> save = new List<Type>();
+			
 			MyFSPath fsPath = new MyFSPath(MyFSLocationEnum.Mod, "");
 			string modsPath = MyFileSystem.GetAbsolutePath(fsPath);
 			if (!Directory.Exists(modsPath))
@@ -95,7 +97,7 @@ namespace SEModAPIExtensions.API
 							{
 								if (interfaceType.FullName == typeof(lookfor).FullName)
 								{
-									return lookfor;
+									save.Add(lookfor);
 								}
 							}
 						}
@@ -108,6 +110,7 @@ namespace SEModAPIExtensions.API
 					}
 				}
 			}
+			return save;
 		}
 		
 		#endregion
