@@ -57,6 +57,7 @@ namespace SEModAPIExtensions.API
 			m_chatMessages = new List<string>();
 			m_chatHandlerSetup = false;
 			m_chatEvents = new List<ChatEvent>();
+			m_commands = CommandManager.ListCommands()
 
 			Console.WriteLine("Finished loading ChatManager");
 		}
