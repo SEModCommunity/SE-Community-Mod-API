@@ -252,11 +252,7 @@ namespace SEModAPIExtensions.API
 					ChatManager.Instance.AddEvent(chatEvent);
 				}
 				m_chatMessages.Add("Server: " + message);
-<<<<<<< HEAD
 				
-=======
-
->>>>>>> cd722861c92bbcd4aa6c50df58d5d580a1782b4c
 				LogManager.ChatLog.WriteLineAndConsole("Chat - Server: " + message);
 			}
 			catch (Exception ex)
