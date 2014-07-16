@@ -521,6 +521,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		private CubeGridEntity m_parent;
 		private bool m_isLoading;
 
+		protected Dictionary<Object, MyObjectBuilder_CubeBlock> m_rawDataObjectBuilderList;
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -535,6 +537,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			m_isLoading = true;
 			m_parent = parent;
+
+			m_rawDataObjectBuilderList = new Dictionary<object, MyObjectBuilder_CubeBlock>();
 		}
 		
 		#endregion
@@ -550,9 +554,33 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Methods"
 
+		protected override void InternalGetBackingDataHashSet()
+		{
+			try
+			{
+				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
+				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				m_rawDataObjectBuilderList.Clear();
+				foreach (Object entity in m_rawDataHashSet)
+				{
+					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
+					m_rawDataObjectBuilderList.Add(entity, baseEntity);
+				}
+
+				m_isInternalResourceLocked = false;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
 		public override void LoadDynamic()
 		{
 			if (IsResourceLocked)
+				return;
+			if (m_isInternalResourceLocked)
 				return;
 
 			IsResourceLocked = true;
@@ -560,6 +588,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
+
+			//Skip the update if there is a discrepency between the entity list and the object builder list
+			if (rawEntities.Count != m_rawDataObjectBuilderList.Count)
+				return;
 
 			//Update the main data mapping
 			data.Clear();
@@ -570,7 +602,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 				try
 				{
-					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
+					MyObjectBuilder_CubeBlock baseEntity = null;
+					if (m_rawDataObjectBuilderList.ContainsKey(entity))
+						baseEntity = m_rawDataObjectBuilderList[entity];
 
 					if (baseEntity == null)
 						continue;

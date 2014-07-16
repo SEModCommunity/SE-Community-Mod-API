@@ -279,6 +279,8 @@ namespace SEModAPIInternal.API.Entity
 		private static BaseEntity m_nextEntityToUpdate;
 		private bool m_isShutDown;
 
+		protected Dictionary<Object, MyObjectBuilder_EntityBase> m_rawDataObjectBuilderList;
+
 		public static string ObjectManagerNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ObjectManagerClass = "CAF1EB435F77C7B77580E2E16F988BED";
 		public static string ObjectManagerGetEntityHashSet = "84C54760C0F0DDDA50B0BE27B7116ED8";
@@ -303,6 +305,8 @@ namespace SEModAPIInternal.API.Entity
 			IsDynamic = true;
 			m_instance = this;
 			m_isShutDown = false;
+
+			m_rawDataObjectBuilderList = new Dictionary<object, MyObjectBuilder_EntityBase>();
 		}
 
 		#endregion
@@ -345,6 +349,15 @@ namespace SEModAPIInternal.API.Entity
 			{
 				var rawValue = BaseObject.InvokeStaticMethod(InternalType, ObjectManagerGetEntityHashSet);
 				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				m_rawDataObjectBuilderList.Clear();
+				foreach (Object entity in m_rawDataHashSet)
+				{
+					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
+					m_rawDataObjectBuilderList.Add(entity, baseEntity);
+				}
+
+				m_isInternalResourceLocked = false;
 			}
 			catch (Exception ex)
 			{
@@ -358,12 +371,18 @@ namespace SEModAPIInternal.API.Entity
 				return;
 			if (IsShutDown)
 				return;
+			if (m_isInternalResourceLocked)
+				return;
 
 			IsResourceLocked = true;
 
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
+
+			//Skip the update if there is a discrepency between the entity list and the object builder list
+			if (rawEntities.Count != m_rawDataObjectBuilderList.Count)
+				return;
 
 			//Update the main data mapping
 			data.Clear();
@@ -389,7 +408,9 @@ namespace SEModAPIInternal.API.Entity
 						)
 						continue;
 
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
+					MyObjectBuilder_EntityBase baseEntity = null;
+					if(m_rawDataObjectBuilderList.ContainsKey(entity))
+						baseEntity = m_rawDataObjectBuilderList[entity];
 
 					if (baseEntity == null)
 						continue;

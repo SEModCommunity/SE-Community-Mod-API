@@ -354,11 +354,10 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
-		private Object m_backingObject;
-		private string m_backingSourceMethod;
 		private FileInfo m_fileInfo;
 		private readonly FieldInfo m_definitionsContainerField;
-
+		protected Object m_backingObject;
+		protected string m_backingSourceMethod;
 		protected DateTime m_lastDynamicLoadTime;
 
 		//Flags
@@ -366,6 +365,7 @@ namespace SEModAPIInternal.API.Entity
 		private bool m_changed = false;
 		private bool m_isDynamic = false;
 		private bool m_isResourceLocked = false;
+		protected bool m_isInternalResourceLocked = false;
 
 		//Raw data stores
 		protected HashSet<Object> m_rawDataHashSet = new HashSet<object>();
@@ -518,8 +518,13 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				Action action = InternalGetBackingDataHashSet;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				if (!m_isInternalResourceLocked)
+				{
+					m_isInternalResourceLocked = true;
+
+					Action action = InternalGetBackingDataHashSet;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 
 				return m_rawDataHashSet;
 			}
@@ -540,6 +545,8 @@ namespace SEModAPIInternal.API.Entity
 				if (rawValue == null)
 					return;
 				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				m_isInternalResourceLocked = false;
 			}
 			catch (Exception ex)
 			{
@@ -551,8 +558,13 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				Action action = InternalGetBackingDataList;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				if (!m_isInternalResourceLocked)
+				{
+					m_isInternalResourceLocked = true;
+
+					Action action = InternalGetBackingDataList;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 
 				return m_rawDataList;
 			}
@@ -573,6 +585,8 @@ namespace SEModAPIInternal.API.Entity
 				if (rawValue == null)
 					return;
 				m_rawDataList = UtilityFunctions.ConvertList(rawValue);
+
+				m_isInternalResourceLocked = false;
 			}
 			catch (Exception ex)
 			{
@@ -783,15 +797,16 @@ namespace SEModAPIInternal.API.Entity
 			{
 				TimeSpan timeSinceLastLoad = DateTime.Now - m_lastDynamicLoadTime;
 
-				if (IsDynamic && timeSinceLastLoad.TotalMilliseconds > 50)
+				if (IsDynamic)// && timeSinceLastLoad.TotalMilliseconds > 50)
 				{
-					m_lastDynamicLoadTime = DateTime.Now;
+					//m_lastDynamicLoadTime = DateTime.Now;
 					LoadDynamic();
 				}
 
 				List<T> newList = new List<T>();
 				if(!m_isResourceLocked)
 				{
+					m_isResourceLocked = true;
 					foreach (var def in GetInternalData().Values)
 					{
 						if (!(def is T))
@@ -799,6 +814,7 @@ namespace SEModAPIInternal.API.Entity
 
 						newList.Add((T)def);
 					}
+					m_isResourceLocked = false;
 				}
 
 				return newList;
