@@ -23,7 +23,7 @@ namespace SEModAPIExtensions.API
 		
 		private static CommandManager m_instance;
 		
-		private List<CommandBase> m_commands;
+		private Dictionary<Guid, CommandBase> m_commands;
 		private bool m_initialized;
 		
 		#endregion
@@ -60,7 +60,7 @@ namespace SEModAPIExtensions.API
 			get { return m_initialized; }
 		}
 		
-		public List<CommandBase> Commands
+		public Dictionary<Guid, CommandBase> Commands
 		{
 			get { return m_commands; }
 		}
@@ -69,7 +69,41 @@ namespace SEModAPIExtensions.API
 		
 		#region "Methods"
 		
-		
+		public void LoadCommand(string instancename = "")
+		{
+			Console.WriteLine("Loading commands ...");
+
+			try
+			{
+				//m_commands.Clear();
+				m_initialized = false;
+
+				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
+				List<Type> types = m_utils.CheckFileTypes(ICommand, m_commands)
+				foreach(Type type in types)
+				{
+					try
+					{
+						//Create an instance of the plugin object
+						var commandObject = Activator.CreateInstance(type);
+
+						//And add it to the dictionary
+						m_commands.Add(guidValue, pluginObject);
+						break;
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.ToString());
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
+
+			Console.WriteLine("Finished loading commands");
+		}
 		
 		#endregion
 	}
