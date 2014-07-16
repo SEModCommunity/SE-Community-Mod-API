@@ -27,6 +27,8 @@ namespace SEModAPIExtensions.API
 
 		private Dictionary<Guid, Object> m_plugins;
 		private bool m_initialized;
+		
+		private APIExtensionsUtils m_utils;
 
 		#endregion
 
@@ -66,6 +68,11 @@ namespace SEModAPIExtensions.API
 		{
 			get { return m_plugins; }
 		}
+		
+		protected APIExtensionsUtils Utils
+		{
+			get { return m_utils; }
+		}
 
 		#endregion
 
@@ -89,72 +96,19 @@ namespace SEModAPIExtensions.API
 				m_initialized = false;
 
 				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
-
-				MyFSPath fsPath = new MyFSPath(MyFSLocationEnum.Mod, "");
-				string modsPath = MyFileSystem.GetAbsolutePath(fsPath);
-				if (!Directory.Exists(modsPath))
-					return;
-
-				string[] subDirectories = Directory.GetDirectories(modsPath);
-				foreach (string path in subDirectories)
+				Type type = m_utils.CheckFileTypes(IPlugin, m_plugins)
+				try
 				{
-					string[] files = Directory.GetFiles(path);
-					foreach (string file in files)
-					{
-						try
-						{
-							FileInfo fileInfo = new FileInfo(file);
-							if (!fileInfo.Extension.ToLower().Equals(".dll"))
-								continue;
+					//Create an instance of the plugin object
+					var pluginObject = Activator.CreateInstance(type);
 
-							//Load the assembly
-							Assembly pluginAssembly = Assembly.UnsafeLoadFrom(file);
-
-							//Get the assembly GUID
-							GuidAttribute guid = (GuidAttribute)pluginAssembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
-							Guid guidValue = new Guid(guid.Value);
-
-							//Look through the exported types to find the one that implements PluginBase
-							Type[] types = pluginAssembly.GetExportedTypes();
-							foreach (Type type in types)
-							{
-								//Check that we don't have an entry already for this GUID
-								if (m_plugins.ContainsKey(guidValue))
-									break;
-
-								if (type.BaseType == null)
-									continue;
-
-								Type[] filteredTypes = type.BaseType.GetInterfaces();
-								foreach (Type interfaceType in filteredTypes)
-								{
-									if (interfaceType.FullName == typeof(IPlugin).FullName)
-									{
-										try
-										{
-											//Create an instance of the plugin object
-											var pluginObject = Activator.CreateInstance(type);
-
-											//And add it to the dictionary
-											m_plugins.Add(guidValue, pluginObject);
-
-											break;
-										}
-										catch (Exception ex)
-										{
-											Console.WriteLine(ex.ToString());
-										}
-									}
-								}
-							}
-
-							break;
-						}
-						catch (Exception ex)
-						{
-							Console.WriteLine(ex.ToString());
-						}
-					}
+					//And add it to the dictionary
+					m_plugins.Add(guidValue, pluginObject);
+					break;
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
 				}
 			}
 			catch (Exception ex)
