@@ -96,19 +96,22 @@ namespace SEModAPIExtensions.API
 				m_initialized = false;
 
 				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
-				Type type = m_utils.CheckFileTypes(IPlugin, m_plugins)
-				try
+				List<Type> types = m_utils.CheckFileTypes(IPlugin, m_plugins)
+				foreach(Type type in types)
 				{
-					//Create an instance of the plugin object
-					var pluginObject = Activator.CreateInstance(type);
+					try
+					{
+						//Create an instance of the plugin object
+						var pluginObject = Activator.CreateInstance(type);
 
-					//And add it to the dictionary
-					m_plugins.Add(guidValue, pluginObject);
-					break;
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.ToString());
+						//And add it to the dictionary
+						m_plugins.Add(guidValue, pluginObject);
+						break;
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.ToString());
+					}
 				}
 			}
 			catch (Exception ex)
