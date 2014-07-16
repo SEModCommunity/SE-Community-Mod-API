@@ -54,6 +54,7 @@ namespace SEModAPIExtensions.API.Plugin
 
 		public abstract void Init();
 		public abstract void Update();
+		public abstract void Shutdown();
 
 		#endregion
 	}

@@ -1318,10 +1318,48 @@ namespace SEServerExtender
 
 		private void LST_Plugins_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			if (LST_Plugins.SelectedItem == null)
+				return;
+
 			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
 			Object plugin = PluginManager.Instance.Plugins[selectedItem];
 
 			PG_Plugins.SelectedObject = plugin;
+
+			bool pluginState = PluginManager.Instance.GetPluginState(selectedItem);
+			if (pluginState)
+			{
+				BTN_Plugins_Load.Enabled = false;
+				BTN_Plugins_Unload.Enabled = true;
+			}
+			else
+			{
+				BTN_Plugins_Load.Enabled = true;
+				BTN_Plugins_Unload.Enabled = false;
+			}
+		}
+
+		private void BTN_Plugins_Unload_Click(object sender, EventArgs e)
+		{
+			if (LST_Plugins.SelectedItem == null)
+				return;
+
+			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+			PluginManager.Instance.UnloadPlugin(selectedItem);
+		}
+
+		private void BTN_Plugins_Load_Click(object sender, EventArgs e)
+		{
+			if (LST_Plugins.SelectedItem == null)
+				return;
+
+			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+			PluginManager.Instance.InitPlugin(selectedItem);
+		}
+
+		private void BTN_Plugins_Refresh_Click(object sender, EventArgs e)
+		{
+			PluginManager.Instance.LoadPlugins(m_server.CommandLineArgs.instanceName);
 		}
 
 		#endregion
