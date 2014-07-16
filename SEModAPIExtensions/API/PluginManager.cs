@@ -149,11 +149,11 @@ namespace SEModAPIExtensions.API
 			foreach (var key in m_plugins.Keys)
 			{
 				var plugin = m_plugins[key];
-				
+
 				//Skip un-initialized plugins
 				if (!m_pluginState.ContainsKey(key))
 					continue;
-					
+	
 				//Run entity events
 				List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
 				foreach (EntityEventManager.EntityEvent entityEvent in events)
@@ -247,6 +247,64 @@ namespace SEModAPIExtensions.API
 			ChatManager.Instance.ClearEvents();
 		}
 		
+		public void InitPlugin(Guid key)
+		{
+			if (m_pluginState.ContainsKey(key))
+				return;
+
+			LogManager.APILog.WriteLineAndConsole("Initializing plugin '" + key.ToString() + "' ...");
+
+			try
+			{
+				var plugin = m_plugins[key];
+				MethodInfo initMethod = plugin.GetType().GetMethod("Init");
+				initMethod.Invoke(plugin, new object[] { });
+
+				m_pluginState.Add(key, true);
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+			}
+		}
+
+		public void UnloadPlugin(Guid key)
+		{
+			if (key == null)
+				return;
+
+			//Skip if the plugin doesn't exist
+			if (!m_plugins.ContainsKey(key))
+				return;
+
+			//Skip if the pluing is already unloaded
+			if (!m_pluginState.ContainsKey(key))
+				return;
+
+			LogManager.APILog.WriteLineAndConsole("Unloading plugin '" + key.ToString() + "'");
+
+			var plugin = m_plugins[key];
+			try
+			{
+				MethodInfo initMethod = plugin.GetType().GetMethod("Shutdown");
+				initMethod.Invoke(plugin, new object[] { });
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+			}
+
+			m_pluginState.Remove(key);
+		}
+
+		public bool GetPluginState(Guid key)
+		{
+			if (!m_pluginState.ContainsKey(key))
+				return false;
+
+			return m_pluginState[key];
+		}
+
 		public void InitPlugin(Guid key)
 		{
 			if (m_pluginState.ContainsKey(key))

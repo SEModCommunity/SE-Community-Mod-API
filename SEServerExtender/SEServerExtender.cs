@@ -32,6 +32,7 @@ using SEModAPIInternal.API.Server;
 using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
+using VRageMath;
 
 namespace SEServerExtender
 {
@@ -80,7 +81,7 @@ namespace SEServerExtender
 		private bool SetupTimers()
 		{
 			m_entityTreeRefreshTimer = new System.Windows.Forms.Timer();
-			m_entityTreeRefreshTimer.Interval = 500;
+			m_entityTreeRefreshTimer.Interval = 1000;
 			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
 
 			m_chatViewRefreshTimer = new System.Windows.Forms.Timer();
@@ -96,7 +97,7 @@ namespace SEServerExtender
 			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
 
 			m_statusCheckTimer = new System.Windows.Forms.Timer();
-			m_statusCheckTimer.Interval = 750;
+			m_statusCheckTimer.Interval = 500;
 			m_statusCheckTimer.Tick += new EventHandler(StatusCheckRefresh);
 			m_statusCheckTimer.Start();
 
@@ -298,6 +299,11 @@ namespace SEServerExtender
 				}
 			}
 
+			if (m_server.IsRunning)
+				CHK_Control_Debugging.Checked = SandboxGameAssemblyWrapper.IsDebugging;
+			if (m_server.IsRunning && m_server.CommandLineArgs.instanceName.Length > 0)
+				CMB_Control_CommonInstanceList.SelectedText = m_server.CommandLineArgs.instanceName;
+
 			BTN_ServerControl_Stop.Enabled = m_server.IsRunning;
 			BTN_ServerControl_Start.Enabled = !m_server.IsRunning;
 			BTN_Chat_Send.Enabled = m_server.IsRunning;
@@ -466,8 +472,8 @@ namespace SEServerExtender
 
 						if (!item.IsDisposed)
 						{
-							SerializableVector3 rawPosition = item.Position;
-							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							Vector3 rawPosition = item.Position;
+							double distance = rawPosition.Length();
 							string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 						}
@@ -489,8 +495,11 @@ namespace SEServerExtender
 			{
 				try
 				{
-					SerializableVector3 rawPosition = item.Position;
-					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+					if (item == null)
+						continue;
+
+					Vector3 rawPosition = item.Position;
+					double distance = rawPosition.Length();
 
 					Type sectorObjectType = item.GetType();
 					string nodeKey = item.EntityId.ToString();
@@ -522,73 +531,17 @@ namespace SEServerExtender
 			{
 				try
 				{
+					if (node == null)
+						continue;
+
 					if (node.Tag != null && list.Contains(node.Tag))
 					{
 						CharacterEntity item = (CharacterEntity)node.Tag;
 
 						if (!item.IsDisposed)
 						{
-							SerializableVector3 rawPosition = item.Position;
-							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-							string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
-							node.Text = newNodeText;
-						}
-						list.Remove(item);
-					}
-					else
-					{
-						node.Remove();
-					}
-				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
-			}
-
-			//Add new nodes
-			foreach (var item in list)
-			{
-				try
-				{
-					SerializableVector3 rawPosition = item.Position;
-					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
-
-					Type sectorObjectType = item.GetType();
-					string nodeKey = item.EntityId.ToString();
-
-					TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m");
-					newNode.Name = item.Name;
-					newNode.Tag = item;
-				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
-			}
-
-			//Update node text
-			rootNode.Text = rootNode.Name + " (" + rootNode.Nodes.Count.ToString() + ")";
-		}
-
-		private void RenderVoxelMapNodes(TreeNode rootNode)
-		{
-			//Get entities from sector object manager
-			List<VoxelMap> list = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
-
-			//Cleanup and update the existing nodes
-			foreach (TreeNode node in rootNode.Nodes)
-			{
-				try
-				{
-					if (node.Tag != null && list.Contains(node.Tag))
-					{
-						VoxelMap item = (VoxelMap)node.Tag;
-
-						if (!item.IsDisposed)
-						{
-							SerializableVector3 rawPosition = item.Position;
-							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							Vector3 rawPosition = item.Position;
+							double distance = rawPosition.Length();
 							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 						}
@@ -610,8 +563,79 @@ namespace SEServerExtender
 			{
 				try
 				{
-					SerializableVector3 rawPosition = item.Position;
-					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+					if (item == null)
+						continue;
+
+					Vector3 rawPosition = item.Position;
+					double distance = rawPosition.Length();
+
+					Type sectorObjectType = item.GetType();
+					string nodeKey = item.EntityId.ToString();
+
+					TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Dist: " + distance.ToString() + "m");
+					newNode.Name = item.Name;
+					newNode.Tag = item;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
+			}
+
+			//Update node text
+			rootNode.Text = rootNode.Name + " (" + rootNode.Nodes.Count.ToString() + ")";
+		}
+
+		private void RenderVoxelMapNodes(TreeNode rootNode)
+		{
+			if (rootNode == null)
+				return;
+
+			//Get entities from sector object manager
+			List<VoxelMap> list = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
+
+			//Cleanup and update the existing nodes
+			foreach (TreeNode node in rootNode.Nodes)
+			{
+				try
+				{
+					if (node == null)
+						continue;
+
+					if (node.Tag != null && list.Contains(node.Tag))
+					{
+						VoxelMap item = (VoxelMap)node.Tag;
+
+						if (!item.IsDisposed)
+						{
+							Vector3 rawPosition = item.Position;
+							double distance = rawPosition.Length();
+							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
+							node.Text = newNodeText;
+						}
+						list.Remove(item);
+					}
+					else
+					{
+						node.Remove();
+					}
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
+			}
+
+			//Add new nodes
+			foreach (var item in list)
+			{
+				try
+				{
+					if (item == null)
+						continue;
+
+					Vector3 rawPosition = item.Position;
+					double distance = rawPosition.Length();
 
 					Type sectorObjectType = item.GetType();
 					string nodeKey = item.EntityId.ToString();
@@ -632,6 +656,9 @@ namespace SEServerExtender
 
 		private void RenderFloatingObjectNodes(TreeNode rootNode)
 		{
+			if (rootNode == null)
+				return;
+
 			//Get entities from sector object manager
 			List<FloatingObject> list = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
 
@@ -640,14 +667,17 @@ namespace SEServerExtender
 			{
 				try
 				{
+					if (node == null)
+						continue;
+
 					if (node.Tag != null && list.Contains(node.Tag))
 					{
 						FloatingObject item = (FloatingObject)node.Tag;
 
-						if (!item.IsDisposed)
+						if (!item.IsDisposed && item.Item != null)
 						{
-							SerializableVector3 rawPosition = item.Position;
-							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							Vector3 rawPosition = item.Position;
+							double distance = rawPosition.Length();
 							string newNodeText = item.Name + " | Amount: " + item.Item.Amount.ToString() + " | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 						}
@@ -669,8 +699,15 @@ namespace SEServerExtender
 			{
 				try
 				{
-					SerializableVector3 rawPosition = item.Position;
-					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+					if (item == null)
+						continue;
+					if (item.IsDisposed)
+						continue;
+					if (item.Item == null)
+						continue;
+
+					Vector3 rawPosition = item.Position;
+					double distance = rawPosition.Length();
 
 					Type sectorObjectType = item.GetType();
 					string nodeKey = item.EntityId.ToString();
@@ -694,6 +731,9 @@ namespace SEServerExtender
 
 		private void RenderMeteorNodes(TreeNode rootNode)
 		{
+			if (rootNode == null)
+				return;
+
 			//Get entities from sector object manager
 			List<Meteor> list = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
 
@@ -702,14 +742,17 @@ namespace SEServerExtender
 			{
 				try
 				{
+					if (node == null)
+						continue;
+
 					if (node.Tag != null && list.Contains(node.Tag))
 					{
 						Meteor item = (Meteor)node.Tag;
 
 						if (!item.IsDisposed)
 						{
-							SerializableVector3 rawPosition = item.Position;
-							double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+							Vector3 rawPosition = item.Position;
+							double distance = rawPosition.Length();
 							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 						}
@@ -731,12 +774,13 @@ namespace SEServerExtender
 			{
 				try
 				{
-					SerializableVector3 rawPosition = item.Position;
-					double distance = Math.Round(Math.Sqrt(rawPosition.X * rawPosition.X + rawPosition.Y * rawPosition.Y + rawPosition.Z * rawPosition.Z), 2);
+					if (item == null)
+						continue;
 
-					Type sectorObjectType = item.GetType();
+					Vector3 rawPosition = item.Position;
+					double distance = rawPosition.Length();
+
 					string nodeKey = item.EntityId.ToString();
-
 					TreeNode newNode = rootNode.Nodes.Add(nodeKey, item.Name + " | Dist: " + distance.ToString() + "m");
 					newNode.Name = item.Name;
 					newNode.Tag = item;
@@ -1274,10 +1318,48 @@ namespace SEServerExtender
 
 		private void LST_Plugins_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			if (LST_Plugins.SelectedItem == null)
+				return;
+
 			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
 			Object plugin = PluginManager.Instance.Plugins[selectedItem];
 
 			PG_Plugins.SelectedObject = plugin;
+
+			bool pluginState = PluginManager.Instance.GetPluginState(selectedItem);
+			if (pluginState)
+			{
+				BTN_Plugins_Load.Enabled = false;
+				BTN_Plugins_Unload.Enabled = true;
+			}
+			else
+			{
+				BTN_Plugins_Load.Enabled = true;
+				BTN_Plugins_Unload.Enabled = false;
+			}
+		}
+
+		private void BTN_Plugins_Unload_Click(object sender, EventArgs e)
+		{
+			if (LST_Plugins.SelectedItem == null)
+				return;
+
+			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+			PluginManager.Instance.UnloadPlugin(selectedItem);
+		}
+
+		private void BTN_Plugins_Load_Click(object sender, EventArgs e)
+		{
+			if (LST_Plugins.SelectedItem == null)
+				return;
+
+			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+			PluginManager.Instance.InitPlugin(selectedItem);
+		}
+
+		private void BTN_Plugins_Refresh_Click(object sender, EventArgs e)
+		{
+			PluginManager.Instance.LoadPlugins(m_server.CommandLineArgs.instanceName);
 		}
 
 		#endregion
