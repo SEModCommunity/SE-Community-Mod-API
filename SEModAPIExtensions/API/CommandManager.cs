@@ -105,28 +105,14 @@ namespace SEModAPIExtensions.API
 			Console.WriteLine("Finished loading commands");
 		}
 		
-		public bool Execute(string cmd, string[] args)
+		public List<CommandBase> DictionaryCommandsToList()
 		{
-			foreach (var command in m_commands.Values)
+			List<CommandBase> cmds = new List<CommandBase>;
+			foreach(CommandBase cmd in m_commands)
 			{
-				try
-				{
-					MethodInfo exectueMethod = command.GetType().GetMethod("execute");
-					executeMethod.Invoke(command, new object[] { cmd, args });
-					string newstring = "";
-					for(int i = 0; i < args.Length; i++)
-					{
-						newstring += args[i];
-						if(i != args.Length)
-							newstring += ", ";
-					}
-					Console.WriteLine("Command: " + cmd + " using arguments " + newstring);
-				}
-				catch (Exception ex)
-				{
-					LogManager.APILog.WriteLine(ex);
-				}
+				cmds.Add(cmd);
 			}
+			return cmds;
 		}
 		
 		#endregion
