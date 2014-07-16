@@ -105,6 +105,30 @@ namespace SEModAPIExtensions.API
 			Console.WriteLine("Finished loading commands");
 		}
 		
+		public bool Execute(string cmd, string[] args)
+		{
+			foreach (var command in m_commands.Values)
+			{
+				try
+				{
+					MethodInfo exectueMethod = command.GetType().GetMethod("execute");
+					executeMethod.Invoke(command, new object[] { cmd, args });
+					string newstring = "";
+					for(int i = 0; i < args.Length; i++)
+					{
+						newstring += args[i];
+						if(i != args.Length)
+							newstring += ", ";
+					}
+					Console.WriteLine("Command: " + cmd + " using arguments " + newstring);
+				}
+				catch (Exception ex)
+				{
+					LogManager.APILog.WriteLine(ex);
+				}
+			}
+		}
+		
 		#endregion
 	}
 }
