@@ -133,7 +133,7 @@ namespace SEModAPIInternal.API.Entity
 		[Browsable(false)]
 		[ReadOnly(true)]
 		[Description("The value ID representing the type of the object")]
-		public MyObjectBuilderTypeEnum TypeId
+		public MyObjectBuilderType TypeId
 		{
 			get { return m_baseEntity.TypeId; }
 			set
@@ -834,7 +834,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			if (!IsMutable) return default(T);
 
-			MyObjectBuilder_Base newBase = MyObjectBuilder_Base.CreateNewObject(MyObjectBuilderTypeEnum.EntityBase);
+			MyObjectBuilder_Base newBase = MyObjectBuilder_Base.CreateNewObject(typeof(MyObjectBuilder_EntityBase));
 			return NewEntry<T>(newBase);
 		}
 

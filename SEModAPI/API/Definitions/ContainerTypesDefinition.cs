@@ -2,6 +2,8 @@
 using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI.API.Definitions;
 
+using VRage.Common.Utils;
+
 namespace SEModAPI.API.Definitions
 {
     public class ContainerTypesDefinition : OverLayerDefinition<MyObjectBuilder_ContainerTypeDefinition>
@@ -65,12 +67,12 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
-		public MyObjectBuilderTypeEnum TypeId
+		public MyObjectBuilderType TypeId
         {
             get { return m_baseDefinition.TypeId; }
         }
 
-        public int SubtypeId
+        public MyStringId SubtypeId
         {
             get { return m_baseDefinition.SubtypeId; }
         }

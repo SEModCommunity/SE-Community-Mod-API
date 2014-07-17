@@ -629,84 +629,80 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					}
 					else
 					{
-						switch (baseEntity.TypeId)
-						{
-							case MyObjectBuilderTypeEnum.CargoContainer:
-								matchingCubeBlock = new CargoContainerEntity(m_parent, (MyObjectBuilder_CargoContainer)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Reactor:
-								matchingCubeBlock = new ReactorEntity(m_parent, (MyObjectBuilder_Reactor)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Beacon:
-								matchingCubeBlock = new BeaconEntity(m_parent, (MyObjectBuilder_Beacon)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Cockpit:
-								matchingCubeBlock = new CockpitEntity(m_parent, (MyObjectBuilder_Cockpit)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.GravityGenerator:
-								matchingCubeBlock = new GravityGeneratorEntity(m_parent, (MyObjectBuilder_GravityGenerator)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.MedicalRoom:
-								matchingCubeBlock = new MedicalRoomEntity(m_parent, (MyObjectBuilder_MedicalRoom)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.InteriorLight:
-								matchingCubeBlock = new InteriorLightEntity(m_parent, (MyObjectBuilder_InteriorLight)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.ReflectorLight:
-								matchingCubeBlock = new ReflectorLightEntity(m_parent, (MyObjectBuilder_ReflectorLight)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.BatteryBlock:
-								matchingCubeBlock = new BatteryBlockEntity(m_parent, (MyObjectBuilder_BatteryBlock)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Door:
-								matchingCubeBlock = new DoorEntity(m_parent, (MyObjectBuilder_Door)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Refinery:
-								matchingCubeBlock = new RefineryEntity(m_parent, (MyObjectBuilder_Refinery)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Assembler:
-								matchingCubeBlock = new AssemblerEntity(m_parent, (MyObjectBuilder_Assembler)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Thrust:
-								matchingCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
-								break;
-							//case MyObjectBuilderTypeEnum.MergeBlock:
-								//matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
-								//break;
-							case MyObjectBuilderTypeEnum.LandingGear:
-								matchingCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Conveyor:
-								matchingCubeBlock = new ConveyorBlockEntity(m_parent, (MyObjectBuilder_Conveyor)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.ConveyorConnector:
-								matchingCubeBlock = new ConveyorTubeEntity(m_parent, (MyObjectBuilder_ConveyorConnector)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.SolarPanel:
-								matchingCubeBlock = new SolarPanelEntity(m_parent, (MyObjectBuilder_SolarPanel)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Gyro:
-								matchingCubeBlock = new GyroEntity(m_parent, (MyObjectBuilder_Gyro)baseEntity, entity);
-								break;
-							//case MyObjectBuilderTypeEnum.LargeGatlingTurret:
-								//matchingCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
-								//break;
-							//case MyObjectBuilderTypeEnum.LargeMissileTurret:
-								//matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
-								//break;
-							case MyObjectBuilderTypeEnum.ShipGrinder:
-								matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.ShipWelder:
-								matchingCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Drill:
-								matchingCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
-								break;
-							default:
-								matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
-								break;
-						}
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_CargoContainer))
+							matchingCubeBlock = new CargoContainerEntity(m_parent, (MyObjectBuilder_CargoContainer)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Reactor))
+							matchingCubeBlock = new ReactorEntity(m_parent, (MyObjectBuilder_Reactor)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Beacon))
+							matchingCubeBlock = new BeaconEntity(m_parent, (MyObjectBuilder_Beacon)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Cockpit))
+							matchingCubeBlock = new CockpitEntity(m_parent, (MyObjectBuilder_Cockpit)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_GravityGenerator))
+							matchingCubeBlock = new GravityGeneratorEntity(m_parent, (MyObjectBuilder_GravityGenerator)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_MedicalRoom))
+							matchingCubeBlock = new MedicalRoomEntity(m_parent, (MyObjectBuilder_MedicalRoom)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_InteriorLight))
+							matchingCubeBlock = new InteriorLightEntity(m_parent, (MyObjectBuilder_InteriorLight)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_ReflectorLight))
+							matchingCubeBlock = new ReflectorLightEntity(m_parent, (MyObjectBuilder_ReflectorLight)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_BatteryBlock))
+							matchingCubeBlock = new BatteryBlockEntity(m_parent, (MyObjectBuilder_BatteryBlock)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Door))
+							matchingCubeBlock = new DoorEntity(m_parent, (MyObjectBuilder_Door)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Refinery))
+							matchingCubeBlock = new RefineryEntity(m_parent, (MyObjectBuilder_Refinery)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Assembler))
+							matchingCubeBlock = new AssemblerEntity(m_parent, (MyObjectBuilder_Assembler)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Thrust))
+							matchingCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
+
+						//if (baseEntity.TypeId == typeof(MyObjectBuilder_MergeBlock))
+							//matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_LandingGear))
+							matchingCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Conveyor))
+							matchingCubeBlock = new ConveyorBlockEntity(m_parent, (MyObjectBuilder_Conveyor)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_ConveyorConnector))
+							matchingCubeBlock = new ConveyorTubeEntity(m_parent, (MyObjectBuilder_ConveyorConnector)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_SolarPanel))
+							matchingCubeBlock = new SolarPanelEntity(m_parent, (MyObjectBuilder_SolarPanel)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Gyro))
+							matchingCubeBlock = new GyroEntity(m_parent, (MyObjectBuilder_Gyro)baseEntity, entity);
+
+						//if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeGatlingTurret))
+							//matchingCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
+
+						//if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeMissileTurret))
+							//matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipGrinder))
+							matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipWelder))
+							matchingCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
+
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Drill))
+							matchingCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
+
+						if (matchingCubeBlock == null)
+							matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 					}
 
 					if (matchingCubeBlock == null)

@@ -169,7 +169,7 @@ namespace SEModAPI.API
 		}
 
 		public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+		{/*
 			if (value.GetType() == typeof(string))
 			{
 				string source = (string)value;
@@ -185,7 +185,7 @@ namespace SEModAPI.API
 					}
 				}
 			}
-
+			*/
 			return base.ConvertFrom(context, culture, value);
 		}
 	}
@@ -213,10 +213,10 @@ namespace SEModAPI.API
 					m_idList.Add(def.Id);
 				}
 
-				m_idList.Add(new SerializableDefinitionId(MyObjectBuilderTypeEnum.CubeGrid, ""));
-				m_idList.Add(new SerializableDefinitionId(MyObjectBuilderTypeEnum.VoxelMap, ""));
-				m_idList.Add(new SerializableDefinitionId(MyObjectBuilderTypeEnum.FloatingObject, ""));
-				m_idList.Add(new SerializableDefinitionId(MyObjectBuilderTypeEnum.Meteor, ""));
+				//m_idList.Add(new SerializableDefinitionId(MyObjectBuilderTypeEnum.CubeGrid, ""));
+				//m_idList.Add(new SerializableDefinitionId(MyObjectBuilderTypeEnum.VoxelMap, ""));
+				//m_idList.Add(new SerializableDefinitionId(MyObjectBuilderTypeEnum.FloatingObject, ""));
+				//m_idList.Add(new SerializableDefinitionId(MyObjectBuilderTypeEnum.Meteor, ""));
 			}
 		}
 
@@ -239,7 +239,7 @@ namespace SEModAPI.API
 		}
 
 		public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+		{/*
 			if (value.GetType() == typeof(string))
 			{
 				string source = (string)value;
@@ -255,7 +255,7 @@ namespace SEModAPI.API
 					}
 				}
 			}
-
+			*/
 			return base.ConvertFrom(context, culture, value);
 		}
 	}

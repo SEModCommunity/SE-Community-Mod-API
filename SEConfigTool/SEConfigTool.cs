@@ -232,7 +232,7 @@ namespace SEConfigTool
 						if (nodeName == "")
 							nodeName = cubeBlock.Id.ToString();
 						if (nodeName == "")
-							nodeName = cubeBlock.EntityId.ToString();
+							nodeName = cubeBlock.EntityId.ToString();/*
 						switch (cubeBlock.Id.TypeId)
 						{
 							case MyObjectBuilderTypeEnum.CubeBlock:
@@ -283,7 +283,7 @@ namespace SEConfigTool
 							default:
 								blockNode = miscBlocksNode.Nodes.Add(cubeBlock.EntityId.ToString(), nodeName);
 								break;
-						}
+						}*/
 					}
 
 					if (cubeType == typeof(CargoContainerEntity))
@@ -640,11 +640,11 @@ namespace SEConfigTool
 				LST_PhysicalItemConfig.Items.Add(definition.Name);
 			}
 
-			CMB_PhysicalItemConfig_Details_Type.Items.Clear();
+			CMB_PhysicalItemConfig_Details_Type.Items.Clear();/*
 			foreach (var type in Enum.GetValues(typeof(MyObjectBuilderTypeEnum)))
 			{
 				CMB_PhysicalItemConfig_Details_Type.Items.Add(type);
-			}
+			}*/
 
 			m_currentlyFillingConfigurationListBox = false;
 		}
@@ -1409,7 +1409,7 @@ namespace SEConfigTool
 
 			AmmoMagazinesDefinition ammoMagazine = m_ammoMagazinesDefinitionsManager.DefinitionOf(LST_AmmoConfig.SelectedIndex);
 
-			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, TXT_AmmoConfig_Details_Id.Text);
+			ammoMagazine.Id = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_AmmoMagazine)), TXT_AmmoConfig_Details_Id.Text);
 			ammoMagazine.DisplayName = TXT_AmmoConfig_Details_Name.Text;
 			ammoMagazine.Description = TXT_AmmoConfig_Details_Description.Text;
 			ammoMagazine.Icon = TXT_AmmoConfig_Details_Icon.Text;
@@ -1432,7 +1432,7 @@ namespace SEConfigTool
 			}
 
 			ammoMagazine.DisplayName = "(New)";
-			ammoMagazine.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.AmmoMagazine, "NewSubtype");
+			ammoMagazine.Id = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_AmmoMagazine)), "NewSubtype");
 
 			FillAmmoConfigurationListBox(false);
 
@@ -1646,7 +1646,7 @@ namespace SEConfigTool
 			}
 
 			//Set some default values for the new entry
-			containerItem.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "Stone");
+			containerItem.Id = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_Ore)), "Stone");
 			containerItem.AmountMin = 1;
 			containerItem.AmountMax = 1;
 
@@ -1740,7 +1740,7 @@ namespace SEConfigTool
 
 			GlobalEventsDefinition globalEvent = m_globalEventsDefinitionsManager.DefinitionOf(index);
 
-			globalEvent.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.EventDefinition, ((MyGlobalEventTypeEnum)CMB_GlobalEventsConfig_Details_EventType.SelectedItem).ToString());
+			globalEvent.Id = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_GlobalEventDefinition)), ((MyGlobalEventTypeEnum)CMB_GlobalEventsConfig_Details_EventType.SelectedItem).ToString());
 			globalEvent.DisplayName = globalEvent.Name;
 			globalEvent.Description = TXT_ConfigGlobalEvent_Details_Description.Text;
 			globalEvent.EventType = (MyGlobalEventTypeEnum)CMB_GlobalEventsConfig_Details_EventType.SelectedItem;
@@ -1777,7 +1777,7 @@ namespace SEConfigTool
 			}
 
 			newGlobalEventDef.DisplayName = "(New)";
-			newGlobalEventDef.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.EventDefinition, MyGlobalEventTypeEnum.InvalidEventType.ToString());
+			newGlobalEventDef.Id = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_GlobalEventDefinition)), MyGlobalEventTypeEnum.InvalidEventType.ToString());
 
 			FillGlobalEventConfigurationListBox(false);
 
@@ -2073,7 +2073,7 @@ namespace SEConfigTool
 
 			PhysicalItemsDefinition physicalItem = m_physicalItemsDefinitionsManager.DefinitionOf(index);
 
-			physicalItem.Id = new SerializableDefinitionId((MyObjectBuilderTypeEnum)CMB_PhysicalItemConfig_Details_Type.SelectedItem, TXT_PhysicalItemConfig_Details_Id.Text);
+			physicalItem.Id = new SerializableDefinitionId((MyObjectBuilderType)CMB_PhysicalItemConfig_Details_Type.SelectedItem, TXT_PhysicalItemConfig_Details_Id.Text);
 			physicalItem.DisplayName = TXT_PhysicalItemConfig_Details_Name.Text;
 			physicalItem.Description = TXT_PhysicalItemConfig_Details_Description.Text;
 			physicalItem.Icon = TXT_PhysicalItemConfig_Details_Icon.Text;
@@ -2106,7 +2106,7 @@ namespace SEConfigTool
 			}
 
 			physicalItem.DisplayName = "(New)";
-			physicalItem.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "NewSubtype");
+			physicalItem.Id = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_Ore)), "NewSubtype");
 
 			FillPhysicalItemConfigurationListBox(false);
 
@@ -2193,7 +2193,7 @@ namespace SEConfigTool
 
 			ComponentsDefinition component = m_componentsDefinitionsManager.DefinitionOf(index);
 
-			component.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, TXT_ComponentConfig_Details_Id.Text);
+			component.Id = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_Component)), TXT_ComponentConfig_Details_Id.Text);
 			component.DisplayName = TXT_ComponentConfig_Details_Name.Text;
 			component.Description = TXT_ComponentConfig_Details_Description.Text;
 			component.Icon = TXT_ComponentConfig_Details_Icon.Text;
@@ -2225,7 +2225,7 @@ namespace SEConfigTool
 			}
 
 			component.DisplayName = "(New)";
-			component.Id = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Component, "NewSubtype");
+			component.Id = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_Component)), "NewSubtype");
 
 			FillComponentConfigurationListBox(false);
 
@@ -2274,7 +2274,7 @@ namespace SEConfigTool
 				LST_BlueprintConfig_Details_Prerequisites.Items.Add(prereq.Name);
 			}
 
-			CMB_BlueprintConfig_Details_Result_TypeId.SelectedItem = new SerializableDefinitionId(blueprint.Result.TypeId, blueprint.Result.SubTypeId);
+			CMB_BlueprintConfig_Details_Result_TypeId.SelectedItem = new SerializableDefinitionId(MyObjectBuilderType.Parse(blueprint.Result.TypeId), blueprint.Result.SubTypeId);
 			CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedIndex = -1;
 
 			m_currentlySelecting = false;
@@ -2313,7 +2313,7 @@ namespace SEConfigTool
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(LST_BlueprintConfig.SelectedIndex);
 
 			SerializableDefinitionId selectedItem = (SerializableDefinitionId)CMB_BlueprintConfig_Details_Result_TypeId.SelectedValue;
-			blueprint.Result.TypeId = selectedItem.TypeId;
+			blueprint.Result.TypeId = selectedItem.TypeId.ToString();
 			blueprint.Result.SubTypeId = selectedItem.SubtypeName;
 			blueprint.Result.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Result_Amount.Text, m_numberFormatInfo);
 			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TXT_BlueprintConfig_Details_Result_BaseProductionTime.Text, m_numberFormatInfo);
@@ -2339,17 +2339,17 @@ namespace SEConfigTool
 
 		private void BTN_BlueprintConfig_Details_Result_New_Click(object sender, EventArgs e)
 		{
-			SerializableDefinitionId selectedItem = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "Stone");
+			SerializableDefinitionId selectedItem = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_Ore)), "Stone");
 			MyObjectBuilder_BlueprintDefinition temp = new MyObjectBuilder_BlueprintDefinition();
 			temp.BaseProductionTimeInSeconds = 1;
 			temp.Prerequisites = new MyObjectBuilder_BlueprintDefinition.Item[1];
 			temp.Prerequisites[0] = new MyObjectBuilder_BlueprintDefinition.Item();
-			temp.Prerequisites[0].TypeId = selectedItem.TypeId;
+			temp.Prerequisites[0].TypeId = selectedItem.TypeId.ToString();
 			temp.Prerequisites[0].SubtypeId = selectedItem.SubtypeName;
 			temp.Prerequisites[0].Amount = 1;
 			temp.Result = new MyObjectBuilder_BlueprintDefinition.Item();
 			temp.Result.Amount = 1;
-			temp.Result.TypeId = selectedItem.TypeId;
+			temp.Result.TypeId = selectedItem.TypeId.ToString();
 			temp.Result.SubtypeId = selectedItem.SubtypeName;
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.NewEntry(temp);
 			if (blueprint == null)
@@ -2399,7 +2399,7 @@ namespace SEConfigTool
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.DefinitionOf(blueprintIndex);
 			BlueprintItemDefinition prereq = blueprint.Prerequisites[prereqIndex];
 
-			SerializableDefinitionId selectedItem = new SerializableDefinitionId(prereq.TypeId, prereq.SubTypeId);
+			SerializableDefinitionId selectedItem = new SerializableDefinitionId(MyObjectBuilderType.Parse(prereq.TypeId), prereq.SubTypeId);
 			CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedItem = selectedItem;
 			TXT_BlueprintConfig_Details_Prerequisites_Amount.Text = prereq.Amount.ToString(m_numberFormatInfo);
 
@@ -2416,7 +2416,7 @@ namespace SEConfigTool
 			BlueprintItemDefinition prereq = blueprint.Prerequisites[prereqIndex];
 
 			SerializableDefinitionId selectedItem = (SerializableDefinitionId)CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedItem;
-			prereq.TypeId = selectedItem.TypeId;
+			prereq.TypeId = selectedItem.TypeId.ToString();
 			prereq.SubTypeId = selectedItem.SubtypeName;
 			prereq.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Prerequisites_Amount.Text, m_numberFormatInfo);
 

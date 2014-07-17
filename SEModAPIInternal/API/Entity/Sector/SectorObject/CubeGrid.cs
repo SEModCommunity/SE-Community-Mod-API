@@ -68,35 +68,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			: base(definition)
 		{
 			m_cubeBlockManager = new CubeBlockManager(this);
-			List<CubeBlockEntity> cubeBlockList = new List<CubeBlockEntity>();
-			foreach (var cubeBlock in ((MyObjectBuilder_CubeGrid)BaseEntity).CubeBlocks)
-			{
-				switch (cubeBlock.TypeId)
-				{
-					case MyObjectBuilderTypeEnum.CargoContainer:
-						cubeBlockList.Add(new CargoContainerEntity(this, (MyObjectBuilder_CargoContainer)cubeBlock));
-						break;
-					case MyObjectBuilderTypeEnum.Reactor:
-						cubeBlockList.Add(new ReactorEntity(this, (MyObjectBuilder_Reactor)cubeBlock));
-						break;
-					case MyObjectBuilderTypeEnum.MedicalRoom:
-						cubeBlockList.Add(new MedicalRoomEntity(this, (MyObjectBuilder_MedicalRoom)cubeBlock));
-						break;
-					case MyObjectBuilderTypeEnum.Cockpit:
-						cubeBlockList.Add(new CockpitEntity(this, (MyObjectBuilder_Cockpit)cubeBlock));
-						break;
-					case MyObjectBuilderTypeEnum.Beacon:
-						cubeBlockList.Add(new BeaconEntity(this, (MyObjectBuilder_Beacon)cubeBlock));
-						break;
-					case MyObjectBuilderTypeEnum.GravityGenerator:
-						cubeBlockList.Add(new GravityGeneratorEntity(this, (MyObjectBuilder_GravityGenerator)cubeBlock));
-						break;
-					default:
-						cubeBlockList.Add(new CubeBlockEntity(this, cubeBlock));
-						break;
-				}
-			}
-			m_cubeBlockManager.Load(cubeBlockList);
 		}
 
 		public CubeGridEntity(MyObjectBuilder_CubeGrid definition, Object backingObject)
@@ -146,7 +117,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				string name = "";
 				foreach (var cubeBlock in GetSubTypeEntity().CubeBlocks)
 				{
-					if (cubeBlock.TypeId == MyObjectBuilderTypeEnum.Beacon)
+					if (cubeBlock.TypeId == typeof(MyObjectBuilder_Beacon))
 					{
 						if (name.Length > 0)
 							name += "|";

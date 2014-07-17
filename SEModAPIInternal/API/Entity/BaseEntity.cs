@@ -612,12 +612,7 @@ namespace SEModAPIInternal.API.Entity
 					}
 					else
 					{
-						switch (baseEntity.TypeId)
-						{
-							default:
-								matchingEntity = new BaseEntity(baseEntity, entity);
-								break;
-						}
+						matchingEntity = new BaseEntity(baseEntity, entity);
 					}
 
 					if (matchingEntity == null)

@@ -128,7 +128,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
-		public MyObjectBuilderTypeEnum TypeId
+		public string TypeId
 		{
 			get { return m_baseDefinition.TypeId; }
 			set

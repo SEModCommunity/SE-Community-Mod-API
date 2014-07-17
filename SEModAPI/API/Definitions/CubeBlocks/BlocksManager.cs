@@ -260,7 +260,7 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 			m_thrusters.Clear();
 			m_virtualMasses.Clear();
 			foreach (var cubeBlock in blocks)
-			{
+			{/*
 				switch (cubeBlock.Id.TypeId)
 				{
 					case (MyObjectBuilderTypeEnum.CubeBlock):
@@ -484,7 +484,7 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 						m_cubeBlocks.Add(new CubeBlockDef(cubeBlock));
 					}
 					break;
-				}	
+				}*/
 			}
 			m_pendingChanges = false;
 		}

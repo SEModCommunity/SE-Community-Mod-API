@@ -63,19 +63,19 @@ namespace SEModAPIInternal.API.Entity
 			List<BaseEntity> unknowns = new List<BaseEntity>();
 			foreach (var sectorObject in definition.SectorObjects)
 			{
-				if (sectorObject.TypeId == MyObjectBuilderTypeEnum.CubeGrid)
+				if (sectorObject.TypeId == typeof(MyObjectBuilder_CubeGrid))
 				{
 					cubeGrids.Add(new CubeGridEntity((MyObjectBuilder_CubeGrid)sectorObject));
 				}
-				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.VoxelMap)
+				else if (sectorObject.TypeId == typeof(MyObjectBuilder_VoxelMap))
 				{
 					voxelMaps.Add(new VoxelMap((MyObjectBuilder_VoxelMap)sectorObject));
 				}
-				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.FloatingObject)
+				else if (sectorObject.TypeId == typeof(MyObjectBuilder_FloatingObject))
 				{
 					floatingObjects.Add(new FloatingObject((MyObjectBuilder_FloatingObject)sectorObject));
 				}
-				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.Meteor)
+				else if (sectorObject.TypeId == typeof(MyObjectBuilder_Meteor))
 				{
 					meteors.Add(new Meteor((MyObjectBuilder_Meteor)sectorObject));
 				}
@@ -432,27 +432,18 @@ namespace SEModAPIInternal.API.Entity
 
 					if(matchingEntity == null)
 					{
-						switch (baseEntity.TypeId)
-						{
-							case MyObjectBuilderTypeEnum.Character:
-								matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.CubeGrid:
-								matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.FloatingObject:
-								matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Meteor:
-								matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.VoxelMap:
-								matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
-								break;
-							default:
-								matchingEntity = new BaseEntity(baseEntity, entity);
-								break;
-						}
+						if(baseEntity.TypeId == typeof(MyObjectBuilder_Character))
+							matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
+						else if (baseEntity.TypeId == typeof(MyObjectBuilder_CubeGrid))
+							matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
+						else if (baseEntity.TypeId == typeof(MyObjectBuilder_FloatingObject))
+							matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
+						else if (baseEntity.TypeId == typeof(MyObjectBuilder_Meteor))
+							matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
+						else if (baseEntity.TypeId == typeof(MyObjectBuilder_VoxelMap))
+							matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
+						else
+							matchingEntity = new BaseEntity(baseEntity, entity);
 					}
 
 					if (matchingEntity == null)

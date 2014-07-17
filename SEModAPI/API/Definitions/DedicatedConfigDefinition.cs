@@ -463,7 +463,7 @@ namespace SEModAPI.API.Definitions
 		/// <summary>
 		/// Get or set the Scenario's TypeId
 		/// </summary>
-		public MyObjectBuilderTypeEnum ScenarioTypeId
+		public MyObjectBuilderType ScenarioTypeId
 		{
 			get { return m_definition.Scenario.TypeId; }
 			set
