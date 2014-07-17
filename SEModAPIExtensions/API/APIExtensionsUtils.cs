@@ -1,4 +1,19 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Timers;
+
+using SEModAPIExtensions.API.Plugin;
+
+using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
+using SEModAPIInternal.Support;
 
 namespace SEModAPIExtensions.API
 {
