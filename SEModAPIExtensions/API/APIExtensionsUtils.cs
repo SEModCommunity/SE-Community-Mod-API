@@ -14,7 +14,7 @@ namespace SEModAPIExtensions.API
 		
 		#region "Constructors and Intializers"
 		
-		protected APIExtensionUtils()
+		protected APIExtensionsUtils()
 		{
 			m_pluginmanager = PluginManager.Instance;
 			m_chatmanager = ChatManager.Instance;
@@ -53,7 +53,7 @@ namespace SEModAPIExtensions.API
 		
 		#region "Methods"
 		
-		public CheckFileTypes(Type lookfor, Dictionary<Guid, Object> check)
+		public List<Type> CheckFileTypes(Type lookfor, Dictionary<Guid, Object> check)
 		{
 			List<Type> save = new List<Type>();
 			

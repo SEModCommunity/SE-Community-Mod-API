@@ -78,8 +78,8 @@ namespace SEModAPIExtensions.API
 				//m_commands.Clear();
 				m_initialized = false;
 
-				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
-				List<Type> types = m_utils.CheckFileTypes(ICommand, m_commands)
+				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instancename);
+				List<Type> types = m_utils.CheckFileTypes(ICommand, m_commands);
 				foreach(Type type in types)
 				{
 					try
@@ -107,7 +107,7 @@ namespace SEModAPIExtensions.API
 		
 		public static List<CommandBase> ListCommands()
 		{
-			List<CommandBase> cmds = new List<CommandBase>;
+			List<CommandBase> cmds = new List<CommandBase>();
 			foreach(CommandBase cmd in m_commands)
 			{
 				cmds.Add(cmd);

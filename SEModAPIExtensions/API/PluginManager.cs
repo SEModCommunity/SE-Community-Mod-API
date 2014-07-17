@@ -98,7 +98,7 @@ namespace SEModAPIExtensions.API
 				m_initialized = false;
 
 				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
-				List<Type> types = m_utils.CheckFileTypes(IPlugin, m_plugins)
+				List<Type> types = m_utils.CheckFileTypes(IPlugin, m_plugins);
 				foreach(Type type in types)
 				{
 					try
