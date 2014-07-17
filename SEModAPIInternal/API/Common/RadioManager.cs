@@ -22,14 +22,14 @@ namespace SEModAPIInternal.API.Common
 
 		public static string RadioManagerNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string RadioManagerClass = "994372BD682BE5E79F2F32E79BE318F5";
-		public static string RadioManagerGetBroadcastRadiusMethod = "8A5396D04D8A6103090509A66A7DC73A";
+		public static string RadioManagerGetBroadcastRadiusMethod = "CC1F306EACC95C00A05C100712656EBC";
 		public static string RadioManagerSetBroadcastRadiusMethod = "C42CAA2B50B8705C7F36262BCE8E60EA";
 		public static string RadioManagerGetLinkedEntityMethod = "7DE57FDDF37DD6219A990596E0283F01";
 		public static string RadioManagerSetLinkedEntityMethod = "1C653F74AF87659F7AA9B39E35D789CE";
 		public static string RadioManagerGetEnabledMethod = "78F34EF54782BBB097110F15BB3F5CC7";
 		public static string RadioManagerSetEnabledMethod = "5DCB378F714DC1A82AF40135BBE08BE1";
-		public static string RadioManagerGetAABBTreeIdMethod = "55F1050DBEFA4A4E59B9AC694273FCBF";
-		public static string RadioManagerSetAABBTreeIdMethod = "0DF08FF73DEEA410137C12A887AAB469";
+		public static string RadioManagerGetAABBTreeIdMethod = "20FCED684DEC4EA0CCEE92D67DB109F1";
+		public static string RadioManagerSetAABBTreeIdMethod = "10D69A54D5F2CE65056EBB10BCF3D8B3";
 
 		#endregion
 
