@@ -9,7 +9,7 @@ namespace SEModAPIExtensions.API.Plugin
 {
 	public abstract class CommandBase : ICommand
 	{
-	        #region "Attributes"
+	    #region "Attributes"
 	        
 	        protected Object m_owner;
 	        protected Object m_executor;
@@ -30,18 +30,12 @@ namespace SEModAPIExtensions.API.Plugin
 		
 		public Object Owner
 		{
-			get
-			{
-				return m_owner;
-			}
+			get { return m_owner; }
 		}
 		
 		public Object Executor
 		{
-			get
-			{
-				return m_executor;
-			}
+			get { return m_executor; }
 		}
 		
 		#endregion

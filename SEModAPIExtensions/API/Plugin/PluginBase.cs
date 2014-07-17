@@ -14,6 +14,7 @@ namespace SEModAPIExtensions.API.Plugin
 		protected Guid m_pluginId;
 		protected string m_name = "";
 		protected string m_version = "";
+        protected CommandBase m_commandexecutor = new CommandBase(this);
 
 		#endregion
 
@@ -47,6 +48,11 @@ namespace SEModAPIExtensions.API.Plugin
 		{
 			get { return m_version; }
 		}
+
+        public CommandBase CommandExecutor
+        {
+            get { return m_commandexecutor; }
+        }
 
 		#endregion
 

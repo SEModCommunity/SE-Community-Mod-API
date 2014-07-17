@@ -84,11 +84,11 @@ namespace SEModAPIExtensions.API
 				{
 					try
 					{
-						//Create an instance of the plugin object
+						//Create an instance of the command object
 						var commandObject = Activator.CreateInstance(type);
 
 						//And add it to the dictionary
-						m_commands.Add(guidValue, pluginObject);
+						m_commands.Add(guidValue, commandObject);
 						break;
 					}
 					catch (Exception ex)
