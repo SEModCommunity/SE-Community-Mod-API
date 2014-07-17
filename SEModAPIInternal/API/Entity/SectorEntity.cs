@@ -347,12 +347,22 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
+				if (m_isInternalResourceLocked)
+					return;
+
+				m_isInternalResourceLocked = true;
+
 				var rawValue = BaseObject.InvokeStaticMethod(InternalType, ObjectManagerGetEntityHashSet);
 				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
 
 				m_rawDataObjectBuilderList.Clear();
 				foreach (Object entity in m_rawDataHashSet)
 				{
+					//Skip disposed entities
+					bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
+					if (isDisposed)
+						continue;
+
 					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
 					m_rawDataObjectBuilderList.Add(entity, baseEntity);
 				}
@@ -383,6 +393,8 @@ namespace SEModAPIInternal.API.Entity
 			//Skip the update if there is a discrepency between the entity list and the object builder list
 			if (rawEntities.Count != m_rawDataObjectBuilderList.Count)
 				return;
+
+			m_isInternalResourceLocked = true;
 
 			//Update the main data mapping
 			data.Clear();
@@ -473,6 +485,7 @@ namespace SEModAPIInternal.API.Entity
 				backingData.Add(entry.BackingObject, entry);
 			}
 
+			m_isInternalResourceLocked = false;
 			IsResourceLocked = false;
 		}
 

@@ -465,23 +465,35 @@ namespace SEServerExtender
 				{
 					if (node == null)
 						continue;
-
-					if (node.Tag != null && list.Contains(node.Tag))
+					if (node.Tag == null)
 					{
-						CubeGridEntity item = (CubeGridEntity)node.Tag;
+						node.Remove();
+						continue;
+					}
 
-						if (!item.IsDisposed)
+					CubeGridEntity item = (CubeGridEntity)node.Tag;
+					bool foundMatch = false;
+					foreach (CubeGridEntity listItem in list)
+					{
+						if (listItem.EntityId == item.EntityId)
 						{
+							foundMatch = true;
+
 							Vector3 rawPosition = item.Position;
 							double distance = rawPosition.Length();
 							string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
+
+							list.Remove(listItem);
+
+							break;
 						}
-						list.Remove(item);
 					}
-					else
+
+					if (!foundMatch)
 					{
 						node.Remove();
+						continue;
 					}
 				}
 				catch (Exception ex)
