@@ -379,9 +379,6 @@ namespace SEServerExtender
 
 		private void TreeViewRefresh(object sender, EventArgs e)
 		{
-			if (m_server.CommandLineArgs.noGUI)
-				return;
-
 			TRV_Entities.BeginUpdate();
 
 			TreeNode sectorObjectsNode;
@@ -402,7 +399,7 @@ namespace SEServerExtender
 			}
 
 			RenderSectorObjectChildNodes(sectorObjectsNode);
-			sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.Definitions.Count.ToString() + ")";
+			sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>().Count.ToString() + ")";
 
 			TRV_Entities.EndUpdate();
 		}

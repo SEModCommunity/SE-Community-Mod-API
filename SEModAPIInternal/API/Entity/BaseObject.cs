@@ -469,17 +469,6 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public List<BaseObject> Definitions
-		{
-			get
-			{
-				if (IsDynamic)
-					LoadDynamic();
-
-				return GetInternalData().Values.ToList();
-			}
-		}
-
 		public FileInfo FileInfo
 		{
 			get { return m_fileInfo; }
@@ -520,7 +509,7 @@ namespace SEModAPIInternal.API.Entity
 			{
 				TimeSpan timeSinceLastLoad = DateTime.Now - m_lastBackingHashSetLoadTime;
 
-				if (!m_isInternalResourceLocked && timeSinceLastLoad.TotalMilliseconds > 100)
+				if (!m_isInternalResourceLocked)// && timeSinceLastLoad.TotalMilliseconds > 100)
 				{
 					m_lastBackingHashSetLoadTime = DateTime.Now;
 
@@ -810,7 +799,7 @@ namespace SEModAPIInternal.API.Entity
 				List<T> newList = new List<T>();
 				if(!m_isResourceLocked)
 				{
-					m_isResourceLocked = true;
+					//m_isResourceLocked = true;
 					foreach (var def in GetInternalData().Values)
 					{
 						if (!(def is T))
@@ -818,7 +807,7 @@ namespace SEModAPIInternal.API.Entity
 
 						newList.Add((T)def);
 					}
-					m_isResourceLocked = false;
+					//m_isResourceLocked = false;
 				}
 
 				return newList;

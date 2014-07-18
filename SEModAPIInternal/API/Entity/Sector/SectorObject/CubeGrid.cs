@@ -335,7 +335,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 			//Refresh the cube blocks content in the cube grid from the cube blocks manager
 			cubeGrid.CubeBlocks.Clear();
-			foreach (var item in m_cubeBlockManager.Definitions)
+			foreach (var item in m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>())
 			{
 				cubeGrid.CubeBlocks.Add((MyObjectBuilder_CubeBlock)item.GetSubTypeEntity());
 			}

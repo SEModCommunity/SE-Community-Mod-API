@@ -12,6 +12,8 @@ using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.Support;
 
+using VRageMath;
+
 namespace SEModAPIExtensions.API
 {
 	public class ChatManager
@@ -127,7 +129,7 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
-//#if DEBUG
+#if DEBUG
 		private void ServerCrashTest()
 		{
 			if (!SandboxGameAssemblyWrapper.IsDebugging)
@@ -137,7 +139,7 @@ namespace SEModAPIExtensions.API
 			FieldInfo mainGameField = mainGameType.GetField("392503BDB6F8C1E34A232489E2A0C6D4", BindingFlags.Public | BindingFlags.Static);
 			mainGameField.SetValue(null, null);
 		}
-//#endif
+#endif
 
 		protected Object CreateChatMessageStruct(string message)
 		{
@@ -275,7 +277,79 @@ namespace SEModAPIExtensions.API
 					}
 				}
 			}
-//#if DEBUG
+
+			//Utility
+			if (command.Equals("/tp"))
+			{
+				if (paramCount == 2)
+				{
+					string rawEntityId = commandParts[1];
+					string rawPosition = commandParts[2];
+
+					try
+					{
+						long entityId = long.Parse(rawEntityId);
+
+						string[] rawCoordinateValues = rawPosition.Split(',');
+						if (rawCoordinateValues.Length < 3)
+							return true;
+
+						float x = float.Parse(rawCoordinateValues[0]);
+						float y = float.Parse(rawCoordinateValues[1]);
+						float z = float.Parse(rawCoordinateValues[2]);
+
+						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+						foreach (BaseEntity entity in entities)
+						{
+							if (entity.EntityId != entityId)
+								continue;
+
+							entity.Position = new Vector3(x, y, z);
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+			}
+
+			//Diagnostic
+			if (command.Equals("/list"))
+			{
+				if (paramCount == 1 && commandParts[1].ToLower().Equals("all"))
+				{
+					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+					LogManager.APILog.WriteLineAndConsole("Total entities: '" + entities.Count.ToString() + "'");
+				}
+				if (paramCount == 1 && commandParts[1].ToLower().Equals("cubegrid"))
+				{
+					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					LogManager.APILog.WriteLineAndConsole("Cubegrid entities: '" + entities.Count.ToString() + "'");
+				}
+				if (paramCount == 1 && commandParts[1].ToLower().Equals("character"))
+				{
+					List<CharacterEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CharacterEntity>();
+					LogManager.APILog.WriteLineAndConsole("Character entities: '" + entities.Count.ToString() + "'");
+				}
+				if (paramCount == 1 && commandParts[1].ToLower().Equals("voxelmap"))
+				{
+					List<VoxelMap> entities = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
+					LogManager.APILog.WriteLineAndConsole("Voxelmap entities: '" + entities.Count.ToString() + "'");
+				}
+				if (paramCount == 1 && commandParts[1].ToLower().Equals("meteor"))
+				{
+					List<Meteor> entities = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
+					LogManager.APILog.WriteLineAndConsole("Meteor entities: '" + entities.Count.ToString() + "'");
+				}
+				if (paramCount == 1 && commandParts[1].ToLower().Equals("floatingobject"))
+				{
+					List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+					LogManager.APILog.WriteLineAndConsole("Floating object entities: '" + entities.Count.ToString() + "'");
+				}
+			}
+
+#if DEBUG
 			//Debug
 			if (SandboxGameAssemblyWrapper.IsDebugging)
 			{
@@ -288,7 +362,7 @@ namespace SEModAPIExtensions.API
 					}
 				}
 			}
-//#endif
+#endif
 			return true;
 		}
 

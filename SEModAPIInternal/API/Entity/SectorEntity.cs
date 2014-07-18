@@ -363,8 +363,15 @@ namespace SEModAPIInternal.API.Entity
 					if (isDisposed)
 						continue;
 
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
-					m_rawDataObjectBuilderList.Add(entity, baseEntity);
+					try
+					{
+						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
+						m_rawDataObjectBuilderList.Add(entity, baseEntity);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
 				}
 
 				m_isInternalResourceLocked = false;
@@ -391,8 +398,8 @@ namespace SEModAPIInternal.API.Entity
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
 
 			//Skip the update if there is a discrepency between the entity list and the object builder list
-			if (rawEntities.Count != m_rawDataObjectBuilderList.Count)
-				return;
+			//if (rawEntities.Count != m_rawDataObjectBuilderList.Count)
+				//return;
 
 			m_isInternalResourceLocked = true;
 
@@ -406,9 +413,9 @@ namespace SEModAPIInternal.API.Entity
 				try
 				{
 					//Skip disposed entities
-					bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
-					if (isDisposed)
-						continue;
+					//bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
+					//if (isDisposed)
+						//continue;
 
 					//Skip unknowns for now until we get the bugs sorted out with the other types
 					Type entityType = entity.GetType();
