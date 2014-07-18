@@ -130,7 +130,7 @@ namespace SEModAPIInternal.API.Entity
 		public InventoryItemEntity NewEntry()
 		{
 			MyObjectBuilder_InventoryItem defaults = new MyObjectBuilder_InventoryItem();
-			SerializableDefinitionId itemTypeId = new SerializableDefinitionId(MyObjectBuilderTypeEnum.Ore, "Stone");
+			SerializableDefinitionId itemTypeId = new SerializableDefinitionId(typeof(MyObjectBuilder_Ore), "Stone");
 			defaults.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(itemTypeId);
 			defaults.Amount = 1;
 

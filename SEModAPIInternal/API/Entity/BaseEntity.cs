@@ -38,6 +38,9 @@ namespace SEModAPIInternal.API.Entity
 		private float m_maxLinearVelocity;
 		private static Type m_internalType;
 
+		private Vector3Wrapper m_genericLinearVelocity;
+		private Vector3Wrapper m_genericAngularVelocity;
+
 		public static string BaseEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string BaseEntityClass = "F6DF01EE4159339113BB9650DEEE1913";
 		public static string BaseEntityGetObjectBuilderMethod = "GetObjectBuilder";
@@ -57,11 +60,16 @@ namespace SEModAPIInternal.API.Entity
 		public BaseEntity(MyObjectBuilder_EntityBase baseEntity)
 			: base(baseEntity)
 		{
+			m_genericLinearVelocity = new Vector3Wrapper();
+			m_genericAngularVelocity = new Vector3Wrapper();
 		}
 
 		public BaseEntity(MyObjectBuilder_EntityBase baseEntity, Object backingObject)
 			: base(baseEntity, backingObject)
 		{
+			m_genericLinearVelocity = new Vector3Wrapper();
+			m_genericAngularVelocity = new Vector3Wrapper();
+
 			try
 			{
 				Action action = InternalRegisterEntityMovedEvent;
@@ -221,13 +229,37 @@ namespace SEModAPIInternal.API.Entity
 		[Browsable(false)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public virtual Vector3Wrapper LinearVelocity
-		{ get; set; }
+		{
+			get { return m_genericLinearVelocity; }
+			set
+			{
+				m_genericLinearVelocity = value;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateLinearVelocity;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
+			}
+		}
 
 		[Category("Entity")]
 		[Browsable(false)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public virtual Vector3Wrapper AngularVelocity
-		{ get; set; }
+		{
+			get { return m_genericAngularVelocity; }
+			set
+			{
+				m_genericAngularVelocity = value;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateAngularVelocity;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
+			}
+		}
 
 		[Category("Entity")]
 		public float MaxLinearVelocity
@@ -580,12 +612,7 @@ namespace SEModAPIInternal.API.Entity
 					}
 					else
 					{
-						switch (baseEntity.TypeId)
-						{
-							default:
-								matchingEntity = new BaseEntity(baseEntity, entity);
-								break;
-						}
+						matchingEntity = new BaseEntity(baseEntity, entity);
 					}
 
 					if (matchingEntity == null)

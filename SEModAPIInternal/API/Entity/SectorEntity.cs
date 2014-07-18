@@ -63,19 +63,19 @@ namespace SEModAPIInternal.API.Entity
 			List<BaseEntity> unknowns = new List<BaseEntity>();
 			foreach (var sectorObject in definition.SectorObjects)
 			{
-				if (sectorObject.TypeId == MyObjectBuilderTypeEnum.CubeGrid)
+				if (sectorObject.TypeId == typeof(MyObjectBuilder_CubeGrid))
 				{
 					cubeGrids.Add(new CubeGridEntity((MyObjectBuilder_CubeGrid)sectorObject));
 				}
-				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.VoxelMap)
+				else if (sectorObject.TypeId == typeof(MyObjectBuilder_VoxelMap))
 				{
 					voxelMaps.Add(new VoxelMap((MyObjectBuilder_VoxelMap)sectorObject));
 				}
-				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.FloatingObject)
+				else if (sectorObject.TypeId == typeof(MyObjectBuilder_FloatingObject))
 				{
 					floatingObjects.Add(new FloatingObject((MyObjectBuilder_FloatingObject)sectorObject));
 				}
-				else if (sectorObject.TypeId == MyObjectBuilderTypeEnum.Meteor)
+				else if (sectorObject.TypeId == typeof(MyObjectBuilder_Meteor))
 				{
 					meteors.Add(new Meteor((MyObjectBuilder_Meteor)sectorObject));
 				}
@@ -279,6 +279,8 @@ namespace SEModAPIInternal.API.Entity
 		private static BaseEntity m_nextEntityToUpdate;
 		private bool m_isShutDown;
 
+		protected Dictionary<Object, MyObjectBuilder_EntityBase> m_rawDataObjectBuilderList;
+
 		public static string ObjectManagerNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ObjectManagerClass = "CAF1EB435F77C7B77580E2E16F988BED";
 		public static string ObjectManagerGetEntityHashSet = "84C54760C0F0DDDA50B0BE27B7116ED8";
@@ -303,6 +305,8 @@ namespace SEModAPIInternal.API.Entity
 			IsDynamic = true;
 			m_instance = this;
 			m_isShutDown = false;
+
+			m_rawDataObjectBuilderList = new Dictionary<object, MyObjectBuilder_EntityBase>();
 		}
 
 		#endregion
@@ -343,8 +347,34 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
+				if (m_isInternalResourceLocked)
+					return;
+
+				m_isInternalResourceLocked = true;
+
 				var rawValue = BaseObject.InvokeStaticMethod(InternalType, ObjectManagerGetEntityHashSet);
 				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				m_rawDataObjectBuilderList.Clear();
+				foreach (Object entity in m_rawDataHashSet)
+				{
+					//Skip disposed entities
+					bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
+					if (isDisposed)
+						continue;
+
+					try
+					{
+						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
+						m_rawDataObjectBuilderList.Add(entity, baseEntity);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+
+				m_isInternalResourceLocked = false;
 			}
 			catch (Exception ex)
 			{
@@ -358,12 +388,20 @@ namespace SEModAPIInternal.API.Entity
 				return;
 			if (IsShutDown)
 				return;
+			if (m_isInternalResourceLocked)
+				return;
 
 			IsResourceLocked = true;
 
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
+
+			//Skip the update if there is a discrepency between the entity list and the object builder list
+			//if (rawEntities.Count != m_rawDataObjectBuilderList.Count)
+				//return;
+
+			m_isInternalResourceLocked = true;
 
 			//Update the main data mapping
 			data.Clear();
@@ -375,9 +413,9 @@ namespace SEModAPIInternal.API.Entity
 				try
 				{
 					//Skip disposed entities
-					bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
-					if (isDisposed)
-						continue;
+					//bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
+					//if (isDisposed)
+						//continue;
 
 					//Skip unknowns for now until we get the bugs sorted out with the other types
 					Type entityType = entity.GetType();
@@ -389,7 +427,9 @@ namespace SEModAPIInternal.API.Entity
 						)
 						continue;
 
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
+					MyObjectBuilder_EntityBase baseEntity = null;
+					if(m_rawDataObjectBuilderList.ContainsKey(entity))
+						baseEntity = m_rawDataObjectBuilderList[entity];
 
 					if (baseEntity == null)
 						continue;
@@ -411,27 +451,18 @@ namespace SEModAPIInternal.API.Entity
 
 					if(matchingEntity == null)
 					{
-						switch (baseEntity.TypeId)
-						{
-							case MyObjectBuilderTypeEnum.Character:
-								matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.CubeGrid:
-								matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.FloatingObject:
-								matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.Meteor:
-								matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
-								break;
-							case MyObjectBuilderTypeEnum.VoxelMap:
-								matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
-								break;
-							default:
-								matchingEntity = new BaseEntity(baseEntity, entity);
-								break;
-						}
+						if(baseEntity.TypeId == typeof(MyObjectBuilder_Character))
+							matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
+						else if (baseEntity.TypeId == typeof(MyObjectBuilder_CubeGrid))
+							matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
+						else if (baseEntity.TypeId == typeof(MyObjectBuilder_FloatingObject))
+							matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
+						else if (baseEntity.TypeId == typeof(MyObjectBuilder_Meteor))
+							matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
+						else if (baseEntity.TypeId == typeof(MyObjectBuilder_VoxelMap))
+							matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
+						else
+							matchingEntity = new BaseEntity(baseEntity, entity);
 					}
 
 					if (matchingEntity == null)
@@ -461,6 +492,7 @@ namespace SEModAPIInternal.API.Entity
 				backingData.Add(entry.BackingObject, entry);
 			}
 
+			m_isInternalResourceLocked = false;
 			IsResourceLocked = false;
 		}
 

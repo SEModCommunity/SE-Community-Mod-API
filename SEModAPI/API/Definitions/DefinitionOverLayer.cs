@@ -69,7 +69,7 @@ namespace SEModAPI.API.Definitions
 		[Browsable(true)]
 		[ReadOnly(true)]
 		[Description("The value ID representing the type of the object")]
-		public MyObjectBuilderTypeEnum TypeId
+		public MyObjectBuilderType TypeId
 		{
 			get { return m_baseDefinition.TypeId; }
 		}
