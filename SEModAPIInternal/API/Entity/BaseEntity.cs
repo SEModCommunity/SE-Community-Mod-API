@@ -38,8 +38,9 @@ namespace SEModAPIInternal.API.Entity
 		private float m_maxLinearVelocity;
 		private static Type m_internalType;
 
-		private Vector3Wrapper m_genericLinearVelocity;
-		private Vector3Wrapper m_genericAngularVelocity;
+		private MyPositionAndOrientation m_positionOrientation;
+		private Vector3 m_genericLinearVelocity;
+		private Vector3 m_genericAngularVelocity;
 
 		public static string BaseEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string BaseEntityClass = "F6DF01EE4159339113BB9650DEEE1913";
@@ -50,6 +51,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityCombineOnClosedEventMethod = "C1704F26C9D5D7EBE19DC78AB8923F4E";
 		public static string BaseEntityGetIsDisposedMethod = "6D8F627C1C0F9F166031C3B600FEDA60";
 		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
+		public static string BaseEntityGetOrientationMatrixMethod = "FD50436D896ACC794550210055349FE0";
 
 		public static string PhysicsManagerGetRigidBodyMethod = "634E5EC534E45874230868BD089055B1";
 
@@ -60,27 +62,22 @@ namespace SEModAPIInternal.API.Entity
 		public BaseEntity(MyObjectBuilder_EntityBase baseEntity)
 			: base(baseEntity)
 		{
-			m_genericLinearVelocity = new Vector3Wrapper();
-			m_genericAngularVelocity = new Vector3Wrapper();
+			m_positionOrientation = baseEntity.PositionAndOrientation.GetValueOrDefault();
+			m_genericLinearVelocity = new Vector3();
+			m_genericAngularVelocity = new Vector3();
+			m_maxLinearVelocity = (float)104.7;
 		}
 
 		public BaseEntity(MyObjectBuilder_EntityBase baseEntity, Object backingObject)
 			: base(baseEntity, backingObject)
 		{
-			m_genericLinearVelocity = new Vector3Wrapper();
-			m_genericAngularVelocity = new Vector3Wrapper();
+			m_positionOrientation = baseEntity.PositionAndOrientation.GetValueOrDefault();
+			m_genericLinearVelocity = new Vector3();
+			m_genericAngularVelocity = new Vector3();
+			m_maxLinearVelocity = (float)104.7;
 
-			try
-			{
-				Action action = InternalRegisterEntityMovedEvent;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-
-				m_maxLinearVelocity = (float)104.7;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
+			Action action = InternalRegisterEntityMovedEvent;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		#endregion
@@ -146,12 +143,25 @@ namespace SEModAPIInternal.API.Entity
 
 		[Category("Entity")]
 		[Browsable(false)]
-		public MyPositionAndOrientation PositionAndOrientation
+		protected MyPositionAndOrientation PositionAndOrientation
 		{
-			get { return GetSubTypeEntity().PositionAndOrientation.GetValueOrDefault(); }
+			get
+			{
+				if (BackingObject != null)
+				{
+					HkRigidBody body = GetRigidBody();
+					if (body != null && !body.IsDisposed)
+					{
+						m_positionOrientation.Position = body.Position;
+						//TODO - Figure out how to transform the orientation quaternion to the position-orientation matrix
+					}
+				}
+
+				return m_positionOrientation;
+			}
 			set
 			{
-				if (GetSubTypeEntity().PositionAndOrientation.Equals(value)) return;
+				m_positionOrientation = value;
 				GetSubTypeEntity().PositionAndOrientation = value;
 				Changed = true;
 
@@ -169,12 +179,11 @@ namespace SEModAPIInternal.API.Entity
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper Position
 		{
-			get { return GetSubTypeEntity().PositionAndOrientation.GetValueOrDefault().Position; }
+			get { return PositionAndOrientation.Position; }
 			set
 			{
-				if (Position.Equals(value)) return;
-				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(value, Forward, Up);
-				GetSubTypeEntity().PositionAndOrientation = positionOrientation;
+				m_positionOrientation.Position = value;
+				GetSubTypeEntity().PositionAndOrientation = m_positionOrientation;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -189,12 +198,11 @@ namespace SEModAPIInternal.API.Entity
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper Up
 		{
-			get { return GetSubTypeEntity().PositionAndOrientation.GetValueOrDefault().Up; }
+			get { return PositionAndOrientation.Up; }
 			set
 			{
-				if (Up.Equals(value)) return;
-				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(Position, Forward, value);
-				GetSubTypeEntity().PositionAndOrientation = positionOrientation;
+				m_positionOrientation.Up = value;
+				GetSubTypeEntity().PositionAndOrientation = m_positionOrientation;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -209,12 +217,11 @@ namespace SEModAPIInternal.API.Entity
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper Forward
 		{
-			get { return GetSubTypeEntity().PositionAndOrientation.GetValueOrDefault().Forward; }
+			get { return PositionAndOrientation.Forward; }
 			set
 			{
-				if (Forward.Equals(value)) return;
-				MyPositionAndOrientation? positionOrientation = new MyPositionAndOrientation(Position, value, Up);
-				GetSubTypeEntity().PositionAndOrientation = positionOrientation;
+				m_positionOrientation.Forward = value;
+				GetSubTypeEntity().PositionAndOrientation = m_positionOrientation;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -226,11 +233,20 @@ namespace SEModAPIInternal.API.Entity
 		}
 
 		[Category("Entity")]
-		[Browsable(false)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public virtual Vector3Wrapper LinearVelocity
 		{
-			get { return m_genericLinearVelocity; }
+			get
+			{
+				if (BackingObject != null)
+				{
+					HkRigidBody body = GetRigidBody();
+					if(body != null && !body.IsDisposed)
+						m_genericLinearVelocity = body.LinearVelocity;
+				}
+
+				return m_genericLinearVelocity;
+			}
 			set
 			{
 				m_genericLinearVelocity = value;
@@ -244,11 +260,20 @@ namespace SEModAPIInternal.API.Entity
 		}
 
 		[Category("Entity")]
-		[Browsable(false)]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public virtual Vector3Wrapper AngularVelocity
 		{
-			get { return m_genericAngularVelocity; }
+			get
+			{
+				if (BackingObject != null)
+				{
+					HkRigidBody body = GetRigidBody();
+					if (body != null && !body.IsDisposed)
+						m_genericAngularVelocity = body.AngularVelocity;
+				}
+
+				return m_genericAngularVelocity;
+			}
 			set
 			{
 				m_genericAngularVelocity = value;
@@ -291,7 +316,7 @@ namespace SEModAPIInternal.API.Entity
 				try
 				{
 					HkRigidBody body = GetRigidBody();
-					if (body == null)
+					if (body == null || body.IsDisposed)
 						return 0;
 
 					float mass = body.Mass;
@@ -378,11 +403,44 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		protected HkRigidBody GetRigidBody()
+		private HkRigidBody GetRigidBody()
 		{
 			try
 			{
 				Object physicsObject = GetEntityPhysicsObject();
+				if (physicsObject == null)
+					return null;
+				HkRigidBody rigidBody = (HkRigidBody)InvokeEntityMethod(physicsObject, PhysicsManagerGetRigidBodyMethod);
+
+				return rigidBody;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		private static Object GetEntityPhysicsObject(Object entity)
+		{
+			try
+			{
+				Object physicsObject = InvokeEntityMethod(entity, BaseEntityGetPhysicsManagerMethod);
+
+				return physicsObject;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static HkRigidBody GetRigidBody(Object entity)
+		{
+			try
+			{
+				Object physicsObject = GetEntityPhysicsObject(entity);
 				if (physicsObject == null)
 					return null;
 				HkRigidBody rigidBody = (HkRigidBody)InvokeEntityMethod(physicsObject, PhysicsManagerGetRigidBodyMethod);
@@ -423,7 +481,7 @@ namespace SEModAPIInternal.API.Entity
 				if (havokBody == null)
 					return;
 
-				Vector3 newPosition = (Vector3)Position;
+				Vector3 newPosition = (Vector3)GetSubTypeEntity().PositionAndOrientation.GetValueOrDefault().Position;
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{

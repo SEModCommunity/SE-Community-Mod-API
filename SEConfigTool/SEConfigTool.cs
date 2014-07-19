@@ -192,9 +192,9 @@ namespace SEConfigTool
 			//Add the cube grids
 			foreach (CubeGridEntity cubeGrid in sector.CubeGrids)
 			{
-				float x = cubeGrid.PositionAndOrientation.Position.x;
-				float y = cubeGrid.PositionAndOrientation.Position.y;
-				float z = cubeGrid.PositionAndOrientation.Position.z;
+				float x = cubeGrid.Position.X;
+				float y = cubeGrid.Position.Y;
+				float z = cubeGrid.Position.Z;
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
@@ -361,9 +361,9 @@ namespace SEConfigTool
 			//Add the voxel maps
 			foreach (VoxelMap voxelMap in sector.VoxelMaps)
 			{
-				float x = voxelMap.PositionAndOrientation.Position.x;
-				float y = voxelMap.PositionAndOrientation.Position.y;
-				float z = voxelMap.PositionAndOrientation.Position.z;
+				float x = voxelMap.Position.X;
+				float y = voxelMap.Position.Y;
+				float z = voxelMap.Position.Z;
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
@@ -378,9 +378,9 @@ namespace SEConfigTool
 			//Add the floating objects
 			foreach (FloatingObject floatingObject in sector.FloatingObjects)
 			{
-				float x = floatingObject.PositionAndOrientation.Position.x;
-				float y = floatingObject.PositionAndOrientation.Position.y;
-				float z = floatingObject.PositionAndOrientation.Position.z;
+				float x = floatingObject.Position.X;
+				float y = floatingObject.Position.Y;
+				float z = floatingObject.Position.Z;
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
@@ -395,9 +395,9 @@ namespace SEConfigTool
 			//Add the meteors
 			foreach (Meteor meteor in sector.Meteors)
 			{
-				float x = meteor.PositionAndOrientation.Position.x;
-				float y = meteor.PositionAndOrientation.Position.y;
-				float z = meteor.PositionAndOrientation.Position.z;
+				float x = meteor.Position.X;
+				float y = meteor.Position.Y;
+				float z = meteor.Position.Z;
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 
@@ -412,9 +412,9 @@ namespace SEConfigTool
 			//Add any unknown objects
 			foreach (BaseEntity unknown in sector.UnknownObjects)
 			{
-				float x = unknown.PositionAndOrientation.Position.x;
-				float y = unknown.PositionAndOrientation.Position.y;
-				float z = unknown.PositionAndOrientation.Position.z;
+				float x = unknown.Position.X;
+				float y = unknown.Position.Y;
+				float z = unknown.Position.Z;
 
 				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
 

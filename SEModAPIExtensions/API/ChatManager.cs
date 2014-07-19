@@ -231,6 +231,16 @@ namespace SEModAPIExtensions.API
 				}
 				m_chatMessages.Add("Server: " + message);
 
+				//Send a loopback chat event for server-sent messages
+				ChatEvent selfChatEvent = new ChatEvent();
+				selfChatEvent.type = ChatEventType.OnChatSent;
+				selfChatEvent.timestamp = DateTime.Now;
+				selfChatEvent.sourceUserId = 0;
+				selfChatEvent.remoteUserId = 0;
+				selfChatEvent.message = message;
+				selfChatEvent.priority = 0;
+				ChatManager.Instance.AddEvent(selfChatEvent);
+
 				LogManager.ChatLog.WriteLineAndConsole("Chat - Server: " + message);
 			}
 			catch (Exception ex)

@@ -363,6 +363,14 @@ namespace SEModAPIInternal.API.Entity
 					if (isDisposed)
 						continue;
 
+					//Skip entities that don't have the physics defined yet
+					if (BaseEntity.GetRigidBody(entity) == null)
+						continue;
+
+					//Skip entities that don't have a position-orientation matrix defined
+					if (BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetOrientationMatrixMethod) == null)
+						continue;
+
 					try
 					{
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
@@ -397,10 +405,6 @@ namespace SEModAPIInternal.API.Entity
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
 
-			//Skip the update if there is a discrepency between the entity list and the object builder list
-			//if (rawEntities.Count != m_rawDataObjectBuilderList.Count)
-				//return;
-
 			m_isInternalResourceLocked = true;
 
 			//Update the main data mapping
@@ -412,11 +416,6 @@ namespace SEModAPIInternal.API.Entity
 
 				try
 				{
-					//Skip disposed entities
-					//bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
-					//if (isDisposed)
-						//continue;
-
 					//Skip unknowns for now until we get the bugs sorted out with the other types
 					Type entityType = entity.GetType();
 					if (entityType != CharacterEntity.InternalType &&
