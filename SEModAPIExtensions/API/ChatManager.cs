@@ -42,6 +42,8 @@ namespace SEModAPIExtensions.API
 		private static bool m_chatHandlerSetup;
 
 		private List<ChatEvent> m_chatEvents;
+		
+		private List<CommandBase> m_commands;
 
 		public static string ChatMessageStruct = "C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668";
 		public static string ChatMessageMessageField = "EDCBEBB604B287DFA90A5A46DC7AD28D";
@@ -57,6 +59,7 @@ namespace SEModAPIExtensions.API
 			m_chatMessages = new List<string>();
 			m_chatHandlerSetup = false;
 			m_chatEvents = new List<ChatEvent>();
+            m_commands = CommandManager.ListCommands();
 
 			Console.WriteLine("Finished loading ChatManager");
 		}
@@ -102,6 +105,15 @@ namespace SEModAPIExtensions.API
 				return copy;
 			}
 		}
+		
+		public List<CommandBase> Commands
+		{
+			get
+			{
+				List<CommandBase> copy = new List<CommandBase>(m_commands.ToArray());
+				return copy;
+			}
+		}
 
 		#endregion
 
@@ -128,6 +140,18 @@ namespace SEModAPIExtensions.API
 				LogManager.GameLog.WriteLine(ex);
 			}
 		}
+		
+//#if DEBUG
+		private void ServerCrashTest()
+		{
+			if (!SandboxGameAssemblyWrapper.IsDebugging)
+				return;
+
+			Type mainGameType = SandboxGameAssemblyWrapper.Instance.MainGameType;
+			FieldInfo mainGameField = mainGameType.GetField("392503BDB6F8C1E34A232489E2A0C6D4", BindingFlags.Public | BindingFlags.Static);
+			mainGameField.SetValue(null, null);
+		}
+//#endif
 
 #if DEBUG
 		private void ServerCrashTest()
@@ -230,7 +254,7 @@ namespace SEModAPIExtensions.API
 					ChatManager.Instance.AddEvent(chatEvent);
 				}
 				m_chatMessages.Add("Server: " + message);
-
+				
 				LogManager.ChatLog.WriteLineAndConsole("Chat - Server: " + message);
 			}
 			catch (Exception ex)
@@ -249,6 +273,16 @@ namespace SEModAPIExtensions.API
 			string command = commandParts[0].ToLower();
 			if(command[0] != '/')
 				return false;
+				
+			string cmds = command.TrimStart("/"); 
+			string[] args = commandParts;
+			args.RemoveAt(0);
+				
+			foreach (CommandBase cmd in m_commands)
+			{
+				if (cmd.execute(cmds, args))
+					return true;
+			}
 
 			//Delete
 			if (command.Equals("/delete"))

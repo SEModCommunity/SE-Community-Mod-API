@@ -16,5 +16,7 @@ namespace SEModAPIExtensions.API.Plugin
 		{ get; }
 		string Version
 		{ get; }
+        CommandBase CommandExecutor
+        { get; }
 	}
 }
