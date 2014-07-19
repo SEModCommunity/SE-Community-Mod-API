@@ -39,13 +39,17 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="API\APIExtensionsUtilss.cs" />
     <Compile Include="API\ChatManager.cs" />
+    <Compile Include="API\CommandManager.cs" />
     <Compile Include="API\MultiblockStructure.cs" />
+	<Compile Include="API\Plugin\CommandBase.cs" />
     <Compile Include="API\Plugin\Events\IBaseEntityHandler.cs" />
     <Compile Include="API\Plugin\Events\IChatEventHandler.cs" />
     <Compile Include="API\Plugin\Events\ICubeBlockEventHandler.cs" />
     <Compile Include="API\Plugin\Events\ICubeGridHandler.cs" />
     <Compile Include="API\Plugin\Events\IPlayerEventHandler.cs" />
+    <Compile Include="API\Plugin\ICommand.cs" />
     <Compile Include="API\Plugin\IPlugin.cs" />
     <Compile Include="API\Plugin\PluginBase.cs" />
     <Compile Include="API\PluginManager.cs" />
