@@ -317,9 +317,10 @@ namespace SEModAPIExtensions.API
 							if (entity.EntityId != entityId)
 								continue;
 
-							entity.Position = new Vector3(x, y, z);
+							Vector3 newPosition = new Vector3(x, y, z);
+							entity.Position = newPosition;
 
-							SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been moved to '" + entity.Position.ToString() + "'");
+							SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been moved to '" + newPosition.ToString() + "'");
 						}
 					}
 					catch (Exception ex)
@@ -365,7 +366,7 @@ namespace SEModAPIExtensions.API
 					{
 						for (int i = 2; i < commandParts.Length; i++ )
 						{
-							entityName += commandParts[i];
+							entityName += " " + commandParts[i];
 						}
 					}
 

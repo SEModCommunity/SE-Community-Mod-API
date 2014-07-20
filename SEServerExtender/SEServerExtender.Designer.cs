@@ -62,6 +62,7 @@
 			this.splitContainer9 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer10 = new System.Windows.Forms.SplitContainer();
 			this.TRV_Factions = new System.Windows.Forms.TreeView();
+			this.BTN_Factions_Delete = new System.Windows.Forms.Button();
 			this.PG_Factions = new System.Windows.Forms.PropertyGrid();
 			this.TAB_Plugins_Page = new System.Windows.Forms.TabPage();
 			this.splitContainer11 = new System.Windows.Forms.SplitContainer();
@@ -79,7 +80,6 @@
 			this.BTN_Utilities_ClearFloatingObjectsNow = new System.Windows.Forms.Button();
 			this.CHK_Utilities_FloatingObjectAutoClean = new System.Windows.Forms.CheckBox();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.BTN_Factions_Delete = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -581,6 +581,17 @@
 			this.TRV_Factions.TabIndex = 0;
 			this.TRV_Factions.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TRV_Factions_AfterSelect);
 			// 
+			// BTN_Factions_Delete
+			// 
+			this.BTN_Factions_Delete.Enabled = false;
+			this.BTN_Factions_Delete.Location = new System.Drawing.Point(172, 4);
+			this.BTN_Factions_Delete.Name = "BTN_Factions_Delete";
+			this.BTN_Factions_Delete.Size = new System.Drawing.Size(75, 23);
+			this.BTN_Factions_Delete.TabIndex = 1;
+			this.BTN_Factions_Delete.Text = "Delete";
+			this.BTN_Factions_Delete.UseVisualStyleBackColor = true;
+			this.BTN_Factions_Delete.Click += new System.EventHandler(this.BTN_Factions_Delete_Click);
+			// 
 			// PG_Factions
 			// 
 			this.PG_Factions.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -770,16 +781,6 @@
 			this.statusStrip1.Size = new System.Drawing.Size(951, 22);
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
-			// 
-			// BTN_Factions_Delete
-			// 
-			this.BTN_Factions_Delete.Location = new System.Drawing.Point(172, 4);
-			this.BTN_Factions_Delete.Name = "BTN_Factions_Delete";
-			this.BTN_Factions_Delete.Size = new System.Drawing.Size(75, 23);
-			this.BTN_Factions_Delete.TabIndex = 1;
-			this.BTN_Factions_Delete.Text = "Delete";
-			this.BTN_Factions_Delete.UseVisualStyleBackColor = true;
-			this.BTN_Factions_Delete.Click += new System.EventHandler(this.BTN_Factions_Delete_Click);
 			// 
 			// SEServerExtender
 			// 

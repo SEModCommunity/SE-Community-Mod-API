@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -225,6 +226,11 @@ namespace SEModAPIInternal.API.Common
 
 			BaseObject.InvokeEntityMethod(BackingObject, FactionRemoveMemberMethod, new object[] { m_memberToModify });
 
+			//TODO - Test and see if we can reliably send the network removal to clients without this pause
+			Thread.Sleep(15);
+
+			FactionsManager.Instance.RemoveMember(Id, m_memberToModify);
+
 			m_memberToModify = 0;
 		}
 
@@ -291,13 +297,17 @@ namespace SEModAPIInternal.API.Common
 		private MyObjectBuilder_FactionCollection m_factionCollection;
 		private Dictionary<long, Faction> m_factions;
 
-		protected long m_factionToRemove;
+		protected long m_factionToModify;
+		protected long m_memberToModify;
 
 		public static string FactionManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string FactionManagerClass = "17E6A2D4B9414B1D3DDA551E10938751";
 		public static string FactionManagerGetFactionCollectionMethod = "C93E560F96FE606D0BE190EDE1AA5005";
 		public static string FactionManagerGetFactionByIdMethod = "A01C0785253581981A78896FFBB103E9";
 		public static string FactionManagerRemoveFactionByIdMethod = "A8A9206AB10ECC19F73F4FF98E874379";
+
+		public static string FactionNetManagerRemoveFactionMethod = "01E89FED8AEDE7182CACB3F84D5748AC";
+		public static string FactionNetManagerRemoveMemberMethod = "4FDD02E48E4AAF15026A9181C13F711E";
 
 		#endregion
 
@@ -387,9 +397,18 @@ namespace SEModAPIInternal.API.Common
 
 		public void RemoveFaction(long id)
 		{
-			m_factionToRemove = id;
+			m_factionToModify = id;
 
 			Action action = InternalRemoveFaction;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+		}
+
+		internal void RemoveMember(long factionId, long memberId)
+		{
+			m_factionToModify = factionId;
+			m_memberToModify = memberId;
+
+			Action action = InternalRemoveMember;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
@@ -404,12 +423,30 @@ namespace SEModAPIInternal.API.Common
 
 		protected void InternalRemoveFaction()
 		{
-			if (m_factionToRemove == 0)
+			if (m_factionToModify == 0)
 				return;
 
-			BaseObject.InvokeEntityMethod(BackingObject, FactionManagerRemoveFactionByIdMethod, new object[] { m_factionToRemove });
+			BaseObject.InvokeEntityMethod(BackingObject, FactionManagerRemoveFactionByIdMethod, new object[] { m_factionToModify });
 
-			m_factionToRemove = 0;
+			//TODO - Test and see if we can reliably send the network removal to clients without this pause
+			Thread.Sleep(15);
+
+			BaseObject.InvokeEntityMethod(BackingObject, FactionNetManagerRemoveFactionMethod, new object[] { m_factionToModify });
+
+			m_factionToModify = 0;
+		}
+
+		protected void InternalRemoveMember()
+		{
+			if (m_factionToModify == 0)
+				return;
+			if (m_memberToModify == 0)
+				return;
+
+			BaseObject.InvokeEntityMethod(BackingObject, FactionNetManagerRemoveMemberMethod, new object[] { m_factionToModify, m_memberToModify });
+
+			m_factionToModify = 0;
+			m_memberToModify = 0;
 		}
 
 		#endregion

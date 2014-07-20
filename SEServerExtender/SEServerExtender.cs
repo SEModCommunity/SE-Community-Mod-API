@@ -1363,12 +1363,16 @@ namespace SEServerExtender
 
 		private void TRV_Factions_AfterSelect(object sender, TreeViewEventArgs e)
 		{
+			BTN_Factions_Delete.Enabled = false;
+
 			if (e.Node == null)
 				return;
 			if (e.Node.Tag == null)
 				return;
 
 			var linkedObject = e.Node.Tag;
+
+			BTN_Factions_Delete.Enabled = true;
 
 			PG_Factions.SelectedObject = linkedObject;
 		}

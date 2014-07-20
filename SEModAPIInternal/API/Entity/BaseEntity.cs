@@ -520,7 +520,9 @@ namespace SEModAPIInternal.API.Entity
 				if (havokBody == null)
 					return;
 
-				Vector3 newVelocity = (Vector3)LinearVelocity;
+				Vector3 newVelocity = (Vector3)m_genericLinearVelocity;
+				if(m_genericLinearVelocity.Length() == 0)
+					newVelocity = (Vector3)LinearVelocity;
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
@@ -543,7 +545,9 @@ namespace SEModAPIInternal.API.Entity
 				if (havokBody == null)
 					return;
 
-				Vector3 newVelocity = (Vector3)AngularVelocity;
+				Vector3 newVelocity = (Vector3)m_genericAngularVelocity;
+				if(m_genericAngularVelocity.Length() == 0)
+					newVelocity = (Vector3)AngularVelocity;
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
