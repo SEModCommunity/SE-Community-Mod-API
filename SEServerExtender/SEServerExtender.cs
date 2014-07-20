@@ -1273,6 +1273,30 @@ namespace SEServerExtender
 									string newNodeText = item.Name + " (" + item.Members.Count.ToString() + ")";
 									node.Text = newNodeText;
 
+									TreeNode membersNode = node.Nodes[0];
+									TreeNode joinRequestsNode = node.Nodes[1];
+
+									if (membersNode.Nodes.Count != item.Members.Count)
+									{
+										membersNode.Nodes.Clear();
+										foreach (FactionMember member in item.Members)
+										{
+											TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
+											memberNode.Name = member.PlayerId.ToString();
+											memberNode.Tag = member;
+										}
+									}
+									if (joinRequestsNode.Nodes.Count != item.JoinRequests.Count)
+									{
+										joinRequestsNode.Nodes.Clear();
+										foreach (FactionMember member in item.JoinRequests)
+										{
+											TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
+											memberNode.Name = member.PlayerId.ToString();
+											memberNode.Tag = member;
+										}
+									}
+
 									list.Remove(faction);
 
 									break;
@@ -1347,6 +1371,29 @@ namespace SEServerExtender
 			var linkedObject = e.Node.Tag;
 
 			PG_Factions.SelectedObject = linkedObject;
+		}
+
+		private void BTN_Factions_Delete_Click(object sender, EventArgs e)
+		{
+			TreeNode node = TRV_Factions.SelectedNode;
+			if (node == null)
+				return;
+			if (node.Tag == null)
+				return;
+
+			var linkedObject = node.Tag;
+
+			if (linkedObject is Faction)
+			{
+				Faction faction = (Faction)linkedObject;
+				FactionsManager.Instance.RemoveFaction(faction.Id);
+			}
+
+			if (linkedObject is FactionMember)
+			{
+				FactionMember member = (FactionMember)linkedObject;
+				member.Parent.RemoveMember(member.PlayerId);
+			}
 		}
 
 		#endregion

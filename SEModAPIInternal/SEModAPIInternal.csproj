@@ -61,6 +61,7 @@
     <Compile Include="API\Common\PlayerManager.cs" />
     <Compile Include="API\Common\PowerManager.cs" />
     <Compile Include="API\Common\RadioManager.cs" />
+    <Compile Include="API\Common\SaveManager.cs" />
     <Compile Include="API\Common\WorldManager.cs" />
     <Compile Include="API\Entity\BaseEntity.cs" />
     <Compile Include="API\Entity\BaseObject.cs" />

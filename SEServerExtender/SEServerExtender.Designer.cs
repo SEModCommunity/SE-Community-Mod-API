@@ -79,6 +79,7 @@
 			this.BTN_Utilities_ClearFloatingObjectsNow = new System.Windows.Forms.Button();
 			this.CHK_Utilities_FloatingObjectAutoClean = new System.Windows.Forms.CheckBox();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.BTN_Factions_Delete = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -119,6 +120,7 @@
 			this.splitContainer9.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer10)).BeginInit();
 			this.splitContainer10.Panel1.SuspendLayout();
+			this.splitContainer10.Panel2.SuspendLayout();
 			this.splitContainer10.SuspendLayout();
 			this.TAB_Plugins_Page.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer11)).BeginInit();
@@ -562,6 +564,10 @@
 			// splitContainer10.Panel1
 			// 
 			this.splitContainer10.Panel1.Controls.Add(this.TRV_Factions);
+			// 
+			// splitContainer10.Panel2
+			// 
+			this.splitContainer10.Panel2.Controls.Add(this.BTN_Factions_Delete);
 			this.splitContainer10.Size = new System.Drawing.Size(300, 537);
 			this.splitContainer10.SplitterDistance = 502;
 			this.splitContainer10.TabIndex = 0;
@@ -765,6 +771,16 @@
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
+			// BTN_Factions_Delete
+			// 
+			this.BTN_Factions_Delete.Location = new System.Drawing.Point(172, 4);
+			this.BTN_Factions_Delete.Name = "BTN_Factions_Delete";
+			this.BTN_Factions_Delete.Size = new System.Drawing.Size(75, 23);
+			this.BTN_Factions_Delete.TabIndex = 1;
+			this.BTN_Factions_Delete.Text = "Delete";
+			this.BTN_Factions_Delete.UseVisualStyleBackColor = true;
+			this.BTN_Factions_Delete.Click += new System.EventHandler(this.BTN_Factions_Delete_Click);
+			// 
 			// SEServerExtender
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -815,6 +831,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer9)).EndInit();
 			this.splitContainer9.ResumeLayout(false);
 			this.splitContainer10.Panel1.ResumeLayout(false);
+			this.splitContainer10.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer10)).EndInit();
 			this.splitContainer10.ResumeLayout(false);
 			this.TAB_Plugins_Page.ResumeLayout(false);
@@ -889,5 +906,6 @@
 		private System.Windows.Forms.Button BTN_Plugins_Unload;
 		private System.Windows.Forms.Button BTN_Plugins_Refresh;
 		private System.Windows.Forms.Button BTN_Plugins_Load;
+		private System.Windows.Forms.Button BTN_Factions_Delete;
 	}
 }

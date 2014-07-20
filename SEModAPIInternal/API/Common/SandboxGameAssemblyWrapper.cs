@@ -488,6 +488,23 @@ namespace SEModAPIInternal.API.Common
 			return result;
 		}
 
+		public bool IsUserAdmin(ulong remoteUserId)
+		{
+			bool result = false;
+
+			List<ulong> adminUsers = GetServerConfig().Administrators;
+			foreach (ulong userId in adminUsers)
+			{
+				if (remoteUserId == userId)
+				{
+					result = true;
+					break;
+				}
+			}
+
+			return result;
+		}
+
 		#endregion
 	}
 }

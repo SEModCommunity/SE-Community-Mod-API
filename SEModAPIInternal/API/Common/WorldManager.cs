@@ -78,11 +78,19 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
+		public bool IsAutosaving
+		{
+			get
+			{
+				return SaveManager.IsSaving;
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
 
-		public Object InternalGetFactionManager()
+		internal Object InternalGetFactionManager()
 		{
 			try
 			{
@@ -98,7 +106,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public Object InternalGetPlayerManager()
+		internal Object InternalGetPlayerManager()
 		{
 			Object playerManager = BaseObject.InvokeEntityMethod(BackingObject, WorldManagerGetPlayerManagerMethod);
 

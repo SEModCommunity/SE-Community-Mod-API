@@ -19,9 +19,21 @@ namespace SEModAPIInternal.API.Common
 		private MyObjectBuilder_Faction m_faction;
 		private Dictionary<long, FactionMember> m_members;
 		private Dictionary<long, FactionMember> m_joinRequests;
+		private long m_memberToModify;
 
 		public static string FactionNamespace = "AAC05F537A6F0F6775339593FBDFC564";
 		public static string FactionClass = "1ECF0BCA9FD77A768222E28B816597E6";
+
+		public static string FactionGetMembersMethod = "0370D2FAE277C81EC5E86DAE00187F83";
+		public static string FactionGetJoinRequestsMethod = "6BEF546F0DE1D6950850E0E17F9B1D50";
+
+		public static string FactionAddApplicantMethod = "52E37DA969B098F9A64AC1CFBF0B24D0";
+		public static string FactionRemoveApplicantMethod = "A89B7D2F964A5E95158389AEAC8C4E48";
+		public static string FactionAcceptApplicantMethod = "674DD8BE4E653E63ADE2EDB5A27E38DE";
+		public static string FactionRemoveMemberMethod = "A8A9206AB10ECC19F73F4FF98E874379";
+
+		public static string FactionMembersDictionaryField = "6C5002516CE91D083B8487A823E176DE";
+		public static string FactionJoinRequestsDictionaryField = "1395A0D694642F440B050480A4D28F06";
 
 		#endregion
 
@@ -34,13 +46,13 @@ namespace SEModAPIInternal.API.Common
 			m_members = new Dictionary<long, FactionMember>();
 			foreach (var member in m_faction.Members)
 			{
-				m_members.Add(member.PlayerId, new FactionMember(member));
+				m_members.Add(member.PlayerId, new FactionMember(this, member));
 			}
 
 			m_joinRequests = new Dictionary<long, FactionMember>();
 			foreach (var member in m_faction.JoinRequests)
 			{
-				m_joinRequests.Add(member.PlayerId, new FactionMember(member));
+				m_joinRequests.Add(member.PlayerId, new FactionMember(this, member));
 			}
 		}
 
@@ -119,6 +131,35 @@ namespace SEModAPIInternal.API.Common
 			return m_faction;
 		}
 
+		public void RemoveMember(long memberId)
+		{
+			try
+			{
+				if (!m_members.ContainsKey(memberId))
+					return;
+
+				m_memberToModify = memberId;
+
+				MyObjectBuilder_FactionMember memberToRemove = new MyObjectBuilder_FactionMember();
+				foreach (var member in m_faction.Members)
+				{
+					if (member.PlayerId == m_memberToModify)
+					{
+						memberToRemove = member;
+						break;
+					}
+				}
+				m_faction.Members.Remove(memberToRemove);
+
+				Action action = InternalRemoveMember;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
 		protected void RefreshFactionMembers()
 		{
 			List<MyObjectBuilder_FactionMember> memberList = GetSubTypeEntity().Members;
@@ -143,7 +184,7 @@ namespace SEModAPIInternal.API.Common
 				if (m_members.ContainsKey(member.PlayerId))
 					continue;
 
-				FactionMember newMember = new FactionMember(member);
+				FactionMember newMember = new FactionMember(this, member);
 				m_members.Add(newMember.PlayerId, newMember);
 			}
 		}
@@ -172,9 +213,19 @@ namespace SEModAPIInternal.API.Common
 				if (m_joinRequests.ContainsKey(member.PlayerId))
 					continue;
 
-				FactionMember newMember = new FactionMember(member);
+				FactionMember newMember = new FactionMember(this, member);
 				m_joinRequests.Add(newMember.PlayerId, newMember);
 			}
+		}
+
+		protected void InternalRemoveMember()
+		{
+			if (m_memberToModify == 0)
+				return;
+
+			BaseObject.InvokeEntityMethod(BackingObject, FactionRemoveMemberMethod, new object[] { m_memberToModify });
+
+			m_memberToModify = 0;
 		}
 
 		#endregion
@@ -185,6 +236,7 @@ namespace SEModAPIInternal.API.Common
 		#region "Attributes"
 
 		private MyObjectBuilder_FactionMember m_member;
+		private Faction m_parent;
 
 		public static string FactionMemberNamespace = "AAC05F537A6F0F6775339593FBDFC564";
 		public static string FactionMemberClass = "32F8947D11EDAF4D079FD54C2397A951";
@@ -193,14 +245,20 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Constructors and Initializers"
 
-		public FactionMember(MyObjectBuilder_FactionMember definition)
+		public FactionMember(Faction parent, MyObjectBuilder_FactionMember definition)
 		{
+			m_parent = parent;
 			m_member = definition;
 		}
 
 		#endregion
 
 		#region "Properties"
+
+		public Faction Parent
+		{
+			get { return m_parent; }
+		}
 
 		public MyObjectBuilder_FactionMember BaseEntity
 		{
@@ -238,7 +296,7 @@ namespace SEModAPIInternal.API.Common
 		public static string FactionManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string FactionManagerClass = "17E6A2D4B9414B1D3DDA551E10938751";
 		public static string FactionManagerGetFactionCollectionMethod = "C93E560F96FE606D0BE190EDE1AA5005";
-		public static string FactionManagerGetFactionByIdMethod = "E82E38AFFB42537CD735F119BC0EDAD7";
+		public static string FactionManagerGetFactionByIdMethod = "A01C0785253581981A78896FFBB103E9";
 		public static string FactionManagerRemoveFactionByIdMethod = "A8A9206AB10ECC19F73F4FF98E874379";
 
 		#endregion

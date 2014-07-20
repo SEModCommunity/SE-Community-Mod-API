@@ -20,6 +20,8 @@ using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
+using VRage;
+
 namespace SEModAPIInternal.API.Entity
 {
 	public class SectorEntity : BaseObject
@@ -348,6 +350,8 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				if (m_isInternalResourceLocked)
+					return;
+				if (WorldManager.Instance.IsAutosaving)
 					return;
 
 				m_isInternalResourceLocked = true;

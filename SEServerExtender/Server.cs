@@ -52,6 +52,7 @@ namespace SEServerExtender
 
 		//Timers
 		private System.Timers.Timer m_pluginMainLoop;
+		private System.Timers.Timer m_autosaveTimer;
 
 		#endregion
 
@@ -71,6 +72,10 @@ namespace SEServerExtender
 			m_pluginMainLoop = new System.Timers.Timer();
 			m_pluginMainLoop.Interval = 200;
 			m_pluginMainLoop.Elapsed += PluginManagerMain;
+
+			m_autosaveTimer = new System.Timers.Timer();
+			m_autosaveTimer.Interval = 120000;
+			m_autosaveTimer.Elapsed += AutoSaveMain;
 
 			if(m_commandLineArgs.instanceName != "")
 				PluginManager.Instance.LoadPlugins(m_commandLineArgs.instanceName);
@@ -188,6 +193,11 @@ namespace SEServerExtender
 				m_pluginManager.Update();
 			}
 		}
+		
+		private void AutoSaveMain(object sender, EventArgs e)
+		{
+			SaveManager.SaveWorld();
+		}
 
 		private void RunServer()
 		{
@@ -238,6 +248,7 @@ namespace SEServerExtender
 
 				PluginManager.Instance.LoadPlugins(m_commandLineArgs.instanceName);
 				m_pluginMainLoop.Start();
+				m_autosaveTimer.Start();
 
 				m_isServerRunning = true;
 				SectorObjectManager.Instance.IsShutDown = false;

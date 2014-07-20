@@ -129,18 +129,6 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
-#if DEBUG
-		private void ServerCrashTest()
-		{
-			if (!SandboxGameAssemblyWrapper.IsDebugging)
-				return;
-
-			Type mainGameType = SandboxGameAssemblyWrapper.Instance.MainGameType;
-			FieldInfo mainGameField = mainGameType.GetField("392503BDB6F8C1E34A232489E2A0C6D4", BindingFlags.Public | BindingFlags.Static);
-			mainGameField.SetValue(null, null);
-		}
-#endif
-
 		protected Object CreateChatMessageStruct(string message)
 		{
 			Type chatMessageStructType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(ChatMessageStruct);
@@ -155,6 +143,10 @@ namespace SEModAPIExtensions.API
 		protected void ReceiveChatMessage(ulong remoteUserId, string message, ChatEntryTypeEnum entryType)
 		{
 			string playerName = remoteUserId.ToString();
+
+			bool commandParsed = ParseChatCommands(message, remoteUserId);
+			if (commandParsed)
+				return;
 
 			if (entryType == ChatEntryTypeEnum.ChatMsg)
 			{
@@ -180,9 +172,11 @@ namespace SEModAPIExtensions.API
 
 			try
 			{
-				Object chatMessageStruct = CreateChatMessageStruct(message);
-
-				ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
+				if (remoteUserId != 0)
+				{
+					Object chatMessageStruct = CreateChatMessageStruct(message);
+					ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
+				}
 
 				m_chatMessages.Add("Server: " + message);
 
@@ -249,11 +243,14 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
-		protected bool ParseChatCommands(string message)
+		protected bool ParseChatCommands(string message, ulong remoteUserId = 0)
 		{
+			if (remoteUserId != 0 && !SandboxGameAssemblyWrapper.Instance.IsUserAdmin(remoteUserId))
+				return false;
+
 			string[] commandParts = message.Split(' ');
 			int paramCount = commandParts.Length - 1;
-			if (paramCount < 1)
+			if (paramCount < 0)
 				return false;
 
 			string command = commandParts[0].ToLower();
@@ -270,6 +267,7 @@ namespace SEModAPIExtensions.API
 					if (commandParts[2].ToLower().Equals("nobeacon"))
 					{
 						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+						List<BaseEntity> entitiesToDispose = new List<BaseEntity>();
 						foreach (BaseEntity entity in entities)
 						{
 							if (entity is CubeGridEntity)
@@ -280,9 +278,14 @@ namespace SEModAPIExtensions.API
 
 								if (entity.Name.Equals(entity.EntityId.ToString()))
 								{
-									entity.Dispose();
+									entitiesToDispose.Add(entity);
 								}
 							}
+						}
+
+						foreach (BaseEntity entity in entitiesToDispose)
+						{
+							entity.Dispose();
 						}
 					}
 				}
@@ -315,6 +318,8 @@ namespace SEModAPIExtensions.API
 								continue;
 
 							entity.Position = new Vector3(x, y, z);
+
+							SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been moved to '" + entity.Position.ToString() + "'");
 						}
 					}
 					catch (Exception ex)
@@ -322,6 +327,61 @@ namespace SEModAPIExtensions.API
 						LogManager.GameLog.WriteLine(ex);
 					}
 				}
+			}
+			if (command.Equals("/stop"))
+			{
+				if (paramCount == 1)
+				{
+					string rawEntityId = commandParts[1];
+
+					try
+					{
+						long entityId = long.Parse(rawEntityId);
+
+						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+						foreach (BaseEntity entity in entities)
+						{
+							if (entity.EntityId != entityId)
+								continue;
+
+							entity.LinearVelocity = Vector3.Zero;
+							entity.AngularVelocity = Vector3.Zero;
+
+							SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' is no longer moving or rotating");
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+			}
+			if (command.Equals("/getid"))
+			{
+				if (paramCount > 0)
+				{
+					string entityName = commandParts[1];
+					if (commandParts.Length > 2)
+					{
+						for (int i = 2; i < commandParts.Length; i++ )
+						{
+							entityName += commandParts[i];
+						}
+					}
+
+					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+					foreach (BaseEntity entity in entities)
+					{
+						if (!entity.Name.ToLower().Equals(entityName.ToLower()))
+							continue;
+
+						SendPrivateChatMessage(remoteUserId, "Entity ID is '" + entity.EntityId.ToString() + "'");
+					}
+				}
+			}
+			if (command.Equals("/save"))
+			{
+				SaveManager.SaveWorld();
 			}
 
 			//Diagnostic
@@ -331,48 +391,46 @@ namespace SEModAPIExtensions.API
 				{
 					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
 					LogManager.APILog.WriteLineAndConsole("Total entities: '" + entities.Count.ToString() + "'");
+
+					SendPrivateChatMessage(remoteUserId, "Total entities: '" + entities.Count.ToString() + "'");
 				}
 				if (paramCount == 1 && commandParts[1].ToLower().Equals("cubegrid"))
 				{
 					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
 					LogManager.APILog.WriteLineAndConsole("Cubegrid entities: '" + entities.Count.ToString() + "'");
+
+					SendPrivateChatMessage(remoteUserId, "Cubegrid entities: '" + entities.Count.ToString() + "'");
 				}
 				if (paramCount == 1 && commandParts[1].ToLower().Equals("character"))
 				{
 					List<CharacterEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CharacterEntity>();
 					LogManager.APILog.WriteLineAndConsole("Character entities: '" + entities.Count.ToString() + "'");
+
+					SendPrivateChatMessage(remoteUserId, "Character entities: '" + entities.Count.ToString() + "'");
 				}
 				if (paramCount == 1 && commandParts[1].ToLower().Equals("voxelmap"))
 				{
 					List<VoxelMap> entities = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
 					LogManager.APILog.WriteLineAndConsole("Voxelmap entities: '" + entities.Count.ToString() + "'");
+
+					SendPrivateChatMessage(remoteUserId, "Voxelmap entities: '" + entities.Count.ToString() + "'");
 				}
 				if (paramCount == 1 && commandParts[1].ToLower().Equals("meteor"))
 				{
 					List<Meteor> entities = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
 					LogManager.APILog.WriteLineAndConsole("Meteor entities: '" + entities.Count.ToString() + "'");
+
+					SendPrivateChatMessage(remoteUserId, "Meteor entities: '" + entities.Count.ToString() + "'");
 				}
 				if (paramCount == 1 && commandParts[1].ToLower().Equals("floatingobject"))
 				{
 					List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
 					LogManager.APILog.WriteLineAndConsole("Floating object entities: '" + entities.Count.ToString() + "'");
+
+					SendPrivateChatMessage(remoteUserId, "Floating object entities: '" + entities.Count.ToString() + "'");
 				}
 			}
 
-#if DEBUG
-			//Debug
-			if (SandboxGameAssemblyWrapper.IsDebugging)
-			{
-				if (command.Equals("/crash"))
-				{
-					if (paramCount == 1 && commandParts[1].ToLower().Equals("server"))
-					{
-						Action action = ServerCrashTest;
-						SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-					}
-				}
-			}
-#endif
 			return true;
 		}
 
