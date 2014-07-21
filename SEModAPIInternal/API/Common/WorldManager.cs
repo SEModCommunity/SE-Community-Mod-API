@@ -9,6 +9,8 @@ using Sandbox.Common.ObjectBuilders;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
 
+using VRage;
+
 namespace SEModAPIInternal.API.Common
 {
 	public class WorldManager
@@ -23,6 +25,10 @@ namespace SEModAPIInternal.API.Common
 		public static string WorldManagerInstanceField = "AE8262481750DAB9C8D416E4DBB9BA04";
 		public static string WorldManagerFactionManagerField = "0A481A0F72FB8D956A8E00BB2563E605";
 		public static string WorldManagerGetPlayerManagerMethod = "4C1B66FF099503DCB589BBFFC4976633";
+
+		public static string WorldResourceManagerNamespace = "AAC05F537A6F0F6775339593FBDFC564";
+		public static string WorldResourceManagerClass = "15B6B94DB5BE105E7B58A34D4DC11412";
+		public static string WorldResourceManagerResourceLockField = "5378A366A1927C9686ABCFD6316F5AE6";
 
 		#endregion
 
@@ -111,6 +117,23 @@ namespace SEModAPIInternal.API.Common
 			Object playerManager = BaseObject.InvokeEntityMethod(BackingObject, WorldManagerGetPlayerManagerMethod);
 
 			return playerManager;
+		}
+
+		internal FastResourceLock InternalGetResourceLock()
+		{
+			try
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(WorldResourceManagerNamespace, WorldResourceManagerClass);
+				FieldInfo field = BaseObject.GetStaticField(type, WorldResourceManagerResourceLockField);
+				FastResourceLock result = (FastResourceLock)field.GetValue(null);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
 		}
 
 		#endregion

@@ -62,18 +62,24 @@ namespace SEModAPIInternal.API.Entity
 		public BaseEntity(MyObjectBuilder_EntityBase baseEntity)
 			: base(baseEntity)
 		{
-			m_positionOrientation = baseEntity.PositionAndOrientation.GetValueOrDefault();
-			m_genericLinearVelocity = new Vector3();
-			m_genericAngularVelocity = new Vector3();
+			if (baseEntity != null && baseEntity.PositionAndOrientation != null)
+				m_positionOrientation = baseEntity.PositionAndOrientation.GetValueOrDefault();
+			else
+				m_positionOrientation = new MyPositionAndOrientation();
+			m_genericLinearVelocity = new Vector3(0, 0, 0);
+			m_genericAngularVelocity = new Vector3(0, 0, 0);
 			m_maxLinearVelocity = (float)104.7;
 		}
 
 		public BaseEntity(MyObjectBuilder_EntityBase baseEntity, Object backingObject)
 			: base(baseEntity, backingObject)
 		{
-			m_positionOrientation = baseEntity.PositionAndOrientation.GetValueOrDefault();
-			m_genericLinearVelocity = new Vector3();
-			m_genericAngularVelocity = new Vector3();
+			if (baseEntity != null && baseEntity.PositionAndOrientation != null)
+				m_positionOrientation = baseEntity.PositionAndOrientation.GetValueOrDefault();
+			else
+				m_positionOrientation = new MyPositionAndOrientation();
+			m_genericLinearVelocity = new Vector3(0, 0, 0);
+			m_genericAngularVelocity = new Vector3(0, 0, 0);
 			m_maxLinearVelocity = (float)104.7;
 
 			Action action = InternalRegisterEntityMovedEvent;

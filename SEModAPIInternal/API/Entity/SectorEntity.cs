@@ -353,6 +353,8 @@ namespace SEModAPIInternal.API.Entity
 					return;
 				if (WorldManager.Instance.IsAutosaving)
 					return;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+					return;
 
 				m_isInternalResourceLocked = true;
 
@@ -375,15 +377,11 @@ namespace SEModAPIInternal.API.Entity
 					if (BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetOrientationMatrixMethod) == null)
 						continue;
 
-					try
-					{
-						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { false });
-						m_rawDataObjectBuilderList.Add(entity, baseEntity);
-					}
-					catch (Exception ex)
-					{
-						LogManager.GameLog.WriteLine(ex);
-					}
+					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+					if (baseEntity == null)
+						continue;
+
+					m_rawDataObjectBuilderList.Add(entity, baseEntity);
 				}
 
 				m_isInternalResourceLocked = false;

@@ -337,9 +337,15 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "': " + ex.Message);
+				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "' on type '" + gameEntity.GetType().FullName + "': " + ex.Message);
+				
+				//DEBUG
+				if (methodName.ToLower().Equals("getobjectbuilder"))
+					return null;
+
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					LogManager.GameLog.WriteLine(Environment.StackTrace);
+
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}

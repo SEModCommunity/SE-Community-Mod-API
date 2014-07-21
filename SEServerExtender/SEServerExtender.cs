@@ -1291,9 +1291,9 @@ namespace SEServerExtender
 										joinRequestsNode.Nodes.Clear();
 										foreach (FactionMember member in item.JoinRequests)
 										{
-											TreeNode memberNode = membersNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
-											memberNode.Name = member.PlayerId.ToString();
-											memberNode.Tag = member;
+											TreeNode joinRequestNode = joinRequestsNode.Nodes.Add(member.PlayerId.ToString(), member.PlayerId.ToString());
+											joinRequestNode.Name = member.PlayerId.ToString();
+											joinRequestNode.Tag = member;
 										}
 									}
 
@@ -1375,6 +1375,10 @@ namespace SEServerExtender
 			BTN_Factions_Delete.Enabled = true;
 
 			PG_Factions.SelectedObject = linkedObject;
+
+			//DEBUG
+			if (e.Node.Text.Equals("Join Requests"))
+				BTN_Factions_Delete.Enabled = false;
 		}
 
 		private void BTN_Factions_Delete_Click(object sender, EventArgs e)
