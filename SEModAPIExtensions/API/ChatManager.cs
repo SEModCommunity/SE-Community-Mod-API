@@ -145,15 +145,12 @@ namespace SEModAPIExtensions.API
 			string playerName = remoteUserId.ToString();
 
 			bool commandParsed = ParseChatCommands(message, remoteUserId);
-			if (commandParsed)
-				return;
 
-			if (entryType == ChatEntryTypeEnum.ChatMsg)
+			if (!commandParsed && entryType == ChatEntryTypeEnum.ChatMsg)
 			{
 				m_chatMessages.Add(playerName + ": " + message);
+				LogManager.ChatLog.WriteLineAndConsole("Chat - Client '" + playerName + "': " + message);
 			}
-
-			LogManager.ChatLog.WriteLineAndConsole("Chat - Client '" + playerName + "': " + message);
 
 			ChatEvent chatEvent = new ChatEvent();
 			chatEvent.type = ChatEventType.OnChatReceived;
@@ -203,27 +200,29 @@ namespace SEModAPIExtensions.API
 				return;
 
 			bool commandParsed = ParseChatCommands(message);
-			if (commandParsed)
-				return;
 
 			try
 			{
-				Object chatMessageStruct = CreateChatMessageStruct(message);
-				List<ulong> connectedPlayers = ServerNetworkManager.Instance.GetConnectedPlayers();
-				foreach (ulong remoteUserId in connectedPlayers)
+				if (!commandParsed)
 				{
-					ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
+					Object chatMessageStruct = CreateChatMessageStruct(message);
+					List<ulong> connectedPlayers = ServerNetworkManager.Instance.GetConnectedPlayers();
+					foreach (ulong remoteUserId in connectedPlayers)
+					{
+						ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
 
-					ChatEvent chatEvent = new ChatEvent();
-					chatEvent.type = ChatEventType.OnChatSent;
-					chatEvent.timestamp = DateTime.Now;
-					chatEvent.sourceUserId = 0;
-					chatEvent.remoteUserId = remoteUserId;
-					chatEvent.message = message;
-					chatEvent.priority = 0;
-					ChatManager.Instance.AddEvent(chatEvent);
+						ChatEvent chatEvent = new ChatEvent();
+						chatEvent.type = ChatEventType.OnChatSent;
+						chatEvent.timestamp = DateTime.Now;
+						chatEvent.sourceUserId = 0;
+						chatEvent.remoteUserId = remoteUserId;
+						chatEvent.message = message;
+						chatEvent.priority = 0;
+						ChatManager.Instance.AddEvent(chatEvent);
+					}
+					m_chatMessages.Add("Server: " + message);
+					LogManager.ChatLog.WriteLineAndConsole("Chat - Server: " + message);
 				}
-				m_chatMessages.Add("Server: " + message);
 
 				//Send a loopback chat event for server-sent messages
 				ChatEvent selfChatEvent = new ChatEvent();
@@ -234,8 +233,6 @@ namespace SEModAPIExtensions.API
 				selfChatEvent.message = message;
 				selfChatEvent.priority = 0;
 				ChatManager.Instance.AddEvent(selfChatEvent);
-
-				LogManager.ChatLog.WriteLineAndConsole("Chat - Server: " + message);
 			}
 			catch (Exception ex)
 			{

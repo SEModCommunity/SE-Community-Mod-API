@@ -78,11 +78,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		/// <returns>The casted instance into the class type</returns>
 		new internal MyObjectBuilder_Reactor GetSubTypeEntity()
 		{
-			MyObjectBuilder_Reactor reactor = (MyObjectBuilder_Reactor)BaseEntity;
+			MyObjectBuilder_Reactor reactor = (MyObjectBuilder_Reactor)ObjectBuilder;
 
 			//Make sure the inventory is up-to-date
 			Inventory.RefreshInventory();
-			reactor.Inventory = Inventory.GetSubTypeEntity();
+			reactor.Inventory = Inventory.ObjectBuilder;
 
 			return reactor;
 		}

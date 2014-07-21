@@ -51,7 +51,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		/// <returns>The casted instance into the class type</returns>
 		new internal MyObjectBuilder_MedicalRoom GetSubTypeEntity()
 		{
-			return (MyObjectBuilder_MedicalRoom)BaseEntity;
+			return (MyObjectBuilder_MedicalRoom)ObjectBuilder;
 		}
 
 		#endregion

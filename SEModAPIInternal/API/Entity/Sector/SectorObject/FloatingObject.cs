@@ -42,6 +42,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[Category("Floating Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal static Type InternalType
@@ -58,7 +59,22 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Browsable(true)]
 		public override string Name
 		{
-			get { return GetSubTypeEntity().Item.PhysicalContent.SubtypeName; }
+			get { return ObjectBuilder.Item.PhysicalContent.SubtypeName; }
+		}
+
+		[Category("Floating Object")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_FloatingObject ObjectBuilder
+		{
+			get
+			{
+				return (MyObjectBuilder_FloatingObject)base.ObjectBuilder;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
 		}
 
 		[Category("Floating Object")]
@@ -83,15 +99,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_FloatingObject GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_FloatingObject)BaseEntity;
-		}
 
 		protected void InternalUpdateItem()
 		{

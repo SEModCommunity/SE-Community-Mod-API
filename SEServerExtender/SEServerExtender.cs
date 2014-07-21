@@ -1070,6 +1070,51 @@ namespace SEServerExtender
 
 				TRV_Entities.EndUpdate();
 			}
+
+			if (linkedObject is ShipToolBaseEntity)
+			{
+				ShipToolBaseEntity shipTool = (ShipToolBaseEntity)linkedObject;
+
+				InventoryEntity inventory = shipTool.Inventory;
+
+				TRV_Entities.BeginUpdate();
+
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
+
+				TRV_Entities.EndUpdate();
+			}
+
+			if (linkedObject is ShipDrillEntity)
+			{
+				ShipDrillEntity shipDrill = (ShipDrillEntity)linkedObject;
+
+				InventoryEntity inventory = shipDrill.Inventory;
+
+				TRV_Entities.BeginUpdate();
+
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
+
+				TRV_Entities.EndUpdate();
+			}
+
+			if (linkedObject is ProductionBlockEntity)
+			{
+				ProductionBlockEntity productionBlock = (ProductionBlockEntity)linkedObject;
+
+				TRV_Entities.BeginUpdate();
+
+				if (e.Node.Nodes.Count < 2)
+				{
+					e.Node.Nodes.Clear();
+					e.Node.Nodes.Add("Input");
+					e.Node.Nodes.Add("Output");
+				}
+
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node.Nodes[0], productionBlock.InputInventory.Items);
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node.Nodes[1], productionBlock.OutputInventory.Items);
+
+				TRV_Entities.EndUpdate();
+			}
 		}
 
 		private void BTN_Entities_Delete_Click(object sender, EventArgs e)

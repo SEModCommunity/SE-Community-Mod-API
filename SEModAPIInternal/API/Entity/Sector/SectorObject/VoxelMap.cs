@@ -38,6 +38,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[Category("Voxel Map")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal static Type InternalType
@@ -52,19 +53,36 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		[Category("Voxel Map")]
 		[Browsable(true)]
+		[ReadOnly(true)]
 		public override string Name
 		{
 			get { return Filename; }
 		}
 
 		[Category("Voxel Map")]
-		public string Filename
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_VoxelMap ObjectBuilder
 		{
-			get { return GetSubTypeEntity().Filename; }
+			get
+			{
+				return (MyObjectBuilder_VoxelMap)base.ObjectBuilder;
+			}
 			set
 			{
-				if (GetSubTypeEntity().Filename == value) return;
-				GetSubTypeEntity().Filename = value;
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Voxel Map")]
+		[ReadOnly(true)]
+		public string Filename
+		{
+			get { return ObjectBuilder.Filename; }
+			set
+			{
+				if (ObjectBuilder.Filename == value) return;
+				ObjectBuilder.Filename = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -79,21 +97,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Methods"
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_VoxelMap GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_VoxelMap)BaseEntity;
-		}
-
 		protected void InternalUpdateVoxelMap()
 		{
 			try
 			{
-				InternalUpdateBaseEntity();
-
 				//TODO - Add methods to re-load voxel map if file name changes
 			}
 			catch (Exception ex)

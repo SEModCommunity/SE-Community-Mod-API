@@ -55,13 +55,28 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		}
 
 		[Category("Terminal Block")]
-		public string CustomName
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_TerminalBlock ObjectBuilder
 		{
-			get { return GetSubTypeEntity().CustomName; }
+			get
+			{
+				return (MyObjectBuilder_TerminalBlock)base.ObjectBuilder;
+			}
 			set
 			{
-				if (GetSubTypeEntity().CustomName == value) return;
-				GetSubTypeEntity().CustomName = value;
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Terminal Block")]
+		public string CustomName
+		{
+			get { return ObjectBuilder.CustomName; }
+			set
+			{
+				if (ObjectBuilder.CustomName == value) return;
+				ObjectBuilder.CustomName = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -75,15 +90,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_TerminalBlock GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_TerminalBlock)BaseEntity;
-		}
 
 		protected void InternalSetCustomName()
 		{

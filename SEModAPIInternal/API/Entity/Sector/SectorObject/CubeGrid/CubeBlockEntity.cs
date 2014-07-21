@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xml.Serialization.GeneratedAssembly;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -91,6 +94,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Properties"
 
+		[Category("Cube Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal static Type InternalType
@@ -103,7 +107,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[Category("Entity")]
+		[Category("Cube Block")]
+		[ReadOnly(true)]
 		public override string Name
 		{
 			get
@@ -119,16 +124,32 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[Category("Entity")]
+		[Category("Cube Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_CubeBlock ObjectBuilder
+		{
+			get
+			{
+				return (MyObjectBuilder_CubeBlock)base.ObjectBuilder;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Cube Block")]
 		[Browsable(true)]
+		[ReadOnly(true)]
 		[Description("The unique entity ID representing a functional entity in-game")]
 		public long EntityId
 		{
-			get { return GetSubTypeEntity().EntityId; }
+			get { return ObjectBuilder.EntityId; }
 			set
 			{
-				if (GetSubTypeEntity().EntityId == value) return;
-				GetSubTypeEntity().EntityId = value;
+				if (ObjectBuilder.EntityId == value) return;
+				ObjectBuilder.EntityId = value;
 
 				Changed = true;
 			}
@@ -139,25 +160,25 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[TypeConverter(typeof(Vector3ITypeConverter))]
 		public SerializableVector3I Min
 		{
-			get { return GetSubTypeEntity().Min; }
+			get { return ObjectBuilder.Min; }
 			set
 			{
-				if (GetSubTypeEntity().Min.Equals(value)) return;
-				GetSubTypeEntity().Min = value;
+				if (ObjectBuilder.Min.Equals(value)) return;
+				ObjectBuilder.Min = value;
 				Changed = true;
 			}
 		}
 
 		[Category("Cube Block")]
-		[ReadOnly(true)]
 		[Browsable(false)]
+		[ReadOnly(true)]
 		public SerializableBlockOrientation BlockOrientation
 		{
-			get { return GetSubTypeEntity().BlockOrientation; }
+			get { return ObjectBuilder.BlockOrientation; }
 			set
 			{
-				if (GetSubTypeEntity().BlockOrientation.Equals(value)) return;
-				GetSubTypeEntity().BlockOrientation = value;
+				if (ObjectBuilder.BlockOrientation.Equals(value)) return;
+				ObjectBuilder.BlockOrientation = value;
 				Changed = true;
 			}
 		}
@@ -166,16 +187,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public SerializableVector3 ColorMaskHSV
 		{
-			get { return GetSubTypeEntity().ColorMaskHSV; }
+			get { return ObjectBuilder.ColorMaskHSV; }
 			set
 			{
-				if (GetSubTypeEntity().ColorMaskHSV.Equals(value)) return;
-				GetSubTypeEntity().ColorMaskHSV = value;
+				if (ObjectBuilder.ColorMaskHSV.Equals(value)) return;
+				ObjectBuilder.ColorMaskHSV = value;
 				Changed = true;
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdate;
+					Action action = InternalUpdateColorMaskHSV;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -184,16 +205,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[Category("Cube Block")]
 		public float BuildPercent
 		{
-			get { return GetSubTypeEntity().BuildPercent; }
+			get { return ObjectBuilder.BuildPercent; }
 			set
 			{
-				if (GetSubTypeEntity().BuildPercent == value) return;
-				GetSubTypeEntity().BuildPercent = value;
+				if (ObjectBuilder.BuildPercent == value) return;
+				ObjectBuilder.BuildPercent = value;
 				Changed = true;
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdate;
+					Action action = InternalUpdateConstructionManager;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -202,16 +223,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[Category("Cube Block")]
 		public float IntegrityPercent
 		{
-			get { return GetSubTypeEntity().IntegrityPercent; }
+			get { return ObjectBuilder.IntegrityPercent; }
 			set
 			{
-				if (GetSubTypeEntity().IntegrityPercent == value) return;
-				GetSubTypeEntity().IntegrityPercent = value;
+				if (ObjectBuilder.IntegrityPercent == value) return;
+				ObjectBuilder.IntegrityPercent = value;
 				Changed = true;
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdate;
+					Action action = InternalUpdateConstructionManager;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -220,11 +241,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[Category("Cube Block")]
 		public long Owner
 		{
-			get { return GetSubTypeEntity().Owner; }
+			get { return ObjectBuilder.Owner; }
 			set
 			{
-				if (GetSubTypeEntity().Owner == value) return;
-				GetSubTypeEntity().Owner = value;
+				if (ObjectBuilder.Owner == value) return;
+				ObjectBuilder.Owner = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -236,14 +257,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		}
 
 		[Category("Cube Block")]
-		[Description("Added as of 1.037.000")]
 		public MyOwnershipShareModeEnum ShareMode
 		{
-			get { return GetSubTypeEntity().ShareMode; }
+			get { return ObjectBuilder.ShareMode; }
 			set
 			{
-				if (GetSubTypeEntity().ShareMode == value) return;
-				GetSubTypeEntity().ShareMode = value;
+				if (ObjectBuilder.ShareMode == value) return;
+				ObjectBuilder.ShareMode = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -274,13 +294,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Methods"
 
-		new public void Dispose()
+		public override void Dispose()
 		{
+			m_isDisposed = true;
+
 			if(SandboxGameAssemblyWrapper.IsDebugging)
 				LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
 
 			//Only enable events for non-structural blocks, for now
-			if (GetSubTypeEntity().EntityId != 0)
+			if (ObjectBuilder.EntityId != 0)
 			{
 				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 				newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockDeleted;
@@ -290,27 +312,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				EntityEventManager.Instance.AddEvent(newEvent);
 			}
 
-			m_isDisposed = true;
-
 			base.Dispose();
 		}
 
-		/// <summary>
-		/// Generates a new in-game entity ID
-		/// </summary>
-		/// <returns></returns>
-		public long GenerateEntityId()
+		public override void Export(FileInfo fileInfo)
 		{
-			return UtilityFunctions.GenerateEntityId();
-		}
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_CubeBlock GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_CubeBlock)BaseEntity;
+			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlockSerializer>(ObjectBuilder, fileInfo);
 		}
 
 		#region "Internal"
@@ -432,21 +439,17 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		protected void InternalUpdate()
+		protected void InternalUpdateConstructionManager()
 		{
 			try
 			{
 				//Update construction manager details
 				Object constructionManager = GetConstructionManager();
-				MethodInfo getIntegrityMethod = constructionManager.GetType().GetMethod(ConstructionManagerGetMaxIntegrityMethod);
-				float maxIntegrity = (float)getIntegrityMethod.Invoke(constructionManager, new object[] { });
+				float maxIntegrity = (float)InvokeEntityMethod(constructionManager, ConstructionManagerGetMaxIntegrityMethod);
 				float integrity = IntegrityPercent * maxIntegrity;
 				float build = BuildPercent * maxIntegrity;
-				MethodInfo method = constructionManager.GetType().GetMethod(ConstructionManagerSetIntegrityBuildValuesMethod, BindingFlags.NonPublic | BindingFlags.Instance);
-				method.Invoke(constructionManager, new object[] { integrity, build });
 
-				//Update color mask
-				InternalUpdateColorMaskHSV();
+				InvokeEntityMethod(constructionManager, ConstructionManagerSetIntegrityBuildValuesMethod, new object[] { integrity, build });
 			}
 			catch (Exception ex)
 			{
@@ -486,7 +489,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
-				FieldInfo field = BackingObject.GetType().GetField(CubeBlockColorMaskHSVField);
+				FieldInfo field = GetEntityField(BackingObject, CubeBlockColorMaskHSVField);
 				field.SetValue(BackingObject, (Vector3)ColorMaskHSV);
 			}
 			catch (Exception ex)
@@ -558,6 +561,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
+				if (m_isInternalResourceLocked)
+					return;
+				if (WorldManager.Instance.IsAutosaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+					return;
+
+				m_isInternalResourceLocked = true;
+
 				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
 				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
 
@@ -565,6 +577,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				foreach (Object entity in m_rawDataHashSet)
 				{
 					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
+					if (baseEntity == null)
+						continue;
+
 					m_rawDataObjectBuilderList.Add(entity, baseEntity);
 				}
 
@@ -589,9 +604,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
 
-			//Skip the update if there is a discrepency between the entity list and the object builder list
-			if (rawEntities.Count != m_rawDataObjectBuilderList.Count)
-				return;
+			m_isInternalResourceLocked = true;
 
 			//Update the main data mapping
 			data.Clear();
@@ -625,7 +638,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							continue;
 
 						//Update the base entity (not the same as BackingObject which is the internal object)
-						matchingCubeBlock.BaseEntity = baseEntity;
+						matchingCubeBlock.ObjectBuilder = baseEntity;
 					}
 					else
 					{
@@ -732,6 +745,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				backingData.Add(entry.BackingObject, entry);
 			}
 
+			m_isInternalResourceLocked = false;
 			IsResourceLocked = false;
 			m_isLoading = false;
 		}

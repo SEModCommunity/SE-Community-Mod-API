@@ -36,7 +36,6 @@ namespace SEModAPIInternal.API.Entity
 		private BaseObjectManager m_voxelMapManager;
 		private BaseObjectManager m_floatingObjectManager;
 		private BaseObjectManager m_meteorManager;
-		private BaseObjectManager m_unknownObjectManager;
 
 		#endregion
 
@@ -50,7 +49,6 @@ namespace SEModAPIInternal.API.Entity
 			m_voxelMapManager = new BaseObjectManager();
 			m_floatingObjectManager = new BaseObjectManager();
 			m_meteorManager = new BaseObjectManager();
-			m_unknownObjectManager = new BaseObjectManager();
 
 			List<Event> events = new List<Event>();
 			foreach (var sectorEvent in definition.SectorEvents.Events)
@@ -62,7 +60,6 @@ namespace SEModAPIInternal.API.Entity
 			List<VoxelMap> voxelMaps = new List<VoxelMap>();
 			List<FloatingObject> floatingObjects = new List<FloatingObject>();
 			List<Meteor> meteors = new List<Meteor>();
-			List<BaseEntity> unknowns = new List<BaseEntity>();
 			foreach (var sectorObject in definition.SectorObjects)
 			{
 				if (sectorObject.TypeId == typeof(MyObjectBuilder_CubeGrid))
@@ -81,19 +78,14 @@ namespace SEModAPIInternal.API.Entity
 				{
 					meteors.Add(new Meteor((MyObjectBuilder_Meteor)sectorObject));
 				}
-				else
-				{
-					unknowns.Add(new BaseEntity(sectorObject));
-				}
 			}
 
 			//Build the managers from the lists
-			m_eventManager.Load(events.ToArray());
-			m_cubeGridManager.Load(cubeGrids.ToArray());
-			m_voxelMapManager.Load(voxelMaps.ToArray());
-			m_floatingObjectManager.Load(floatingObjects.ToArray());
-			m_meteorManager.Load(meteors.ToArray());
-			m_unknownObjectManager.Load(unknowns.ToArray());
+			m_eventManager.Load(events);
+			m_cubeGridManager.Load(cubeGrids);
+			m_voxelMapManager.Load(voxelMaps);
+			m_floatingObjectManager.Load(floatingObjects);
+			m_meteorManager.Load(meteors);
 		}
 
 		#endregion
@@ -113,15 +105,64 @@ namespace SEModAPIInternal.API.Entity
 		}
 
 		[Category("Sector")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_Sector ObjectBuilder
+		{
+			get
+			{
+				MyObjectBuilder_Sector baseSector = (MyObjectBuilder_Sector)ObjectBuilder;
+
+				try
+				{
+					//Update the events in the base definition
+					baseSector.SectorEvents.Events.Clear();
+					foreach (var item in m_eventManager.GetTypedInternalData<Event>())
+					{
+						baseSector.SectorEvents.Events.Add(item.ObjectBuilder);
+					}
+
+					//Update the sector objects in the base definition
+					baseSector.SectorObjects.Clear();
+					foreach (var item in m_cubeGridManager.GetTypedInternalData<CubeGridEntity>())
+					{
+						baseSector.SectorObjects.Add(item.ObjectBuilder);
+					}
+					foreach (var item in m_voxelMapManager.GetTypedInternalData<VoxelMap>())
+					{
+						baseSector.SectorObjects.Add(item.ObjectBuilder);
+					}
+					foreach (var item in m_floatingObjectManager.GetTypedInternalData<FloatingObject>())
+					{
+						baseSector.SectorObjects.Add(item.ObjectBuilder);
+					}
+					foreach (var item in m_meteorManager.GetTypedInternalData<Meteor>())
+					{
+						baseSector.SectorObjects.Add(item.ObjectBuilder);
+					}
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
+				return baseSector;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Sector")]
 		public VRageMath.Vector3I Position
 		{
-			get { return GetSubTypeEntity().Position; }
+			get { return ObjectBuilder.Position; }
 		}
 
 		[Category("Sector")]
 		public int AppVersion
 		{
-			get { return GetSubTypeEntity().AppVersion; }
+			get { return ObjectBuilder.AppVersion; }
 		}
 
 		[Category("Sector")]
@@ -179,17 +220,6 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		[Category("Sector")]
-		[Browsable(false)]
-		public List<BaseEntity> UnknownObjects
-		{
-			get
-			{
-				var newList = m_unknownObjectManager.GetTypedInternalData<BaseEntity>();
-				return newList;
-			}
-		}
-
 		#endregion
 
 		#region "Methods"
@@ -221,53 +251,6 @@ namespace SEModAPIInternal.API.Entity
 				return m_meteorManager.DeleteEntry((Meteor)source);
 
 			return false;
-		}
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Sector GetSubTypeEntity()
-		{
-			MyObjectBuilder_Sector baseSector = (MyObjectBuilder_Sector)BaseEntity;
-
-			try
-			{
-				//Update the events in the base definition
-				baseSector.SectorEvents.Events.Clear();
-				foreach (var item in m_eventManager.GetTypedInternalData<Event>())
-				{
-					baseSector.SectorEvents.Events.Add(item.GetSubTypeEntity());
-				}
-
-				//Update the sector objects in the base definition
-				baseSector.SectorObjects.Clear();
-				foreach (var item in m_cubeGridManager.GetTypedInternalData<CubeGridEntity>())
-				{
-					baseSector.SectorObjects.Add(item.GetSubTypeEntity());
-				}
-				foreach (var item in m_voxelMapManager.GetTypedInternalData<VoxelMap>())
-				{
-					baseSector.SectorObjects.Add(item.GetSubTypeEntity());
-				}
-				foreach (var item in m_floatingObjectManager.GetTypedInternalData<FloatingObject>())
-				{
-					baseSector.SectorObjects.Add(item.GetSubTypeEntity());
-				}
-				foreach (var item in m_meteorManager.GetTypedInternalData<Meteor>())
-				{
-					baseSector.SectorObjects.Add(item.GetSubTypeEntity());
-				}
-				foreach (var item in m_unknownObjectManager.GetTypedInternalData<BaseEntity>())
-				{
-					baseSector.SectorObjects.Add(item.GetSubTypeEntity());
-				}
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-			return baseSector;
 		}
 
 		#endregion
@@ -369,8 +352,8 @@ namespace SEModAPIInternal.API.Entity
 					if (isDisposed)
 						continue;
 
-					//Skip entities that don't have the physics defined yet
-					if (BaseEntity.GetRigidBody(entity) == null)
+					//Skip entities that have invalid physics objects
+					if (BaseEntity.GetRigidBody(entity) == null || BaseEntity.GetRigidBody(entity).IsDisposed)
 						continue;
 
 					//Skip entities that don't have a position-orientation matrix defined
@@ -447,7 +430,7 @@ namespace SEModAPIInternal.API.Entity
 							continue;
 
 						//Update the base entity (not the same as BackingObject which is the internal object)
-						matchingEntity.BaseEntity = baseEntity;
+						matchingEntity.ObjectBuilder = baseEntity;
 					}
 
 					if(matchingEntity == null)
@@ -533,7 +516,7 @@ namespace SEModAPIInternal.API.Entity
 				m_nextEntityToUpdate.BackingObject = Activator.CreateInstance(internalType);
 
 				//Initialize the backing object
-				BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate.BackingObject, "Init", new object[] { m_nextEntityToUpdate.GetSubTypeEntity() });
+				BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate.BackingObject, "Init", new object[] { m_nextEntityToUpdate.ObjectBuilder });
 
 				//Add the backing object to the main game object manager
 				BaseEntity.InvokeStaticMethod(InternalType, ObjectManagerAddEntity, new object[] { m_nextEntityToUpdate.BackingObject, true });
@@ -543,7 +526,7 @@ namespace SEModAPIInternal.API.Entity
 				Type someManager = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(EntityBaseNetManagerNamespace, EntityBaseNetManagerClass);
 				BaseEntity.InvokeStaticMethod(someManager, EntityBaseNetManagerSendEntity, new object[] { baseEntity });
 
-				m_nextEntityToUpdate.BaseEntity = baseEntity;
+				m_nextEntityToUpdate.ObjectBuilder = baseEntity;
 				m_nextEntityToUpdate = null;
 			}
 			catch (Exception ex)
@@ -597,7 +580,7 @@ namespace SEModAPIInternal.API.Entity
 
 		new public bool Save()
 		{
-			return WriteSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(m_Sector.GetSubTypeEntity(), this.FileInfo.FullName);
+			return WriteSpaceEngineersFile<MyObjectBuilder_Sector, MyObjectBuilder_SectorSerializer>(m_Sector.ObjectBuilder, this.FileInfo.FullName);
 		}
 
 		#endregion

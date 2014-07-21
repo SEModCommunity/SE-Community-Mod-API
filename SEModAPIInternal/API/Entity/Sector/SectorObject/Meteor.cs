@@ -46,6 +46,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[Category("Meteor")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal static Type InternalType
@@ -62,62 +63,37 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Browsable(true)]
 		public override string Name
 		{
-			get { return GetSubTypeEntity().Item.PhysicalContent.SubtypeName; }
+			get { return ObjectBuilder.Item.PhysicalContent.SubtypeName; }
 		}
 
 		[Category("Meteor")]
-		[Browsable(true)]
-		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override Vector3Wrapper LinearVelocity
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_Meteor ObjectBuilder
 		{
-			get { return GetSubTypeEntity().LinearVelocity; }
-			set
+			get
 			{
-				if (GetSubTypeEntity().LinearVelocity == value) return;
-				GetSubTypeEntity().LinearVelocity = value;
-				Changed = true;
-
-				if (BackingObject != null)
-				{
-					Action action = InternalUpdateLinearVelocity;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				}
+				return (MyObjectBuilder_Meteor)base.ObjectBuilder;
 			}
-		}
-
-		[Category("Meteor")]
-		[Browsable(true)]
-		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override Vector3Wrapper AngularVelocity
-		{
-			get { return GetSubTypeEntity().AngularVelocity; }
 			set
 			{
-				if (GetSubTypeEntity().AngularVelocity == value) return;
-				GetSubTypeEntity().AngularVelocity = value;
-				Changed = true;
-
-				if (BackingObject != null)
-				{
-					Action action = InternalUpdateAngularVelocity;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				}
+				base.ObjectBuilder = value;
 			}
 		}
 
 		[Category("Meteor")]
 		public float Integrity
 		{
-			get { return GetSubTypeEntity().Integrity; }
+			get { return ObjectBuilder.Integrity; }
 			set
 			{
-				if (GetSubTypeEntity().Integrity == value) return;
-				GetSubTypeEntity().Integrity = value;
+				if (ObjectBuilder.Integrity == value) return;
+				ObjectBuilder.Integrity = value;
 				Changed = true;
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateMeteor;
+					Action action = InternalUpdateMeteorIntegrity;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -136,7 +112,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 				if (BackingObject != null)
 				{
-					Action action = InternalUpdateMeteor;
+					Action action = InternalUpdateMeteorItem;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -146,21 +122,22 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Methods"
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Meteor GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_Meteor)BaseEntity;
-		}
-
-		protected void InternalUpdateMeteor()
+		protected void InternalUpdateMeteorIntegrity()
 		{
 			try
 			{
-				InternalUpdateBaseEntity();
+				//TODO - Add methods to set integrity and item of the meteor
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
 
+		protected void InternalUpdateMeteorItem()
+		{
+			try
+			{
 				//TODO - Add methods to set integrity and item of the meteor
 			}
 			catch (Exception ex)

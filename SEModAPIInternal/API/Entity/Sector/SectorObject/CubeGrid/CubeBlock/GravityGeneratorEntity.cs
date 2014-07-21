@@ -92,7 +92,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		/// <returns>The casted instance into the class type</returns>
 		new internal MyObjectBuilder_GravityGenerator GetSubTypeEntity()
 		{
-			return (MyObjectBuilder_GravityGenerator)BaseEntity;
+			return (MyObjectBuilder_GravityGenerator)ObjectBuilder;
 		}
 
 		protected void InternalUpdateGravityAcceleration()

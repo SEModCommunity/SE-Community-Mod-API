@@ -100,21 +100,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Methods"
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_CargoContainer GetSubTypeEntity()
-		{
-			MyObjectBuilder_CargoContainer container = (MyObjectBuilder_CargoContainer)BaseEntity;
-
-			//Make sure the inventory is up-to-date
-			Inventory.RefreshInventory();
-			container.Inventory = Inventory.GetSubTypeEntity();
-
-			return container;
-		}
-
 		#region "Internal"
 
 		protected Object InternalGetContainerInventory()

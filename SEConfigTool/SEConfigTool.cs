@@ -407,23 +407,6 @@ namespace SEConfigTool
 
 			#endregion
 
-			#region UnknownObjects
-
-			//Add any unknown objects
-			foreach (BaseEntity unknown in sector.UnknownObjects)
-			{
-				float x = unknown.Position.X;
-				float y = unknown.Position.Y;
-				float z = unknown.Position.Z;
-
-				float dist = (float)Math.Sqrt(x * x + y * y + z * z);
-
-				TreeNode newNode = TRV_SavedGame_Objects.Nodes[4].Nodes.Add(unknown.Name + " | " + "Dist: " + dist.ToString("F2") + "m");
-				newNode.Tag = unknown;
-			}
-
-			#endregion
-
 			TRV_SavedGame_Objects.EndUpdate();
 
 			stopWatch.Stop();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -20,55 +21,85 @@ namespace SEModAPIInternal.API.Entity.Sector
 
 		#region "Properties"
 
+		[Category("Event")]
+		[Browsable(true)]
+		[ReadOnly(true)]
 		public override string Name
 		{
 			get
 			{
-				string name = GetSubTypeEntity().EventType.ToString();
+				string name = ObjectBuilder.EventType.ToString();
 				return name;
 			}
 		}
 
+		[Category("Event")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_GlobalEventBase ObjectBuilder
+		{
+			get
+			{
+				return (MyObjectBuilder_GlobalEventBase)base.ObjectBuilder;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Event")]
+		[Browsable(true)]
+		[ReadOnly(true)]
 		public long ActivationTimeMs
 		{
-			get { return GetSubTypeEntity().ActivationTimeMs; }
+			get { return ObjectBuilder.ActivationTimeMs; }
 			set
 			{
-				if (GetSubTypeEntity().ActivationTimeMs == value) return;
-				GetSubTypeEntity().ActivationTimeMs = value;
+				if (ObjectBuilder.ActivationTimeMs == value) return;
+				ObjectBuilder.ActivationTimeMs = value;
 				Changed = true;
 			}
 		}
 
+		[Category("Event")]
+		[Browsable(true)]
+		[ReadOnly(true)]
 		public SerializableDefinitionId DefinitionId
 		{
-			get { return GetSubTypeEntity().DefinitionId; }
+			get { return ObjectBuilder.DefinitionId; }
 			set
 			{
-				if (GetSubTypeEntity().DefinitionId.Equals(value)) return;
-				GetSubTypeEntity().DefinitionId = value;
+				if (ObjectBuilder.DefinitionId.Equals(value)) return;
+				ObjectBuilder.DefinitionId = value;
 				Changed = true;
 			}
 		}
 
+		[Category("Event")]
+		[Browsable(true)]
+		[ReadOnly(true)]
 		public bool Enabled
 		{
-			get { return GetSubTypeEntity().Enabled; }
+			get { return ObjectBuilder.Enabled; }
 			set
 			{
-				if (GetSubTypeEntity().Enabled == value) return;
-				GetSubTypeEntity().Enabled = value;
+				if (ObjectBuilder.Enabled == value) return;
+				ObjectBuilder.Enabled = value;
 				Changed = true;
 			}
 		}
 
+		[Category("Event")]
+		[Browsable(true)]
+		[ReadOnly(true)]
 		public MyGlobalEventTypeEnum EventType
 		{
-			get { return GetSubTypeEntity().EventType; }
+			get { return ObjectBuilder.EventType; }
 			set
 			{
-				if (GetSubTypeEntity().EventType == value) return;
-				GetSubTypeEntity().EventType = value;
+				if (ObjectBuilder.EventType == value) return;
+				ObjectBuilder.EventType = value;
 				Changed = true;
 			}
 		}
@@ -76,15 +107,6 @@ namespace SEModAPIInternal.API.Entity.Sector
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		internal MyObjectBuilder_GlobalEventBase GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_GlobalEventBase)BaseEntity;
-		}
 
 		#endregion
 	}

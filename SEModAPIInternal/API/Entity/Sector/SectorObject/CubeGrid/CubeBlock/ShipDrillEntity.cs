@@ -15,8 +15,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Attributes"
 
-		public static string AssemblerNamespace = "";
-		public static string AssemblerClass = "";
+		private InventoryEntity m_inventory;
+
+		public static string ShipDrillNamespace = "Sandbox.Game.Weapons";
+		public static string ShipDrillClass = "MyShipDrill";
+
+		public static string ShipDrillGetInventoryMethod = "GetInventory";
 
 		#endregion
 
@@ -25,28 +29,54 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public ShipDrillEntity(CubeGridEntity parent, MyObjectBuilder_Drill definition)
 			: base(parent, definition)
 		{
+			m_inventory = new InventoryEntity(definition.Inventory);
 		}
 
 		public ShipDrillEntity(CubeGridEntity parent, MyObjectBuilder_Drill definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
+			m_inventory = new InventoryEntity(definition.Inventory, InternalGetContainerInventory());
 		}
 
 		#endregion
 
 		#region "Properties"
+
+		[Category("Drill")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		public InventoryEntity Inventory
+		{
+			get
+			{
+				return m_inventory;
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Drill GetSubTypeEntity()
+		#region "Internal"
+
+		protected Object InternalGetContainerInventory()
 		{
-			return (MyObjectBuilder_Drill)BaseEntity;
+			try
+			{
+				Object baseObject = BackingObject;
+				Object actualObject = GetActualObject();
+				Object inventory = InvokeEntityMethod(actualObject, ShipDrillGetInventoryMethod, new object[] { 0 });
+
+				return inventory;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
 		}
+
+		#endregion
 
 		#endregion
 	}

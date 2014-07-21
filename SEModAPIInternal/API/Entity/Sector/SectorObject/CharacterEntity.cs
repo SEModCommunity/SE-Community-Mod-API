@@ -50,8 +50,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public CharacterEntity(FileInfo characterFile)
 			: base(null)
 		{
-			MyObjectBuilder_Character character = BaseEntityManager.LoadContentFile<MyObjectBuilder_Character, MyObjectBuilder_CharacterSerializer>(characterFile);
-			BaseEntity = character;
+			MyObjectBuilder_Character character = BaseObjectManager.LoadContentFile<MyObjectBuilder_Character, MyObjectBuilder_CharacterSerializer>(characterFile);
+			ObjectBuilder = character;
 
 			m_inventory = new InventoryEntity(character.Inventory);
 		}
@@ -111,34 +111,36 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		}
 
 		[Category("Character")]
-		[Browsable(true)]
-		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override Vector3Wrapper LinearVelocity
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_Character ObjectBuilder
 		{
-			get { return GetSubTypeEntity().LinearVelocity; }
+			get
+			{
+				MyObjectBuilder_Character character = (MyObjectBuilder_Character)base.ObjectBuilder;
+
+				//Make sure the inventory is up-to-date
+				Inventory.RefreshInventory();
+				character.Inventory = Inventory.ObjectBuilder;
+
+				return character;
+			}
 			set
 			{
-				if (GetSubTypeEntity().LinearVelocity.Equals(value)) return;
-				GetSubTypeEntity().LinearVelocity = value;
-				Changed = true;
-
-				if (BackingObject != null)
-				{
-					Action action = InternalUpdateLinearVelocity;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				}
+				base.ObjectBuilder = value;
 			}
 		}
 
 		[Category("Character")]
 		[Browsable(false)]
+		[ReadOnly(true)]
 		public MyObjectBuilder_Battery Battery
 		{
-			get { return GetSubTypeEntity().Battery; }
+			get { return ObjectBuilder.Battery; }
 			set
 			{
-				if (GetSubTypeEntity().Battery == value) return;
-				GetSubTypeEntity().Battery = value;
+				if (ObjectBuilder.Battery == value) return;
+				ObjectBuilder.Battery = value;
 				Changed = true;
 			}
 		}
@@ -148,16 +150,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				float originalValue = GetSubTypeEntity().Battery.CurrentCapacity;
+				float originalValue = Battery.CurrentCapacity;
 				float percentageValue = (float)Math.Round(originalValue * 10000000, 2);
 				return percentageValue;
 			}
 			set
 			{
-				float originalValue = GetSubTypeEntity().Battery.CurrentCapacity;
+				float originalValue = Battery.CurrentCapacity;
 				float percentageValue = (float)Math.Round(originalValue * 10000000, 2);
 				if (percentageValue == value) return;
-				GetSubTypeEntity().Battery.CurrentCapacity = value / 10000000;
+				Battery.CurrentCapacity = value / 10000000;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -173,7 +175,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				float health = GetSubTypeEntity().Health.GetValueOrDefault(-1);
+				float health = ObjectBuilder.Health.GetValueOrDefault(-1);
 				if (BackingObject != null)
 					if (health <= 0)
 						health = InternalGetCharacterHealth();
@@ -189,13 +191,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 
-				GetSubTypeEntity().Health = value;
+				ObjectBuilder.Health = value;
 				Changed = true;
 			}
 		}
 
 		[Category("Character")]
 		[Browsable(false)]
+		[ReadOnly(true)]
 		public InventoryEntity Inventory
 		{
 			get
@@ -206,31 +209,36 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		[Category("Character")]
 		[Browsable(true)]
+		[ReadOnly(true)]
 		public bool DampenersEnabled
 		{
-			get { return GetSubTypeEntity().DampenersEnabled; }
+			get { return ObjectBuilder.DampenersEnabled; }
 		}
 
 		[Category("Character")]
 		[Browsable(true)]
+		[ReadOnly(true)]
 		public bool JetpackEnabled
 		{
-			get { return GetSubTypeEntity().JetpackEnabled; }
+			get { return ObjectBuilder.JetpackEnabled; }
 		}
 
 		[Category("Character")]
 		[Browsable(true)]
+		[ReadOnly(true)]
 		public bool LightEnabled
 		{
-			get { return GetSubTypeEntity().LightEnabled; }
+			get { return ObjectBuilder.LightEnabled; }
 		}
 
 		#endregion
 
 		#region "Methods"
 
-		new public void Dispose()
+		public override void Dispose()
 		{
+			m_isDisposed = true;
+
 			LogManager.APILog.WriteLine("Disposing CharacterEntity '" + Name + "'");
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
@@ -240,29 +248,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
 
-			m_isDisposed = true;
-
 			base.Dispose();
-		}
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Character GetSubTypeEntity()
-		{
-			MyObjectBuilder_Character character = (MyObjectBuilder_Character)BaseEntity;
-
-			//Make sure the inventory is up-to-date
-			Inventory.RefreshInventory();
-			character.Inventory = Inventory.GetSubTypeEntity();
-
-			return character;
 		}
 
 		public override void Export(FileInfo fileInfo)
 		{
-			BaseEntityManager.SaveContentFile<MyObjectBuilder_Character, MyObjectBuilder_CharacterSerializer>(GetSubTypeEntity(), fileInfo);
+			BaseObjectManager.SaveContentFile<MyObjectBuilder_Character, MyObjectBuilder_CharacterSerializer>(ObjectBuilder, fileInfo);
 		}
 
 		#region "Internal"

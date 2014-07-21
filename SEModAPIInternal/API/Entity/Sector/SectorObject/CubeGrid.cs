@@ -51,23 +51,30 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public CubeGridEntity(FileInfo prefabFile)
 			: base(null)
 		{
-			BaseEntity = BaseEntityManager.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile);
-			GetSubTypeEntity().EntityId = 0;
+			ObjectBuilder = BaseObjectManager.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile);
+			ObjectBuilder.EntityId = 0;
 
 			m_cubeBlockManager = new CubeBlockManager(this);
 			List<CubeBlockEntity> cubeBlockList = new List<CubeBlockEntity>();
-			foreach (var cubeBlock in ((MyObjectBuilder_CubeGrid)BaseEntity).CubeBlocks)
+			foreach (var cubeBlock in ((MyObjectBuilder_CubeGrid)ObjectBuilder).CubeBlocks)
 			{
 				cubeBlock.EntityId = 0;
 				cubeBlockList.Add(new CubeBlockEntity(this, cubeBlock));
 			}
-			m_cubeBlockManager.Load(cubeBlockList.ToArray());
+			m_cubeBlockManager.Load(cubeBlockList);
 		}
 
 		public CubeGridEntity(MyObjectBuilder_CubeGrid definition)
 			: base(definition)
 		{
 			m_cubeBlockManager = new CubeBlockManager(this);
+			List<CubeBlockEntity> cubeBlockList = new List<CubeBlockEntity>();
+			foreach (var cubeBlock in definition.CubeBlocks)
+			{
+				cubeBlock.EntityId = 0;
+				cubeBlockList.Add(new CubeBlockEntity(this, cubeBlock));
+			}
+			m_cubeBlockManager.Load(cubeBlockList);
 		}
 
 		public CubeGridEntity(MyObjectBuilder_CubeGrid definition, Object backingObject)
@@ -93,6 +100,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[Category("Cube Grid")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal static Type InternalType
@@ -111,23 +119,61 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				if (GetSubTypeEntity() == null)
-					return "";
+				if (ObjectBuilder == null)
+					return "Cube Grid";
 
 				string name = "";
-				foreach (var cubeBlock in GetSubTypeEntity().CubeBlocks)
+				if (BackingObject == null)
 				{
-					if (cubeBlock.TypeId == typeof(MyObjectBuilder_Beacon))
+					foreach (var cubeBlock in ObjectBuilder.CubeBlocks)
+					{
+						if (cubeBlock.TypeId == typeof(MyObjectBuilder_Beacon))
+						{
+							if (name.Length > 0)
+								name += "|";
+
+							string customName = ((MyObjectBuilder_Beacon)cubeBlock).CustomName;
+							if (customName == "")
+								customName = "Beacon";
+							name += customName;
+						}
+					}
+				}
+				else
+				{
+					List<BeaconEntity> beaconBlocks = m_cubeBlockManager.GetTypedInternalData<BeaconEntity>();
+					foreach (BeaconEntity cubeBlock in beaconBlocks)
 					{
 						if (name.Length > 0)
 							name += "|";
-						name += ((MyObjectBuilder_Beacon)cubeBlock).CustomName;
+
+						string customName = cubeBlock.Name;
+						if (customName == "")
+							customName = "Beacon";
+
+						name += customName;
 					}
 				}
+
 				if (name.Length == 0)
-					return GetSubTypeEntity().EntityId.ToString();
-				else
-					return name;
+					name = ObjectBuilder.EntityId.ToString();
+
+				return name;
+			}
+		}
+
+		[Category("Cube Grid")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_CubeGrid ObjectBuilder
+		{
+			get
+			{
+				return (MyObjectBuilder_CubeGrid)base.ObjectBuilder;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
 			}
 		}
 
@@ -135,11 +181,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[ReadOnly(true)]
 		public MyCubeSize GridSizeEnum
 		{
-			get { return GetSubTypeEntity().GridSizeEnum; }
+			get { return ObjectBuilder.GridSizeEnum; }
 			set
 			{
-				if (GetSubTypeEntity().GridSizeEnum == value) return;
-				GetSubTypeEntity().GridSizeEnum = value;
+				if (ObjectBuilder.GridSizeEnum == value) return;
+				ObjectBuilder.GridSizeEnum = value;
 				Changed = true;
 			}
 		}
@@ -148,11 +194,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[ReadOnly(true)]
 		public bool IsStatic
 		{
-			get { return GetSubTypeEntity().IsStatic; }
+			get { return ObjectBuilder.IsStatic; }
 			set
 			{
-				if (GetSubTypeEntity().IsStatic == value) return;
-				GetSubTypeEntity().IsStatic = value;
+				if (ObjectBuilder.IsStatic == value) return;
+				ObjectBuilder.IsStatic = value;
 				Changed = true;
 			}
 		}
@@ -160,56 +206,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Cube Grid")]
 		public bool IsDampenersEnabled
 		{
-			get { return GetSubTypeEntity().DampenersEnabled; }
+			get { return ObjectBuilder.DampenersEnabled; }
 			set
 			{
-				if (GetSubTypeEntity().DampenersEnabled == value) return;
-				GetSubTypeEntity().DampenersEnabled = value;
+				if (ObjectBuilder.DampenersEnabled == value) return;
+				ObjectBuilder.DampenersEnabled = value;
 				Changed = true;
 
 				if (BackingObject != null)
 				{
 					Action action = InternalUpdateDampenersEnabled;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				}
-			}
-		}
-
-		[Category("Cube Grid")]
-		[Browsable(true)]
-		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override Vector3Wrapper LinearVelocity
-		{
-			get { return GetSubTypeEntity().LinearVelocity; }
-			set
-			{
-				if (GetSubTypeEntity().LinearVelocity.Equals(value)) return;
-				GetSubTypeEntity().LinearVelocity = value;
-				Changed = true;
-
-				if (BackingObject != null)
-				{
-					Action action = InternalUpdateLinearVelocity;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				}
-			}
-		}
-
-		[Category("Cube Grid")]
-		[Browsable(true)]
-		[TypeConverter(typeof(Vector3TypeConverter))]
-		public override Vector3Wrapper AngularVelocity
-		{
-			get { return GetSubTypeEntity().AngularVelocity; }
-			set
-			{
-				if (GetSubTypeEntity().AngularVelocity.Equals(value)) return;
-				GetSubTypeEntity().AngularVelocity = value;
-				Changed = true;
-
-				if (BackingObject != null)
-				{
-					Action action = InternalUpdateAngularVelocity;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -230,21 +236,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Browsable(false)]
 		public List<BoneInfo> Skeleton
 		{
-			get { return GetSubTypeEntity().Skeleton; }
+			get { return ObjectBuilder.Skeleton; }
 		}
 
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<MyObjectBuilder_ConveyorLine> ConveyorLines
 		{
-			get { return GetSubTypeEntity().ConveyorLines; }
+			get { return ObjectBuilder.ConveyorLines; }
 		}
 
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<MyObjectBuilder_BlockGroup> BlockGroups
 		{
-			get { return GetSubTypeEntity().BlockGroups; }
+			get { return ObjectBuilder.BlockGroups; }
 		}
 
 		[Category("Cube Grid")]
@@ -279,10 +285,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Methods"
 
-		new public void Dispose()
+		public override void Dispose()
 		{
 			LogManager.APILog.WriteLine("Disposing CubeGridEntity '" + Name + "'");
-
+			/*
+			foreach(CubeBlockEntity cubeBlock in CubeBlocks)
+			{
+				cubeBlock.Dispose();
+			}
+			*/
 			base.Dispose();
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
@@ -293,13 +304,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			EntityEventManager.Instance.AddEvent(newEvent);
 		}
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new public MyObjectBuilder_CubeGrid GetSubTypeEntity()
+		public override void Export(FileInfo fileInfo)
 		{
-			return (MyObjectBuilder_CubeGrid)BaseEntity;
+			RefreshCubeBlocks();
+
+			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(ObjectBuilder, fileInfo);
 		}
 
 		public CubeBlockEntity GetCubeBlock(Vector3I cubePosition)
@@ -311,7 +320,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 				if (cubeBlock == null)
 				{
-					foreach (var entry in GetSubTypeEntity().CubeBlocks)
+					foreach (var entry in ObjectBuilder.CubeBlocks)
 					{
 						if (entry.Min == cubePosition)
 						{
@@ -331,21 +340,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public void RefreshCubeBlocks()
 		{
-			MyObjectBuilder_CubeGrid cubeGrid = (MyObjectBuilder_CubeGrid)BaseEntity;
+			MyObjectBuilder_CubeGrid cubeGrid = (MyObjectBuilder_CubeGrid)ObjectBuilder;
 
 			//Refresh the cube blocks content in the cube grid from the cube blocks manager
 			cubeGrid.CubeBlocks.Clear();
 			foreach (var item in m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>())
 			{
-				cubeGrid.CubeBlocks.Add((MyObjectBuilder_CubeBlock)item.GetSubTypeEntity());
+				cubeGrid.CubeBlocks.Add((MyObjectBuilder_CubeBlock)item.ObjectBuilder);
 			}
-		}
-
-		public override void Export(FileInfo fileInfo)
-		{
-			RefreshCubeBlocks();
-
-			BaseEntityManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(GetSubTypeEntity(), fileInfo);
 		}
 
 		#region "Internal"

@@ -53,11 +53,26 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		[Category("Light")]
 		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_LightingBlock ObjectBuilder
+		{
+			get
+			{
+				return (MyObjectBuilder_LightingBlock)base.ObjectBuilder;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Light")]
+		[Browsable(false)]
 		public Color Color
 		{
 			get
 			{
-				var baseEntity = GetSubTypeEntity();
+				var baseEntity = ObjectBuilder;
 				Color color = new Color(baseEntity.ColorRed, baseEntity.ColorGreen, baseEntity.ColorBlue, baseEntity.ColorAlpha);
 
 				return color;
@@ -65,7 +80,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			set
 			{
 				if (Color == value) return;
-				var baseEntity = GetSubTypeEntity();
+				var baseEntity = ObjectBuilder;
 				baseEntity.ColorAlpha = value.A;
 				baseEntity.ColorRed = value.R;
 				baseEntity.ColorGreen = value.G;
@@ -83,11 +98,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Light")]
 		public float ColorAlpha
 		{
-			get { return GetSubTypeEntity().ColorAlpha; }
+			get { return ObjectBuilder.ColorAlpha; }
 			set
 			{
-				if (GetSubTypeEntity().ColorAlpha == value) return;
-				GetSubTypeEntity().ColorAlpha = value;
+				if (ObjectBuilder.ColorAlpha == value) return;
+				ObjectBuilder.ColorAlpha = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -101,11 +116,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Light")]
 		public float ColorRed
 		{
-			get { return GetSubTypeEntity().ColorRed; }
+			get { return ObjectBuilder.ColorRed; }
 			set
 			{
-				if (GetSubTypeEntity().ColorRed == value) return;
-				GetSubTypeEntity().ColorRed = value;
+				if (ObjectBuilder.ColorRed == value) return;
+				ObjectBuilder.ColorRed = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -119,11 +134,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Light")]
 		public float ColorGreen
 		{
-			get { return GetSubTypeEntity().ColorGreen; }
+			get { return ObjectBuilder.ColorGreen; }
 			set
 			{
-				if (GetSubTypeEntity().ColorGreen == value) return;
-				GetSubTypeEntity().ColorGreen = value;
+				if (ObjectBuilder.ColorGreen == value) return;
+				ObjectBuilder.ColorGreen = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -137,11 +152,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Light")]
 		public float ColorBlue
 		{
-			get { return GetSubTypeEntity().ColorBlue; }
+			get { return ObjectBuilder.ColorBlue; }
 			set
 			{
-				if (GetSubTypeEntity().ColorBlue == value) return;
-				GetSubTypeEntity().ColorBlue = value;
+				if (ObjectBuilder.ColorBlue == value) return;
+				ObjectBuilder.ColorBlue = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -155,11 +170,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Light")]
 		public float Intensity
 		{
-			get { return GetSubTypeEntity().Intensity; }
+			get { return ObjectBuilder.Intensity; }
 			set
 			{
-				if (GetSubTypeEntity().Intensity == value) return;
-				GetSubTypeEntity().Intensity = value;
+				if (ObjectBuilder.Intensity == value) return;
+				ObjectBuilder.Intensity = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -173,11 +188,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Light")]
 		public float Falloff
 		{
-			get { return GetSubTypeEntity().Falloff; }
+			get { return ObjectBuilder.Falloff; }
 			set
 			{
-				if (GetSubTypeEntity().Falloff == value) return;
-				GetSubTypeEntity().Falloff = value;
+				if (ObjectBuilder.Falloff == value) return;
+				ObjectBuilder.Falloff = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -191,11 +206,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Light")]
 		public float Radius
 		{
-			get { return GetSubTypeEntity().Radius; }
+			get { return ObjectBuilder.Radius; }
 			set
 			{
-				if (GetSubTypeEntity().Radius == value) return;
-				GetSubTypeEntity().Radius = value;
+				if (ObjectBuilder.Radius == value) return;
+				ObjectBuilder.Radius = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -209,15 +224,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_LightingBlock GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_LightingBlock)BaseEntity;
-		}
 
 		protected Object GetLightNetworkManager()
 		{

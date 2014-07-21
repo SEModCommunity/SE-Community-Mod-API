@@ -43,12 +43,27 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Properties"
 
 		[Category("Functional Block")]
-		public bool Enabled
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_FunctionalBlock ObjectBuilder
 		{
-			get { return GetSubTypeEntity().Enabled; }
+			get
+			{
+				return (MyObjectBuilder_FunctionalBlock)base.ObjectBuilder;
+			}
 			set
 			{
-				var baseEntity = GetSubTypeEntity();
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Functional Block")]
+		public bool Enabled
+		{
+			get { return ObjectBuilder.Enabled; }
+			set
+			{
+				var baseEntity = ObjectBuilder;
 				if (baseEntity.Enabled == value) return;
 				baseEntity.Enabled = value;
 				Changed = true;
@@ -64,15 +79,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_FunctionalBlock GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_FunctionalBlock)BaseEntity;
-		}
 
 		protected void InternalUpdateFunctionalBlock()
 		{

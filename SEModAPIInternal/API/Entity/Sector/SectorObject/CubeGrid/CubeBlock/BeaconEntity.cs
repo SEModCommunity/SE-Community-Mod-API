@@ -76,7 +76,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		/// <returns>The casted instance into the class type</returns>
 		new internal MyObjectBuilder_Beacon GetSubTypeEntity()
 		{
-			return (MyObjectBuilder_Beacon)BaseEntity;
+			return (MyObjectBuilder_Beacon)ObjectBuilder;
 		}
 
 		#region "Internal"

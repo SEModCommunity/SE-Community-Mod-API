@@ -23,7 +23,6 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private InventoryItemManager m_itemManager;
-		private InventoryNetworkManager m_networkManager;
 
 		protected InventoryItemEntity m_itemToUpdate;
 		protected Decimal m_oldItemAmount;
@@ -67,14 +66,13 @@ namespace SEModAPIInternal.API.Entity
 		{
 			m_itemManager = new InventoryItemManager(this, backingObject, InventoryGetItemListMethod);
 			m_itemManager.LoadDynamic();
-
-			m_networkManager = new InventoryNetworkManager(this);
 		}
 
 		#endregion
 
 		#region "Properties"
 
+		[Category("Container Inventory")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal static Type InternalType
@@ -87,25 +85,46 @@ namespace SEModAPIInternal.API.Entity
 		}
 
 		[Category("Container Inventory")]
+		[ReadOnly(true)]
 		public override string Name
 		{
 			get { return "Inventory"; }
 		}
 
-		[Category("Container Inventory")]
-		public uint NextItemId
+		[Category("Object")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		[Description("Object builder data of the object")]
+		internal new MyObjectBuilder_Inventory ObjectBuilder
 		{
-			get { return GetSubTypeEntity().nextItemId; }
+			get
+			{
+				MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)base.ObjectBuilder;
+
+				return inventory;
+			}
 			set
 			{
-				if (GetSubTypeEntity().nextItemId == value) return;
-				GetSubTypeEntity().nextItemId = value;
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Container Inventory")]
+		[ReadOnly(true)]
+		public uint NextItemId
+		{
+			get { return ObjectBuilder.nextItemId; }
+			set
+			{
+				if (ObjectBuilder.nextItemId == value) return;
+				ObjectBuilder.nextItemId = value;
 				Changed = true;
 			}
 		}
 
 		[Category("Container Inventory")]
 		[Browsable(false)]
+		[ReadOnly(true)]
 		public List<InventoryItemEntity> Items
 		{
 			get
@@ -174,17 +193,6 @@ namespace SEModAPIInternal.API.Entity
 			return result;
 		}
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Inventory GetSubTypeEntity()
-		{
-			RefreshInventory();
-
-			return (MyObjectBuilder_Inventory)BaseEntity;
-		}
-
 		public void RefreshInventory()
 		{
 			try
@@ -194,12 +202,12 @@ namespace SEModAPIInternal.API.Entity
 					//Update the base entity
 					MethodInfo getObjectBuilder = BackingObject.GetType().GetMethod(InventoryGetObjectBuilderMethod);
 					MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)getObjectBuilder.Invoke(BackingObject, new object[] { });
-					BaseEntity = inventory;
+					ObjectBuilder = inventory;
 				}
 				else
 				{
 					//Update the item manager
-					MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)BaseEntity;
+					MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)ObjectBuilder;
 					List<InventoryItemEntity> itemList = new List<InventoryItemEntity>();
 					foreach (MyObjectBuilder_InventoryItem item in inventory.Items)
 					{
@@ -244,7 +252,7 @@ namespace SEModAPIInternal.API.Entity
 					method = BackingObject.GetType().GetMethod(InventoryAddItemAmountMethod);
 					parameters = new object[] {
 						delta,
-						m_itemToUpdate.GetSubTypeEntity().PhysicalContent,
+						m_itemToUpdate.ObjectBuilder.PhysicalContent,
 						Type.Missing
 					};
 				}
@@ -258,7 +266,7 @@ namespace SEModAPIInternal.API.Entity
 					method = BackingObject.GetType().GetMethod(InventoryRemoveItemAmountMethod, argTypes);
 					parameters = new object[] {
 						-delta,
-						m_itemToUpdate.GetSubTypeEntity().PhysicalContent,
+						m_itemToUpdate.ObjectBuilder.PhysicalContent,
 						Type.Missing
 					};
 				}
@@ -371,6 +379,21 @@ namespace SEModAPIInternal.API.Entity
 
 		[Category("Container Item")]
 		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_InventoryItem ObjectBuilder
+		{
+			get
+			{
+				return (MyObjectBuilder_InventoryItem)base.ObjectBuilder;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Container Item")]
+		[Browsable(false)]
 		public InventoryEntity Container
 		{
 			get { return m_parentContainer; }
@@ -387,11 +410,11 @@ namespace SEModAPIInternal.API.Entity
 			{
 				if (m_itemId.Equals(value)) return;
 
-				GetSubTypeEntity().PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(value);
+				ObjectBuilder.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(value);
 				bool result = FindMatchingItem();
 				if (!result)
 				{
-					GetSubTypeEntity().PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(m_itemId);
+					ObjectBuilder.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(m_itemId);
 					return;
 				}
 
@@ -403,11 +426,11 @@ namespace SEModAPIInternal.API.Entity
 		[ReadOnly(true)]
 		public uint ItemId
 		{
-			get { return GetSubTypeEntity().ItemId; }
+			get { return ObjectBuilder.ItemId; }
 			set
 			{
-				if (GetSubTypeEntity().ItemId == value) return;
-				GetSubTypeEntity().ItemId = value;
+				if (ObjectBuilder.ItemId == value) return;
+				ObjectBuilder.ItemId = value;
 				Changed = true;
 			}
 		}
@@ -415,10 +438,10 @@ namespace SEModAPIInternal.API.Entity
 		[Category("Container Item")]
 		public float Amount
 		{
-			get { return GetSubTypeEntity().Amount; }
+			get { return ObjectBuilder.Amount; }
 			set
 			{
-				var baseEntity = GetSubTypeEntity();
+				var baseEntity = ObjectBuilder;
 				if (baseEntity.Amount == value) return;
 
 				if(Container != null)
@@ -431,13 +454,14 @@ namespace SEModAPIInternal.API.Entity
 
 		[Category("Container Item")]
 		[Browsable(false)]
+		[ReadOnly(true)]
 		public MyObjectBuilder_PhysicalObject PhysicalContent
 		{
-			get { return GetSubTypeEntity().PhysicalContent; }
+			get { return ObjectBuilder.PhysicalContent; }
 			set
 			{
-				if (GetSubTypeEntity().PhysicalContent == value) return;
-				GetSubTypeEntity().PhysicalContent = value;
+				if (ObjectBuilder.PhysicalContent == value) return;
+				ObjectBuilder.PhysicalContent = value;
 				Changed = true;
 			}
 		}
@@ -446,14 +470,14 @@ namespace SEModAPIInternal.API.Entity
 		[ReadOnly(true)]
 		public float TotalMass
 		{
-			get { return GetSubTypeEntity().Amount * m_itemMass; }
+			get { return ObjectBuilder.Amount * m_itemMass; }
 		}
 
 		[Category("Container Item")]
 		[ReadOnly(true)]
 		public float TotalVolume
 		{
-			get { return GetSubTypeEntity().Amount * m_itemVolume; }
+			get { return ObjectBuilder.Amount * m_itemVolume; }
 		}
 
 		[Category("Container Item")]
@@ -538,19 +562,10 @@ namespace SEModAPIInternal.API.Entity
 			return foundMatchingItem;
 		}
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		internal MyObjectBuilder_InventoryItem GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_InventoryItem)BaseEntity;
-		}
-
 		#endregion
 	}
 
-	public class InventoryItemManager : BaseEntityManager
+	public class InventoryItemManager : BaseObjectManager
 	{
 		#region "Attributes"
 
@@ -610,7 +625,7 @@ namespace SEModAPIInternal.API.Entity
 						matchingItem = (InventoryItemEntity)backingData[entity];
 
 						//Update the base entity (not the same as BackingObject which is the internal object)
-						matchingItem.BaseEntity = baseEntity;
+						matchingItem.ObjectBuilder = baseEntity;
 					}
 					else
 					{
@@ -646,82 +661,6 @@ namespace SEModAPIInternal.API.Entity
 			}
 
 			IsResourceLocked = false;
-		}
-
-		#endregion
-	}
-
-	public class InventoryNetworkManager
-	{
-		#region "Attributes"
-
-		private InventoryEntity m_container;
-		private Object m_networkManager;
-
-		//Field in parent container that contains the network manager
-		public static string InventoryNetworkManagerField = "84CAF0B1E470C6C236DD00B4FCCBF095";
-
-		public static string InventoryNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
-		public static string InventoryNetworkManagerClass = "98C1408628C42B9F7FDB1DE7B8FAE776";
-
-		//Source, Amount, ItemId, Destination, DestinationSlot = -1, SomeBool = false
-		public static string InventoryNetworkManagerTransferItemMethod = "18F69CB3FF811B5A608841DE822B8821";
-		//Source, Amount, ItemId, SomeBool = false
-		public static string InventoryNetworkManagerUpdateItemMethod = "DB1C87495038A9B539EE33337B3A4694";
-
-		#endregion
-
-		#region "Constructors and Initializers"
-
-		public InventoryNetworkManager(InventoryEntity container)
-		{
-			m_container = container;
-			m_networkManager = NetworkManager;
-		}
-
-		#endregion
-
-		#region "Properties"
-
-		internal Object NetworkManager
-		{
-			get
-			{
-				if(m_networkManager == null)
-				{
-					try
-					{
-						FieldInfo inventoryNetworkManagerField = m_container.BackingObject.GetType().GetField(InventoryNetworkManagerField, BindingFlags.NonPublic | BindingFlags.Static);
-						Object inventoryNetworkManager = inventoryNetworkManagerField.GetValue(null);
-						m_networkManager = inventoryNetworkManager;
-					}
-					catch (Exception ex)
-					{
-						LogManager.GameLog.WriteLine(ex);
-					}
-				}
-
-				return m_networkManager;
-			}
-		}
-
-		#endregion
-
-		#region "Methods"
-
-		internal void TransferItems(Object destination, Decimal amount, uint itemId)
-		{
-			try
-			{
-				Object source = m_container.BackingObject;
-				Object networkManager = NetworkManager;
-				MethodInfo method = networkManager.GetType().GetMethod(InventoryNetworkManagerTransferItemMethod);
-				method.Invoke(networkManager, new object[] { source, amount, itemId, destination, -1, false });
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
 		}
 
 		#endregion

@@ -11,7 +11,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
-	public class AssemblerEntity : FunctionalBlockEntity
+	public class AssemblerEntity : ProductionBlockEntity
 	{
 		#region "Attributes"
 
@@ -38,16 +38,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Assembler GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_Assembler)BaseEntity;
-		}
-
 		#endregion
 	}
 }

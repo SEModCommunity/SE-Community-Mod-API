@@ -27,7 +27,7 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
-		private MyObjectBuilder_Base m_baseEntity;
+		private MyObjectBuilder_Base m_objectBuilder;
 		private Object m_backingObject;
 
 		protected bool m_isDisposed = false;
@@ -38,12 +38,12 @@ namespace SEModAPIInternal.API.Entity
 
 		public BaseObject(MyObjectBuilder_Base baseEntity)
 		{
-			m_baseEntity = baseEntity;
+			m_objectBuilder = baseEntity;
 		}
 
 		public BaseObject(MyObjectBuilder_Base baseEntity, Object backingObject)
 		{
-			m_baseEntity = baseEntity;
+			m_objectBuilder = baseEntity;
 			m_backingObject = backingObject;
 		}
 
@@ -70,19 +70,19 @@ namespace SEModAPIInternal.API.Entity
 		public virtual string Name { get; private set; }
 
 		/// <summary>
-		/// Internal data of the object
+		/// Object builder data of the object
 		/// </summary>
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
-		[Description("Internal data of the object")]
-		internal MyObjectBuilder_Base BaseEntity
+		[Description("Object builder data of the object")]
+		internal MyObjectBuilder_Base ObjectBuilder
 		{
-			get { return m_baseEntity; }
+			get { return m_objectBuilder; }
 			set
 			{
-				if (m_baseEntity == value) return;
-				m_baseEntity = value;
+				if (m_objectBuilder == value) return;
+				m_objectBuilder = value;
 
 				Changed = true;
 			}
@@ -114,13 +114,13 @@ namespace SEModAPIInternal.API.Entity
 		{
 			get
 			{
-				SerializableDefinitionId newId = new SerializableDefinitionId(m_baseEntity.TypeId, m_baseEntity.SubtypeName);
+				SerializableDefinitionId newId = new SerializableDefinitionId(m_objectBuilder.TypeId, m_objectBuilder.SubtypeName);
 				return newId;
 			}
 			set
 			{
-				if (m_baseEntity.TypeId == value.TypeId && m_baseEntity.SubtypeName == value.SubtypeName) return;
-				m_baseEntity = m_baseEntity.ChangeType(value.TypeId, value.SubtypeName);
+				if (m_objectBuilder.TypeId == value.TypeId && m_objectBuilder.SubtypeName == value.SubtypeName) return;
+				m_objectBuilder = m_objectBuilder.ChangeType(value.TypeId, value.SubtypeName);
 
 				Changed = true;
 			}
@@ -135,11 +135,11 @@ namespace SEModAPIInternal.API.Entity
 		[Description("The value ID representing the type of the object")]
 		public MyObjectBuilderType TypeId
 		{
-			get { return m_baseEntity.TypeId; }
+			get { return m_objectBuilder.TypeId; }
 			set
 			{
-				if (m_baseEntity.TypeId == value) return;
-				m_baseEntity = m_baseEntity.ChangeType(value, m_baseEntity.SubtypeName);
+				if (m_objectBuilder.TypeId == value) return;
+				m_objectBuilder = m_objectBuilder.ChangeType(value, m_objectBuilder.SubtypeName);
 
 				Changed = true;
 			}
@@ -154,11 +154,11 @@ namespace SEModAPIInternal.API.Entity
 		[Description("The value ID representing the sub-type of the object")]
 		public string Subtype
 		{
-			get { return m_baseEntity.SubtypeName; }
+			get { return m_objectBuilder.SubtypeName; }
 			set
 			{
-				if (m_baseEntity.SubtypeName == value) return;
-				m_baseEntity.SubtypeName = value;
+				if (m_objectBuilder.SubtypeName == value) return;
+				m_objectBuilder.SubtypeName = value;
 				Changed = true;
 			}
 		}
@@ -175,7 +175,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		public void Dispose()
+		public virtual void Dispose()
 		{
 			if (m_isDisposed)
 				return;
@@ -188,18 +188,9 @@ namespace SEModAPIInternal.API.Entity
 			m_isDisposed = true;
 		}
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		internal virtual MyObjectBuilder_Base GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_Base)m_baseEntity;
-		}
-
 		public virtual void Export(FileInfo fileInfo)
 		{
-			BaseEntityManager.SaveContentFile<MyObjectBuilder_Base, MyObjectBuilder_BaseSerializer>(GetSubTypeEntity(), fileInfo);
+			BaseObjectManager.SaveContentFile<MyObjectBuilder_Base, MyObjectBuilder_BaseSerializer>(ObjectBuilder, fileInfo);
 		}
 
 		#region "Internal"
@@ -852,7 +843,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			if (!IsMutable) return default(T);
 
-			var newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { source.GetSubTypeEntity() });
+			var newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { source.ObjectBuilder });
 			GetInternalData().Add(m_definitions.Count, newEntry);
 			m_changed = true;
 
@@ -883,7 +874,7 @@ namespace SEModAPIInternal.API.Entity
 
 			foreach (var def in m_definitions)
 			{
-				if (def.Value.GetSubTypeEntity().Equals(entry))
+				if (def.Value.ObjectBuilder.Equals(entry))
 				{
 					GetInternalData().Remove(def.Key);
 					m_changed = true;
@@ -984,7 +975,7 @@ namespace SEModAPIInternal.API.Entity
 			List<MyObjectBuilder_Base> baseDefs = new List<MyObjectBuilder_Base>();
 			foreach(var baseObject in GetInternalData().Values)
 			{
-				baseDefs.Add(baseObject.GetSubTypeEntity());
+				baseDefs.Add(baseObject.ObjectBuilder);
 			}
 
 			//Save the source data into the definitions container
