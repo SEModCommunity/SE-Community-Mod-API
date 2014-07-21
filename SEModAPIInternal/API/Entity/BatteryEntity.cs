@@ -225,15 +225,6 @@ namespace SEModAPIInternal.API.Entity.Sector
 
 		#region "Methods"
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal virtual MyObjectBuilder_Battery GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_Battery)BaseEntity;
-		}
-
 		public void Update()
 		{
 			if (BackingObject == null) return;
