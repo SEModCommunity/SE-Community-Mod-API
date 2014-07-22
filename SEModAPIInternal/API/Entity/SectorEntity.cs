@@ -328,6 +328,37 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
+		private bool IsValidEntity(Object entity)
+		{
+			if (entity == null)
+				return false;
+
+			//Skip unknowns for now until we get the bugs sorted out with the other types
+			Type entityType = entity.GetType();
+			if (entityType != CharacterEntity.InternalType &&
+				entityType != CubeGridEntity.InternalType &&
+				entityType != VoxelMap.InternalType &&
+				entityType != FloatingObject.InternalType &&
+				entityType != Meteor.InternalType
+				)
+				return false;
+
+			//Skip disposed entities
+			bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
+			if (isDisposed)
+				return false;
+
+			//Skip entities that have invalid physics objects
+			if (BaseEntity.GetRigidBody(entity) == null || BaseEntity.GetRigidBody(entity).IsDisposed)
+				return false;
+
+			//Skip entities that don't have a position-orientation matrix defined
+			if (BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetOrientationMatrixMethod) == null)
+				return false;
+
+			return true;
+		}
+
 		protected override void InternalGetBackingDataHashSet()
 		{
 			try
@@ -335,6 +366,8 @@ namespace SEModAPIInternal.API.Entity
 				if (m_isInternalResourceLocked)
 					return;
 				if (WorldManager.Instance.IsWorldSaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
 					return;
 				if (WorldManager.Instance.InternalGetResourceLock().Owned)
 					return;
@@ -347,27 +380,7 @@ namespace SEModAPIInternal.API.Entity
 				m_rawDataObjectBuilderList.Clear();
 				foreach (Object entity in m_rawDataHashSet)
 				{
-					//Skip unknowns for now until we get the bugs sorted out with the other types
-					Type entityType = entity.GetType();
-					if (entityType != CharacterEntity.InternalType &&
-						entityType != CubeGridEntity.InternalType &&
-						entityType != VoxelMap.InternalType &&
-						entityType != FloatingObject.InternalType &&
-						entityType != Meteor.InternalType
-						)
-						continue;
-
-					//Skip disposed entities
-					bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
-					if (isDisposed)
-						continue;
-
-					//Skip entities that have invalid physics objects
-					if (BaseEntity.GetRigidBody(entity) == null || BaseEntity.GetRigidBody(entity).IsDisposed)
-						continue;
-
-					//Skip entities that don't have a position-orientation matrix defined
-					if (BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetOrientationMatrixMethod) == null)
+					if (!IsValidEntity(entity))
 						continue;
 
 					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
@@ -393,41 +406,44 @@ namespace SEModAPIInternal.API.Entity
 				return;
 			if (m_isInternalResourceLocked)
 				return;
+			if (WorldManager.Instance.IsWorldSaving)
+				return;
+			if (WorldManager.Instance.InternalGetResourceLock() == null)
+				return;
+			if (WorldManager.Instance.InternalGetResourceLock().Owned)
+				return;
 
 			IsResourceLocked = true;
 
 			HashSet<Object> rawEntities = GetBackingDataHashSet();
 			Dictionary<long, BaseObject> data = GetInternalData();
 			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
+			Dictionary<Object, MyObjectBuilder_EntityBase> objectBuilderList = new Dictionary<object, MyObjectBuilder_EntityBase>(m_rawDataObjectBuilderList);
+
+			if (rawEntities.Count != objectBuilderList.Count)
+			{
+				IsResourceLocked = false;
+				return;
+			}
 
 			m_isInternalResourceLocked = true;
 
 			//Update the main data mapping
-			data.Clear();
-			int entityCount = 0;
+			Dictionary<long, BaseObject> tempData = new Dictionary<long, BaseObject>();
 			foreach (Object entity in rawEntities)
 			{
-				entityCount++;
-
 				try
 				{
-					//Skip unknowns for now until we get the bugs sorted out with the other types
-					Type entityType = entity.GetType();
-					if (entityType != CharacterEntity.InternalType &&
-						entityType != CubeGridEntity.InternalType &&
-						entityType != VoxelMap.InternalType &&
-						entityType != FloatingObject.InternalType &&
-						entityType != Meteor.InternalType
-						)
+					if (!IsValidEntity(entity))
 						continue;
 
 					MyObjectBuilder_EntityBase baseEntity = null;
-					if(m_rawDataObjectBuilderList.ContainsKey(entity))
-						baseEntity = m_rawDataObjectBuilderList[entity];
+					if (objectBuilderList.ContainsKey(entity))
+						baseEntity = objectBuilderList[entity];
 
 					if (baseEntity == null)
 						continue;
-					if (data.ContainsKey(baseEntity.EntityId))
+					if (tempData.ContainsKey(baseEntity.EntityId))
 						continue;
 
 					BaseEntity matchingEntity = null;
@@ -462,7 +478,7 @@ namespace SEModAPIInternal.API.Entity
 					if (matchingEntity == null)
 						throw new Exception("Failed to match/create sector object entity");
 
-					data.Add(matchingEntity.EntityId, matchingEntity);
+					tempData.Add(matchingEntity.EntityId, matchingEntity);
 				}
 				catch (Exception ex)
 				{
@@ -470,20 +486,52 @@ namespace SEModAPIInternal.API.Entity
 				}
 			}
 
-			//Update the backing data mapping
-			foreach (var key in backingData.Keys)
+			if (tempData.Count == 0 || tempData.Count != rawEntities.Count)
 			{
-				var entry = backingData[key];
-				if (!data.ContainsValue(entry))
+				m_isInternalResourceLocked = false;
+				IsResourceLocked = false;
+				return;
+			}
+
+			//Go through all of the old data values
+			List<long> entriesToRemove = new List<long>();
+			foreach (long key in data.Keys)
+			{
+				try
 				{
+					BaseObject entry = data[key];
+
+					//If the entry still exists, continue
+					if (tempData.ContainsValue(entry))
+						continue;
+
+					//Otherwise dispose it
 					entry.Dispose();
+					entriesToRemove.Add(key);
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
 				}
 			}
+
+			data.Clear();
 			backingData.Clear();
-			foreach (var key in data.Keys)
+			foreach (long key in tempData.Keys)
 			{
-				var entry = data[key];
-				backingData.Add(entry.BackingObject, entry);
+				try
+				{
+					if (entriesToRemove.Contains(key))
+						continue;
+
+					var entry = tempData[key];
+					data.Add(key, entry);
+					backingData.Add(entry.BackingObject, entry);
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
 			}
 
 			m_isInternalResourceLocked = false;

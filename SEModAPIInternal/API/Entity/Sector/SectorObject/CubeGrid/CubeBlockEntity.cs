@@ -705,14 +705,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						//if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeMissileTurret))
 							//matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
 
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipGrinder))
-							matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
+						//if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipGrinder))
+							//matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
 
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipWelder))
-							matchingCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
+						//if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipWelder))
+							//matchingCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
 
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Drill))
-							matchingCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
+						//if (baseEntity.TypeId == typeof(MyObjectBuilder_Drill))
+							//matchingCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
 
 						if (matchingCubeBlock == null)
 							matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);

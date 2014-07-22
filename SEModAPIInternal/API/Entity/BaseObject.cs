@@ -330,10 +330,6 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "' on type '" + gameEntity.GetType().FullName + "': " + ex.Message);
 				
-				//DEBUG
-				if (methodName.ToLower().Equals("getobjectbuilder"))
-					return null;
-
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					LogManager.GameLog.WriteLine(Environment.StackTrace);
 
@@ -796,7 +792,7 @@ namespace SEModAPIInternal.API.Entity
 				List<T> newList = new List<T>();
 				if(!m_isResourceLocked)
 				{
-					//m_isResourceLocked = true;
+					m_isResourceLocked = true;
 					foreach (var def in GetInternalData().Values)
 					{
 						if (!(def is T))
@@ -804,7 +800,7 @@ namespace SEModAPIInternal.API.Entity
 
 						newList.Add((T)def);
 					}
-					//m_isResourceLocked = false;
+					m_isResourceLocked = false;
 				}
 
 				return newList;

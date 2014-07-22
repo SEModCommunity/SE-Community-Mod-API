@@ -1525,30 +1525,24 @@ namespace SEServerExtender
 		// Get all floating objects and dispose of them.
 		private void BeginClearObjects()
 		{
-			List<BaseEntity> entityList = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-
 			try
 			{
-				BTN_Utilities_ClearFloatingObjectsNow.Enabled = false;
 				Console.WriteLine("[{0}] Clearing floating objects...", DateTime.Now.ToString());
-				foreach (var sectorObject in entityList)
+				BTN_Utilities_ClearFloatingObjectsNow.Enabled = false;
+
+				List<FloatingObject> floatingObjectList = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+				foreach (FloatingObject sectorObject in floatingObjectList)
 				{
-					if (sectorObject is FloatingObject)
-					{
-						if (sectorObject is BaseEntity)
-						{
-							BaseEntity item = (BaseEntity)sectorObject;
-							item.Dispose();
-						}
-					}
+					sectorObject.Dispose();
 				}
+
 				BTN_Utilities_ClearFloatingObjectsNow.Enabled = true;
+				Console.WriteLine("[{0}] Floating objects cleared!", DateTime.Now.ToString());
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(this, ex.ToString());
 			}
-			Console.WriteLine("[{0}] Floating objects cleared!", DateTime.Now.ToString());
 		}
 
 		// Start the Auto Clean timer if user checks the auto clean checkbox.

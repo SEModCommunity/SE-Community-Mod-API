@@ -404,14 +404,19 @@ namespace SEModAPIInternal.API.Entity
 
 			if (BackingObject != null)
 			{
-				Vector3 currentPosition = Position;
-				currentPosition = Vector3.Add(currentPosition, new Vector3(10000000, 10000000, 10000000));
-				Position = currentPosition;
+				//Only move and remove if the backing object isn't already disposed
+				bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(BackingObject, BaseEntity.BaseEntityGetIsDisposedMethod);
+				if (!isDisposed)
+				{
+					Vector3 currentPosition = Position;
+					currentPosition = Vector3.Add(currentPosition, new Vector3(10000000, 10000000, 10000000));
+					Position = currentPosition;
 
-				Thread.Sleep(100);
+					Thread.Sleep(100);
 
-				Action action = InternalRemoveEntity;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+					Action action = InternalRemoveEntity;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
@@ -579,7 +584,7 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.APILog.WriteLineAndConsole("Entity '" + EntityId.ToString() + "': Calling 'Close' to remove entity");
+					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " '" + EntityId.ToString() + "': Calling 'Close' to remove entity");
 
 				BaseObject.InvokeEntityMethod(BackingObject, "Close");
 
