@@ -351,7 +351,7 @@ namespace SEModAPIInternal.API.Entity
 		private readonly FieldInfo m_definitionsContainerField;
 		protected Object m_backingObject;
 		protected string m_backingSourceMethod;
-		protected DateTime m_lastBackingHashSetLoadTime;
+		protected DateTime m_lastLoadTime;
 
 		//Flags
 		private bool m_isMutable = true;
@@ -500,12 +500,8 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				TimeSpan timeSinceLastLoad = DateTime.Now - m_lastBackingHashSetLoadTime;
-
-				if (!m_isInternalResourceLocked)// && timeSinceLastLoad.TotalMilliseconds > 100)
+				if (!m_isInternalResourceLocked)
 				{
-					m_lastBackingHashSetLoadTime = DateTime.Now;
-
 					Action action = InternalGetBackingDataHashSet;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
@@ -784,8 +780,12 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (IsDynamic)
+				TimeSpan timeSinceLastLoad = DateTime.Now - m_lastLoadTime;
+
+				if (IsDynamic && timeSinceLastLoad.TotalMilliseconds > 100)
 				{
+					m_lastLoadTime = DateTime.Now;
+
 					LoadDynamic();
 				}
 

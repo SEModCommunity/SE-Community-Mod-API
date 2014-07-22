@@ -409,10 +409,10 @@ namespace SEModAPIInternal.API.Entity
 				if (!isDisposed)
 				{
 					Vector3 currentPosition = Position;
-					currentPosition = Vector3.Add(currentPosition, new Vector3(10000000, 10000000, 10000000));
+					currentPosition = Vector3.Add(currentPosition, new Vector3(20000000, 20000000, 20000000));
 					Position = currentPosition;
 
-					Thread.Sleep(100);
+					Thread.Sleep(250);
 
 					Action action = InternalRemoveEntity;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);

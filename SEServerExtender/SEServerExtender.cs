@@ -477,7 +477,7 @@ namespace SEServerExtender
 							foundMatch = true;
 
 							Vector3 rawPosition = item.Position;
-							double distance = rawPosition.Length();
+							double distance = Math.Round(rawPosition.Length(), 0);
 							string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 
@@ -550,7 +550,7 @@ namespace SEServerExtender
 						if (!item.IsDisposed)
 						{
 							Vector3 rawPosition = item.Position;
-							double distance = rawPosition.Length();
+							double distance = Math.Round(rawPosition.Length(), 0);
 							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 						}
@@ -618,7 +618,7 @@ namespace SEServerExtender
 						if (!item.IsDisposed)
 						{
 							Vector3 rawPosition = item.Position;
-							double distance = rawPosition.Length();
+							double distance = Math.Round(rawPosition.Length(), 0);
 							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 						}
@@ -686,7 +686,7 @@ namespace SEServerExtender
 						if (!item.IsDisposed && item.Item != null)
 						{
 							Vector3 rawPosition = item.Position;
-							double distance = rawPosition.Length();
+							double distance = Math.Round(rawPosition.Length(), 0);
 							string newNodeText = item.Name + " | Amount: " + item.Item.Amount.ToString() + " | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 						}
@@ -761,7 +761,7 @@ namespace SEServerExtender
 						if (!item.IsDisposed)
 						{
 							Vector3 rawPosition = item.Position;
-							double distance = rawPosition.Length();
+							double distance = Math.Round(rawPosition.Length(), 0);
 							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 						}
