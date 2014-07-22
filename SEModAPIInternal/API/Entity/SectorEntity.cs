@@ -347,6 +347,16 @@ namespace SEModAPIInternal.API.Entity
 				m_rawDataObjectBuilderList.Clear();
 				foreach (Object entity in m_rawDataHashSet)
 				{
+					//Skip unknowns for now until we get the bugs sorted out with the other types
+					Type entityType = entity.GetType();
+					if (entityType != CharacterEntity.InternalType &&
+						entityType != CubeGridEntity.InternalType &&
+						entityType != VoxelMap.InternalType &&
+						entityType != FloatingObject.InternalType &&
+						entityType != Meteor.InternalType
+						)
+						continue;
+
 					//Skip disposed entities
 					bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
 					if (isDisposed)
