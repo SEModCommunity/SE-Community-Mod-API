@@ -397,28 +397,29 @@ namespace SEModAPIInternal.API.Entity
 
 		public override void Dispose()
 		{
-			if (!IsDisposed && BackingObject != null)
-			{
-				m_isDisposed = true;
+			if (IsDisposed)
+				return;
 
+			base.Dispose();
+
+			if (BackingObject != null)
+			{
 				Vector3 currentPosition = Position;
 				currentPosition = Vector3.Add(currentPosition, new Vector3(10000000, 10000000, 10000000));
 				Position = currentPosition;
 
-				Thread.Sleep(50);
+				Thread.Sleep(100);
 
 				Action action = InternalRemoveEntity;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-
-				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
-				newEvent.type = EntityEventManager.EntityEventType.OnBaseEntityDeleted;
-				newEvent.timestamp = DateTime.Now;
-				newEvent.entity = this;
-				newEvent.priority = 1;
-				EntityEventManager.Instance.AddEvent(newEvent);
 			}
 
-			base.Dispose();
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnBaseEntityDeleted;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			newEvent.priority = 1;
+			EntityEventManager.Instance.AddEvent(newEvent);
 		}
 
 		public override void Export(FileInfo fileInfo)

@@ -177,7 +177,7 @@ namespace SEModAPIInternal.API.Entity
 
 		public virtual void Dispose()
 		{
-			if (m_isDisposed)
+			if (IsDisposed)
 				return;
 
 			if (BackingObject != null)

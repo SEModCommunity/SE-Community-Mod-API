@@ -199,7 +199,7 @@ namespace SEServerExtender
 		
 		private void AutoSaveMain(object sender, EventArgs e)
 		{
-			SaveManager.SaveWorld();
+			WorldManager.Instance.SaveWorld();
 		}
 
 		private void RunServer()

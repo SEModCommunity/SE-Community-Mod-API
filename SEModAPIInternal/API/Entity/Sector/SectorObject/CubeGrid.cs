@@ -295,13 +295,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			*/
 			base.Dispose();
-
+			/*
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridDeleted;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
 			newEvent.priority = 1;
-			EntityEventManager.Instance.AddEvent(newEvent);
+			EntityEventManager.Instance.AddEvent(newEvent);*/
 		}
 
 		public override void Export(FileInfo fileInfo)

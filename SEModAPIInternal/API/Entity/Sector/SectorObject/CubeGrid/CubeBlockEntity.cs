@@ -563,7 +563,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			{
 				if (m_isInternalResourceLocked)
 					return;
-				if (WorldManager.Instance.IsAutosaving)
+				if (WorldManager.Instance.IsWorldSaving)
 					return;
 				if (WorldManager.Instance.InternalGetResourceLock().Owned)
 					return;

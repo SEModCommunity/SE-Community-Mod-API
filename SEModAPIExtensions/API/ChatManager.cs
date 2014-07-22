@@ -379,7 +379,7 @@ namespace SEModAPIExtensions.API
 			}
 			if (command.Equals("/save"))
 			{
-				SaveManager.SaveWorld();
+				WorldManager.Instance.SaveWorld();
 			}
 
 			//Diagnostic

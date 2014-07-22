@@ -334,7 +334,7 @@ namespace SEModAPIInternal.API.Entity
 			{
 				if (m_isInternalResourceLocked)
 					return;
-				if (WorldManager.Instance.IsAutosaving)
+				if (WorldManager.Instance.IsWorldSaving)
 					return;
 				if (WorldManager.Instance.InternalGetResourceLock().Owned)
 					return;
