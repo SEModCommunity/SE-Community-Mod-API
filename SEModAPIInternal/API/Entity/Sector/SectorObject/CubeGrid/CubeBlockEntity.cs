@@ -172,7 +172,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[Category("Cube Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
-		public SerializableBlockOrientation BlockOrientation
+		public MyBlockOrientation BlockOrientation
 		{
 			get { return ObjectBuilder.BlockOrientation; }
 			set
@@ -185,7 +185,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		[Category("Cube Block")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
-		public SerializableVector3 ColorMaskHSV
+		public Vector3Wrapper ColorMaskHSV
 		{
 			get { return ObjectBuilder.ColorMaskHSV; }
 			set
@@ -681,8 +681,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						if (baseEntity.TypeId == typeof(MyObjectBuilder_Thrust))
 							matchingCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
 
-						//if (baseEntity.TypeId == typeof(MyObjectBuilder_MergeBlock))
-							//matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_MergeBlock))
+							matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
 
 						if (baseEntity.TypeId == typeof(MyObjectBuilder_LandingGear))
 							matchingCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
@@ -699,20 +699,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						if (baseEntity.TypeId == typeof(MyObjectBuilder_Gyro))
 							matchingCubeBlock = new GyroEntity(m_parent, (MyObjectBuilder_Gyro)baseEntity, entity);
 
-						//if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeGatlingTurret))
-							//matchingCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeGatlingTurret))
+							matchingCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
 
-						//if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeMissileTurret))
-							//matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeMissileTurret))
+							matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
 
-						//if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipGrinder))
-							//matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipGrinder))
+							matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
 
-						//if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipWelder))
-							//matchingCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipWelder))
+							matchingCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
 
-						//if (baseEntity.TypeId == typeof(MyObjectBuilder_Drill))
-							//matchingCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
+						if (baseEntity.TypeId == typeof(MyObjectBuilder_Drill))
+							matchingCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
 
 						if (matchingCubeBlock == null)
 							matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);

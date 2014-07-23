@@ -23,17 +23,20 @@ namespace SEModAPIInternal.API.Common
 		VoxelSomething2 = 36,							//..630C381F251A7EBADB91135C8E343D17
 		EntityBase = 37,								//..4F06732E7F1BD73CCF9AA12C9675A0F6
 		EntityBaseSerialized = 38,						//..9163D0037A92C9B6DBF801EF5D53998E
+		GravitySettings = 666,							//..4E427F5D20ED55F40EFFE0F6D0E179D8
 		TurretTarget = 686,								//..DABFCC05F372B902A14FEFB1B6B889B3
 		TurretRange = 687,								//..78F7C65371191C7D0BA7C46BC9F112DE
 		TurretSettings = 688,							//..65BD9CBA6B21F560415090186DE389B6
 		FloatingObjectPositionOrientation = 1630,		//..D5E5BAF9064D0C9A26E2BB899ED3BED8
 		InventoryTransferItem = 2467,					//..5D0E63127AEA2BE91B98D448983B0647
 		InventoryUpdateItemAmount = 2468,				//..8305AA2AB275DF34165B55263A6A7AA5
+		EnabledConveyorSystem = 2476,					//..696B1F840A189ED6F234D7875793AF6D
 		CockpitPositionOrientation = 2480,				//..8368ACD3E728CDA04FE741CDC05B1D16
 		CockpitBool = 2481,								//..E59C3103AA8B11FF99C28DA074A47BBA
 		CockpitAutopilotBase = 2487,					//..CCA7807F519575CCBA69CA2492CC90ED
 		CharacterModelName = 4758,						//..4757FDF8DAF0EB6F0D0346ECEFD6E719
 		CharacterSomething5 = 7414,						//..3BEB0A4A04463445218D632E2CD94536
+		GyroPower = 7586,								//..BB19174225804BB5035228F5477D82C9
 		FloatingObjectAltPositionOrientation = 10150,	//..564E654F19DA5C21E7869B4744304993
 		FloatingObjectContents = 10151,					//..0008E59AE36FA0F2E7ED91037507E4E8
 		ChatMessage = 13872,							//C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668
@@ -71,9 +74,25 @@ namespace SEModAPIInternal.API.Common
 
 		/////////////////////////////////////////////////
 
+		//1 Packet Type
+		public static string GravityGeneratorNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string GravityGeneratorNetManagerClass = "74AB413CFFB499A7945B3E3B84DC56CB";
+
+		//2 Packet Types
+		public static string TerminalFunctionalBlocksNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string TerminalFunctionalBlocksNetManagerClass = "850F199A13F4F6D5ED23E89E7F8D99CD";
+
 		//2+ Packet Types
 		public static string InventoryNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string InventoryNetManagerClass = "98C1408628C42B9F7FDB1DE7B8FAE776";
+
+		//1 Packet Type
+		public static string GyroPowerNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string GyroPowerNetManagerClass = "B4646791D7A57BE4E2EE21A1F22A4364";
+
+		//1 Packet Type
+		public static string ConveyorEnabledBlockNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string ConveyorEnabledBlockNetManagerClass = "C866709CB4D18071636E8389BEBA8508";
 
 		//3 Packet Types
 		public static string TurretNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
@@ -94,10 +113,6 @@ namespace SEModAPIInternal.API.Common
 		//7 Packet Types
 		public static string CharacterNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string CharacterNetManagerClass = "FA70B722FFD1F55F5A5019DA2499E60B";
-
-		//2 Packet Types
-		public static string TerminalFunctionalBlocksNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
-		public static string TerminalFunctionalBlocksNetManagerClass = "850F199A13F4F6D5ED23E89E7F8D99CD";
 
 		#endregion
 

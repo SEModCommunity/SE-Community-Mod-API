@@ -28,6 +28,11 @@ namespace SEModAPIExtensions.API
 		private Dictionary<Guid, Object> m_plugins;
 		private Dictionary<Guid, bool> m_pluginState;
 		private bool m_initialized;
+		private DateTime m_lastUpdate;
+		private TimeSpan m_lastUpdateTime;
+		private double m_averageUpdateInterval;
+		private double m_averageUpdateTime;
+		private DateTime m_lastAverageOutput;
 
 		#endregion
 
@@ -40,6 +45,11 @@ namespace SEModAPIExtensions.API
 			m_plugins = new Dictionary<Guid, Object>();
 			m_pluginState = new Dictionary<Guid, bool>();
 			m_initialized = false;
+			m_lastUpdate = DateTime.Now;
+			m_lastUpdateTime = DateTime.Now - m_lastUpdate;
+			m_averageUpdateInterval = 0;
+			m_averageUpdateTime = 0;
+			m_lastAverageOutput = DateTime.Now;
 
 			Console.WriteLine("Finished loading PluginManager");
 		}
@@ -188,6 +198,10 @@ namespace SEModAPIExtensions.API
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
 
+			m_lastUpdateTime = DateTime.Now - m_lastUpdate;
+			m_averageUpdateInterval = (m_averageUpdateTime + m_lastUpdateTime.TotalMilliseconds) / 2;
+			m_lastUpdate = DateTime.Now;
+
 			EntityEventManager.Instance.ResourceLocked = true;
 			foreach (var key in m_plugins.Keys)
 			{
@@ -288,6 +302,21 @@ namespace SEModAPIExtensions.API
 			EntityEventManager.Instance.ClearEvents();
 			EntityEventManager.Instance.ResourceLocked = false;
 			ChatManager.Instance.ClearEvents();
+
+			TimeSpan updateTime = DateTime.Now - m_lastUpdate;
+			m_averageUpdateTime = (m_averageUpdateTime + updateTime.TotalMilliseconds) / 2;
+
+			TimeSpan timeSinceAverageOutput = DateTime.Now - m_lastAverageOutput;
+			if (timeSinceAverageOutput.TotalSeconds > 30)
+			{
+				m_lastAverageOutput = DateTime.Now;
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+				{
+					LogManager.APILog.WriteLineAndConsole("PluginManager - Update interval = " + m_averageUpdateInterval.ToString() + "ms");
+					LogManager.APILog.WriteLineAndConsole("PluginManager - Update time = " + m_averageUpdateTime.ToString() + "ms");
+				}
+			}
 		}
 
 		public void InitPlugin(Guid key)

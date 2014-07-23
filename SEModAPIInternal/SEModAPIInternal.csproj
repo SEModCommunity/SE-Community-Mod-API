@@ -65,6 +65,7 @@
     <Compile Include="API\Entity\BaseEntity.cs" />
     <Compile Include="API\Entity\BaseObject.cs" />
     <Compile Include="API\Entity\BatteryEntity.cs" />
+    <Compile Include="API\Entity\PowerReceiver.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\AssemblerEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\BatteryBlockEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\ConveyorBlockEntity.cs" />

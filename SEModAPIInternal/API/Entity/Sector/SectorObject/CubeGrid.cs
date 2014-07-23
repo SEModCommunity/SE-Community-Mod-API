@@ -318,17 +318,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				long packedBlockCoordinates = (long)cubePosition.X + (long)cubePosition.Y * 10000 + (long)cubePosition.Z * 100000000;
 				CubeBlockEntity cubeBlock = (CubeBlockEntity)m_cubeBlockManager.GetEntry(packedBlockCoordinates);
 
-				if (cubeBlock == null)
-				{
-					foreach (var entry in ObjectBuilder.CubeBlocks)
-					{
-						if (entry.Min == cubePosition)
-						{
-							cubeBlock = new CubeBlockEntity(this, entry);
-						}
-					}
-				}
-
 				return cubeBlock;
 			}
 			catch (Exception ex)
@@ -388,29 +377,38 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 	public class CubeGridNetworkManager
 	{
+		//24 Packets
 		public enum CubeGridPacketIds
 		{
 			CubeBlockHashSet = 14,				//..AAC558DB3CA968D0D3B965EA00DF05D4
 			Packet1_2 = 15,
 			Packet1_3 = 16,
-			Packet1_4 = 17,
+			CubeBlockPositionList = 17,			//..5A55EA00576BB526436F3708D1F55455
 			Packet1_5 = 18,
-			Packet1_6 = 19,
+			AllPowerStatus = 19,				//..782C8DC19A883BCB6A43C3006F456A2F
 
 			Packet2_1 = 24,
 			Packet2_2 = 25,
-			Packet2_3 = 26,
+			CubeBlockItemList = 26,				//..3FD479635EACD6C3047ACB77CBAB645D
 			Packet2_4 = 27,
 			Packet2_5 = 28,
 			Packet2_6 = 29,
 
+			SomePacket1 = 4711,
+			SomePacket2 = 4712,
+			SomePacket3 = 4713,
+			SomePacket4 = 4714,
+
 			Packet3_1 = 15262,
 			Packet3_2 = 15263,
 			Packet3_3 = 15264,
-			Packet3_4 = 15265,
+			CubeBlockOrientationIsh = 15265,	//..69FB43596400BF997D806DF041F2B54D
 			CubeBlockFactionData = 15266,		//..090EFC311778552F418C0835D1248D60
+			CubeBlockOwnershipMode = 15267,		//..F62F6360C3B7B7D32C525D5987F70A68
 
-			Packet4_1 = 15271,
+			AllPowerStatus2 = 15271,			//..903CC5CD740D130E90DB6CBF79F80F4F
+
+			ShipToggle1 = 15275,				//..4DCFFCEE8D5BA392C7A57ACD6470D7CD
 		}
 
 		#region "Attributes"
@@ -420,11 +418,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public static string CubeGridGetNetManagerMethod = "AF2DACDED0370C8DBA03A53FDA4E2C47";
 
-		//18 Packet Types
+		//Definition
 		public static string CubeGridNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string CubeGridNetManagerClass = "E727876839B1C8FFEE302CD2A1948CDA";
-		public static string CubeGridNetManagerCubeBlocksToDestroyField = "8E76EFAC4EED3B61D48795B2CD5AF989";
+
+		//Methods
 		public static string CubeGridNetManagerBroadcastCubeBlockFactionDataMethod = "EF45C83059E3CD5A2C5354ABB687D861";
+
+		//Fields
+		public static string CubeGridNetManagerCubeBlocksToDestroyField = "8E76EFAC4EED3B61D48795B2CD5AF989";
 
 		#endregion
 

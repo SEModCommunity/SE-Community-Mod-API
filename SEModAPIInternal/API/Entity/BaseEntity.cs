@@ -42,17 +42,25 @@ namespace SEModAPIInternal.API.Entity
 		private MyPositionAndOrientation m_positionOrientation;
 		private Vector3 m_linearVelocity;
 		private Vector3 m_angularVelocity;
+		private BaseEntityNetworkManager m_networkManager;
 
+		//Definition
 		public static string BaseEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string BaseEntityClass = "F6DF01EE4159339113BB9650DEEE1913";
+
+		//Methods
 		public static string BaseEntityGetObjectBuilderMethod = "GetObjectBuilder";
 		public static string BaseEntityGetPhysicsManagerMethod = "691FA4830C80511C934826203A251981";
 		public static string BaseEntityGetEntityIdMethod = "53C3FFA07960404AABBEAAF931E5487E";
 		public static string BaseEntityCombineOnMovedEventMethod = "04F6493DF187FBA38C2B379BA9484304";
 		public static string BaseEntityCombineOnClosedEventMethod = "C1704F26C9D5D7EBE19DC78AB8923F4E";
 		public static string BaseEntityGetIsDisposedMethod = "6D8F627C1C0F9F166031C3B600FEDA60";
-		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
 		public static string BaseEntityGetOrientationMatrixMethod = "FD50436D896ACC794550210055349FE0";
+		public static string BaseEntityRemoveMethod = "EF75CF24B6BD63FC1A42E023BAF658B2";
+		public static string BaseEntityGetNetManagerMethod = "3EC1D0BC400097C3ED3F405F29BF6EED";
+
+		//Fields
+		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
 
 		public static string PhysicsManagerGetRigidBodyMethod = "634E5EC534E45874230868BD089055B1";
 
@@ -98,6 +106,8 @@ namespace SEModAPIInternal.API.Entity
 				m_entityId = 0;
 				m_positionOrientation = new MyPositionAndOrientation();
 			}
+
+			m_networkManager = new BaseEntityNetworkManager(this, GetEntityNetworkManager(BackingObject));
 
 			m_linearVelocity = new Vector3(0, 0, 0);
 			m_angularVelocity = new Vector3(0, 0, 0);
@@ -408,9 +418,7 @@ namespace SEModAPIInternal.API.Entity
 				bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(BackingObject, BaseEntity.BaseEntityGetIsDisposedMethod);
 				if (!isDisposed)
 				{
-					Vector3 currentPosition = Position;
-					currentPosition = Vector3.Add(currentPosition, new Vector3(20000000, 20000000, 20000000));
-					Position = currentPosition;
+					m_networkManager.RemoveEntity();
 
 					Thread.Sleep(250);
 
@@ -467,6 +475,22 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		internal static Object GetEntityNetworkManager(Object entity)
+		{
+			try
+			{
+				Object result = InvokeEntityMethod(entity, BaseEntityGetNetManagerMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return null;
+			}
+
+		}
+
 		protected void InternalUpdateMaxLinearVelocity()
 		{
 			try
@@ -474,7 +498,7 @@ namespace SEModAPIInternal.API.Entity
 				HkRigidBody havokBody = PhysicsBody;
 				if (havokBody == null)
 					return;
-				havokBody.MaxLinearVelocity = MaxLinearVelocity;
+				havokBody.MaxLinearVelocity = m_maxLinearVelocity;
 			}
 			catch (Exception ex)
 			{
@@ -587,8 +611,6 @@ namespace SEModAPIInternal.API.Entity
 					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " '" + EntityId.ToString() + "': Calling 'Close' to remove entity");
 
 				BaseObject.InvokeEntityMethod(BackingObject, "Close");
-
-				//TODO - Figure out what needs to be called to fully broadcast the removal to the clients
 			}
 			catch (Exception ex)
 			{
@@ -632,6 +654,63 @@ namespace SEModAPIInternal.API.Entity
 		}
 
 		#endregion
+
+		#endregion
+	}
+
+	public class BaseEntityNetworkManager
+	{
+		#region "Attributes"
+
+		private BaseEntity m_parent;
+		private Object m_networkManager;
+
+		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
+
+		public static string BaseEntityBroadcastRemovalMethod = "4047DAC064B9876D7A78640A42157F5E";
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public BaseEntityNetworkManager(BaseEntity parent, Object netManager)
+		{
+			m_parent = parent;
+			m_networkManager = netManager;
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		public Object NetworkManager
+		{
+			get
+			{
+				if (m_networkManager == null)
+				{
+					m_networkManager = BaseEntity.GetEntityNetworkManager(m_parent.BackingObject);
+				}
+
+				return m_networkManager;
+			}
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		public void RemoveEntity()
+		{
+			Action action = InternalRemoveEntity;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+		}
+
+		protected void InternalRemoveEntity()
+		{
+			BaseObject.InvokeEntityMethod(NetworkManager, BaseEntityBroadcastRemovalMethod);
+		}
 
 		#endregion
 	}
