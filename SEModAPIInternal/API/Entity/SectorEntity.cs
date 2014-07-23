@@ -400,142 +400,151 @@ namespace SEModAPIInternal.API.Entity
 
 		public override void LoadDynamic()
 		{
-			if (IsResourceLocked)
-				return;
-			if (IsShutDown)
-				return;
-			if (m_isInternalResourceLocked)
-				return;
-			if (WorldManager.Instance.IsWorldSaving)
-				return;
-			if (WorldManager.Instance.InternalGetResourceLock() == null)
-				return;
-			if (WorldManager.Instance.InternalGetResourceLock().Owned)
-				return;
-
-			IsResourceLocked = true;
-
-			HashSet<Object> rawEntities = GetBackingDataHashSet();
-			Dictionary<long, BaseObject> data = GetInternalData();
-			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
-			Dictionary<Object, MyObjectBuilder_EntityBase> objectBuilderList = new Dictionary<object, MyObjectBuilder_EntityBase>(m_rawDataObjectBuilderList);
-
-			if (rawEntities.Count != objectBuilderList.Count)
+			try
 			{
-				IsResourceLocked = false;
-				return;
-			}
+				if (IsResourceLocked)
+					return;
+				if (IsShutDown)
+					return;
+				if (m_isInternalResourceLocked)
+					return;
+				if (WorldManager.Instance.IsWorldSaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+					return;
 
-			m_isInternalResourceLocked = true;
+				IsResourceLocked = true;
 
-			//Update the main data mapping
-			Dictionary<long, BaseObject> tempData = new Dictionary<long, BaseObject>();
-			foreach (Object entity in rawEntities)
-			{
-				try
+				Dictionary<Object, MyObjectBuilder_EntityBase> objectBuilderList = new Dictionary<object, MyObjectBuilder_EntityBase>(m_rawDataObjectBuilderList);
+				HashSet<Object> rawEntities = GetBackingDataHashSet();
+				Dictionary<long, BaseObject> data = GetInternalData();
+				Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
+
+				if (rawEntities.Count != objectBuilderList.Count)
 				{
-					if (!IsValidEntity(entity))
-						continue;
+					IsResourceLocked = false;
+					return;
+				}
 
-					MyObjectBuilder_EntityBase baseEntity = null;
-					if (objectBuilderList.ContainsKey(entity))
-						baseEntity = objectBuilderList[entity];
+				m_isInternalResourceLocked = true;
 
-					if (baseEntity == null)
-						continue;
-					if (tempData.ContainsKey(baseEntity.EntityId))
-						continue;
-
-					BaseEntity matchingEntity = null;
-
-					//If the original data already contains an entry for this, skip creation
-					if (backingData.ContainsKey(entity))
+				//Update the main data mapping
+				Dictionary<long, BaseObject> tempData = new Dictionary<long, BaseObject>();
+				foreach (Object entity in rawEntities)
+				{
+					try
 					{
-						matchingEntity = (BaseEntity)backingData[entity];
-						if (matchingEntity.IsDisposed)
+						if (!IsValidEntity(entity))
 							continue;
 
-						//Update the base entity (not the same as BackingObject which is the internal object)
-						matchingEntity.ObjectBuilder = baseEntity;
-					}
+						MyObjectBuilder_EntityBase baseEntity = null;
+						if (objectBuilderList.ContainsKey(entity))
+							baseEntity = objectBuilderList[entity];
 
-					if(matchingEntity == null)
+						if (baseEntity == null)
+							continue;
+						if (tempData.ContainsKey(baseEntity.EntityId))
+							continue;
+
+						BaseEntity matchingEntity = null;
+
+						//If the original data already contains an entry for this, skip creation
+						if (backingData.ContainsKey(entity))
+						{
+							matchingEntity = (BaseEntity)backingData[entity];
+							if (matchingEntity.IsDisposed)
+								continue;
+
+							//Update the base entity (not the same as BackingObject which is the internal object)
+							matchingEntity.ObjectBuilder = baseEntity;
+						}
+
+						if (matchingEntity == null)
+						{
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Character))
+								matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
+							else if (baseEntity.TypeId == typeof(MyObjectBuilder_CubeGrid))
+								matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
+							else if (baseEntity.TypeId == typeof(MyObjectBuilder_FloatingObject))
+								matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
+							else if (baseEntity.TypeId == typeof(MyObjectBuilder_Meteor))
+								matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
+							else if (baseEntity.TypeId == typeof(MyObjectBuilder_VoxelMap))
+								matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
+							else
+								matchingEntity = new BaseEntity(baseEntity, entity);
+						}
+
+						if (matchingEntity == null)
+							throw new Exception("Failed to match/create sector object entity");
+
+						tempData.Add(matchingEntity.EntityId, matchingEntity);
+					}
+					catch (Exception ex)
 					{
-						if(baseEntity.TypeId == typeof(MyObjectBuilder_Character))
-							matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
-						else if (baseEntity.TypeId == typeof(MyObjectBuilder_CubeGrid))
-							matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
-						else if (baseEntity.TypeId == typeof(MyObjectBuilder_FloatingObject))
-							matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
-						else if (baseEntity.TypeId == typeof(MyObjectBuilder_Meteor))
-							matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
-						else if (baseEntity.TypeId == typeof(MyObjectBuilder_VoxelMap))
-							matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
-						else
-							matchingEntity = new BaseEntity(baseEntity, entity);
+						LogManager.GameLog.WriteLine(ex);
 					}
-
-					if (matchingEntity == null)
-						throw new Exception("Failed to match/create sector object entity");
-
-					tempData.Add(matchingEntity.EntityId, matchingEntity);
 				}
-				catch (Exception ex)
+
+				if (tempData.Count == 0 || tempData.Count != rawEntities.Count)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					m_isInternalResourceLocked = false;
+					IsResourceLocked = false;
+					return;
 				}
-			}
 
-			if (tempData.Count == 0 || tempData.Count != rawEntities.Count)
-			{
+				//Go through all of the old data values
+				List<long> entriesToRemove = new List<long>();
+				foreach (long key in data.Keys)
+				{
+					try
+					{
+						BaseObject entry = data[key];
+
+						//If the entry still exists, continue
+						if (tempData.ContainsValue(entry))
+							continue;
+
+						//Otherwise dispose it
+						entry.Dispose();
+						entriesToRemove.Add(key);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+
+				data.Clear();
+				backingData.Clear();
+				foreach (long key in tempData.Keys)
+				{
+					try
+					{
+						if (entriesToRemove.Contains(key))
+							continue;
+
+						var entry = tempData[key];
+						data.Add(key, entry);
+						backingData.Add(entry.BackingObject, entry);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+
 				m_isInternalResourceLocked = false;
 				IsResourceLocked = false;
-				return;
 			}
-
-			//Go through all of the old data values
-			List<long> entriesToRemove = new List<long>();
-			foreach (long key in data.Keys)
+			catch (Exception ex)
 			{
-				try
-				{
-					BaseObject entry = data[key];
-
-					//If the entry still exists, continue
-					if (tempData.ContainsValue(entry))
-						continue;
-
-					//Otherwise dispose it
-					entry.Dispose();
-					entriesToRemove.Add(key);
-				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
+				LogManager.GameLog.WriteLine(ex);
+				m_isInternalResourceLocked = false;
+				IsResourceLocked = false;
 			}
-
-			data.Clear();
-			backingData.Clear();
-			foreach (long key in tempData.Keys)
-			{
-				try
-				{
-					if (entriesToRemove.Contains(key))
-						continue;
-
-					var entry = tempData[key];
-					data.Add(key, entry);
-					backingData.Add(entry.BackingObject, entry);
-				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
-			}
-
-			m_isInternalResourceLocked = false;
-			IsResourceLocked = false;
 		}
 
 		public void AddEntity(BaseEntity entity)
