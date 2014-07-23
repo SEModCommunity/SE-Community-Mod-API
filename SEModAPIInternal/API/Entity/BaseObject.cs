@@ -20,6 +20,7 @@ using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity.Sector;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
+using VRage;
 
 namespace SEModAPIInternal.API.Entity
 {
@@ -353,20 +354,23 @@ namespace SEModAPIInternal.API.Entity
 		protected string m_backingSourceMethod;
 		protected DateTime m_lastLoadTime;
 
+		protected FastResourceLock m_resourceLock = new FastResourceLock();
+		protected FastResourceLock m_rawDataHashSetResourceLock = new FastResourceLock();
+		protected FastResourceLock m_rawDataListResourceLock = new FastResourceLock();
+		protected FastResourceLock m_rawDataObjectBuilderListResourceLock = new FastResourceLock();
+
 		//Flags
 		private bool m_isMutable = true;
 		private bool m_changed = false;
 		private bool m_isDynamic = false;
-		private bool m_isResourceLocked = false;
-		protected bool m_isInternalResourceLocked = false;
 
 		//Raw data stores
 		protected HashSet<Object> m_rawDataHashSet = new HashSet<object>();
 		protected List<Object> m_rawDataList = new List<object>();
+		protected Dictionary<Object, MyObjectBuilder_Base> m_rawDataObjectBuilderList = new Dictionary<object, MyObjectBuilder_Base>();
 
 		//Clean data stores
 		private Dictionary<long, BaseObject> m_definitions = new Dictionary<long, BaseObject>();
-		private Dictionary<Object, BaseObject> m_backingDefinitions = new Dictionary<Object, BaseObject>();
 
 		#endregion
 
@@ -453,9 +457,9 @@ namespace SEModAPIInternal.API.Entity
 			get
 			{
 				if (m_changed) return true;
-				foreach (var def in GetInternalData())
+				foreach (BaseObject def in GetInternalData().Values)
 				{
-					if (GetChangedState(def.Value))
+					if (def.Changed)
 						return true;
 				}
 				return false;
@@ -476,13 +480,41 @@ namespace SEModAPIInternal.API.Entity
 
 		public bool IsResourceLocked
 		{
-			get { return m_isResourceLocked; }
-			protected set { m_isResourceLocked = value; }
+			get { return m_resourceLock.Owned; }
+		}
+
+		public bool IsInternalResourceLocked
+		{
+			get { return (m_rawDataHashSetResourceLock.Owned || m_rawDataListResourceLock.Owned || m_rawDataObjectBuilderListResourceLock.Owned); }
 		}
 
 		#endregion
 
 		#region "Methods"
+
+		private FieldInfo GetMatchingDefinitionsContainerField()
+		{
+			//Find the the matching field in the container
+			Type thisType = typeof(MyObjectBuilder_Base[]);
+			Type defType = typeof(MyObjectBuilder_Definitions);
+			FieldInfo matchingField = null;
+			foreach (FieldInfo field in defType.GetFields())
+			{
+				Type fieldType = field.FieldType;
+				if (thisType.FullName == fieldType.FullName)
+				{
+					matchingField = field;
+					break;
+				}
+			}
+
+			return matchingField;
+		}
+
+		protected virtual bool IsValidEntity(Object entity)
+		{
+			return true;
+		}
 
 		#region "GetDataSource"
 
@@ -491,20 +523,12 @@ namespace SEModAPIInternal.API.Entity
 			return m_definitions;
 		}
 
-		protected virtual Dictionary<Object, BaseObject> GetBackingInternalData()
-		{
-			return m_backingDefinitions;
-		}
-
 		protected HashSet<Object> GetBackingDataHashSet()
 		{
 			try
 			{
-				if (!m_isInternalResourceLocked)
-				{
-					Action action = InternalGetBackingDataHashSet;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				}
+				Action action = InternalRefreshBackingDataHashSet;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
 				return m_rawDataHashSet;
 			}
@@ -515,14 +539,20 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		protected virtual void InternalGetBackingDataHashSet()
+		protected virtual void InternalRefreshBackingDataHashSet()
 		{
 			try
 			{
-				if (m_isInternalResourceLocked)
+				if (m_rawDataHashSetResourceLock.Owned)
+					return;
+				if (WorldManager.Instance.IsWorldSaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
 					return;
 
-				m_isInternalResourceLocked = true;
+				m_rawDataHashSetResourceLock.AcquireExclusive();
 
 				if (m_backingObject == null)
 					return;
@@ -531,11 +561,12 @@ namespace SEModAPIInternal.API.Entity
 					return;
 				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
 
-				m_isInternalResourceLocked = false;
+				m_rawDataHashSetResourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
+				m_rawDataHashSetResourceLock.ReleaseExclusive();
 			}
 		}
 
@@ -543,13 +574,8 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (!m_isInternalResourceLocked)
-				{
-					m_isInternalResourceLocked = true;
-
-					Action action = InternalGetBackingDataList;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				}
+				Action action = InternalRefreshBackingDataList;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
 				return m_rawDataList;
 			}
@@ -560,10 +586,21 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		protected virtual void InternalGetBackingDataList()
+		protected virtual void InternalRefreshBackingDataList()
 		{
 			try
 			{
+				if (m_rawDataListResourceLock.Owned)
+					return;
+				if (WorldManager.Instance.IsWorldSaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+					return;
+
+				m_rawDataListResourceLock.AcquireExclusive();
+
 				if (m_backingObject == null)
 					return;
 				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
@@ -571,12 +608,34 @@ namespace SEModAPIInternal.API.Entity
 					return;
 				m_rawDataList = UtilityFunctions.ConvertList(rawValue);
 
-				m_isInternalResourceLocked = false;
+				m_rawDataListResourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
+				m_rawDataListResourceLock.ReleaseExclusive();
 			}
+		}
+
+		protected Dictionary<object, MyObjectBuilder_Base> GetObjectBuilderMap()
+		{
+			try
+			{
+				Action action = InternalRefreshObjectBuilderMap;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+
+				return m_rawDataObjectBuilderList;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return new Dictionary<object, MyObjectBuilder_Base>();
+			}
+		}
+
+		protected virtual void InternalRefreshObjectBuilderMap()
+		{
+			
 		}
 
 		#endregion
@@ -752,30 +811,6 @@ namespace SEModAPIInternal.API.Entity
 			return GetInternalData()[key];
 		}
 
-		protected bool GetChangedState(BaseObject overLayer)
-		{
-			return overLayer.Changed;
-		}
-
-		private FieldInfo GetMatchingDefinitionsContainerField()
-		{
-			//Find the the matching field in the container
-			Type thisType = typeof(MyObjectBuilder_Base[]);
-			Type defType = typeof(MyObjectBuilder_Definitions);
-			FieldInfo matchingField = null;
-			foreach (FieldInfo field in defType.GetFields())
-			{
-				Type fieldType = field.FieldType;
-				if (thisType.FullName == fieldType.FullName)
-				{
-					matchingField = field;
-					break;
-				}
-			}
-
-			return matchingField;
-		}
-		
 		public virtual List<T> GetTypedInternalData<T>() where T : BaseObject
 		{
 			try
@@ -786,13 +821,19 @@ namespace SEModAPIInternal.API.Entity
 				{
 					m_lastLoadTime = DateTime.Now;
 
-					LoadDynamic();
+					try
+					{
+						LoadDynamic();
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
 				}
 
 				List<T> newList = new List<T>();
-				if(!m_isResourceLocked)
+				if (!m_resourceLock.Owned)
 				{
-					m_isResourceLocked = true;
 					foreach (var def in GetInternalData().Values)
 					{
 						if (!(def is T))
@@ -800,7 +841,6 @@ namespace SEModAPIInternal.API.Entity
 
 						newList.Add((T)def);
 					}
-					m_isResourceLocked = false;
 				}
 
 				return newList;
@@ -821,9 +861,14 @@ namespace SEModAPIInternal.API.Entity
 			if (!IsMutable) return default(T);
 
 			MyObjectBuilder_Base newBase = MyObjectBuilder_Base.CreateNewObject(typeof(MyObjectBuilder_EntityBase));
-			return NewEntry<T>(newBase);
+			var newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { newBase });
+			GetInternalData().Add(m_definitions.Count, newEntry);
+			m_changed = true;
+
+			return newEntry;
 		}
 
+		[Obsolete]
 		public T NewEntry<T>(MyObjectBuilder_Base source) where T : BaseObject
 		{
 			if (!IsMutable) return default(T);
@@ -846,6 +891,14 @@ namespace SEModAPIInternal.API.Entity
 			return newEntry;
 		}
 
+		public void AddEntry<T>(long key, T entry) where T : BaseObject
+		{
+			if (!IsMutable) return;
+
+			GetInternalData().Add(key, entry);
+			m_changed = true;
+		}
+
 		#endregion
 
 		#region "DeleteContent"
@@ -856,26 +909,11 @@ namespace SEModAPIInternal.API.Entity
 
 			if (GetInternalData().ContainsKey(id))
 			{
+				var entry = GetInternalData()[id];
 				GetInternalData().Remove(id);
+				entry.Dispose();
 				m_changed = true;
 				return true;
-			}
-
-			return false;
-		}
-
-		public bool DeleteEntry(MyObjectBuilder_Base entry)
-		{
-			if (!IsMutable) return false;
-
-			foreach (var def in m_definitions)
-			{
-				if (def.Value.ObjectBuilder.Equals(entry))
-				{
-					GetInternalData().Remove(def.Key);
-					m_changed = true;
-					return true;
-				}
 			}
 
 			return false;
@@ -889,13 +927,35 @@ namespace SEModAPIInternal.API.Entity
 			{
 				if (def.Value.Equals(entry))
 				{
-					GetInternalData().Remove(def.Key);
-					m_changed = true;
-					return true;
+					DeleteEntry(def.Key);
 				}
 			}
 
 			return false;
+		}
+
+		public bool DeleteEntries<T>(List<T> entries) where T : BaseObject
+		{
+			if (!IsMutable) return false;
+
+			foreach (var entry in entries)
+			{
+				DeleteEntry(entry);
+			}
+
+			return true;
+		}
+
+		public bool DeleteEntries<T>(Dictionary<long, T> entries) where T : BaseObject
+		{
+			if (!IsMutable) return false;
+
+			foreach (var entry in entries.Keys)
+			{
+				DeleteEntry(entry);
+			}
+
+			return true;
 		}
 
 		#endregion
@@ -918,6 +978,7 @@ namespace SEModAPIInternal.API.Entity
 			Load(baseDefinitions);
 		}
 
+		[Obsolete]
 		public void Load(MyObjectBuilder_Base[] source)
 		{
 			//Copy the data into the manager
@@ -928,6 +989,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[Obsolete]
 		public void Load(List<MyObjectBuilder_Base> source)
 		{
 			Load(source.ToArray());

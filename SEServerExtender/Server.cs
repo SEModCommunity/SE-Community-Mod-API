@@ -254,7 +254,6 @@ namespace SEServerExtender
 				m_autosaveTimer.Start();
 
 				m_isServerRunning = true;
-				SectorObjectManager.Instance.IsShutDown = false;
 
 				m_runServerThread = new Thread(new ThreadStart(this.RunServer));
 				m_runServerThread.Start();
@@ -268,7 +267,6 @@ namespace SEServerExtender
 		public void StopServer()
 		{
 			m_pluginMainLoop.Stop();
-			SectorObjectManager.Instance.IsShutDown = true;
 
 			//m_serverWrapper.StopServer();
 			m_runServerThread.Interrupt();

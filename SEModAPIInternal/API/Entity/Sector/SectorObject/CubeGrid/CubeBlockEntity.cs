@@ -524,8 +524,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		private CubeGridEntity m_parent;
 		private bool m_isLoading;
 
-		protected Dictionary<Object, MyObjectBuilder_CubeBlock> m_rawDataObjectBuilderList;
-
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -540,8 +538,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			m_isLoading = true;
 			m_parent = parent;
-
-			m_rawDataObjectBuilderList = new Dictionary<object, MyObjectBuilder_CubeBlock>();
 		}
 		
 		#endregion
@@ -557,25 +553,27 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Methods"
 
-		protected override void InternalGetBackingDataHashSet()
+		protected override void InternalRefreshObjectBuilderMap()
 		{
 			try
 			{
-				if (m_isInternalResourceLocked)
+				if (m_rawDataObjectBuilderListResourceLock.Owned)
 					return;
 				if (WorldManager.Instance.IsWorldSaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
 					return;
 				if (WorldManager.Instance.InternalGetResourceLock().Owned)
 					return;
 
-				m_isInternalResourceLocked = true;
-
-				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
-				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
+				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
 
 				m_rawDataObjectBuilderList.Clear();
-				foreach (Object entity in m_rawDataHashSet)
+				foreach (Object entity in GetBackingDataHashSet())
 				{
+					if (!IsValidEntity(entity))
+						continue;
+
 					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
 					if (baseEntity == null)
 						continue;
@@ -583,171 +581,166 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					m_rawDataObjectBuilderList.Add(entity, baseEntity);
 				}
 
-				m_isInternalResourceLocked = false;
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 		}
 
 		public override void LoadDynamic()
 		{
-			if (IsResourceLocked)
-				return;
-			if (m_isInternalResourceLocked)
-				return;
-
-			IsResourceLocked = true;
-
-			HashSet<Object> rawEntities = GetBackingDataHashSet();
-			Dictionary<long, BaseObject> data = GetInternalData();
-			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
-
-			m_isInternalResourceLocked = true;
-
-			//Update the main data mapping
-			data.Clear();
-			int entityCount = 0;
-			foreach (Object entity in rawEntities)
+			try
 			{
-				entityCount++;
+				if (IsResourceLocked)
+					return;
+				if (WorldManager.Instance.IsWorldSaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+					return;
 
-				try
+				m_resourceLock.AcquireExclusive();
+
+				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = new Dictionary<Object, MyObjectBuilder_Base>(GetObjectBuilderMap());
+				HashSet<Object> rawEntities = new HashSet<Object>(GetBackingDataHashSet());
+				if (objectBuilderList.Count != rawEntities.Count)
 				{
-					MyObjectBuilder_CubeBlock baseEntity = null;
-					if (m_rawDataObjectBuilderList.ContainsKey(entity))
-						baseEntity = m_rawDataObjectBuilderList[entity];
+					if (SandboxGameAssemblyWrapper.IsDebugging)
+						LogManager.APILog.WriteLine("Mismatch between raw entities and object builders");
+					m_resourceLock.ReleaseExclusive();
+					return;
+				}
 
-					if (baseEntity == null)
-						continue;
+				Dictionary<long, BaseObject> entitiesToRemove = new Dictionary<long, BaseObject>(GetInternalData());
 
-					Vector3I cubePosition = baseEntity.Min;
-					long packedBlockCoordinates = (long)cubePosition.X + (long)cubePosition.Y * 10000 + (long)cubePosition.Z * 100000000;
-
-					if (data.ContainsKey(packedBlockCoordinates))
-						continue;
-
-					CubeBlockEntity matchingCubeBlock = null;
-
-					//If the original data already contains an entry for this, skip creation
-					if (backingData.ContainsKey(entity))
+				//Update the main data mapping
+				foreach (Object entity in rawEntities)
+				{
+					try
 					{
-						matchingCubeBlock = (CubeBlockEntity)backingData[entity];
-						if (matchingCubeBlock.IsDisposed)
+						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
+
+						if (baseEntity == null)
 							continue;
 
-						//Update the base entity (not the same as BackingObject which is the internal object)
-						matchingCubeBlock.ObjectBuilder = baseEntity;
+						Vector3I cubePosition = baseEntity.Min;
+						long packedBlockCoordinates = (long)cubePosition.X + (long)cubePosition.Y * 10000 + (long)cubePosition.Z * 100000000;
+
+						//If the original data already contains an entry for this, skip creation
+						if (GetInternalData().ContainsKey(packedBlockCoordinates))
+						{
+							CubeBlockEntity matchingCubeBlock = (CubeBlockEntity)GetEntry(packedBlockCoordinates);
+							if (matchingCubeBlock.IsDisposed)
+								continue;
+
+							//Update the base entity (not the same as BackingObject which is the internal object)
+							matchingCubeBlock.ObjectBuilder = baseEntity;
+
+							//Remove this entry from the cleanup list
+							entitiesToRemove.Remove(packedBlockCoordinates);
+						}
+						else
+						{
+							CubeBlockEntity newCubeBlock = null;
+
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_CargoContainer))
+								newCubeBlock = new CargoContainerEntity(m_parent, (MyObjectBuilder_CargoContainer)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Reactor))
+								newCubeBlock = new ReactorEntity(m_parent, (MyObjectBuilder_Reactor)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Beacon))
+								newCubeBlock = new BeaconEntity(m_parent, (MyObjectBuilder_Beacon)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Cockpit))
+								newCubeBlock = new CockpitEntity(m_parent, (MyObjectBuilder_Cockpit)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_GravityGenerator))
+								newCubeBlock = new GravityGeneratorEntity(m_parent, (MyObjectBuilder_GravityGenerator)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_MedicalRoom))
+								newCubeBlock = new MedicalRoomEntity(m_parent, (MyObjectBuilder_MedicalRoom)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_InteriorLight))
+								newCubeBlock = new InteriorLightEntity(m_parent, (MyObjectBuilder_InteriorLight)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_ReflectorLight))
+								newCubeBlock = new ReflectorLightEntity(m_parent, (MyObjectBuilder_ReflectorLight)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_BatteryBlock))
+								newCubeBlock = new BatteryBlockEntity(m_parent, (MyObjectBuilder_BatteryBlock)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Door))
+								newCubeBlock = new DoorEntity(m_parent, (MyObjectBuilder_Door)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Refinery))
+								newCubeBlock = new RefineryEntity(m_parent, (MyObjectBuilder_Refinery)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Assembler))
+								newCubeBlock = new AssemblerEntity(m_parent, (MyObjectBuilder_Assembler)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Thrust))
+								newCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_MergeBlock))
+								newCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_LandingGear))
+								newCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Conveyor))
+								newCubeBlock = new ConveyorBlockEntity(m_parent, (MyObjectBuilder_Conveyor)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_ConveyorConnector))
+								newCubeBlock = new ConveyorTubeEntity(m_parent, (MyObjectBuilder_ConveyorConnector)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_SolarPanel))
+								newCubeBlock = new SolarPanelEntity(m_parent, (MyObjectBuilder_SolarPanel)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Gyro))
+								newCubeBlock = new GyroEntity(m_parent, (MyObjectBuilder_Gyro)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeGatlingTurret))
+								newCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeMissileTurret))
+								newCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipGrinder))
+								newCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipWelder))
+								newCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
+							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_Drill))
+								newCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
+							else
+								newCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
+
+							AddEntry(packedBlockCoordinates, newCubeBlock);
+						}
 					}
-					else
+					catch (Exception ex)
 					{
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_CargoContainer))
-							matchingCubeBlock = new CargoContainerEntity(m_parent, (MyObjectBuilder_CargoContainer)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Reactor))
-							matchingCubeBlock = new ReactorEntity(m_parent, (MyObjectBuilder_Reactor)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Beacon))
-							matchingCubeBlock = new BeaconEntity(m_parent, (MyObjectBuilder_Beacon)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Cockpit))
-							matchingCubeBlock = new CockpitEntity(m_parent, (MyObjectBuilder_Cockpit)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_GravityGenerator))
-							matchingCubeBlock = new GravityGeneratorEntity(m_parent, (MyObjectBuilder_GravityGenerator)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_MedicalRoom))
-							matchingCubeBlock = new MedicalRoomEntity(m_parent, (MyObjectBuilder_MedicalRoom)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_InteriorLight))
-							matchingCubeBlock = new InteriorLightEntity(m_parent, (MyObjectBuilder_InteriorLight)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_ReflectorLight))
-							matchingCubeBlock = new ReflectorLightEntity(m_parent, (MyObjectBuilder_ReflectorLight)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_BatteryBlock))
-							matchingCubeBlock = new BatteryBlockEntity(m_parent, (MyObjectBuilder_BatteryBlock)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Door))
-							matchingCubeBlock = new DoorEntity(m_parent, (MyObjectBuilder_Door)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Refinery))
-							matchingCubeBlock = new RefineryEntity(m_parent, (MyObjectBuilder_Refinery)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Assembler))
-							matchingCubeBlock = new AssemblerEntity(m_parent, (MyObjectBuilder_Assembler)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Thrust))
-							matchingCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_MergeBlock))
-							matchingCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_LandingGear))
-							matchingCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Conveyor))
-							matchingCubeBlock = new ConveyorBlockEntity(m_parent, (MyObjectBuilder_Conveyor)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_ConveyorConnector))
-							matchingCubeBlock = new ConveyorTubeEntity(m_parent, (MyObjectBuilder_ConveyorConnector)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_SolarPanel))
-							matchingCubeBlock = new SolarPanelEntity(m_parent, (MyObjectBuilder_SolarPanel)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Gyro))
-							matchingCubeBlock = new GyroEntity(m_parent, (MyObjectBuilder_Gyro)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeGatlingTurret))
-							matchingCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeMissileTurret))
-							matchingCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipGrinder))
-							matchingCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipWelder))
-							matchingCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
-
-						if (baseEntity.TypeId == typeof(MyObjectBuilder_Drill))
-							matchingCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
-
-						if (matchingCubeBlock == null)
-							matchingCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
+						LogManager.GameLog.WriteLine(ex);
 					}
-
-					if (matchingCubeBlock == null)
-						throw new Exception("Failed to match/create cube block entity");
-
-					data.Add(packedBlockCoordinates, matchingCubeBlock);
 				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
+
+				DeleteEntries(entitiesToRemove);
+
+				m_isLoading = false;
+
+				m_resourceLock.ReleaseExclusive();
 			}
-
-			//Update the backing data mapping
-			foreach (var key in backingData.Keys)
+			catch (Exception ex)
 			{
-				var entry = backingData[key];
-				if (!data.ContainsValue(entry))
-				{
-					entry.Dispose();
-				}
+				LogManager.GameLog.WriteLine(ex);
+				m_resourceLock.ReleaseExclusive();
 			}
-			backingData.Clear();
-			foreach (var key in data.Keys)
-			{
-				var entry = data[key];
-				backingData.Add(entry.BackingObject, entry);
-			}
-
-			m_isInternalResourceLocked = false;
-			IsResourceLocked = false;
-			m_isLoading = false;
 		}
 
 		#endregion

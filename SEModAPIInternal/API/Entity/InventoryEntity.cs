@@ -590,77 +590,115 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		public override void LoadDynamic()
+		protected override void InternalRefreshObjectBuilderMap()
 		{
-			if (IsResourceLocked)
-				return;
-
-			IsResourceLocked = true;
-
-			List<Object> rawEntities = GetBackingDataList();
-			Dictionary<long, BaseObject> data = GetInternalData();
-			Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
-
-			//Update the main data mapping
-			data.Clear();
-			int entityCount = 0;
-			foreach (Object entity in rawEntities)
+			try
 			{
-				entityCount++;
+				if (m_rawDataObjectBuilderListResourceLock.Owned)
+					return;
+				if (WorldManager.Instance.IsWorldSaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+					return;
 
-				try
+				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
+
+				m_rawDataObjectBuilderList.Clear();
+				foreach (Object entity in GetBackingDataList())
 				{
-					MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
+					if (!IsValidEntity(entity))
+						continue;
 
+					MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
 					if (baseEntity == null)
 						continue;
-					if (data.ContainsKey(baseEntity.ItemId))
-						continue;
 
-					InventoryItemEntity matchingItem = null;
-
-					//If the original data already contains an entry for this, skip creation
-					if (backingData.ContainsKey(entity))
-					{
-						matchingItem = (InventoryItemEntity)backingData[entity];
-
-						//Update the base entity (not the same as BackingObject which is the internal object)
-						matchingItem.ObjectBuilder = baseEntity;
-					}
-					else
-					{
-						matchingItem = new InventoryItemEntity(baseEntity, entity);
-						matchingItem.Container = m_parent;
-					}
-
-					if (matchingItem == null)
-						throw new Exception("Failed to match/create inventory item entity");
-
-					data.Add(matchingItem.ItemId, matchingItem);
+					m_rawDataObjectBuilderList.Add(entity, baseEntity);
 				}
-				catch (Exception ex)
-				{
-					LogManager.GameLog.WriteLine(ex);
-				}
+
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
-
-			//Update the backing data mapping
-			foreach (var key in backingData.Keys)
+			catch (Exception ex)
 			{
-				var entry = backingData[key];
-				if (!data.ContainsValue(entry))
-				{
-					entry.Dispose();
-				}
+				LogManager.GameLog.WriteLine(ex);
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
-			backingData.Clear();
-			foreach (var key in data.Keys)
-			{
-				var entry = data[key];
-				backingData.Add(entry.BackingObject, entry);
-			}
+		}
 
-			IsResourceLocked = false;
+		public override void LoadDynamic()
+		{
+			try
+			{
+				if (IsResourceLocked)
+					return;
+				if (WorldManager.Instance.IsWorldSaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+					return;
+
+				m_resourceLock.AcquireExclusive();
+
+				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = new Dictionary<Object, MyObjectBuilder_Base>(GetObjectBuilderMap());
+				List<Object> rawEntities = new List<Object>(GetBackingDataList());
+				if (objectBuilderList.Count != rawEntities.Count)
+				{
+					if (SandboxGameAssemblyWrapper.IsDebugging)
+						LogManager.APILog.WriteLine("Mismatch between raw entities and object builders");
+					m_resourceLock.ReleaseExclusive();
+					return;
+				}
+
+				Dictionary<long, BaseObject> entitiesToRemove = new Dictionary<long, BaseObject>(GetInternalData());
+
+				//Update the main data mapping
+				foreach (Object entity in rawEntities)
+				{
+					try
+					{
+						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)objectBuilderList[entity];
+						if (baseEntity == null)
+							continue;
+
+						long itemId = baseEntity.ItemId;
+
+						//If the original data already contains an entry for this, skip creation
+						if (GetInternalData().ContainsKey(itemId))
+						{
+							InventoryItemEntity matchingItem = (InventoryItemEntity)GetEntry(itemId);
+
+							//Update the base entity (not the same as BackingObject which is the internal object)
+							matchingItem.ObjectBuilder = baseEntity;
+
+							//Remove this entry from the cleanup list
+							entitiesToRemove.Remove(itemId);
+						}
+						else
+						{
+							InventoryItemEntity newItemEntity = new InventoryItemEntity(baseEntity, entity);
+							newItemEntity.Container = m_parent;
+
+							AddEntry(newItemEntity.ItemId, newItemEntity);
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+
+				DeleteEntries(entitiesToRemove);
+
+				m_resourceLock.ReleaseExclusive();
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				m_resourceLock.ReleaseExclusive();
+			}
 		}
 
 		#endregion

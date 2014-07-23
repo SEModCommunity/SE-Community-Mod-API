@@ -491,6 +491,22 @@ namespace SEModAPIInternal.API.Entity
 
 		}
 
+		internal static long GetEntityId(Object entity)
+		{
+			try
+			{
+				//TODO - Change this to a method to get the entity id instead of just getting the field
+				FieldInfo entityIdField = GetEntityField(entity, BaseEntityEntityIdField);
+				long entityId = (long)entityIdField.GetValue(entity);
+				return entityId;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return 0;
+			}
+		}
+
 		protected void InternalUpdateMaxLinearVelocity()
 		{
 			try

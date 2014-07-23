@@ -262,9 +262,6 @@ namespace SEModAPIInternal.API.Entity
 
 		private static SectorObjectManager m_instance;
 		private static BaseEntity m_nextEntityToUpdate;
-		private bool m_isShutDown;
-
-		protected Dictionary<Object, MyObjectBuilder_EntityBase> m_rawDataObjectBuilderList;
 
 		public static string ObjectManagerNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ObjectManagerClass = "CAF1EB435F77C7B77580E2E16F988BED";
@@ -289,9 +286,6 @@ namespace SEModAPIInternal.API.Entity
 		{
 			IsDynamic = true;
 			m_instance = this;
-			m_isShutDown = false;
-
-			m_rawDataObjectBuilderList = new Dictionary<object, MyObjectBuilder_EntityBase>();
 		}
 
 		#endregion
@@ -318,52 +312,54 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public bool IsShutDown
-		{
-			get { return m_isShutDown; }
-			set { m_isShutDown = value; }
-		}
-
 		#endregion
 
 		#region "Methods"
 
-		private bool IsValidEntity(Object entity)
-		{
-			if (entity == null)
-				return false;
-
-			//Skip unknowns for now until we get the bugs sorted out with the other types
-			Type entityType = entity.GetType();
-			if (entityType != CharacterEntity.InternalType &&
-				entityType != CubeGridEntity.InternalType &&
-				entityType != VoxelMap.InternalType &&
-				entityType != FloatingObject.InternalType &&
-				entityType != Meteor.InternalType
-				)
-				return false;
-
-			//Skip disposed entities
-			bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
-			if (isDisposed)
-				return false;
-
-			//Skip entities that have invalid physics objects
-			if (BaseEntity.GetRigidBody(entity) == null || BaseEntity.GetRigidBody(entity).IsDisposed)
-				return false;
-
-			//Skip entities that don't have a position-orientation matrix defined
-			if (BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetOrientationMatrixMethod) == null)
-				return false;
-
-			return true;
-		}
-
-		protected override void InternalGetBackingDataHashSet()
+		protected override bool IsValidEntity(Object entity)
 		{
 			try
 			{
-				if (m_isInternalResourceLocked)
+				if (entity == null)
+					return false;
+
+				//Skip unknowns for now until we get the bugs sorted out with the other types
+				Type entityType = entity.GetType();
+				if (entityType != CharacterEntity.InternalType &&
+					entityType != CubeGridEntity.InternalType &&
+					entityType != VoxelMap.InternalType &&
+					entityType != FloatingObject.InternalType &&
+					entityType != Meteor.InternalType
+					)
+					return false;
+
+				//Skip disposed entities
+				bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetIsDisposedMethod);
+				if (isDisposed)
+					return false;
+
+				//Skip entities that have invalid physics objects
+				if (BaseEntity.GetRigidBody(entity) == null || BaseEntity.GetRigidBody(entity).IsDisposed)
+					return false;
+
+				//Skip entities that don't have a position-orientation matrix defined
+				if (BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetOrientationMatrixMethod) == null)
+					return false;
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return false;
+			}
+		}
+
+		protected override void InternalRefreshBackingDataHashSet()
+		{
+			try
+			{
+				if (m_rawDataHashSetResourceLock.Owned)
 					return;
 				if (WorldManager.Instance.IsWorldSaving)
 					return;
@@ -372,13 +368,39 @@ namespace SEModAPIInternal.API.Entity
 				if (WorldManager.Instance.InternalGetResourceLock().Owned)
 					return;
 
-				m_isInternalResourceLocked = true;
+				m_rawDataHashSetResourceLock.AcquireExclusive();
 
 				var rawValue = BaseObject.InvokeStaticMethod(InternalType, ObjectManagerGetEntityHashSet);
+				if (rawValue == null)
+					return;
 				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
 
+				m_rawDataHashSetResourceLock.ReleaseExclusive();
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				m_rawDataHashSetResourceLock.ReleaseExclusive();
+			}
+		}
+
+		protected override void InternalRefreshObjectBuilderMap()
+		{
+			try
+			{
+				if (m_rawDataObjectBuilderListResourceLock.Owned)
+					return;
+				if (WorldManager.Instance.IsWorldSaving)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
+					return;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+					return;
+
+				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
+
 				m_rawDataObjectBuilderList.Clear();
-				foreach (Object entity in m_rawDataHashSet)
+				foreach (Object entity in GetBackingDataHashSet())
 				{
 					if (!IsValidEntity(entity))
 						continue;
@@ -390,11 +412,12 @@ namespace SEModAPIInternal.API.Entity
 					m_rawDataObjectBuilderList.Add(entity, baseEntity);
 				}
 
-				m_isInternalResourceLocked = false;
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 		}
 
@@ -404,10 +427,6 @@ namespace SEModAPIInternal.API.Entity
 			{
 				if (IsResourceLocked)
 					return;
-				if (IsShutDown)
-					return;
-				if (m_isInternalResourceLocked)
-					return;
 				if (WorldManager.Instance.IsWorldSaving)
 					return;
 				if (WorldManager.Instance.InternalGetResourceLock() == null)
@@ -415,23 +434,21 @@ namespace SEModAPIInternal.API.Entity
 				if (WorldManager.Instance.InternalGetResourceLock().Owned)
 					return;
 
-				IsResourceLocked = true;
+				m_resourceLock.AcquireExclusive();
 
-				Dictionary<Object, MyObjectBuilder_EntityBase> objectBuilderList = new Dictionary<object, MyObjectBuilder_EntityBase>(m_rawDataObjectBuilderList);
-				HashSet<Object> rawEntities = GetBackingDataHashSet();
-				Dictionary<long, BaseObject> data = GetInternalData();
-				Dictionary<Object, BaseObject> backingData = GetBackingInternalData();
-
-				if (rawEntities.Count != objectBuilderList.Count)
+				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = new Dictionary<Object, MyObjectBuilder_Base>(GetObjectBuilderMap());
+				HashSet<Object> rawEntities = new HashSet<Object>(GetBackingDataHashSet());
+				if (objectBuilderList.Count != rawEntities.Count)
 				{
-					IsResourceLocked = false;
+					if(SandboxGameAssemblyWrapper.IsDebugging)
+						LogManager.APILog.WriteLine("Mismatch between raw entities and object builders");
+					m_resourceLock.ReleaseExclusive();
 					return;
 				}
 
-				m_isInternalResourceLocked = true;
+				Dictionary<long, BaseObject> entitiesToRemove = new Dictionary<long, BaseObject>(GetInternalData());
 
 				//Update the main data mapping
-				Dictionary<long, BaseObject> tempData = new Dictionary<long, BaseObject>();
 				foreach (Object entity in rawEntities)
 				{
 					try
@@ -439,48 +456,44 @@ namespace SEModAPIInternal.API.Entity
 						if (!IsValidEntity(entity))
 							continue;
 
-						MyObjectBuilder_EntityBase baseEntity = null;
-						if (objectBuilderList.ContainsKey(entity))
-							baseEntity = objectBuilderList[entity];
-
+						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
 						if (baseEntity == null)
 							continue;
-						if (tempData.ContainsKey(baseEntity.EntityId))
-							continue;
 
-						BaseEntity matchingEntity = null;
+						long entityId = BaseEntity.GetEntityId(entity);
 
-						//If the original data already contains an entry for this, skip creation
-						if (backingData.ContainsKey(entity))
+						//If the original data already contains an entry for this, skip creation and just update values
+						if (GetInternalData().ContainsKey(entityId))
 						{
-							matchingEntity = (BaseEntity)backingData[entity];
-							if (matchingEntity.IsDisposed)
+							BaseEntity matchingEntity = (BaseEntity)GetEntry(entityId);
+							if (matchingEntity == null || matchingEntity.IsDisposed)
 								continue;
 
 							//Update the base entity (not the same as BackingObject which is the internal object)
 							matchingEntity.ObjectBuilder = baseEntity;
-						}
 
-						if (matchingEntity == null)
+							//Remove this entry from the cleanup list
+							entitiesToRemove.Remove(matchingEntity.EntityId);
+						}
+						else
 						{
+							BaseEntity newEntity = null;
+
 							if (baseEntity.TypeId == typeof(MyObjectBuilder_Character))
-								matchingEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
+								newEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
 							else if (baseEntity.TypeId == typeof(MyObjectBuilder_CubeGrid))
-								matchingEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
+								newEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
 							else if (baseEntity.TypeId == typeof(MyObjectBuilder_FloatingObject))
-								matchingEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
+								newEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
 							else if (baseEntity.TypeId == typeof(MyObjectBuilder_Meteor))
-								matchingEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
+								newEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
 							else if (baseEntity.TypeId == typeof(MyObjectBuilder_VoxelMap))
-								matchingEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
+								newEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
 							else
-								matchingEntity = new BaseEntity(baseEntity, entity);
+								newEntity = new BaseEntity(baseEntity, entity);
+
+							AddEntry(newEntity.EntityId, newEntity);
 						}
-
-						if (matchingEntity == null)
-							throw new Exception("Failed to match/create sector object entity");
-
-						tempData.Add(matchingEntity.EntityId, matchingEntity);
 					}
 					catch (Exception ex)
 					{
@@ -488,62 +501,14 @@ namespace SEModAPIInternal.API.Entity
 					}
 				}
 
-				if (tempData.Count == 0 || tempData.Count != rawEntities.Count)
-				{
-					m_isInternalResourceLocked = false;
-					IsResourceLocked = false;
-					return;
-				}
+				DeleteEntries(entitiesToRemove);
 
-				//Go through all of the old data values
-				List<long> entriesToRemove = new List<long>();
-				foreach (long key in data.Keys)
-				{
-					try
-					{
-						BaseObject entry = data[key];
-
-						//If the entry still exists, continue
-						if (tempData.ContainsValue(entry))
-							continue;
-
-						//Otherwise dispose it
-						entry.Dispose();
-						entriesToRemove.Add(key);
-					}
-					catch (Exception ex)
-					{
-						LogManager.GameLog.WriteLine(ex);
-					}
-				}
-
-				data.Clear();
-				backingData.Clear();
-				foreach (long key in tempData.Keys)
-				{
-					try
-					{
-						if (entriesToRemove.Contains(key))
-							continue;
-
-						var entry = tempData[key];
-						data.Add(key, entry);
-						backingData.Add(entry.BackingObject, entry);
-					}
-					catch (Exception ex)
-					{
-						LogManager.GameLog.WriteLine(ex);
-					}
-				}
-
-				m_isInternalResourceLocked = false;
-				IsResourceLocked = false;
+				m_resourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
-				m_isInternalResourceLocked = false;
-				IsResourceLocked = false;
+				m_resourceLock.ReleaseExclusive();
 			}
 		}
 
