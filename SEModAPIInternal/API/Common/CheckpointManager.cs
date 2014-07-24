@@ -117,8 +117,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				MyFSPath path = new MyFSPath(MyFSLocationEnum.Saves, worldName);
-				object[] parameters = new object[] { path, null };
+				object[] parameters = new object[] { worldName, null };
 				MyObjectBuilder_Checkpoint result = (MyObjectBuilder_Checkpoint)m_getServerCheckpoint.Invoke(null, parameters);
 				worldId = (ulong)parameters[1];
 

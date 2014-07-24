@@ -102,8 +102,7 @@ namespace SEModAPIExtensions.API
 
 				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
 
-				MyFSPath fsPath = new MyFSPath(MyFSLocationEnum.Mod, "");
-				string modsPath = MyFileSystem.GetAbsolutePath(fsPath);
+				string modsPath = MyFileSystem.ModsPath;
 				if (!Directory.Exists(modsPath))
 					return;
 
