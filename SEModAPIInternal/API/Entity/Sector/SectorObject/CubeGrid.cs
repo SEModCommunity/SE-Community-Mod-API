@@ -281,6 +281,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[Category("Cube Grid")]
+		[ReadOnly(true)]
+		public float TotalPower
+		{
+			get { return PowerManager.TotalPower; }
+		}
+
+		[Category("Cube Grid")]
+		[ReadOnly(true)]
+		public float AvailablePower
+		{
+			get { return PowerManager.AvailablePower; }
+		}
+
 		#endregion
 
 		#region "Methods"

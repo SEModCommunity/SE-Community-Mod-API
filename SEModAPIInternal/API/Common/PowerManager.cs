@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -20,9 +24,12 @@ namespace SEModAPIInternal.API.Common
 		public static string PowerManagerUnregisterPowerReceiverMethod = "EF8CE8BD7E3A4EC649E71B15336AB6E3";
 		public static string PowerManagerRegisterPowerProducerMethod = "5E8FD2CD7A15CB64013EA628AA5A6F36";
 		public static string PowerManagerUnregisterPowerProducerMethod = "7D2580FB3DEF36528602A4087A148755";
+		public static string PowerManagerGetAvailablePowerMethod = "D807FF48CBA89A66D5325A7FE26F1CF3";
+		public static string PowerManagerGetUsedPowerPercentMethod = "AD3ACAD83021E7C4396AC6DDB26F51A9";
 
 		public static string PowerManagerPowerReceiverHashSetField = "FA93081ED4667D9B994BBD362F5BCB03";
 		public static string PowerManagerPowerProducerHashSetField = "9923D3B372EC5E98B4B3E4F043C89137";
+		public static string PowerManagerTotalPowerField = "2321C01912603DCD25560D74826632AC";
 
 		#endregion
 
@@ -36,6 +43,41 @@ namespace SEModAPIInternal.API.Common
 		#endregion
 
 		#region "Properties"
+
+		public float TotalPower
+		{
+			get
+			{
+				try
+				{
+					FieldInfo field = BaseObject.GetEntityField(m_powerManager, PowerManagerTotalPowerField);
+					float totalPower = (float)field.GetValue(m_powerManager);
+					return totalPower;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+					return 0;
+				}
+			}
+		}
+
+		public float AvailablePower
+		{
+			get
+			{
+				try
+				{
+					float availablePower = TotalPower - (float)BaseObject.InvokeEntityMethod(m_powerManager, PowerManagerGetAvailablePowerMethod);
+					return availablePower;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+					return 0;
+				}
+			}
+		}
 
 		#endregion
 

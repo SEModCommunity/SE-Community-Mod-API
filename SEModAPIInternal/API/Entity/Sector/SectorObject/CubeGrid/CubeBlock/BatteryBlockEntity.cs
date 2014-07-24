@@ -31,8 +31,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string BatteryBlockSetMaxStoredPowerMethod = "51188413AE93A8E2B2375B7721F1A3FC";
 		public static string BatteryBlockGetProducerEnabledMethod = "36B457125A54787901017D24BD0E3346";
 		public static string BatteryBlockSetProducerEnabledMethod = "5538173B5047FC438226267C0088356E";
-		public static string BatteryBlockBroadcastProducerEnabledMethod = "280D7AE8C0F523FF089618970C13B55B";
-		public static string BatteryBlockBroadcastCurrentStoredPowerMethod = "F512BA7EF29F6A8B7DE3D56BAAC0207B";
 		public static string BatteryBlockGetPowerReceiverMethod = "get_PowerReceiver";
 
 		//Internal fields
@@ -40,6 +38,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string BatteryBlockMaxStoredPowerField = "3E888DF7D4F5C207088050DF6CA348D5";
 		public static string BatteryBlockProducerEnabledField = "5CE4521F11C6B1D64721848D226F15BF";
 		public static string BatteryBlockBatteryDefinitionField = "F0C59D70E13560B7212CEF8CF082A67B";
+
+		public static string BatteryBlockNetManagerNamespace = "";
+		public static string BatteryBlockNetManagerClass = "";
+		public static string BatteryBlockNetManagerBroadcastProducerEnabledMethod = "280D7AE8C0F523FF089618970C13B55B";
+		public static string BatteryBlockNetManagerBroadcastCurrentStoredPowerMethod = "F512BA7EF29F6A8B7DE3D56BAAC0207B";
 
 		#endregion
 
@@ -55,7 +58,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			: base(parent, definition, backingObject)
 		{
 			m_batteryBlock = new MyBatteryBlockDefinition();
-			m_powerReceiver = new PowerReceiver(BackingObject, InternalGetPowerReceiver());
+			m_powerReceiver = new PowerReceiver(Parent.PowerManager, InternalGetPowerReceiver());
 		}
 
 		#endregion
@@ -108,7 +111,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				if (ObjectBuilder.MaxStoredPower == value) return;
 				ObjectBuilder.MaxStoredPower = value;
 				m_batteryBlock.MaxStoredPower = value;
-				m_powerReceiver.SetMaxCapacity(value);
 				Changed = true;
 
 				if (BackingObject != null)
@@ -140,18 +142,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Battery Block")]
 		public float RequiredPowerInput
 		{
-			get
-			{
-				if (ActualObject != null)
-					InternalGetBatteryBlockDefinition();
-
-				return m_batteryBlock.RequiredPowerInput;
-			}
+			get { return PowerReceiver.MaxRequiredInput; }
 			set
 			{
-				if (m_batteryBlock.RequiredPowerInput == value) return;
-				m_batteryBlock.RequiredPowerInput = value;
-				m_powerReceiver.SetMaxRequiredInput(value);
+				if (PowerReceiver.MaxRequiredInput == value) return;
+				PowerReceiver.MaxRequiredInput = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -256,11 +251,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			try
 			{
-				InternalSetBatteryBlockDefinition();
 				InvokeEntityMethod(ActualObject, BatteryBlockSetMaxStoredPowerMethod, new object[] { MaxStoredPower });
-
-				Parent.PowerManager.UnregisterPowerReceiver(ActualObject);
-				Parent.PowerManager.RegisterPowerReceiver(ActualObject);
 			}
 			catch (Exception ex)
 			{

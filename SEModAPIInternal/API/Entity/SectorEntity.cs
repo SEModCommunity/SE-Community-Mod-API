@@ -436,8 +436,15 @@ namespace SEModAPIInternal.API.Entity
 
 				m_resourceLock.AcquireExclusive();
 
+				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
+				m_rawDataHashSetResourceLock.AcquireExclusive();
+
 				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = new Dictionary<Object, MyObjectBuilder_Base>(GetObjectBuilderMap());
 				HashSet<Object> rawEntities = new HashSet<Object>(GetBackingDataHashSet());
+
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
+				m_rawDataHashSetResourceLock.ReleaseExclusive();
+
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if(SandboxGameAssemblyWrapper.IsDebugging)
@@ -454,6 +461,9 @@ namespace SEModAPIInternal.API.Entity
 					try
 					{
 						if (!IsValidEntity(entity))
+							continue;
+
+						if (!objectBuilderList.ContainsKey(entity))
 							continue;
 
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];

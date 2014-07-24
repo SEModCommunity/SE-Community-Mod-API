@@ -15,9 +15,10 @@ namespace SEModAPIInternal.API.Entity
 {
 	public class PowerReceiver
 	{
-		private Object m_parent;
+		#region "Attributes"
+
+		private PowerManager m_parent;
 		private Object m_powerReceiver;
-		private float m_maxCapacity;
 		private float m_maxRequiredInput;
 
 		//Power Receiver Type
@@ -39,27 +40,37 @@ namespace SEModAPIInternal.API.Entity
 		public static string PowerReceiverTypeEnumNamespace = "FB8C11741B7126BD9C97FE76747E087F";
 		public static string PowerReceiverTypeEnumClass = "0CAE5E7398171101A465139DC3A8A6A4";
 
-		public PowerReceiver(Object parent, Object powerReceiver)
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public PowerReceiver(PowerManager parent, Object powerReceiver)
 		{
 			m_parent = parent;
 			m_powerReceiver = powerReceiver;
 
 			m_maxRequiredInput = 0;
-			m_maxCapacity = 0;
 		}
 
-		public void SetMaxRequiredInput(float input)
+		#endregion
+
+		#region "Properties"
+
+		public float MaxRequiredInput
 		{
-			m_maxRequiredInput = input;
+			get { return m_maxRequiredInput; }
+			set
+			{
+				m_maxRequiredInput = value;
 
-			Action action = InternalUpdateMaxRequiredInput;
-			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				Action action = InternalUpdateMaxRequiredInput;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+			}
 		}
 
-		public void SetMaxCapacity(float capacity)
-		{
-			m_maxCapacity = capacity;
-		}
+		#endregion
+
+		#region "Methods"
 
 		protected float PowerReceiverCallback()
 		{
@@ -86,5 +97,7 @@ namespace SEModAPIInternal.API.Entity
 				LogManager.GameLog.WriteLine(ex);
 			}
 		}
+
+		#endregion
 	}
 }

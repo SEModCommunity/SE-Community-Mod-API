@@ -590,6 +590,22 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
+		protected override bool IsValidEntity(Object entity)
+		{
+			try
+			{
+				if (entity == null)
+					return false;
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return false;
+			}
+		}
+
 		protected override void InternalRefreshObjectBuilderMap()
 		{
 			try
@@ -642,8 +658,15 @@ namespace SEModAPIInternal.API.Entity
 
 				m_resourceLock.AcquireExclusive();
 
+				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
+				m_rawDataListResourceLock.AcquireExclusive();
+
 				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = new Dictionary<Object, MyObjectBuilder_Base>(GetObjectBuilderMap());
 				List<Object> rawEntities = new List<Object>(GetBackingDataList());
+
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
+				m_rawDataListResourceLock.ReleaseExclusive();
+
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
@@ -659,6 +682,12 @@ namespace SEModAPIInternal.API.Entity
 				{
 					try
 					{
+						if (!IsValidEntity(entity))
+							continue;
+
+						if (!objectBuilderList.ContainsKey(entity))
+							continue;
+
 						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)objectBuilderList[entity];
 						if (baseEntity == null)
 							continue;

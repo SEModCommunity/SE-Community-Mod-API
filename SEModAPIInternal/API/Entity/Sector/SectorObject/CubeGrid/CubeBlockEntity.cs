@@ -553,6 +553,22 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Methods"
 
+		protected override bool IsValidEntity(Object entity)
+		{
+			try
+			{
+				if (entity == null)
+					return false;
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return false;
+			}
+		}
+
 		protected override void InternalRefreshObjectBuilderMap()
 		{
 			try
@@ -605,8 +621,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 				m_resourceLock.AcquireExclusive();
 
+				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
+				m_rawDataHashSetResourceLock.AcquireExclusive();
+
 				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = new Dictionary<Object, MyObjectBuilder_Base>(GetObjectBuilderMap());
 				HashSet<Object> rawEntities = new HashSet<Object>(GetBackingDataHashSet());
+
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
+				m_rawDataHashSetResourceLock.ReleaseExclusive();
+
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
@@ -622,6 +645,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				{
 					try
 					{
+						if (!IsValidEntity(entity))
+							continue;
+
+						if (!objectBuilderList.ContainsKey(entity))
+							continue;
+
 						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
 
 						if (baseEntity == null)
