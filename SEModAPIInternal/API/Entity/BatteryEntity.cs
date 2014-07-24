@@ -15,6 +15,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector
 {
+	[Obsolete]
 	public class BatteryEntity : BaseObject
 	{
 		#region "Attributes"

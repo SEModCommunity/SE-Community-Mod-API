@@ -18,6 +18,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Attributes"
 
 		private InventoryEntity m_Inventory;
+		private PowerProducer m_powerProducer;
 
 		public static string ReactorNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ReactorClass = "714451095FE0D12C399607EAC612A6FE";
@@ -32,12 +33,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			: base(parent, definition)
 		{
 			m_Inventory = new InventoryEntity(definition.Inventory);
+			m_powerProducer = new PowerProducer(Parent.PowerManager, null);
 		}
 
 		public ReactorEntity(CubeGridEntity parent, MyObjectBuilder_Reactor definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
 			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetReactorInventory());
+			m_powerProducer = new PowerProducer(Parent.PowerManager, ActualObject);
 		}
 
 		#endregion
@@ -66,6 +69,28 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				}
 				return fuelMass;
 			}
+		}
+
+		[Category("Reactor")]
+		public float MaxPower
+		{
+			get { return PowerProducer.MaxPowerOutput; }
+			set { PowerProducer.MaxPowerOutput = value; }
+		}
+
+		[Category("Reactor")]
+		public float Power
+		{
+			get { return PowerProducer.PowerOutput; }
+			set { PowerProducer.PowerOutput = value; }
+		}
+
+		[Category("Reactor")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal PowerProducer PowerProducer
+		{
+			get { return m_powerProducer; }
 		}
 
 		#endregion
