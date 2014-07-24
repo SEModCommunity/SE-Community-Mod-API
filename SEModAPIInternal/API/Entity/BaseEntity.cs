@@ -57,7 +57,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityGetIsDisposedMethod = "6D8F627C1C0F9F166031C3B600FEDA60";
 		public static string BaseEntityGetOrientationMatrixMethod = "FD50436D896ACC794550210055349FE0";
 		public static string BaseEntityRemoveMethod = "EF75CF24B6BD63FC1A42E023BAF658B2";
-		public static string BaseEntityGetNetManagerMethod = "3EC1D0BC400097C3ED3F405F29BF6EED";
+		public static string BaseEntityGetNetManagerMethod = "F4456F82186EC3AE6C73294FA6C0A11D";
 
 		//Fields
 		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
