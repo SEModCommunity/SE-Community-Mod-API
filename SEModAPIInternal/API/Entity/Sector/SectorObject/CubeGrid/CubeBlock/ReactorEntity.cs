@@ -49,6 +49,27 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		[Category("Reactor")]
 		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_Reactor ObjectBuilder
+		{
+			get
+			{
+				MyObjectBuilder_Reactor reactor = (MyObjectBuilder_Reactor)ObjectBuilder;
+
+				//Make sure the inventory is up-to-date
+				Inventory.RefreshInventory();
+				reactor.Inventory = Inventory.ObjectBuilder;
+
+				return reactor;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Reactor")]
+		[Browsable(false)]
 		public InventoryEntity Inventory
 		{
 			get
@@ -96,21 +117,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Reactor GetSubTypeEntity()
-		{
-			MyObjectBuilder_Reactor reactor = (MyObjectBuilder_Reactor)ObjectBuilder;
-
-			//Make sure the inventory is up-to-date
-			Inventory.RefreshInventory();
-			reactor.Inventory = Inventory.ObjectBuilder;
-
-			return reactor;
-		}
 
 		#region "Internal"
 

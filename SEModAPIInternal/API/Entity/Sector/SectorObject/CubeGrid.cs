@@ -53,6 +53,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			ObjectBuilder = BaseObjectManager.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile);
 			ObjectBuilder.EntityId = 0;
+			if(ObjectBuilder.PositionAndOrientation != null)
+				PositionAndOrientation = ObjectBuilder.PositionAndOrientation.GetValueOrDefault();
 
 			m_cubeBlockManager = new CubeBlockManager(this);
 			List<CubeBlockEntity> cubeBlockList = new List<CubeBlockEntity>();

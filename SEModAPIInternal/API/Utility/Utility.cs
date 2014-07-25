@@ -155,12 +155,12 @@ namespace SEModAPIInternal.API.Utility
 			}
 		}
 
-		public static Vector3? GenerateRandomBorderPosition(Vector3 borderStart, Vector3 borderEnd)
+		public static Vector3 GenerateRandomBorderPosition(Vector3 borderStart, Vector3 borderEnd)
 		{
 			BoundingBox box = new BoundingBox(borderStart, borderEnd);
-			Vector3? nullableResult = new Vector3?(MyVRageUtils.GetRandomBorderPosition(ref box));
+			Vector3 result = MyVRageUtils.GetRandomBorderPosition(ref box);
 
-			return nullableResult;
+			return result;
 		}
 
 		#endregion

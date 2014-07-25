@@ -568,6 +568,9 @@ namespace SEModAPIInternal.API.Entity
 				Type someManager = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(EntityBaseNetManagerNamespace, EntityBaseNetManagerClass);
 				BaseEntity.InvokeStaticMethod(someManager, EntityBaseNetManagerSendEntity, new object[] { baseEntity });
 
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					Console.WriteLine("Entity '" + m_nextEntityToUpdate.GetType().Name + "': Finished adding to scene");
+
 				m_nextEntityToUpdate.ObjectBuilder = baseEntity;
 				m_nextEntityToUpdate = null;
 			}

@@ -75,14 +75,24 @@ namespace SEModAPIInternal.API.Entity
 			{
 				m_entityId = baseEntity.EntityId;
 				if (baseEntity.PositionAndOrientation != null)
+				{
 					m_positionOrientation = baseEntity.PositionAndOrientation.GetValueOrDefault();
+				}
 				else
+				{
 					m_positionOrientation = new MyPositionAndOrientation();
+					m_positionOrientation.Position = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-500000, -500000, -500000), new Vector3(500000, 500000, 500000));
+					m_positionOrientation.Forward = new Vector3(0, 0, 1);
+					m_positionOrientation.Up = new Vector3(0, 1, 0);
+				}
 			}
 			else
 			{
 				m_entityId = 0;
 				m_positionOrientation = new MyPositionAndOrientation();
+				m_positionOrientation.Position = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-500000, -500000, -500000), new Vector3(500000, 500000, 500000));
+				m_positionOrientation.Forward = new Vector3(0, 0, 1);
+				m_positionOrientation.Up = new Vector3(0, 1, 0);
 			}
 
 			m_linearVelocity = new Vector3(0, 0, 0);
@@ -684,7 +694,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
-		public static string BaseEntityBroadcastRemovalMethod = "4047DAC064B9876D7A78640A42157F5E";
+		public static string BaseEntityBroadcastRemovalMethod = "B24AB8B6F391B676C87C39C041BCDE1B";
 
 		#endregion
 

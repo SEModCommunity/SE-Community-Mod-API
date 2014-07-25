@@ -31,6 +31,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string BatteryBlockSetMaxStoredPowerMethod = "51188413AE93A8E2B2375B7721F1A3FC";
 		public static string BatteryBlockGetProducerEnabledMethod = "36B457125A54787901017D24BD0E3346";
 		public static string BatteryBlockSetProducerEnabledMethod = "5538173B5047FC438226267C0088356E";
+		public static string BatteryBlockGetSemiautoEnabledMethod = "19312D5BF11FBC0A682B613E21621BA6";
+		public static string BatteryBlockSetSemiautoEnabledMethod = "A3BEE5A757F096951F158F9FFF5A878A";
 		public static string BatteryBlockGetPowerReceiverMethod = "get_PowerReceiver";
 
 		//Internal fields
@@ -134,6 +136,24 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				if (BackingObject != null)
 				{
 					Action action = InternalUpdateBatteryBlockProducerEnabled;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
+			}
+		}
+
+		[Category("Battery Block")]
+		public bool SemiautoEnabled
+		{
+			get { return ObjectBuilder.SemiautoEnabled; }
+			set
+			{
+				if (ObjectBuilder.SemiautoEnabled == value) return;
+				ObjectBuilder.SemiautoEnabled = value;
+				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateBatteryBlockSemiautoEnabled;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -264,6 +284,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			try
 			{
 				InvokeEntityMethod(ActualObject, BatteryBlockSetProducerEnabledMethod, new object[] { ProducerEnabled });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		protected void InternalUpdateBatteryBlockSemiautoEnabled()
+		{
+			try
+			{
+				InvokeEntityMethod(ActualObject, BatteryBlockSetSemiautoEnabledMethod, new object[] { SemiautoEnabled });
 			}
 			catch (Exception ex)
 			{

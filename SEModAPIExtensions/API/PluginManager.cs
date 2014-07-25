@@ -312,8 +312,8 @@ namespace SEModAPIExtensions.API
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					LogManager.APILog.WriteLineAndConsole("PluginManager - Update interval = " + m_averageUpdateInterval.ToString() + "ms");
-					LogManager.APILog.WriteLineAndConsole("PluginManager - Update time = " + m_averageUpdateTime.ToString() + "ms");
+					LogManager.APILog.WriteLine("PluginManager - Update interval = " + m_averageUpdateInterval.ToString() + "ms");
+					LogManager.APILog.WriteLine("PluginManager - Update time = " + m_averageUpdateTime.ToString() + "ms");
 				}
 			}
 		}
