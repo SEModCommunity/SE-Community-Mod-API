@@ -231,6 +231,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return ObjectBuilder.LightEnabled; }
 		}
 
+		[Category("Character")]
+		[Browsable(true)]
+		[ReadOnly(true)]
+		public ulong SteamId
+		{
+			get { return PlayerMap.Instance.GetSteamId(EntityId); }
+		}
+
 		#endregion
 
 		#region "Methods"

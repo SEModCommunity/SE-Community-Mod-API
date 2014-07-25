@@ -534,7 +534,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		}
 
 		public CubeBlockManager(CubeGridEntity parent, Object backingSource, string backingSourceMethodName)
-			: base(backingSource, backingSourceMethodName)
+			: base(backingSource, backingSourceMethodName, InternalBackingType.Hashset)
 		{
 			m_isLoading = true;
 			m_parent = parent;
@@ -606,39 +606,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		public override void LoadDynamic()
+		protected override void LoadDynamic()
 		{
 			try
 			{
-				if (IsResourceLocked)
-					return;
-				if (WorldManager.Instance.IsWorldSaving)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock() == null)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock().Owned)
-					return;
-
-				m_resourceLock.AcquireExclusive();
-
-				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
-				m_rawDataHashSetResourceLock.AcquireExclusive();
-
-				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = new Dictionary<Object, MyObjectBuilder_Base>(GetObjectBuilderMap());
-				HashSet<Object> rawEntities = new HashSet<Object>(GetBackingDataHashSet());
-
-				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-				m_rawDataHashSetResourceLock.ReleaseExclusive();
+				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
+				HashSet<Object> rawEntities = GetBackingDataHashSet();
 
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
-						LogManager.APILog.WriteLine("Mismatch between raw entities and object builders");
+						LogManager.APILog.WriteLine("CubeBlockManager - Mismatch between raw entities and object builders");
 					m_resourceLock.ReleaseExclusive();
 					return;
 				}
-
-				Dictionary<long, BaseObject> entitiesToRemove = new Dictionary<long, BaseObject>(GetInternalData());
 
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
@@ -652,7 +633,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							continue;
 
 						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
-
 						if (baseEntity == null)
 							continue;
 
@@ -668,9 +648,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 							//Update the base entity (not the same as BackingObject which is the internal object)
 							matchingCubeBlock.ObjectBuilder = baseEntity;
-
-							//Remove this entry from the cleanup list
-							entitiesToRemove.Remove(packedBlockCoordinates);
 						}
 						else
 						{
@@ -751,9 +728,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 								newCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 
 							AddEntry(packedBlockCoordinates, newCubeBlock);
-
-							if(entitiesToRemove.ContainsKey(packedBlockCoordinates))
-								entitiesToRemove.Remove(packedBlockCoordinates);
 						}
 					}
 					catch (Exception ex)
@@ -762,17 +736,26 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					}
 				}
 
-				DeleteEntries(entitiesToRemove);
+				//Cleanup old entities
+				foreach (var entry in GetInternalData())
+				{
+					try
+					{
+						if (!rawEntities.Contains(entry.Value.BackingObject))
+							DeleteEntry(entry.Value);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
 
 				if(GetInternalData().Count > 0)
 					m_isLoading = false;
-
-				m_resourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
-				m_resourceLock.ReleaseExclusive();
 			}
 		}
 
