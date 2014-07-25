@@ -2,17 +2,25 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
+
+using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.Support;
 
 using VRageMath;
+using VRage.Common.Utils;
+using SEModAPIInternal.API.Utility;
+using Sandbox.Common.ObjectBuilders;
 
 namespace SEModAPIExtensions.API
 {
@@ -254,29 +262,24 @@ namespace SEModAPIExtensions.API
 			if(command[0] != '/')
 				return false;
 
+			#region Delete Commands
+
 			//Delete
 			if (command.Equals("/delete"))
 			{
-				//All cube grids
-				if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
+				//All entities
+				if (paramCount > 1 && commandParts[1].ToLower().Equals("all"))
 				{
-					//That have no beacon or only a beacon with no name
+					//All cube grids that have no beacon or only a beacon with no name
 					if (commandParts[2].ToLower().Equals("nobeacon"))
 					{
-						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-						List<BaseEntity> entitiesToDispose = new List<BaseEntity>();
-						foreach (BaseEntity entity in entities)
+						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+						List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+						foreach (CubeGridEntity entity in entities)
 						{
-							if (entity is CubeGridEntity)
+							if (entity.Name.Equals(entity.EntityId.ToString()))
 							{
-								//Skip static cube grids
-								if (((CubeGridEntity)entity).IsStatic)
-									continue;
-
-								if (entity.Name.Equals(entity.EntityId.ToString()))
-								{
-									entitiesToDispose.Add(entity);
-								}
+								entitiesToDispose.Add(entity);
 							}
 						}
 
@@ -284,9 +287,110 @@ namespace SEModAPIExtensions.API
 						{
 							entity.Dispose();
 						}
+
+						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed");
+					}
+
+					//All floating objects
+					if (commandParts[2].ToLower().Equals("floatingobjects"))
+					{
+						List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+						int floatingObjectCount = entities.Count;
+						foreach (FloatingObject entity in entities)
+						{
+							entity.Dispose();
+						}
+
+						SendPrivateChatMessage(remoteUserId, floatingObjectCount.ToString() + " floating objects have been removed");
+					}
+				}
+
+				//All non-static cube grids
+				if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
+				{
+					//That have no beacon or only a beacon with no name
+					if (commandParts[2].ToLower().Equals("nobeacon"))
+					{
+						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+						List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+						foreach (CubeGridEntity entity in entities)
+						{
+							//Skip static cube grids
+							if (((CubeGridEntity)entity).IsStatic)
+								continue;
+
+							if (entity.Name.Equals(entity.EntityId.ToString()))
+							{
+								entitiesToDispose.Add(entity);
+							}
+						}
+
+						foreach (BaseEntity entity in entitiesToDispose)
+						{
+							entity.Dispose();
+						}
+
+						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " ships have been removed");
+					}
+				}
+
+				//All static cube grids
+				if (paramCount > 1 && commandParts[1].ToLower().Equals("station"))
+				{
+					//That have no beacon or only a beacon with no name
+					if (commandParts[2].ToLower().Equals("nobeacon"))
+					{
+						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+						List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+						foreach (CubeGridEntity entity in entities)
+						{
+							//Skip non-static cube grids
+							if (!((CubeGridEntity)entity).IsStatic)
+								continue;
+
+							if (entity.Name.Equals(entity.EntityId.ToString()))
+							{
+								entitiesToDispose.Add(entity);
+							}
+						}
+
+						foreach (BaseEntity entity in entitiesToDispose)
+						{
+							entity.Dispose();
+						}
+
+						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " stations have been removed");
+					}
+				}
+
+				//Single entity
+				if (paramCount == 1)
+				{
+					string rawEntityId = commandParts[1];
+
+					try
+					{
+						long entityId = long.Parse(rawEntityId);
+
+						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+						foreach (BaseEntity entity in entities)
+						{
+							if (entity.EntityId != entityId)
+								continue;
+
+							entity.Dispose();
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
 					}
 				}
 			}
+
+			#endregion
+
+			#region Utility Commands
 
 			//Utility
 			if (command.Equals("/tp"))
@@ -380,7 +484,201 @@ namespace SEModAPIExtensions.API
 			if (command.Equals("/save"))
 			{
 				WorldManager.Instance.SaveWorld();
+
+				SendPrivateChatMessage(remoteUserId, "World has been saved!");
 			}
+			if (command.Equals("/owner"))
+			{
+				if (paramCount == 2)
+				{
+					string rawEntityId = commandParts[1];
+					string rawOwnerId = commandParts[2];
+
+					try
+					{
+						long entityId = long.Parse(rawEntityId);
+						long ownerId = long.Parse(rawOwnerId);
+
+						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+						foreach (CubeGridEntity cubeGrid in entities)
+						{
+							if (cubeGrid.EntityId != entityId)
+								continue;
+
+							//Update the owner of the blocks on the cube grid
+							foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+							{
+								//Skip blocks that don't have an entity id
+								if (cubeBlock.EntityId == 0)
+									continue;
+
+								cubeBlock.Owner = ownerId;
+							}
+
+							SendPrivateChatMessage(remoteUserId, "CubeGridEntity '" + cubeGrid.EntityId.ToString() + "' owner has been changed to '" + ownerId.ToString() + "'");
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+			}
+			if (command.Equals("/export"))
+			{
+				if (paramCount == 1)
+				{
+					string rawEntityId = commandParts[1];
+
+					try
+					{
+						long entityId = long.Parse(rawEntityId);
+
+						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+						foreach (BaseEntity entity in entities)
+						{
+							if (entity.EntityId != entityId)
+								continue;
+
+							string modPath = MyFileSystem.ModsPath;
+							if (!Directory.Exists(modPath))
+								break;
+
+							string fileName = entity.Name.ToLower();
+							Regex rgx = new Regex("[^a-zA-Z0-9]");
+							string cleanFileName = rgx.Replace(fileName, "");
+
+							string exportPath = Path.Combine(modPath, "Exports");
+							if (!Directory.Exists(exportPath))
+								Directory.CreateDirectory(exportPath);
+							FileInfo exportFile = new FileInfo(Path.Combine(exportPath, cleanFileName + ".sbc"));
+							entity.Export(exportFile);
+
+							SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been exported to Mods/Exports");
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+			}
+			if (command.Equals("/import"))
+			{
+				if (paramCount == 1)
+				{
+					string fileName = commandParts[1];
+					Regex rgx = new Regex("[^a-zA-Z0-9]");
+					string cleanFileName = rgx.Replace(fileName, "");
+
+					string modPath = MyFileSystem.ModsPath;
+					if(Directory.Exists(modPath))
+					{
+						string exportPath = Path.Combine(modPath, "Exports");
+						if (Directory.Exists(exportPath))
+						{
+							FileInfo importFile = new FileInfo(Path.Combine(exportPath, cleanFileName));
+							if (importFile.Exists)
+							{
+								//TODO - Find a clean way to determine what type of entity is in the file so that we can import
+
+								SendPrivateChatMessage(remoteUserId, "Feature is not yet completed");
+							}
+						}
+					}
+				}
+			}
+			if (command.Equals("/spawn"))
+			{
+				if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
+				{
+					if (commandParts[2].ToLower().Equals("all"))
+					{
+					}
+					if (commandParts[2].ToLower().Equals("exports"))
+					{
+					}
+					if (commandParts[2].ToLower().Equals("cargo"))
+					{
+						//Load the spawn groups
+						SpawnGroupsDefinitionsManager spawnGroupsDefinitionsManager = new SpawnGroupsDefinitionsManager();
+						FileInfo contentDataFile = new FileInfo(Path.Combine(MyFileSystem.ContentPath, "Data", "SpawnGroups.sbc"));
+						spawnGroupsDefinitionsManager.Load(contentDataFile);
+
+						//Calculate lowest and highest frequencies
+						float lowestFrequency = 999999;
+						float highestFrequency = 0;
+						foreach (SpawnGroupDefinition entry in spawnGroupsDefinitionsManager.Definitions)
+						{
+							if (entry.Frequency < lowestFrequency)
+								lowestFrequency = entry.Frequency;
+							if (entry.Frequency > highestFrequency)
+								highestFrequency = entry.Frequency;
+						}
+						if (lowestFrequency <= 0)
+							lowestFrequency = 1;
+
+						//Get a list of which groups *could* spawn
+						Random random = new Random((int)DateTime.Now.ToBinary());
+						double randomChance = random.NextDouble();
+						randomChance = randomChance * (highestFrequency / lowestFrequency);
+						List<SpawnGroupDefinition> possibleGroups = new List<SpawnGroupDefinition>();
+						foreach (SpawnGroupDefinition entry in spawnGroupsDefinitionsManager.Definitions)
+						{
+							if (entry.Frequency >= randomChance)
+							{
+								possibleGroups.Add(entry);
+							}
+						}
+
+						//Determine which group *will* spawn
+						randomChance = random.NextDouble();
+						int randomShipIndex = Math.Min((int)Math.Round(randomChance * possibleGroups.Count, 0), possibleGroups.Count);
+						SpawnGroupDefinition randomSpawnGroup = possibleGroups[randomShipIndex];
+
+						SendPrivateChatMessage(remoteUserId, "Spawning cargo group '" + randomSpawnGroup.Name + "' ...");
+
+						//Spawn the ships in the group
+						float worldSize = SandboxGameAssemblyWrapper.Instance.GetServerConfig().SessionSettings.WorldSizeKm * 1000.0f;
+						float spawnSize = 0.5f * worldSize;
+						float destinationSize = 0.01f * spawnSize;
+						Vector3 groupPosition = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-spawnSize, -spawnSize, -spawnSize), new Vector3(spawnSize, spawnSize, spawnSize));
+						Vector3 destinationPosition = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-destinationSize, -destinationSize, -destinationSize), new Vector3(destinationSize, destinationSize, destinationSize));
+						Matrix orientation = Matrix.CreateLookAt(groupPosition, destinationPosition, new Vector3(0, 1, 0));
+						foreach (SpawnGroupPrefab entry in randomSpawnGroup.Prefabs)
+						{
+							FileInfo prefabFile = new FileInfo(Path.Combine(MyFileSystem.ContentPath, "Data", "Prefabs", entry.File));
+							if (!prefabFile.Exists)
+								continue;
+
+							//Create the ship
+							CubeGridEntity cubeGrid = new CubeGridEntity(prefabFile);
+
+							//Set the ship position and orientation
+							Vector3 shipPosition = Vector3.Transform(entry.Position, orientation) + groupPosition;
+							orientation.Translation = shipPosition;
+							MyPositionAndOrientation newPositionOrientation = new MyPositionAndOrientation(orientation);
+							cubeGrid.PositionAndOrientation = newPositionOrientation;
+
+							//Set the ship velocity
+							//Speed is clamped between 1.0f and the max cube grid speed
+							Vector3 travelVector = destinationPosition - groupPosition;
+							travelVector.Normalize();
+							Vector3 shipVelocity = travelVector * (float)Math.Min(cubeGrid.MaxLinearVelocity, Math.Max(1.0f, entry.Speed));
+							cubeGrid.LinearVelocity = shipVelocity;
+
+							//And add the ship to the world
+							SectorObjectManager.Instance.AddEntity(cubeGrid);
+						}
+
+						SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.Name + "' spawned with " + randomSpawnGroup.Prefabs.Length.ToString() + " ships at " + groupPosition.ToString());
+					}
+				}
+			}
+
+			#endregion
+
+			#region Diagnostic Commands
 
 			//Diagnostic
 			if (command.Equals("/list"))
@@ -428,6 +726,8 @@ namespace SEModAPIExtensions.API
 					SendPrivateChatMessage(remoteUserId, "Floating object entities: '" + entities.Count.ToString() + "'");
 				}
 			}
+
+			#endregion
 
 			return true;
 		}
