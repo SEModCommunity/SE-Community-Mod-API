@@ -751,6 +751,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 								newCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 
 							AddEntry(packedBlockCoordinates, newCubeBlock);
+
+							if(entitiesToRemove.ContainsKey(packedBlockCoordinates))
+								entitiesToRemove.Remove(packedBlockCoordinates);
 						}
 					}
 					catch (Exception ex)
@@ -761,7 +764,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 				DeleteEntries(entitiesToRemove);
 
-				m_isLoading = false;
+				if(GetInternalData().Count > 0)
+					m_isLoading = false;
 
 				m_resourceLock.ReleaseExclusive();
 			}

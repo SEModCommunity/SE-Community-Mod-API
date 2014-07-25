@@ -17,7 +17,8 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
-		private PowerManager m_parent;
+		private Object m_parent;
+		private PowerManager m_powerManager;
 		private Object m_powerReceiver;
 		private float m_maxRequiredInput;
 
@@ -44,12 +45,13 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Constructors and Initializers"
 
-		public PowerReceiver(PowerManager parent, Object powerReceiver)
+		public PowerReceiver(Object parent, PowerManager powerManager, Object powerReceiver)
 		{
 			m_parent = parent;
+			m_powerManager = powerManager;
 			m_powerReceiver = powerReceiver;
 
-			m_maxRequiredInput = 0;
+			m_maxRequiredInput = 4;
 		}
 
 		#endregion
@@ -91,6 +93,9 @@ namespace SEModAPIInternal.API.Entity
 				field2.SetValue(m_powerReceiver, m_maxRequiredInput);
 
 				BaseObject.InvokeEntityMethod(m_powerReceiver, PowerReceiverSetMaxRequiredInputMethod, new object[] { m_maxRequiredInput });
+
+				m_powerManager.UnregisterPowerReceiver(m_parent);
+				m_powerManager.RegisterPowerReceiver(m_parent);
 			}
 			catch (Exception ex)
 			{

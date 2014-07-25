@@ -93,7 +93,7 @@ namespace SEModAPIExtensions.API
 					}
 
 					//Check if the structure still matches the definition
-					if (!IsDefinitionMatch(m_anchor))
+					if (!IsDefinitionMatch(AnchorBlock))
 						isFunctional = false;
 
 					return isFunctional;
@@ -104,6 +104,11 @@ namespace SEModAPIExtensions.API
 					return false;
 				}
 			}
+		}
+
+		public CubeBlockEntity AnchorBlock
+		{
+			get { return m_anchor; }
 		}
 
 		public List<CubeBlockEntity> Blocks
@@ -136,10 +141,25 @@ namespace SEModAPIExtensions.API
 
 		#region "Methods"
 
+		public void LoadBlocks()
+		{
+			var def = GetMultiblockDefinition();
+			m_blocks.Clear();
+			foreach (Vector3I key in def.Keys)
+			{
+				Vector3I blockPos = m_anchor.Min + key;
+				CubeBlockEntity cubeBlock = Parent.GetCubeBlock(blockPos);
+				if (cubeBlock == null)
+				{
+					m_blocks.Clear();
+					return;
+				}
+				m_blocks.Add(cubeBlock);
+			}
+		}
+
 		public void LoadBlocksFromAnchor(Vector3I anchor)
 		{
-			m_anchor = Parent.GetCubeBlock(anchor);
-
 			var def = GetMultiblockDefinition();
 			m_blocks.Clear();
 			foreach (Vector3I key in def.Keys)
@@ -165,22 +185,14 @@ namespace SEModAPIExtensions.API
 				return false;
 			if (cubeToCheck.Parent.IsDisposed)
 				return false;
+			if (cubeToCheck.Parent.IsLoading)
+				return false;
 			if (recurseDepth < 0 || recurseDepth > 2)
 				return false;
 
-			bool isMatch = true;
+			bool isMatch = false;
 			Vector3I cubePos = cubeToCheck.Min;
 			Type cubeType = cubeToCheck.GetType();
-
-			//Wait up to 250ms for the cube block's parent to finish loading
-			DateTime loadingWaitStarted = DateTime.Now;
-			while (cubeToCheck.Parent.IsLoading)
-			{
-				Thread.Sleep(15);
-				TimeSpan timeSinceWaitStarted = DateTime.Now - loadingWaitStarted;
-				if (timeSinceWaitStarted.TotalMilliseconds > 250)
-					return false;
-			}
 
 			Dictionary<Vector3I, StructureEntry> structureDef = GetMultiblockDefinition();
 			StructureEntry anchorDef = structureDef[Vector3I.Zero];
@@ -202,12 +214,9 @@ namespace SEModAPIExtensions.API
 					return false;
 
 				//Recursively search through possible anchor blocks
-				isMatch = false;
 				foreach (Vector3I key in structureDef.Keys)
 				{
 					StructureEntry entry = structureDef[key];
-					if (key == Vector3I.Zero)
-						continue;
 
 					if (cubeType == entry.type)
 					{
@@ -221,6 +230,7 @@ namespace SEModAPIExtensions.API
 			}
 			else
 			{
+				m_anchor = cubeToCheck;
 				isMatch = true;
 				foreach (Vector3I key in structureDef.Keys)
 				{
@@ -262,9 +272,9 @@ namespace SEModAPIExtensions.API
 				}
 			}
 
-			if (isMatch && SandboxGameAssemblyWrapper.IsDebugging)
+			if (isMatch && SandboxGameAssemblyWrapper.IsDebugging && recurseDepth == 0)
 			{
-				//LogManager.APILog.WriteLine("Found multiblock match in cube grid '" + cubeToCheck.Parent.Name + "' at " + cubePos.ToString());
+				//LogManager.APILog.WriteLine("Found multiblock match in cube grid '" + cubeToCheck.Parent.Name + "' anchored at " + ((Vector3I)m_anchor.Min).ToString());
 			}
 
 			return isMatch;
@@ -278,7 +288,7 @@ namespace SEModAPIExtensions.API
 				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
 				{
 					if(IsDefinitionMatch(cubeBlock))
-						anchorList.Add(cubeBlock.Min);
+						anchorList.Add(m_anchor.Min);
 				}
 
 				return anchorList;
