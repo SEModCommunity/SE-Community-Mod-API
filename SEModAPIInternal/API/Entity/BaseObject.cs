@@ -644,6 +644,8 @@ namespace SEModAPIInternal.API.Entity
 
 		private void RefreshInternalData()
 		{
+			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+				return;
 			if (WorldManager.Instance.IsWorldSaving)
 				return;
 			if (WorldManager.Instance.InternalGetResourceLock() == null)
@@ -694,8 +696,10 @@ namespace SEModAPIInternal.API.Entity
 			TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastProfilingOutput;
 			if (timeSinceLastProfilingOutput.TotalSeconds > 30)
 			{
+				m_lastProfilingOutput = DateTime.Now;
+
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Average data load time: " + m_averageLoadTime.ToString() + "ms");
+					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Average data load time: " + Math.Round(m_averageLoadTime, 0).ToString() + "ms");
 			}
 		}
 
