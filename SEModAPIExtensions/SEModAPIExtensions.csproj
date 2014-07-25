@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="API\CargoShipManager.cs" />
     <Compile Include="API\ChatManager.cs" />
     <Compile Include="API\MultiblockStructure.cs" />
     <Compile Include="API\Plugin\Events\IBaseEntityHandler.cs" />

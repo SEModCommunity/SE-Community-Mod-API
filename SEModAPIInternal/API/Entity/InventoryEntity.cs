@@ -65,7 +65,7 @@ namespace SEModAPIInternal.API.Entity
 			: base(definition, backingObject)
 		{
 			m_itemManager = new InventoryItemManager(this, backingObject, InventoryGetItemListMethod);
-			m_itemManager.LoadDynamic();
+			m_itemManager.Refresh();
 		}
 
 		#endregion
@@ -581,7 +581,7 @@ namespace SEModAPIInternal.API.Entity
 		}
 
 		public InventoryItemManager(InventoryEntity parent, Object backingSource, string backingSourceMethodName)
-			: base(backingSource, backingSourceMethodName)
+			: base(backingSource, backingSourceMethodName, InternalBackingType.List)
 		{
 			m_parent = parent;
 		}
@@ -643,39 +643,20 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public override void LoadDynamic()
+		protected override void LoadDynamic()
 		{
 			try
 			{
-				if (IsResourceLocked)
-					return;
-				if (WorldManager.Instance.IsWorldSaving)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock() == null)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock().Owned)
-					return;
-
-				m_resourceLock.AcquireExclusive();
-
-				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
-				m_rawDataListResourceLock.AcquireExclusive();
-
-				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = new Dictionary<Object, MyObjectBuilder_Base>(GetObjectBuilderMap());
-				List<Object> rawEntities = new List<Object>(GetBackingDataList());
-
-				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-				m_rawDataListResourceLock.ReleaseExclusive();
+				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
+				List<Object> rawEntities = GetBackingDataList();
 
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
-						LogManager.APILog.WriteLine("Mismatch between raw entities and object builders");
+						LogManager.APILog.WriteLine("InventoryItemManager - Mismatch between raw entities and object builders");
 					m_resourceLock.ReleaseExclusive();
 					return;
 				}
-
-				Dictionary<long, BaseObject> entitiesToRemove = new Dictionary<long, BaseObject>(GetInternalData());
 
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
@@ -701,9 +682,6 @@ namespace SEModAPIInternal.API.Entity
 
 							//Update the base entity (not the same as BackingObject which is the internal object)
 							matchingItem.ObjectBuilder = baseEntity;
-
-							//Remove this entry from the cleanup list
-							entitiesToRemove.Remove(itemId);
 						}
 						else
 						{
@@ -719,14 +697,23 @@ namespace SEModAPIInternal.API.Entity
 					}
 				}
 
-				DeleteEntries(entitiesToRemove);
-
-				m_resourceLock.ReleaseExclusive();
+				//Cleanup old entities
+				foreach (var entry in GetInternalData())
+				{
+					try
+					{
+						if (!rawEntities.Contains(entry.Value.BackingObject))
+							DeleteEntry(entry.Value);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
-				m_resourceLock.ReleaseExclusive();
 			}
 		}
 

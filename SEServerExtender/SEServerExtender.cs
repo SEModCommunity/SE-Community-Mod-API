@@ -379,6 +379,9 @@ namespace SEServerExtender
 
 		private void TreeViewRefresh(object sender, EventArgs e)
 		{
+			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+				return;
+
 			TRV_Entities.BeginUpdate();
 
 			TreeNode sectorObjectsNode;

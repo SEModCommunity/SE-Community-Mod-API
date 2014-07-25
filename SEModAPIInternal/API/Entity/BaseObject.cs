@@ -3,23 +3,20 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
+using System.Threading;
 using System.Xml;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 
 using SEModAPI.API;
-using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
-using SEModAPIInternal.API.Entity.Sector;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
+
 using VRage;
 
 namespace SEModAPIInternal.API.Entity
@@ -346,13 +343,23 @@ namespace SEModAPIInternal.API.Entity
 
 	public class BaseObjectManager
 	{
+		public enum InternalBackingType
+		{
+			Hashset,
+			List,
+			Dictionary,
+		}
+
 		#region "Attributes"
 
 		private FileInfo m_fileInfo;
 		private readonly FieldInfo m_definitionsContainerField;
-		protected Object m_backingObject;
-		protected string m_backingSourceMethod;
-		protected DateTime m_lastLoadTime;
+		private Object m_backingObject;
+		private string m_backingSourceMethod;
+		private InternalBackingType m_backingSourceType;
+		private DateTime m_lastLoadTime;
+		private double m_averageLoadTime;
+		private DateTime m_lastProfilingOutput;
 
 		protected FastResourceLock m_resourceLock = new FastResourceLock();
 		protected FastResourceLock m_rawDataHashSetResourceLock = new FastResourceLock();
@@ -383,9 +390,15 @@ namespace SEModAPIInternal.API.Entity
 			m_isMutable = true;
 
 			m_definitionsContainerField = GetMatchingDefinitionsContainerField();
+
+			m_backingSourceType = InternalBackingType.Hashset;
+
+			m_lastLoadTime = DateTime.Now;
+			m_averageLoadTime = 0;
+			m_lastProfilingOutput = DateTime.Now;
 		}
 
-		public BaseObjectManager(Object backingSource, string backingMethodName)
+		public BaseObjectManager(Object backingSource, string backingMethodName, InternalBackingType backingSourceType)
 		{
 			m_fileInfo = null;
 			m_changed = false;
@@ -396,6 +409,11 @@ namespace SEModAPIInternal.API.Entity
 
 			m_backingObject = backingSource;
 			m_backingSourceMethod = backingMethodName;
+			m_backingSourceType = backingSourceType;
+
+			m_lastLoadTime = DateTime.Now;
+			m_averageLoadTime = 0;
+			m_lastProfilingOutput = DateTime.Now;
 		}
 
 		public BaseObjectManager(MyObjectBuilder_Base[] baseDefinitions)
@@ -492,6 +510,62 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
+		private void WaitForLock()
+		{
+			//TODO - Determine how much of a load this is on the system using this sleep loop
+			DateTime waitStart = DateTime.Now;
+			TimeSpan totalWaitTime = DateTime.Now - waitStart;
+			while (!IsResourceLocked)
+			{
+				Thread.Sleep(15);
+				totalWaitTime = DateTime.Now - waitStart;
+				if (totalWaitTime.TotalMilliseconds >= 90)
+					break;
+			}
+		}
+
+		private void WaitForRelease()
+		{
+			//TODO - Determine how much of a load this is on the system using this sleep loop
+			DateTime waitStart = DateTime.Now;
+			TimeSpan totalWaitTime = DateTime.Now - waitStart;
+			while (IsResourceLocked)
+			{
+				Thread.Sleep(15);
+				totalWaitTime = DateTime.Now - waitStart;
+				if (totalWaitTime.TotalMilliseconds >= 90)
+					break;
+			}
+		}
+
+		private void WaitForInternalLock()
+		{
+			//TODO - Determine how much of a load this is on the system using this sleep loop
+			DateTime waitStart = DateTime.Now;
+			TimeSpan totalWaitTime = DateTime.Now - waitStart;
+			while (!IsInternalResourceLocked)
+			{
+				Thread.Sleep(15);
+				totalWaitTime = DateTime.Now - waitStart;
+				if (totalWaitTime.TotalMilliseconds >= 90)
+					break;
+			}
+		}
+
+		private void WaitForInternalRelease()
+		{
+			//TODO - Determine how much of a load this is on the system using this sleep loop
+			DateTime waitStart = DateTime.Now;
+			TimeSpan totalWaitTime = DateTime.Now - waitStart;
+			while (IsInternalResourceLocked)
+			{
+				Thread.Sleep(15);
+				totalWaitTime = DateTime.Now - waitStart;
+				if (totalWaitTime.TotalMilliseconds >= 90)
+					break;
+			}
+		}
+
 		private FieldInfo GetMatchingDefinitionsContainerField()
 		{
 			//Find the the matching field in the container
@@ -518,24 +592,164 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "GetDataSource"
 
-		protected virtual Dictionary<long, BaseObject> GetInternalData()
+		protected Dictionary<long, BaseObject> GetInternalData()
 		{
 			return m_definitions;
 		}
 
 		protected HashSet<Object> GetBackingDataHashSet()
 		{
+			return m_rawDataHashSet;
+		}
+
+		protected List<Object> GetBackingDataList()
+		{
+			return m_rawDataList;
+		}
+
+		protected Dictionary<object, MyObjectBuilder_Base> GetObjectBuilderMap()
+		{
+			return m_rawDataObjectBuilderList;
+		}
+
+		#endregion
+
+		#region "RefreshDataSource"
+
+		public void Refresh()
+		{
+			if (IsResourceLocked)
+				return;
+			if (IsInternalResourceLocked)
+				return;
+
+			RefreshInternalData();
+		}
+
+		private void RefreshRawData()
+		{
+			WaitForInternalRelease();
+
+			//Request refreshes of all internal raw data
+			RefreshBackingDataHashSet();
+			RefreshBackingDataList();
+			RefreshObjectBuilderMap();
+
+			//Wait for the internal refresh to start
+			WaitForInternalLock();
+
+			//Wait for the internal refresh to finish
+			WaitForInternalRelease();
+		}
+
+		private void RefreshInternalData()
+		{
+			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+				return;
+			if (WorldManager.Instance.IsWorldSaving)
+				return;
+			if (WorldManager.Instance.InternalGetResourceLock() == null)
+				return;
+			if (WorldManager.Instance.InternalGetResourceLock().Owned)
+				return;
+
+			TimeSpan timeSinceLastLoad = DateTime.Now - m_lastLoadTime;
+
+			if (IsDynamic && timeSinceLastLoad.TotalMilliseconds > 100)
+			{
+				m_lastLoadTime = DateTime.Now;
+
+				try
+				{
+					WaitForRelease();
+
+					//Lock the main data
+					m_resourceLock.AcquireExclusive();
+
+					RefreshRawData();
+
+					//Lock all of the raw data
+					m_rawDataHashSetResourceLock.AcquireExclusive();
+					m_rawDataListResourceLock.AcquireExclusive();
+					m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
+
+					//Refresh the main data
+					LoadDynamic();
+
+					//Unlock all of the raw data
+					m_rawDataHashSetResourceLock.ReleaseExclusive();
+					m_rawDataListResourceLock.ReleaseExclusive();
+					m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
+
+					//Unlock the main data
+					m_resourceLock.ReleaseExclusive();
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
+
+				TimeSpan timeToLoad = DateTime.Now - m_lastLoadTime;
+				m_averageLoadTime = (m_averageLoadTime + timeToLoad.TotalMilliseconds) / 2.0;
+			}
+
+			TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastProfilingOutput;
+			if (timeSinceLastProfilingOutput.TotalSeconds > 30)
+			{
+				m_lastProfilingOutput = DateTime.Now;
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Average data load time: " + Math.Round(m_averageLoadTime, 0).ToString() + "ms");
+			}
+		}
+
+		protected virtual void LoadDynamic()
+		{
+			return;
+		}
+
+		private void RefreshBackingDataHashSet()
+		{
 			try
 			{
+				if (m_backingSourceType != InternalBackingType.Hashset)
+					return;
+
 				Action action = InternalRefreshBackingDataHashSet;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-
-				return m_rawDataHashSet;
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
-				return new HashSet<object>();
+			}
+		}
+
+		private void RefreshBackingDataList()
+		{
+			try
+			{
+				if (m_backingSourceType != InternalBackingType.List)
+					return;
+
+				Action action = InternalRefreshBackingDataList;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		private void RefreshObjectBuilderMap()
+		{
+			try
+			{
+				Action action = InternalRefreshObjectBuilderMap;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 		}
 
@@ -570,22 +784,6 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		protected List<Object> GetBackingDataList()
-		{
-			try
-			{
-				Action action = InternalRefreshBackingDataList;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-
-				return m_rawDataList;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				return new List<object>();
-			}
-		}
-
 		protected virtual void InternalRefreshBackingDataList()
 		{
 			try
@@ -614,22 +812,6 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.GameLog.WriteLine(ex);
 				m_rawDataListResourceLock.ReleaseExclusive();
-			}
-		}
-
-		protected Dictionary<object, MyObjectBuilder_Base> GetObjectBuilderMap()
-		{
-			try
-			{
-				Action action = InternalRefreshObjectBuilderMap;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-
-				return m_rawDataObjectBuilderList;
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-				return new Dictionary<object, MyObjectBuilder_Base>();
 			}
 		}
 
@@ -811,37 +993,24 @@ namespace SEModAPIInternal.API.Entity
 			return GetInternalData()[key];
 		}
 
-		public virtual List<T> GetTypedInternalData<T>() where T : BaseObject
+		public List<T> GetTypedInternalData<T>() where T : BaseObject
 		{
 			try
 			{
-				TimeSpan timeSinceLastLoad = DateTime.Now - m_lastLoadTime;
+				Refresh();
 
-				if (IsDynamic && timeSinceLastLoad.TotalMilliseconds > 100)
-				{
-					m_lastLoadTime = DateTime.Now;
-
-					try
-					{
-						LoadDynamic();
-					}
-					catch (Exception ex)
-					{
-						LogManager.GameLog.WriteLine(ex);
-					}
-				}
+				m_resourceLock.AcquireExclusive();
 
 				List<T> newList = new List<T>();
-				if (!m_resourceLock.Owned)
+				foreach (var def in GetInternalData().Values)
 				{
-					foreach (var def in GetInternalData().Values)
-					{
-						if (!(def is T))
-							continue;
+					if (!(def is T))
+						continue;
 
-						newList.Add((T)def);
-					}
+					newList.Add((T)def);
 				}
+
+				m_resourceLock.ReleaseExclusive();
 
 				return newList;
 			}
@@ -1008,11 +1177,6 @@ namespace SEModAPIInternal.API.Entity
 		public void Load<T>(List<T> source) where T : BaseObject
 		{
 			Load(source.ToArray());
-		}
-
-		public virtual void LoadDynamic()
-		{
-			throw new NotImplementedException();
 		}
 
 		#endregion

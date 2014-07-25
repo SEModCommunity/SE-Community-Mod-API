@@ -505,7 +505,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				//TODO - Change this to a method to get the entity id instead of just getting the field
+				//TODO - Change this to a method call instead of just getting the field value
 				FieldInfo entityIdField = GetEntityField(entity, BaseEntityEntityIdField);
 				long entityId = (long)entityIdField.GetValue(entity);
 				return entityId;
@@ -536,7 +536,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				//TODO - Change this to a method to set the entity id instead of just setting the field
+				//TODO - Change this to a method call instead of just setting the field value
 				FieldInfo entityIdField = GetEntityField(BackingObject, BaseEntityEntityIdField);
 				entityIdField.SetValue(BackingObject, EntityId);
 			}
@@ -558,7 +558,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					LogManager.APILog.WriteLineAndConsole("Entity - Changing position of '" + Name + "' from '" + havokBody.Position.ToString() + "' to '" + newPosition.ToString() + "'");
+					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Changing position of '" + Name + "' from '" + havokBody.Position.ToString() + "' to '" + newPosition.ToString() + "'");
 				}
 
 				havokBody.Position = newPosition;
@@ -597,7 +597,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					LogManager.APILog.WriteLineAndConsole("Entity - Changing linear velocity of '" + Name + "' from '" + havokBody.LinearVelocity.ToString() + "' to '" + m_linearVelocity.ToString() + "'");
+					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Changing linear velocity of '" + Name + "' from '" + havokBody.LinearVelocity.ToString() + "' to '" + m_linearVelocity.ToString() + "'");
 				}
 
 				havokBody.LinearVelocity = m_linearVelocity;
@@ -618,7 +618,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					LogManager.APILog.WriteLineAndConsole("Entity - Changing angular velocity of '" + Name + "' from '" + havokBody.AngularVelocity.ToString() + "' to '" + m_angularVelocity.ToString() + "'");
+					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Changing angular velocity of '" + Name + "' from '" + havokBody.AngularVelocity.ToString() + "' to '" + m_angularVelocity.ToString() + "'");
 				}
 
 				havokBody.AngularVelocity = m_angularVelocity;
@@ -634,13 +634,13 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " '" + EntityId.ToString() + "': Calling 'Close' to remove entity");
+					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " '" + Name + "': Calling 'Close' to remove entity");
 
 				BaseObject.InvokeEntityMethod(BackingObject, "Close");
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLineAndConsole("Failed to remove entity '" + EntityId.ToString() + "'");
+				LogManager.APILog.WriteLineAndConsole("Failed to remove entity '" + Name + "'");
 				LogManager.GameLog.WriteLine(ex);
 			}
 		}

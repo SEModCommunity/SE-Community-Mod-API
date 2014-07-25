@@ -170,6 +170,24 @@ namespace SEModAPI.API.Definitions
 
 		[Browsable(true)]
 		[ReadOnly(false)]
+		[Description("Get or set the hacking speed multiplier")]
+		[Category("Global Settings")]
+		/// <summary>
+		/// Get or set the hacking speed multiplier
+		/// </summary>
+		public float HackSpeedMultiplier
+		{
+			get { return m_definition.SessionSettings.HackSpeedMultiplier; }
+			set
+			{
+				if (m_definition.SessionSettings.HackSpeedMultiplier == value) return;
+				m_definition.SessionSettings.HackSpeedMultiplier = value;
+				Changed = true;
+			}
+		}
+
+		[Browsable(true)]
+		[ReadOnly(false)]
 		[Description("Get or set the online mode")]
 		[Category("Global Settings")]
 		/// <summary>
@@ -362,6 +380,60 @@ namespace SEModAPI.API.Definitions
 			{
 				if (m_definition.SessionSettings.CargoShipsEnabled == value) return;
 				m_definition.SessionSettings.CargoShipsEnabled = value;
+				Changed = true;
+			}
+		}
+
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("")]
+		[Category("World Settings")]
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool RealisticSound
+		{
+			get { return m_definition.SessionSettings.RealisticSound; }
+			set
+			{
+				if (m_definition.SessionSettings.RealisticSound == value) return;
+				m_definition.SessionSettings.RealisticSound = value;
+				Changed = true;
+			}
+		}
+
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("")]
+		[Category("World Settings")]
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool PermanentDeath
+		{
+			get { return m_definition.SessionSettings.PermanentDeath.GetValueOrDefault(true); }
+			set
+			{
+				if (m_definition.SessionSettings.PermanentDeath.GetValueOrDefault(true) == value) return;
+				m_definition.SessionSettings.PermanentDeath = value;
+				Changed = true;
+			}
+		}
+
+		[Browsable(true)]
+		[ReadOnly(false)]
+		[Description("")]
+		[Category("Global Settings")]
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool ClientCanSave
+		{
+			get { return m_definition.SessionSettings.ClientCanSave; }
+			set
+			{
+				if (m_definition.SessionSettings.ClientCanSave == value) return;
+				m_definition.SessionSettings.ClientCanSave = value;
 				Changed = true;
 			}
 		}

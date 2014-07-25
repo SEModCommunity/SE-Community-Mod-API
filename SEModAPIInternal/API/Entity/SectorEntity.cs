@@ -421,35 +421,17 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		public override void LoadDynamic()
+		protected override void LoadDynamic()
 		{
 			try
 			{
-				if (IsResourceLocked)
-					return;
-				if (WorldManager.Instance.IsWorldSaving)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock() == null)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock().Owned)
-					return;
-
-				m_resourceLock.AcquireExclusive();
-
-				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
-				m_rawDataHashSetResourceLock.AcquireExclusive();
-
-				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = new Dictionary<Object, MyObjectBuilder_Base>(GetObjectBuilderMap());
-				HashSet<Object> rawEntities = new HashSet<Object>(GetBackingDataHashSet());
-
-				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-				m_rawDataHashSetResourceLock.ReleaseExclusive();
+				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
+				HashSet<Object> rawEntities = GetBackingDataHashSet();
 
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if(SandboxGameAssemblyWrapper.IsDebugging)
-						LogManager.APILog.WriteLine("Mismatch between raw entities and object builders");
-					m_resourceLock.ReleaseExclusive();
+						LogManager.APILog.WriteLine("SectorObjectManager - Mismatch between raw entities and object builders");
 					return;
 				}
 
@@ -460,17 +442,28 @@ namespace SEModAPIInternal.API.Entity
 				{
 					try
 					{
-						if (!IsValidEntity(entity))
+						long entityId = BaseEntity.GetEntityId(entity);
+						if (entityId == 0)
 							continue;
 
-						if (!objectBuilderList.ContainsKey(entity))
+						if (!IsValidEntity(entity))
+						{
+							entitiesToRemove.Remove(entityId);
 							continue;
+						}
+
+						if (!objectBuilderList.ContainsKey(entity))
+						{
+							entitiesToRemove.Remove(entityId);
+							continue;
+						}
 
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
 						if (baseEntity == null)
+						{
+							entitiesToRemove.Remove(entityId);
 							continue;
-
-						long entityId = BaseEntity.GetEntityId(entity);
+						}
 
 						//If the original data already contains an entry for this, skip creation and just update values
 						if (GetInternalData().ContainsKey(entityId))
@@ -503,6 +496,10 @@ namespace SEModAPIInternal.API.Entity
 								newEntity = new BaseEntity(baseEntity, entity);
 
 							AddEntry(newEntity.EntityId, newEntity);
+
+							//Remove this entry from the cleanup list
+							if (entitiesToRemove.ContainsKey(newEntity.EntityId))
+								entitiesToRemove.Remove(newEntity.EntityId);
 						}
 					}
 					catch (Exception ex)
@@ -512,13 +509,10 @@ namespace SEModAPIInternal.API.Entity
 				}
 
 				DeleteEntries(entitiesToRemove);
-
-				m_resourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
-				m_resourceLock.ReleaseExclusive();
 			}
 		}
 
@@ -527,7 +521,7 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + entity.Name + "' is being added ...");
+					Console.WriteLine(entity.GetType().Name + " '" + entity.Name + "' is being added ...");
 
 				m_nextEntityToUpdate = entity;
 
@@ -548,7 +542,7 @@ namespace SEModAPIInternal.API.Entity
 					return;
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + m_nextEntityToUpdate.GetType().Name + "': Adding to scene ...");
+					Console.WriteLine(m_nextEntityToUpdate.GetType().Name + " '" + m_nextEntityToUpdate.GetType().Name + "': Adding to scene ...");
 
 				//Create the backing object
 				Type entityType = m_nextEntityToUpdate.GetType();
@@ -563,20 +557,66 @@ namespace SEModAPIInternal.API.Entity
 				//Add the backing object to the main game object manager
 				BaseEntity.InvokeStaticMethod(InternalType, ObjectManagerAddEntity, new object[] { m_nextEntityToUpdate.BackingObject, true });
 
+				if (m_nextEntityToUpdate is FloatingObject)
+				{
+					InternalBroadcastAddFloatingObject();
+				}
+				else
+				{
+					InternalBroadcastAddEntity();
+				}
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					Console.WriteLine(m_nextEntityToUpdate.GetType().Name + " '" + m_nextEntityToUpdate.GetType().Name + "': Finished adding to scene");
+
+				m_nextEntityToUpdate = null;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLineAndConsole("Failed to add new entity");
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		protected void InternalBroadcastAddEntity()
+		{
+			try
+			{
+				if (m_nextEntityToUpdate == null)
+					return;
+
 				//Broadcast the new entity to the clients
 				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate.BackingObject, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
 				Type someManager = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(EntityBaseNetManagerNamespace, EntityBaseNetManagerClass);
 				BaseEntity.InvokeStaticMethod(someManager, EntityBaseNetManagerSendEntity, new object[] { baseEntity });
-
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Entity '" + m_nextEntityToUpdate.GetType().Name + "': Finished adding to scene");
 
 				m_nextEntityToUpdate.ObjectBuilder = baseEntity;
 				m_nextEntityToUpdate = null;
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLineAndConsole("Failed to add new entity");
+				LogManager.APILog.WriteLineAndConsole("Failed to broadcast new entity");
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		protected void InternalBroadcastAddFloatingObject()
+		{
+			try
+			{
+				if (m_nextEntityToUpdate == null)
+					return;
+
+				//Broadcast the new entity to the clients
+				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate.BackingObject, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+				//TODO - Do stuff
+
+				m_nextEntityToUpdate.ObjectBuilder = baseEntity;
+				m_nextEntityToUpdate = null;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLineAndConsole("Failed to broadcast new floating object");
 				LogManager.GameLog.WriteLine(ex);
 			}
 		}

@@ -2,17 +2,26 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
+
+using Sandbox.Common.ObjectBuilders;
+
+using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
+using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRageMath;
+using VRage.Common.Utils;
 
 namespace SEModAPIExtensions.API
 {
@@ -254,29 +263,24 @@ namespace SEModAPIExtensions.API
 			if(command[0] != '/')
 				return false;
 
+			#region Delete Commands
+
 			//Delete
 			if (command.Equals("/delete"))
 			{
-				//All cube grids
-				if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
+				//All entities
+				if (paramCount > 1 && commandParts[1].ToLower().Equals("all"))
 				{
-					//That have no beacon or only a beacon with no name
+					//All cube grids that have no beacon or only a beacon with no name
 					if (commandParts[2].ToLower().Equals("nobeacon"))
 					{
-						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-						List<BaseEntity> entitiesToDispose = new List<BaseEntity>();
-						foreach (BaseEntity entity in entities)
+						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+						List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+						foreach (CubeGridEntity entity in entities)
 						{
-							if (entity is CubeGridEntity)
+							if (entity.Name.Equals(entity.EntityId.ToString()))
 							{
-								//Skip static cube grids
-								if (((CubeGridEntity)entity).IsStatic)
-									continue;
-
-								if (entity.Name.Equals(entity.EntityId.ToString()))
-								{
-									entitiesToDispose.Add(entity);
-								}
+								entitiesToDispose.Add(entity);
 							}
 						}
 
@@ -284,9 +288,110 @@ namespace SEModAPIExtensions.API
 						{
 							entity.Dispose();
 						}
+
+						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed");
+					}
+
+					//All floating objects
+					if (commandParts[2].ToLower().Equals("floatingobjects"))
+					{
+						List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+						int floatingObjectCount = entities.Count;
+						foreach (FloatingObject entity in entities)
+						{
+							entity.Dispose();
+						}
+
+						SendPrivateChatMessage(remoteUserId, floatingObjectCount.ToString() + " floating objects have been removed");
+					}
+				}
+
+				//All non-static cube grids
+				if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
+				{
+					//That have no beacon or only a beacon with no name
+					if (commandParts[2].ToLower().Equals("nobeacon"))
+					{
+						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+						List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+						foreach (CubeGridEntity entity in entities)
+						{
+							//Skip static cube grids
+							if (((CubeGridEntity)entity).IsStatic)
+								continue;
+
+							if (entity.Name.Equals(entity.EntityId.ToString()))
+							{
+								entitiesToDispose.Add(entity);
+							}
+						}
+
+						foreach (BaseEntity entity in entitiesToDispose)
+						{
+							entity.Dispose();
+						}
+
+						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " ships have been removed");
+					}
+				}
+
+				//All static cube grids
+				if (paramCount > 1 && commandParts[1].ToLower().Equals("station"))
+				{
+					//That have no beacon or only a beacon with no name
+					if (commandParts[2].ToLower().Equals("nobeacon"))
+					{
+						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+						List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+						foreach (CubeGridEntity entity in entities)
+						{
+							//Skip non-static cube grids
+							if (!((CubeGridEntity)entity).IsStatic)
+								continue;
+
+							if (entity.Name.Equals(entity.EntityId.ToString()))
+							{
+								entitiesToDispose.Add(entity);
+							}
+						}
+
+						foreach (BaseEntity entity in entitiesToDispose)
+						{
+							entity.Dispose();
+						}
+
+						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " stations have been removed");
+					}
+				}
+
+				//Single entity
+				if (paramCount == 1)
+				{
+					string rawEntityId = commandParts[1];
+
+					try
+					{
+						long entityId = long.Parse(rawEntityId);
+
+						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+						foreach (BaseEntity entity in entities)
+						{
+							if (entity.EntityId != entityId)
+								continue;
+
+							entity.Dispose();
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
 					}
 				}
 			}
+
+			#endregion
+
+			#region Utility Commands
 
 			//Utility
 			if (command.Equals("/tp"))
@@ -380,7 +485,130 @@ namespace SEModAPIExtensions.API
 			if (command.Equals("/save"))
 			{
 				WorldManager.Instance.SaveWorld();
+
+				SendPrivateChatMessage(remoteUserId, "World has been saved!");
 			}
+			if (command.Equals("/owner"))
+			{
+				if (paramCount == 2)
+				{
+					string rawEntityId = commandParts[1];
+					string rawOwnerId = commandParts[2];
+
+					try
+					{
+						long entityId = long.Parse(rawEntityId);
+						long ownerId = long.Parse(rawOwnerId);
+
+						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+						foreach (CubeGridEntity cubeGrid in entities)
+						{
+							if (cubeGrid.EntityId != entityId)
+								continue;
+
+							//Update the owner of the blocks on the cube grid
+							foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+							{
+								//Skip blocks that don't have an entity id
+								if (cubeBlock.EntityId == 0)
+									continue;
+
+								cubeBlock.Owner = ownerId;
+							}
+
+							SendPrivateChatMessage(remoteUserId, "CubeGridEntity '" + cubeGrid.EntityId.ToString() + "' owner has been changed to '" + ownerId.ToString() + "'");
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+			}
+			if (command.Equals("/export"))
+			{
+				if (paramCount == 1)
+				{
+					string rawEntityId = commandParts[1];
+
+					try
+					{
+						long entityId = long.Parse(rawEntityId);
+
+						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+						foreach (BaseEntity entity in entities)
+						{
+							if (entity.EntityId != entityId)
+								continue;
+
+							string modPath = MyFileSystem.ModsPath;
+							if (!Directory.Exists(modPath))
+								break;
+
+							string fileName = entity.Name.ToLower();
+							Regex rgx = new Regex("[^a-zA-Z0-9]");
+							string cleanFileName = rgx.Replace(fileName, "");
+
+							string exportPath = Path.Combine(modPath, "Exports");
+							if (!Directory.Exists(exportPath))
+								Directory.CreateDirectory(exportPath);
+							FileInfo exportFile = new FileInfo(Path.Combine(exportPath, cleanFileName + ".sbc"));
+							entity.Export(exportFile);
+
+							SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been exported to Mods/Exports");
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
+			}
+			if (command.Equals("/import"))
+			{
+				if (paramCount == 1)
+				{
+					string fileName = commandParts[1];
+					Regex rgx = new Regex("[^a-zA-Z0-9]");
+					string cleanFileName = rgx.Replace(fileName, "");
+
+					string modPath = MyFileSystem.ModsPath;
+					if(Directory.Exists(modPath))
+					{
+						string exportPath = Path.Combine(modPath, "Exports");
+						if (Directory.Exists(exportPath))
+						{
+							FileInfo importFile = new FileInfo(Path.Combine(exportPath, cleanFileName));
+							if (importFile.Exists)
+							{
+								//TODO - Find a clean way to determine what type of entity is in the file so that we can import
+
+								SendPrivateChatMessage(remoteUserId, "Feature is not yet completed");
+							}
+						}
+					}
+				}
+			}
+			if (command.Equals("/spawn"))
+			{
+				if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
+				{
+					if (commandParts[2].ToLower().Equals("all"))
+					{
+					}
+					if (commandParts[2].ToLower().Equals("exports"))
+					{
+					}
+					if (commandParts[2].ToLower().Equals("cargo"))
+					{
+						CargoShipManager.Instance.SpawnCargoShipGroup(remoteUserId);
+					}
+				}
+			}
+
+			#endregion
+
+			#region Diagnostic Commands
 
 			//Diagnostic
 			if (command.Equals("/list"))
@@ -428,6 +656,8 @@ namespace SEModAPIExtensions.API
 					SendPrivateChatMessage(remoteUserId, "Floating object entities: '" + entities.Count.ToString() + "'");
 				}
 			}
+
+			#endregion
 
 			return true;
 		}
