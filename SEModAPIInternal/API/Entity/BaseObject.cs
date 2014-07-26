@@ -358,8 +358,9 @@ namespace SEModAPIInternal.API.Entity
 		private string m_backingSourceMethod;
 		private InternalBackingType m_backingSourceType;
 		private DateTime m_lastLoadTime;
-		private double m_averageLoadTime;
-		private DateTime m_lastProfilingOutput;
+
+		private static double m_averageLoadTime;
+		private static DateTime m_lastProfilingOutput;
 
 		protected FastResourceLock m_resourceLock = new FastResourceLock();
 		protected FastResourceLock m_rawDataHashSetResourceLock = new FastResourceLock();
@@ -394,8 +395,9 @@ namespace SEModAPIInternal.API.Entity
 			m_backingSourceType = InternalBackingType.Hashset;
 
 			m_lastLoadTime = DateTime.Now;
-			m_averageLoadTime = 0;
-			m_lastProfilingOutput = DateTime.Now;
+
+			if(m_lastProfilingOutput == null)
+				m_lastProfilingOutput = DateTime.Now;
 		}
 
 		public BaseObjectManager(Object backingSource, string backingMethodName, InternalBackingType backingSourceType)
@@ -414,28 +416,6 @@ namespace SEModAPIInternal.API.Entity
 			m_lastLoadTime = DateTime.Now;
 			m_averageLoadTime = 0;
 			m_lastProfilingOutput = DateTime.Now;
-		}
-
-		public BaseObjectManager(MyObjectBuilder_Base[] baseDefinitions)
-		{
-			m_fileInfo = null;
-			m_changed = false;
-			m_isMutable = true;
-
-			m_definitionsContainerField = GetMatchingDefinitionsContainerField();
-
-			Load(baseDefinitions);
-		}
-
-		public BaseObjectManager(List<MyObjectBuilder_Base> baseDefinitions)
-		{
-			m_fileInfo = null;
-			m_changed = false;
-			m_isMutable = true;
-
-			m_definitionsContainerField = GetMatchingDefinitionsContainerField();
-
-			Load(baseDefinitions);
 		}
 
 		public BaseObjectManager(BaseObject[] baseDefinitions)
@@ -510,62 +490,6 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		private void WaitForLock()
-		{
-			//TODO - Determine how much of a load this is on the system using this sleep loop
-			DateTime waitStart = DateTime.Now;
-			TimeSpan totalWaitTime = DateTime.Now - waitStart;
-			while (!IsResourceLocked)
-			{
-				Thread.Sleep(15);
-				totalWaitTime = DateTime.Now - waitStart;
-				if (totalWaitTime.TotalMilliseconds >= 90)
-					break;
-			}
-		}
-
-		private void WaitForRelease()
-		{
-			//TODO - Determine how much of a load this is on the system using this sleep loop
-			DateTime waitStart = DateTime.Now;
-			TimeSpan totalWaitTime = DateTime.Now - waitStart;
-			while (IsResourceLocked)
-			{
-				Thread.Sleep(15);
-				totalWaitTime = DateTime.Now - waitStart;
-				if (totalWaitTime.TotalMilliseconds >= 90)
-					break;
-			}
-		}
-
-		private void WaitForInternalLock()
-		{
-			//TODO - Determine how much of a load this is on the system using this sleep loop
-			DateTime waitStart = DateTime.Now;
-			TimeSpan totalWaitTime = DateTime.Now - waitStart;
-			while (!IsInternalResourceLocked)
-			{
-				Thread.Sleep(15);
-				totalWaitTime = DateTime.Now - waitStart;
-				if (totalWaitTime.TotalMilliseconds >= 90)
-					break;
-			}
-		}
-
-		private void WaitForInternalRelease()
-		{
-			//TODO - Determine how much of a load this is on the system using this sleep loop
-			DateTime waitStart = DateTime.Now;
-			TimeSpan totalWaitTime = DateTime.Now - waitStart;
-			while (IsInternalResourceLocked)
-			{
-				Thread.Sleep(15);
-				totalWaitTime = DateTime.Now - waitStart;
-				if (totalWaitTime.TotalMilliseconds >= 90)
-					break;
-			}
-		}
-
 		private FieldInfo GetMatchingDefinitionsContainerField()
 		{
 			//Find the the matching field in the container
@@ -622,13 +546,30 @@ namespace SEModAPIInternal.API.Entity
 				return;
 			if (IsInternalResourceLocked)
 				return;
+			TimeSpan timeSinceLastLoad = DateTime.Now - m_lastLoadTime;
+			if (timeSinceLastLoad.TotalMilliseconds < 250)
+				return;
+
+			m_lastLoadTime = DateTime.Now;
 
 			RefreshInternalData();
+
+			TimeSpan timeToLoad = DateTime.Now - m_lastLoadTime;
+			m_averageLoadTime = (m_averageLoadTime + timeToLoad.TotalMilliseconds) / 2.0;
+
+			TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastProfilingOutput;
+			if (timeSinceLastProfilingOutput.TotalSeconds > 30)
+			{
+				m_lastProfilingOutput = DateTime.Now;
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Average data load time: " + Math.Round(m_averageLoadTime, 0).ToString() + "ms");
+			}
 		}
 
 		private void RefreshRawData()
 		{
-			WaitForInternalRelease();
+			//WaitForInternalRelease();
 
 			//Request refreshes of all internal raw data
 			RefreshBackingDataHashSet();
@@ -636,10 +577,10 @@ namespace SEModAPIInternal.API.Entity
 			RefreshObjectBuilderMap();
 
 			//Wait for the internal refresh to start
-			WaitForInternalLock();
+			//WaitForInternalLock();
 
 			//Wait for the internal refresh to finish
-			WaitForInternalRelease();
+			//WaitForInternalRelease();
 		}
 
 		private void RefreshInternalData()
@@ -653,16 +594,10 @@ namespace SEModAPIInternal.API.Entity
 			if (WorldManager.Instance.InternalGetResourceLock().Owned)
 				return;
 
-			TimeSpan timeSinceLastLoad = DateTime.Now - m_lastLoadTime;
-
-			if (IsDynamic && timeSinceLastLoad.TotalMilliseconds > 100)
+			if (IsDynamic)
 			{
-				m_lastLoadTime = DateTime.Now;
-
 				try
 				{
-					WaitForRelease();
-
 					//Lock the main data
 					m_resourceLock.AcquireExclusive();
 
@@ -688,18 +623,6 @@ namespace SEModAPIInternal.API.Entity
 				{
 					LogManager.GameLog.WriteLine(ex);
 				}
-
-				TimeSpan timeToLoad = DateTime.Now - m_lastLoadTime;
-				m_averageLoadTime = (m_averageLoadTime + timeToLoad.TotalMilliseconds) / 2.0;
-			}
-
-			TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastProfilingOutput;
-			if (timeSinceLastProfilingOutput.TotalSeconds > 30)
-			{
-				m_lastProfilingOutput = DateTime.Now;
-
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Average data load time: " + Math.Round(m_averageLoadTime, 0).ToString() + "ms");
 			}
 		}
 
