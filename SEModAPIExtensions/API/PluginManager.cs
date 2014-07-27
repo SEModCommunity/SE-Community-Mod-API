@@ -33,6 +33,7 @@ namespace SEModAPIExtensions.API
 		private double m_averageUpdateInterval;
 		private double m_averageUpdateTime;
 		private DateTime m_lastAverageOutput;
+		private double m_averageEvents;
 
 		#endregion
 
@@ -50,6 +51,7 @@ namespace SEModAPIExtensions.API
 			m_averageUpdateInterval = 0;
 			m_averageUpdateTime = 0;
 			m_lastAverageOutput = DateTime.Now;
+			m_averageEvents = 0;
 
 			Console.WriteLine("Finished loading PluginManager");
 		}
@@ -202,6 +204,10 @@ namespace SEModAPIExtensions.API
 			m_lastUpdate = DateTime.Now;
 
 			EntityEventManager.Instance.ResourceLocked = true;
+
+			List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
+			List<ChatManager.ChatEvent> chatEvents = ChatManager.Instance.ChatEvents;
+
 			foreach (var key in m_plugins.Keys)
 			{
 				var plugin = m_plugins[key];
@@ -211,7 +217,6 @@ namespace SEModAPIExtensions.API
 					continue;
 
 				//Run entity events
-				List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
 				foreach (EntityEventManager.EntityEvent entityEvent in events)
 				{
 					//If this is a cube block created event and the parent cube grid is still loading then defer the event
@@ -270,7 +275,6 @@ namespace SEModAPIExtensions.API
 				}
 
 				//Run chat events
-				List<ChatManager.ChatEvent> chatEvents = ChatManager.Instance.ChatEvents;
 				foreach (ChatManager.ChatEvent chatEvent in chatEvents)
 				{
 					try
@@ -298,9 +302,7 @@ namespace SEModAPIExtensions.API
 				}
 			}
 
-			EntityEventManager.Instance.ClearEvents();
-			EntityEventManager.Instance.ResourceLocked = false;
-			ChatManager.Instance.ClearEvents();
+			m_averageEvents = (m_averageEvents + (events.Count + chatEvents.Count)) / 2;
 
 			TimeSpan updateTime = DateTime.Now - m_lastUpdate;
 			m_averageUpdateTime = (m_averageUpdateTime + updateTime.TotalMilliseconds) / 2;
@@ -314,8 +316,13 @@ namespace SEModAPIExtensions.API
 				{
 					LogManager.APILog.WriteLine("PluginManager - Update interval = " + m_averageUpdateInterval.ToString() + "ms");
 					LogManager.APILog.WriteLine("PluginManager - Update time = " + m_averageUpdateTime.ToString() + "ms");
+					LogManager.APILog.WriteLine("PluginManager - Events per update = " + m_averageEvents.ToString());
 				}
 			}
+
+			EntityEventManager.Instance.ClearEvents();
+			EntityEventManager.Instance.ResourceLocked = false;
+			ChatManager.Instance.ClearEvents();
 		}
 
 		public void InitPlugin(Guid key)

@@ -361,6 +361,7 @@ namespace SEModAPIInternal.API.Entity
 
 		private static double m_averageLoadTime;
 		private static DateTime m_lastProfilingOutput;
+		private static int m_refreshCount;
 
 		protected FastResourceLock m_resourceLock = new FastResourceLock();
 		protected FastResourceLock m_rawDataHashSetResourceLock = new FastResourceLock();
@@ -490,6 +491,15 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
+		public void SetBackingProperties(Object backingObject, string backingMethod, InternalBackingType backingType)
+		{
+			m_isDynamic = true;
+
+			m_backingObject = backingObject;
+			m_backingSourceMethod = backingMethod;
+			m_backingSourceType = backingType;
+		}
+
 		private FieldInfo GetMatchingDefinitionsContainerField()
 		{
 			//Find the the matching field in the container
@@ -550,6 +560,8 @@ namespace SEModAPIInternal.API.Entity
 			if (timeSinceLastLoad.TotalMilliseconds < 250)
 				return;
 
+			m_refreshCount++;
+
 			m_lastLoadTime = DateTime.Now;
 
 			RefreshInternalData();
@@ -561,26 +573,23 @@ namespace SEModAPIInternal.API.Entity
 			if (timeSinceLastProfilingOutput.TotalSeconds > 30)
 			{
 				m_lastProfilingOutput = DateTime.Now;
+				double refreshesPerSecond = m_refreshCount / timeSinceLastProfilingOutput.TotalSeconds;
+				m_refreshCount = 0;
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Average data load time: " + Math.Round(m_averageLoadTime, 0).ToString() + "ms");
+				{
+					LogManager.APILog.WriteLine("ObjectManager - Average data load time: " + Math.Round(m_averageLoadTime, 2).ToString() + "ms");
+					LogManager.APILog.WriteLine("ObjectManager - Refreshes per second: " + Math.Round(refreshesPerSecond, 2).ToString());
+				}
 			}
 		}
 
 		private void RefreshRawData()
 		{
-			//WaitForInternalRelease();
-
 			//Request refreshes of all internal raw data
 			RefreshBackingDataHashSet();
 			RefreshBackingDataList();
 			RefreshObjectBuilderMap();
-
-			//Wait for the internal refresh to start
-			//WaitForInternalLock();
-
-			//Wait for the internal refresh to finish
-			//WaitForInternalRelease();
 		}
 
 		private void RefreshInternalData()
@@ -1020,6 +1029,7 @@ namespace SEModAPIInternal.API.Entity
 				if (def.Value.Equals(entry))
 				{
 					DeleteEntry(def.Key);
+					break;
 				}
 			}
 

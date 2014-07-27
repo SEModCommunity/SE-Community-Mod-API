@@ -1022,6 +1022,13 @@ namespace SEServerExtender
 				BTN_Entities_Delete.Enabled = true;
 			}
 
+			//Temporarily disabled most of floating objects. They are badly bugged after 1.040
+			if (linkedObject is FloatingObject)
+			{
+				BTN_Entities_Export.Enabled = false;
+				BTN_Entities_Delete.Enabled = false;
+			}
+
 			if (linkedObject is CubeGridEntity)
 			{
 				BTN_Entities_New.Enabled = true;

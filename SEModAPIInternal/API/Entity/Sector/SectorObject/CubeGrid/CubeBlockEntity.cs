@@ -85,7 +85,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockCreated;
 				newEvent.timestamp = DateTime.Now;
 				newEvent.entity = this;
-				newEvent.priority = 1;
+				if (m_parent.IsLoading)
+					newEvent.priority = 10;
+				else
+					newEvent.priority = 1;
 				EntityEventManager.Instance.AddEvent(newEvent);
 			}
 		}
@@ -530,6 +533,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public CubeBlockManager(CubeGridEntity parent)
 		{
+			m_isLoading = true;
 			m_parent = parent;
 		}
 

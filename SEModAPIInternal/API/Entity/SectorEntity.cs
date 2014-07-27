@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -21,6 +22,7 @@ using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRage;
+using VRageMath;
 
 namespace SEModAPIInternal.API.Entity
 {
@@ -373,7 +375,21 @@ namespace SEModAPIInternal.API.Entity
 				var rawValue = BaseObject.InvokeStaticMethod(InternalType, ObjectManagerGetEntityHashSet);
 				if (rawValue == null)
 					return;
-				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				//Create/Clear the hash set
+				if (m_rawDataHashSet == null)
+					m_rawDataHashSet = new HashSet<object>();
+				else
+					m_rawDataHashSet.Clear();
+
+				//Only allow valid entities in the hash set
+				foreach (var entry in UtilityFunctions.ConvertHashSet(rawValue))
+				{
+					if (!IsValidEntity(entry))
+						continue;
+
+					m_rawDataHashSet.Add(entry);
+				}
 
 				m_rawDataHashSetResourceLock.ReleaseExclusive();
 			}
@@ -398,25 +414,35 @@ namespace SEModAPIInternal.API.Entity
 					return;
 
 				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
+				m_rawDataHashSetResourceLock.AcquireExclusive();
 
 				m_rawDataObjectBuilderList.Clear();
 				foreach (Object entity in GetBackingDataHashSet())
 				{
-					if (!IsValidEntity(entity))
-						continue;
+					try
+					{
+						if (!IsValidEntity(entity))
+							continue;
 
-					MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
-					if (baseEntity == null)
-						continue;
+						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+						if (baseEntity == null)
+							continue;
 
-					m_rawDataObjectBuilderList.Add(entity, baseEntity);
+						m_rawDataObjectBuilderList.Add(entity, baseEntity);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
 				}
 
+				m_rawDataHashSetResourceLock.ReleaseExclusive();
 				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
+				m_rawDataHashSetResourceLock.ReleaseExclusive();
 				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 		}
@@ -427,6 +453,7 @@ namespace SEModAPIInternal.API.Entity
 			{
 				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
+				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
@@ -434,8 +461,6 @@ namespace SEModAPIInternal.API.Entity
 						LogManager.APILog.WriteLine("SectorObjectManager - Mismatch between raw entities and object builders");
 					return;
 				}
-
-				Dictionary<long, BaseObject> entitiesToRemove = new Dictionary<long, BaseObject>(GetInternalData());
 
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
@@ -447,23 +472,14 @@ namespace SEModAPIInternal.API.Entity
 							continue;
 
 						if (!IsValidEntity(entity))
-						{
-							entitiesToRemove.Remove(entityId);
 							continue;
-						}
 
 						if (!objectBuilderList.ContainsKey(entity))
-						{
-							entitiesToRemove.Remove(entityId);
 							continue;
-						}
 
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
 						if (baseEntity == null)
-						{
-							entitiesToRemove.Remove(entityId);
 							continue;
-						}
 
 						//If the original data already contains an entry for this, skip creation and just update values
 						if (GetInternalData().ContainsKey(entityId))
@@ -474,9 +490,6 @@ namespace SEModAPIInternal.API.Entity
 
 							//Update the base entity (not the same as BackingObject which is the internal object)
 							matchingEntity.ObjectBuilder = baseEntity;
-
-							//Remove this entry from the cleanup list
-							entitiesToRemove.Remove(matchingEntity.EntityId);
 						}
 						else
 						{
@@ -492,14 +505,9 @@ namespace SEModAPIInternal.API.Entity
 								newEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
 							else if (baseEntity.TypeId == typeof(MyObjectBuilder_VoxelMap))
 								newEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
-							else
-								newEntity = new BaseEntity(baseEntity, entity);
 
-							AddEntry(newEntity.EntityId, newEntity);
-
-							//Remove this entry from the cleanup list
-							if (entitiesToRemove.ContainsKey(newEntity.EntityId))
-								entitiesToRemove.Remove(newEntity.EntityId);
+							if(newEntity != null)
+								AddEntry(newEntity.EntityId, newEntity);
 						}
 					}
 					catch (Exception ex)
@@ -508,7 +516,19 @@ namespace SEModAPIInternal.API.Entity
 					}
 				}
 
-				DeleteEntries(entitiesToRemove);
+				//Cleanup old entities
+				foreach (var entry in internalDataCopy)
+				{
+					try
+					{
+						if (!rawEntities.Contains(entry.Value.BackingObject))
+							DeleteEntry(entry.Value);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
 			}
 			catch (Exception ex)
 			{
@@ -567,7 +587,10 @@ namespace SEModAPIInternal.API.Entity
 				}
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine(m_nextEntityToUpdate.GetType().Name + " '" + m_nextEntityToUpdate.GetType().Name + "': Finished adding to scene");
+				{
+					Type type = m_nextEntityToUpdate.GetType();
+					Console.WriteLine(type.Name + " '" + m_nextEntityToUpdate.Name + "': Finished adding to scene");
+				}
 
 				m_nextEntityToUpdate = null;
 			}
@@ -591,7 +614,6 @@ namespace SEModAPIInternal.API.Entity
 				BaseEntity.InvokeStaticMethod(someManager, EntityBaseNetManagerSendEntity, new object[] { baseEntity });
 
 				m_nextEntityToUpdate.ObjectBuilder = baseEntity;
-				m_nextEntityToUpdate = null;
 			}
 			catch (Exception ex)
 			{
@@ -612,7 +634,6 @@ namespace SEModAPIInternal.API.Entity
 				//TODO - Do stuff
 
 				m_nextEntityToUpdate.ObjectBuilder = baseEntity;
-				m_nextEntityToUpdate = null;
 			}
 			catch (Exception ex)
 			{

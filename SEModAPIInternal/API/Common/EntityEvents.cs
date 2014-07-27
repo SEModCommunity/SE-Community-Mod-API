@@ -73,8 +73,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			get
 			{
-				List<EntityEvent> copy = new List<EntityEvent>(m_entityEvents.ToArray());
-				return copy;
+				return m_entityEvents;
 			}
 		}
 

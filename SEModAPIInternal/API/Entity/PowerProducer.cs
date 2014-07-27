@@ -23,6 +23,13 @@ namespace SEModAPIInternal.API.Entity
 		protected float m_maxPowerOutput;
 		protected float m_powerOutput;
 
+		public static string PowerProducerNamespace = "FB8C11741B7126BD9C97FE76747E087F";
+		public static string PowerProducerClass = "7E69388ED0DB47818FB7AFF9F16C6EDA";
+
+		public static string PowerProducerGetMaxPowerOutputMethod = "304D0BCE903575319058E3EE5CD6429A";
+		public static string PowerProducerGetCurrentOutputMethod = "3C43D22A5D0B87D032C4B1BAC85EF6F9";
+		public static string PowerProducerSetCurrentOutputMethod = "46B1D2DF533DD2B153D67CEA14568B97";
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -34,6 +41,9 @@ namespace SEModAPIInternal.API.Entity
 
 			m_maxPowerOutput = 0;
 			m_powerOutput = 0;
+
+			m_maxPowerOutput = MaxPowerOutput;
+			m_powerOutput = PowerOutput;
 		}
 
 		#endregion
@@ -44,15 +54,19 @@ namespace SEModAPIInternal.API.Entity
 		{
 			get
 			{
-				//TODO - Get this value directly from the entity
-				return m_maxPowerOutput;
-			}
-			set
-			{
-				m_maxPowerOutput = value;
+				if (m_powerProducer == null)
+					return m_maxPowerOutput;
 
-				Action action = InternalUpdateMaxPowerOutput;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				try
+				{
+					float result = (float)BaseObject.InvokeEntityMethod(m_powerProducer, PowerProducerGetMaxPowerOutputMethod);
+					return result;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+					return m_maxPowerOutput;
+				}
 			}
 		}
 
@@ -60,8 +74,19 @@ namespace SEModAPIInternal.API.Entity
 		{
 			get
 			{
-				//TODO - Get this value directly from the entity
-				return m_powerOutput;
+				if (m_powerProducer == null)
+					return m_powerOutput;
+
+				try
+				{
+					float result = (float)BaseObject.InvokeEntityMethod(m_powerProducer, PowerProducerGetCurrentOutputMethod);
+					return result;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+					return m_powerOutput;
+				}
 			}
 			set
 			{
@@ -76,14 +101,9 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		protected void InternalUpdateMaxPowerOutput()
-		{
-			//TODO - Do stuff
-		}
-
 		protected void InternalUpdatePowerOutput()
 		{
-			//TODO - Do stuff
+			BaseObject.InvokeEntityMethod(m_powerProducer, PowerProducerSetCurrentOutputMethod, new object[] { m_powerOutput });
 		}
 
 		#endregion

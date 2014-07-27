@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
 
@@ -11,6 +12,7 @@ using SEModAPI.API.Definitions;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
@@ -78,21 +80,21 @@ namespace SEModAPIExtensions.API
 
 				//Determine which group *will* spawn
 				randomChance = random.NextDouble();
-				int randomShipIndex = Math.Min((int)Math.Round(randomChance * possibleGroups.Count, 0), possibleGroups.Count);
+				int randomShipIndex = Math.Max(0, Math.Min((int)Math.Round(randomChance * possibleGroups.Count, 0), possibleGroups.Count-1));
 				SpawnGroupDefinition randomSpawnGroup = possibleGroups[randomShipIndex];
 
 				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Spawning cargo group '" + randomSpawnGroup.Name + "' ...");
 
 				//Spawn the ships in the group
 				float worldSize = SandboxGameAssemblyWrapper.Instance.GetServerConfig().SessionSettings.WorldSizeKm * 1000.0f;
-				float spawnSize = 0.5f * worldSize;
-				float destinationSize = 0.01f * spawnSize;
+				float spawnSize = 0.25f * worldSize;
+				float destinationSize = 0.02f * spawnSize;
 				Vector3 groupPosition = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-spawnSize, -spawnSize, -spawnSize), new Vector3(spawnSize, spawnSize, spawnSize));
 				Vector3 destinationPosition = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-destinationSize, -destinationSize, -destinationSize), new Vector3(destinationSize, destinationSize, destinationSize));
 				Matrix orientation = Matrix.CreateLookAt(groupPosition, destinationPosition, new Vector3(0, 1, 0));
 				foreach (SpawnGroupPrefab entry in randomSpawnGroup.Prefabs)
 				{
-					FileInfo prefabFile = new FileInfo(Path.Combine(MyFileSystem.ContentPath, "Data", "Prefabs", entry.File));
+					FileInfo prefabFile = new FileInfo(Path.Combine(MyFileSystem.ContentPath, "Data", "Prefabs", entry.File + ".sbc"));
 					if (!prefabFile.Exists)
 						continue;
 
@@ -112,11 +114,16 @@ namespace SEModAPIExtensions.API
 					Vector3 shipVelocity = travelVector * (float)Math.Min(cubeGrid.MaxLinearVelocity, Math.Max(1.0f, entry.Speed));
 					cubeGrid.LinearVelocity = shipVelocity;
 
+					cubeGrid.IsDampenersEnabled = false;
+
 					//And add the ship to the world
 					SectorObjectManager.Instance.AddEntity(cubeGrid);
+
+					//Force a refresh of the cube grid
+					List<CubeBlockEntity> cubeBlocks = cubeGrid.CubeBlocks;
 				}
 
-				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.Name + "' spawned with " + randomSpawnGroup.Prefabs.Length.ToString() + " ships at " + groupPosition.ToString());
+				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.BaseDefinition.DisplayName + "' spawned with " + randomSpawnGroup.Prefabs.Length.ToString() + " ships at " + groupPosition.ToString());
 			}
 			catch (Exception ex)
 			{

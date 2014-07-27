@@ -100,6 +100,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Methods"
 
+		public override void Dispose()
+		{
+			//TODO - Get this to work after 1.040
+		}
+
 		protected void InternalUpdateItem()
 		{
 			try
@@ -113,5 +118,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		}
 
 		#endregion
+	}
+
+	public class FloatingObjectManager
+	{
+		public static string FloatingObjectManagerNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string FloatingObjectManagerClass = "66E5A072764E86AD0AC8B63304F0DC31";
 	}
 }

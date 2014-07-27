@@ -9,6 +9,7 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 using Sandbox.Definitions;
 
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
@@ -19,11 +20,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		private InventoryEntity m_Inventory;
 		private PowerProducer m_powerProducer;
+		private float m_maxPowerOutput;
 
 		public static string ReactorNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ReactorClass = "714451095FE0D12C399607EAC612A6FE";
 
 		public static string ReactorGetInventoryMethod = "GetInventory";
+		public static string ReactorSetMaxPowerOutputMethod = "3AE8807920F62F546CE2319D282975B2";
 
 		#endregion
 
@@ -96,7 +99,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public float MaxPower
 		{
 			get { return PowerProducer.MaxPowerOutput; }
-			set { PowerProducer.MaxPowerOutput = value; }
+			set
+			{
+				m_maxPowerOutput = value;
+
+				Action action = InternalUpdateMaxPowerOutput;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+			}
 		}
 
 		[Category("Reactor")]
@@ -135,6 +144,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				LogManager.GameLog.WriteLine(ex);
 				return null;
 			}
+		}
+
+		protected void InternalUpdateMaxPowerOutput()
+		{
+			InvokeEntityMethod(ActualObject, ReactorSetMaxPowerOutputMethod, new object[] { m_maxPowerOutput });
 		}
 
 		#endregion

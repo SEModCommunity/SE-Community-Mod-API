@@ -33,6 +33,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		private CubeGridNetworkManager m_networkManager;
 		private PowerManager m_powerManager;
 		private static Type m_internalType;
+		private string m_name;
+		private DateTime m_lastNameRefresh;
 
 		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
@@ -64,6 +66,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				cubeBlockList.Add(new CubeBlockEntity(this, cubeBlock));
 			}
 			m_cubeBlockManager.Load(cubeBlockList);
+
+			m_lastNameRefresh = DateTime.Now;
+			m_name = "Cube Grid";
 		}
 
 		public CubeGridEntity(MyObjectBuilder_CubeGrid definition)
@@ -77,6 +82,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				cubeBlockList.Add(new CubeBlockEntity(this, cubeBlock));
 			}
 			m_cubeBlockManager.Load(cubeBlockList);
+
+			m_lastNameRefresh = DateTime.Now;
+			m_name = "Cube Grid";
 		}
 
 		public CubeGridEntity(MyObjectBuilder_CubeGrid definition, Object backingObject)
@@ -96,6 +104,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.entity = this;
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
+
+			m_lastNameRefresh = DateTime.Now;
+			m_name = "Cube Grid";
 		}
 
 		#endregion
@@ -143,22 +154,34 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				}
 				else
 				{
-					List<BeaconEntity> beaconBlocks = m_cubeBlockManager.GetTypedInternalData<BeaconEntity>();
-					foreach (BeaconEntity cubeBlock in beaconBlocks)
+					TimeSpan timeSinceLastNameRefresh = DateTime.Now - m_lastNameRefresh;
+					if (timeSinceLastNameRefresh.TotalMilliseconds < 5000)
 					{
-						if (name.Length > 0)
-							name += "|";
+						name = m_name;
+					}
+					else
+					{
+						m_lastNameRefresh = DateTime.Now;
 
-						string customName = cubeBlock.Name;
-						if (customName == "")
-							customName = "Beacon";
+						List<BeaconEntity> beaconBlocks = m_cubeBlockManager.GetTypedInternalData<BeaconEntity>();
+						foreach (BeaconEntity cubeBlock in beaconBlocks)
+						{
+							if (name.Length > 0)
+								name += "|";
 
-						name += customName;
+							string customName = cubeBlock.Name;
+							if (customName == "")
+								customName = "Beacon";
+
+							name += customName;
+						}
 					}
 				}
 
 				if (name.Length == 0)
 					name = ObjectBuilder.EntityId.ToString();
+
+				m_name = name;
 
 				return name;
 			}
@@ -171,7 +194,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				return (MyObjectBuilder_CubeGrid)base.ObjectBuilder;
+				MyObjectBuilder_CubeGrid objectBuilder = (MyObjectBuilder_CubeGrid)base.ObjectBuilder;
+
+				objectBuilder.LinearVelocity = LinearVelocity;
+				objectBuilder.AngularVelocity = AngularVelocity;
+
+				return objectBuilder;
 			}
 			set
 			{
