@@ -39,12 +39,17 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
 
-		public static string CubeGridSetDampenersEnabledMethod = "86B66668D555E1C1B744C17D2AFA77F7";
 		public static string CubeGridGetCubeBlocksHashSetMethod = "E38F3E9D7A76CD246B99F6AE91CC3E4A";
 		public static string CubeGridGetPowerManagerMethod = "D92A57E3478304C8F8F780A554C6D6C4";
+		public static string CubeGridGetDampenersPowerReceiverMethod = "0D142C5CB93281BA2431FB266E8E3CA8";
 
 		public static string CubeGridIsStaticField = "";
 		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
+
+		public static string CubeGridDampenersPowerReceiverNamespace = "8EAF60352312606996BD8147B0A3C880";
+		public static string CubeGridDampenersPowerReceiverClass = "958ADAA3423FBDC5DE98C1A32DE7258C";
+		public static string CubeGridDampenersPowerReceiverGetEnabled = "51FDDFF9224B3F717EEFFEBEA5F1BAF6";
+		public static string CubeGridDampenersPowerReceiverSetEnabled = "86B66668D555E1C1B744C17D2AFA77F7";
 
 		#endregion
 
@@ -385,6 +390,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Internal"
 
+		protected Object GetDampenersPowerReceiver()
+		{
+			Object result = InvokeEntityMethod(BackingObject, CubeGridGetDampenersPowerReceiverMethod);
+
+			return result;
+		}
+
+		protected void InternalUpdateDampenersEnabled()
+		{
+			InvokeEntityMethod(GetDampenersPowerReceiver(), CubeGridDampenersPowerReceiverSetEnabled, new object[] { IsDampenersEnabled });
+		}
+
 		protected void InternalCubeGridMovedEvent(Object entity)
 		{
 			try
@@ -395,18 +412,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				newEvent.entity = this;
 				newEvent.priority = 9;
 				EntityEventManager.Instance.AddEvent(newEvent);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalUpdateDampenersEnabled()
-		{
-			try
-			{
-				InvokeEntityMethod(BackingObject, CubeGridSetDampenersEnabledMethod, new object[] { IsDampenersEnabled });
 			}
 			catch (Exception ex)
 			{

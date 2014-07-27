@@ -21,6 +21,7 @@ namespace SEModAPIInternal.API.Entity
 		private PowerManager m_powerManager;
 		private Object m_powerReceiver;
 		private float m_maxRequiredInput;
+		private Func<float> m_powerRateCallback;
 
 		//Power Receiver Type
 		public static string PowerReceiverNamespace = "FB8C11741B7126BD9C97FE76747E087F";
@@ -45,13 +46,14 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Constructors and Initializers"
 
-		public PowerReceiver(Object parent, PowerManager powerManager, Object powerReceiver)
+		public PowerReceiver(Object parent, PowerManager powerManager, Object powerReceiver, Func<float> powerRateCallback)
 		{
 			m_parent = parent;
 			m_powerManager = powerManager;
 			m_powerReceiver = powerReceiver;
+			m_powerRateCallback = powerRateCallback;
 
-			m_maxRequiredInput = 4;
+			m_maxRequiredInput = 0;
 		}
 
 		#endregion
@@ -74,20 +76,13 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		protected float PowerReceiverCallback()
-		{
-			return m_maxRequiredInput;
-		}
-
 		protected void InternalUpdateMaxRequiredInput()
 		{
 			try
 			{
-				if (m_maxRequiredInput == 0)
-					return;
-
 				FieldInfo field = BaseObject.GetEntityField(m_powerReceiver, PowerReceiverInputRateCallbackField);
-				field.SetValue(m_powerReceiver, new Func<float>(PowerReceiverCallback));
+				if(m_powerRateCallback != null)
+					field.SetValue(m_powerReceiver, m_powerRateCallback);
 
 				FieldInfo field2 = BaseObject.GetEntityField(m_powerReceiver, PowerReceiverMaxRequiredInputField);
 				field2.SetValue(m_powerReceiver, m_maxRequiredInput);

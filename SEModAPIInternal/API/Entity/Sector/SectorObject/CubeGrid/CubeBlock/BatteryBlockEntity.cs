@@ -61,7 +61,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public BatteryBlockEntity(CubeGridEntity parent, MyObjectBuilder_BatteryBlock definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
-			m_powerReceiver = new PowerReceiver(ActualObject, Parent.PowerManager, InternalGetPowerReceiver());
+			m_powerReceiver = new PowerReceiver(ActualObject, Parent.PowerManager, InternalGetPowerReceiver(), new Func<float>(PowerRateCallback));
 			m_maxPowerOutput = 0;
 			m_maxStoredPower = definition.MaxStoredPower;
 		}
@@ -218,6 +218,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Methods"
 
 		#region "Internal"
+
+		protected float PowerRateCallback()
+		{
+			if(ProducerEnabled || (CurrentStoredPower / MaxStoredPower) >= 0.98)
+			{
+				return 0.0f;
+			}
+			else
+			{
+				return PowerReceiver.MaxRequiredInput;
+			}
+		}
 
 		protected Object InternalGetPowerReceiver()
 		{
