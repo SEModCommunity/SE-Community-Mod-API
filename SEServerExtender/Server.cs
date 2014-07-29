@@ -218,7 +218,10 @@ namespace SEServerExtender
 			try
 			{
 				bool result = m_serverWrapper.StartServer(m_commandLineArgs.worldName, m_commandLineArgs.instanceName, !m_commandLineArgs.noConsole);
-			
+
+				m_pluginMainLoop.Stop();
+				m_pluginManager.Shutdown();
+
 				m_isServerRunning = false;
 
 				Console.WriteLine("Server has stopped running");
@@ -273,6 +276,7 @@ namespace SEServerExtender
 		public void StopServer()
 		{
 			m_pluginMainLoop.Stop();
+			m_pluginManager.Shutdown();
 
 			//m_serverWrapper.StopServer();
 			m_runServerThread.Interrupt();

@@ -325,6 +325,14 @@ namespace SEModAPIExtensions.API
 			ChatManager.Instance.ClearEvents();
 		}
 
+		public void Shutdown()
+		{
+			foreach (var key in m_plugins.Keys)
+			{
+				UnloadPlugin(key);
+			}
+		}
+
 		public void InitPlugin(Guid key)
 		{
 			if (m_pluginState.ContainsKey(key))
