@@ -471,6 +471,33 @@ namespace SEModAPIInternal.API.Entity
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_EntityBase, MyObjectBuilder_EntityBaseSerializer>(ObjectBuilder, fileInfo);
 		}
 
+		public override void ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for BaseEntity");
+				Object tempEntity = Activator.CreateInstance(type);
+				MethodInfo method1 = GetEntityMethod(tempEntity, BaseEntityGetObjectBuilderMethod);
+				MethodInfo method2 = GetEntityMethod(tempEntity, BaseEntityGetPhysicsManagerMethod);
+				MethodInfo method3 = GetEntityMethod(tempEntity, BaseEntityGetEntityIdMethod);
+				MethodInfo method4 = GetEntityMethod(tempEntity, BaseEntityCombineOnMovedEventMethod);
+				MethodInfo method5 = GetEntityMethod(tempEntity, BaseEntityCombineOnClosedEventMethod);
+				MethodInfo method6 = GetEntityMethod(tempEntity, BaseEntityGetIsDisposedMethod);
+				MethodInfo method7 = GetEntityMethod(tempEntity, BaseEntityGetOrientationMatrixMethod);
+				MethodInfo method8 = GetEntityMethod(tempEntity, BaseEntityRemoveMethod);
+				MethodInfo method9 = GetEntityMethod(tempEntity, BaseEntityGetNetManagerMethod);
+				FieldInfo field1 = GetEntityField(tempEntity, BaseEntityEntityIdField);
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+			}
+
+			base.ReflectionUnitTest();
+		}
+
 		#region "Internal"
 
 		private static Object GetEntityPhysicsObject(Object entity)
@@ -715,7 +742,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
-		public static string BaseEntityBroadcastRemovalMethod = "A9FCBC7354FE080D1B74D63725023480";
+		public static string BaseEntityBroadcastRemovalMethod = "121CA9A4CCCA40BD005639836BF53529";
 
 		#endregion
 

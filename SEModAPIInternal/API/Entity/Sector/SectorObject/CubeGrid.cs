@@ -360,6 +360,33 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(ObjectBuilder, fileInfo);
 		}
 
+		public override void ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for CubeGridEntity");
+				Object tempEntity = Activator.CreateInstance(type);
+				MethodInfo method1 = GetEntityMethod(tempEntity, CubeGridGetCubeBlocksHashSetMethod);
+				MethodInfo method2 = GetEntityMethod(tempEntity, CubeGridGetCubeBlocksHashSetMethod);
+				MethodInfo method3 = GetEntityMethod(tempEntity, CubeGridGetCubeBlocksHashSetMethod);
+				FieldInfo field1 = GetEntityField(tempEntity, CubeGridBlockGroupsField);
+
+				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridDampenersPowerReceiverNamespace, CubeGridDampenersPowerReceiverClass);
+				if (type2 == null)
+					throw new Exception("Could not find type for CubeGridEntity-CubeGridDampenersPowerReceiver");
+				Object tempEntity2 = Activator.CreateInstance(type2);
+				MethodInfo method11 = GetEntityMethod(tempEntity2, CubeGridDampenersPowerReceiverGetEnabled);
+				MethodInfo method12 = GetEntityMethod(tempEntity2, CubeGridDampenersPowerReceiverSetEnabled);
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+			}
+			base.ReflectionUnitTest();
+		}
+
 		public CubeBlockEntity GetCubeBlock(Vector3I cubePosition)
 		{
 			try

@@ -36,6 +36,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public static string CubeBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string CubeBlockClass = "54A8BE425EAC4A11BFF922CFB5FF89D0";
+
 		public static string CubeBlockGetObjectBuilderMethod = "CBB75211A3B0B3188541907C9B1B0C5C";
 		public static string CubeBlockGetActualBlockMethod = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
 		public static string CubeBlockDamageBlockMethod = "165EAAEA972A8C5D69F391D030C48869";
@@ -43,19 +44,26 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string CubeBlockGetBuildPercentMethod = "BE3EB9D9351E3CB273327FB522FD60E1";
 		public static string CubeBlockGetIntegrityValueMethod = "get_Integrity";
 		public static string CubeBlockGetMaxIntegrityValueMethod = "4D4887346D2D13A2C6B46A258BAD29DD";
+		public static string CubeBlockUpdateWeldProgressMethod = "A8DDA0AEB3B67EA1E62B927C9D831279";
+
 		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 		public static string CubeBlockColorMaskHSVField = "80392678992D8667596D700F61290E02";
 		public static string CubeBlockConstructionManagerField = "C7EFFDDD3AD38830FE93363F3327C724";
-		public static string CubeBlockUpdateWeldProgressMethod = "A8DDA0AEB3B67EA1E62B927C9D831279";
+
+		/////////////////////////////////////////////////////
 
 		public static string ActualCubeBlockNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ActualCubeBlockClass = "4E262F069F7C0F85458881743E182B25";
+
 		public static string ActualCubeBlockGetObjectBuilderMethod = "GetObjectBuilderCubeBlock";
 		public static string ActualCubeBlockGetFactionsObjectMethod = "3E8AC70E5FAAA9C8C4992B71E12CDE28";
 		public static string ActualCubeBlockSetFactionsDataMethod = "7161368A8164DF15904DC82476F7EBBA";
 
+		/////////////////////////////////////////////////////
+
 		public static string FactionsDataNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string FactionsDataClass = "0428A90CA95B1CE381A027F8E935681A";
+
 		public static string FactionsDataOwnerField = "9A0535F68700D4E48674829975E95CAB";
 		public static string FactionsDataShareModeField = "0436783F3C7FB6B04C88AB4F9097380F";
 

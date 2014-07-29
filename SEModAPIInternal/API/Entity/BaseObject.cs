@@ -191,6 +191,11 @@ namespace SEModAPIInternal.API.Entity
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_Base, MyObjectBuilder_BaseSerializer>(ObjectBuilder, fileInfo);
 		}
 
+		public virtual void ReflectionUnitTest()
+		{
+			//Do stuff
+		}
+
 		#region "Internal"
 
 		internal static FieldInfo GetStaticField(Type objectType, string fieldName)
