@@ -230,7 +230,6 @@ namespace SEModAPIExtensions.API
 			}
 			else
 			{
-				m_anchor = cubeToCheck;
 				isMatch = true;
 				foreach (Vector3I key in structureDef.Keys)
 				{
@@ -270,6 +269,8 @@ namespace SEModAPIExtensions.API
 						}
 					}
 				}
+				if(isMatch)
+					m_anchor = cubeToCheck;
 			}
 
 			if (isMatch && SandboxGameAssemblyWrapper.IsDebugging && recurseDepth == 0)
