@@ -35,18 +35,28 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Properties"
+
+		[Category("Thrust")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_Thrust ObjectBuilder
+		{
+			get
+			{
+				MyObjectBuilder_Thrust thrust = (MyObjectBuilder_Thrust)base.ObjectBuilder;
+
+
+				return thrust;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Thrust GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_Thrust)ObjectBuilder;
-		}
 
 		#endregion
 	}

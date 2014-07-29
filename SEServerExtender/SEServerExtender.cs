@@ -118,6 +118,15 @@ namespace SEServerExtender
 				if (CMB_Control_CommonInstanceList.Items.Count > 0)
 					CMB_Control_CommonInstanceList.SelectedIndex = 0;
 				CMB_Control_CommonInstanceList.EndUpdate();
+
+				CMB_Control_AutosaveInterval.BeginUpdate();
+				CMB_Control_AutosaveInterval.Items.Add(1);
+				CMB_Control_AutosaveInterval.Items.Add(2);
+				CMB_Control_AutosaveInterval.Items.Add(5);
+				CMB_Control_AutosaveInterval.Items.Add(10);
+				CMB_Control_AutosaveInterval.Items.Add(30);
+				CMB_Control_AutosaveInterval.SelectedIndex = 2;
+				CMB_Control_AutosaveInterval.EndUpdate();
 			}
 			catch (AutoException)
 			{
@@ -281,6 +290,23 @@ namespace SEServerExtender
 			PG_Control_Server_Properties.SelectedObject = m_server.Config;
 		}
 
+		private void CMB_Control_AutosaveInterval_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (!CMB_Control_AutosaveInterval.Enabled || CMB_Control_AutosaveInterval.SelectedIndex == -1) return;
+
+			double interval = 2;
+			try
+			{
+				interval = double.Parse(CMB_Control_AutosaveInterval.Text);
+			}
+			catch (Exception ex)
+			{
+				//Do something
+			}
+
+			m_server.AutosaveInterval = interval * 60000;
+		}
+
 		private void UpdateControls()
 		{
 			if (m_server.Config == null)
@@ -311,7 +337,10 @@ namespace SEServerExtender
 				BTN_Entities_New.Enabled = false;
 			BTN_Utilities_ClearFloatingObjectsNow.Enabled = m_server.IsRunning;
 
-			CMB_Control_CommonInstanceList.Enabled = !m_server.IsRunning;
+			if (CHK_Control_CommonDataPath.CheckState == CheckState.Checked)
+				CMB_Control_CommonInstanceList.Enabled = !m_server.IsRunning;
+			else
+				CMB_Control_CommonInstanceList.Enabled = false;
 
 			TXT_Chat_Message.Enabled = m_server.IsRunning;
 

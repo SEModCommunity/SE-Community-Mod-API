@@ -437,7 +437,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			AllPowerStatus = 19,				//..782C8DC19A883BCB6A43C3006F456A2F
 
 			Packet2_1 = 24,
-			Packet2_2 = 25,
+			CubeBlockBuildIntegrityValues = 25,	//..EF2D90F50F1E378F0495FFB906D1C6C6
 			CubeBlockItemList = 26,				//..3FD479635EACD6C3047ACB77CBAB645D
 			Packet2_4 = 27,
 			Packet2_5 = 28,
@@ -472,10 +472,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CubeGridNetManagerClass = "E727876839B1C8FFEE302CD2A1948CDA";
 
 		//Methods
+		public static string CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod = "F7C40254F25941842EA6558205FAC160";
 		public static string CubeGridNetManagerBroadcastCubeBlockFactionDataMethod = "EF45C83059E3CD5A2C5354ABB687D861";
 
 		//Fields
 		public static string CubeGridNetManagerCubeBlocksToDestroyField = "8E76EFAC4EED3B61D48795B2CD5AF989";
+
+		public static string CubeGridIntegrityChangeEnumNamespace = CubeGridEntity.CubeGridNamespace + "." + CubeGridEntity.CubeGridClass;
+		public static string CubeGridIntegrityChangeEnumClass = "55D3513B52D474C7AF161242E01FB9A9";
 
 		#endregion
 
@@ -519,6 +523,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			try
 			{
 				BaseObject.InvokeEntityMethod(m_netManager, CubeGridNetManagerBroadcastCubeBlockFactionDataMethod, new object[] { m_cubeGrid.BackingObject, cubeBlock.ActualObject, cubeBlock.Owner, cubeBlock.ShareMode });
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+		}
+
+		public void BroadcastCubeBlockBuildIntegrityValues(CubeBlockEntity cubeBlock)
+		{
+			try
+			{
+				Type someEnum = CubeGridEntity.InternalType.GetNestedType(CubeGridIntegrityChangeEnumClass);
+				Array someEnumValues = someEnum.GetEnumValues();
+				Object enumValue = someEnumValues.GetValue(0);
+				BaseObject.InvokeEntityMethod(m_netManager, CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod, new object[] { cubeBlock.BackingObject, enumValue, 0L });
 			}
 			catch (Exception ex)
 			{

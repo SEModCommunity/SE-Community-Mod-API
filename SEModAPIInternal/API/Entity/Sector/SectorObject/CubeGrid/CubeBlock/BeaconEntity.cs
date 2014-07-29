@@ -44,11 +44,29 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Properties"
 
 		[Category("Beacon")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_Beacon ObjectBuilder
+		{
+			get
+			{
+				MyObjectBuilder_Beacon beacon = (MyObjectBuilder_Beacon)base.ObjectBuilder;
+
+
+				return beacon;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Beacon")]
 		public float BroadcastRadius
 		{
 			get
 			{
-				float result = GetSubTypeEntity().BroadcastRadius;
+				float result = ObjectBuilder.BroadcastRadius;
 
 				if (m_radioManager != null)
 					result = m_radioManager.BroadcastRadius;
@@ -57,40 +75,25 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 			set
 			{
-				if (GetSubTypeEntity().BroadcastRadius == value) return;
-				GetSubTypeEntity().BroadcastRadius = value;
+				if (ObjectBuilder.BroadcastRadius == value) return;
+				ObjectBuilder.BroadcastRadius = value;
 				Changed = true;
 
 				if(m_radioManager != null)
-					m_radioManager.BroadcastRadius = BroadcastRadius;
+					m_radioManager.BroadcastRadius = value;
 			}
+		}
+
+		internal RadioManager RadioManager
+		{
+			get { return m_radioManager; }
 		}
 
 		#endregion
 
 		#region "Methods"
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_Beacon GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_Beacon)ObjectBuilder;
-		}
-
 		#region "Internal"
-
-		protected void InternalUpdateBeacon()
-		{
-			try
-			{
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
 
 		protected Object InternalGetRadioManager()
 		{

@@ -171,6 +171,12 @@ namespace SEServerExtender
 			set { m_commandLineArgs.instanceName = value; }
 		}
 
+		public double AutosaveInterval
+		{
+			get { return m_autosaveTimer.Interval; }
+			set { m_autosaveTimer.Interval = value; }
+		}
+
 		#endregion
 
 		#region "Methods"

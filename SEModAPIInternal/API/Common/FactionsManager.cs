@@ -304,7 +304,7 @@ namespace SEModAPIInternal.API.Common
 		public static string FactionManagerClass = "17E6A2D4B9414B1D3DDA551E10938751";
 		public static string FactionManagerGetFactionCollectionMethod = "C93E560F96FE606D0BE190EDE1AA5005";
 		public static string FactionManagerGetFactionByIdMethod = "A01C0785253581981A78896FFBB103E9";
-		public static string FactionManagerRemoveFactionByIdMethod = "A8A9206AB10ECC19F73F4FF98E874379";
+		public static string FactionManagerRemoveFactionByIdMethod = "69FBA8150E79975E21C1C8C5D7BF897D";
 
 		public static string FactionNetManagerRemoveFactionMethod = "01E89FED8AEDE7182CACB3F84D5748AC";
 		public static string FactionNetManagerRemoveMemberMethod = "4FDD02E48E4AAF15026A9181C13F711E";

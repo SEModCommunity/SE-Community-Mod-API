@@ -156,14 +156,6 @@ namespace SEModAPIInternal.API.Common
 			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetAABBTreeIdMethod, new object[] { TreeId });
 		}
 
-		protected void InternalUpdateRadioManager()
-		{
-			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetBroadcastRadiusMethod, new object[] { BroadcastRadius });
-			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetLinkedEntityMethod, new object[] { LinkedEntity });
-			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetEnabledMethod, new object[] { Enabled });
-			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetAABBTreeIdMethod, new object[] { TreeId });
-		}
-
 		#endregion
 	}
 }

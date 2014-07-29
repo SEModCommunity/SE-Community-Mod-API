@@ -39,11 +39,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string CubeBlockGetObjectBuilderMethod = "CBB75211A3B0B3188541907C9B1B0C5C";
 		public static string CubeBlockGetActualBlockMethod = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
 		public static string CubeBlockDamageBlockMethod = "165EAAEA972A8C5D69F391D030C48869";
+		public static string CubeBlockGetBuildValueMethod = "547DF8386C799EEBC0203BE5C6AE0870";
 		public static string CubeBlockGetBuildPercentMethod = "BE3EB9D9351E3CB273327FB522FD60E1";
-		public static string CubeBlockGetIntegrityPercentMethod = "get_Integrity";
+		public static string CubeBlockGetIntegrityValueMethod = "get_Integrity";
+		public static string CubeBlockGetMaxIntegrityValueMethod = "4D4887346D2D13A2C6B46A258BAD29DD";
 		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 		public static string CubeBlockColorMaskHSVField = "80392678992D8667596D700F61290E02";
 		public static string CubeBlockConstructionManagerField = "C7EFFDDD3AD38830FE93363F3327C724";
+		public static string CubeBlockUpdateWeldProgressMethod = "A8DDA0AEB3B67EA1E62B927C9D831279";
 
 		public static string ActualCubeBlockNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ActualCubeBlockClass = "4E262F069F7C0F85458881743E182B25";
@@ -56,12 +59,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string FactionsDataOwnerField = "9A0535F68700D4E48674829975E95CAB";
 		public static string FactionsDataShareModeField = "0436783F3C7FB6B04C88AB4F9097380F";
 
+		/////////////////////////////////////////////////////
+
 		public static string ConstructionManagerNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ConstructionManagerClass = "2C7EEC6B76DB78A31F836F6C7B1AEC6D";
+
 		public static string ConstructionManagerSetIntegrityBuildValuesMethod = "123634878DED2B96F018A0BA919334D6";
+		public static string ConstructionManagerGetBuildValueMethod = "9B2219F87A3F1E3D7144B1620EB957B8";
+		public static string ConstructionManagerGetIntegrityValueMethod = "61DE8883DF85215AA0119E0EC9355A1F";
+		public static string ConstructionManagerGetMaxIntegrityMethod = "CF9727375CAA90567E5BF6CCB8D80793";
+		public static string ConstructionManagerGetBuildPercentMethod = "3279B5A136168CB4AFCAE966C7686078";
+		public static string ConstructionManagerGetIntegrityPercentMethod = "33A1D37E8668BB51CD2F1A00D414944D";
+
 		public static string ConstructionManagerIntegrityValueField = "50F9175E642B77E93F3F348663C098EB";
 		public static string ConstructionManagerBuildValueField = "749048B5E6D15707367DC12046920B4D";
-		public static string ConstructionManagerGetMaxIntegrityMethod = "CF9727375CAA90567E5BF6CCB8D80793";
 
 		#endregion
 
@@ -215,6 +226,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				ObjectBuilder.BuildPercent = value;
 				Changed = true;
 
+				ObjectBuilder.IntegrityPercent = value;
+
 				if (BackingObject != null)
 				{
 					Action action = InternalUpdateConstructionManager;
@@ -232,6 +245,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (ObjectBuilder.IntegrityPercent == value) return;
 				ObjectBuilder.IntegrityPercent = value;
 				Changed = true;
+
+				ObjectBuilder.BuildPercent = value;
 
 				if (BackingObject != null)
 				{
@@ -452,7 +467,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				float integrity = IntegrityPercent * maxIntegrity;
 				float build = BuildPercent * maxIntegrity;
 
-				InvokeEntityMethod(constructionManager, ConstructionManagerSetIntegrityBuildValuesMethod, new object[] { integrity, build });
+				InvokeEntityMethod(constructionManager, ConstructionManagerSetIntegrityBuildValuesMethod, new object[] { build, integrity });
+
+				Parent.NetworkManager.BroadcastCubeBlockBuildIntegrityValues(this);
 			}
 			catch (Exception ex)
 			{
@@ -478,7 +495,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
-				float result = (float)InvokeEntityMethod(BackingObject, CubeBlockGetIntegrityPercentMethod);
+				float result = (float)InvokeEntityMethod(GetConstructionManager(), ConstructionManagerGetIntegrityPercentMethod);
 				return result;
 			}
 			catch (Exception ex)
@@ -494,20 +511,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			{
 				FieldInfo field = GetEntityField(BackingObject, CubeBlockColorMaskHSVField);
 				field.SetValue(BackingObject, (Vector3)ColorMaskHSV);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalDamageBlock()
-		{
-			try
-			{
-				float damage = InternalGetIntegrityPercent() - IntegrityPercent;
-				damage /= 2.0f - InternalGetIntegrityPercent();		//Counteracts internal damage scaling
-				InvokeEntityMethod(BackingObject, CubeBlockDamageBlockMethod, new object[] { damage, MyDamageType.Environment });
 			}
 			catch (Exception ex)
 			{
@@ -616,6 +619,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			{
 				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
+				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
@@ -741,7 +745,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				}
 
 				//Cleanup old entities
-				foreach (var entry in GetInternalData())
+				foreach (var entry in internalDataCopy)
 				{
 					try
 					{
