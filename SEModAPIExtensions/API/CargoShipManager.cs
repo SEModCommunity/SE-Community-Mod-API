@@ -13,6 +13,7 @@ using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
@@ -44,6 +45,40 @@ namespace SEModAPIExtensions.API
 		}
 
 		public void SpawnCargoShipGroup(ulong remoteUserId = 0)
+		{
+			SpawnCargoShipGroup(true, remoteUserId);
+		}
+
+		public void SpawnCargoShipGroup(bool spawnAtAsteroids = true, ulong remoteUserId = 0)
+		{
+			float worldSize = SandboxGameAssemblyWrapper.Instance.GetServerConfig().SessionSettings.WorldSizeKm * 1000.0f;
+			float spawnSize = 0.25f * worldSize;
+			float destinationSize = 0.02f * spawnSize;
+
+			if (spawnAtAsteroids)
+			{
+				float farthestAsteroidDistance = 0;
+				float nearestAsteroidDistance = 999999;
+				foreach (VoxelMap voxelMap in SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>())
+				{
+					Vector3 asteroidPositon = voxelMap.Position;
+					if (asteroidPositon.Length() > farthestAsteroidDistance)
+						farthestAsteroidDistance = asteroidPositon.Length();
+					if (asteroidPositon.Length() < nearestAsteroidDistance)
+						nearestAsteroidDistance = asteroidPositon.Length();
+				}
+
+				spawnSize = farthestAsteroidDistance * 2;
+				destinationSize = nearestAsteroidDistance * 2;
+			}
+
+			Vector3 groupPosition = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-spawnSize, -spawnSize, -spawnSize), new Vector3(spawnSize, spawnSize, spawnSize));
+			Vector3 destinationPosition = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-destinationSize, -destinationSize, -destinationSize), new Vector3(destinationSize, destinationSize, destinationSize));
+
+			SpawnCargoShipGroup(groupPosition, destinationPosition, remoteUserId);
+		}
+
+		public void SpawnCargoShipGroup(Vector3 startPosition, Vector3 stopPosition, ulong remoteUserId = 0)
 		{
 			try
 			{
@@ -86,12 +121,7 @@ namespace SEModAPIExtensions.API
 				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Spawning cargo group '" + randomSpawnGroup.Name + "' ...");
 
 				//Spawn the ships in the group
-				float worldSize = SandboxGameAssemblyWrapper.Instance.GetServerConfig().SessionSettings.WorldSizeKm * 1000.0f;
-				float spawnSize = 0.25f * worldSize;
-				float destinationSize = 0.02f * spawnSize;
-				Vector3 groupPosition = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-spawnSize, -spawnSize, -spawnSize), new Vector3(spawnSize, spawnSize, spawnSize));
-				Vector3 destinationPosition = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-destinationSize, -destinationSize, -destinationSize), new Vector3(destinationSize, destinationSize, destinationSize));
-				Matrix orientation = Matrix.CreateLookAt(groupPosition, destinationPosition, new Vector3(0, 1, 0));
+				Matrix orientation = Matrix.CreateLookAt(startPosition, stopPosition, new Vector3(0, 1, 0));
 				foreach (SpawnGroupPrefab entry in randomSpawnGroup.Prefabs)
 				{
 					FileInfo prefabFile = new FileInfo(Path.Combine(MyFileSystem.ContentPath, "Data", "Prefabs", entry.File + ".sbc"));
@@ -102,19 +132,36 @@ namespace SEModAPIExtensions.API
 					CubeGridEntity cubeGrid = new CubeGridEntity(prefabFile);
 
 					//Set the ship position and orientation
-					Vector3 shipPosition = Vector3.Transform(entry.Position, orientation) + groupPosition;
+					Vector3 shipPosition = Vector3.Transform(entry.Position, orientation) + startPosition;
 					orientation.Translation = shipPosition;
 					MyPositionAndOrientation newPositionOrientation = new MyPositionAndOrientation(orientation);
 					cubeGrid.PositionAndOrientation = newPositionOrientation;
 
 					//Set the ship velocity
 					//Speed is clamped between 1.0f and the max cube grid speed
-					Vector3 travelVector = destinationPosition - groupPosition;
+					Vector3 travelVector = stopPosition - startPosition;
 					travelVector.Normalize();
 					Vector3 shipVelocity = travelVector * (float)Math.Min(cubeGrid.MaxLinearVelocity, Math.Max(1.0f, entry.Speed));
 					cubeGrid.LinearVelocity = shipVelocity;
 
 					cubeGrid.IsDampenersEnabled = false;
+
+					foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+					{
+						//Set the beacon names
+						if (cubeBlock is BeaconEntity)
+						{
+							BeaconEntity beacon = (BeaconEntity)cubeBlock;
+							beacon.CustomName = entry.Name;
+						}
+
+						//Set the owner of every block with an entity id
+						//TODO - Find out if setting to an arbitrary non-zero works for this
+						if (cubeBlock.EntityId != 0)
+						{
+							cubeBlock.Owner = 42;
+						}
+					}
 
 					//And add the ship to the world
 					SectorObjectManager.Instance.AddEntity(cubeGrid);
@@ -123,7 +170,7 @@ namespace SEModAPIExtensions.API
 					List<CubeBlockEntity> cubeBlocks = cubeGrid.CubeBlocks;
 				}
 
-				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.BaseDefinition.DisplayName + "' spawned with " + randomSpawnGroup.Prefabs.Length.ToString() + " ships at " + groupPosition.ToString());
+				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.BaseDefinition.DisplayName + "' spawned with " + randomSpawnGroup.Prefabs.Length.ToString() + " ships at " + startPosition.ToString());
 			}
 			catch (Exception ex)
 			{
