@@ -81,7 +81,7 @@ namespace SEServerExtender
 		private bool SetupTimers()
 		{
 			m_entityTreeRefreshTimer = new System.Windows.Forms.Timer();
-			m_entityTreeRefreshTimer.Interval = 1000;
+			m_entityTreeRefreshTimer.Interval = 500;
 			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
 
 			m_chatViewRefreshTimer = new System.Windows.Forms.Timer();
@@ -89,11 +89,11 @@ namespace SEServerExtender
 			m_chatViewRefreshTimer.Tick += new EventHandler(ChatViewRefresh);
 
 			m_factionRefreshTimer = new System.Windows.Forms.Timer();
-			m_factionRefreshTimer.Interval = 1000;
+			m_factionRefreshTimer.Interval = 5000;
 			m_factionRefreshTimer.Tick += new EventHandler(FactionRefresh);
 
 			m_pluginManagerRefreshTimer = new System.Windows.Forms.Timer();
-			m_pluginManagerRefreshTimer.Interval = 1000;
+			m_pluginManagerRefreshTimer.Interval = 10000;
 			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
 
 			m_statusCheckTimer = new System.Windows.Forms.Timer();
@@ -148,10 +148,7 @@ namespace SEServerExtender
 
 			if (!m_server.IsRunning && m_server.CommandLineArgs.autoStart)
 			{
-				if (m_server.CommandLineArgs.noGUI)
-					BTN_ServerControl_Start_Click(null, null);
-				else
-					BTN_ServerControl_Start.PerformClick();
+				BTN_ServerControl_Start.PerformClick();
 			}
 
 			if (m_server.IsRunning)

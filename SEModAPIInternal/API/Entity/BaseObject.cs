@@ -587,6 +587,10 @@ namespace SEModAPIInternal.API.Entity
 					LogManager.APILog.WriteLine("ObjectManager - Refreshes per second: " + Math.Round(refreshesPerSecond, 2).ToString());
 				}
 			}
+			if (timeSinceLastProfilingOutput.TotalSeconds > 40)
+			{
+				LogManager.APILog.WriteLine("Debug point! ObjectManager profiling output took longer than 40 seconds!");
+			}
 		}
 
 		private void RefreshRawData()
