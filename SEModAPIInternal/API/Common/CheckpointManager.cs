@@ -13,6 +13,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Common
 {
+	[Obsolete]
 	public class CheckpointManager
 	{
 		#region "Attributes"

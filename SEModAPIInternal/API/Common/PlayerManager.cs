@@ -4,15 +4,26 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
+using Sandbox.Common.ObjectBuilders;
+
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
 
 using VRage.Serialization;
+using VRage.Collections;
 
 namespace SEModAPIInternal.API.Common
 {
 	public class PlayerMap
 	{
+		public struct InternalPlayerItem
+		{
+			public string name;
+			public bool isDead;
+			public ulong steamId;
+			public string model;
+		}
+
 		#region "Attributes"
 
 		private static PlayerMap m_instance;
@@ -22,6 +33,7 @@ namespace SEModAPIInternal.API.Common
 		public static string PlayerMapEntityToPlayerMappingMethod = "79B43F2C2366136E88B5B7064CA93A74";
 		public static string PlayerMapSteamIdToPlayerMappingMethod = "AC5FA6C0D87D43E4B5550A1BB7812DEB";
 		public static string PlayerMapGetSerializableDictionaryMethod = "460B7921B2E774D61F63929C4032F1AC";
+		public static string PlayerMapGetPlayerItemMappingMethod = "0EB2BF49DCB5C20A059E3D6CCA3665AA";
 
 		public static string PlayerMapEntrySteamIdField = "208AE30D2628BD946A59F72F1A373ED4";
 
@@ -95,6 +107,39 @@ namespace SEModAPIInternal.API.Common
 			return result;
 		}
 
+		public MyObjectBuilder_Checkpoint.PlayerItem GetPlayerItemFromPlayerId(long playerId)
+		{
+			MyObjectBuilder_Checkpoint.PlayerItem playerItem = new MyObjectBuilder_Checkpoint.PlayerItem();
+			DictionaryReader<long, InternalPlayerItem> allPlayers = InternalGetPlayerItemMappping();
+			if (!allPlayers.ContainsKey(playerId))
+				return playerItem;
+			InternalPlayerItem internalPlayerItem = allPlayers[playerId];
+			playerItem.PlayerId = playerId;
+			playerItem.SteamId = internalPlayerItem.steamId;
+			playerItem.Name = internalPlayerItem.name;
+			playerItem.Model = internalPlayerItem.model;
+			playerItem.IsDead = internalPlayerItem.isDead;
+
+			return playerItem;
+		}
+
+		public List<long> GetPlayerIdsFromSteamId(ulong steamId, bool ignoreDead = true)
+		{
+			List<long> matchingPlayerIds = new List<long>();
+
+			DictionaryReader<long, InternalPlayerItem> allPlayers = InternalGetPlayerItemMappping();
+			foreach (var entry in allPlayers)
+			{
+				if (ignoreDead && entry.Value.isDead)
+					continue;
+
+				if (entry.Value.steamId == steamId)
+					matchingPlayerIds.Add(entry.Key);
+			}
+
+			return matchingPlayerIds;
+		}
+
 		protected Object GetPlayerFromSteamId(ulong steamId)
 		{
 			try
@@ -154,6 +199,22 @@ namespace SEModAPIInternal.API.Common
 			{
 				LogManager.GameLog.WriteLine(ex);
 				return new SerializableDictionary<long, ulong>();
+			}
+		}
+
+		protected DictionaryReader<long, InternalPlayerItem> InternalGetPlayerItemMappping()
+		{
+			try
+			{
+				Object rawPlayerItemMapping = BaseObject.InvokeEntityMethod(BackingObject, PlayerMapGetPlayerItemMappingMethod);
+				DictionaryReader<long, InternalPlayerItem> allPlayersMapping = (DictionaryReader<long, InternalPlayerItem>)rawPlayerItemMapping;
+
+				return allPlayersMapping;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return new DictionaryReader<long, InternalPlayerItem>();
 			}
 		}
 

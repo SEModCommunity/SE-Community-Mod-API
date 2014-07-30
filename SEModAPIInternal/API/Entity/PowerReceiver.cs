@@ -46,6 +46,16 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Constructors and Initializers"
 
+		public PowerReceiver(Object parent, PowerManager powerManager, Object powerReceiver)
+		{
+			m_parent = parent;
+			m_powerManager = powerManager;
+			m_powerReceiver = powerReceiver;
+			m_powerRateCallback = null;
+
+			m_maxRequiredInput = 0;
+		}
+
 		public PowerReceiver(Object parent, PowerManager powerManager, Object powerReceiver, Func<float> powerRateCallback)
 		{
 			m_parent = parent;
@@ -60,15 +70,36 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[Browsable(false)]
+		[ReadOnly(true)]
+		public Object BackingObject
+		{
+			get { return m_powerReceiver; }
+		}
+
 		public float MaxRequiredInput
 		{
 			get { return m_maxRequiredInput; }
 			set
 			{
+				if (BackingObject == null || m_powerRateCallback == null) return;
 				m_maxRequiredInput = value;
 
 				Action action = InternalUpdateMaxRequiredInput;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+			}
+		}
+
+		public float CurrentInput
+		{
+			get
+			{
+				if (BackingObject == null)
+					return 0;
+
+				float currentInput = (float)BaseObject.InvokeEntityMethod(BackingObject, PowerReceiverGetCurrentInputMethod);
+
+				return currentInput;
 			}
 		}
 
@@ -80,14 +111,17 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				FieldInfo field = BaseObject.GetEntityField(m_powerReceiver, PowerReceiverInputRateCallbackField);
+				if (m_powerRateCallback == null)
+					return;
+
+				FieldInfo field = BaseObject.GetEntityField(BackingObject, PowerReceiverInputRateCallbackField);
 				if(m_powerRateCallback != null)
-					field.SetValue(m_powerReceiver, m_powerRateCallback);
+					field.SetValue(BackingObject, m_powerRateCallback);
 
-				FieldInfo field2 = BaseObject.GetEntityField(m_powerReceiver, PowerReceiverMaxRequiredInputField);
-				field2.SetValue(m_powerReceiver, m_maxRequiredInput);
+				FieldInfo field2 = BaseObject.GetEntityField(BackingObject, PowerReceiverMaxRequiredInputField);
+				field2.SetValue(BackingObject, m_maxRequiredInput);
 
-				BaseObject.InvokeEntityMethod(m_powerReceiver, PowerReceiverSetMaxRequiredInputMethod, new object[] { m_maxRequiredInput });
+				BaseObject.InvokeEntityMethod(BackingObject, PowerReceiverSetMaxRequiredInputMethod, new object[] { m_maxRequiredInput });
 
 				m_powerManager.UnregisterPowerReceiver(m_parent);
 				m_powerManager.RegisterPowerReceiver(m_parent);

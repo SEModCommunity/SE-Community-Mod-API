@@ -68,7 +68,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			m_inventory = new InventoryEntity(definition.Inventory, InternalGetCharacterInventory());
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
-			newEvent.type = EntityEventManager.EntityEventType.OnPlayerJoined;
+			newEvent.type = EntityEventManager.EntityEventType.OnCharacterCreated;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
 			newEvent.priority = 1;
@@ -250,7 +250,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			LogManager.APILog.WriteLine("Disposing CharacterEntity '" + Name + "'");
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
-			newEvent.type = EntityEventManager.EntityEventType.OnPlayerLeft;
+			newEvent.type = EntityEventManager.EntityEventType.OnCharacterDeleted;
 			newEvent.timestamp = DateTime.Now;
 			newEvent.entity = this;
 			newEvent.priority = 1;

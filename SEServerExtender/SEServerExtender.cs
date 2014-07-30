@@ -429,6 +429,7 @@ namespace SEServerExtender
 
 			RenderSectorObjectChildNodes(sectorObjectsNode);
 			sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>().Count.ToString() + ")";
+			sectorObjectsNode.Tag = SectorObjectManager.Instance;
 
 			TRV_Entities.EndUpdate();
 		}
@@ -1028,12 +1029,28 @@ namespace SEServerExtender
 			BTN_Entities_New.Enabled = false;
 			BTN_Entities_Delete.Enabled = false;
 
-			if (e.Node == null)
-				return;
-			if (e.Node.Tag == null)
+			TreeNode selectedNode = e.Node;
+
+			if (selectedNode == null)
 				return;
 
-			var linkedObject = e.Node.Tag;
+			TreeNode parentNode = e.Node.Parent;
+
+			if (parentNode == null)
+				return;
+
+			if (parentNode.Tag != null && parentNode.Tag is SectorObjectManager)
+			{
+				if (selectedNode == parentNode.Nodes[0])
+				{
+					BTN_Entities_New.Enabled = true;
+				}
+			}
+
+			if (selectedNode.Tag == null)
+				return;
+
+			var linkedObject = selectedNode.Tag;
 			PG_Entities_Details.SelectedObject = linkedObject;
 
 			//Enable export for all objects that inherit from BaseObject
@@ -1046,13 +1063,6 @@ namespace SEServerExtender
 			if (linkedObject is BaseEntity)
 			{
 				BTN_Entities_Delete.Enabled = true;
-			}
-
-			//Temporarily disabled most of floating objects. They are badly bugged after 1.040
-			if (linkedObject is FloatingObject)
-			{
-				BTN_Entities_Export.Enabled = false;
-				BTN_Entities_Delete.Enabled = false;
 			}
 
 			if (linkedObject is CubeGridEntity)
@@ -1068,151 +1078,202 @@ namespace SEServerExtender
 
 			if (linkedObject is CharacterEntity)
 			{
-				BTN_Entities_New.Enabled = true;
-
 				CharacterEntity character = (CharacterEntity)linkedObject;
 
-				InventoryEntity inventory = character.Inventory;
+				if (e.Node.Nodes.Count < 1)
+				{
+					TRV_Entities.BeginUpdate();
 
-				TRV_Entities.BeginUpdate();
+					e.Node.Nodes.Clear();
+					TreeNode itemsNode = e.Node.Nodes.Add("Items");
+					itemsNode.Name = itemsNode.Text;
+					itemsNode.Tag = character.Inventory;
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
-
-				TRV_Entities.EndUpdate();
+					TRV_Entities.EndUpdate();
+				}
 			}
 
 			if (linkedObject is CargoContainerEntity)
 			{
 				CargoContainerEntity container = (CargoContainerEntity)linkedObject;
 
-				InventoryEntity inventory = container.Inventory;
+				if (e.Node.Nodes.Count < 1)
+				{
+					TRV_Entities.BeginUpdate();
 
-				TRV_Entities.BeginUpdate();
+					e.Node.Nodes.Clear();
+					TreeNode itemsNode = e.Node.Nodes.Add("Items");
+					itemsNode.Name = itemsNode.Text;
+					itemsNode.Tag = container.Inventory;
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
-
-				TRV_Entities.EndUpdate();
+					TRV_Entities.EndUpdate();
+				}
 			}
 
 			if (linkedObject is ReactorEntity)
 			{
 				ReactorEntity reactor = (ReactorEntity)linkedObject;
 
-				InventoryEntity inventory = reactor.Inventory;
+				if (e.Node.Nodes.Count < 1)
+				{
+					TRV_Entities.BeginUpdate();
 
-				TRV_Entities.BeginUpdate();
+					e.Node.Nodes.Clear();
+					TreeNode itemsNode = e.Node.Nodes.Add("Items");
+					itemsNode.Name = itemsNode.Text;
+					itemsNode.Tag = reactor.Inventory;
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
-
-				TRV_Entities.EndUpdate();
+					TRV_Entities.EndUpdate();
+				}
 			}
 
 			if (linkedObject is ShipToolBaseEntity)
 			{
 				ShipToolBaseEntity shipTool = (ShipToolBaseEntity)linkedObject;
 
-				InventoryEntity inventory = shipTool.Inventory;
+				if (e.Node.Nodes.Count < 1)
+				{
+					TRV_Entities.BeginUpdate();
 
-				TRV_Entities.BeginUpdate();
+					e.Node.Nodes.Clear();
+					TreeNode itemsNode = e.Node.Nodes.Add("Items");
+					itemsNode.Name = itemsNode.Text;
+					itemsNode.Tag = shipTool.Inventory;
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
-
-				TRV_Entities.EndUpdate();
+					TRV_Entities.EndUpdate();
+				}
 			}
 
 			if (linkedObject is ShipDrillEntity)
 			{
 				ShipDrillEntity shipDrill = (ShipDrillEntity)linkedObject;
 
-				InventoryEntity inventory = shipDrill.Inventory;
+				if (e.Node.Nodes.Count < 1)
+				{
+					TRV_Entities.BeginUpdate();
 
-				TRV_Entities.BeginUpdate();
+					e.Node.Nodes.Clear();
+					TreeNode itemsNode = e.Node.Nodes.Add("Items");
+					itemsNode.Name = itemsNode.Text;
+					itemsNode.Tag = shipDrill.Inventory;
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
-
-				TRV_Entities.EndUpdate();
+					TRV_Entities.EndUpdate();
+				}
 			}
 
 			if (linkedObject is ProductionBlockEntity)
 			{
 				ProductionBlockEntity productionBlock = (ProductionBlockEntity)linkedObject;
 
-				TRV_Entities.BeginUpdate();
-
 				if (e.Node.Nodes.Count < 2)
 				{
+					TRV_Entities.BeginUpdate();
+
 					e.Node.Nodes.Clear();
-					e.Node.Nodes.Add("Input");
-					e.Node.Nodes.Add("Output");
+					TreeNode inputNode = e.Node.Nodes.Add("Input");
+					inputNode.Name = inputNode.Text;
+					inputNode.Tag = productionBlock.InputInventory;
+					TreeNode outputNode = e.Node.Nodes.Add("Output");
+					outputNode.Name = outputNode.Text;
+					outputNode.Tag = productionBlock.OutputInventory;
+
+					TRV_Entities.EndUpdate();
 				}
+			}
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node.Nodes[0], productionBlock.InputInventory.Items);
-				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node.Nodes[1], productionBlock.OutputInventory.Items);
+			if (linkedObject is InventoryEntity)
+			{
+				BTN_Entities_New.Enabled = true;
 
-				TRV_Entities.EndUpdate();
+				InventoryEntity inventory = (InventoryEntity)linkedObject;
+
+				UpdateNodeInventoryItemBranch<InventoryItemEntity>(e.Node, inventory.Items);
+			}
+
+			if (linkedObject is InventoryItemEntity)
+			{
+				BTN_Entities_New.Enabled = true;
+				BTN_Entities_Delete.Enabled = true;
 			}
 		}
 
 		private void BTN_Entities_Delete_Click(object sender, EventArgs e)
 		{
-			Object linkedObject = TRV_Entities.SelectedNode.Tag;
-			if (linkedObject is BaseEntity)
+			try
 			{
-				try
-				{
-					BaseEntity item = (BaseEntity)linkedObject;
-					item.Dispose();
+				Object linkedObject = TRV_Entities.SelectedNode.Tag;
+				if (!(linkedObject is BaseObject))
+					return;
 
-					TreeNode parentNode = TRV_Entities.SelectedNode.Parent;
-					TRV_Entities.SelectedNode.Tag = null;
-					TRV_Entities.SelectedNode.Remove();
-					TRV_Entities.SelectedNode = parentNode.FirstNode;
-					if(parentNode.FirstNode != null)
-						PG_Entities_Details.SelectedObject = parentNode.FirstNode.Tag;
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.ToString());
-				}
+				BaseObject baseObject = (BaseObject)linkedObject;
+				baseObject.Dispose();
+
+				TreeNode parentNode = TRV_Entities.SelectedNode.Parent;
+				TRV_Entities.SelectedNode.Tag = null;
+				TreeNode newSelectedNode = TRV_Entities.SelectedNode.NextVisibleNode;
+				if (newSelectedNode == null)
+					newSelectedNode = TRV_Entities.SelectedNode.PrevVisibleNode;
+				if (newSelectedNode == null)
+					newSelectedNode = parentNode.FirstNode;
+				TRV_Entities.SelectedNode.Remove();
+				if (parentNode.FirstNode != null)
+					PG_Entities_Details.SelectedObject = parentNode.FirstNode.Tag;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.ToString());
 			}
 		}
 
 		private void BTN_Entities_New_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog openFileDialog = new OpenFileDialog
-			{
-				InitialDirectory = GameInstallationInfo.GamePath,
-				DefaultExt = "sbc file (*.sbc)"
-			};
+			TreeNode selectedNode = TRV_Entities.SelectedNode;
 
-			if (openFileDialog.ShowDialog() == DialogResult.OK)
+			if (selectedNode == null)
+				return;
+
+			TreeNode parentNode = selectedNode.Parent;
+
+			if (parentNode == null)
+				return;
+
+			if (parentNode.Tag != null && parentNode.Tag is SectorObjectManager)
 			{
-				FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
-				if (fileInfo.Exists)
+				if (selectedNode == parentNode.Nodes[0])
 				{
-					try
-					{
-						BaseEntity newEntity = null;
-
-						if (TRV_Entities.SelectedNode != null && TRV_Entities.SelectedNode.Tag != null && TRV_Entities.SelectedNode.Tag is BaseEntity)
-						{
-							BaseEntity selectedEntity = (BaseEntity)TRV_Entities.SelectedNode.Tag;
-
-							if (selectedEntity is CubeGridEntity)
-								newEntity = new CubeGridEntity(fileInfo);
-							else if (selectedEntity is CharacterEntity)
-								newEntity = new CharacterEntity(fileInfo);
-						}
-
-						if(newEntity != null)
-							SectorObjectManager.Instance.AddEntity(newEntity);
-					}
-					catch (Exception ex)
-					{
-						LogManager.GameLog.WriteLine(ex);
-						MessageBox.Show(this, ex.ToString());
-					}
+					CreateCubeGridImportDialog();
+					return;
 				}
+			}
+
+			if (selectedNode.Tag == null)
+				return;
+
+			if (!(selectedNode.Tag is BaseObject))
+				return;
+
+			BaseObject linkedObject = (BaseObject)selectedNode.Tag;
+
+			if (linkedObject is InventoryEntity)
+			{
+				InventoryItemDialog newItemDialog = new InventoryItemDialog();
+				newItemDialog.Container = (InventoryEntity)linkedObject;
+				newItemDialog.ShowDialog(this);
+				return;
+			}
+
+			if(linkedObject is InventoryItemEntity)
+			{
+				InventoryItemDialog newItemDialog = new InventoryItemDialog();
+				newItemDialog.Container = ((InventoryItemEntity)linkedObject).Container;
+				newItemDialog.ShowDialog(this);
+				return;
+			}
+
+			if(linkedObject is CubeGridEntity)
+			{
+				CreateCubeGridImportDialog();
+				return;
 			}
 		}
 
@@ -1253,6 +1314,35 @@ namespace SEServerExtender
 				return;
 			var linkedObject = node.Tag;
 			PG_Entities_Details.SelectedObject = linkedObject;
+		}
+
+		private void CreateCubeGridImportDialog()
+		{
+			OpenFileDialog openFileDialog = new OpenFileDialog
+			{
+				InitialDirectory = GameInstallationInfo.GamePath,
+				DefaultExt = "sbc file (*.sbc)"
+			};
+
+			if (openFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
+				if (fileInfo.Exists)
+				{
+					try
+					{
+						CubeGridEntity newEntity = new CubeGridEntity(fileInfo);
+
+						if (newEntity != null)
+							SectorObjectManager.Instance.AddEntity(newEntity);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+						MessageBox.Show(this, ex.ToString());
+					}
+				}
+			}
 		}
 
 		#endregion

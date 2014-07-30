@@ -162,26 +162,13 @@ namespace SEModAPIInternal.API.Entity
 			return newItem;
 		}
 
-		public InventoryItemEntity NewEntry(MyObjectBuilder_InventoryItem source)
+		public bool NewEntry(InventoryItemEntity source)
 		{
-			InventoryItemEntity newItem = m_itemManager.NewEntry<InventoryItemEntity>(source);
-			newItem.ItemId = NextItemId;
-			NextItemId = NextItemId + 1;
+			UpdateItemAmount(source, (Decimal)source.Amount);
 
 			RefreshInventory();
 
-			return newItem;
-		}
-
-		public InventoryItemEntity NewEntry(InventoryItemEntity source)
-		{
-			InventoryItemEntity newItem = (InventoryItemEntity)m_itemManager.NewEntry(source);
-			newItem.ItemId = NextItemId;
-			NextItemId = NextItemId + 1;
-
-			RefreshInventory();
-
-			return newItem;
+			return true;
 		}
 
 		public bool DeleteEntry(InventoryItemEntity source)
@@ -509,6 +496,11 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 
 		#region "Methods"
+
+		public override void Dispose()
+		{
+			Amount = 0;
+		}
 
 		private bool FindMatchingItem()
 		{

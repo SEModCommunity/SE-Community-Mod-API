@@ -271,6 +271,22 @@ namespace SEModAPIInternal.API.Common
 			get { return m_member; }
 		}
 
+		public string Name
+		{
+			get
+			{
+				return PlayerMap.Instance.GetPlayerItemFromPlayerId(PlayerId).Name;
+			}
+		}
+
+		public ulong SteamId
+		{
+			get
+			{
+				return PlayerMap.Instance.GetPlayerItemFromPlayerId(PlayerId).SteamId;
+			}
+		}
+
 		public long PlayerId
 		{
 			get { return m_member.PlayerId; }
@@ -284,6 +300,14 @@ namespace SEModAPIInternal.API.Common
 		public bool IsLeader
 		{
 			get { return m_member.IsLeader; }
+		}
+
+		public bool IsDead
+		{
+			get
+			{
+				return PlayerMap.Instance.GetPlayerItemFromPlayerId(PlayerId).IsDead;
+			}
 		}
 
 		#endregion

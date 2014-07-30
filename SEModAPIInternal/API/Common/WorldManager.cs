@@ -23,10 +23,18 @@ namespace SEModAPIInternal.API.Common
 
 		public static string WorldManagerNamespace = "AAC05F537A6F0F6775339593FBDFC564";
 		public static string WorldManagerClass = "D580AE7552E79DAB03A3D64B1F7B67F9";
-		public static string WorldManagerInstanceField = "AE8262481750DAB9C8D416E4DBB9BA04";
-		public static string WorldManagerFactionManagerField = "0A481A0F72FB8D956A8E00BB2563E605";
+
 		public static string WorldManagerGetPlayerManagerMethod = "4C1B66FF099503DCB589BBFFC4976633";
 		public static string WorldManagerSaveWorldMethod = "50092B623574C842837BD09CE21A96D6";
+		public static string WorldManagerGetCheckpoint = "6CA03E6E730B7881842157B90C864031";
+		public static string WorldManagerGetSector = "B2DFAD1262F75849DA03F64C5E3535B7";
+		public static string WorldManagerGetSessionName = "193678BC97A6081A8AA344BF44620BC5";
+
+		public static string WorldManagerInstanceField = "AE8262481750DAB9C8D416E4DBB9BA04";
+		public static string WorldManagerFactionManagerField = "0A481A0F72FB8D956A8E00BB2563E605";
+		public static string WorldManagerSessionSettingsField = "3D4D3F0E4E3582FF30FD014D9BB1E504";
+
+		////////////////////////////////////////////////////////////////////
 
 		public static string WorldResourceManagerNamespace = "AAC05F537A6F0F6775339593FBDFC564";
 		public static string WorldResourceManagerClass = "15B6B94DB5BE105E7B58A34D4DC11412";
@@ -86,11 +94,60 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
+		public string Name
+		{
+			get
+			{
+				string name = (string)BaseObject.InvokeEntityMethod(BackingObject, WorldManagerGetSessionName);
+
+				return name;
+			}
+		}
+
 		public bool IsWorldSaving
 		{
 			get
 			{
 				return m_isSaving;
+			}
+		}
+
+		public MySessionSettings SessionSettings
+		{
+			get
+			{
+				try
+				{
+					FieldInfo field = BaseObject.GetEntityField(BackingObject, WorldManagerSessionSettingsField);
+					MySessionSettings sessionSettings = (MySessionSettings)field.GetValue(BackingObject);
+
+					return sessionSettings;
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+					return new MySessionSettings();
+				}
+			}
+		}
+
+		public MyObjectBuilder_Checkpoint Checkpoint
+		{
+			get
+			{
+				MyObjectBuilder_Checkpoint checkpoint = (MyObjectBuilder_Checkpoint)BaseObject.InvokeEntityMethod(BackingObject, WorldManagerGetCheckpoint, new object[] { Name });
+
+				return checkpoint;
+			}
+		}
+
+		public MyObjectBuilder_Sector Sector
+		{
+			get
+			{
+				MyObjectBuilder_Sector sector = (MyObjectBuilder_Sector)BaseObject.InvokeEntityMethod(BackingObject, WorldManagerGetSector);
+
+				return sector;
 			}
 		}
 

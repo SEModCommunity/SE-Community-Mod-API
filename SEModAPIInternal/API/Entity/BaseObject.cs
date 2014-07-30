@@ -259,6 +259,34 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		internal static bool HasEntityMethod(Object gameEntity, string methodName)
+		{
+			try
+			{
+				if (gameEntity == null)
+					return false;
+				if (methodName == null || methodName.Length == 0)
+					return false;
+				Type entityType = gameEntity.GetType();
+				MethodInfo method = entityType.GetMethod(methodName);
+				if (method == null)
+					method = entityType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (method == null)
+					method = entityType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (method == null)
+					return false;
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "': " + ex.Message);
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.GameLog.WriteLine(Environment.StackTrace);
+				LogManager.GameLog.WriteLine(ex);
+				return false;
+			}
+		}
+
 		internal static MethodInfo GetEntityMethod(Object gameEntity, string methodName)
 		{
 			try

@@ -18,11 +18,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Attributes"
 
+		private PowerReceiver m_powerReceiver;
+
 		public static string FunctionalBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string FunctionalBlockClass = "7085736D64DCC58ED5DCA05FFEEA9664";
 
 		public static string FunctionalBlockSetEnabledMethod = "97EC0047E8B562F4590B905BD8571F51";
 		public static string FunctionalBlockBroadcastEnabledMethod = "D979DB9AA474782929587EC7DE5E53AA";
+		public static string FunctionalBlockGetPowerReceiverMethod = "get_PowerReceiver";
 
 		#endregion
 
@@ -36,6 +39,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public FunctionalBlockEntity(CubeGridEntity parent, MyObjectBuilder_FunctionalBlock definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
+			m_powerReceiver = new PowerReceiver(ActualObject, Parent.PowerManager, InternalGetPowerReceiver(), new Func<float>(InternalPowerReceiverCallback));
 		}
 
 		#endregion
@@ -76,6 +80,23 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[Category("Functional Block")]
+		public float CurrentInput
+		{
+			get
+			{
+				return PowerReceiver.CurrentInput;
+			}
+		}
+
+		[Category("Functional Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal PowerReceiver PowerReceiver
+		{
+			get { return m_powerReceiver; }
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -107,6 +128,19 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				LogManager.GameLog.WriteLine(ex);
 			}
+		}
+
+		protected virtual float InternalPowerReceiverCallback()
+		{
+			return 0;
+		}
+
+		protected virtual Object InternalGetPowerReceiver()
+		{
+			if (!HasEntityMethod(ActualObject, FunctionalBlockGetPowerReceiverMethod))
+				return null;
+
+			return InvokeEntityMethod(ActualObject, FunctionalBlockGetPowerReceiverMethod);
 		}
 
 		#endregion

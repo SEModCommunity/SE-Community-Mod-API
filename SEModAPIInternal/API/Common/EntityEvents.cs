@@ -22,6 +22,8 @@ namespace SEModAPIInternal.API.Common
 			OnCubeGridDeleted,
 			OnCubeBlockCreated,
 			OnCubeBlockDeleted,
+			OnCharacterCreated,
+			OnCharacterDeleted,
 		}
 
 		public struct EntityEvent
