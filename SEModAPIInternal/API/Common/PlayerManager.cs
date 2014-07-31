@@ -8,6 +8,7 @@ using Sandbox.Common.ObjectBuilders;
 
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Utility;
+using SEModAPIInternal.API.Server;
 using SEModAPIInternal.Support;
 
 using VRage.Serialization;
@@ -337,6 +338,16 @@ namespace SEModAPIInternal.API.Common
 		public PlayerMap PlayerMap
 		{
 			get { return PlayerMap.Instance; }
+		}
+
+		public List<ulong> ConnectedPlayers
+		{
+			get
+			{
+				List<ulong> connectedPlayers = ServerNetworkManager.Instance.GetConnectedPlayers();
+
+				return connectedPlayers;
+			}
 		}
 
 		#endregion

@@ -7,9 +7,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Timers;
 
+using Sandbox.Common.ObjectBuilders;
+
 using SEModAPIExtensions.API.Plugin;
 
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
@@ -34,6 +37,7 @@ namespace SEModAPIExtensions.API
 		private double m_averageUpdateTime;
 		private DateTime m_lastAverageOutput;
 		private double m_averageEvents;
+		private List<ulong> m_lastConnectedPlayerList;
 
 		#endregion
 
@@ -52,6 +56,7 @@ namespace SEModAPIExtensions.API
 			m_averageUpdateTime = 0;
 			m_lastAverageOutput = DateTime.Now;
 			m_averageEvents = 0;
+			m_lastConnectedPlayerList = new List<ulong>();
 
 			Console.WriteLine("Finished loading PluginManager");
 		}
@@ -216,6 +221,44 @@ namespace SEModAPIExtensions.API
 				if (!m_pluginState.ContainsKey(key))
 					continue;
 
+				//Generate the player join/leave events here
+				List<ulong> connectedPlayers = PlayerManager.Instance.ConnectedPlayers;
+				foreach (ulong steamId in connectedPlayers)
+				{
+					if (!m_lastConnectedPlayerList.Contains(steamId))
+					{
+						EntityEventManager.EntityEvent playerEvent = new EntityEventManager.EntityEvent();
+						playerEvent.priority = 1;
+						playerEvent.timestamp = DateTime.Now;
+						playerEvent.type = EntityEventManager.EntityEventType.OnPlayerJoined;
+						//TODO - Find a way to stall the event long enough for a linked character entity to exist
+						//For now, create a dummy entity just for passing the player's steam id along
+						BaseEntity dummyObject = new BaseEntity(null);
+						dummyObject.EntityId = (long)steamId;
+						playerEvent.entity = dummyObject;
+
+						events.Add(playerEvent);
+					}
+				}
+				foreach (ulong steamId in m_lastConnectedPlayerList)
+				{
+					if (!connectedPlayers.Contains(steamId))
+					{
+						EntityEventManager.EntityEvent playerEvent = new EntityEventManager.EntityEvent();
+						playerEvent.priority = 1;
+						playerEvent.timestamp = DateTime.Now;
+						playerEvent.type = EntityEventManager.EntityEventType.OnPlayerLeft;
+						//TODO - Find a way to stall the event long enough for a linked character entity to exist
+						//For now, create a dummy entity just for passing the player's steam id along
+						BaseEntity dummyObject = new BaseEntity(null);
+						dummyObject.EntityId = (long)steamId;
+						playerEvent.entity = dummyObject;
+
+						events.Add(playerEvent);
+					}
+				}
+				m_lastConnectedPlayerList = connectedPlayers;
+
 				//Run entity events
 				foreach (EntityEventManager.EntityEvent entityEvent in events)
 				{
@@ -236,9 +279,12 @@ namespace SEModAPIExtensions.API
 							try
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerJoined");
-								//TODO - Get the right remote user Id here
-								if(updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { (ulong)0, entityEvent.entity });
+								if (updateMethod != null)
+								{
+									//FIXME - Temporary hack to pass along the player's steam id
+									ulong steamId = (entityEvent.entity != null) ? (ulong)((BaseEntity)entityEvent.entity).EntityId : 0L;
+									updateMethod.Invoke(plugin, new object[] { steamId, entityEvent.entity });
+								}
 							}
 							catch (Exception ex)
 							{
@@ -249,9 +295,12 @@ namespace SEModAPIExtensions.API
 							try
 							{
 								MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerLeft");
-								//TODO - Get the right remote user Id here
 								if (updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { (ulong)0, entityEvent.entity });
+								{
+									//FIXME - Temporary hack to pass along the player's steam id
+									ulong steamId = (entityEvent.entity != null) ? (ulong)((BaseEntity)entityEvent.entity).EntityId : 0L;
+									updateMethod.Invoke(plugin, new object[] { steamId, entityEvent.entity });
+								}
 							}
 							catch (Exception ex)
 							{
