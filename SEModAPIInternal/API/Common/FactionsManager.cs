@@ -27,7 +27,6 @@ namespace SEModAPIInternal.API.Common
 
 		public static string FactionGetMembersMethod = "0370D2FAE277C81EC5E86DAE00187F83";
 		public static string FactionGetJoinRequestsMethod = "6BEF546F0DE1D6950850E0E17F9B1D50";
-
 		public static string FactionAddApplicantMethod = "52E37DA969B098F9A64AC1CFBF0B24D0";
 		public static string FactionRemoveApplicantMethod = "A89B7D2F964A5E95158389AEAC8C4E48";
 		public static string FactionAcceptApplicantMethod = "674DD8BE4E653E63ADE2EDB5A27E38DE";
@@ -126,6 +125,32 @@ namespace SEModAPIInternal.API.Common
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FactionNamespace, FactionClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for Faction");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, FactionGetMembersMethod);
+				result &= BaseObject.HasMethod(type1, FactionGetJoinRequestsMethod);
+				result &= BaseObject.HasMethod(type1, FactionAddApplicantMethod);
+				result &= BaseObject.HasMethod(type1, FactionRemoveApplicantMethod);
+				result &= BaseObject.HasMethod(type1, FactionAcceptApplicantMethod);
+				result &= BaseObject.HasMethod(type1, FactionRemoveMemberMethod);
+				result &= BaseObject.HasField(type1, FactionMembersDictionaryField);
+				result &= BaseObject.HasField(type1, FactionJoinRequestsDictionaryField);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public MyObjectBuilder_Faction GetSubTypeEntity()
 		{
@@ -326,9 +351,15 @@ namespace SEModAPIInternal.API.Common
 
 		public static string FactionManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string FactionManagerClass = "17E6A2D4B9414B1D3DDA551E10938751";
+
 		public static string FactionManagerGetFactionCollectionMethod = "C93E560F96FE606D0BE190EDE1AA5005";
 		public static string FactionManagerGetFactionByIdMethod = "A01C0785253581981A78896FFBB103E9";
 		public static string FactionManagerRemoveFactionByIdMethod = "69FBA8150E79975E21C1C8C5D7BF897D";
+
+		//////////////////////////////////////////////////////
+
+		public static string FactionNetManagerNamespace = "";
+		public static string FactionNetManagerClass = "";
 
 		public static string FactionNetManagerRemoveFactionMethod = "01E89FED8AEDE7182CACB3F84D5748AC";
 		public static string FactionNetManagerRemoveMemberMethod = "4FDD02E48E4AAF15026A9181C13F711E";
@@ -382,6 +413,30 @@ namespace SEModAPIInternal.API.Common
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FactionManagerNamespace, FactionManagerClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for FactionsManager");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, FactionManagerGetFactionCollectionMethod);
+				result &= BaseObject.HasMethod(type1, FactionManagerGetFactionByIdMethod);
+				result &= BaseObject.HasMethod(type1, FactionManagerRemoveFactionByIdMethod);
+
+				result &= BaseObject.HasMethod(type1, FactionNetManagerRemoveFactionMethod);
+				result &= BaseObject.HasMethod(type1, FactionNetManagerRemoveMemberMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public MyObjectBuilder_FactionCollection GetSubTypeEntity()
 		{

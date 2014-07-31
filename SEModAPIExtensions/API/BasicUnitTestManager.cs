@@ -126,6 +126,48 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("InventoryItemEntity reflection validation failed!");
 			}
 
+			if (!PlayerMap.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("PlayerMap reflection validation failed!");
+			}
+
+			if (!PlayerManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("PlayerManager reflection validation failed!");
+			}
+
+			if (!WorldManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("WorldManager reflection validation failed!");
+			}
+
+			if (!RadioManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("RadioManager reflection validation failed!");
+			}
+
+			if (!PowerManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("PowerManager reflection validation failed!");
+			}
+
+			if (!FactionsManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("FactionsManager reflection validation failed!");
+			}
+
+			if (!Faction.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("Faction reflection validation failed!");
+			}
+
 			return result;
 		}
 	}

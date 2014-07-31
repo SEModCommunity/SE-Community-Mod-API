@@ -22,6 +22,7 @@ namespace SEModAPIInternal.API.Common
 
 		public static string RadioManagerNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string RadioManagerClass = "994372BD682BE5E79F2F32E79BE318F5";
+
 		public static string RadioManagerGetBroadcastRadiusMethod = "CC1F306EACC95C00A05C100712656EBC";
 		public static string RadioManagerSetBroadcastRadiusMethod = "C42CAA2B50B8705C7F36262BCE8E60EA";
 		public static string RadioManagerGetLinkedEntityMethod = "7DE57FDDF37DD6219A990596E0283F01";
@@ -135,6 +136,32 @@ namespace SEModAPIInternal.API.Common
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(RadioManagerNamespace, RadioManagerClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for RadioManager");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, RadioManagerGetBroadcastRadiusMethod);
+				result &= BaseObject.HasMethod(type1, RadioManagerSetBroadcastRadiusMethod);
+				result &= BaseObject.HasMethod(type1, RadioManagerGetLinkedEntityMethod);
+				result &= BaseObject.HasMethod(type1, RadioManagerSetLinkedEntityMethod);
+				result &= BaseObject.HasMethod(type1, RadioManagerGetEnabledMethod);
+				result &= BaseObject.HasMethod(type1, RadioManagerSetEnabledMethod);
+				result &= BaseObject.HasMethod(type1, RadioManagerGetAABBTreeIdMethod);
+				result &= BaseObject.HasMethod(type1, RadioManagerSetAABBTreeIdMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		protected void InternalUpdateBroadcastRadius()
 		{

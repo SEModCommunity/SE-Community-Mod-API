@@ -20,6 +20,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public static string DoorNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string DoorClass = "F0D92F8F3A91716EC613ADD46F36158D";
+
 		public static string DoorGetStateMethod = "EED93169FB8C3235596CF33BD3AA33B8";
 		public static string DoorSetStateMethod = "2A0572A89EB6003FDC46A6D8420ECF79";
 

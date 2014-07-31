@@ -45,10 +45,16 @@ namespace SEModAPIInternal.API.Common
 
 		public static string PlayerMapNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string PlayerMapClass = "E4C2964159826A46D102C2D7FDDC0733";
+
 		public static string PlayerMapEntityToPlayerMappingMethod = "79B43F2C2366136E88B5B7064CA93A74";
 		public static string PlayerMapSteamIdToPlayerMappingMethod = "AC5FA6C0D87D43E4B5550A1BB7812DEB";
 		public static string PlayerMapGetSerializableDictionaryMethod = "460B7921B2E774D61F63929C4032F1AC";
 		public static string PlayerMapGetPlayerItemMappingMethod = "0EB2BF49DCB5C20A059E3D6CCA3665AA";
+
+		//////////////////////////////////////////////////////
+
+		public static string PlayerMapEntryNamespace = "";
+		public static string PlayerMapEntryClass = "";
 
 		public static string PlayerMapEntrySteamIdField = "208AE30D2628BD946A59F72F1A373ED4";
 
@@ -91,6 +97,33 @@ namespace SEModAPIInternal.API.Common
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PlayerMapNamespace, PlayerMapClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for PlayerMap");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, PlayerMapEntityToPlayerMappingMethod);
+				result &= BaseObject.HasMethod(type1, PlayerMapSteamIdToPlayerMappingMethod);
+				result &= BaseObject.HasMethod(type1, PlayerMapGetSerializableDictionaryMethod);
+				result &= BaseObject.HasMethod(type1, PlayerMapGetPlayerItemMappingMethod);
+				/*
+				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PlayerMapEntryNamespace, PlayerMapEntryClass);
+				if (type2 == null)
+					throw new Exception("Could not find player map entry type for PlayerMap");
+				result &= BaseObject.HasField(type2, PlayerMapEntrySteamIdField);
+				*/
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public long GetPlayerEntityId(ulong steamId)
 		{
@@ -262,6 +295,7 @@ namespace SEModAPIInternal.API.Common
 
 		public static string PlayerManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string PlayerManagerClass = "08FBF1782D25BEBDA2070CAF8CE47D72";
+
 		public static string PlayerManagerPlayerMapField = "3F86E23829227B55C95CEB9F813578B2";
 
 		#endregion
@@ -308,6 +342,25 @@ namespace SEModAPIInternal.API.Common
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PlayerManagerNamespace, PlayerManagerClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for PlayerManager");
+				bool result = true;
+				result &= BaseObject.HasField(type1, PlayerManagerPlayerMapField);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public Object InternalGetPlayerMap()
 		{

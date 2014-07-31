@@ -83,6 +83,33 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Methods"
 
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PowerManagerNamespace, PowerManagerClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for PowerManager");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, PowerManagerRegisterPowerReceiverMethod);
+				result &= BaseObject.HasMethod(type1, PowerManagerUnregisterPowerReceiverMethod);
+				result &= BaseObject.HasMethod(type1, PowerManagerRegisterPowerProducerMethod);
+				result &= BaseObject.HasMethod(type1, PowerManagerUnregisterPowerProducerMethod);
+				result &= BaseObject.HasMethod(type1, PowerManagerGetAvailablePowerMethod);
+				result &= BaseObject.HasMethod(type1, PowerManagerGetUsedPowerPercentMethod);
+				result &= BaseObject.HasField(type1, PowerManagerPowerReceiverHashSetField);
+				result &= BaseObject.HasField(type1, PowerManagerPowerProducerHashSetField);
+				result &= BaseObject.HasField(type1, PowerManagerTotalPowerField);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
+
 		public void RegisterPowerReceiver(Object receiver)
 		{
 			BaseObject.InvokeEntityMethod(m_powerManager, PowerManagerRegisterPowerReceiverMethod, new object[] { receiver });
