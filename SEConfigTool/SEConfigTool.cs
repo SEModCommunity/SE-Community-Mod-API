@@ -1454,6 +1454,8 @@ namespace SEConfigTool
 
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
 
+			TXT_ContainerTypeConfig_Details_Information_Name.Enabled = false;
+
 			TXT_ContainerTypeConfig_Details_Information_Name.Text = containerType.Name;
 			TXT_ContainerTypeConfig_Details_Information_CountMin.Text = containerType.CountMin.ToString();
 			TXT_ContainerTypeConfig_Details_Information_CountMax.Text = containerType.CountMax.ToString();
@@ -1501,7 +1503,6 @@ namespace SEConfigTool
 		{
 			ContainerTypesDefinition containerType = m_containerTypesDefinitionsManager.DefinitionOf(LST_ContainerTypesConfig.SelectedIndex);
 
-			containerType.Name = TXT_ContainerTypeConfig_Details_Information_Name.Text;
 			containerType.CountMin = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMin.Text, m_numberFormatInfo);
 			containerType.CountMax = Convert.ToInt32(TXT_ContainerTypeConfig_Details_Information_CountMax.Text, m_numberFormatInfo);
 
@@ -1525,7 +1526,6 @@ namespace SEConfigTool
 				return;
 			}
 
-			containerType.Name = "(New)";
 			containerType.CountMin = 1;
 			containerType.CountMax = 1;
 

@@ -51,16 +51,18 @@ namespace SEModAPIInternal.API.Entity
 		//Methods
 		public static string BaseEntityGetObjectBuilderMethod = "GetObjectBuilder";
 		public static string BaseEntityGetPhysicsManagerMethod = "691FA4830C80511C934826203A251981";
-		public static string BaseEntityGetEntityIdMethod = "53C3FFA07960404AABBEAAF931E5487E";
 		public static string BaseEntityCombineOnMovedEventMethod = "04F6493DF187FBA38C2B379BA9484304";
 		public static string BaseEntityCombineOnClosedEventMethod = "C1704F26C9D5D7EBE19DC78AB8923F4E";
 		public static string BaseEntityGetIsDisposedMethod = "6D8F627C1C0F9F166031C3B600FEDA60";
 		public static string BaseEntityGetOrientationMatrixMethod = "FD50436D896ACC794550210055349FE0";
-		public static string BaseEntityRemoveMethod = "EF75CF24B6BD63FC1A42E023BAF658B2";
 		public static string BaseEntityGetNetManagerMethod = "F4456F82186EC3AE6C73294FA6C0A11D";
+		public static string BaseEntityGetEntityIdMethod = "D524D6A5CA90978702080AE100BB664B";
+		public static string BaseEntitySetEntityIdMethod = "D3D6702587D6336FEE37725E8D2C52CD";
 
-		//Fields
-		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
+		//////////////////////////////////////////////////////////
+
+		public static string PhysicsManagerNamespace = "D1B6432AAEEF40F9D99F69835A7B23F5";
+		public static string PhysicsManagerClass = "5BAA908D4615EC702E28985E09DBEF8F";
 
 		public static string PhysicsManagerGetRigidBodyMethod = "634E5EC534E45874230868BD089055B1";
 
@@ -481,20 +483,24 @@ namespace SEModAPIInternal.API.Entity
 				bool result = true;
 				result &= HasMethod(type, BaseEntityGetObjectBuilderMethod);
 				result &= HasMethod(type, BaseEntityGetPhysicsManagerMethod);
-				result &= HasMethod(type, BaseEntityGetEntityIdMethod);
 				result &= HasMethod(type, BaseEntityCombineOnMovedEventMethod);
 				result &= HasMethod(type, BaseEntityCombineOnClosedEventMethod);
 				result &= HasMethod(type, BaseEntityGetIsDisposedMethod);
 				result &= HasMethod(type, BaseEntityGetOrientationMatrixMethod);
-				result &= HasMethod(type, BaseEntityRemoveMethod);
 				result &= HasMethod(type, BaseEntityGetNetManagerMethod);
-				result &= HasField(type, BaseEntityEntityIdField);
+				result &= HasMethod(type, BaseEntityGetEntityIdMethod);
+				result &= HasMethod(type, BaseEntitySetEntityIdMethod);
+
+				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PhysicsManagerNamespace, PhysicsManagerClass);
+				if (type2 == null)
+					throw new Exception("Could not find physics manager type for BaseEntity");
+				result &= HasMethod(type2, PhysicsManagerGetRigidBodyMethod);
 
 				return result;
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine(ex);
+				Console.WriteLine(ex);
 				return false;
 			}
 		}
@@ -554,9 +560,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				//TODO - Change this to a method call instead of just getting the field value
-				FieldInfo entityIdField = GetEntityField(entity, BaseEntityEntityIdField);
-				long entityId = (long)entityIdField.GetValue(entity);
+				long entityId = (long)InvokeEntityMethod(entity, BaseEntityGetEntityIdMethod);
 				return entityId;
 			}
 			catch (Exception ex)
@@ -583,16 +587,7 @@ namespace SEModAPIInternal.API.Entity
 
 		protected void InternalUpdateEntityId()
 		{
-			try
-			{
-				//TODO - Change this to a method call instead of just setting the field value
-				FieldInfo entityIdField = GetEntityField(BackingObject, BaseEntityEntityIdField);
-				entityIdField.SetValue(BackingObject, EntityId);
-			}
-			catch (Exception ex)
-			{
-				LogManager.GameLog.WriteLine(ex);
-			}
+			InvokeEntityMethod(BackingObject, BaseEntitySetEntityIdMethod, new object[] { EntityId });
 		}
 
 		protected void InternalUpdatePosition()
@@ -743,7 +738,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
-		public static string BaseEntityBroadcastRemovalMethod = "121CA9A4CCCA40BD005639836BF53529";
+		public static string BaseEntityBroadcastRemovalMethod = "2A9D4D3D5105F382A43E1EFFFBEF515A";
 
 		#endregion
 

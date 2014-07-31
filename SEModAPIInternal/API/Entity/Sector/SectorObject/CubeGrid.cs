@@ -510,6 +510,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		//Fields
 		public static string CubeGridNetManagerCubeBlocksToDestroyField = "8E76EFAC4EED3B61D48795B2CD5AF989";
 
+		//////////////////////////////////////////////////////////////////
+
 		public static string CubeGridIntegrityChangeEnumNamespace = CubeGridEntity.CubeGridNamespace + "." + CubeGridEntity.CubeGridClass;
 		public static string CubeGridIntegrityChangeEnumClass = "55D3513B52D474C7AF161242E01FB9A9";
 
@@ -562,7 +564,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockFactionDataMethod);
 				result &= BaseObject.HasField(type, CubeGridNetManagerCubeBlocksToDestroyField);
 
-				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridIntegrityChangeEnumNamespace, CubeGridIntegrityChangeEnumClass);
+				Type type2 = CubeGridEntity.InternalType.GetNestedType(CubeGridIntegrityChangeEnumClass);
 				if (type2 == null)
 					throw new Exception("Could not find type for CubeGridNetworkManager-CubeGridIntegrityChangeEnum");
 
@@ -570,7 +572,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine(ex);
+				Console.WriteLine(ex);
 				return false;
 			}
 		}

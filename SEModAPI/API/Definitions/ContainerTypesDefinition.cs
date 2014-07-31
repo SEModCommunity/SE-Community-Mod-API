@@ -47,17 +47,6 @@ namespace SEModAPI.API.Definitions
             }
         }
 
-		new public string Name
-		{
-			get { return m_baseDefinition.Name; }
-			set
-			{
-				if (m_baseDefinition.Name == value) return;
-				m_baseDefinition.Name = value;
-				Changed = true;
-			}
-		}
-
 		new public MyObjectBuilder_ContainerTypeDefinition BaseDefinition
 		{
 			get
@@ -110,7 +99,7 @@ namespace SEModAPI.API.Definitions
 
         protected override string GetNameFrom(MyObjectBuilder_ContainerTypeDefinition definition)
         {
-            return definition.Name;
+            return "Container Type";
         }
 
 		public ContainerTypeItem NewEntry()

@@ -64,7 +64,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string FactionsDataNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string FactionsDataClass = "0428A90CA95B1CE381A027F8E935681A";
 
-		public static string FactionsDataOwnerField = "9A0535F68700D4E48674829975E95CAB";
+		public static string FactionsDataOwnerField = "8A0FAA1F70093FC9A179D3FAF9658D97";
 		public static string FactionsDataShareModeField = "0436783F3C7FB6B04C88AB4F9097380F";
 
 		/////////////////////////////////////////////////////

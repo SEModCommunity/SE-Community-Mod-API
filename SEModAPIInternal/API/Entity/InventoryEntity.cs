@@ -38,7 +38,6 @@ namespace SEModAPIInternal.API.Entity
 		public static string InventoryGetObjectBuilderMethod = "EFBD3CF8717682D7B59A5878FF97E0BB";
 		public static string InventoryCleanUpMethod = "476A04917356C2C5FFE23B1CBFC11450";
 		public static string InventoryGetItemListMethod = "C43E297C0F568726D4BDD5D71B901911";
-
 		public static string InventoryAddItemAmountMethod = "FB009222ACFCEACDC546801B06DDACB6";
 		public static string InventoryRemoveItemAmountMethod = "623B0AC0E7D9C30410680C76A55F0C6B";
 
@@ -162,7 +161,12 @@ namespace SEModAPIInternal.API.Entity
 				result &= BaseObject.HasMethod(type, InventoryCleanUpMethod);
 				result &= BaseObject.HasMethod(type, InventoryGetItemListMethod);
 				result &= BaseObject.HasMethod(type, InventoryAddItemAmountMethod);
-				result &= BaseObject.HasMethod(type, InventoryRemoveItemAmountMethod);
+
+				Type[] argTypes = new Type[3];
+				argTypes[0] = typeof(Decimal);
+				argTypes[1] = typeof(MyObjectBuilder_PhysicalObject);
+				argTypes[2] = typeof(bool);
+				result &= BaseObject.HasMethod(type, InventoryRemoveItemAmountMethod, argTypes);
 
 				return result;
 			}

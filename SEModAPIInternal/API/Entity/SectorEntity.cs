@@ -274,8 +274,6 @@ namespace SEModAPIInternal.API.Entity
 
 		public static string ObjectFactoryNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ObjectFactoryClass = "E825333D6467D99DD83FB850C600395C";
-		public static string ObjectFactoryCreateEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
-		public static string ObjectFactoryCreateTypedEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
 
 		/////////////////////////////////////////////////////////////////
 
@@ -336,13 +334,11 @@ namespace SEModAPIInternal.API.Entity
 				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ObjectFactoryNamespace, ObjectFactoryClass);
 				if (type2 == null)
 					throw new Exception("Could not find object factory type for SectorObjectManager");
-				result &= BaseObject.HasMethod(type2, ObjectFactoryCreateEntityMethod);
-				result &= BaseObject.HasMethod(type2, ObjectFactoryCreateTypedEntityMethod);
 
 				Type type3 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(EntityBaseNetManagerNamespace, EntityBaseNetManagerClass);
 				if (type3 == null)
 					throw new Exception("Could not find entity base network manager type for SectorObjectManager");
-				result &= BaseObject.HasMethod(type2, EntityBaseNetManagerSendEntity);
+				result &= BaseObject.HasMethod(type3, EntityBaseNetManagerSendEntity);
 
 				return result;
 			}

@@ -39,8 +39,13 @@ namespace SEModAPIExtensions.API
 
 		public bool Run()
 		{
+			bool oldDebuggingSetting = SandboxGameAssemblyWrapper.IsDebugging;
+			SandboxGameAssemblyWrapper.IsDebugging = true;
+
 			bool result = true;
 			result &= RunReflectionUnitTests();
+
+			SandboxGameAssemblyWrapper.IsDebugging = oldDebuggingSetting;
 
 			return result;
 		}
