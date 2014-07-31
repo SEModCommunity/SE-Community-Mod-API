@@ -27,10 +27,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string LightUpdateIntensityMethod = "8017479AD649F97C1D60B7A69627D433";
 		public static string LightUpdateFalloffMethod = "C3366430336FC45474244C38663E85C3";
 		public static string LightUpdateRadiusMethod = "671145C348E272C8E78649055AF2073D";
+
 		public static string LightNetworkManagerField = "EB495BC5B3C2335D2B8AD10C334D0928";
+
+		////////////////////////////////////////////////////////////////////////
 
 		public static string LightNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string LightNetworkManagerClass = "0F8EE1AD651CB822CB9635B463AE6CD5";
+
 		public static string LightNetworkManagerSendUpdateMethod = "582447224E2B03FA4EAB3D6C2DDD48D9";	//Color, Radius, Falloff, Intensity
 
 		#endregion
@@ -224,6 +228,35 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				bool result = true;
+
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(LightNamespace, LightClass);
+				if (type == null)
+					throw new Exception("Could not find internal type for LightEntity");
+				result &= HasMethod(type, LightUpdateColorMethod);
+				result &= HasMethod(type, LightUpdateIntensityMethod);
+				result &= HasMethod(type, LightUpdateFalloffMethod);
+				result &= HasMethod(type, LightUpdateRadiusMethod);
+				result &= HasField(type, LightNetworkManagerField);
+
+				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(LightNetworkManagerNamespace, LightNetworkManagerClass);
+				if (type2 == null)
+					throw new Exception("Could not find network manager type for LightEntity");
+				result &= HasMethod(type2, LightNetworkManagerSendUpdateMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		protected Object GetLightNetworkManager()
 		{

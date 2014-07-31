@@ -180,9 +180,35 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("PowerReceiver reflection validation failed!");
 			}
 
+			result &= RunCubeBlockReflectionTests();
+
 			if (result)
 			{
-				Console.WriteLine("All types passed reflection unit tests!");
+				Console.WriteLine("All main types passed reflection unit tests!");
+			}
+
+			return result;
+		}
+
+		protected bool RunCubeBlockReflectionTests()
+		{
+			bool result = true;
+
+			if (!LightEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("LightEntity reflection validation failed!");
+			}
+
+			if (!BatteryBlockEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("BatteryBlockEntity reflection validation failed!");
+			}
+
+			if (result)
+			{
+				Console.WriteLine("All block types passed reflection unit tests!");
 			}
 
 			return result;
