@@ -61,6 +61,25 @@ namespace SEModAPIInternal.API.Utility
 			}
 		}
 
+		public static Dictionary<long, Object> ConvertDictionary(Object source)
+		{
+			try
+			{
+				Type rawType = source.GetType();
+				Type[] genericArgs = rawType.GetGenericArguments();
+				MethodInfo conversion = typeof(UtilityFunctions).GetMethod("ConvertEntityDictionary", BindingFlags.Public | BindingFlags.Static);
+				conversion = conversion.MakeGenericMethod(genericArgs[1]);
+				Dictionary<long, Object> result = (Dictionary<long, Object>)conversion.Invoke(null, new object[] { source });
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return new Dictionary<long, Object>();
+			}
+		}
+
 		public static HashSet<Object> ConvertEntityHashSet<T>(IEnumerable<T> source)
 		{
 			HashSet<Object> dataSet = new HashSet<Object>();
@@ -89,6 +108,25 @@ namespace SEModAPIInternal.API.Utility
 				foreach (var rawEntity in source)
 				{
 					dataSet.Add(rawEntity);
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
+
+			return dataSet;
+		}
+
+		public static Dictionary<long, Object> ConvertEntityDictionary<T>(IEnumerable<KeyValuePair<long, T>> source)
+		{
+			Dictionary<long, Object> dataSet = new Dictionary<long, Object>();
+
+			try
+			{
+				foreach (var rawEntity in source)
+				{
+					dataSet.Add(rawEntity.Key, rawEntity.Value);
 				}
 			}
 			catch (Exception ex)

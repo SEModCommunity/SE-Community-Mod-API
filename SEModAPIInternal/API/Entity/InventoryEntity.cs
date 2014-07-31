@@ -191,7 +191,11 @@ namespace SEModAPIInternal.API.Entity
 
 		public bool NewEntry(InventoryItemEntity source)
 		{
-			UpdateItemAmount(source, (Decimal)source.Amount);
+			m_itemManager.AddEntry<InventoryItemEntity>(NextItemId, source);
+
+			//TODO - Figure out the right way to add new items
+			//Just updating an item amount doesn't seem to work right
+			UpdateItemAmount(source, (Decimal)(source.Amount * 2));
 
 			RefreshInventory();
 
@@ -687,6 +691,7 @@ namespace SEModAPIInternal.API.Entity
 			{
 				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				List<Object> rawEntities = GetBackingDataList();
+				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
@@ -736,7 +741,7 @@ namespace SEModAPIInternal.API.Entity
 				}
 
 				//Cleanup old entities
-				foreach (var entry in GetInternalData())
+				foreach (var entry in internalDataCopy)
 				{
 					try
 					{
