@@ -637,6 +637,10 @@ namespace SEModAPIInternal.API.Entity
 
 		public void Refresh()
 		{
+			if (!IsDynamic)
+				return;
+			if (!IsMutable)
+				return;
 			if (IsResourceLocked)
 				return;
 			if (IsInternalResourceLocked)

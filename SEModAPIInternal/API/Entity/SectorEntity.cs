@@ -113,7 +113,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			get
 			{
-				MyObjectBuilder_Sector baseSector = (MyObjectBuilder_Sector)ObjectBuilder;
+				MyObjectBuilder_Sector baseSector = (MyObjectBuilder_Sector)base.ObjectBuilder;
 
 				try
 				{
