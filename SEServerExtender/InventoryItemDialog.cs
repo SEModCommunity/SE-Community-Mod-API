@@ -123,6 +123,8 @@ namespace SEServerExtender
 
 		private void BTN_InventoryItem_Add_Click(object sender, EventArgs e)
 		{
+			if (CMB_ItemType.SelectedItem == null)
+				return;
 			if (Amount <= 0.0f)
 				return;
 

@@ -7,6 +7,7 @@ using System.Text;
 using Sandbox.Common.ObjectBuilders;
 
 using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRage.Serialization;
@@ -22,6 +23,20 @@ namespace SEModAPIInternal.API.Common
 			public bool isDead;
 			public ulong steamId;
 			public string model;
+
+			public InternalPlayerItem(Object source)
+			{
+				Type type = source.GetType();
+				FieldInfo field1 = BaseObject.GetEntityField(source, "E520D0BC4EC9B47A81D9F52D4B70345F");
+				FieldInfo field2 = BaseObject.GetEntityField(source, "FE57DC9F46A21EA612B9769D5A7A9606");
+				FieldInfo field3 = BaseObject.GetEntityField(source, "F18302983BC40AE893A0E0E0F2263A93");
+				FieldInfo field4 = BaseObject.GetEntityField(source, "2E57D5D124FF88C06AD1DFF6FE070B73");
+
+				name = (string)field1.GetValue(source);
+				isDead = (bool)field2.GetValue(source);
+				steamId = (ulong)field3.GetValue(source);
+				model = (string)field4.GetValue(source);
+			}
 		}
 
 		#region "Attributes"
@@ -110,15 +125,24 @@ namespace SEModAPIInternal.API.Common
 		public MyObjectBuilder_Checkpoint.PlayerItem GetPlayerItemFromPlayerId(long playerId)
 		{
 			MyObjectBuilder_Checkpoint.PlayerItem playerItem = new MyObjectBuilder_Checkpoint.PlayerItem();
-			DictionaryReader<long, InternalPlayerItem> allPlayers = InternalGetPlayerItemMappping();
-			if (!allPlayers.ContainsKey(playerId))
-				return playerItem;
-			InternalPlayerItem internalPlayerItem = allPlayers[playerId];
-			playerItem.PlayerId = playerId;
-			playerItem.SteamId = internalPlayerItem.steamId;
-			playerItem.Name = internalPlayerItem.name;
-			playerItem.Model = internalPlayerItem.model;
-			playerItem.IsDead = internalPlayerItem.isDead;
+
+			try
+			{
+				Dictionary<long, Object> allPlayers = InternalGetPlayerItemMappping();
+				if (!allPlayers.ContainsKey(playerId))
+					return playerItem;
+				Object item = allPlayers[playerId];
+				InternalPlayerItem internalPlayerItem = new InternalPlayerItem(item);
+				playerItem.PlayerId = playerId;
+				playerItem.SteamId = internalPlayerItem.steamId;
+				playerItem.Name = internalPlayerItem.name;
+				playerItem.Model = internalPlayerItem.model;
+				playerItem.IsDead = internalPlayerItem.isDead;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+			}
 
 			return playerItem;
 		}
@@ -127,14 +151,22 @@ namespace SEModAPIInternal.API.Common
 		{
 			List<long> matchingPlayerIds = new List<long>();
 
-			DictionaryReader<long, InternalPlayerItem> allPlayers = InternalGetPlayerItemMappping();
-			foreach (var entry in allPlayers)
+			try
 			{
-				if (ignoreDead && entry.Value.isDead)
-					continue;
+				Dictionary<long, Object> allPlayers = InternalGetPlayerItemMappping();
+				foreach (var entry in allPlayers)
+				{
+					InternalPlayerItem internalPlayerItem = (InternalPlayerItem)entry.Value;
+					if (ignoreDead && internalPlayerItem.isDead)
+						continue;
 
-				if (entry.Value.steamId == steamId)
-					matchingPlayerIds.Add(entry.Key);
+					if (internalPlayerItem.steamId == steamId)
+						matchingPlayerIds.Add(entry.Key);
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
 			}
 
 			return matchingPlayerIds;
@@ -202,19 +234,19 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		protected DictionaryReader<long, InternalPlayerItem> InternalGetPlayerItemMappping()
+		protected Dictionary<long, Object> InternalGetPlayerItemMappping()
 		{
 			try
 			{
 				Object rawPlayerItemMapping = BaseObject.InvokeEntityMethod(BackingObject, PlayerMapGetPlayerItemMappingMethod);
-				DictionaryReader<long, InternalPlayerItem> allPlayersMapping = (DictionaryReader<long, InternalPlayerItem>)rawPlayerItemMapping;
+				Dictionary<long, Object> allPlayersMapping = UtilityFunctions.ConvertDictionary(rawPlayerItemMapping);
 
 				return allPlayersMapping;
 			}
 			catch (Exception ex)
 			{
 				LogManager.GameLog.WriteLine(ex);
-				return new DictionaryReader<long, InternalPlayerItem>();
+				return new Dictionary<long, Object>();
 			}
 		}
 
