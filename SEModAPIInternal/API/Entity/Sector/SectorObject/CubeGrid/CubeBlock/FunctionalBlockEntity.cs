@@ -101,6 +101,27 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Methods"
 
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FunctionalBlockNamespace, FunctionalBlockClass);
+				if (type == null)
+					throw new Exception("Could not find internal type for FunctionalBlockEntity");
+				bool result = true;
+				result &= HasMethod(type, FunctionalBlockSetEnabledMethod);
+				result &= HasMethod(type, FunctionalBlockBroadcastEnabledMethod);
+				//result &= HasMethod(type, FunctionalBlockGetPowerReceiverMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
+
 		protected void InternalUpdateFunctionalBlock()
 		{
 			try
@@ -137,7 +158,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		protected virtual Object InternalGetPowerReceiver()
 		{
-			if (!HasEntityMethod(ActualObject, FunctionalBlockGetPowerReceiverMethod))
+			Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FunctionalBlockNamespace, FunctionalBlockClass);
+			if (!HasMethod(type, FunctionalBlockGetPowerReceiverMethod))
 				return null;
 
 			return InvokeEntityMethod(ActualObject, FunctionalBlockGetPowerReceiverMethod);

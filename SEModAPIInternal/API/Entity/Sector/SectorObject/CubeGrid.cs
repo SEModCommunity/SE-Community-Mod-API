@@ -46,8 +46,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CubeGridIsStaticField = "";
 		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
 
+		//////////////////////////////////////////////////////////////
+
 		public static string CubeGridDampenersPowerReceiverNamespace = "8EAF60352312606996BD8147B0A3C880";
 		public static string CubeGridDampenersPowerReceiverClass = "958ADAA3423FBDC5DE98C1A32DE7258C";
+
 		public static string CubeGridDampenersPowerReceiverGetEnabled = "51FDDFF9224B3F717EEFFEBEA5F1BAF6";
 		public static string CubeGridDampenersPowerReceiverSetEnabled = "86B66668D555E1C1B744C17D2AFA77F7";
 
@@ -360,31 +363,33 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(ObjectBuilder, fileInfo);
 		}
 
-		public override void ReflectionUnitTest()
+		public static bool ReflectionUnitTest()
 		{
 			try
 			{
 				Type type = InternalType;
 				if (type == null)
 					throw new Exception("Could not find internal type for CubeGridEntity");
-				Object tempEntity = Activator.CreateInstance(type);
-				MethodInfo method1 = GetEntityMethod(tempEntity, CubeGridGetCubeBlocksHashSetMethod);
-				MethodInfo method2 = GetEntityMethod(tempEntity, CubeGridGetCubeBlocksHashSetMethod);
-				MethodInfo method3 = GetEntityMethod(tempEntity, CubeGridGetCubeBlocksHashSetMethod);
-				FieldInfo field1 = GetEntityField(tempEntity, CubeGridBlockGroupsField);
+				bool result = true;
+				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
+				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
+				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
+				//result &= HasField(type, CubeGridIsStaticField);
+				result &= HasField(type, CubeGridBlockGroupsField);
 
 				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridDampenersPowerReceiverNamespace, CubeGridDampenersPowerReceiverClass);
 				if (type2 == null)
 					throw new Exception("Could not find type for CubeGridEntity-CubeGridDampenersPowerReceiver");
-				Object tempEntity2 = Activator.CreateInstance(type2);
-				MethodInfo method11 = GetEntityMethod(tempEntity2, CubeGridDampenersPowerReceiverGetEnabled);
-				MethodInfo method12 = GetEntityMethod(tempEntity2, CubeGridDampenersPowerReceiverSetEnabled);
+				result &= HasMethod(type2, CubeGridDampenersPowerReceiverGetEnabled);
+				result &= HasMethod(type2, CubeGridDampenersPowerReceiverSetEnabled);
+
+				return result;
 			}
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLine(ex);
+				return false;
 			}
-			base.ReflectionUnitTest();
 		}
 
 		public CubeBlockEntity GetCubeBlock(Vector3I cubePosition)
@@ -544,6 +549,31 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = NetManagerType;
+				if (type == null)
+					throw new Exception("Could not find internal type for CubeGridNetworkManager");
+				bool result = true;
+				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod);
+				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockFactionDataMethod);
+				result &= BaseObject.HasField(type, CubeGridNetManagerCubeBlocksToDestroyField);
+
+				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridIntegrityChangeEnumNamespace, CubeGridIntegrityChangeEnumClass);
+				if (type2 == null)
+					throw new Exception("Could not find type for CubeGridNetworkManager-CubeGridIntegrityChangeEnum");
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public void BroadcastCubeBlockFactionData(CubeBlockEntity cubeBlock)
 		{

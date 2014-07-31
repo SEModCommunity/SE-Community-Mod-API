@@ -146,6 +146,33 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for InventoryEntity");
+				bool result = true;
+				result &= BaseObject.HasMethod(type, InventoryCalculateMassVolumeMethod);
+				result &= BaseObject.HasMethod(type, InventoryGetTotalVolumeMethod);
+				result &= BaseObject.HasMethod(type, InventoryGetTotalMassMethod);
+				result &= BaseObject.HasMethod(type, InventorySetFromObjectBuilderMethod);
+				result &= BaseObject.HasMethod(type, InventoryGetObjectBuilderMethod);
+				result &= BaseObject.HasMethod(type, InventoryCleanUpMethod);
+				result &= BaseObject.HasMethod(type, InventoryGetItemListMethod);
+				result &= BaseObject.HasMethod(type, InventoryAddItemAmountMethod);
+				result &= BaseObject.HasMethod(type, InventoryRemoveItemAmountMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
+
 		public InventoryItemEntity NewEntry()
 		{
 			MyObjectBuilder_InventoryItem defaults = new MyObjectBuilder_InventoryItem();
@@ -496,6 +523,25 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for InventoryItemEntity");
+				bool result = true;
+				result &= BaseObject.HasMethod(type, InventoryItemGetObjectBuilderMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public override void Dispose()
 		{

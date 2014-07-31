@@ -64,6 +64,13 @@ namespace SEServerExtender
 			m_instance = this;
 			m_server = server;
 
+			bool unitTestResult = BasicUnitTestManager.Instance.Run();
+			if (!unitTestResult)
+			{
+				Close();
+				return;
+			}
+
 			//Run init functions
 			InitializeComponent();
 			if (!SetupTimers())

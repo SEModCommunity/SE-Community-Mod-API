@@ -270,10 +270,14 @@ namespace SEModAPIInternal.API.Entity
 		public static string ObjectManagerGetEntityHashSet = "84C54760C0F0DDDA50B0BE27B7116ED8";
 		public static string ObjectManagerAddEntity = "E5E18F5CAD1F62BB276DF991F20AE6AF";
 
+		/////////////////////////////////////////////////////////////////
+
 		public static string ObjectFactoryNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ObjectFactoryClass = "E825333D6467D99DD83FB850C600395C";
 		public static string ObjectFactoryCreateEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
 		public static string ObjectFactoryCreateTypedEntityMethod = "060AD47B4BD57C19FEEC3DED4F8E7F9D";
+
+		/////////////////////////////////////////////////////////////////
 
 		//2 Packet Types
 		public static string EntityBaseNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
@@ -317,6 +321,37 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for SectorObjectManager");
+				bool result = true;
+				result &= BaseObject.HasMethod(type, ObjectManagerGetEntityHashSet);
+				result &= BaseObject.HasMethod(type, ObjectManagerAddEntity);
+
+				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ObjectFactoryNamespace, ObjectFactoryClass);
+				if (type2 == null)
+					throw new Exception("Could not find object factory type for SectorObjectManager");
+				result &= BaseObject.HasMethod(type2, ObjectFactoryCreateEntityMethod);
+				result &= BaseObject.HasMethod(type2, ObjectFactoryCreateTypedEntityMethod);
+
+				Type type3 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(EntityBaseNetManagerNamespace, EntityBaseNetManagerClass);
+				if (type3 == null)
+					throw new Exception("Could not find entity base network manager type for SectorObjectManager");
+				result &= BaseObject.HasMethod(type2, EntityBaseNetManagerSendEntity);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
 
 		protected override bool IsValidEntity(Object entity)
 		{

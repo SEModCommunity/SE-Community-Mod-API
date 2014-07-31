@@ -191,12 +191,56 @@ namespace SEModAPIInternal.API.Entity
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_Base, MyObjectBuilder_BaseSerializer>(ObjectBuilder, fileInfo);
 		}
 
-		public virtual void ReflectionUnitTest()
+		public static bool ReflectionUnitTest()
 		{
-			//Do stuff
+			return true;
 		}
 
 		#region "Internal"
+
+		internal static bool HasField(Type objectType, string fieldName)
+		{
+			try
+			{
+				if (fieldName == null || fieldName.Length == 0)
+					return false;
+				FieldInfo field = objectType.GetField(fieldName);
+				if (field == null)
+					field = objectType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (field == null)
+					field = objectType.BaseType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (field == null)
+					return false;
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return false;
+			}
+		}
+
+		internal static bool HasMethod(Type objectType, string methodName)
+		{
+			try
+			{
+				if (methodName == null || methodName.Length == 0)
+					return false;
+				MethodInfo method = objectType.GetMethod(methodName);
+				if (method == null)
+					method = objectType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (method == null)
+					method = objectType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (method == null)
+					return false;
+				return true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return false;
+			}
+		}
 
 		internal static FieldInfo GetStaticField(Type objectType, string fieldName)
 		{
@@ -256,34 +300,6 @@ namespace SEModAPIInternal.API.Entity
 					LogManager.GameLog.WriteLine(Environment.StackTrace);
 				LogManager.GameLog.WriteLine(ex);
 				return null;
-			}
-		}
-
-		internal static bool HasEntityMethod(Object gameEntity, string methodName)
-		{
-			try
-			{
-				if (gameEntity == null)
-					return false;
-				if (methodName == null || methodName.Length == 0)
-					return false;
-				Type entityType = gameEntity.GetType();
-				MethodInfo method = entityType.GetMethod(methodName);
-				if (method == null)
-					method = entityType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-				if (method == null)
-					method = entityType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-				if (method == null)
-					return false;
-				return true;
-			}
-			catch (Exception ex)
-			{
-				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "': " + ex.Message);
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.GameLog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
-				return false;
 			}
 		}
 

@@ -471,31 +471,32 @@ namespace SEModAPIInternal.API.Entity
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_EntityBase, MyObjectBuilder_EntityBaseSerializer>(ObjectBuilder, fileInfo);
 		}
 
-		public override void ReflectionUnitTest()
+		public static bool ReflectionUnitTest()
 		{
 			try
 			{
 				Type type = InternalType;
 				if (type == null)
 					throw new Exception("Could not find internal type for BaseEntity");
-				Object tempEntity = Activator.CreateInstance(type);
-				MethodInfo method1 = GetEntityMethod(tempEntity, BaseEntityGetObjectBuilderMethod);
-				MethodInfo method2 = GetEntityMethod(tempEntity, BaseEntityGetPhysicsManagerMethod);
-				MethodInfo method3 = GetEntityMethod(tempEntity, BaseEntityGetEntityIdMethod);
-				MethodInfo method4 = GetEntityMethod(tempEntity, BaseEntityCombineOnMovedEventMethod);
-				MethodInfo method5 = GetEntityMethod(tempEntity, BaseEntityCombineOnClosedEventMethod);
-				MethodInfo method6 = GetEntityMethod(tempEntity, BaseEntityGetIsDisposedMethod);
-				MethodInfo method7 = GetEntityMethod(tempEntity, BaseEntityGetOrientationMatrixMethod);
-				MethodInfo method8 = GetEntityMethod(tempEntity, BaseEntityRemoveMethod);
-				MethodInfo method9 = GetEntityMethod(tempEntity, BaseEntityGetNetManagerMethod);
-				FieldInfo field1 = GetEntityField(tempEntity, BaseEntityEntityIdField);
+				bool result = true;
+				result &= HasMethod(type, BaseEntityGetObjectBuilderMethod);
+				result &= HasMethod(type, BaseEntityGetPhysicsManagerMethod);
+				result &= HasMethod(type, BaseEntityGetEntityIdMethod);
+				result &= HasMethod(type, BaseEntityCombineOnMovedEventMethod);
+				result &= HasMethod(type, BaseEntityCombineOnClosedEventMethod);
+				result &= HasMethod(type, BaseEntityGetIsDisposedMethod);
+				result &= HasMethod(type, BaseEntityGetOrientationMatrixMethod);
+				result &= HasMethod(type, BaseEntityRemoveMethod);
+				result &= HasMethod(type, BaseEntityGetNetManagerMethod);
+				result &= HasField(type, BaseEntityEntityIdField);
+
+				return result;
 			}
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLine(ex);
+				return false;
 			}
-
-			base.ReflectionUnitTest();
 		}
 
 		#region "Internal"
@@ -758,6 +759,16 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		public static Type InternalType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(BaseEntityNetworkManagerNamespace, BaseEntityNetworkManagerClass);
+
+				return type;
+			}
+		}
+
 		public Object NetworkManager
 		{
 			get
@@ -774,6 +785,24 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for BaseEntityNetworkManager");
+				bool result = BaseObject.HasMethod(type, BaseEntityBroadcastRemovalMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public void RemoveEntity()
 		{

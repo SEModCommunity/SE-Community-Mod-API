@@ -20,6 +20,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public static string TerminalBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string TerminalBlockClass = "CCFD704C70C3F20F7E84E8EA42D7A730";
+
 		public static string TerminalBlockGetCustomNameMethod = "DE9705A29F3FE6F1E501595879B2E54F";
 		public static string TerminalBlockSetCustomNameMethod = "774FC8084C0899CEF5C8DAE867B847FE";
 		public static string TerminalBlockBroadcastCustomNameMethod = "97B2C51E83D10649FBF8E598D77C8BF8";
@@ -90,6 +91,27 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(TerminalBlockNamespace, TerminalBlockClass);
+				if (type == null)
+					throw new Exception("Could not find internal type for TerminalBlockEntity");
+				bool result = true;
+				result &= HasMethod(type, TerminalBlockGetCustomNameMethod);
+				result &= HasMethod(type, TerminalBlockSetCustomNameMethod);
+				result &= HasMethod(type, TerminalBlockBroadcastCustomNameMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
 
 		protected void InternalSetCustomName()
 		{

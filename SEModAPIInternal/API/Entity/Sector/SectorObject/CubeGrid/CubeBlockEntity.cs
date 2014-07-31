@@ -346,6 +346,60 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlockSerializer>(ObjectBuilder, fileInfo);
 		}
 
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for CubeBlockEntity");
+				bool result = true;
+				result &= HasMethod(type, CubeBlockGetObjectBuilderMethod);
+				result &= HasMethod(type, CubeBlockGetActualBlockMethod);
+				result &= HasMethod(type, CubeBlockDamageBlockMethod);
+				result &= HasMethod(type, CubeBlockGetBuildValueMethod);
+				result &= HasMethod(type, CubeBlockGetBuildPercentMethod);
+				result &= HasMethod(type, CubeBlockGetIntegrityValueMethod);
+				result &= HasMethod(type, CubeBlockGetMaxIntegrityValueMethod);
+				result &= HasMethod(type, CubeBlockUpdateWeldProgressMethod);
+				result &= HasField(type, CubeBlockParentCubeGridField);
+				result &= HasField(type, CubeBlockColorMaskHSVField);
+				result &= HasField(type, CubeBlockConstructionManagerField);
+
+				type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ActualCubeBlockNamespace, ActualCubeBlockClass);
+				if (type == null)
+					throw new Exception("Could not find actual type for CubeBlockEntity");
+				result &= HasMethod(type, ActualCubeBlockGetObjectBuilderMethod);
+				result &= HasMethod(type, ActualCubeBlockGetFactionsObjectMethod);
+				result &= HasMethod(type, ActualCubeBlockSetFactionsDataMethod);
+
+				type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FactionsDataNamespace, FactionsDataClass);
+				if (type == null)
+					throw new Exception("Could not find factions data type for CubeBlockEntity");
+				result &= HasField(type, FactionsDataOwnerField);
+				result &= HasField(type, FactionsDataShareModeField);
+
+				type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ConstructionManagerNamespace, ConstructionManagerClass);
+				if (type == null)
+					throw new Exception("Could not find construction manager type for CubeBlockEntity");
+				result &= HasMethod(type, ConstructionManagerSetIntegrityBuildValuesMethod);
+				result &= HasMethod(type, ConstructionManagerGetBuildValueMethod);
+				result &= HasMethod(type, ConstructionManagerGetIntegrityValueMethod);
+				result &= HasMethod(type, ConstructionManagerGetMaxIntegrityMethod);
+				result &= HasMethod(type, ConstructionManagerGetBuildPercentMethod);
+				result &= HasMethod(type, ConstructionManagerGetIntegrityPercentMethod);
+				result &= HasField(type, ConstructionManagerIntegrityValueField);
+				result &= HasField(type, ConstructionManagerBuildValueField);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
+
 		#region "Internal"
 
 		protected Object GetActualObject()

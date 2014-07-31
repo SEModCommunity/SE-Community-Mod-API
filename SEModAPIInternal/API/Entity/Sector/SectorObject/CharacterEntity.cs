@@ -243,6 +243,32 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Methods"
 
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for CharacterEntity");
+				bool result = true;
+				result &= BaseObject.HasMethod(type, CharacterGetHealthMethod);
+				result &= BaseObject.HasMethod(type, CharacterDamageCharacterMethod);
+				result &= BaseObject.HasMethod(type, CharacterSetHealthMethod);
+				result &= BaseObject.HasMethod(type, CharacterGetBatteryCapacityMethod);
+				result &= BaseObject.HasMethod(type, CharacterSetBatteryCapacityMethod);
+				result &= BaseObject.HasMethod(type, CharacterGetInventoryMethod);
+				result &= BaseObject.HasMethod(type, CharacterGetDisplayNameMethod);
+				result &= BaseObject.HasField(type, CharacterItemListField);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
+
 		public override void Dispose()
 		{
 			m_isDisposed = true;
