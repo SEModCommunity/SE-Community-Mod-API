@@ -243,7 +243,7 @@ namespace SEModAPIInternal.API.Entity
 					MethodInfo method = objectType.GetMethod(methodName);
 					if (method == null)
 						method = objectType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-					if (method == null)
+					if (method == null && objectType.BaseType != null)
 						method = objectType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 					if (method == null)
 					{
@@ -257,7 +257,7 @@ namespace SEModAPIInternal.API.Entity
 					MethodInfo method = objectType.GetMethod(methodName, argTypes);
 					if (method == null)
 						method = objectType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy, Type.DefaultBinder, argTypes, null);
-					if (method == null)
+					if (method == null && objectType.BaseType != null)
 						method = objectType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy, Type.DefaultBinder, argTypes, null);
 					if (method == null)
 					{

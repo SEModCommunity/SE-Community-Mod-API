@@ -26,9 +26,9 @@ namespace SEModAPIInternal.API.Entity
 		public static string PowerProducerNamespace = "FB8C11741B7126BD9C97FE76747E087F";
 		public static string PowerProducerClass = "7E69388ED0DB47818FB7AFF9F16C6EDA";
 
-		public static string PowerProducerGetMaxPowerOutputMethod = "26E65BB7D006796371B30295522ED81C";
-		public static string PowerProducerGetCurrentOutputMethod = "E1934F426DB7E3E1C7D37A8BC54EF305";
-		public static string PowerProducerSetCurrentOutputMethod = "B85ED474AD873A1311A35BD2AE732356";
+		public static string PowerProducerGetMaxPowerOutputMethod = "58EEBD759116F30A9CA9E3561AEFE417";
+		public static string PowerProducerGetCurrentOutputMethod = "3C551213B1D8782AE3A6E532D28E5C6B";
+		public static string PowerProducerSetCurrentOutputMethod = "84D5D77856C2CD320799ADE58CE2C225";
 
 		#endregion
 
@@ -100,6 +100,27 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PowerProducerNamespace, PowerProducerClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for PowerProducer");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, PowerProducerGetMaxPowerOutputMethod);
+				result &= BaseObject.HasMethod(type1, PowerProducerGetCurrentOutputMethod);
+				result &= BaseObject.HasMethod(type1, PowerProducerSetCurrentOutputMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return false;
+			}
+		}
 
 		protected void InternalUpdatePowerOutput()
 		{

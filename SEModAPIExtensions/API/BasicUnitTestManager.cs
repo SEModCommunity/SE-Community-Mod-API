@@ -168,6 +168,23 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("Faction reflection validation failed!");
 			}
 
+			if (!PowerProducer.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("PowerProducer reflection validation failed!");
+			}
+
+			if (!PowerReceiver.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("PowerReceiver reflection validation failed!");
+			}
+
+			if (result)
+			{
+				Console.WriteLine("All types passed reflection unit tests!");
+			}
+
 			return result;
 		}
 	}

@@ -107,6 +107,31 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PowerReceiverNamespace, PowerReceiverClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for PowerReceiver");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, PowerReceiverRunPowerRateCallbackMethod);
+				result &= BaseObject.HasMethod(type1, PowerReceiverGetCurrentInputMethod);
+				result &= BaseObject.HasMethod(type1, PowerReceiverGetCurrentRateMethod);
+				result &= BaseObject.HasMethod(type1, PowerReceiverSetMaxRequiredInputMethod);
+				result &= BaseObject.HasField(type1, PowerReceiverMaxRequiredInputField);
+				result &= BaseObject.HasField(type1, PowerReceiverPowerRatioField);
+				result &= BaseObject.HasField(type1, PowerReceiverInputRateCallbackField);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.GameLog.WriteLine(ex);
+				return false;
+			}
+		}
+
 		protected void InternalUpdateMaxRequiredInput()
 		{
 			try
