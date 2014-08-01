@@ -206,6 +206,12 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("BatteryBlockEntity reflection validation failed!");
 			}
 
+			if (!DoorEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("DoorEntity reflection validation failed!");
+			}
+
 			if (result)
 			{
 				Console.WriteLine("All block types passed reflection unit tests!");
