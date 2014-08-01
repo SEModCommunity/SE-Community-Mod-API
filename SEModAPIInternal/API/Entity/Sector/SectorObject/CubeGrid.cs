@@ -59,9 +59,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#region "Constructors and Initializers"
 
 		public CubeGridEntity(FileInfo prefabFile)
-			: base(null)
+			: base(BaseObjectManager.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile))
 		{
-			ObjectBuilder = BaseObjectManager.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile);
 			ObjectBuilder.EntityId = 0;
 			if(ObjectBuilder.PositionAndOrientation != null)
 				PositionAndOrientation = ObjectBuilder.PositionAndOrientation.GetValueOrDefault();

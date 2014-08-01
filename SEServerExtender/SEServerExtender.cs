@@ -1335,10 +1335,9 @@ namespace SEServerExtender
 				{
 					try
 					{
-						CubeGridEntity newEntity = new CubeGridEntity(fileInfo);
+						CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
 
-						if (newEntity != null)
-							SectorObjectManager.Instance.AddEntity(newEntity);
+						SectorObjectManager.Instance.AddEntity(cubeGrid);
 					}
 					catch (Exception ex)
 					{
