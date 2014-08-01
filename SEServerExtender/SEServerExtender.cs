@@ -20,6 +20,7 @@ using SEModAPI.API.Definitions;
 using SEModAPI.Support;
 
 using SEModAPIExtensions.API;
+using SEModAPIExtensions.API.Plugin;
 
 using SEModAPIInternal.API;
 using SEModAPIInternal.API.Common;
@@ -54,7 +55,6 @@ namespace SEServerExtender
 
 		//Utilities Page
 		private int m_floatingObjectsCount;
-
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -1596,7 +1596,8 @@ namespace SEServerExtender
 				LST_Plugins.Items.Clear();
 				foreach (var key in PluginManager.Instance.Plugins.Keys)
 				{
-					LST_Plugins.Items.Add(key);
+					PluginBase plugin = (PluginBase)PluginManager.Instance.Plugins[key];
+					LST_Plugins.Items.Add(plugin.Name + " - " + key.ToString());
 				}
 				LST_Plugins.SelectedIndex = selectedIndex;
 				LST_Plugins.EndUpdate();
@@ -1608,7 +1609,9 @@ namespace SEServerExtender
 			if (LST_Plugins.SelectedItem == null)
 				return;
 
-			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+			//Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+			int selectedIndex = LST_Plugins.SelectedIndex;
+			Guid selectedItem = PluginManager.Instance.Plugins.Keys.ElementAt(selectedIndex);
 			Object plugin = PluginManager.Instance.Plugins[selectedItem];
 
 			PG_Plugins.SelectedObject = plugin;
