@@ -48,6 +48,28 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		public string DisplayName
+		{
+			get { return m_baseDefinition.DisplayName; }
+			set
+			{
+				if (m_baseDefinition.DisplayName == value) return;
+				m_baseDefinition.DisplayName = value;
+				Changed = true;
+			}
+		}
+
+		public string Description
+		{
+			get { return m_baseDefinition.Description; }
+			set
+			{
+				if (m_baseDefinition.Description == value) return;
+				m_baseDefinition.Description = value;
+				Changed = true;
+			}
+		}
+
 		public float Frequency
         {
             get { return m_baseDefinition.Frequency; }
@@ -70,7 +92,7 @@ namespace SEModAPI.API.Definitions
 
         protected override string GetNameFrom(MyObjectBuilder_SpawnGroupDefinition definition)
         {
-            return definition.TypeId.ToString();
+			return definition.DisplayName;
         }
 
 		public SpawnGroupPrefab NewEntry()

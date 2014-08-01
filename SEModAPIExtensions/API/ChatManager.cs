@@ -151,7 +151,7 @@ namespace SEModAPIExtensions.API
 
 		protected void ReceiveChatMessage(ulong remoteUserId, string message, ChatEntryTypeEnum entryType)
 		{
-			string playerName = remoteUserId.ToString();
+			string playerName = PlayerMap.Instance.GetPlayerNameFromSteamId(remoteUserId);
 
 			bool commandParsed = ParseChatCommands(message, remoteUserId);
 

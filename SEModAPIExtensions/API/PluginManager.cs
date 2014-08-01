@@ -257,7 +257,7 @@ namespace SEModAPIExtensions.API
 						events.Add(playerEvent);
 					}
 				}
-				m_lastConnectedPlayerList = connectedPlayers;
+				m_lastConnectedPlayerList = new List<ulong>(connectedPlayers);
 
 				//Run entity events
 				foreach (EntityEventManager.EntityEvent entityEvent in events)

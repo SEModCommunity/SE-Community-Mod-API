@@ -68,7 +68,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 			m_cubeBlockManager = new CubeBlockManager(this);
 			List<CubeBlockEntity> cubeBlockList = new List<CubeBlockEntity>();
-			foreach (var cubeBlock in ((MyObjectBuilder_CubeGrid)ObjectBuilder).CubeBlocks)
+			foreach (var cubeBlock in ObjectBuilder.CubeBlocks)
 			{
 				cubeBlock.EntityId = 0;
 				cubeBlockList.Add(new CubeBlockEntity(this, cubeBlock));
@@ -266,6 +266,17 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get
 			{
 				List<CubeBlockEntity> cubeBlocks = m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>();
+				return cubeBlocks;
+			}
+		}
+
+		[Category("Cube Grid")]
+		[Browsable(false)]
+		public List<MyObjectBuilder_CubeBlock> BaseCubeBlocks
+		{
+			get
+			{
+				List<MyObjectBuilder_CubeBlock> cubeBlocks = ObjectBuilder.CubeBlocks;
 				return cubeBlocks;
 			}
 		}

@@ -1374,13 +1374,15 @@ namespace SEServerExtender
 
 			LST_Chat_ConnectedPlayers.BeginUpdate();
 
-			List<ulong> connectedPlayers = ServerNetworkManager.Instance.GetConnectedPlayers();
+			List<ulong> connectedPlayers = PlayerManager.Instance.ConnectedPlayers;
 			if (connectedPlayers.Count != LST_Chat_ConnectedPlayers.Items.Count)
 			{
 				LST_Chat_ConnectedPlayers.Items.Clear();
 				foreach (ulong remoteUserId in connectedPlayers)
 				{
-					LST_Chat_ConnectedPlayers.Items.Add(remoteUserId.ToString());
+					string playerName = PlayerMap.Instance.GetPlayerNameFromSteamId(remoteUserId);
+
+					LST_Chat_ConnectedPlayers.Items.Add(playerName);
 				}
 			}
 

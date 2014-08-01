@@ -68,8 +68,8 @@ namespace SEModAPIExtensions.API
 						nearestAsteroidDistance = asteroidPositon.Length();
 				}
 
-				spawnSize = farthestAsteroidDistance * 2;
-				destinationSize = nearestAsteroidDistance * 2;
+				spawnSize = farthestAsteroidDistance * 2 + 10000;
+				destinationSize = nearestAsteroidDistance * 2 + 2000;
 			}
 
 			Vector3 groupPosition = UtilityFunctions.GenerateRandomBorderPosition(new Vector3(-spawnSize, -spawnSize, -spawnSize), new Vector3(spawnSize, spawnSize, spawnSize));
@@ -120,6 +120,7 @@ namespace SEModAPIExtensions.API
 
 				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Spawning cargo group '" + randomSpawnGroup.Name + "' ...");
 
+
 				//Spawn the ships in the group
 				Matrix orientation = Matrix.CreateLookAt(startPosition, stopPosition, new Vector3(0, 1, 0));
 				foreach (SpawnGroupPrefab entry in randomSpawnGroup.Prefabs)
@@ -146,21 +147,19 @@ namespace SEModAPIExtensions.API
 
 					cubeGrid.IsDampenersEnabled = false;
 
-					foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+					foreach (MyObjectBuilder_CubeBlock cubeBlock in cubeGrid.BaseCubeBlocks)
 					{
 						//Set the beacon names
-						if (cubeBlock is BeaconEntity)
+						if (cubeBlock.TypeId == typeof(MyObjectBuilder_Beacon))
 						{
-							BeaconEntity beacon = (BeaconEntity)cubeBlock;
-							beacon.CustomName = entry.Name;
+							MyObjectBuilder_Beacon beacon = (MyObjectBuilder_Beacon)cubeBlock;
+							beacon.CustomName = entry.BeaconText;
 						}
 
-						//Set the owner of every block with an entity id
+						//Set the owner of every block
 						//TODO - Find out if setting to an arbitrary non-zero works for this
-						if (cubeBlock.EntityId != 0)
-						{
-							cubeBlock.Owner = 42;
-						}
+						cubeBlock.Owner = PlayerMap.Instance.GetServerVirtualPlayerId();
+						cubeBlock.ShareMode = MyOwnershipShareModeEnum.Faction;
 					}
 
 					//And add the ship to the world
@@ -170,7 +169,7 @@ namespace SEModAPIExtensions.API
 					List<CubeBlockEntity> cubeBlocks = cubeGrid.CubeBlocks;
 				}
 
-				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.BaseDefinition.DisplayName + "' spawned with " + randomSpawnGroup.Prefabs.Length.ToString() + " ships at " + startPosition.ToString());
+				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.DisplayName + "' spawned with " + randomSpawnGroup.Prefabs.Length.ToString() + " ships at " + startPosition.ToString());
 			}
 			catch (Exception ex)
 			{

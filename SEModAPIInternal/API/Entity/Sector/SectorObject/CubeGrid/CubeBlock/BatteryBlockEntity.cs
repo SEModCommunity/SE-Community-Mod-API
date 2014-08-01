@@ -232,13 +232,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				result &= HasField(type, BatteryBlockSemiautoEnabledField);
 				result &= HasField(type, BatteryBlockBatteryDefinitionField);
 				result &= HasField(type, BatteryBlockNetManagerField);
-				/*
-				Type type2 = type.GetNestedType(BatteryBlockNetManagerClass);
+				
+				Type type2 = type.GetNestedType(BatteryBlockNetManagerClass, BindingFlags.NonPublic);
 				if (type2 == null)
 					throw new Exception("Could not find network manager type for BatteryBlockEntity");
 				result &= HasMethod(type2, BatteryBlockNetManagerBroadcastProducerEnabledMethod);
 				result &= HasMethod(type2, BatteryBlockNetManagerBroadcastCurrentStoredPowerMethod);
-				*/
+				
 				return result;
 			}
 			catch (Exception ex)

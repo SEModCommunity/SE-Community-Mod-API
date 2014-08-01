@@ -51,6 +51,7 @@ namespace SEModAPIInternal.API.Common
 		public static string PlayerMapSteamIdToPlayerMappingMethod = "AC5FA6C0D87D43E4B5550A1BB7812DEB";
 		public static string PlayerMapGetSerializableDictionaryMethod = "460B7921B2E774D61F63929C4032F1AC";
 		public static string PlayerMapGetPlayerItemMappingMethod = "0EB2BF49DCB5C20A059E3D6CCA3665AA";
+		public static string PlayerMapAddPlayerItemMappingMethod = "FC99AC4D95CE082574C5C7F4F48C63DE";
 
 		//////////////////////////////////////////////////////
 
@@ -111,6 +112,7 @@ namespace SEModAPIInternal.API.Common
 				result &= BaseObject.HasMethod(type1, PlayerMapSteamIdToPlayerMappingMethod);
 				result &= BaseObject.HasMethod(type1, PlayerMapGetSerializableDictionaryMethod);
 				result &= BaseObject.HasMethod(type1, PlayerMapGetPlayerItemMappingMethod);
+				result &= BaseObject.HasMethod(type1, PlayerMapAddPlayerItemMappingMethod);
 				/*
 				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PlayerMapEntryNamespace, PlayerMapEntryClass);
 				if (type2 == null)
@@ -124,6 +126,20 @@ namespace SEModAPIInternal.API.Common
 				Console.WriteLine(ex);
 				return false;
 			}
+		}
+
+		public string GetPlayerNameFromSteamId(ulong steamId)
+		{
+			string playerName = steamId.ToString();
+
+			List<long> playerIds = PlayerMap.Instance.GetPlayerIdsFromSteamId(steamId);
+			foreach (var entry in playerIds)
+			{
+				MyObjectBuilder_Checkpoint.PlayerItem playerItem = PlayerMap.Instance.GetPlayerItemFromPlayerId(entry);
+				playerName = playerItem.Name;
+			}
+
+			return playerName;
 		}
 
 		public long GetPlayerEntityId(ulong steamId)
@@ -190,7 +206,7 @@ namespace SEModAPIInternal.API.Common
 				Dictionary<long, Object> allPlayers = InternalGetPlayerItemMappping();
 				foreach (var entry in allPlayers)
 				{
-					InternalPlayerItem internalPlayerItem = (InternalPlayerItem)entry.Value;
+					InternalPlayerItem internalPlayerItem = new InternalPlayerItem(entry.Value);
 					if (ignoreDead && internalPlayerItem.isDead)
 						continue;
 
@@ -282,6 +298,44 @@ namespace SEModAPIInternal.API.Common
 				LogManager.GameLog.WriteLine(ex);
 				return new Dictionary<long, Object>();
 			}
+		}
+
+		public long GetServerVirtualPlayerId()
+		{
+			ulong serverSteamId = 0;
+			foreach (var entry in WorldManager.Instance.Checkpoint.Players.Dictionary)
+			{
+				if (entry.Value.PlayerId == 0L)
+				{
+					serverSteamId = entry.Value.SteamID;
+				}
+			}
+
+			long serverVirtualPlayerId = 0;
+			List<long> playerIds = GetPlayerIdsFromSteamId(serverSteamId);
+			if (playerIds.Count == 0)
+			{
+				serverVirtualPlayerId = BaseEntity.GenerateEntityId();
+				if (serverVirtualPlayerId < 0)
+					serverVirtualPlayerId = -serverVirtualPlayerId;
+
+				MyObjectBuilder_Checkpoint.PlayerItem playerItem = new MyObjectBuilder_Checkpoint.PlayerItem();
+				playerItem.Name = "Server";
+				playerItem.IsDead = false;
+				playerItem.Model = "";
+				playerItem.PlayerId = serverVirtualPlayerId;
+				playerItem.SteamId = serverSteamId;
+
+				List<MyObjectBuilder_Checkpoint.PlayerItem> dummyList = new List<MyObjectBuilder_Checkpoint.PlayerItem>();
+				dummyList.Add(playerItem);
+				BaseObject.InvokeEntityMethod(BackingObject, PlayerMapAddPlayerItemMappingMethod, new object[] { dummyList });
+			}
+			else
+			{
+				serverVirtualPlayerId = playerIds[0];
+			}
+
+			return serverVirtualPlayerId;
 		}
 
 		#endregion
