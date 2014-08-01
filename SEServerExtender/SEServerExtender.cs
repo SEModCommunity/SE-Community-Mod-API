@@ -55,6 +55,7 @@ namespace SEServerExtender
 
 		//Utilities Page
 		private int m_floatingObjectsCount;
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -1354,9 +1355,6 @@ namespace SEServerExtender
 
 		private void ChatViewRefresh(object sender, EventArgs e)
 		{
-			if (m_server.CommandLineArgs.noGUI)
-				return;
-
 			LST_Chat_Messages.BeginUpdate();
 
 			string[] chatMessages = ChatManager.Instance.ChatMessages.ToArray();
@@ -1609,7 +1607,6 @@ namespace SEServerExtender
 			if (LST_Plugins.SelectedItem == null)
 				return;
 
-			//Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
 			int selectedIndex = LST_Plugins.SelectedIndex;
 			Guid selectedItem = PluginManager.Instance.Plugins.Keys.ElementAt(selectedIndex);
 			Object plugin = PluginManager.Instance.Plugins[selectedItem];
@@ -1634,7 +1631,8 @@ namespace SEServerExtender
 			if (LST_Plugins.SelectedItem == null)
 				return;
 
-			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+			int selectedIndex = LST_Plugins.SelectedIndex;
+			Guid selectedItem = PluginManager.Instance.Plugins.Keys.ElementAt(selectedIndex);
 			PluginManager.Instance.UnloadPlugin(selectedItem);
 		}
 
@@ -1643,7 +1641,8 @@ namespace SEServerExtender
 			if (LST_Plugins.SelectedItem == null)
 				return;
 
-			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+			int selectedIndex = LST_Plugins.SelectedIndex;
+			Guid selectedItem = PluginManager.Instance.Plugins.Keys.ElementAt(selectedIndex);
 			PluginManager.Instance.InitPlugin(selectedItem);
 		}
 

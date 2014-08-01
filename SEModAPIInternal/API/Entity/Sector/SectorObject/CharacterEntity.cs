@@ -47,7 +47,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CharacterBatteryNamespace = "FB8C11741B7126BD9C97FE76747E087F";
 		public static string CharacterBatteryClass = "328929D5EC05DF770D51383F6FC0B025";
 
-		public static string CharacterBatteryGetBatteryCapacityMethod = "CE7D13B1E1E0E9EBF10ABF14BD645FC1";
+		public static string CharacterBatteryGetBatteryCapacityMethod = "3C51AB5F654F37207D895D117703E30A";
 		public static string CharacterBatterySetBatteryCapacityMethod = "C3BF60F3540A8A48CB8FEE0CDD3A95C6";
 
 		public static string CharacterBatteryCapacityField = "0BAEC0F968A4BEAE30E7C46D9406765C";

@@ -56,8 +56,10 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityGetIsDisposedMethod = "6D8F627C1C0F9F166031C3B600FEDA60";
 		public static string BaseEntityGetOrientationMatrixMethod = "FD50436D896ACC794550210055349FE0";
 		public static string BaseEntityGetNetManagerMethod = "F4456F82186EC3AE6C73294FA6C0A11D";
-		public static string BaseEntityGetEntityIdMethod = "A7BC1DF754191D7893D0CBBD20F1BF08";
+		public static string BaseEntityGetEntityIdMethod = "45C74DC9A22EABBBA5C56EDD15ABF01A";
 		public static string BaseEntitySetEntityIdMethod = "D3D6702587D6336FEE37725E8D2C52CD";
+
+		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
 
 		//////////////////////////////////////////////////////////
 
@@ -490,6 +492,7 @@ namespace SEModAPIInternal.API.Entity
 				result &= HasMethod(type, BaseEntityGetNetManagerMethod);
 				result &= HasMethod(type, BaseEntityGetEntityIdMethod);
 				result &= HasMethod(type, BaseEntitySetEntityIdMethod);
+				result &= HasField(type, BaseEntityEntityIdField);
 
 				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PhysicsManagerNamespace, PhysicsManagerClass);
 				if (type2 == null)
@@ -560,7 +563,27 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				long entityId = (long)InvokeEntityMethod(entity, BaseEntityGetEntityIdMethod);
+				long entityId = 0L;
+				bool oldDebuggingSetting = SandboxGameAssemblyWrapper.IsDebugging;
+				SandboxGameAssemblyWrapper.IsDebugging = false;
+				bool hasGetter = HasMethod(InternalType, BaseEntityGetEntityIdMethod);
+				SandboxGameAssemblyWrapper.IsDebugging = oldDebuggingSetting;
+				if (hasGetter)
+				{
+					entityId = (long)InvokeEntityMethod(entity, BaseEntityGetEntityIdMethod);
+				}
+				else
+				{
+					try
+					{
+						FieldInfo field = GetEntityField(entity, BaseEntityEntityIdField);
+						entityId = (long)field.GetValue(entity);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GameLog.WriteLine(ex);
+					}
+				}
 				return entityId;
 			}
 			catch (Exception ex)
@@ -738,7 +761,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
-		public static string BaseEntityBroadcastRemovalMethod = "CCF2C040799E2EF1C9230C27DB9E50E4";
+		public static string BaseEntityBroadcastRemovalMethod = "47024C1AA8D2D191CF96242C1F587152";
 
 		#endregion
 
