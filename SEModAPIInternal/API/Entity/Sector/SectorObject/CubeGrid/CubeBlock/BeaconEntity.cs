@@ -94,6 +94,26 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Methods"
 
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				bool result = true;
+
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(BeaconNamespace, BeaconClass);
+				if (type == null)
+					throw new Exception("Could not find internal type for BeaconEntity");
+				result &= HasMethod(type, BeaconGetRadioManagerMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
+
 		#region "Internal"
 
 		protected Object InternalGetRadioManager()

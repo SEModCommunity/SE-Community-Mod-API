@@ -24,6 +24,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public static string GravityGeneratorNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string GravityGeneratorClass = "8F510E70FE6A50C0B39D09689C2D6CF4";
+
 		public static string GravityGeneratorSetAccelerationMethod = "79BD2994D8EC029801BD5978D7474622";
 		public static string GravityGeneratorSetFieldSizeMethod = "79D354AC704AAF4576B6F44487097505";
 
@@ -46,14 +47,31 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Properties"
 
 		[Category("Gravity Generator")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_GravityGenerator ObjectBuilder
+		{
+			get
+			{
+				MyObjectBuilder_GravityGenerator gravity = (MyObjectBuilder_GravityGenerator)base.ObjectBuilder;
+
+				return gravity;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[Category("Gravity Generator")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public SerializableVector3 FieldSize
 		{
-			get { return GetSubTypeEntity().FieldSize; }
+			get { return ObjectBuilder.FieldSize; }
 			set
 			{
-				if (GetSubTypeEntity().FieldSize.Equals(value)) return;
-				GetSubTypeEntity().FieldSize = value;
+				if (ObjectBuilder.FieldSize.Equals(value)) return;
+				ObjectBuilder.FieldSize = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -67,11 +85,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Gravity Generator")]
 		public float GravityAcceleration
 		{
-			get { return GetSubTypeEntity().GravityAcceleration; }
+			get { return ObjectBuilder.GravityAcceleration; }
 			set
 			{
-				if (GetSubTypeEntity().GravityAcceleration == value) return;
-				GetSubTypeEntity().GravityAcceleration = value;
+				if (ObjectBuilder.GravityAcceleration == value) return;
+				ObjectBuilder.GravityAcceleration = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -86,13 +104,25 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Methods"
 
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_GravityGenerator GetSubTypeEntity()
+		public static bool ReflectionUnitTest()
 		{
-			return (MyObjectBuilder_GravityGenerator)ObjectBuilder;
+			try
+			{
+				bool result = true;
+
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(GravityGeneratorNamespace, GravityGeneratorClass);
+				if (type == null)
+					throw new Exception("Could not find internal type for GravityGeneratorEntity");
+				result &= HasMethod(type, GravityGeneratorSetAccelerationMethod);
+				result &= HasMethod(type, GravityGeneratorSetFieldSizeMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
 		}
 
 		protected void InternalUpdateGravityAcceleration()

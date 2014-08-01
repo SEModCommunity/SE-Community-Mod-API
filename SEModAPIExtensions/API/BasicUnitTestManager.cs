@@ -212,6 +212,18 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("DoorEntity reflection validation failed!");
 			}
 
+			if (!GravityGeneratorEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("GravityGeneratorEntity reflection validation failed!");
+			}
+
+			if (!BeaconEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("BeaconEntity reflection validation failed!");
+			}
+
 			if (result)
 			{
 				Console.WriteLine("All block types passed reflection unit tests!");
