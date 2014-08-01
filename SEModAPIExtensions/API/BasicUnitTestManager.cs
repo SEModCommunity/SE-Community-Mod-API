@@ -224,6 +224,24 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("BeaconEntity reflection validation failed!");
 			}
 
+			if (!AntennaEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("AntennaEntity reflection validation failed!");
+			}
+
+			if (!ThrustEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ThrustEntity reflection validation failed!");
+			}
+
+			if (!ThrustNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ThrustNetworkManager reflection validation failed!");
+			}
+
 			if (result)
 			{
 				Console.WriteLine("All block types passed reflection unit tests!");

@@ -795,6 +795,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							if (baseEntity.TypeId == typeof(MyObjectBuilder_Drill))
 								newCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
 							else
+							if (baseEntity.TypeId == typeof(MyObjectBuilder_RadioAntenna))
+								newCubeBlock = new AntennaEntity(m_parent, (MyObjectBuilder_RadioAntenna)baseEntity, entity);
+							else
 								newCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 
 							AddEntry(packedBlockCoordinates, newCubeBlock);
