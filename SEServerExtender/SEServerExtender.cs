@@ -65,10 +65,6 @@ namespace SEServerExtender
 			m_instance = this;
 			m_server = server;
 
-			bool unitTestResult = BasicUnitTestManager.Instance.Run();
-			//if (!unitTestResult)
-				//Close();
-
 			//Run init functions
 			InitializeComponent();
 			if (!SetupTimers())
@@ -364,6 +360,17 @@ namespace SEServerExtender
 
 				BTN_Control_Server_Save.Enabled = false;
 				BTN_Control_Server_Reset.Enabled = false;
+			}
+
+			if (!m_server.IsRunning)
+			{
+				BTN_Plugins_Refresh.Enabled = false;
+				BTN_Plugins_Load.Enabled = false;
+				BTN_Plugins_Unload.Enabled = false;
+			}
+			else
+			{
+				BTN_Plugins_Refresh.Enabled = true;
 			}
 		}
 
