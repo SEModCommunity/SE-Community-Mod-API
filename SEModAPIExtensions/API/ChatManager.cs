@@ -291,9 +291,7 @@ namespace SEModAPIExtensions.API
 
 						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed");
 					}
-
-					//All floating objects
-					if (commandParts[2].ToLower().Equals("floatingobjects"))
+					else if (commandParts[2].ToLower().Equals("floatingobjects"))	//All floating objects
 					{
 						List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
 						int floatingObjectCount = entities.Count;
@@ -303,6 +301,32 @@ namespace SEModAPIExtensions.API
 						}
 
 						SendPrivateChatMessage(remoteUserId, floatingObjectCount.ToString() + " floating objects have been removed");
+					}
+					else
+					{
+						string entityName = commandParts[2];
+						if (commandParts.Length > 3)
+						{
+							for (int i = 3; i < commandParts.Length; i++)
+							{
+								entityName += " " + commandParts[i];
+							}
+						}
+
+						int matchingEntitiesCount = 0;
+						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+						foreach (BaseEntity entity in entities)
+						{
+							bool isMatch = Regex.IsMatch(entity.Name, entityName, RegexOptions.IgnoreCase);
+							if (!isMatch)
+								continue;
+
+							entity.Dispose();
+
+							matchingEntitiesCount++;
+						}
+
+						SendPrivateChatMessage(remoteUserId, matchingEntitiesCount.ToString() + " objects have been removed");
 					}
 				}
 
