@@ -160,8 +160,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			bool oldDebuggingSetting = SandboxGameAssemblyWrapper.IsDebugging;
 			SandboxGameAssemblyWrapper.IsDebugging = false;
-			Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FunctionalBlockNamespace, FunctionalBlockClass);
-			bool hasPowerReceiver = HasMethod(type, FunctionalBlockGetPowerReceiverMethod);
+			bool hasPowerReceiver = HasMethod(ActualObject.GetType(), FunctionalBlockGetPowerReceiverMethod);
 			SandboxGameAssemblyWrapper.IsDebugging = oldDebuggingSetting;
 			if (!hasPowerReceiver)
 				return null;

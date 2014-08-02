@@ -38,6 +38,8 @@ namespace SEModAPIInternal.API.Entity
 		public static string PowerReceiverPowerRatioField = "0E8DD5E4ED55981F95E90E0524F6FA1A";
 		public static string PowerReceiverInputRateCallbackField = "053C195FD883E42B0FB64E893A4000D6";
 
+		////////////////////////////////////////////////////////////////////
+
 		//3 - Door, 4 - Gravity Generator, 5 - Battery, 8 - BatteryBlock
 		public static string PowerReceiverTypeEnumNamespace = "FB8C11741B7126BD9C97FE76747E087F";
 		public static string PowerReceiverTypeEnumClass = "0CAE5E7398171101A465139DC3A8A6A4";
@@ -82,7 +84,8 @@ namespace SEModAPIInternal.API.Entity
 			get { return m_maxRequiredInput; }
 			set
 			{
-				if (BackingObject == null || m_powerRateCallback == null) return;
+				if (BackingObject == null || m_powerRateCallback == null)
+					return;
 				m_maxRequiredInput = value;
 
 				Action action = InternalUpdateMaxRequiredInput;

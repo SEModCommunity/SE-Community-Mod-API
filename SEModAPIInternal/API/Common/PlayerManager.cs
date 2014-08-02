@@ -398,7 +398,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			get
 			{
-				List<ulong> connectedPlayers = ServerNetworkManager.Instance.GetConnectedPlayers();
+				List<ulong> connectedPlayers = new List<ulong>(ServerNetworkManager.Instance.GetConnectedPlayers());
 
 				return connectedPlayers;
 			}

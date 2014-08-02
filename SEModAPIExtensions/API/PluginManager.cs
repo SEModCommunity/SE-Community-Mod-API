@@ -283,7 +283,7 @@ namespace SEModAPIExtensions.API
 								{
 									//FIXME - Temporary hack to pass along the player's steam id
 									ulong steamId = (entityEvent.entity != null) ? (ulong)((BaseEntity)entityEvent.entity).EntityId : 0L;
-									updateMethod.Invoke(plugin, new object[] { steamId, entityEvent.entity });
+									updateMethod.Invoke(plugin, new object[] { steamId, null });
 								}
 							}
 							catch (Exception ex)
@@ -299,7 +299,7 @@ namespace SEModAPIExtensions.API
 								{
 									//FIXME - Temporary hack to pass along the player's steam id
 									ulong steamId = (entityEvent.entity != null) ? (ulong)((BaseEntity)entityEvent.entity).EntityId : 0L;
-									updateMethod.Invoke(plugin, new object[] { steamId, entityEvent.entity });
+									updateMethod.Invoke(plugin, new object[] { steamId, null });
 								}
 							}
 							catch (Exception ex)

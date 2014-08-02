@@ -215,7 +215,7 @@ namespace SEModAPIExtensions.API
 				if (!commandParsed)
 				{
 					Object chatMessageStruct = CreateChatMessageStruct(message);
-					List<ulong> connectedPlayers = ServerNetworkManager.Instance.GetConnectedPlayers();
+					List<ulong> connectedPlayers = PlayerManager.Instance.ConnectedPlayers;
 					foreach (ulong remoteUserId in connectedPlayers)
 					{
 						ServerNetworkManager.Instance.SendStruct(remoteUserId, chatMessageStruct, chatMessageStruct.GetType());
