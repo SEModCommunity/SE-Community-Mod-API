@@ -212,17 +212,10 @@ namespace SEModAPIExtensions.API
 
 			List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
 			List<ChatManager.ChatEvent> chatEvents = ChatManager.Instance.ChatEvents;
-
-			foreach (var key in m_plugins.Keys)
+			//Generate the player join/leave events here
+			List<ulong> connectedPlayers = PlayerManager.Instance.ConnectedPlayers;
+			try
 			{
-				var plugin = m_plugins[key];
-
-				//Skip un-initialized plugins
-				if (!m_pluginState.ContainsKey(key))
-					continue;
-
-				//Generate the player join/leave events here
-				List<ulong> connectedPlayers = PlayerManager.Instance.ConnectedPlayers;
 				foreach (ulong steamId in connectedPlayers)
 				{
 					if (!m_lastConnectedPlayerList.Contains(steamId))
@@ -231,12 +224,9 @@ namespace SEModAPIExtensions.API
 						playerEvent.priority = 1;
 						playerEvent.timestamp = DateTime.Now;
 						playerEvent.type = EntityEventManager.EntityEventType.OnPlayerJoined;
-						//TODO - Find a way to stall the event long enough for a linked character entity to exist
+						//TODO - Find a way to stall the event long enough for a linked character entity to exist - this is impossible because of cockpits and respawnships
 						//For now, create a dummy entity just for passing the player's steam id along
-						BaseEntity dummyObject = new BaseEntity(null);
-						dummyObject.EntityId = (long)steamId;
-						playerEvent.entity = dummyObject;
-
+						playerEvent.entity = (Object)steamId;
 						events.Add(playerEvent);
 					}
 				}
@@ -248,16 +238,26 @@ namespace SEModAPIExtensions.API
 						playerEvent.priority = 1;
 						playerEvent.timestamp = DateTime.Now;
 						playerEvent.type = EntityEventManager.EntityEventType.OnPlayerLeft;
-						//TODO - Find a way to stall the event long enough for a linked character entity to exist
+						//TODO - Find a way to stall the event long enough for a linked character entity to exist - this is impossible because of cockpits and respawnships
 						//For now, create a dummy entity just for passing the player's steam id along
-						BaseEntity dummyObject = new BaseEntity(null);
-						dummyObject.EntityId = (long)steamId;
-						playerEvent.entity = dummyObject;
-
+						playerEvent.entity = (Object)steamId;
 						events.Add(playerEvent);
 					}
 				}
-				m_lastConnectedPlayerList = new List<ulong>(connectedPlayers);
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("PluginManager.Update() Exception in player discovery: " + ex.ToString());
+			}
+			m_lastConnectedPlayerList = new List<ulong>(connectedPlayers);
+
+			foreach (var key in m_plugins.Keys)
+			{
+				var plugin = m_plugins[key];
+
+				//Skip un-initialized plugins
+				if (!m_pluginState.ContainsKey(key))
+					continue;
 
 				//Run entity events
 				foreach (EntityEventManager.EntityEvent entityEvent in events)
@@ -282,8 +282,8 @@ namespace SEModAPIExtensions.API
 								if (updateMethod != null)
 								{
 									//FIXME - Temporary hack to pass along the player's steam id
-									ulong steamId = (entityEvent.entity != null) ? (ulong)((BaseEntity)entityEvent.entity).EntityId : 0L;
-									updateMethod.Invoke(plugin, new object[] { steamId, entityEvent.entity });
+									ulong steamId = (ulong)entityEvent.entity;
+									updateMethod.Invoke(plugin, new object[] { steamId });
 								}
 							}
 							catch (Exception ex)
@@ -298,8 +298,8 @@ namespace SEModAPIExtensions.API
 								if (updateMethod != null)
 								{
 									//FIXME - Temporary hack to pass along the player's steam id
-									ulong steamId = (entityEvent.entity != null) ? (ulong)((BaseEntity)entityEvent.entity).EntityId : 0L;
-									updateMethod.Invoke(plugin, new object[] { steamId, entityEvent.entity });
+									ulong steamId = (ulong)entityEvent.entity;
+									updateMethod.Invoke(plugin, new object[] { steamId });
 								}
 							}
 							catch (Exception ex)
