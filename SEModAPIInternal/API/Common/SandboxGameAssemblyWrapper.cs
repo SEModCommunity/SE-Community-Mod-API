@@ -33,6 +33,7 @@ namespace SEModAPIInternal.API.Common
 		protected static SandboxGameAssemblyWrapper m_instance;
 		protected static bool m_isDebugging;
 		protected static bool m_isUsingCommonProgramData;
+		protected static bool m_isInSafeMode;
 
 		protected bool m_isGameLoaded;
 
@@ -79,6 +80,7 @@ namespace SEModAPIInternal.API.Common
 			m_instance = this;
 			m_isDebugging = false;
 			m_isUsingCommonProgramData = false;
+			m_isInSafeMode = false;
 
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
 
@@ -138,6 +140,20 @@ namespace SEModAPIInternal.API.Common
 			{
 				var inst = SandboxGameAssemblyWrapper.Instance;
 				m_isUsingCommonProgramData = value;
+			}
+		}
+
+		public static bool IsInSafeMode
+		{
+			get
+			{
+				var inst = SandboxGameAssemblyWrapper.Instance;
+				return m_isInSafeMode;
+			}
+			set
+			{
+				var inst = SandboxGameAssemblyWrapper.Instance;
+				m_isInSafeMode = value;
 			}
 		}
 

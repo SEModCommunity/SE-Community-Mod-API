@@ -242,6 +242,18 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("ThrustNetworkManager reflection validation failed!");
 			}
 
+			if (!GyroEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("GyroEntity reflection validation failed!");
+			}
+
+			if (!GyroNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("GyroNetworkManager reflection validation failed!");
+			}
+
 			if (result)
 			{
 				Console.WriteLine("All block types passed reflection unit tests!");

@@ -4,7 +4,11 @@ using System.Threading;
 using System.Windows.Forms;
 
 using SEModAPI.Support;
+
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
+
+using SEModAPIExtensions.API;
 
 namespace SEServerExtender
 {
@@ -93,6 +97,10 @@ namespace SEServerExtender
 						}
 					}
 				}
+
+				bool unitTestResult = BasicUnitTestManager.Instance.Run();
+				if (!unitTestResult)
+					SandboxGameAssemblyWrapper.IsInSafeMode = true;
 
 				m_server = new Server(extenderArgs);
 				if (extenderArgs.autoStart)
