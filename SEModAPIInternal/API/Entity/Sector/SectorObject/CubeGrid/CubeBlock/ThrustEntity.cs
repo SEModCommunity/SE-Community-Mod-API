@@ -185,7 +185,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		protected void InternalUpdateOverride()
 		{
-			InvokeEntityMethod(ActualObject, ThrustSetOverrideMethod, new object[] { Override });
+			InvokeEntityMethod(ActualObject, ThrustSetOverrideMethod, new object[] { m_thrustOverride });
 			m_networkManager.BroadcastOverride();
 		}
 
