@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Timers;
+using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
 
@@ -155,7 +156,6 @@ namespace SEModAPIExtensions.API
 
 											//And add it to the dictionary
 											m_plugins.Add(guidValue, pluginObject);
-
 											break;
 										}
 										catch (Exception ex)
@@ -186,15 +186,18 @@ namespace SEModAPIExtensions.API
 		public void Init()
 		{
 			Console.WriteLine("Initializing plugins ...");
+			m_initialized = true;
 
 			foreach (var key in m_plugins.Keys)
 			{
+				
 				InitPlugin(key);
+
 			}
 
 			Console.WriteLine("Finished initializing plugins");
 
-			m_initialized = true;
+			
 		}
 
 		public void Update()
@@ -250,105 +253,25 @@ namespace SEModAPIExtensions.API
 				LogManager.APILog.WriteLine("PluginManager.Update() Exception in player discovery: " + ex.ToString());
 			}
 			m_lastConnectedPlayerList = new List<ulong>(connectedPlayers);
-
+			//int count = 0;
 			foreach (var key in m_plugins.Keys)
 			{
 				var plugin = m_plugins[key];
 
-				//Skip un-initialized plugins
 				if (!m_pluginState.ContainsKey(key))
+				{
+					//count++;
 					continue;
-
-				//Run entity events
-				foreach (EntityEventManager.EntityEvent entityEvent in events)
-				{
-					//If this is a cube block created event and the parent cube grid is still loading then defer the event
-					if (entityEvent.type == EntityEventManager.EntityEventType.OnCubeBlockCreated)
-					{
-						CubeBlockEntity cubeBlock = (CubeBlockEntity)entityEvent.entity;
-						if (cubeBlock.Parent.IsLoading)
-						{
-							EntityEventManager.Instance.AddEvent(entityEvent);
-							continue;
-						}
-					}
-
-					switch (entityEvent.type)
-					{
-						case EntityEventManager.EntityEventType.OnPlayerJoined:
-							try
-							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerJoined");
-								if (updateMethod != null)
-								{
-									//FIXME - Temporary hack to pass along the player's steam id
-									ulong steamId = (ulong)entityEvent.entity;
-									updateMethod.Invoke(plugin, new object[] { steamId });
-								}
-							}
-							catch (Exception ex)
-							{
-								LogManager.GameLog.WriteLine(ex);
-							}
-							break;
-						case EntityEventManager.EntityEventType.OnPlayerLeft:
-							try
-							{
-								MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerLeft");
-								if (updateMethod != null)
-								{
-									//FIXME - Temporary hack to pass along the player's steam id
-									ulong steamId = (ulong)entityEvent.entity;
-									updateMethod.Invoke(plugin, new object[] { steamId });
-								}
-							}
-							catch (Exception ex)
-							{
-								LogManager.GameLog.WriteLine(ex);
-							}
-							break;
-						default:
-							try
-							{
-								string methodName = entityEvent.type.ToString();
-								MethodInfo updateMethod = plugin.GetType().GetMethod(methodName);
-								if (updateMethod != null)
-									updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
-							}
-							catch (Exception ex)
-							{
-								LogManager.GameLog.WriteLine(ex);
-							}
-							break;
-					}
 				}
+				PluginManagerThreadParams parameters = new PluginManagerThreadParams();
+				parameters.plugin = plugin;
+				parameters.key = key;
+				parameters.events = new List<EntityEventManager.EntityEvent>(events);
+				parameters.chatEvents = new List<ChatManager.ChatEvent>(chatEvents);
 
-				//Run chat events
-				foreach (ChatManager.ChatEvent chatEvent in chatEvents)
-				{
-					try
-					{
-						string methodName = chatEvent.type.ToString();
-						MethodInfo updateMethod = plugin.GetType().GetMethod(methodName);
-						if (updateMethod != null)
-							updateMethod.Invoke(plugin, new object[] { chatEvent });
-					}
-					catch (Exception ex)
-					{
-						LogManager.GameLog.WriteLine(ex);
-					}
-				}
+				Thread pluginThread = new Thread(doUpdate);
+				pluginThread.Start(parameters);
 
-				//Run update
-				try
-				{
-					MethodInfo updateMethod = plugin.GetType().GetMethod("Update");
-					updateMethod.Invoke(plugin, new object[] { });
-				}
-				catch (Exception ex)
-				{
-					LogManager.APILog.WriteLine(ex);
-				}
 			}
 
 			m_averageEvents = (m_averageEvents + (events.Count + chatEvents.Count)) / 2;
@@ -373,7 +296,106 @@ namespace SEModAPIExtensions.API
 			EntityEventManager.Instance.ResourceLocked = false;
 			ChatManager.Instance.ClearEvents();
 		}
+		public static void doUpdate(object _parameters)
+		{
+			if (_parameters == null) return;
+			PluginManagerThreadParams parameters = (PluginManagerThreadParams)_parameters;
 
+			List<EntityEventManager.EntityEvent> events = parameters.events;
+			List<ChatManager.ChatEvent> chatEvents = parameters.chatEvents;
+			Object plugin = parameters.plugin;
+
+			//Run entity events
+			foreach (EntityEventManager.EntityEvent entityEvent in events)
+			{
+				//If this is a cube block created event and the parent cube grid is still loading then defer the event
+				if (entityEvent.type == EntityEventManager.EntityEventType.OnCubeBlockCreated)
+				{
+					CubeBlockEntity cubeBlock = (CubeBlockEntity)entityEvent.entity;
+					if (cubeBlock.Parent.IsLoading)
+					{
+						EntityEventManager.Instance.AddEvent(entityEvent);
+						continue;
+					}
+				}
+
+				switch (entityEvent.type)
+				{
+					case EntityEventManager.EntityEventType.OnPlayerJoined:
+						try
+						{
+							MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerJoined");
+							if (updateMethod != null)
+							{
+								//FIXME - Temporary hack to pass along the player's steam id
+								ulong steamId = (ulong)entityEvent.entity;
+								updateMethod.Invoke(plugin, new object[] { steamId });
+							}
+						}
+						catch (Exception ex)
+						{
+							LogManager.GameLog.WriteLine(ex);
+						}
+						break;
+					case EntityEventManager.EntityEventType.OnPlayerLeft:
+						try
+						{
+							MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerLeft");
+							if (updateMethod != null)
+							{
+								//FIXME - Temporary hack to pass along the player's steam id
+								ulong steamId = (ulong)entityEvent.entity;
+								updateMethod.Invoke(plugin, new object[] { steamId });
+							}
+						}
+						catch (Exception ex)
+						{
+							LogManager.GameLog.WriteLine(ex);
+						}
+						break;
+					default:
+						try
+						{
+							string methodName = entityEvent.type.ToString();
+							MethodInfo updateMethod = plugin.GetType().GetMethod(methodName);
+							if (updateMethod != null)
+								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+						}
+						catch (Exception ex)
+						{
+							LogManager.GameLog.WriteLine(ex);
+						}
+						break;
+				}
+			}
+
+			//Run chat events
+			foreach (ChatManager.ChatEvent chatEvent in chatEvents)
+			{
+				try
+				{
+					string methodName = chatEvent.type.ToString();
+					MethodInfo updateMethod = plugin.GetType().GetMethod(methodName);
+					if (updateMethod != null)
+						updateMethod.Invoke(plugin, new object[] { chatEvent });
+				}
+				catch (Exception ex)
+				{
+					LogManager.GameLog.WriteLine(ex);
+				}
+			}
+
+			//Run update
+			try
+			{
+				MethodInfo updateMethod = plugin.GetType().GetMethod("Update");
+				updateMethod.Invoke(plugin, new object[] { });
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+			}
+		}
 		public void Shutdown()
 		{
 			foreach (var key in m_plugins.Keys)
