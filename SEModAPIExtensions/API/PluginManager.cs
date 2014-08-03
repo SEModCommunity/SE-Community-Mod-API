@@ -253,16 +253,12 @@ namespace SEModAPIExtensions.API
 				LogManager.APILog.WriteLine("PluginManager.Update() Exception in player discovery: " + ex.ToString());
 			}
 			m_lastConnectedPlayerList = new List<ulong>(connectedPlayers);
-			//int count = 0;
 			foreach (var key in m_plugins.Keys)
 			{
 				var plugin = m_plugins[key];
 
 				if (!m_pluginState.ContainsKey(key))
-				{
-					//count++;
 					continue;
-				}
 				PluginManagerThreadParams parameters = new PluginManagerThreadParams();
 				parameters.plugin = plugin;
 				parameters.key = key;
