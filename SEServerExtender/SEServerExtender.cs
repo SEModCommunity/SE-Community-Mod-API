@@ -98,12 +98,12 @@ namespace SEServerExtender
 			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
 
 			m_statusCheckTimer = new System.Windows.Forms.Timer();
-			m_statusCheckTimer.Interval = 500;
+			m_statusCheckTimer.Interval = 5000;
 			m_statusCheckTimer.Tick += new EventHandler(StatusCheckRefresh);
 			m_statusCheckTimer.Start();
 
 			m_utilitiesCleanFloatingObjectsTimer = new System.Windows.Forms.Timer();
-			m_utilitiesCleanFloatingObjectsTimer.Interval = 1000;
+			m_utilitiesCleanFloatingObjectsTimer.Interval = 5000;
 			m_utilitiesCleanFloatingObjectsTimer.Tick += new EventHandler(UtilitiesCleanFloatingObjects);
 
 			return true;
@@ -146,11 +146,6 @@ namespace SEServerExtender
 		private void StatusCheckRefresh(object sender, EventArgs e)
 		{
 			UpdateControls();
-
-			if (!m_server.IsRunning && m_server.CommandLineArgs.autoStart)
-			{
-				BTN_ServerControl_Start.PerformClick();
-			}
 
 			if (m_server.IsRunning)
 			{
@@ -1690,7 +1685,8 @@ namespace SEServerExtender
 		{
 			if (CHK_Utilities_FloatingObjectAutoClean.Checked == true)
 			{
-				m_utilitiesCleanFloatingObjectsTimer.Start();
+				if(!m_utilitiesCleanFloatingObjectsTimer.Enabled)
+					m_utilitiesCleanFloatingObjectsTimer.Start();
 			}
 			else
 			{

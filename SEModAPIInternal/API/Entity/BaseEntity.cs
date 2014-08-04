@@ -455,8 +455,6 @@ namespace SEModAPIInternal.API.Entity
 				{
 					m_networkManager.RemoveEntity();
 
-					Thread.Sleep(250);
-
 					Action action = InternalRemoveEntity;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}

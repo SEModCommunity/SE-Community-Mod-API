@@ -249,12 +249,9 @@ namespace SEModAPIInternal.API.Common
 			if (m_memberToModify == 0)
 				return;
 
-			BaseObject.InvokeEntityMethod(BackingObject, FactionRemoveMemberMethod, new object[] { m_memberToModify });
-
-			//TODO - Test and see if we can reliably send the network removal to clients without this pause
-			Thread.Sleep(15);
-
 			FactionsManager.Instance.RemoveMember(Id, m_memberToModify);
+
+			BaseObject.InvokeEntityMethod(BackingObject, FactionRemoveMemberMethod, new object[] { m_memberToModify });
 
 			m_memberToModify = 0;
 		}
@@ -505,12 +502,9 @@ namespace SEModAPIInternal.API.Common
 			if (m_factionToModify == 0)
 				return;
 
-			BaseObject.InvokeEntityMethod(BackingObject, FactionManagerRemoveFactionByIdMethod, new object[] { m_factionToModify });
-
-			//TODO - Test and see if we can reliably send the network removal to clients without this pause
-			Thread.Sleep(15);
-
 			BaseObject.InvokeEntityMethod(BackingObject, FactionNetManagerRemoveFactionMethod, new object[] { m_factionToModify });
+
+			BaseObject.InvokeEntityMethod(BackingObject, FactionManagerRemoveFactionByIdMethod, new object[] { m_factionToModify });
 
 			m_factionToModify = 0;
 		}

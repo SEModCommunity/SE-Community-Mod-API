@@ -34,70 +34,77 @@ namespace SEServerExtender
 		[STAThread]
 		static void Main(string[] args)
 		{
-			try
+			//Setup error handling for unmanaged exceptions
+			AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
+			Application.ThreadException += Application_ThreadException;
+			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
+			CommandLineArgs extenderArgs = new CommandLineArgs();
+
+			//Setup the default args
+			extenderArgs.autoStart = false;
+			extenderArgs.worldName = "";
+			extenderArgs.instanceName = "";
+			extenderArgs.noGUI = false;
+			extenderArgs.noConsole = false;
+			extenderArgs.debug = false;
+			extenderArgs.gamePath = "";
+
+			//Process the args
+			foreach (string arg in args)
 			{
-				//Setup error handling for unmanaged exceptions
-				AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
-				Application.ThreadException += Application_ThreadException;
-				Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-
-				//Setup the default args
-				CommandLineArgs extenderArgs = new CommandLineArgs();
-				extenderArgs.autoStart = false;
-				extenderArgs.worldName = "";
-				extenderArgs.instanceName = "";
-				extenderArgs.noGUI = false;
-				extenderArgs.noConsole = false;
-				extenderArgs.debug = false;
-				extenderArgs.gamePath = "";
-
-				//Process the args
-				foreach (string arg in args)
+				if (arg.Split('=').Length > 1)
 				{
-					if (arg.Split('=').Length > 1)
+					string argName = arg.Split('=')[0];
+					string argValue = arg.Split('=')[1];
+
+					Console.WriteLine("Name-Value Arg: name='" + argName + "' value='" + argValue + "'");
+
+					if (argName.ToLower().Equals("instance"))
 					{
-						string argName = arg.Split('=')[0];
-						string argValue = arg.Split('=')[1];
-
-						Console.WriteLine("Name-Value Arg: name='" + argName + "' value='" + argValue + "'");
-
-						if (argName.ToLower().Equals("instance"))
-						{
-							extenderArgs.instanceName = argValue;
-						}
-						if (argName.ToLower().Equals("gamepath"))
-						{
-							extenderArgs.gamePath = argValue;
-						}
+						extenderArgs.instanceName = argValue;
 					}
-					else
+					if (argName.ToLower().Equals("gamepath"))
 					{
-						if (arg.ToLower().Equals("autostart"))
-						{
-							extenderArgs.autoStart = true;
-						}
-						if (arg.ToLower().Equals("nogui"))
-						{
-							extenderArgs.noGUI = true;
-
-							//Implies autostart
-							extenderArgs.autoStart = true;
-						}
-						if (arg.ToLower().Equals("noconsole"))
-						{
-							extenderArgs.noGUI = true;
-
-							//Implies nogui and autostart
-							extenderArgs.noGUI = true;
-							extenderArgs.autoStart = true;
-						}
-						if (arg.ToLower().Equals("debug"))
-						{
-							extenderArgs.debug = true;
-						}
+						extenderArgs.gamePath = argValue;
 					}
 				}
+				else
+				{
+					if (arg.ToLower().Equals("autostart"))
+					{
+						extenderArgs.autoStart = true;
+					}
+					if (arg.ToLower().Equals("nogui"))
+					{
+						extenderArgs.noGUI = true;
 
+						//Implies autostart
+						extenderArgs.autoStart = true;
+					}
+					if (arg.ToLower().Equals("noconsole"))
+					{
+						extenderArgs.noConsole = true;
+
+						//Implies nogui and autostart
+						extenderArgs.noGUI = true;
+						extenderArgs.autoStart = true;
+					}
+					if (arg.ToLower().Equals("debug"))
+					{
+						extenderArgs.debug = true;
+					}
+				}
+			}
+
+			if (!Environment.UserInteractive)
+			{
+				extenderArgs.noConsole = true;
+				extenderArgs.noGUI = true;
+			}
+
+			try
+			{
 				bool unitTestResult = BasicUnitTestManager.Instance.Run();
 				if (!unitTestResult)
 					SandboxGameAssemblyWrapper.IsInSafeMode = true;
@@ -118,18 +125,33 @@ namespace SEServerExtender
 			}
 			catch (AutoException eEx)
 			{
-				Console.WriteLine("AutoException - " + eEx.AdditionnalInfo + "\n\r" + eEx.GetDebugString());
-				MessageBox.Show(eEx.AdditionnalInfo + "\n\r" + eEx.GetDebugString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				if(!extenderArgs.noConsole)
+					Console.WriteLine("AutoException - " + eEx.AdditionnalInfo + "\n\r" + eEx.GetDebugString());
+				if (!extenderArgs.noGUI)
+					MessageBox.Show(eEx.AdditionnalInfo + "\n\r" + eEx.GetDebugString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				if (extenderArgs.noConsole && extenderArgs.noGUI)
+					throw eEx.GetBaseException();
 			}
 			catch (TargetInvocationException ex)
 			{
-				Console.WriteLine("TargetInvocationException - " + ex.ToString() + "\n\r" + ex.InnerException.ToString());
-				MessageBox.Show(ex.ToString() + "\n\r" + ex.InnerException.ToString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				if (!extenderArgs.noConsole)
+					Console.WriteLine("TargetInvocationException - " + ex.ToString() + "\n\r" + ex.InnerException.ToString());
+				if (!extenderArgs.noGUI)
+					MessageBox.Show(ex.ToString() + "\n\r" + ex.InnerException.ToString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				if (extenderArgs.noConsole && extenderArgs.noGUI)
+					throw ex;
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine("Exception - " + ex.ToString());
-				MessageBox.Show(ex.ToString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				if (!extenderArgs.noConsole)
+					Console.WriteLine("Exception - " + ex.ToString());
+				if (!extenderArgs.noGUI)
+					MessageBox.Show(ex.ToString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				if (extenderArgs.noConsole && extenderArgs.noGUI)
+					throw ex;
 			}
 		}
 
@@ -164,6 +186,5 @@ namespace SEServerExtender
 				LogManager.GameLog.WriteLine((Exception)e.ExceptionObject);
 			}
 		}
-
 	}
 }
