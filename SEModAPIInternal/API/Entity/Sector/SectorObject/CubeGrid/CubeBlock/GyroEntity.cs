@@ -110,9 +110,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Gyro")]
 		[Browsable(true)]
 		[ReadOnly(false)]
+		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper TargetAngularVelocity
 		{
-			get { return ObjectBuilder.TargetAngularVelocity; }
+			get { return (Vector3Wrapper)ObjectBuilder.TargetAngularVelocity; }
 			set
 			{
 				if ((Vector3)ObjectBuilder.TargetAngularVelocity == (Vector3)value) return;
@@ -278,12 +279,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		protected void InternalBroadcastPower()
 		{
-			BaseObject.InvokeEntityMethod(m_backingObject, GyroNetworkManagerBroadcastOverrideMethod, new object[] { m_parent.GyroPower });
+			BaseObject.InvokeEntityMethod(m_backingObject, GyroNetworkManagerBroadcastPowerMethod, new object[] { m_parent.GyroPower });
 		}
 
 		protected void InternalBroadcastTargetAngularVelocity()
 		{
-			BaseObject.InvokeEntityMethod(m_backingObject, GyroNetworkManagerBroadcastOverrideMethod, new object[] { (Vector3)m_parent.TargetAngularVelocity });
+			Vector3 newTarget = (Vector3)m_parent.TargetAngularVelocity;
+			BaseObject.InvokeEntityMethod(m_backingObject, GyroNetworkManagerBroadcastTargetAngularVelocityMethod, new object[] { newTarget });
 		}
 
 		#endregion
