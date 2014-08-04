@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 
@@ -31,6 +32,12 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity
 {
+	[DataContract]
+	[KnownType(typeof(CharacterEntity))]
+	[KnownType(typeof(CubeGridEntity))]
+	[KnownType(typeof(FloatingObject))]
+	[KnownType(typeof(Meteor))]
+	[KnownType(typeof(VoxelMap))]
 	public class BaseEntity : BaseObject
 	{
 		#region "Attributes"
@@ -145,6 +152,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Entity")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -158,6 +166,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -170,6 +179,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -178,6 +188,9 @@ namespace SEModAPIInternal.API.Entity
 			get
 			{
 				MyObjectBuilder_EntityBase entityBase = (MyObjectBuilder_EntityBase)base.ObjectBuilder;
+				if (entityBase == null)
+					return (MyObjectBuilder_EntityBase)null;
+
 				entityBase.EntityId = m_entityId;
 				entityBase.PositionAndOrientation = m_positionOrientation;
 
@@ -189,6 +202,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		[Browsable(true)]
 		[Description("The unique entity ID representing a functional entity in-game")]
@@ -217,14 +231,20 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		public MyPersistentEntityFlags2 PersistentFlags
 		{
 			get { return ObjectBuilder.PersistentFlags; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Entity")]
 		[Browsable(false)]
 		public MyPositionAndOrientation PositionAndOrientation
@@ -259,6 +279,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper Position
@@ -277,6 +298,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper Up
@@ -295,6 +317,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper Forward
@@ -313,6 +336,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper LinearVelocity
@@ -344,6 +368,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper AngularVelocity
@@ -372,6 +397,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
 		public float MaxLinearVelocity
 		{
@@ -400,7 +426,9 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Entity")]
+		[Browsable(true)]
 		[ReadOnly(true)]
 		public float Mass
 		{
@@ -415,8 +443,13 @@ namespace SEModAPIInternal.API.Entity
 
 				return body.Mass;
 			}
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Entity")]
 		[Browsable(false)]
 		[ReadOnly(true)]

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
@@ -258,6 +259,7 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 	}
 
+	[DataContract]
 	public class SectorObjectManager : BaseObjectManager
 	{
 		#region "Attributes"

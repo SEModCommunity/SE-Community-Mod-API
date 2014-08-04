@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 
@@ -585,6 +586,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		#endregion
 	}
 
+	[DataContract]
 	public class CubeBlockManager : BaseObjectManager
 	{
 		#region "Attributes"
@@ -616,6 +618,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public bool IsLoading
 		{
 			get { return m_isLoading; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		#endregion

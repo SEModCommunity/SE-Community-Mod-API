@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/SEModAPI.API" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" />
+  <xs:complexType name="ArrayOfBaseEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="BaseEntity" nillable="true" type="tns:BaseEntity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfBaseEntity" nillable="true" type="tns:ArrayOfBaseEntity" />
+  <xs:complexType name="BaseEntity">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:BaseObject">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="EntityId" type="xs:long" />
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/SEModAPI.API" minOccurs="0" name="LinearVelocity" type="q1:Vector3Wrapper" />
+          <xs:element minOccurs="0" name="Mass" type="xs:float" />
+          <xs:element minOccurs="0" name="MaxLinearVelocity" type="xs:float" />
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/SEModAPI.API" minOccurs="0" name="Position" type="q2:Vector3Wrapper" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="BaseEntity" nillable="true" type="tns:BaseEntity" />
+  <xs:complexType name="BaseObject">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Changed" type="xs:boolean" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="Id" type="q3:SerializableDefinitionId" />
+      <xs:element minOccurs="0" name="IsDisposed" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Subtype" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="BaseObject" nillable="true" type="tns:BaseObject" />
+</xs:schema>

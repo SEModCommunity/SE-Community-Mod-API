@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 using Sandbox.Common;
 using Sandbox.Common.ObjectBuilders;
@@ -25,13 +26,18 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
+	[DataContract]
+	[KnownType("KnownTypes")]
 	public class CubeGridEntity : BaseEntity
 	{
 		#region "Attributes"
 
+		[DataMember]
 		private CubeBlockManager m_cubeBlockManager;
 		private CubeGridNetworkManager m_networkManager;
+		[DataMember]
 		private PowerManager m_powerManager;
+
 		private static Type m_internalType;
 		private string m_name;
 		private DateTime m_lastNameRefresh;
@@ -120,6 +126,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[DataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -133,6 +140,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Grid")]
 		[ReadOnly(true)]
 		public override string Name
@@ -194,6 +202,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -202,6 +211,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get
 			{
 				MyObjectBuilder_CubeGrid objectBuilder = (MyObjectBuilder_CubeGrid)base.ObjectBuilder;
+				if (objectBuilder == null)
+					return (MyObjectBuilder_CubeGrid)null;
 
 				objectBuilder.LinearVelocity = LinearVelocity;
 				objectBuilder.AngularVelocity = AngularVelocity;
@@ -214,32 +225,31 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Grid")]
 		[ReadOnly(true)]
 		public MyCubeSize GridSizeEnum
 		{
 			get { return ObjectBuilder.GridSizeEnum; }
-			set
+			private set
 			{
-				if (ObjectBuilder.GridSizeEnum == value) return;
-				ObjectBuilder.GridSizeEnum = value;
-				Changed = true;
+				//Do nothing!
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Grid")]
 		[ReadOnly(true)]
 		public bool IsStatic
 		{
 			get { return ObjectBuilder.IsStatic; }
-			set
+			private set
 			{
-				if (ObjectBuilder.IsStatic == value) return;
-				ObjectBuilder.IsStatic = value;
-				Changed = true;
+				//Do nothing!
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Grid")]
 		public bool IsDampenersEnabled
 		{
@@ -258,8 +268,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
+		[ReadOnly(true)]
 		public List<CubeBlockEntity> CubeBlocks
 		{
 			get
@@ -267,8 +279,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				List<CubeBlockEntity> cubeBlocks = m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>();
 				return cubeBlocks;
 			}
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<MyObjectBuilder_CubeBlock> BaseCubeBlocks
@@ -280,6 +297,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<BoneInfo> Skeleton
@@ -287,6 +305,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return ObjectBuilder.Skeleton; }
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<MyObjectBuilder_ConveyorLine> ConveyorLines
@@ -294,6 +313,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return ObjectBuilder.ConveyorLines; }
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		public List<MyObjectBuilder_BlockGroup> BlockGroups
@@ -301,20 +321,33 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return ObjectBuilder.BlockGroups; }
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
+		[ReadOnly(true)]
 		public CubeGridNetworkManager NetworkManager
 		{
 			get { return m_networkManager; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[DataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
+		[ReadOnly(true)]
 		public PowerManager PowerManager
 		{
 			get { return m_powerManager; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		public bool IsLoading
@@ -327,25 +360,92 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 				return isLoading;
 			}
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[DataMember]
 		[Category("Cube Grid")]
 		[ReadOnly(true)]
 		public float TotalPower
 		{
 			get { return PowerManager.TotalPower; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[DataMember]
 		[Category("Cube Grid")]
 		[ReadOnly(true)]
 		public float AvailablePower
 		{
 			get { return PowerManager.AvailablePower; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		#endregion
 
 		#region "Methods"
+
+		public static List<Type> KnownTypes()
+		{
+			List<Type> types = new List<Type>();
+
+			Assembly assembly = Assembly.GetAssembly(typeof(MyObjectBuilder_Base));
+			foreach (Type type in assembly.GetTypes())
+			{
+				if (typeof(MyObjectBuilder_Base).IsAssignableFrom(type))
+					types.Add(type);
+			}
+			return types;
+
+			types.Add(typeof(MyObjectBuilder_CubeGrid));
+
+			types.Add(typeof(MyObjectBuilder_CargoContainer));
+			types.Add(typeof(MyObjectBuilder_Reactor));
+			types.Add(typeof(MyObjectBuilder_Beacon));
+			types.Add(typeof(MyObjectBuilder_Cockpit));
+			types.Add(typeof(MyObjectBuilder_GravityGenerator));
+			types.Add(typeof(MyObjectBuilder_MedicalRoom));
+			types.Add(typeof(MyObjectBuilder_InteriorLight));
+			types.Add(typeof(MyObjectBuilder_ReflectorLight));
+			types.Add(typeof(MyObjectBuilder_BatteryBlock));
+			types.Add(typeof(MyObjectBuilder_Door));
+			types.Add(typeof(MyObjectBuilder_Refinery));
+			types.Add(typeof(MyObjectBuilder_Assembler));
+			types.Add(typeof(MyObjectBuilder_Thrust));
+			types.Add(typeof(MyObjectBuilder_MergeBlock));
+			types.Add(typeof(MyObjectBuilder_LandingGear));
+			types.Add(typeof(MyObjectBuilder_Conveyor));
+			types.Add(typeof(MyObjectBuilder_ConveyorConnector));
+			types.Add(typeof(MyObjectBuilder_SolarPanel));
+			types.Add(typeof(MyObjectBuilder_Gyro));
+			types.Add(typeof(MyObjectBuilder_LargeGatlingTurret));
+			types.Add(typeof(MyObjectBuilder_LargeMissileTurret));
+			types.Add(typeof(MyObjectBuilder_ShipGrinder));
+			types.Add(typeof(MyObjectBuilder_ShipWelder));
+			types.Add(typeof(MyObjectBuilder_Drill));
+			types.Add(typeof(MyObjectBuilder_RadioAntenna));
+
+			types.Add(typeof(MyObjectBuilder_Ore));
+			types.Add(typeof(MyObjectBuilder_Ingot));
+			types.Add(typeof(MyObjectBuilder_Component));
+			types.Add(typeof(MyObjectBuilder_PhysicalGunObject));
+
+			types.Add(typeof(MyObjectBuilder_HandDrill));
+			types.Add(typeof(MyObjectBuilder_AngleGrinder));
+			types.Add(typeof(MyObjectBuilder_Welder));
+			types.Add(typeof(MyObjectBuilder_AutomaticRifle));
+
+			return types;
+		}
 
 		public override void Dispose()
 		{
@@ -466,6 +566,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 	}
 
+	[DataContract]
 	public class CubeGridNetworkManager
 	{
 		//24 Packets
@@ -555,6 +656,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 					LogManager.GameLog.WriteLine(ex);
 					return typeof(Object);
 				}
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 
