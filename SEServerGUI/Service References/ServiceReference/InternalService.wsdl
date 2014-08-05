@@ -172,16 +172,105 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IInternalServiceContract_GetSectorCubeGridEntities_Input_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IInternalServiceContract_GetSectorCubeGridEntities_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IInternalServiceContract_GetCubeBlocks_Input_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IInternalServiceContract_GetCubeBlocks_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
       <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" />
-      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" />
-      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
-      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/SEModAPI.API" />
-      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Audio" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.Localization" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd11" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Voxels" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd12" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Gui" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd13" namespace="http://schemas.datacontract.org/2004/07/VRage" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd14" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd15" namespace="http://schemas.datacontract.org/2004/07/VRage.Serialization" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd16" namespace="http://schemas.datacontract.org/2004/07/System.Collections" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd17" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Conveyors" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd18" namespace="http://schemas.datacontract.org/2004/07/SEModAPI.API" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd19" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" />
+      <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd20" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IInternalServiceContract_GetConnectedPlayers_InputMessage">
@@ -196,6 +285,18 @@
   <wsdl:message name="IInternalServiceContract_GetSectorEntities_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetSectorEntitiesResponse" />
   </wsdl:message>
+  <wsdl:message name="IInternalServiceContract_GetSectorCubeGridEntities_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSectorCubeGridEntities" />
+  </wsdl:message>
+  <wsdl:message name="IInternalServiceContract_GetSectorCubeGridEntities_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSectorCubeGridEntitiesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IInternalServiceContract_GetCubeBlocks_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCubeBlocks" />
+  </wsdl:message>
+  <wsdl:message name="IInternalServiceContract_GetCubeBlocks_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCubeBlocksResponse" />
+  </wsdl:message>
   <wsdl:portType name="IInternalServiceContract">
     <wsdl:operation name="GetConnectedPlayers">
       <wsdl:input wsaw:Action="http://tempuri.org/IInternalServiceContract/GetConnectedPlayers" message="tns:IInternalServiceContract_GetConnectedPlayers_InputMessage" />
@@ -204,6 +305,14 @@
     <wsdl:operation name="GetSectorEntities">
       <wsdl:input wsaw:Action="http://tempuri.org/IInternalServiceContract/GetSectorEntities" message="tns:IInternalServiceContract_GetSectorEntities_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IInternalServiceContract/GetSectorEntitiesResponse" message="tns:IInternalServiceContract_GetSectorEntities_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSectorCubeGridEntities">
+      <wsdl:input wsaw:Action="http://tempuri.org/IInternalServiceContract/GetSectorCubeGridEntities" message="tns:IInternalServiceContract_GetSectorCubeGridEntities_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IInternalServiceContract/GetSectorCubeGridEntitiesResponse" message="tns:IInternalServiceContract_GetSectorCubeGridEntities_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCubeBlocks">
+      <wsdl:input wsaw:Action="http://tempuri.org/IInternalServiceContract/GetCubeBlocks" message="tns:IInternalServiceContract_GetCubeBlocks_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IInternalServiceContract/GetCubeBlocksResponse" message="tns:IInternalServiceContract_GetCubeBlocks_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSHttpBinding_IInternalServiceContract" type="tns:IInternalServiceContract">
@@ -228,6 +337,28 @@
       </wsdl:input>
       <wsdl:output>
         <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_GetSectorEntities_output_policy" />
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSectorCubeGridEntities">
+      <soap12:operation soapAction="http://tempuri.org/IInternalServiceContract/GetSectorCubeGridEntities" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_GetSectorCubeGridEntities_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_GetSectorCubeGridEntities_output_policy" />
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCubeBlocks">
+      <soap12:operation soapAction="http://tempuri.org/IInternalServiceContract/GetCubeBlocks" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_GetCubeBlocks_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_GetCubeBlocks_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>

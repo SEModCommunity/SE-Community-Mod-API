@@ -24,7 +24,7 @@ using VRage;
 
 namespace SEModAPIInternal.API.Entity
 {
-	[DataContract]
+	[DataContract(Name="BaseObjectProxy")]
 	[KnownType(typeof(BaseEntity))]
 	[KnownType(typeof(CharacterEntity))]
 	[KnownType(typeof(CubeGridEntity))]
@@ -35,8 +35,8 @@ namespace SEModAPIInternal.API.Entity
 	{
 		#region "Attributes"
 
-		private MyObjectBuilder_Base m_objectBuilder;
-		private Object m_backingObject;
+		protected MyObjectBuilder_Base m_objectBuilder;
+		protected Object m_backingObject;
 
 		protected bool m_isDisposed = false;
 
@@ -62,7 +62,7 @@ namespace SEModAPIInternal.API.Entity
 		/// <summary>
 		/// Changed status of the object
 		/// </summary>
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -82,7 +82,7 @@ namespace SEModAPIInternal.API.Entity
 		/// <summary>
 		/// Object builder data of the object
 		/// </summary>
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -119,7 +119,7 @@ namespace SEModAPIInternal.API.Entity
 		/// <summary>
 		/// Full type of the object
 		/// </summary>
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -151,7 +151,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -583,6 +583,11 @@ namespace SEModAPIInternal.API.Entity
 		public bool IsInternalResourceLocked
 		{
 			get { return (m_rawDataHashSetResourceLock.Owned || m_rawDataListResourceLock.Owned || m_rawDataObjectBuilderListResourceLock.Owned); }
+		}
+
+		public int Count
+		{
+			get { return m_definitions.Count; }
 		}
 
 		#endregion

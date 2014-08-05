@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Voxels" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Voxels" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
+  <xs:simpleType name="MyMwcVoxelFilesEnum">
+    <xs:annotation>
+      <xs:appinfo>
+        <ActualType Name="short" Namespace="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TorusWithSmallTunnel_256x128x256" />
+      <xs:enumeration value="VerticalIsland_128x256x128" />
+      <xs:enumeration value="TorusWithManyTunnels_256x128x256" />
+      <xs:enumeration value="VerticalIsland_128x128x128" />
+      <xs:enumeration value="VerticalIslandStorySector_128x256x128" />
+      <xs:enumeration value="DeformedSphere1_64x64x64" />
+      <xs:enumeration value="DeformedSphere2_64x64x64" />
+      <xs:enumeration value="DeformedSphereWithCorridor_128x64x64" />
+      <xs:enumeration value="ScratchedBoulder_128x128x128" />
+      <xs:enumeration value="DeformedSphereWithHoles_64x128x64" />
+      <xs:enumeration value="Mission01_asteroid_mine" />
+      <xs:enumeration value="EacPrisonAsteroid" />
+      <xs:enumeration value="Chinese_Mines_FrontRightAsteroid" />
+      <xs:enumeration value="Barths_moon_base" />
+      <xs:enumeration value="JunkYardToxic_128x128x128" />
+      <xs:enumeration value="Barths_moon_camp" />
+      <xs:enumeration value="rift_base_smaller" />
+      <xs:enumeration value="Junkyard_RaceAsteroid_256x256x256" />
+      <xs:enumeration value="ChineseRefinery_Second_128x128x128" />
+      <xs:enumeration value="Chinese_Corridor_Tunnel_256x256x256" />
+      <xs:enumeration value="Bioresearch" />
+      <xs:enumeration value="small2_asteroids" />
+      <xs:enumeration value="small3_asteroids" />
+      <xs:enumeration value="many_medium_asteroids" />
+      <xs:enumeration value="many_small_asteroids" />
+      <xs:enumeration value="many2_small_asteroids" />
+      <xs:enumeration value="reef_ast" />
+      <xs:enumeration value="hopebase512" />
+      <xs:enumeration value="hopefood128" />
+      <xs:enumeration value="Small_Pirate_Base_Asteroid" />
+      <xs:enumeration value="Small_Pirate_Base_3_1" />
+      <xs:enumeration value="Small_Pirate_Base_3_2" />
+      <xs:enumeration value="Laika5_128_128_128" />
+      <xs:enumeration value="Arabian_Border_7" />
+      <xs:enumeration value="Arabian_Border_Arabian" />
+      <xs:enumeration value="Chinese_Mines_Side" />
+      <xs:enumeration value="Fortress_Sanc_1" />
+      <xs:enumeration value="Russian_Transmitter_2" />
+      <xs:enumeration value="Nearby_Station_7" />
+      <xs:enumeration value="RiftStationSmaller" />
+      <xs:enumeration value="PirateBaseStaticAsteroid_A_1000m" />
+      <xs:enumeration value="PirateBaseStaticAsteroid_A_5000m_1" />
+      <xs:enumeration value="PirateBaseStaticAsteroid_A_5000m_2" />
+      <xs:enumeration value="RedShipCrashedAsteroid" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyMwcVoxelFilesEnum" nillable="true" type="tns:MyMwcVoxelFilesEnum" />
+  <xs:complexType name="MyObjectBuilder_VoxelMap">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q1:MyObjectBuilder_EntityBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Filename" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_VoxelMap" nillable="true" type="tns:MyObjectBuilder_VoxelMap" />
+  <xs:complexType name="MyObjectBuilder_VoxelMap_MergeContent">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q2:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="MergeType" type="tns:MyMwcVoxelMapMergeTypeEnum" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="PositionInVoxelMapInVoxelCoords" type="q3:Vector3S" />
+          <xs:element minOccurs="0" name="VoxelFile" type="tns:MyMwcVoxelFilesEnum" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_VoxelMap_MergeContent" nillable="true" type="tns:MyObjectBuilder_VoxelMap_MergeContent" />
+  <xs:simpleType name="MyMwcVoxelMapMergeTypeEnum">
+    <xs:annotation>
+      <xs:appinfo>
+        <ActualType Name="unsignedByte" Namespace="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ADD" />
+      <xs:enumeration value="INVERSE_AND_SUBTRACT" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyMwcVoxelMapMergeTypeEnum" nillable="true" type="tns:MyMwcVoxelMapMergeTypeEnum" />
+  <xs:complexType name="MyObjectBuilder_VoxelMap_MergeMaterial">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q4="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q4:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="PositionInVoxelMapInVoxelCoords" type="q5:Vector3S" />
+          <xs:element minOccurs="0" name="VoxelFile" type="tns:MyMwcVoxelFilesEnum" />
+          <xs:element minOccurs="0" name="VoxelMaterial" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_VoxelMap_MergeMaterial" nillable="true" type="tns:MyObjectBuilder_VoxelMap_MergeMaterial" />
+</xs:schema>

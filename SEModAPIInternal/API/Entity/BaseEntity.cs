@@ -32,12 +32,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity
 {
-	[DataContract]
-	[KnownType(typeof(CharacterEntity))]
-	[KnownType(typeof(CubeGridEntity))]
-	[KnownType(typeof(FloatingObject))]
-	[KnownType(typeof(Meteor))]
-	[KnownType(typeof(VoxelMap))]
+	[DataContract(Name = "BaseEntityProxy")]
 	public class BaseEntity : BaseObject
 	{
 		#region "Attributes"
@@ -179,7 +174,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Entity")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -231,7 +226,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Entity")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -298,7 +293,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper Up
@@ -317,7 +312,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Entity")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper Forward
@@ -397,7 +392,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Entity")]
 		public float MaxLinearVelocity
 		{

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/VRage" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/VRage" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="MyGuiDrawAlignEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="HORISONTAL_LEFT_AND_VERTICAL_TOP" />
+      <xs:enumeration value="HORISONTAL_LEFT_AND_VERTICAL_CENTER" />
+      <xs:enumeration value="HORISONTAL_LEFT_AND_VERTICAL_BOTTOM" />
+      <xs:enumeration value="HORISONTAL_CENTER_AND_VERTICAL_CENTER" />
+      <xs:enumeration value="HORISONTAL_CENTER_AND_VERTICAL_TOP" />
+      <xs:enumeration value="HORISONTAL_CENTER_AND_VERTICAL_BOTTOM" />
+      <xs:enumeration value="HORISONTAL_RIGHT_AND_VERTICAL_BOTTOM" />
+      <xs:enumeration value="HORISONTAL_RIGHT_AND_VERTICAL_CENTER" />
+      <xs:enumeration value="HORISONTAL_RIGHT_AND_VERTICAL_TOP" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyGuiDrawAlignEnum" nillable="true" type="tns:MyGuiDrawAlignEnum" />
+</xs:schema>

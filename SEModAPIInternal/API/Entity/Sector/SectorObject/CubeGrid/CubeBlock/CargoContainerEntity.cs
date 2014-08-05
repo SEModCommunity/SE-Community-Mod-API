@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -13,6 +14,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "CargoContainerEntityProxy")]
 	public class CargoContainerEntity : TerminalBlockEntity
 	{
 		#region "Attributes"
@@ -44,6 +46,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[DataMember]
 		[Category("Cargo Container")]
 		[Browsable(false)]
 		public InventoryEntity Inventory
@@ -52,8 +55,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				return m_Inventory;
 			}
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cargo Container")]
 		public float ItemCount
 		{
@@ -68,6 +76,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cargo Container")]
 		public float ItemMass
 		{
@@ -82,6 +91,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cargo Container")]
 		public float ItemVolume
 		{

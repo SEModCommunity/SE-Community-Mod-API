@@ -20,6 +20,7 @@ namespace SEModAPIInternal.Support
 		private static MyLog m_gameLog;
 		private static MyLog m_apiLog;
 		private static MyLog m_chatLog;
+		private static MyLog m_errorLog;
 
 		public static string MainGameMyLogField = "1976E5D4FE6E8C1BD369273DEE0025AC";
 
@@ -118,6 +119,33 @@ namespace SEModAPIInternal.Support
 				}
 
 				return m_chatLog;
+			}
+		}
+
+		public static MyLog ErrorLog
+		{
+			get
+			{
+				if (m_errorLog == null)
+				{
+					var temp = Instance;
+
+					try
+					{
+						m_errorLog = new MyLog();
+						StringBuilder internalAPIAppVersion = new StringBuilder(typeof(LogManager).Assembly.GetName().Version.ToString());
+						m_errorLog.Init("SEModAPIInternal_Error.log", internalAPIAppVersion);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.ToString());
+					}
+				}
+
+				if (m_errorLog == null)
+					throw new Exception("Failed to create error log!");
+
+				return m_errorLog;
 			}
 		}
 

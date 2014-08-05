@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -18,6 +19,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "GravityGeneratorEntityProxy")]
 	public class GravityGeneratorEntity : FunctionalBlockEntity
 	{
 		#region "Attributes"
@@ -46,6 +48,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Gravity Generator")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -63,6 +66,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Gravity Generator")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public SerializableVector3 FieldSize
@@ -82,6 +86,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Gravity Generator")]
 		public float GravityAcceleration
 		{

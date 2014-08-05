@@ -14,7 +14,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
-	[DataContract]
+	[DataContract(Name = "VoxelMapProxy")]
 	public class VoxelMap : BaseEntity
 	{
 		#region "Attributes"

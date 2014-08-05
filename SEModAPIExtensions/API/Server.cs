@@ -27,6 +27,7 @@ using SEModAPIInternal.API.Server;
 using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
+using SEModAPIExtensions.API.IPC;
 
 namespace SEModAPIExtensions.API
 {
@@ -57,8 +58,35 @@ namespace SEModAPIExtensions.API
 		void SaveServerConfig();
 	}
 
-	[DataContract(IsReference=true)]
-	public class Server : IServerServiceContract
+	[ServiceBehavior(
+		ConcurrencyMode = ConcurrencyMode.Single,
+		IncludeExceptionDetailInFaults = true
+	)]
+	public class ServerService : IServerServiceContract
+	{
+		public void StartServer()
+		{
+			Server.Instance.StartServer();
+		}
+
+		public void StopServer()
+		{
+			Server.Instance.StopServer();
+		}
+
+		public void LoadServerConfig()
+		{
+			Server.Instance.LoadServerConfig();
+		}
+
+		public void SaveServerConfig()
+		{
+			Server.Instance.SaveServerConfig();
+		}
+	}
+
+	[DataContract(IsReference = true)]
+	public class Server
 	{
 		#region "Attributes"
 
@@ -66,30 +94,31 @@ namespace SEModAPIExtensions.API
 		private static bool m_isInitialized;
 		private static Thread m_runServerThread;
 		private static bool m_isServerRunning;
-		private static CommandLineArgs m_commandLineArgs;
-		private static DedicatedConfigDefinition m_dedicatedConfigDefinition;
-		private static GameInstallationInfo m_gameInstallationInfo;
 		private static DateTime m_lastRestart;
 		private static int m_restartLimit;
 
+		private CommandLineArgs m_commandLineArgs;
+		private DedicatedConfigDefinition m_dedicatedConfigDefinition;
+		private GameInstallationInfo m_gameInstallationInfo;
+
 		//Managers
-		private static PluginManager m_pluginManager;
-		private static SandboxGameAssemblyWrapper m_gameAssemblyWrapper;
-		private static FactionsManager m_factionsManager;
-		private static ServerAssemblyWrapper m_serverWrapper;
-		private static LogManager m_logManager;
-		private static EntityEventManager m_entityEventManager;
-		private static ChatManager m_chatManager;
+		private PluginManager m_pluginManager;
+		private SandboxGameAssemblyWrapper m_gameAssemblyWrapper;
+		private FactionsManager m_factionsManager;
+		private ServerAssemblyWrapper m_serverWrapper;
+		private LogManager m_logManager;
+		private EntityEventManager m_entityEventManager;
+		private ChatManager m_chatManager;
 
 		//Timers
-		private static System.Timers.Timer m_pluginMainLoop;
-		private static System.Timers.Timer m_autosaveTimer;
+		private System.Timers.Timer m_pluginMainLoop;
+		private System.Timers.Timer m_autosaveTimer;
 
 		#endregion
 
 		#region "Constructors and Initializers"
 
-		public Server()
+		protected Server()
 		{
 			if (m_isInitialized)
 				return;
@@ -105,8 +134,8 @@ namespace SEModAPIExtensions.API
 			m_autosaveTimer.Interval = 120000;
 			m_autosaveTimer.Elapsed += AutoSaveMain;
 
-			Uri baseAddress = new Uri("http://localhost:8000/SEServerExtender/Server/");
-			ServiceHost selfHost = new ServiceHost(typeof(Server), baseAddress);
+			Uri baseAddress = new Uri(InternalService.BaseURI + "Server/");
+			ServiceHost selfHost = new ServiceHost(typeof(ServerService), baseAddress);
 
 			try
 			{
@@ -121,6 +150,8 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("An exception occurred: {0}", ex.Message);
 				selfHost.Abort();
 			}
+
+			Console.WriteLine("Finished creating server!");
 		}
 
 		private bool SetupGameInstallation()

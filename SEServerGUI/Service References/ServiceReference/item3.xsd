@@ -1,17 +1,1578 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPI.API" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPI.API" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:complexType name="Vector3Wrapper">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd15" namespace="http://schemas.datacontract.org/2004/07/VRage.Serialization" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd14" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd17" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Conveyors" />
+  <xs:complexType name="MyObjectBuilderType">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="MyObjectBuilderType" nillable="true" type="tns:MyObjectBuilderType" />
+  <xs:complexType name="MyObjectBuilder_Meteor">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence>
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="AngularVelocity" type="q1:Vector3" />
+          <xs:element minOccurs="0" name="Integrity" type="xs:float" />
+          <xs:element minOccurs="0" name="Item" nillable="true" type="tns:MyObjectBuilder_InventoryItem" />
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="LinearVelocity" type="q2:Vector3" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Meteor" nillable="true" type="tns:MyObjectBuilder_Meteor" />
+  <xs:complexType name="MyObjectBuilder_EntityBase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="EntityId" type="xs:long" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PersistentFlags" type="tns:MyPersistentEntityFlags2" />
+          <xs:element minOccurs="0" name="PositionAndOrientation" nillable="true" type="tns:MyPositionAndOrientation" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_EntityBase" nillable="true" type="tns:MyObjectBuilder_EntityBase" />
+  <xs:complexType name="MyObjectBuilder_Base">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SubtypeName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Base" nillable="true" type="tns:MyObjectBuilder_Base" />
+  <xs:simpleType name="MyPersistentEntityFlags2">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="None">
+            <xs:annotation>
+              <xs:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">0</EnumerationValue>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="Enabled" />
+          <xs:enumeration value="CastShadows" />
+          <xs:enumeration value="InScene">
+            <xs:annotation>
+              <xs:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">16</EnumerationValue>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:element name="MyPersistentEntityFlags2" nillable="true" type="tns:MyPersistentEntityFlags2" />
+  <xs:complexType name="MyPositionAndOrientation">
     <xs:annotation>
       <xs:appinfo>
         <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
       </xs:appinfo>
     </xs:annotation>
     <xs:sequence>
-      <xs:element minOccurs="0" name="X" type="xs:float" />
-      <xs:element minOccurs="0" name="Y" type="xs:float" />
-      <xs:element minOccurs="0" name="Z" type="xs:float" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="Forward" type="q3:SerializableVector3" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="Position" type="q4:SerializableVector3" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="Up" type="q5:SerializableVector3" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="Vector3Wrapper" nillable="true" type="tns:Vector3Wrapper" />
+  <xs:element name="MyPositionAndOrientation" nillable="true" type="tns:MyPositionAndOrientation" />
+  <xs:complexType name="MyObjectBuilder_InventoryItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Amount" type="xs:float" />
+          <xs:element minOccurs="0" name="AmountDecimal" type="xs:decimal" />
+          <xs:element minOccurs="0" name="Content" nillable="true" type="tns:MyObjectBuilder_Base" />
+          <xs:element minOccurs="0" name="ItemId" type="xs:unsignedInt" />
+          <xs:element minOccurs="0" name="PhysicalContent" nillable="true" type="tns:MyObjectBuilder_PhysicalObject" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_InventoryItem" nillable="true" type="tns:MyObjectBuilder_InventoryItem" />
+  <xs:complexType name="MyObjectBuilder_PhysicalObject">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Flags" type="tns:MyItemFlags" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_PhysicalObject" nillable="true" type="tns:MyObjectBuilder_PhysicalObject" />
+  <xs:simpleType name="MyItemFlags">
+    <xs:annotation>
+      <xs:appinfo>
+        <ActualType Name="unsignedByte" Namespace="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="None">
+            <xs:annotation>
+              <xs:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">0</EnumerationValue>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="Damaged" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:element name="MyItemFlags" nillable="true" type="tns:MyItemFlags" />
+  <xs:simpleType name="MyCubeSize">
+    <xs:annotation>
+      <xs:appinfo>
+        <ActualType Name="unsignedByte" Namespace="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Large" />
+      <xs:enumeration value="Small" />
+      <xs:enumeration value="Medium" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyCubeSize" nillable="true" type="tns:MyCubeSize" />
+  <xs:simpleType name="MyBlockTopology">
+    <xs:annotation>
+      <xs:appinfo>
+        <ActualType Name="unsignedByte" Namespace="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Cube" />
+      <xs:enumeration value="TriangleMesh" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyBlockTopology" nillable="true" type="tns:MyBlockTopology" />
+  <xs:complexType name="MyOrientation">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Pitch" type="xs:float" />
+      <xs:element minOccurs="0" name="Roll" type="xs:float" />
+      <xs:element minOccurs="0" name="Yaw" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyOrientation" nillable="true" type="tns:MyOrientation" />
+  <xs:complexType name="MyObjectBuilder_AmmoMagazine">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_PhysicalObject">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ProjectilesCount" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_AmmoMagazine" nillable="true" type="tns:MyObjectBuilder_AmmoMagazine" />
+  <xs:complexType name="MyObjectBuilder_AngleGrinder">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_AngleGrinder" nillable="true" type="tns:MyObjectBuilder_AngleGrinder" />
+  <xs:complexType name="MyObjectBuilder_Assembler">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ProductionBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CurrentProgress" type="xs:float" />
+          <xs:element minOccurs="0" name="DisassembleEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="OtherQueue" nillable="true" type="tns:ArrayOfMyObjectBuilder_ProductionBlock.QueueItem" />
+          <xs:element minOccurs="0" name="RepeatAssembleEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="RepeatDisassembleEnabled" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Assembler" nillable="true" type="tns:MyObjectBuilder_Assembler" />
+  <xs:complexType name="MyObjectBuilder_ProductionBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="InputInventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="NextItemId" type="xs:unsignedInt" />
+          <xs:element minOccurs="0" name="OutputInventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="Queue" nillable="true" type="tns:ArrayOfMyObjectBuilder_ProductionBlock.QueueItem" />
+          <xs:element minOccurs="0" name="UseConveyorSystem" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ProductionBlock" nillable="true" type="tns:MyObjectBuilder_ProductionBlock" />
+  <xs:complexType name="MyObjectBuilder_FunctionalBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_TerminalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Enabled" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_FunctionalBlock" nillable="true" type="tns:MyObjectBuilder_FunctionalBlock" />
+  <xs:complexType name="MyObjectBuilder_TerminalBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CustomName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ShowOnHUD" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_TerminalBlock" nillable="true" type="tns:MyObjectBuilder_TerminalBlock" />
+  <xs:complexType name="MyObjectBuilder_CubeBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="BlockOrientation" type="q6:SerializableBlockOrientation" />
+          <xs:element minOccurs="0" name="BuildPercent" type="xs:float" />
+          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="ColorMaskHSV" type="q7:SerializableVector3" />
+          <xs:element minOccurs="0" name="ConstructionInventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="ConstructionStockpile" nillable="true" type="tns:MyObjectBuilder_ConstructionStockpile" />
+          <xs:element minOccurs="0" name="EntityId" type="xs:long" />
+          <xs:element minOccurs="0" name="IntegrityPercent" type="xs:float" />
+          <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="Min" type="q8:SerializableVector3I" />
+          <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="Orientation" type="q9:SerializableQuaternion" />
+          <xs:element minOccurs="0" name="Owner" type="xs:long" />
+          <xs:element minOccurs="0" name="ShareMode" type="tns:MyOwnershipShareModeEnum" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_CubeBlock" nillable="true" type="tns:MyObjectBuilder_CubeBlock" />
+  <xs:complexType name="MyObjectBuilder_Inventory">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Items" nillable="true" type="tns:ArrayOfMyObjectBuilder_InventoryItem" />
+          <xs:element minOccurs="0" name="nextItemId" type="xs:unsignedInt" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_InventoryItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_InventoryItem" nillable="true" type="tns:MyObjectBuilder_InventoryItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_InventoryItem" nillable="true" type="tns:ArrayOfMyObjectBuilder_InventoryItem" />
+  <xs:complexType name="MyObjectBuilder_ConstructionStockpile">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Items" nillable="true" type="tns:ArrayOfMyObjectBuilder_StockpileItem" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ConstructionStockpile" nillable="true" type="tns:MyObjectBuilder_ConstructionStockpile" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_StockpileItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_StockpileItem" nillable="true" type="tns:MyObjectBuilder_StockpileItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_StockpileItem" nillable="true" type="tns:ArrayOfMyObjectBuilder_StockpileItem" />
+  <xs:complexType name="MyObjectBuilder_StockpileItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Amount" type="xs:int" />
+          <xs:element minOccurs="0" name="PhysicalContent" nillable="true" type="tns:MyObjectBuilder_PhysicalObject" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_StockpileItem" nillable="true" type="tns:MyObjectBuilder_StockpileItem" />
+  <xs:simpleType name="MyOwnershipShareModeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Faction" />
+      <xs:enumeration value="All" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyOwnershipShareModeEnum" nillable="true" type="tns:MyOwnershipShareModeEnum" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_ProductionBlock.QueueItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_ProductionBlock.QueueItem" type="tns:MyObjectBuilder_ProductionBlock.QueueItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_ProductionBlock.QueueItem" nillable="true" type="tns:ArrayOfMyObjectBuilder_ProductionBlock.QueueItem" />
+  <xs:complexType name="MyObjectBuilder_ProductionBlock.QueueItem">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Amount" type="xs:decimal" />
+      <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="Id" type="q10:SerializableDefinitionId" />
+      <xs:element minOccurs="0" name="ItemId" nillable="true" type="xs:unsignedInt" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ProductionBlock.QueueItem" nillable="true" type="tns:MyObjectBuilder_ProductionBlock.QueueItem" />
+  <xs:complexType name="MyObjectBuilder_AutomaticRifle">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CurrentAmmo" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_AutomaticRifle" nillable="true" type="tns:MyObjectBuilder_AutomaticRifle" />
+  <xs:complexType name="MyObjectBuilder_AutopilotBase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_AutopilotBase" nillable="true" type="tns:MyObjectBuilder_AutopilotBase" />
+  <xs:complexType name="MyObjectBuilder_Battery">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CurrentCapacity" type="xs:float" />
+          <xs:element minOccurs="0" name="ProducerEnabled" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Battery" nillable="true" type="tns:MyObjectBuilder_Battery" />
+  <xs:complexType name="MyObjectBuilder_BatteryBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CurrentStoredPower" type="xs:float" />
+          <xs:element minOccurs="0" name="MaxStoredPower" type="xs:float" />
+          <xs:element minOccurs="0" name="ProducerEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="SemiautoEnabled" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_BatteryBlock" nillable="true" type="tns:MyObjectBuilder_BatteryBlock" />
+  <xs:complexType name="MyObjectBuilder_Beacon">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="BroadcastRadius" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Beacon" nillable="true" type="tns:MyObjectBuilder_Beacon" />
+  <xs:complexType name="MyObjectBuilder_BlockGroup">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Blocks" nillable="true" type="q11:ArrayOfVector3I" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_BlockGroup" nillable="true" type="tns:MyObjectBuilder_BlockGroup" />
+  <xs:complexType name="MyObjectBuilder_CargoContainer">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_TerminalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ContainerType" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_CargoContainer" nillable="true" type="tns:MyObjectBuilder_CargoContainer" />
+  <xs:complexType name="MyObjectBuilder_Character">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AIMode" type="xs:boolean" />
+          <xs:element minOccurs="0" name="AutoenableJetpackDelay" type="xs:float" />
+          <xs:element minOccurs="0" name="Battery" nillable="true" type="tns:MyObjectBuilder_Battery" />
+          <xs:element minOccurs="0" name="CharacterModel" nillable="true" type="xs:string" />
+          <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="ColorMaskHSV" type="q12:SerializableVector3" />
+          <xs:element minOccurs="0" name="DampenersEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="DisplayName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="HandWeapon" nillable="true" type="tns:MyObjectBuilder_EntityBase" />
+          <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="HeadAngle" type="q13:SerializableVector2" />
+          <xs:element minOccurs="0" name="Health" nillable="true" type="xs:float" />
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="JetpackEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="LightEnabled" type="xs:boolean" />
+          <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="LinearVelocity" type="q14:SerializableVector3" />
+          <xs:element minOccurs="0" name="LootingCounter" type="xs:float" />
+          <xs:element minOccurs="0" name="UsingLadder" nillable="true" type="xs:long" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Character" nillable="true" type="tns:MyObjectBuilder_Character" />
+  <xs:complexType name="MyObjectBuilder_Checkpoint">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AllPlayers" nillable="true" type="tns:ArrayOfMyObjectBuilder_Checkpoint.PlayerItem" />
+          <xs:element minOccurs="0" name="AppVersion" type="xs:int" />
+          <xs:element minOccurs="0" name="AssemblerEfficiencyMultiplier" type="xs:float" />
+          <xs:element minOccurs="0" name="AssemblerSpeedMultiplier" type="xs:float" />
+          <xs:element minOccurs="0" name="AutoHealing" type="xs:boolean" />
+          <xs:element minOccurs="0" name="AutoSave" type="xs:boolean" />
+          <xs:element minOccurs="0" name="CameraController" type="tns:MyCameraControllerEnum" />
+          <xs:element minOccurs="0" name="CameraEntity" type="xs:long" />
+          <xs:element minOccurs="0" name="CargoShipsEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="CharacterToolbar" nillable="true" type="tns:MyObjectBuilder_Toolbar" />
+          <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/VRage.Serialization" minOccurs="0" name="ControlledEntities" nillable="true" type="q15:SerializableDictionaryOflongunsignedLong" />
+          <xs:element minOccurs="0" name="ControlledObject" type="xs:long" />
+          <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="CurrentSector" type="q16:SerializableVector3I" />
+          <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="EnableCopyPaste" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Factions" nillable="true" type="tns:MyObjectBuilder_FactionCollection" />
+          <xs:element minOccurs="0" name="GameMode" type="tns:MyGameModeEnum" />
+          <xs:element minOccurs="0" name="GameTime" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="GameType" type="tns:MySessionGameType" />
+          <xs:element minOccurs="0" name="HarvestMode" type="tns:MySessionHarvestMode" />
+          <xs:element minOccurs="0" name="InventorySizeMultiplier" type="xs:float" />
+          <xs:element minOccurs="0" name="LastSaveTime" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="MaxFloatingObjects" type="xs:short" />
+          <xs:element minOccurs="0" name="MaxPlayers" type="xs:short" />
+          <xs:element minOccurs="0" name="Mods" nillable="true" type="tns:ArrayOfMyObjectBuilder_Checkpoint.ModItem" />
+          <xs:element minOccurs="0" name="OnlineMode" type="tns:MyOnlineModeEnum" />
+          <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
+          <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/VRage.Serialization" minOccurs="0" name="Players" nillable="true" type="q17:SerializableDictionaryOfunsignedLongMyObjectBuilder_PlayerOPwPSyU5" />
+          <xs:element minOccurs="0" name="RefinerySpeedMultiplier" type="xs:float" />
+          <xs:element minOccurs="0" name="SessionName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Settings" type="tns:MySessionSettings" />
+          <xs:element minOccurs="0" name="ShowPlayerNamesOnHud" type="xs:boolean" />
+          <xs:element minOccurs="0" name="SpectatorDistance" type="xs:float" />
+          <xs:element minOccurs="0" name="SpectatorPosition" type="tns:MyPositionAndOrientation" />
+          <xs:element minOccurs="0" name="ThrusterDamage" type="xs:boolean" />
+          <xs:element minOccurs="0" name="WeaponsEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="WorkshopId" nillable="true" type="xs:unsignedLong" />
+          <xs:element minOccurs="0" name="WorldID" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Checkpoint" nillable="true" type="tns:MyObjectBuilder_Checkpoint" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_Checkpoint.PlayerItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_Checkpoint.PlayerItem" type="tns:MyObjectBuilder_Checkpoint.PlayerItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_Checkpoint.PlayerItem" nillable="true" type="tns:ArrayOfMyObjectBuilder_Checkpoint.PlayerItem" />
+  <xs:complexType name="MyObjectBuilder_Checkpoint.PlayerItem">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IsDead" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Model" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PlayerId" type="xs:long" />
+      <xs:element minOccurs="0" name="SteamId" type="xs:unsignedLong" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Checkpoint.PlayerItem" nillable="true" type="tns:MyObjectBuilder_Checkpoint.PlayerItem" />
+  <xs:simpleType name="MyCameraControllerEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Spectator" />
+      <xs:enumeration value="Entity" />
+      <xs:enumeration value="ThirdPersonSpectator" />
+      <xs:enumeration value="SpectatorDelta" />
+      <xs:enumeration value="SpectatorFixed" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyCameraControllerEnum" nillable="true" type="tns:MyCameraControllerEnum" />
+  <xs:complexType name="MyObjectBuilder_Toolbar">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="ColorMaskHSVList" nillable="true" type="q18:ArrayOfVector3" />
+          <xs:element minOccurs="0" name="SelectedSlot" nillable="true" type="xs:int" />
+          <xs:element minOccurs="0" name="Slots" nillable="true" type="tns:ArrayOfMyObjectBuilder_Toolbar.Slot" />
+          <xs:element minOccurs="0" name="ToolbarType" type="tns:MyToolbarType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Toolbar" nillable="true" type="tns:MyObjectBuilder_Toolbar" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_Toolbar.Slot">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_Toolbar.Slot" type="tns:MyObjectBuilder_Toolbar.Slot" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_Toolbar.Slot" nillable="true" type="tns:ArrayOfMyObjectBuilder_Toolbar.Slot" />
+  <xs:complexType name="MyObjectBuilder_Toolbar.Slot">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Data" nillable="true" type="tns:MyObjectBuilder_ToolbarItem" />
+      <xs:element minOccurs="0" name="Index" type="xs:int" />
+      <xs:element minOccurs="0" name="Item" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Toolbar.Slot" nillable="true" type="tns:MyObjectBuilder_Toolbar.Slot" />
+  <xs:complexType name="MyObjectBuilder_ToolbarItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ToolbarItem" nillable="true" type="tns:MyObjectBuilder_ToolbarItem" />
+  <xs:simpleType name="MyToolbarType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Character" />
+      <xs:enumeration value="SmallCockpit" />
+      <xs:enumeration value="LargeCockpit" />
+      <xs:enumeration value="Ship" />
+      <xs:enumeration value="Spectator" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyToolbarType" nillable="true" type="tns:MyToolbarType" />
+  <xs:complexType name="MyObjectBuilder_FactionCollection">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="Factions" nillable="true" type="q19:ArrayOfMyObjectBuilder_Faction" />
+          <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/VRage.Serialization" minOccurs="0" name="Players" nillable="true" type="q20:SerializableDictionaryOflonglong" />
+          <xs:element minOccurs="0" name="Relations" nillable="true" type="tns:ArrayOfMyObjectBuilder_FactionRelation" />
+          <xs:element minOccurs="0" name="Requests" nillable="true" type="tns:ArrayOfMyObjectBuilder_FactionRequests" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_FactionCollection" nillable="true" type="tns:MyObjectBuilder_FactionCollection" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_FactionRelation">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_FactionRelation" type="tns:MyObjectBuilder_FactionRelation" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_FactionRelation" nillable="true" type="tns:ArrayOfMyObjectBuilder_FactionRelation" />
+  <xs:complexType name="MyObjectBuilder_FactionRelation">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FactionId1" type="xs:long" />
+      <xs:element minOccurs="0" name="FactionId2" type="xs:long" />
+      <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/Sandbox.Common" minOccurs="0" name="Relation" type="q21:MyRelationsBetweenFactions" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_FactionRelation" nillable="true" type="tns:MyObjectBuilder_FactionRelation" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_FactionRequests">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_FactionRequests" type="tns:MyObjectBuilder_FactionRequests" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_FactionRequests" nillable="true" type="tns:ArrayOfMyObjectBuilder_FactionRequests" />
+  <xs:complexType name="MyObjectBuilder_FactionRequests">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FactionId" type="xs:long" />
+      <xs:element xmlns:q22="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="FactionRequests" nillable="true" type="q22:ArrayOflong" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_FactionRequests" nillable="true" type="tns:MyObjectBuilder_FactionRequests" />
+  <xs:simpleType name="MyGameModeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Creative" />
+      <xs:enumeration value="Survival" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyGameModeEnum" nillable="true" type="tns:MyGameModeEnum" />
+  <xs:simpleType name="MySessionGameType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SURVIVAL" />
+      <xs:enumeration value="THREE_TIMES" />
+      <xs:enumeration value="TEN_TIMES" />
+      <xs:enumeration value="CREATIVE" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MySessionGameType" nillable="true" type="tns:MySessionGameType" />
+  <xs:simpleType name="MySessionHarvestMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="REALISTIC" />
+      <xs:enumeration value="TEN_TIMES" />
+      <xs:enumeration value="FIFTY_TIMES" />
+      <xs:enumeration value="CREATIVE" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MySessionHarvestMode" nillable="true" type="tns:MySessionHarvestMode" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_Checkpoint.ModItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_Checkpoint.ModItem" type="tns:MyObjectBuilder_Checkpoint.ModItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_Checkpoint.ModItem" nillable="true" type="tns:ArrayOfMyObjectBuilder_Checkpoint.ModItem" />
+  <xs:complexType name="MyObjectBuilder_Checkpoint.ModItem">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PublishedFileId" type="xs:unsignedLong" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Checkpoint.ModItem" nillable="true" type="tns:MyObjectBuilder_Checkpoint.ModItem" />
+  <xs:simpleType name="MyOnlineModeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OFFLINE" />
+      <xs:enumeration value="PUBLIC" />
+      <xs:enumeration value="FRIENDS" />
+      <xs:enumeration value="PRIVATE" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyOnlineModeEnum" nillable="true" type="tns:MyOnlineModeEnum" />
+  <xs:complexType name="MyObjectBuilder_Player">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/VRage.Serialization" minOccurs="0" name="CameraControllers" nillable="true" type="q23:SerializableDictionaryOflongMyCameraControllerSettingsOPwPSyU5" />
+          <xs:element minOccurs="0" name="PlayerEntity" type="xs:long" />
+          <xs:element minOccurs="0" name="PlayerId" type="xs:long" />
+          <xs:element minOccurs="0" name="PlayerModel" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SteamID" type="xs:unsignedLong" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Player" nillable="true" type="tns:MyObjectBuilder_Player" />
+  <xs:complexType name="MyCameraControllerSettings">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Controller" type="tns:MyCameraControllerEnum" />
+      <xs:element minOccurs="0" name="Distance" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyCameraControllerSettings" nillable="true" type="tns:MyCameraControllerSettings" />
+  <xs:complexType name="MySessionSettings">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AssemblerEfficiencyMultiplier" type="xs:float" />
+      <xs:element minOccurs="0" name="AssemblerSpeedMultiplier" type="xs:float" />
+      <xs:element minOccurs="0" name="AutoHealing" type="xs:boolean" />
+      <xs:element minOccurs="0" name="AutoSave" type="xs:boolean" />
+      <xs:element minOccurs="0" name="CargoShipsEnabled" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ClientCanSave" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EnableCopyPaste" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EnableSpectator" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EnvironmentHostility" type="tns:MyEnvironmentHostilityEnum" />
+      <xs:element minOccurs="0" name="GameMode" type="tns:MyGameModeEnum" />
+      <xs:element minOccurs="0" name="GrinderSpeedMultiplier" type="xs:float" />
+      <xs:element minOccurs="0" name="HackSpeedMultiplier" type="xs:float" />
+      <xs:element minOccurs="0" name="InventorySizeMultiplier" type="xs:float" />
+      <xs:element minOccurs="0" name="MaxFloatingObjects" type="xs:short" />
+      <xs:element minOccurs="0" name="MaxPlayers" type="xs:short" />
+      <xs:element minOccurs="0" name="OnlineMode" type="tns:MyOnlineModeEnum" />
+      <xs:element minOccurs="0" name="PermanentDeath" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="RealisticSound" type="xs:boolean" />
+      <xs:element minOccurs="0" name="RefinerySpeedMultiplier" type="xs:float" />
+      <xs:element minOccurs="0" name="RemoveTrash" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ResetOwnership" type="xs:boolean" />
+      <xs:element minOccurs="0" name="RespawnShipDelete" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ShowPlayerNamesOnHud" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ThrusterDamage" type="xs:boolean" />
+      <xs:element minOccurs="0" name="WeaponsEnabled" type="xs:boolean" />
+      <xs:element minOccurs="0" name="WelderSpeedMultiplier" type="xs:float" />
+      <xs:element minOccurs="0" name="WorldSizeKm" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MySessionSettings" nillable="true" type="tns:MySessionSettings" />
+  <xs:simpleType name="MyEnvironmentHostilityEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SAFE" />
+      <xs:enumeration value="NORMAL" />
+      <xs:enumeration value="CATACLYSM" />
+      <xs:enumeration value="CATACLYSM_UNREAL" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyEnvironmentHostilityEnum" nillable="true" type="tns:MyEnvironmentHostilityEnum" />
+  <xs:complexType name="MyObjectBuilder_Cockpit">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_TerminalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Autopilot" nillable="true" type="tns:MyObjectBuilder_AutopilotBase" />
+          <xs:element minOccurs="0" name="ControlThrusters" type="xs:boolean" />
+          <xs:element minOccurs="0" name="ControlWheels" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Pilot" nillable="true" type="tns:MyObjectBuilder_Character" />
+          <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="PilotGunDefinition" nillable="true" type="q24:SerializableDefinitionId" />
+          <xs:element minOccurs="0" name="PilotRelativeWorld" nillable="true" type="tns:MyPositionAndOrientation" />
+          <xs:element minOccurs="0" name="SelectedGunType" nillable="true" type="tns:MyGunTypeEnum" />
+          <xs:element minOccurs="0" name="Toolbar" nillable="true" type="tns:MyObjectBuilder_Toolbar" />
+          <xs:element minOccurs="0" name="UseSingleWeaponMode" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Cockpit" nillable="true" type="tns:MyObjectBuilder_Cockpit" />
+  <xs:simpleType name="MyGunTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Missile" />
+      <xs:enumeration value="Projectile" />
+      <xs:enumeration value="Drill" />
+      <xs:enumeration value="Welder" />
+      <xs:enumeration value="AngleGrinder" />
+      <xs:enumeration value="CubePlacer" />
+      <xs:enumeration value="Large" />
+      <xs:enumeration value="WallPlacer" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyGunTypeEnum" nillable="true" type="tns:MyGunTypeEnum" />
+  <xs:complexType name="MyObjectBuilder_Collector">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="UseConveyorSystem" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Collector" nillable="true" type="tns:MyObjectBuilder_Collector" />
+  <xs:complexType name="MyObjectBuilder_Component">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_PhysicalObject">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Component" nillable="true" type="tns:MyObjectBuilder_Component" />
+  <xs:complexType name="MyObjectBuilder_Conveyor">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Conveyor" nillable="true" type="tns:MyObjectBuilder_Conveyor" />
+  <xs:complexType name="MyObjectBuilder_ConveyorConnector">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ConveyorConnector" nillable="true" type="tns:MyObjectBuilder_ConveyorConnector" />
+  <xs:complexType name="MyObjectBuilder_ConveyorLine">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ConveyorLineType" type="tns:MyObjectBuilder_ConveyorLine.LineType" />
+          <xs:element xmlns:q25="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="EndDirection" type="q25:Base6Directions.Direction" />
+          <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="EndPosition" type="q26:SerializableVector3I" />
+          <xs:element minOccurs="0" name="PacketsBackward" nillable="true" type="tns:ArrayOfMyObjectBuilder_ConveyorPacket" />
+          <xs:element minOccurs="0" name="PacketsForward" nillable="true" type="tns:ArrayOfMyObjectBuilder_ConveyorPacket" />
+          <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Conveyors" minOccurs="0" name="Sections" nillable="true" type="q27:ArrayOfSerializableLineSectionInformation" />
+          <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="StartDirection" type="q28:Base6Directions.Direction" />
+          <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="StartPosition" type="q29:SerializableVector3I" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ConveyorLine" nillable="true" type="tns:MyObjectBuilder_ConveyorLine" />
+  <xs:simpleType name="MyObjectBuilder_ConveyorLine.LineType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DEFAULT_LINE" />
+      <xs:enumeration value="SMALL_LINE" />
+      <xs:enumeration value="LARGE_LINE" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyObjectBuilder_ConveyorLine.LineType" nillable="true" type="tns:MyObjectBuilder_ConveyorLine.LineType" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_ConveyorPacket">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_ConveyorPacket" nillable="true" type="tns:MyObjectBuilder_ConveyorPacket" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_ConveyorPacket" nillable="true" type="tns:ArrayOfMyObjectBuilder_ConveyorPacket" />
+  <xs:complexType name="MyObjectBuilder_ConveyorPacket">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Item" nillable="true" type="tns:MyObjectBuilder_InventoryItem" />
+          <xs:element minOccurs="0" name="LinePosition" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ConveyorPacket" nillable="true" type="tns:MyObjectBuilder_ConveyorPacket" />
+  <xs:complexType name="MyObjectBuilder_ConveyorTurretBase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_TurretBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="UseConveyorSystem" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ConveyorTurretBase" nillable="true" type="tns:MyObjectBuilder_ConveyorTurretBase" />
+  <xs:complexType name="MyObjectBuilder_TurretBase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="IsPotentialTarget" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Range" type="xs:float" />
+          <xs:element minOccurs="0" name="RemainingAmmo" type="xs:int" />
+          <xs:element minOccurs="0" name="Target" type="xs:long" />
+          <xs:element minOccurs="0" name="TargetMeteors" type="xs:boolean" />
+          <xs:element minOccurs="0" name="TargetMissiles" type="xs:boolean" />
+          <xs:element minOccurs="0" name="TargetMoving" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_TurretBase" nillable="true" type="tns:MyObjectBuilder_TurretBase" />
+  <xs:complexType name="MyObjectBuilder_CubeGrid">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence>
+          <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="AngularVelocity" type="q30:SerializableVector3" />
+          <xs:element minOccurs="0" name="BlockGroups" nillable="true" type="tns:ArrayOfMyObjectBuilder_BlockGroup" />
+          <xs:element minOccurs="0" name="ConveyorLines" nillable="true" type="tns:ArrayOfMyObjectBuilder_ConveyorLine" />
+          <xs:element minOccurs="0" name="CubeBlocks" nillable="true" type="tns:ArrayOfMyObjectBuilder_CubeBlock" />
+          <xs:element minOccurs="0" name="DampenersEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="DisplayName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="GridSizeEnum" type="tns:MyCubeSize" />
+          <xs:element minOccurs="0" name="Handbrake" type="xs:boolean" />
+          <xs:element minOccurs="0" name="IsStatic" type="xs:boolean" />
+          <xs:element xmlns:q31="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="LinearVelocity" type="q31:SerializableVector3" />
+          <xs:element minOccurs="0" name="Skeleton" nillable="true" type="tns:ArrayOfBoneInfo" />
+          <xs:element minOccurs="0" name="XMirroxOdd" type="xs:boolean" />
+          <xs:element xmlns:q32="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="XMirroxPlane" nillable="true" type="q32:SerializableVector3I" />
+          <xs:element minOccurs="0" name="YMirroxOdd" type="xs:boolean" />
+          <xs:element xmlns:q33="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="YMirroxPlane" nillable="true" type="q33:SerializableVector3I" />
+          <xs:element minOccurs="0" name="ZMirroxOdd" type="xs:boolean" />
+          <xs:element xmlns:q34="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="ZMirroxPlane" nillable="true" type="q34:SerializableVector3I" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_CubeGrid" nillable="true" type="tns:MyObjectBuilder_CubeGrid" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_BlockGroup">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_BlockGroup" nillable="true" type="tns:MyObjectBuilder_BlockGroup" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_BlockGroup" nillable="true" type="tns:ArrayOfMyObjectBuilder_BlockGroup" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_ConveyorLine">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_ConveyorLine" nillable="true" type="tns:MyObjectBuilder_ConveyorLine" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_ConveyorLine" nillable="true" type="tns:ArrayOfMyObjectBuilder_ConveyorLine" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_CubeBlock">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_CubeBlock" nillable="true" type="tns:MyObjectBuilder_CubeBlock" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_CubeBlock" nillable="true" type="tns:ArrayOfMyObjectBuilder_CubeBlock" />
+  <xs:complexType name="ArrayOfBoneInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="BoneInfo" type="tns:BoneInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfBoneInfo" nillable="true" type="tns:ArrayOfBoneInfo" />
+  <xs:complexType name="BoneInfo">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q35="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="BoneOffset" type="q35:SerializableVector3UByte" />
+      <xs:element xmlns:q36="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="BonePosition" type="q36:SerializableVector3I" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="BoneInfo" nillable="true" type="tns:BoneInfo" />
+  <xs:complexType name="MyObjectBuilder_CubePlacer">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_CubePlacer" nillable="true" type="tns:MyObjectBuilder_CubePlacer" />
+  <xs:complexType name="MyObjectBuilder_Decoy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Decoy" nillable="true" type="tns:MyObjectBuilder_Decoy" />
+  <xs:complexType name="MyObjectBuilder_Door">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Opening" type="xs:float" />
+          <xs:element minOccurs="0" name="State" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Door" nillable="true" type="tns:MyObjectBuilder_Door" />
+  <xs:complexType name="MyObjectBuilder_Drill">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="UseConveyorSystem" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Drill" nillable="true" type="tns:MyObjectBuilder_Drill" />
+  <xs:complexType name="MyObjectBuilder_FloatingObject">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Item" nillable="true" type="tns:MyObjectBuilder_InventoryItem" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_FloatingObject" nillable="true" type="tns:MyObjectBuilder_FloatingObject" />
+  <xs:complexType name="MyObjectBuilder_GlobalEventBase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ActivationTimeMs" type="xs:long" />
+          <xs:element xmlns:q37="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="DefinitionId" type="q37:SerializableDefinitionId" />
+          <xs:element minOccurs="0" name="Enabled" type="xs:boolean" />
+          <xs:element xmlns:q38="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="EventType" type="q38:MyGlobalEventTypeEnum" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GlobalEventBase" nillable="true" type="tns:MyObjectBuilder_GlobalEventBase" />
+  <xs:complexType name="MyObjectBuilder_GlobalEvents">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Events" nillable="true" type="tns:ArrayOfMyObjectBuilder_GlobalEventBase" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GlobalEvents" nillable="true" type="tns:MyObjectBuilder_GlobalEvents" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_GlobalEventBase">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_GlobalEventBase" nillable="true" type="tns:MyObjectBuilder_GlobalEventBase" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_GlobalEventBase" nillable="true" type="tns:ArrayOfMyObjectBuilder_GlobalEventBase" />
+  <xs:complexType name="MyObjectBuilder_GravityGenerator">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element xmlns:q39="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="FieldSize" type="q39:SerializableVector3" />
+          <xs:element minOccurs="0" name="GravityAcceleration" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GravityGenerator" nillable="true" type="tns:MyObjectBuilder_GravityGenerator" />
+  <xs:complexType name="MyObjectBuilder_Gyro">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="GyroOverride" type="xs:boolean" />
+          <xs:element minOccurs="0" name="GyroPower" type="xs:float" />
+          <xs:element xmlns:q40="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="TargetAngularVelocity" type="q40:SerializableVector3" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Gyro" nillable="true" type="tns:MyObjectBuilder_Gyro" />
+  <xs:complexType name="MyObjectBuilder_HandDrill">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_HandDrill" nillable="true" type="tns:MyObjectBuilder_HandDrill" />
+  <xs:complexType name="MyObjectBuilder_Ingot">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_PhysicalObject">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Ingot" nillable="true" type="tns:MyObjectBuilder_Ingot" />
+  <xs:complexType name="MyObjectBuilder_InteriorLight">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_LightingBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_InteriorLight" nillable="true" type="tns:MyObjectBuilder_InteriorLight" />
+  <xs:complexType name="MyObjectBuilder_LightingBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ColorAlpha" type="xs:float" />
+          <xs:element minOccurs="0" name="ColorBlue" type="xs:float" />
+          <xs:element minOccurs="0" name="ColorGreen" type="xs:float" />
+          <xs:element minOccurs="0" name="ColorRed" type="xs:float" />
+          <xs:element minOccurs="0" name="Falloff" type="xs:float" />
+          <xs:element minOccurs="0" name="Intensity" type="xs:float" />
+          <xs:element minOccurs="0" name="Radius" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_LightingBlock" nillable="true" type="tns:MyObjectBuilder_LightingBlock" />
+  <xs:complexType name="MyObjectBuilder_InteriorTurret">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_TurretBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_InteriorTurret" nillable="true" type="tns:MyObjectBuilder_InteriorTurret" />
+  <xs:complexType name="MyObjectBuilder_Ladder">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Ladder" nillable="true" type="tns:MyObjectBuilder_Ladder" />
+  <xs:complexType name="MyObjectBuilder_LandingGear">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AutoLock" type="xs:boolean" />
+          <xs:element minOccurs="0" name="BrakeForce" type="xs:float" />
+          <xs:element minOccurs="0" name="IsLocked" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_LandingGear" nillable="true" type="tns:MyObjectBuilder_LandingGear" />
+  <xs:complexType name="MyObjectBuilder_LargeGatlingTurret">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ConveyorTurretBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_LargeGatlingTurret" nillable="true" type="tns:MyObjectBuilder_LargeGatlingTurret" />
+  <xs:complexType name="MyObjectBuilder_LargeMissileTurret">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ConveyorTurretBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_LargeMissileTurret" nillable="true" type="tns:MyObjectBuilder_LargeMissileTurret" />
+  <xs:complexType name="MyObjectBuilder_LastLoadedTimes">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element xmlns:q41="http://schemas.datacontract.org/2004/07/VRage.Serialization" minOccurs="0" name="LastLoaded" nillable="true" type="q41:SerializableDictionaryOfstringdateTime" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_LastLoadedTimes" nillable="true" type="tns:MyObjectBuilder_LastLoadedTimes" />
+  <xs:complexType name="MyObjectBuilder_LastSession">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="IsContentWorlds" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Path" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_LastSession" nillable="true" type="tns:MyObjectBuilder_LastSession" />
+  <xs:complexType name="MyObjectBuilder_MedicalRoom">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="SteamUserId" type="xs:unsignedLong" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_MedicalRoom" nillable="true" type="tns:MyObjectBuilder_MedicalRoom" />
+  <xs:complexType name="MyObjectBuilder_MergeBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_MergeBlock" nillable="true" type="tns:MyObjectBuilder_MergeBlock" />
+  <xs:complexType name="MyObjectBuilder_Missile">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Missile" nillable="true" type="tns:MyObjectBuilder_Missile" />
+  <xs:complexType name="MyObjectBuilder_ModInfo">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="SteamIDOwner" type="xs:unsignedLong" />
+          <xs:element minOccurs="0" name="WorkshopId" type="xs:unsignedLong" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ModInfo" nillable="true" type="tns:MyObjectBuilder_ModInfo" />
+  <xs:complexType name="MyObjectBuilder_MotorBase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="RotorEntityId" type="xs:long" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_MotorBase" nillable="true" type="tns:MyObjectBuilder_MotorBase" />
+  <xs:complexType name="MyObjectBuilder_MotorRotor">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_MotorRotor" nillable="true" type="tns:MyObjectBuilder_MotorRotor" />
+  <xs:complexType name="MyObjectBuilder_MotorStator">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_MotorBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CurrentAngle" type="xs:float" />
+          <xs:element minOccurs="0" name="DummyDisplacement" type="xs:float" />
+          <xs:element minOccurs="0" name="ForceRatio" type="xs:float" />
+          <xs:element minOccurs="0" name="FrictionRatio" type="xs:float" />
+          <xs:element minOccurs="0" name="LimitsActive" type="xs:boolean" />
+          <xs:element minOccurs="0" name="MaxAngle" nillable="true" type="xs:float" />
+          <xs:element minOccurs="0" name="MinAngle" nillable="true" type="xs:float" />
+          <xs:element minOccurs="0" name="TargetVelocityRatio" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_MotorStator" nillable="true" type="tns:MyObjectBuilder_MotorStator" />
+  <xs:complexType name="MyObjectBuilder_MotorSuspension">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_MotorBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Damping" type="xs:float" />
+          <xs:element minOccurs="0" name="Friction" type="xs:float" />
+          <xs:element minOccurs="0" name="Power" type="xs:float" />
+          <xs:element minOccurs="0" name="Propulsion" type="xs:boolean" />
+          <xs:element minOccurs="0" name="SteerAngle" type="xs:float" />
+          <xs:element minOccurs="0" name="Steering" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Strength" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_MotorSuspension" nillable="true" type="tns:MyObjectBuilder_MotorSuspension" />
+  <xs:complexType name="MyObjectBuilder_Ore">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_PhysicalObject">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Ore" nillable="true" type="tns:MyObjectBuilder_Ore" />
+  <xs:complexType name="MyObjectBuilder_OreDetector">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DetectionRadius" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_OreDetector" nillable="true" type="tns:MyObjectBuilder_OreDetector" />
+  <xs:complexType name="MyObjectBuilder_Passage">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Passage" nillable="true" type="tns:MyObjectBuilder_Passage" />
+  <xs:complexType name="MyObjectBuilder_PhysicalGunObject">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_PhysicalObject">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="GunEntity" nillable="true" type="tns:MyObjectBuilder_EntityBase" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_PhysicalGunObject" nillable="true" type="tns:MyObjectBuilder_PhysicalGunObject" />
+  <xs:complexType name="MyObjectBuilder_PistonBase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CurrentPosition" type="xs:float" />
+          <xs:element minOccurs="0" name="MaxLimit" type="xs:float" />
+          <xs:element minOccurs="0" name="MinLimit" type="xs:float" />
+          <xs:element minOccurs="0" name="Reverse" type="xs:boolean" />
+          <xs:element minOccurs="0" name="TopBlockId" type="xs:long" />
+          <xs:element minOccurs="0" name="Velocity" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_PistonBase" nillable="true" type="tns:MyObjectBuilder_PistonBase" />
+  <xs:complexType name="MyObjectBuilder_PistonTop">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PistonBlockId" type="xs:long" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_PistonTop" nillable="true" type="tns:MyObjectBuilder_PistonTop" />
+  <xs:complexType name="MyObjectBuilder_RadioAntenna">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="BroadcastRadius" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_RadioAntenna" nillable="true" type="tns:MyObjectBuilder_RadioAntenna" />
+  <xs:complexType name="MyObjectBuilder_Reactor">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="UseConveyorSystem" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Reactor" nillable="true" type="tns:MyObjectBuilder_Reactor" />
+  <xs:complexType name="MyObjectBuilder_RealWheel">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_MotorRotor">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_RealWheel" nillable="true" type="tns:MyObjectBuilder_RealWheel" />
+  <xs:complexType name="MyObjectBuilder_Refinery">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ProductionBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Refinery" nillable="true" type="tns:MyObjectBuilder_Refinery" />
+  <xs:complexType name="MyObjectBuilder_ReflectorLight">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_LightingBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ReflectorLight" nillable="true" type="tns:MyObjectBuilder_ReflectorLight" />
+  <xs:complexType name="MyObjectBuilder_Sector">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AppVersion" type="xs:int" />
+          <xs:element xmlns:q42="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Position" type="q42:Vector3I" />
+          <xs:element minOccurs="0" name="SectorEvents" nillable="true" type="tns:MyObjectBuilder_GlobalEvents" />
+          <xs:element minOccurs="0" name="SectorObjects" nillable="true" type="tns:ArrayOfMyObjectBuilder_EntityBase" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Sector" nillable="true" type="tns:MyObjectBuilder_Sector" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_EntityBase">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_EntityBase" nillable="true" type="tns:MyObjectBuilder_EntityBase" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_EntityBase" nillable="true" type="tns:ArrayOfMyObjectBuilder_EntityBase" />
+  <xs:complexType name="MyObjectBuilder_ShipConnector">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CollectAll" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Connected" type="xs:boolean" />
+          <xs:element minOccurs="0" name="ConnectedEntityId" type="xs:long" />
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="ThrowOut" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ShipConnector" nillable="true" type="tns:MyObjectBuilder_ShipConnector" />
+  <xs:complexType name="MyObjectBuilder_ShipGrinder">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ShipToolBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ShipGrinder" nillable="true" type="tns:MyObjectBuilder_ShipGrinder" />
+  <xs:complexType name="MyObjectBuilder_ShipToolBase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="UseConveyorSystem" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ShipToolBase" nillable="true" type="tns:MyObjectBuilder_ShipToolBase" />
+  <xs:complexType name="MyObjectBuilder_ShipWelder">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ShipToolBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ShipWelder" nillable="true" type="tns:MyObjectBuilder_ShipWelder" />
+  <xs:complexType name="MyObjectBuilder_SignalLight">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_SignalLight" nillable="true" type="tns:MyObjectBuilder_SignalLight" />
+  <xs:complexType name="MyObjectBuilder_SimpleAutopilot">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_AutopilotBase">
+        <xs:sequence>
+          <xs:element xmlns:q43="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Destination" type="q43:Vector3" />
+          <xs:element xmlns:q44="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Direction" type="q44:Vector3" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_SimpleAutopilot" nillable="true" type="tns:MyObjectBuilder_SimpleAutopilot" />
+  <xs:complexType name="MyObjectBuilder_SmallGatlingGun">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="UseConveyorSystem" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_SmallGatlingGun" nillable="true" type="tns:MyObjectBuilder_SmallGatlingGun" />
+  <xs:complexType name="MyObjectBuilder_SmallMissileLauncher">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Inventory" nillable="true" type="tns:MyObjectBuilder_Inventory" />
+          <xs:element minOccurs="0" name="UseConveyorSystem" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_SmallMissileLauncher" nillable="true" type="tns:MyObjectBuilder_SmallMissileLauncher" />
+  <xs:complexType name="MyObjectBuilder_SolarPanel">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_SolarPanel" nillable="true" type="tns:MyObjectBuilder_SolarPanel" />
+  <xs:complexType name="MyObjectBuilder_Thrust">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ThrustOverride" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Thrust" nillable="true" type="tns:MyObjectBuilder_Thrust" />
+  <xs:complexType name="MyObjectBuilder_ToolbarItemCubeBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ToolbarItemDefinition">
+        <xs:sequence>
+          <xs:element xmlns:q45="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="defId" type="q45:SerializableDefinitionId" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ToolbarItemCubeBlock" nillable="true" type="tns:MyObjectBuilder_ToolbarItemCubeBlock" />
+  <xs:complexType name="MyObjectBuilder_ToolbarItemDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ToolbarItem">
+        <xs:sequence>
+          <xs:element xmlns:q46="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="DefinitionId" type="q46:SerializableDefinitionId" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ToolbarItemDefinition" nillable="true" type="tns:MyObjectBuilder_ToolbarItemDefinition" />
+  <xs:complexType name="MyObjectBuilder_ToolbarItemEmpty">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ToolbarItem">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ToolbarItemEmpty" nillable="true" type="tns:MyObjectBuilder_ToolbarItemEmpty" />
+  <xs:complexType name="MyObjectBuilder_ToolbarItemTerminal">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ToolbarItem">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Action" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ToolbarItemTerminal" nillable="true" type="tns:MyObjectBuilder_ToolbarItemTerminal" />
+  <xs:complexType name="MyObjectBuilder_ToolbarItemTerminalBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ToolbarItemTerminal">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="BlockEntityId" type="xs:long" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ToolbarItemTerminalBlock" nillable="true" type="tns:MyObjectBuilder_ToolbarItemTerminalBlock" />
+  <xs:complexType name="MyObjectBuilder_ToolbarItemTerminalGroup">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ToolbarItemTerminal">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="GridEntityId" type="xs:long" />
+          <xs:element minOccurs="0" name="GroupName" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ToolbarItemTerminalGroup" nillable="true" type="tns:MyObjectBuilder_ToolbarItemTerminalGroup" />
+  <xs:complexType name="MyObjectBuilder_ToolbarItemWallBlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ToolbarItemDefinition">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ToolbarItemWallBlock" nillable="true" type="tns:MyObjectBuilder_ToolbarItemWallBlock" />
+  <xs:complexType name="MyObjectBuilder_ToolbarItemWeapon">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_ToolbarItemDefinition">
+        <xs:sequence>
+          <xs:element xmlns:q47="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="defId" type="q47:SerializableDefinitionId" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_ToolbarItemWeapon" nillable="true" type="tns:MyObjectBuilder_ToolbarItemWeapon" />
+  <xs:complexType name="MyObjectBuilder_VirtualMass">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_FunctionalBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_VirtualMass" nillable="true" type="tns:MyObjectBuilder_VirtualMass" />
+  <xs:complexType name="MyObjectBuilder_WallPlacer">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_WallPlacer" nillable="true" type="tns:MyObjectBuilder_WallPlacer" />
+  <xs:complexType name="MyObjectBuilder_Warhead">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Warhead" nillable="true" type="tns:MyObjectBuilder_Warhead" />
+  <xs:complexType name="MyObjectBuilder_Welder">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_EntityBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Welder" nillable="true" type="tns:MyObjectBuilder_Welder" />
+  <xs:complexType name="MyObjectBuilder_Wheel">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_CubeBlock">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_Wheel" nillable="true" type="tns:MyObjectBuilder_Wheel" />
+  <xs:complexType name="MyObjectBuilder_World">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Checkpoint" nillable="true" type="tns:MyObjectBuilder_Checkpoint" />
+          <xs:element minOccurs="0" name="Sector" nillable="true" type="tns:MyObjectBuilder_Sector" />
+          <xs:element xmlns:q48="http://schemas.datacontract.org/2004/07/VRage.Serialization" minOccurs="0" name="VoxelMaps" nillable="true" type="q48:SerializableDictionaryOfstringbase64Binary" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_World" nillable="true" type="tns:MyObjectBuilder_World" />
 </xs:schema>

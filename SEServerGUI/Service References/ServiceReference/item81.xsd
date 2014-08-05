@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Sandbox.Common" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Sandbox.Common" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="MyFontEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Debug" />
+      <xs:enumeration value="Red" />
+      <xs:enumeration value="Green" />
+      <xs:enumeration value="Blue" />
+      <xs:enumeration value="White" />
+      <xs:enumeration value="DarkBlue" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyFontEnum" nillable="true" type="tns:MyFontEnum" />
+  <xs:simpleType name="MyRelationsBetweenFactions">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Neutral" />
+      <xs:enumeration value="Enemies" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyRelationsBetweenFactions" nillable="true" type="tns:MyRelationsBetweenFactions" />
+</xs:schema>

@@ -1,46 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" />
-  <xs:complexType name="CubeGridEntity">
-    <xs:complexContent mixed="false">
-      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q1:BaseEntity">
-        <xs:sequence />
-      </xs:extension>
-    </xs:complexContent>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
+  <xs:complexType name="SerializableVector3">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="X" type="xs:float" />
+      <xs:element minOccurs="0" name="Y" type="xs:float" />
+      <xs:element minOccurs="0" name="Z" type="xs:float" />
+      <xs:element minOccurs="0" name="x" type="xs:float" />
+      <xs:element minOccurs="0" name="y" type="xs:float" />
+      <xs:element minOccurs="0" name="z" type="xs:float" />
+    </xs:sequence>
   </xs:complexType>
-  <xs:element name="CubeGridEntity" nillable="true" type="tns:CubeGridEntity" />
-  <xs:complexType name="CharacterEntity">
-    <xs:complexContent mixed="false">
-      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q2:BaseEntity">
-        <xs:sequence />
-      </xs:extension>
-    </xs:complexContent>
+  <xs:element name="SerializableVector3" nillable="true" type="tns:SerializableVector3" />
+  <xs:complexType name="SerializableVector3I">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="X" type="xs:int" />
+      <xs:element minOccurs="0" name="Y" type="xs:int" />
+      <xs:element minOccurs="0" name="Z" type="xs:int" />
+      <xs:element minOccurs="0" name="x" type="xs:int" />
+      <xs:element minOccurs="0" name="y" type="xs:int" />
+      <xs:element minOccurs="0" name="z" type="xs:int" />
+    </xs:sequence>
   </xs:complexType>
-  <xs:element name="CharacterEntity" nillable="true" type="tns:CharacterEntity" />
-  <xs:complexType name="FloatingObject">
-    <xs:complexContent mixed="false">
-      <xs:extension xmlns:q3="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q3:BaseEntity">
-        <xs:sequence />
-      </xs:extension>
-    </xs:complexContent>
+  <xs:element name="SerializableVector3I" nillable="true" type="tns:SerializableVector3I" />
+  <xs:complexType name="SerializableVector2I">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="X" type="xs:int" />
+      <xs:element minOccurs="0" name="Y" type="xs:int" />
+      <xs:element minOccurs="0" name="x" type="xs:int" />
+      <xs:element minOccurs="0" name="y" type="xs:int" />
+    </xs:sequence>
   </xs:complexType>
-  <xs:element name="FloatingObject" nillable="true" type="tns:FloatingObject" />
-  <xs:complexType name="Meteor">
-    <xs:complexContent mixed="false">
-      <xs:extension xmlns:q4="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q4:BaseEntity">
-        <xs:sequence />
-      </xs:extension>
-    </xs:complexContent>
+  <xs:element name="SerializableVector2I" nillable="true" type="tns:SerializableVector2I" />
+  <xs:complexType name="SerializableVector2">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="X" type="xs:float" />
+      <xs:element minOccurs="0" name="Y" type="xs:float" />
+      <xs:element minOccurs="0" name="x" type="xs:float" />
+      <xs:element minOccurs="0" name="y" type="xs:float" />
+    </xs:sequence>
   </xs:complexType>
-  <xs:element name="Meteor" nillable="true" type="tns:Meteor" />
-  <xs:complexType name="VoxelMap">
+  <xs:element name="SerializableVector2" nillable="true" type="tns:SerializableVector2" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_TransparentMaterial">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_TransparentMaterial" nillable="true" type="tns:MyObjectBuilder_TransparentMaterial" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_TransparentMaterial" nillable="true" type="tns:ArrayOfMyObjectBuilder_TransparentMaterial" />
+  <xs:complexType name="MyObjectBuilder_TransparentMaterial">
     <xs:complexContent mixed="false">
-      <xs:extension xmlns:q5="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q5:BaseEntity">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q1:MyObjectBuilder_Base">
         <xs:sequence>
-          <xs:element minOccurs="0" name="Filename" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="AlphaMistingEnable" type="xs:boolean" />
+          <xs:element minOccurs="0" name="AlphaMistingEnd" type="xs:float" />
+          <xs:element minOccurs="0" name="AlphaMistingStart" type="xs:float" />
+          <xs:element minOccurs="0" name="AlphaSaturation" type="xs:float" />
+          <xs:element minOccurs="0" name="CanBeAffectedByOtherLights" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Emissivity" type="xs:float" />
+          <xs:element minOccurs="0" name="IgnoreDepth" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NeedSort" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Reflection" type="xs:boolean" />
+          <xs:element minOccurs="0" name="SoftParticleDistanceScale" type="xs:float" />
+          <xs:element minOccurs="0" name="Texture" nillable="true" type="xs:string" />
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="UVOffset" type="q2:Vector2" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="UVSize" type="q3:Vector2" />
+          <xs:element minOccurs="0" name="UseAtlas" type="xs:boolean" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="VoxelMap" nillable="true" type="tns:VoxelMap" />
+  <xs:element name="MyObjectBuilder_TransparentMaterial" nillable="true" type="tns:MyObjectBuilder_TransparentMaterial" />
+  <xs:complexType name="SerializableBounds">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Default" type="xs:float" />
+      <xs:element minOccurs="0" name="Max" type="xs:float" />
+      <xs:element minOccurs="0" name="Min" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableBounds" nillable="true" type="tns:SerializableBounds" />
+  <xs:complexType name="SerializableBlockOrientation">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Forward" type="q4:Base6Directions.Direction" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Up" type="q5:Base6Directions.Direction" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableBlockOrientation" nillable="true" type="tns:SerializableBlockOrientation" />
+  <xs:complexType name="SerializableQuaternion">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="W" type="xs:float" />
+      <xs:element minOccurs="0" name="X" type="xs:float" />
+      <xs:element minOccurs="0" name="Y" type="xs:float" />
+      <xs:element minOccurs="0" name="Z" type="xs:float" />
+      <xs:element minOccurs="0" name="w" type="xs:float" />
+      <xs:element minOccurs="0" name="x" type="xs:float" />
+      <xs:element minOccurs="0" name="y" type="xs:float" />
+      <xs:element minOccurs="0" name="z" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableQuaternion" nillable="true" type="tns:SerializableQuaternion" />
+  <xs:complexType name="SerializableVector3UByte">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="X" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="Y" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="Z" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="x" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="y" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="z" type="xs:unsignedByte" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableVector3UByte" nillable="true" type="tns:SerializableVector3UByte" />
+  <xs:complexType name="MyObjectBuilder_TransparentMaterials">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q6="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q6:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Materials" nillable="true" type="tns:ArrayOfMyObjectBuilder_TransparentMaterial" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_TransparentMaterials" nillable="true" type="tns:MyObjectBuilder_TransparentMaterials" />
 </xs:schema>

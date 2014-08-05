@@ -259,7 +259,6 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 	}
 
-	[DataContract]
 	public class SectorObjectManager : BaseObjectManager
 	{
 		#region "Attributes"

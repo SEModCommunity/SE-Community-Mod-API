@@ -24,7 +24,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
-	[DataContract]
+	[DataContract(Name = "CharacterEntityProxy")]
 	public class CharacterEntity : BaseEntity
 	{
 		#region "Attributes"
@@ -90,6 +90,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal static Type InternalType
@@ -102,6 +103,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Character")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -121,6 +123,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Character")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -142,6 +145,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Character")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -156,6 +160,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Character")]
 		public float BatteryLevel
 		{
@@ -181,6 +186,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Character")]
 		public float Health
 		{
@@ -207,6 +213,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Character")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -218,6 +225,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Character")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -226,6 +234,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return ObjectBuilder.DampenersEnabled; }
 		}
 
+		[DataMember]
 		[Category("Character")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -234,6 +243,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return ObjectBuilder.JetpackEnabled; }
 		}
 
+		[DataMember]
 		[Category("Character")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -242,6 +252,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return ObjectBuilder.LightEnabled; }
 		}
 
+		[DataMember]
 		[Category("Character")]
 		[Browsable(true)]
 		[ReadOnly(true)]

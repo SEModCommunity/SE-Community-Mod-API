@@ -26,16 +26,14 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
-	[DataContract]
+	[DataContract(Name = "CubeGridEntityProxy")]
 	[KnownType("KnownTypes")]
 	public class CubeGridEntity : BaseEntity
 	{
 		#region "Attributes"
 
-		[DataMember]
 		private CubeBlockManager m_cubeBlockManager;
 		private CubeGridNetworkManager m_networkManager;
-		[DataMember]
 		private PowerManager m_powerManager;
 
 		private static Type m_internalType;
@@ -126,7 +124,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -202,7 +200,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -334,7 +332,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -366,7 +364,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[ReadOnly(true)]
 		public float TotalPower
@@ -378,7 +376,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Cube Grid")]
 		[ReadOnly(true)]
 		public float AvailablePower
@@ -405,57 +403,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 					types.Add(type);
 			}
 			return types;
-
-			types.Add(typeof(MyObjectBuilder_CubeGrid));
-
-			types.Add(typeof(MyObjectBuilder_CargoContainer));
-			types.Add(typeof(MyObjectBuilder_Reactor));
-			types.Add(typeof(MyObjectBuilder_Beacon));
-			types.Add(typeof(MyObjectBuilder_Cockpit));
-			types.Add(typeof(MyObjectBuilder_GravityGenerator));
-			types.Add(typeof(MyObjectBuilder_MedicalRoom));
-			types.Add(typeof(MyObjectBuilder_InteriorLight));
-			types.Add(typeof(MyObjectBuilder_ReflectorLight));
-			types.Add(typeof(MyObjectBuilder_BatteryBlock));
-			types.Add(typeof(MyObjectBuilder_Door));
-			types.Add(typeof(MyObjectBuilder_Refinery));
-			types.Add(typeof(MyObjectBuilder_Assembler));
-			types.Add(typeof(MyObjectBuilder_Thrust));
-			types.Add(typeof(MyObjectBuilder_MergeBlock));
-			types.Add(typeof(MyObjectBuilder_LandingGear));
-			types.Add(typeof(MyObjectBuilder_Conveyor));
-			types.Add(typeof(MyObjectBuilder_ConveyorConnector));
-			types.Add(typeof(MyObjectBuilder_SolarPanel));
-			types.Add(typeof(MyObjectBuilder_Gyro));
-			types.Add(typeof(MyObjectBuilder_LargeGatlingTurret));
-			types.Add(typeof(MyObjectBuilder_LargeMissileTurret));
-			types.Add(typeof(MyObjectBuilder_ShipGrinder));
-			types.Add(typeof(MyObjectBuilder_ShipWelder));
-			types.Add(typeof(MyObjectBuilder_Drill));
-			types.Add(typeof(MyObjectBuilder_RadioAntenna));
-
-			types.Add(typeof(MyObjectBuilder_Ore));
-			types.Add(typeof(MyObjectBuilder_Ingot));
-			types.Add(typeof(MyObjectBuilder_Component));
-			types.Add(typeof(MyObjectBuilder_PhysicalGunObject));
-
-			types.Add(typeof(MyObjectBuilder_HandDrill));
-			types.Add(typeof(MyObjectBuilder_AngleGrinder));
-			types.Add(typeof(MyObjectBuilder_Welder));
-			types.Add(typeof(MyObjectBuilder_AutomaticRifle));
-
-			return types;
 		}
 
 		public override void Dispose()
 		{
 			LogManager.APILog.WriteLine("Disposing CubeGridEntity '" + Name + "'");
-			/*
-			foreach(CubeBlockEntity cubeBlock in CubeBlocks)
-			{
-				cubeBlock.Dispose();
-			}
-			*/
 			base.Dispose();
 			/*
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
@@ -566,7 +518,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 	}
 
-	[DataContract]
 	public class CubeGridNetworkManager
 	{
 		//24 Packets

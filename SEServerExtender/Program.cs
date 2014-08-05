@@ -26,7 +26,7 @@ namespace SEServerExtender
 		[STAThread]
 		static void Main(string[] args)
 		{
-			Uri baseAddress = new Uri("http://localhost:8000/SEServerExtender/");
+			Uri baseAddress = new Uri(InternalService.BaseURI);
 			ServiceHost selfHost = new ServiceHost(typeof(InternalService), baseAddress);
 
 			try

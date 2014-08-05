@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -11,6 +12,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "ProductionBlockEntityProxy")]
 	public class ProductionBlockEntity : FunctionalBlockEntity
 	{
 		#region "Attributes"
@@ -46,6 +48,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[DataMember]
 		[Category("Production Block")]
 		[Browsable(false)]
 		public InventoryEntity InputInventory
@@ -54,8 +57,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				return m_inputInventory;
 			}
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[DataMember]
 		[Category("Production Block")]
 		[Browsable(false)]
 		public InventoryEntity OutputInventory
@@ -63,6 +71,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get
 			{
 				return m_outputInventory;
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 

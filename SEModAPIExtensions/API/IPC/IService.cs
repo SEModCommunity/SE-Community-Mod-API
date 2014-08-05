@@ -6,6 +6,8 @@ using System.ServiceModel;
 using System.Text;
 
 using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 
 namespace SEModAPIExtensions.API.IPC
 {
@@ -17,5 +19,11 @@ namespace SEModAPIExtensions.API.IPC
 
 		[OperationContract]
 		List<BaseEntity> GetSectorEntities();
+
+		[OperationContract]
+		List<CubeGridEntity> GetSectorCubeGridEntities();
+
+		[OperationContract]
+		List<CubeBlockEntity> GetCubeBlocks(long cubeGridEntityId);
 	}
 }
