@@ -84,7 +84,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Server.cs" />
     <Compile Include="SEServerExtender.cs">
       <SubType>Form</SubType>
     </Compile>

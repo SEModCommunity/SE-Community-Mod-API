@@ -8,26 +8,15 @@ using System.ServiceModel.Description;
 using SEModAPI.Support;
 
 using SEModAPIInternal.API.Common;
-using SEModAPIInternal.API.Common.IPC;
 using SEModAPIInternal.Support;
 
 using SEModAPIExtensions.API;
+using SEModAPIExtensions.API.IPC;
 
 namespace SEServerExtender
 {
 	public static class Program
 	{
-		public struct CommandLineArgs
-		{
-			public bool autoStart;
-			public string worldName;
-			public string instanceName;
-			public bool noGUI;
-			public bool noConsole;
-			public bool debug;
-			public string gamePath;
-		}
-
 		static SEServerExtender m_serverExtenderForm;
 		static Server m_server;
 
@@ -129,7 +118,9 @@ namespace SEServerExtender
 				if (!unitTestResult)
 					SandboxGameAssemblyWrapper.IsInSafeMode = true;
 
-				m_server = new Server(extenderArgs);
+				m_server = Server.Instance;
+				m_server.CommandLineArgs = extenderArgs;
+				m_server.Init();
 				if (extenderArgs.autoStart)
 				{
 					m_server.StartServer();

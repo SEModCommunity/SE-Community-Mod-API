@@ -7,7 +7,7 @@ using System.Text;
 
 using SEModAPIInternal.API.Entity;
 
-namespace SEModAPIInternal.API.Common.IPC
+namespace SEModAPIExtensions.API.IPC
 {
 	[ServiceContract]
 	public interface IInternalServiceContract

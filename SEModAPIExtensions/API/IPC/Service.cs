@@ -5,10 +5,11 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 
+using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 
-namespace SEModAPIInternal.API.Common.IPC
+namespace SEModAPIExtensions.API.IPC
 {
 	public class InternalService : IInternalServiceContract
 	{

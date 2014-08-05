@@ -15,7 +15,7 @@ namespace SEServerGUI
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new SEServerGUI());
+			Application.Run(new SEServerGUIForm());
 		}
 	}
 }

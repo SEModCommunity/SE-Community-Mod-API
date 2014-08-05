@@ -37,11 +37,15 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="API\BasicUnitTestManager.cs" />
     <Compile Include="API\CargoShipManager.cs" />
     <Compile Include="API\ChatManager.cs" />
+    <Compile Include="API\IPC\IService.cs" />
+    <Compile Include="API\IPC\Service.cs" />
     <Compile Include="API\MultiblockStructure.cs" />
     <Compile Include="API\Plugin\Events\IBaseEntityHandler.cs" />
     <Compile Include="API\Plugin\Events\IChatEventHandler.cs" />
@@ -51,6 +55,7 @@
     <Compile Include="API\Plugin\IPlugin.cs" />
     <Compile Include="API\Plugin\PluginBase.cs" />
     <Compile Include="API\PluginManager.cs" />
+    <Compile Include="API\Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +70,8 @@
       <HintPath>..\GameLibraries\SteamSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.XML" />
     <Reference Include="VRage.Common">
       <HintPath>..\GameLibraries\VRage.Common.dll</HintPath>
