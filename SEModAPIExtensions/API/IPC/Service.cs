@@ -10,6 +10,7 @@ using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.Support;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 
 namespace SEModAPIExtensions.API.IPC
 {
@@ -44,7 +45,7 @@ namespace SEModAPIExtensions.API.IPC
 
 		public List<CubeBlockEntity> GetCubeBlocks(long cubeGridEntityId)
 		{
-			LogManager.APILog.WriteLineAndConsole("WCF Service requested cubeblock entities!");
+			//LogManager.APILog.WriteLineAndConsole("WCF Service requested cubeblock entities!");
 
 			List<CubeBlockEntity> cubeBlocks = new List<CubeBlockEntity>();
 			foreach (CubeGridEntity cubeGrid in GetSectorCubeGridEntities())
@@ -57,6 +58,58 @@ namespace SEModAPIExtensions.API.IPC
 			}
 
 			return cubeBlocks;
+		}
+
+		public List<InventoryItemEntity> GetInventoryItems(long cubeGridEntityId, long containerBlockEntityId, ushort inventoryIndex = 0)
+		{
+			LogManager.APILog.WriteLineAndConsole("WCF Service requested inventory item entities!");
+
+			List<InventoryItemEntity> inventoryItems = new List<InventoryItemEntity>();
+			foreach (CubeBlockEntity cubeBlock in GetCubeBlocks(cubeGridEntityId))
+			{
+				if (!(cubeBlock is TerminalBlockEntity))
+					continue;
+
+				if (cubeBlock.EntityId != containerBlockEntityId)
+					continue;
+
+				if (cubeBlock is CargoContainerEntity)
+				{
+					inventoryItems = ((CargoContainerEntity)cubeBlock).Inventory.Items;
+					break;
+				}
+
+				if (cubeBlock is ReactorEntity)
+				{
+					inventoryItems = ((ReactorEntity)cubeBlock).Inventory.Items;
+					break;
+				}
+
+				if (cubeBlock is ProductionBlockEntity)
+				{
+					if (inventoryIndex == 0)
+						inventoryItems = ((ProductionBlockEntity)cubeBlock).InputInventory.Items;
+					if (inventoryIndex == 1)
+						inventoryItems = ((ProductionBlockEntity)cubeBlock).OutputInventory.Items;
+					break;
+				}
+
+				if (cubeBlock is ShipDrillEntity)
+				{
+					inventoryItems = ((ShipDrillEntity)cubeBlock).Inventory.Items;
+					break;
+				}
+
+				if (cubeBlock is ShipToolBaseEntity)
+				{
+					inventoryItems = ((ShipToolBaseEntity)cubeBlock).Inventory.Items;
+					break;
+				}
+			}
+
+			LogManager.APILog.WriteLineAndConsole("WCF Service - Sending " + inventoryItems.Count.ToString() + " items from cube grid '" + cubeGridEntityId.ToString() + "' in block '" + containerBlockEntityId.ToString() + "'");
+
+			return inventoryItems;
 		}
 	}
 }

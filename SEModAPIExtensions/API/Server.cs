@@ -46,6 +46,9 @@ namespace SEModAPIExtensions.API
 	public interface IServerServiceContract
 	{
 		[OperationContract]
+		Server GetServer();
+
+		[OperationContract]
 		void StartServer();
 
 		[OperationContract]
@@ -60,10 +63,16 @@ namespace SEModAPIExtensions.API
 
 	[ServiceBehavior(
 		ConcurrencyMode = ConcurrencyMode.Single,
-		IncludeExceptionDetailInFaults = true
+		IncludeExceptionDetailInFaults = true,
+		IgnoreExtensionDataObject = true
 	)]
 	public class ServerService : IServerServiceContract
 	{
+		public Server GetServer()
+		{
+			return Server.Instance;
+		}
+
 		public void StartServer()
 		{
 			Server.Instance.StartServer();
@@ -85,7 +94,10 @@ namespace SEModAPIExtensions.API
 		}
 	}
 
-	[DataContract(IsReference = true)]
+	[DataContract(
+		Name = "ServerProxy",
+		IsReference = true
+	)]
 	public class Server
 	{
 		#region "Attributes"
@@ -223,6 +235,7 @@ namespace SEModAPIExtensions.API
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		public static Server Instance
 		{
 			get
@@ -238,6 +251,10 @@ namespace SEModAPIExtensions.API
 		public bool IsRunning
 		{
 			get { return m_isServerRunning; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		[DataMember]
@@ -247,10 +264,14 @@ namespace SEModAPIExtensions.API
 			set { m_commandLineArgs = value; }
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		public DedicatedConfigDefinition Config
 		{
 			get { return m_dedicatedConfigDefinition; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		[DataMember]

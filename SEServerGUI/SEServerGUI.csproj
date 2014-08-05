@@ -113,7 +113,16 @@
     <None Include="Service References\ServerServiceReference\item.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServerServiceReference\item11.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServerServiceReference\item13.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ServerServiceReference\Server.wsdl" />
+    <None Include="Service References\ServerServiceReference\SEServerGUI.ServerServiceReference.ServerProxy.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServiceReference\InternalService.wsdl" />
     <None Include="Service References\ServiceReference\item.xsd">
       <SubType>Designer</SubType>
@@ -185,6 +194,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServiceReference\SEServerGUI.ServiceReference.CubeGridEntityProxy.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServiceReference\SEServerGUI.ServiceReference.InventoryItemEntityProxy.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
   </ItemGroup>

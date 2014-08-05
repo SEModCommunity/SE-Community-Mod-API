@@ -114,7 +114,6 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.FunctionalBlockEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.ProductionBlockEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.InventoryEntityProxy))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.InventoryItemEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.RefineryEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.AssemblerEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.DoorEntityProxy))]
@@ -142,6 +141,7 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.ConveyorTubeEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.MedicalRoomEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.ConveyorBlockEntityProxy))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.InventoryItemEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.BaseEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.CharacterEntityProxy))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(SEServerGUI.ServiceReference.MeteorProxy))]
@@ -531,125 +531,6 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.DataContractAttribute(Name="InventoryEntityProxy", Namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity")]
     [System.SerializableAttribute()]
     public partial class InventoryEntityProxy : SEServerGUI.ServiceReference.BaseObjectProxy {
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Collections.Generic.List<SEServerGUI.ServiceReference.InventoryItemEntityProxy> ItemsField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private uint NextItemIdField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.List<SEServerGUI.ServiceReference.InventoryItemEntityProxy> Items {
-            get {
-                return this.ItemsField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ItemsField, value) != true)) {
-                    this.ItemsField = value;
-                    this.RaisePropertyChanged("Items");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public uint NextItemId {
-            get {
-                return this.NextItemIdField;
-            }
-            set {
-                if ((this.NextItemIdField.Equals(value) != true)) {
-                    this.NextItemIdField = value;
-                    this.RaisePropertyChanged("NextItemId");
-                }
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="InventoryItemEntityProxy", Namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity")]
-    [System.SerializableAttribute()]
-    public partial class InventoryItemEntityProxy : SEServerGUI.ServiceReference.BaseObjectProxy {
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private float AmountField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Sandbox.Common.ObjectBuilders.Definitions.SerializableDefinitionId IdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private uint ItemIdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private float MassField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private float VolumeField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float Amount {
-            get {
-                return this.AmountField;
-            }
-            set {
-                if ((this.AmountField.Equals(value) != true)) {
-                    this.AmountField = value;
-                    this.RaisePropertyChanged("Amount");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Sandbox.Common.ObjectBuilders.Definitions.SerializableDefinitionId Id {
-            get {
-                return this.IdField;
-            }
-            set {
-                if ((this.IdField.Equals(value) != true)) {
-                    this.IdField = value;
-                    this.RaisePropertyChanged("Id");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public uint ItemId {
-            get {
-                return this.ItemIdField;
-            }
-            set {
-                if ((this.ItemIdField.Equals(value) != true)) {
-                    this.ItemIdField = value;
-                    this.RaisePropertyChanged("ItemId");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float Mass {
-            get {
-                return this.MassField;
-            }
-            set {
-                if ((this.MassField.Equals(value) != true)) {
-                    this.MassField = value;
-                    this.RaisePropertyChanged("Mass");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float Volume {
-            get {
-                return this.VolumeField;
-            }
-            set {
-                if ((this.VolumeField.Equals(value) != true)) {
-                    this.VolumeField = value;
-                    this.RaisePropertyChanged("Volume");
-                }
-            }
-        }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -1354,6 +1235,93 @@ namespace SEServerGUI.ServiceReference {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="InventoryItemEntityProxy", Namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity")]
+    [System.SerializableAttribute()]
+    public partial class InventoryItemEntityProxy : SEServerGUI.ServiceReference.BaseObjectProxy {
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private float AmountField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Sandbox.Common.ObjectBuilders.Definitions.SerializableDefinitionId IdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private uint ItemIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private float MassField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private float VolumeField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public float Amount {
+            get {
+                return this.AmountField;
+            }
+            set {
+                if ((this.AmountField.Equals(value) != true)) {
+                    this.AmountField = value;
+                    this.RaisePropertyChanged("Amount");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Sandbox.Common.ObjectBuilders.Definitions.SerializableDefinitionId Id {
+            get {
+                return this.IdField;
+            }
+            set {
+                if ((this.IdField.Equals(value) != true)) {
+                    this.IdField = value;
+                    this.RaisePropertyChanged("Id");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public uint ItemId {
+            get {
+                return this.ItemIdField;
+            }
+            set {
+                if ((this.ItemIdField.Equals(value) != true)) {
+                    this.ItemIdField = value;
+                    this.RaisePropertyChanged("ItemId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public float Mass {
+            get {
+                return this.MassField;
+            }
+            set {
+                if ((this.MassField.Equals(value) != true)) {
+                    this.MassField = value;
+                    this.RaisePropertyChanged("Mass");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public float Volume {
+            get {
+                return this.VolumeField;
+            }
+            set {
+                if ((this.VolumeField.Equals(value) != true)) {
+                    this.VolumeField = value;
+                    this.RaisePropertyChanged("Volume");
+                }
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="CharacterEntityProxy", Namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.Sector" +
         "Object")]
     [System.SerializableAttribute()]
@@ -2029,6 +1997,9 @@ namespace SEServerGUI.ServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInternalServiceContract/GetCubeBlocks", ReplyAction="http://tempuri.org/IInternalServiceContract/GetCubeBlocksResponse")]
         System.Collections.Generic.List<SEServerGUI.ServiceReference.CubeBlockEntityProxy> GetCubeBlocks(long cubeGridEntityId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInternalServiceContract/GetInventoryItems", ReplyAction="http://tempuri.org/IInternalServiceContract/GetInventoryItemsResponse")]
+        System.Collections.Generic.List<SEServerGUI.ServiceReference.InventoryItemEntityProxy> GetInventoryItems(long cubeGridEntityId, long containerBlockEntityId, ushort inventoryIndex);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -2072,6 +2043,10 @@ namespace SEServerGUI.ServiceReference {
         
         public System.Collections.Generic.List<SEServerGUI.ServiceReference.CubeBlockEntityProxy> GetCubeBlocks(long cubeGridEntityId) {
             return base.Channel.GetCubeBlocks(cubeGridEntityId);
+        }
+        
+        public System.Collections.Generic.List<SEServerGUI.ServiceReference.InventoryItemEntityProxy> GetInventoryItems(long cubeGridEntityId, long containerBlockEntityId, ushort inventoryIndex) {
+            return base.Channel.GetInventoryItems(cubeGridEntityId, containerBlockEntityId, inventoryIndex);
         }
     }
 }

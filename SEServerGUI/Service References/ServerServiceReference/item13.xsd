@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIExtensions.API" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIExtensions.API" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/Server/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ServerProxy">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AutosaveInterval" type="xs:double" />
+      <xs:element minOccurs="0" name="CommandLineArgs" type="tns:CommandLineArgs" />
+      <xs:element minOccurs="0" name="InstanceName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsRunning" type="xs:boolean" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="ServerProxy" nillable="true" type="tns:ServerProxy" />
+  <xs:complexType name="CommandLineArgs">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="autoStart" type="xs:boolean" />
+      <xs:element minOccurs="0" name="debug" type="xs:boolean" />
+      <xs:element minOccurs="0" name="gamePath" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="instanceName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="noConsole" type="xs:boolean" />
+      <xs:element minOccurs="0" name="noGUI" type="xs:boolean" />
+      <xs:element minOccurs="0" name="worldName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CommandLineArgs" nillable="true" type="tns:CommandLineArgs" />
+</xs:schema>

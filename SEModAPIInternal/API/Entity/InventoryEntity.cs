@@ -114,7 +114,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Container Inventory")]
 		[ReadOnly(true)]
 		public uint NextItemId
@@ -128,7 +128,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Container Inventory")]
 		[Browsable(false)]
 		[ReadOnly(true)]

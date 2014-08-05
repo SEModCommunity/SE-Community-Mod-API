@@ -25,6 +25,7 @@ namespace SEServerGUI
 		private List<BaseEntityProxy> m_sectorEntities;
 		private List<CubeGridEntityProxy> m_sectorCubeGridEntities;
 		private System.Windows.Forms.Timer m_entityTreeRefreshTimer;
+		private ServerProxy m_serverProxy;
 
 		#endregion
 
@@ -51,8 +52,23 @@ namespace SEServerGUI
 
 		private void BTN_Connect_Click(object sender, EventArgs e)
 		{
-			if(!m_entityTreeRefreshTimer.Enabled)
+			try
+			{
+				m_serverProxy = m_serverClient.GetServer();
+			}
+			catch (Exception ex)
+			{
+				TRV_Entities.Nodes.Clear();
+				BTN_StartServer.Enabled = false;
+				BTN_StopServer.Enabled = false;
+				BTN_Connect.Enabled = true;
+				return;
+			}
+
+			if (!m_entityTreeRefreshTimer.Enabled)
 				m_entityTreeRefreshTimer.Start();
+
+			BTN_Connect.Enabled = false;
 		}
 
 		private void BTN_StartServer_Click(object sender, EventArgs e)
@@ -106,7 +122,49 @@ namespace SEServerGUI
 
 		private void TreeViewRefresh(object sender, EventArgs e)
 		{
-			m_sectorEntities = client.GetSectorEntities();
+			//Refresh the server
+			try
+			{
+				m_serverProxy = m_serverClient.GetServer();
+			}
+			catch (Exception ex)
+			{
+				TRV_Entities.Nodes.Clear();
+				m_entityTreeRefreshTimer.Stop();
+				BTN_StartServer.Enabled = false;
+				BTN_StopServer.Enabled = false;
+				BTN_Connect.Enabled = true;
+				return;
+			}
+
+			if (m_serverProxy.IsRunning)
+			{
+				BTN_StartServer.Enabled = false;
+				BTN_StopServer.Enabled = true;
+			}
+			else
+			{
+				BTN_StartServer.Enabled = true;
+				BTN_StopServer.Enabled = false;
+			}
+
+			if (!m_serverProxy.IsRunning)
+				return;
+
+			//Refresh the entities
+			try
+			{
+				m_sectorEntities = client.GetSectorEntities();
+			}
+			catch (Exception ex)
+			{
+				TRV_Entities.Nodes.Clear();
+				m_entityTreeRefreshTimer.Stop();
+				BTN_StartServer.Enabled = false;
+				BTN_StopServer.Enabled = false;
+				BTN_Connect.Enabled = true;
+				return;
+			}
 
 			TRV_Entities.BeginUpdate();
 
@@ -878,11 +936,20 @@ namespace SEServerGUI
 
 			if (linkedObject is InventoryEntityProxy)
 			{
-				BTN_Entities_New.Enabled = true;
-
 				InventoryEntityProxy inventory = (InventoryEntityProxy)linkedObject;
 
-				UpdateNodeInventoryItemBranch<InventoryItemEntityProxy>(e.Node, inventory.Items);
+				if(parentNode.Tag is CubeBlockEntityProxy && parentNode.Parent.Parent.Tag is CubeGridEntityProxy)
+				{
+					CubeGridEntityProxy cubeGrid = (CubeGridEntityProxy)parentNode.Parent.Parent.Tag;
+					CubeBlockEntityProxy cubeBlock = (CubeBlockEntityProxy)parentNode.Tag;
+
+					long cubeGridEntityId = cubeGrid.EntityId;
+					long cubeBlockEntityId = cubeBlock.EntityId;
+					ushort inventoryIndex = 0;
+					List<InventoryItemEntityProxy> inventoryItems = client.GetInventoryItems(cubeGridEntityId, cubeBlockEntityId, inventoryIndex);
+
+					UpdateNodeInventoryItemBranch<InventoryItemEntityProxy>(e.Node, inventoryItems);
+				}
 			}
 		}
 

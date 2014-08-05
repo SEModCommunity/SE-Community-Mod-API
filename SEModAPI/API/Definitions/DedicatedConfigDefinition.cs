@@ -1,14 +1,17 @@
-﻿using System;
-using System.IO;
+﻿using Microsoft.Xml.Serialization.GeneratedAssembly;
+
+using System;
 using System.Collections.Generic;
-using Microsoft.Xml.Serialization.GeneratedAssembly;
-using System.Xml;
 using System.ComponentModel;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Xml;
 
 using Sandbox.Common.ObjectBuilders;
 
 namespace SEModAPI.API.Definitions
 {
+	[DataContract]
 	public class DedicatedConfigDefinition
 	{
 		#region "Attributes"
@@ -29,6 +32,7 @@ namespace SEModAPI.API.Definitions
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		[Description("Determine if the configuration has changed since it has been loaded or saved")]
@@ -41,7 +45,7 @@ namespace SEModAPI.API.Definitions
 			private set;
 		}
 
-
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the server's name")]
@@ -60,6 +64,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the server's port")]
@@ -78,6 +83,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the game mode")]
@@ -96,6 +102,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the inventory size multiplier")]
@@ -114,6 +121,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the assembler speed multiplier")]
@@ -132,6 +140,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the assembler efficiency multiplier")]
@@ -150,6 +159,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the refinery speed multiplier")]
@@ -168,6 +178,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the hacking speed multiplier")]
@@ -186,6 +197,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the online mode")]
@@ -204,6 +216,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the maximum number of players")]
@@ -222,6 +235,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the maximum number of floating object")]
@@ -240,6 +254,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the environment hostility")]
@@ -258,6 +273,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether the player's health auto heal")]
@@ -276,6 +292,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether the player can copy/paste ships")]
@@ -294,6 +311,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether the server will save regularly the sector")]
@@ -312,6 +330,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether the weapons are functional")]
@@ -330,6 +349,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether the player names will show on the HUD")]
@@ -348,6 +368,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether the thrusters damage blocks")]
@@ -366,6 +387,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether random ships spawn on the server")]
@@ -384,6 +406,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("")]
@@ -402,6 +425,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("")]
@@ -420,6 +444,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("")]
@@ -438,6 +463,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether spectator mode is enable")]
@@ -456,6 +482,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether the server will automatically remove debris")]
@@ -474,6 +501,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the world borders. Ships and players cannot go further than this")]
@@ -492,6 +520,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether starter ships are removed after a while")]
@@ -510,6 +539,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Determine whether the server should reset the ships ownership")]
@@ -528,6 +558,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the Scenario's TypeId")]
@@ -546,6 +577,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the scenario's subtype Id")]
@@ -564,6 +596,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the path of the world to load")]
@@ -583,6 +616,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the Ip the server will listen on. 0.0.0.0 to listen to every Ip")]
@@ -601,6 +635,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the steam port")]
@@ -619,6 +654,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the number of asteroid in the world")]
@@ -637,6 +673,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the list of administrators of the server")]
@@ -655,6 +692,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the list of banned players")]
@@ -673,6 +711,7 @@ namespace SEModAPI.API.Definitions
 			}
 		}
 
+		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
 		[Description("Get or set the GroupId of the server.\n" +

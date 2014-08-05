@@ -164,6 +164,7 @@
 			// 
 			// BTN_StopServer
 			// 
+			this.BTN_StopServer.Enabled = false;
 			this.BTN_StopServer.Location = new System.Drawing.Point(84, 3);
 			this.BTN_StopServer.Name = "BTN_StopServer";
 			this.BTN_StopServer.Size = new System.Drawing.Size(75, 23);
@@ -174,6 +175,7 @@
 			// 
 			// BTN_StartServer
 			// 
+			this.BTN_StartServer.Enabled = false;
 			this.BTN_StartServer.Location = new System.Drawing.Point(3, 3);
 			this.BTN_StartServer.Name = "BTN_StartServer";
 			this.BTN_StartServer.Size = new System.Drawing.Size(75, 23);

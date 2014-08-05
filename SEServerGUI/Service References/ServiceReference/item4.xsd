@@ -54,4 +54,20 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="GetInventoryItems">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="cubeGridEntityId" type="xs:long" />
+        <xs:element minOccurs="0" name="containerBlockEntityId" type="xs:long" />
+        <xs:element minOccurs="0" name="inventoryIndex" type="xs:unsignedShort" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetInventoryItemsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" minOccurs="0" name="GetInventoryItemsResult" nillable="true" type="q5:ArrayOfInventoryItemEntityProxy" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>

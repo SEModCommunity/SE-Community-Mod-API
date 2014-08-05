@@ -32,20 +32,11 @@
   <xs:complexType name="InventoryEntityProxy">
     <xs:complexContent mixed="false">
       <xs:extension base="tns:BaseObjectProxy">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="Items" nillable="true" type="tns:ArrayOfInventoryItemEntityProxy" />
-          <xs:element minOccurs="0" name="NextItemId" type="xs:unsignedInt" />
-        </xs:sequence>
+        <xs:sequence />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="InventoryEntityProxy" nillable="true" type="tns:InventoryEntityProxy" />
-  <xs:complexType name="ArrayOfInventoryItemEntityProxy">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="InventoryItemEntityProxy" nillable="true" type="tns:InventoryItemEntityProxy" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfInventoryItemEntityProxy" nillable="true" type="tns:ArrayOfInventoryItemEntityProxy" />
   <xs:complexType name="InventoryItemEntityProxy">
     <xs:complexContent mixed="false">
       <xs:extension base="tns:BaseObjectProxy">
@@ -60,4 +51,10 @@
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="InventoryItemEntityProxy" nillable="true" type="tns:InventoryItemEntityProxy" />
+  <xs:complexType name="ArrayOfInventoryItemEntityProxy">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="InventoryItemEntityProxy" nillable="true" type="tns:InventoryItemEntityProxy" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfInventoryItemEntityProxy" nillable="true" type="tns:ArrayOfInventoryItemEntityProxy" />
 </xs:schema>
