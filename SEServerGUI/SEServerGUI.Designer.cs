@@ -52,6 +52,13 @@
 			this.BTN_Chat_Send = new System.Windows.Forms.Button();
 			this.TAB_Factions_Page = new System.Windows.Forms.TabPage();
 			this.TAB_Plugins_Page = new System.Windows.Forms.TabPage();
+			this.splitContainer11 = new System.Windows.Forms.SplitContainer();
+			this.splitContainer12 = new System.Windows.Forms.SplitContainer();
+			this.LST_Plugins = new System.Windows.Forms.ListBox();
+			this.BTN_Plugins_Refresh = new System.Windows.Forms.Button();
+			this.BTN_Plugins_Load = new System.Windows.Forms.Button();
+			this.BTN_Plugins_Unload = new System.Windows.Forms.Button();
+			this.PG_Plugins = new System.Windows.Forms.PropertyGrid();
 			this.TAB_Utilities_Page = new System.Windows.Forms.TabPage();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -80,6 +87,15 @@
 			this.splitContainer7.Panel1.SuspendLayout();
 			this.splitContainer7.Panel2.SuspendLayout();
 			this.splitContainer7.SuspendLayout();
+			this.TAB_Plugins_Page.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer11)).BeginInit();
+			this.splitContainer11.Panel1.SuspendLayout();
+			this.splitContainer11.Panel2.SuspendLayout();
+			this.splitContainer11.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer12)).BeginInit();
+			this.splitContainer12.Panel1.SuspendLayout();
+			this.splitContainer12.Panel2.SuspendLayout();
+			this.splitContainer12.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -347,6 +363,7 @@
 			// TXT_Chat_Message
 			// 
 			this.TXT_Chat_Message.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TXT_Chat_Message.Enabled = false;
 			this.TXT_Chat_Message.Location = new System.Drawing.Point(0, 0);
 			this.TXT_Chat_Message.Name = "TXT_Chat_Message";
 			this.TXT_Chat_Message.Size = new System.Drawing.Size(433, 20);
@@ -356,6 +373,7 @@
 			// BTN_Chat_Send
 			// 
 			this.BTN_Chat_Send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.BTN_Chat_Send.Enabled = false;
 			this.BTN_Chat_Send.Location = new System.Drawing.Point(53, 3);
 			this.BTN_Chat_Send.Name = "BTN_Chat_Send";
 			this.BTN_Chat_Send.Size = new System.Drawing.Size(75, 23);
@@ -376,6 +394,7 @@
 			// 
 			// TAB_Plugins_Page
 			// 
+			this.TAB_Plugins_Page.Controls.Add(this.splitContainer11);
 			this.TAB_Plugins_Page.Location = new System.Drawing.Point(4, 22);
 			this.TAB_Plugins_Page.Name = "TAB_Plugins_Page";
 			this.TAB_Plugins_Page.Padding = new System.Windows.Forms.Padding(3);
@@ -383,6 +402,98 @@
 			this.TAB_Plugins_Page.TabIndex = 4;
 			this.TAB_Plugins_Page.Text = "Plugins";
 			this.TAB_Plugins_Page.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer11
+			// 
+			this.splitContainer11.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer11.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer11.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer11.Name = "splitContainer11";
+			// 
+			// splitContainer11.Panel1
+			// 
+			this.splitContainer11.Panel1.Controls.Add(this.splitContainer12);
+			this.splitContainer11.Panel1MinSize = 300;
+			// 
+			// splitContainer11.Panel2
+			// 
+			this.splitContainer11.Panel2.Controls.Add(this.PG_Plugins);
+			this.splitContainer11.Size = new System.Drawing.Size(570, 530);
+			this.splitContainer11.SplitterDistance = 300;
+			this.splitContainer11.TabIndex = 1;
+			// 
+			// splitContainer12
+			// 
+			this.splitContainer12.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer12.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			this.splitContainer12.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer12.Name = "splitContainer12";
+			this.splitContainer12.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer12.Panel1
+			// 
+			this.splitContainer12.Panel1.Controls.Add(this.LST_Plugins);
+			// 
+			// splitContainer12.Panel2
+			// 
+			this.splitContainer12.Panel2.Controls.Add(this.BTN_Plugins_Refresh);
+			this.splitContainer12.Panel2.Controls.Add(this.BTN_Plugins_Load);
+			this.splitContainer12.Panel2.Controls.Add(this.BTN_Plugins_Unload);
+			this.splitContainer12.Size = new System.Drawing.Size(300, 530);
+			this.splitContainer12.SplitterDistance = 495;
+			this.splitContainer12.TabIndex = 0;
+			// 
+			// LST_Plugins
+			// 
+			this.LST_Plugins.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LST_Plugins.FormattingEnabled = true;
+			this.LST_Plugins.Location = new System.Drawing.Point(0, 0);
+			this.LST_Plugins.Name = "LST_Plugins";
+			this.LST_Plugins.Size = new System.Drawing.Size(300, 495);
+			this.LST_Plugins.TabIndex = 0;
+			this.LST_Plugins.SelectedIndexChanged += new System.EventHandler(this.LST_Plugins_SelectedIndexChanged);
+			// 
+			// BTN_Plugins_Refresh
+			// 
+			this.BTN_Plugins_Refresh.Enabled = false;
+			this.BTN_Plugins_Refresh.Location = new System.Drawing.Point(3, 3);
+			this.BTN_Plugins_Refresh.Name = "BTN_Plugins_Refresh";
+			this.BTN_Plugins_Refresh.Size = new System.Drawing.Size(75, 23);
+			this.BTN_Plugins_Refresh.TabIndex = 2;
+			this.BTN_Plugins_Refresh.Text = "Refresh";
+			this.BTN_Plugins_Refresh.UseVisualStyleBackColor = true;
+			this.BTN_Plugins_Refresh.Click += new System.EventHandler(this.BTN_Plugins_Refresh_Click);
+			// 
+			// BTN_Plugins_Load
+			// 
+			this.BTN_Plugins_Load.Enabled = false;
+			this.BTN_Plugins_Load.Location = new System.Drawing.Point(141, 3);
+			this.BTN_Plugins_Load.Name = "BTN_Plugins_Load";
+			this.BTN_Plugins_Load.Size = new System.Drawing.Size(75, 23);
+			this.BTN_Plugins_Load.TabIndex = 1;
+			this.BTN_Plugins_Load.Text = "Load";
+			this.BTN_Plugins_Load.UseVisualStyleBackColor = true;
+			this.BTN_Plugins_Load.Click += new System.EventHandler(this.BTN_Plugins_Load_Click);
+			// 
+			// BTN_Plugins_Unload
+			// 
+			this.BTN_Plugins_Unload.Enabled = false;
+			this.BTN_Plugins_Unload.Location = new System.Drawing.Point(222, 3);
+			this.BTN_Plugins_Unload.Name = "BTN_Plugins_Unload";
+			this.BTN_Plugins_Unload.Size = new System.Drawing.Size(75, 23);
+			this.BTN_Plugins_Unload.TabIndex = 0;
+			this.BTN_Plugins_Unload.Text = "Unload";
+			this.BTN_Plugins_Unload.UseVisualStyleBackColor = true;
+			this.BTN_Plugins_Unload.Click += new System.EventHandler(this.BTN_Plugins_Unload_Click);
+			// 
+			// PG_Plugins
+			// 
+			this.PG_Plugins.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PG_Plugins.Enabled = false;
+			this.PG_Plugins.Location = new System.Drawing.Point(0, 0);
+			this.PG_Plugins.Name = "PG_Plugins";
+			this.PG_Plugins.Size = new System.Drawing.Size(266, 530);
+			this.PG_Plugins.TabIndex = 0;
 			// 
 			// TAB_Utilities_Page
 			// 
@@ -430,6 +541,15 @@
 			this.splitContainer7.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).EndInit();
 			this.splitContainer7.ResumeLayout(false);
+			this.TAB_Plugins_Page.ResumeLayout(false);
+			this.splitContainer11.Panel1.ResumeLayout(false);
+			this.splitContainer11.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer11)).EndInit();
+			this.splitContainer11.ResumeLayout(false);
+			this.splitContainer12.Panel1.ResumeLayout(false);
+			this.splitContainer12.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer12)).EndInit();
+			this.splitContainer12.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -461,6 +581,13 @@
 		private System.Windows.Forms.TabPage TAB_Factions_Page;
 		private System.Windows.Forms.TabPage TAB_Plugins_Page;
 		private System.Windows.Forms.TabPage TAB_Utilities_Page;
+		private System.Windows.Forms.SplitContainer splitContainer11;
+		private System.Windows.Forms.SplitContainer splitContainer12;
+		private System.Windows.Forms.ListBox LST_Plugins;
+		private System.Windows.Forms.Button BTN_Plugins_Refresh;
+		private System.Windows.Forms.Button BTN_Plugins_Load;
+		private System.Windows.Forms.Button BTN_Plugins_Unload;
+		private System.Windows.Forms.PropertyGrid PG_Plugins;
 	}
 }
 

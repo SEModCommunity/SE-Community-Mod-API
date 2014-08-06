@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using SEServerGUI.ServiceReference;
 using SEServerGUI.ServerServiceReference;
 using SEServerGUI.ChatServiceReference;
+using SEServerGUI.PluginServiceReference;
 
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
@@ -21,15 +22,17 @@ namespace SEServerGUI
 	{
 		#region "Attributes"
 
-		private InternalServiceContractClient client;
+		private InternalServiceContractClient m_serviceClient;
 		private ServerServiceContractClient m_serverClient;
 		private ChatServiceContractClient m_chatClient;
+		private PluginServiceContractClient m_pluginClient;
 
 		private List<BaseEntityProxy> m_sectorEntities;
 		private List<CubeGridEntityProxy> m_sectorCubeGridEntities;
 
 		private System.Windows.Forms.Timer m_entityTreeRefreshTimer;
 		private System.Windows.Forms.Timer m_chatViewRefreshTimer;
+		private System.Windows.Forms.Timer m_pluginManagerRefreshTimer;
 
 		private ServerProxy m_serverProxy;
 
@@ -41,9 +44,10 @@ namespace SEServerGUI
 		{
 			InitializeComponent();
 
-			client = new InternalServiceContractClient();
+			m_serviceClient = new InternalServiceContractClient();
 			m_serverClient = new ServerServiceContractClient();
 			m_chatClient = new ChatServiceContractClient();
+			m_pluginClient = new PluginServiceContractClient();
 
 			m_sectorEntities = new List<BaseEntityProxy>();
 			m_sectorCubeGridEntities = new List<CubeGridEntityProxy>();
@@ -55,6 +59,10 @@ namespace SEServerGUI
 			m_chatViewRefreshTimer = new System.Windows.Forms.Timer();
 			m_chatViewRefreshTimer.Interval = 1000;
 			m_chatViewRefreshTimer.Tick += new EventHandler(ChatViewRefresh);
+
+			m_pluginManagerRefreshTimer = new System.Windows.Forms.Timer();
+			m_pluginManagerRefreshTimer.Interval = 10000;
+			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
 		}
 
 		#endregion
@@ -67,14 +75,21 @@ namespace SEServerGUI
 
 			TRV_Entities.Nodes.Clear();
 			LST_Chat_Messages.Items.Clear();
+			LST_Chat_ConnectedPlayers.Items.Clear();
+			LST_Plugins.Items.Clear();
 
 			m_entityTreeRefreshTimer.Stop();
 			m_chatViewRefreshTimer.Stop();
+			m_pluginManagerRefreshTimer.Stop();
 
 			BTN_StartServer.Enabled = false;
 			BTN_StopServer.Enabled = false;
 			BTN_Connect.Enabled = true;
 			BTN_Chat_Send.Enabled = false;
+			BTN_Plugins_Load.Enabled = false;
+			BTN_Plugins_Unload.Enabled = false;
+
+			TXT_Chat_Message.Enabled = false;
 		}
 
 		#region "Control"
@@ -95,6 +110,8 @@ namespace SEServerGUI
 				m_entityTreeRefreshTimer.Start();
 			if (!m_chatViewRefreshTimer.Enabled)
 				m_chatViewRefreshTimer.Start();
+			if (!m_pluginManagerRefreshTimer.Enabled)
+				m_pluginManagerRefreshTimer.Start();
 
 			BTN_Connect.Enabled = false;
 		}
@@ -184,7 +201,7 @@ namespace SEServerGUI
 			//Refresh the entities
 			try
 			{
-				m_sectorEntities = client.GetSectorEntities();
+				m_sectorEntities = m_serviceClient.GetSectorEntities();
 			}
 			catch (Exception ex)
 			{
@@ -695,7 +712,7 @@ namespace SEServerGUI
 				miscBlocksNode.Nodes.Clear();
 			}
 
-			List<CubeBlockEntityProxy> cubeBlocks = client.GetCubeBlocks(cubeGrid.EntityId);
+			List<CubeBlockEntityProxy> cubeBlocks = m_serviceClient.GetCubeBlocks(cubeGrid.EntityId);
 
 			foreach (var cubeBlock in cubeBlocks)
 			{
@@ -972,7 +989,7 @@ namespace SEServerGUI
 					long cubeGridEntityId = cubeGrid.EntityId;
 					long cubeBlockEntityId = cubeBlock.EntityId;
 					ushort inventoryIndex = 0;
-					List<InventoryItemEntityProxy> inventoryItems = client.GetInventoryItems(cubeGridEntityId, cubeBlockEntityId, inventoryIndex);
+					List<InventoryItemEntityProxy> inventoryItems = m_serviceClient.GetInventoryItems(cubeGridEntityId, cubeBlockEntityId, inventoryIndex);
 
 					UpdateNodeInventoryItemBranch<InventoryItemEntityProxy>(e.Node, inventoryItems);
 				}
@@ -998,6 +1015,9 @@ namespace SEServerGUI
 				return;
 			if (!m_serverProxy.IsRunning)
 				return;
+
+			BTN_Chat_Send.Enabled = true;
+			TXT_Chat_Message.Enabled = true;
 
 			//Refresh the chat messages
 			string[] chatMessages;
@@ -1026,7 +1046,7 @@ namespace SEServerGUI
 
 			LST_Chat_ConnectedPlayers.BeginUpdate();
 
-			List<ulong> connectedPlayers = client.GetConnectedPlayers();
+			List<ulong> connectedPlayers = m_serviceClient.GetConnectedPlayers();
 			if (connectedPlayers.Count != LST_Chat_ConnectedPlayers.Items.Count)
 			{
 				LST_Chat_ConnectedPlayers.Items.Clear();
@@ -1062,6 +1082,89 @@ namespace SEServerGUI
 					TXT_Chat_Message.Text = "";
 				}
 			}
+		}
+
+		#endregion
+
+		#region "Plugins"
+
+		private void PluginManagerRefresh(object sender, EventArgs e)
+		{
+			if (m_serverProxy == null)
+				return;
+			if (!m_serverProxy.IsRunning)
+				return;
+
+			List<Guid> pluginGuids;
+			try
+			{
+				pluginGuids = m_pluginClient.GetPluginGuids();
+			}
+			catch (Exception ex)
+			{
+				Disconnect();
+				return;
+			}
+
+			if (pluginGuids.Count == LST_Plugins.Items.Count)
+				return;
+
+			LST_Plugins.BeginUpdate();
+			int selectedIndex = LST_Plugins.SelectedIndex;
+			LST_Plugins.Items.Clear();
+			foreach (var key in pluginGuids)
+			{
+				LST_Plugins.Items.Add(key);
+			}
+			LST_Plugins.SelectedIndex = selectedIndex;
+			LST_Plugins.EndUpdate();
+		}
+
+		private void LST_Plugins_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (LST_Plugins.SelectedItem == null)
+				return;
+
+			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+
+			PG_Plugins.SelectedObject = selectedItem;
+
+			bool pluginState = m_pluginClient.GetPluginStatus(selectedItem);
+			if (pluginState)
+			{
+				BTN_Plugins_Load.Enabled = false;
+				BTN_Plugins_Unload.Enabled = true;
+			}
+			else
+			{
+				BTN_Plugins_Load.Enabled = true;
+				BTN_Plugins_Unload.Enabled = false;
+			}
+		}
+
+		private void BTN_Plugins_Refresh_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void BTN_Plugins_Load_Click(object sender, EventArgs e)
+		{
+			if (LST_Plugins.SelectedItem == null)
+				return;
+
+			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+
+			m_pluginClient.LoadPlugin(selectedItem);
+		}
+
+		private void BTN_Plugins_Unload_Click(object sender, EventArgs e)
+		{
+			if (LST_Plugins.SelectedItem == null)
+				return;
+
+			Guid selectedItem = (Guid)LST_Plugins.SelectedItem;
+
+			m_pluginClient.UnloadPlugin(selectedItem);
 		}
 
 		#endregion

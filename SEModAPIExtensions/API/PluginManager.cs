@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.ServiceModel;
 using System.Text;
 using System.Timers;
 
@@ -19,9 +20,55 @@ using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
+using System.ServiceModel.Description;
+using SEModAPIExtensions.API.IPC;
 
 namespace SEModAPIExtensions.API
 {
+	[ServiceContract]
+	public interface IPluginServiceContract
+	{
+		[OperationContract]
+		List<Guid> GetPluginGuids();
+
+		[OperationContract]
+		bool GetPluginStatus(Guid guid);
+
+		[OperationContract]
+		void LoadPlugin(Guid guid);
+
+		[OperationContract]
+		void UnloadPlugin(Guid guid);
+	}
+
+	[ServiceBehavior(
+		ConcurrencyMode = ConcurrencyMode.Single,
+		IncludeExceptionDetailInFaults = true,
+		IgnoreExtensionDataObject = true
+	)]
+	public class PluginService : IPluginServiceContract
+	{
+		public List<Guid> GetPluginGuids()
+		{
+			return new List<Guid>(PluginManager.Instance.Plugins.Keys);
+		}
+
+		public bool GetPluginStatus(Guid guid)
+		{
+			return PluginManager.Instance.GetPluginState(guid);
+		}
+
+		public void LoadPlugin(Guid guid)
+		{
+			PluginManager.Instance.InitPlugin(guid);
+		}
+
+		public void UnloadPlugin(Guid guid)
+		{
+			PluginManager.Instance.UnloadPlugin(guid);
+		}
+	}
+
 	public class PluginManager
 	{
 		#region "Attributes"
@@ -30,6 +77,7 @@ namespace SEModAPIExtensions.API
 
 		private Dictionary<Guid, Object> m_plugins;
 		private Dictionary<Guid, bool> m_pluginState;
+		private Dictionary<Guid, Assembly> m_pluginAssemblies;
 		private bool m_initialized;
 		private DateTime m_lastUpdate;
 		private TimeSpan m_lastUpdateTime;
@@ -49,6 +97,7 @@ namespace SEModAPIExtensions.API
 
 			m_plugins = new Dictionary<Guid, Object>();
 			m_pluginState = new Dictionary<Guid, bool>();
+			m_pluginAssemblies = new Dictionary<Guid, Assembly>();
 			m_initialized = false;
 			m_lastUpdate = DateTime.Now;
 			m_lastUpdateTime = DateTime.Now - m_lastUpdate;
@@ -57,6 +106,23 @@ namespace SEModAPIExtensions.API
 			m_lastAverageOutput = DateTime.Now;
 			m_averageEvents = 0;
 			m_lastConnectedPlayerList = new List<ulong>();
+
+			Uri baseAddress = new Uri(InternalService.BaseURI + "Plugin/");
+			ServiceHost selfHost = new ServiceHost(typeof(PluginService), baseAddress);
+
+			try
+			{
+				selfHost.AddServiceEndpoint(typeof(IPluginServiceContract), new WSHttpBinding(), "PluginService");
+				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+				smb.HttpGetEnabled = true;
+				selfHost.Description.Behaviors.Add(smb);
+				selfHost.Open();
+			}
+			catch (CommunicationException ex)
+			{
+				Console.WriteLine("An exception occurred: {0}", ex.Message);
+				selfHost.Abort();
+			}
 
 			Console.WriteLine("Finished loading PluginManager");
 		}
@@ -131,6 +197,8 @@ namespace SEModAPIExtensions.API
 							//Get the assembly GUID
 							GuidAttribute guid = (GuidAttribute)pluginAssembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
 							Guid guidValue = new Guid(guid.Value);
+
+							m_pluginAssemblies.Add(guidValue, pluginAssembly);
 
 							//Look through the exported types to find the one that implements PluginBase
 							Type[] types = pluginAssembly.GetExportedTypes();
