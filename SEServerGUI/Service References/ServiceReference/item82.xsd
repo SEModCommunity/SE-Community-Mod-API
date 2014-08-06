@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/VRage.Serialization" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/VRage.Serialization" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd16" namespace="http://schemas.datacontract.org/2004/07/System.Collections" />
+  <xs:complexType name="SerializableDictionaryOflongunsignedLong">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="SerializableDictionaryOf{0}{1}{#}" Namespace="http://schemas.datacontract.org/2004/07/VRage.Serialization" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="long" Namespace="http://www.w3.org/2001/XMLSchema" />
+          <GenericParameter Name="unsignedLong" Namespace="http://www.w3.org/2001/XMLSchema" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Dictionary" nillable="true" type="q1:ArrayOfKeyValueOflongunsignedLong" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/System.Collections" minOccurs="0" name="DictionaryEntryProp" nillable="true" type="q2:ArrayOfDictionaryEntry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableDictionaryOflongunsignedLong" nillable="true" type="tns:SerializableDictionaryOflongunsignedLong" />
+  <xs:complexType name="SerializableDictionaryOflonglong">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="SerializableDictionaryOf{0}{1}{#}" Namespace="http://schemas.datacontract.org/2004/07/VRage.Serialization" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="long" Namespace="http://www.w3.org/2001/XMLSchema" />
+          <GenericParameter Name="long" Namespace="http://www.w3.org/2001/XMLSchema" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Dictionary" nillable="true" type="q3:ArrayOfKeyValueOflonglong" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/System.Collections" minOccurs="0" name="DictionaryEntryProp" nillable="true" type="q4:ArrayOfDictionaryEntry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableDictionaryOflonglong" nillable="true" type="tns:SerializableDictionaryOflonglong" />
+  <xs:complexType name="SerializableDictionaryOfunsignedLongMyObjectBuilder_PlayerOPwPSyU5">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="SerializableDictionaryOf{0}{1}{#}" Namespace="http://schemas.datacontract.org/2004/07/VRage.Serialization" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="unsignedLong" Namespace="http://www.w3.org/2001/XMLSchema" />
+          <GenericParameter Name="MyObjectBuilder_Player" Namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Dictionary" nillable="true" type="q5:ArrayOfKeyValueOfunsignedLongMyObjectBuilder_PlayerOPwPSyU5" />
+      <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/System.Collections" minOccurs="0" name="DictionaryEntryProp" nillable="true" type="q6:ArrayOfDictionaryEntry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableDictionaryOfunsignedLongMyObjectBuilder_PlayerOPwPSyU5" nillable="true" type="tns:SerializableDictionaryOfunsignedLongMyObjectBuilder_PlayerOPwPSyU5" />
+  <xs:complexType name="SerializableDictionaryOflongMyCameraControllerSettingsOPwPSyU5">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="SerializableDictionaryOf{0}{1}{#}" Namespace="http://schemas.datacontract.org/2004/07/VRage.Serialization" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="long" Namespace="http://www.w3.org/2001/XMLSchema" />
+          <GenericParameter Name="MyCameraControllerSettings" Namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Dictionary" nillable="true" type="q7:ArrayOfKeyValueOflongMyCameraControllerSettingsOPwPSyU5" />
+      <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/System.Collections" minOccurs="0" name="DictionaryEntryProp" nillable="true" type="q8:ArrayOfDictionaryEntry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableDictionaryOflongMyCameraControllerSettingsOPwPSyU5" nillable="true" type="tns:SerializableDictionaryOflongMyCameraControllerSettingsOPwPSyU5" />
+  <xs:complexType name="SerializableDictionaryOfstringdateTime">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="SerializableDictionaryOf{0}{1}{#}" Namespace="http://schemas.datacontract.org/2004/07/VRage.Serialization" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="string" Namespace="http://www.w3.org/2001/XMLSchema" />
+          <GenericParameter Name="dateTime" Namespace="http://www.w3.org/2001/XMLSchema" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q9="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Dictionary" nillable="true" type="q9:ArrayOfKeyValueOfstringdateTime" />
+      <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/System.Collections" minOccurs="0" name="DictionaryEntryProp" nillable="true" type="q10:ArrayOfDictionaryEntry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableDictionaryOfstringdateTime" nillable="true" type="tns:SerializableDictionaryOfstringdateTime" />
+  <xs:complexType name="SerializableDictionaryOfstringbase64Binary">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="SerializableDictionaryOf{0}{1}{#}" Namespace="http://schemas.datacontract.org/2004/07/VRage.Serialization" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="string" Namespace="http://www.w3.org/2001/XMLSchema" />
+          <GenericParameter Name="base64Binary" Namespace="http://www.w3.org/2001/XMLSchema" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Dictionary" nillable="true" type="q11:ArrayOfKeyValueOfstringbase64Binary" />
+      <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/System.Collections" minOccurs="0" name="DictionaryEntryProp" nillable="true" type="q12:ArrayOfDictionaryEntry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableDictionaryOfstringbase64Binary" nillable="true" type="tns:SerializableDictionaryOfstringbase64Binary" />
+</xs:schema>

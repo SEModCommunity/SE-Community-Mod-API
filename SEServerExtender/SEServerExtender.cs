@@ -44,6 +44,12 @@ namespace SEServerExtender
 		//General
 		private static SEServerExtender m_instance;
 		private Server m_server;
+		private List<BaseEntity> m_sectorEntities;
+		private List<CubeGridEntity> m_cubeGridEntities;
+		private List<CharacterEntity> m_characterEntities;
+		private List<VoxelMap> m_voxelMapEntities;
+		private List<FloatingObject> m_floatingObjectEntities;
+		private List<Meteor> m_meteorEntities;
 
 		//Timers
 		private System.Windows.Forms.Timer m_entityTreeRefreshTimer;
@@ -64,6 +70,12 @@ namespace SEServerExtender
 		{
 			m_instance = this;
 			m_server = server;
+			m_sectorEntities = new List<BaseEntity>();
+			m_cubeGridEntities = new List<CubeGridEntity>();
+			m_characterEntities = new List<CharacterEntity>();
+			m_voxelMapEntities = new List<VoxelMap>();
+			m_floatingObjectEntities = new List<FloatingObject>();
+			m_meteorEntities = new List<Meteor>();
 
 			//Run init functions
 			InitializeComponent();
@@ -435,7 +447,7 @@ namespace SEServerExtender
 			}
 
 			RenderSectorObjectChildNodes(sectorObjectsNode);
-			sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>().Count.ToString() + ")";
+			sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.Count.ToString() + ")";
 			sectorObjectsNode.Tag = SectorObjectManager.Instance;
 
 			TRV_Entities.EndUpdate();
@@ -477,6 +489,21 @@ namespace SEServerExtender
 				meteorsNode = objectsNode.Nodes[4];
 			}
 
+			m_sectorEntities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+			foreach (var entry in m_sectorEntities)
+			{
+				if (entry is CubeGridEntity)
+					m_cubeGridEntities.Add((CubeGridEntity)entry);
+				if (entry is CharacterEntity)
+					m_characterEntities.Add((CharacterEntity)entry);
+				if (entry is VoxelMap)
+					m_voxelMapEntities.Add((VoxelMap)entry);
+				if (entry is FloatingObject)
+					m_floatingObjectEntities.Add((FloatingObject)entry);
+				if (entry is Meteor)
+					m_meteorEntities.Add((Meteor)entry);
+			}
+
 			RenderCubeGridNodes(cubeGridsNode);
 			RenderCharacterNodes(charactersNode);
 			RenderVoxelMapNodes(voxelMapsNode);
@@ -489,8 +516,8 @@ namespace SEServerExtender
 			if (rootNode == null)
 				return;
 
-			//Get cube grids from sector object manager
-			List<CubeGridEntity> list = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+			//Get cube grids
+			List<CubeGridEntity> list = m_cubeGridEntities;
 
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
@@ -570,7 +597,7 @@ namespace SEServerExtender
 				return;
 
 			//Get entities from sector object manager
-			List<CharacterEntity> list = SectorObjectManager.Instance.GetTypedInternalData<CharacterEntity>();
+			List<CharacterEntity> list = m_characterEntities;
 
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
@@ -638,7 +665,7 @@ namespace SEServerExtender
 				return;
 
 			//Get entities from sector object manager
-			List<VoxelMap> list = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
+			List<VoxelMap> list = m_voxelMapEntities;
 
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
@@ -706,7 +733,7 @@ namespace SEServerExtender
 				return;
 
 			//Get entities from sector object manager
-			List<FloatingObject> list = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+			List<FloatingObject> list = m_floatingObjectEntities;
 
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
@@ -781,7 +808,7 @@ namespace SEServerExtender
 				return;
 
 			//Get entities from sector object manager
-			List<Meteor> list = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
+			List<Meteor> list = m_meteorEntities;
 
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
@@ -1665,8 +1692,8 @@ namespace SEServerExtender
 				Console.WriteLine("[{0}] Clearing floating objects...", DateTime.Now.ToString());
 				BTN_Utilities_ClearFloatingObjectsNow.Enabled = false;
 
-				List<FloatingObject> floatingObjectList = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
-				foreach (FloatingObject sectorObject in floatingObjectList)
+				m_floatingObjectEntities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+				foreach (FloatingObject sectorObject in m_floatingObjectEntities)
 				{
 					sectorObject.Dispose();
 				}

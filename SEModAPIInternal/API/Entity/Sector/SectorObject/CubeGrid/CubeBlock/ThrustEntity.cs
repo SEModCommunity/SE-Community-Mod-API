@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -16,6 +17,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "ThrustEntityProxy")]
 	public class ThrustEntity : FunctionalBlockEntity
 	{
 		#region "Attributes"
@@ -65,6 +67,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Thrust")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -83,6 +86,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Thrust")]
 		[Browsable(true)]
 		[ReadOnly(false)]
@@ -108,6 +112,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Thrust")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -119,6 +124,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 					return Vector3.Zero;
 
 				return InternalGetMaxThrustVector();
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 

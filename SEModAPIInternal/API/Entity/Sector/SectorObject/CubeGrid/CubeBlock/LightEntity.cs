@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -16,6 +17,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "LightEntityProxy")]
 	public class LightEntity : FunctionalBlockEntity
 	{
 		#region "Attributes"
@@ -55,6 +57,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Light")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -70,6 +73,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Light")]
 		[Browsable(false)]
 		public Color Color
@@ -99,6 +103,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Light")]
 		public float ColorAlpha
 		{
@@ -117,6 +122,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Light")]
 		public float ColorRed
 		{
@@ -135,6 +141,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Light")]
 		public float ColorGreen
 		{
@@ -153,6 +160,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Light")]
 		public float ColorBlue
 		{
@@ -171,6 +179,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Light")]
 		public float Intensity
 		{
@@ -189,6 +198,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Light")]
 		public float Falloff
 		{
@@ -207,6 +217,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Light")]
 		public float Radius
 		{

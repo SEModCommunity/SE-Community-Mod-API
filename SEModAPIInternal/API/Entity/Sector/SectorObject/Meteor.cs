@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -16,6 +17,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
+	[DataContract(Name = "MeteorProxy")]
 	public class Meteor : BaseEntity
 	{
 		#region "Attributes"
@@ -46,6 +48,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Meteor")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -59,6 +62,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Meteor")]
 		[Browsable(true)]
 		public override string Name
@@ -66,6 +70,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return ObjectBuilder.Item.PhysicalContent.SubtypeName; }
 		}
 
+		[DataMember]
 		[Category("Meteor")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -81,6 +86,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Meteor")]
 		public float Integrity
 		{
@@ -99,6 +105,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Meteor")]
 		[Browsable(false)]
 		public InventoryItemEntity Item

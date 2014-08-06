@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.ServiceModel.Description;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -22,9 +25,46 @@ using SEModAPIInternal.Support;
 
 using VRageMath;
 using VRage.Common.Utils;
+using SEModAPIExtensions.API.IPC;
 
 namespace SEModAPIExtensions.API
 {
+	[ServiceContract]
+	public interface IChatServiceContract
+	{
+		[OperationContract]
+		List<string> GetChatMessages();
+
+		[OperationContract]
+		void SendPrivateChatMessage(ulong remoteUserId, string message);
+
+		[OperationContract]
+		void SendPublicChatMessage(string message);
+	}
+
+	[ServiceBehavior(
+		ConcurrencyMode = ConcurrencyMode.Single,
+		IncludeExceptionDetailInFaults = true,
+		IgnoreExtensionDataObject = true
+	)]
+	public class ChatService : IChatServiceContract
+	{
+		public List<string> GetChatMessages()
+		{
+			return ChatManager.Instance.ChatMessages;
+		}
+
+		public void SendPrivateChatMessage(ulong remoteUserId, string message)
+		{
+			ChatManager.Instance.SendPrivateChatMessage(remoteUserId, message);
+		}
+
+		public void SendPublicChatMessage(string message)
+		{
+			ChatManager.Instance.SendPublicChatMessage(message);
+		}
+	}
+
 	public class ChatManager
 	{
 		public enum ChatEventType
@@ -66,6 +106,23 @@ namespace SEModAPIExtensions.API
 			m_chatMessages = new List<string>();
 			m_chatHandlerSetup = false;
 			m_chatEvents = new List<ChatEvent>();
+
+			Uri baseAddress = new Uri(InternalService.BaseURI + "Chat/");
+			ServiceHost selfHost = new ServiceHost(typeof(ChatService), baseAddress);
+
+			try
+			{
+				selfHost.AddServiceEndpoint(typeof(IChatServiceContract), new WSHttpBinding(), "ChatService");
+				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+				smb.HttpGetEnabled = true;
+				selfHost.Description.Behaviors.Add(smb);
+				selfHost.Open();
+			}
+			catch (CommunicationException ex)
+			{
+				Console.WriteLine("An exception occurred: {0}", ex.Message);
+				selfHost.Abort();
+			}
 
 			Console.WriteLine("Finished loading ChatManager");
 		}

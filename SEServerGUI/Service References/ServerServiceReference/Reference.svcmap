@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="82183485-539e-4110-891e-071aec75d261" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies>
+      <ReferencedAssembly AssemblyName="HavokWrapper" />
+      <ReferencedAssembly AssemblyName="Microsoft.CSharp" />
+      <ReferencedAssembly AssemblyName="mscorlib" />
+      <ReferencedAssembly AssemblyName="Sandbox.Common" />
+      <ReferencedAssembly AssemblyName="Sandbox.Common.XmlSerializers" />
+      <ReferencedAssembly AssemblyName="SEModAPI" />
+      <ReferencedAssembly AssemblyName="System" />
+      <ReferencedAssembly AssemblyName="System.Core" />
+      <ReferencedAssembly AssemblyName="System.Data" />
+      <ReferencedAssembly AssemblyName="System.Data.DataSetExtensions" />
+      <ReferencedAssembly AssemblyName="System.Deployment" />
+      <ReferencedAssembly AssemblyName="System.Drawing" />
+      <ReferencedAssembly AssemblyName="System.Runtime.Serialization" />
+      <ReferencedAssembly AssemblyName="System.ServiceModel" />
+      <ReferencedAssembly AssemblyName="System.ServiceProcess" />
+      <ReferencedAssembly AssemblyName="System.Windows.Forms" />
+      <ReferencedAssembly AssemblyName="System.Xml" />
+      <ReferencedAssembly AssemblyName="System.Xml.Linq" />
+      <ReferencedAssembly AssemblyName="VRage.Common" />
+      <ReferencedAssembly AssemblyName="VRage.Library" />
+      <ReferencedAssembly AssemblyName="VRage.Math" />
+    </ReferencedAssemblies>
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8000/SEServerExtender/Server/" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="item.disco" MetadataType="Disco" ID="4874d6ee-f8c0-4ce6-bcad-52c14a33bb66" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/Server/?disco" />
+    <MetadataFile FileName="item11.xsd" MetadataType="Schema" ID="244203e2-73a9-47bb-912a-90e7710ed618" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/Server/?xsd=xsd1" />
+    <MetadataFile FileName="item13.xsd" MetadataType="Schema" ID="1bb3c815-62de-4775-9bd7-76b2ea6ef526" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/Server/?xsd=xsd2" />
+    <MetadataFile FileName="Server.wsdl" MetadataType="Wsdl" ID="54eef047-ff41-4898-acee-3c8dfc3a8cc9" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/Server/?wsdl" />
+    <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="df669758-7efe-4747-89cd-05236bbaebae" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/Server/?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="f0512496-5667-432c-b276-6dceaf1cb085" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies>
+      <ReferencedAssembly AssemblyName="HavokWrapper" />
+      <ReferencedAssembly AssemblyName="Microsoft.CSharp" />
+      <ReferencedAssembly AssemblyName="mscorlib" />
+      <ReferencedAssembly AssemblyName="Sandbox.Common" />
+      <ReferencedAssembly AssemblyName="Sandbox.Common.XmlSerializers" />
+      <ReferencedAssembly AssemblyName="SEModAPI" />
+      <ReferencedAssembly AssemblyName="System" />
+      <ReferencedAssembly AssemblyName="System.Core" />
+      <ReferencedAssembly AssemblyName="System.Data" />
+      <ReferencedAssembly AssemblyName="System.Data.DataSetExtensions" />
+      <ReferencedAssembly AssemblyName="System.Deployment" />
+      <ReferencedAssembly AssemblyName="System.Drawing" />
+      <ReferencedAssembly AssemblyName="System.Runtime.Serialization" />
+      <ReferencedAssembly AssemblyName="System.ServiceModel" />
+      <ReferencedAssembly AssemblyName="System.ServiceProcess" />
+      <ReferencedAssembly AssemblyName="System.Windows.Forms" />
+      <ReferencedAssembly AssemblyName="System.Xml" />
+      <ReferencedAssembly AssemblyName="System.Xml.Linq" />
+      <ReferencedAssembly AssemblyName="VRage.Common" />
+      <ReferencedAssembly AssemblyName="VRage.Library" />
+      <ReferencedAssembly AssemblyName="VRage.Math" />
+    </ReferencedAssemblies>
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8000/SEServerExtender/" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="item8.xsd" MetadataType="Schema" ID="0ee7c881-73ab-4331-b19a-02a306c7b420" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd13" />
+    <MetadataFile FileName="item81.xsd" MetadataType="Schema" ID="fbfe2b80-dcea-4d5c-80f3-e57022f9ab16" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd14" />
+    <MetadataFile FileName="item82.xsd" MetadataType="Schema" ID="99cb2e1e-3f97-4cca-94cd-735aa08a0c07" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd15" />
+    <MetadataFile FileName="item83.xsd" MetadataType="Schema" ID="ebafabc9-4987-45a1-9819-beabe69bc08e" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd16" />
+    <MetadataFile FileName="item84.xsd" MetadataType="Schema" ID="95139696-949c-4f87-957d-2d74df76149b" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd17" />
+    <MetadataFile FileName="InternalService.wsdl" MetadataType="Wsdl" ID="957fb917-8f70-4613-8737-d549f0d3f75e" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?wsdl" />
+    <MetadataFile FileName="item7.xsd" MetadataType="Schema" ID="3b53652e-2b38-4549-821c-9e5df49fab6a" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd5" />
+    <MetadataFile FileName="item3.xsd" MetadataType="Schema" ID="2fd0cb77-b69a-4ba0-b203-69299473d95f" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd6" />
+    <MetadataFile FileName="item5.xsd" MetadataType="Schema" ID="7d5a509b-ae29-4d2e-9dce-0768a05748ee" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd7" />
+    <MetadataFile FileName="item4.xsd" MetadataType="Schema" ID="dd904507-a1a5-44be-9724-01680e51e065" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd0" />
+    <MetadataFile FileName="item6.xsd" MetadataType="Schema" ID="50d41aed-6f97-4d8a-bc29-8f8108549736" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd2" />
+    <MetadataFile FileName="item86.xsd" MetadataType="Schema" ID="62e51856-235f-4d8b-a4c5-060e54cb1813" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd9" />
+    <MetadataFile FileName="item.disco" MetadataType="Disco" ID="5530dfab-4ce5-4f82-91fd-d9c730b21fa2" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?disco" />
+    <MetadataFile FileName="item87.xsd" MetadataType="Schema" ID="500ae63f-77ee-4c39-8e83-f01f3a19658a" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd8" />
+    <MetadataFile FileName="item9.xsd" MetadataType="Schema" ID="e95011c4-f721-44cf-8d19-17da5bdab00a" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd19" />
+    <MetadataFile FileName="item812.xsd" MetadataType="Schema" ID="8330b44a-85df-45d4-a26f-a0e641cf0087" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd12" />
+    <MetadataFile FileName="item10.xsd" MetadataType="Schema" ID="fc6bab71-a3c6-4276-9073-d7179d90a11b" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd20" />
+    <MetadataFile FileName="item85.xsd" MetadataType="Schema" ID="bb5d02f0-e885-4453-ad0a-ff96d0dfaa95" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd18" />
+    <MetadataFile FileName="item1.xsd" MetadataType="Schema" ID="1e6476c0-4d13-453a-a164-e85a5265035b" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd4" />
+    <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="b46c48a4-eb05-4ea2-95ae-d354e4f10f6b" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd1" />
+    <MetadataFile FileName="item810.xsd" MetadataType="Schema" ID="09e57f63-a395-4bc1-b5a2-ee90725c7edb" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd10" />
+    <MetadataFile FileName="item89.xsd" MetadataType="Schema" ID="7928b719-d14c-4b74-8e33-1a39b8f8b735" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd11" />
+    <MetadataFile FileName="item2.xsd" MetadataType="Schema" ID="03e37b29-3a48-4bd9-9cff-c796e0194b6e" SourceId="1" SourceUrl="http://localhost:8000/SEServerExtender/?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

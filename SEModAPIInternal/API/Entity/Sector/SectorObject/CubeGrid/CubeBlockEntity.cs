@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 
@@ -27,6 +28,8 @@ using VRageMath.PackedVector;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 {
+	[DataContract(Name = "CubeBlockEntityProxy")]
+	[KnownType("KnownTypes")]
 	public class CubeBlockEntity : BaseObject
 	{
 		#region "Attributes"
@@ -116,6 +119,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Cube Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -129,6 +133,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Block")]
 		[ReadOnly(true)]
 		public override string Name
@@ -146,6 +151,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -161,6 +167,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Block")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -177,6 +184,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Block")]
 		[ReadOnly(true)]
 		[TypeConverter(typeof(Vector3ITypeConverter))]
@@ -191,6 +199,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -205,6 +214,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Block")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper ColorMaskHSV
@@ -224,6 +234,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Block")]
 		public float BuildPercent
 		{
@@ -244,6 +255,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Block")]
 		public float IntegrityPercent
 		{
@@ -264,6 +276,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Block")]
 		public long Owner
 		{
@@ -282,6 +295,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[DataMember]
 		[Category("Cube Block")]
 		public MyOwnershipShareModeEnum ShareMode
 		{
@@ -300,6 +314,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -308,6 +323,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			get { return m_parent; }
 		}
 
+		[IgnoreDataMember]
 		[Category("Cube Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -319,6 +335,19 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		#endregion
 
 		#region "Methods"
+
+		public static List<Type> KnownTypes()
+		{
+			List<Type> types = new List<Type>();
+
+			Assembly assembly = Assembly.GetAssembly(typeof(CubeBlockEntity));
+			foreach (Type type in assembly.GetTypes())
+			{
+				if (typeof(CubeBlockEntity).IsAssignableFrom(type))
+					types.Add(type);
+			}
+			return types;
+		}
 
 		public override void Dispose()
 		{
@@ -616,6 +645,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public bool IsLoading
 		{
 			get { return m_isLoading; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		#endregion

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Xml;
 
@@ -14,6 +15,8 @@ using Sandbox.Common.ObjectBuilders.Definitions;
 using SEModAPI.API;
 
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity.Sector.SectorObject;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
@@ -21,12 +24,19 @@ using VRage;
 
 namespace SEModAPIInternal.API.Entity
 {
+	[DataContract(Name="BaseObjectProxy")]
+	[KnownType(typeof(BaseEntity))]
+	[KnownType(typeof(CharacterEntity))]
+	[KnownType(typeof(CubeGridEntity))]
+	[KnownType(typeof(FloatingObject))]
+	[KnownType(typeof(Meteor))]
+	[KnownType(typeof(VoxelMap))]
 	public class BaseObject : IDisposable
 	{
 		#region "Attributes"
 
-		private MyObjectBuilder_Base m_objectBuilder;
-		private Object m_backingObject;
+		protected MyObjectBuilder_Base m_objectBuilder;
+		protected Object m_backingObject;
 
 		protected bool m_isDisposed = false;
 
@@ -52,6 +62,7 @@ namespace SEModAPIInternal.API.Entity
 		/// <summary>
 		/// Changed status of the object
 		/// </summary>
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -61,6 +72,7 @@ namespace SEModAPIInternal.API.Entity
 		/// <summary>
 		/// API formated name of the object
 		/// </summary>
+		[DataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -70,6 +82,7 @@ namespace SEModAPIInternal.API.Entity
 		/// <summary>
 		/// Object builder data of the object
 		/// </summary>
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -89,6 +102,7 @@ namespace SEModAPIInternal.API.Entity
 		/// <summary>
 		/// Internal, in-game object that matches to this object
 		/// </summary>
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[Description("Internal, in-game object that matches to this object")]
@@ -105,8 +119,10 @@ namespace SEModAPIInternal.API.Entity
 		/// <summary>
 		/// Full type of the object
 		/// </summary>
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(true)]
+		[ReadOnly(true)]
 		[TypeConverter(typeof(ObjectSerializableDefinitionIdTypeConverter))]
 		public SerializableDefinitionId Id
 		{
@@ -115,18 +131,13 @@ namespace SEModAPIInternal.API.Entity
 				SerializableDefinitionId newId = new SerializableDefinitionId(m_objectBuilder.TypeId, m_objectBuilder.SubtypeName);
 				return newId;
 			}
-			set
+			private set
 			{
-				if (m_objectBuilder.TypeId == value.TypeId && m_objectBuilder.SubtypeName == value.SubtypeName) return;
-				m_objectBuilder = m_objectBuilder.ChangeType(value.TypeId, value.SubtypeName);
-
-				Changed = true;
+				//Do nothing!
 			}
 		}
 
-		/// <summary>
-		/// Enum type of the object
-		/// </summary>
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -134,18 +145,13 @@ namespace SEModAPIInternal.API.Entity
 		public MyObjectBuilderType TypeId
 		{
 			get { return m_objectBuilder.TypeId; }
-			set
+			private set
 			{
-				if (m_objectBuilder.TypeId == value) return;
-				m_objectBuilder = m_objectBuilder.ChangeType(value, m_objectBuilder.SubtypeName);
-
-				Changed = true;
+				//Do nothing!
 			}
 		}
 
-		/// <summary>
-		/// Sub-type of the object
-		/// </summary>
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -153,20 +159,23 @@ namespace SEModAPIInternal.API.Entity
 		public string Subtype
 		{
 			get { return m_objectBuilder.SubtypeName; }
-			set
+			private set
 			{
-				if (m_objectBuilder.SubtypeName == value) return;
-				m_objectBuilder.SubtypeName = value;
-				Changed = true;
+				//Do nothing!
 			}
 		}
 
+		[DataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		public bool IsDisposed
 		{
 			get { return m_isDisposed; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		#endregion
@@ -426,6 +435,10 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 	}
 
+	[DataContract]
+	[KnownType(typeof(SectorObjectManager))]
+	[KnownType(typeof(InventoryItemManager))]
+	[KnownType(typeof(CubeBlockManager))]
 	public class BaseObjectManager
 	{
 		public enum InternalBackingType
@@ -570,6 +583,11 @@ namespace SEModAPIInternal.API.Entity
 		public bool IsInternalResourceLocked
 		{
 			get { return (m_rawDataHashSetResourceLock.Owned || m_rawDataListResourceLock.Owned || m_rawDataObjectBuilderListResourceLock.Owned); }
+		}
+
+		public int Count
+		{
+			get { return m_definitions.Count; }
 		}
 
 		#endregion

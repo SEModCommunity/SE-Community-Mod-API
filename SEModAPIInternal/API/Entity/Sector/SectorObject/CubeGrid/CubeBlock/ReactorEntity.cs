@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -14,6 +15,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "ReactorEntityProxy")]
 	public class ReactorEntity : FunctionalBlockEntity
 	{
 		#region "Attributes"
@@ -50,6 +52,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Reactor")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -71,6 +74,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Reactor")]
 		[Browsable(false)]
 		public InventoryEntity Inventory
@@ -79,8 +83,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				return m_Inventory;
 			}
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[DataMember]
 		[Category("Reactor")]
 		public float Fuel
 		{
@@ -93,8 +102,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				}
 				return fuelMass;
 			}
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[DataMember]
 		[Category("Reactor")]
 		public float MaxPower
 		{
@@ -108,6 +122,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Reactor")]
 		public float Power
 		{
@@ -115,6 +130,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			set { PowerProducer.PowerOutput = value; }
 		}
 
+		[IgnoreDataMember]
 		[Category("Reactor")]
 		[Browsable(false)]
 		[ReadOnly(true)]

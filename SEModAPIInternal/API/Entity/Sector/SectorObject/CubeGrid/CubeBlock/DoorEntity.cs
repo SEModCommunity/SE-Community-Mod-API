@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -14,6 +15,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "DoorEntityProxy")]
 	public class DoorEntity : FunctionalBlockEntity
 	{
 		#region "Attributes"
@@ -42,6 +44,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Door")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -59,12 +62,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Door")]
 		public float Opening
 		{
 			get { return ObjectBuilder.Opening; }
 		}
 
+		[DataMember]
 		[Category("Door")]
 		public bool State
 		{

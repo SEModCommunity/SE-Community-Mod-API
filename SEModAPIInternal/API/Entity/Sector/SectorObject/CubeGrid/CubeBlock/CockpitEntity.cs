@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -10,6 +11,7 @@ using Sandbox.Common.ObjectBuilders.VRageData;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "CockpitEntityProxy")]
 	public class CockpitEntity : TerminalBlockEntity
 	{
 		#region "Constructors and Initializers"
@@ -28,30 +30,51 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[DataMember]
 		[Category("Cockpit")]
 		public bool ControlThrusters
 		{
 			get { return GetSubTypeEntity().ControlThrusters; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[DataMember]
 		[Category("Cockpit")]
 		public bool ControlWheels
 		{
 			get { return GetSubTypeEntity().ControlWheels; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cockpit")]
 		public MyObjectBuilder_AutopilotBase Autopilot
 		{
 			get { return GetSubTypeEntity().Autopilot; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Cockpit")]
 		public MyObjectBuilder_Character Pilot
 		{
 			get { return GetSubTypeEntity().Pilot; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[DataMember]
 		[Category("Cockpit")]
 		public bool IsPassengerSeat
 		{
@@ -64,6 +87,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 					return true;
 
 				return false;
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 

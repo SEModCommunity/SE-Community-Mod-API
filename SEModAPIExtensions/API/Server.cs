@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.ServiceModel.Description;
 using System.Text;
 using System.Threading;
 using System.Timers;
@@ -16,8 +19,6 @@ using SEModAPI.API;
 using SEModAPI.API.Definitions;
 using SEModAPI.Support;
 
-using SEModAPIExtensions.API;
-
 using SEModAPIInternal.API;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
@@ -26,20 +27,91 @@ using SEModAPIInternal.API.Server;
 using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
+using SEModAPIExtensions.API.IPC;
 
-namespace SEServerExtender
+namespace SEModAPIExtensions.API
 {
+	public struct CommandLineArgs
+	{
+		public bool autoStart;
+		public string worldName;
+		public string instanceName;
+		public bool noGUI;
+		public bool noConsole;
+		public bool debug;
+		public string gamePath;
+	}
+
+	[ServiceContract]
+	public interface IServerServiceContract
+	{
+		[OperationContract]
+		Server GetServer();
+
+		[OperationContract]
+		void StartServer();
+
+		[OperationContract]
+		void StopServer();
+
+		[OperationContract]
+		void LoadServerConfig();
+
+		[OperationContract]
+		void SaveServerConfig();
+	}
+
+	[ServiceBehavior(
+		ConcurrencyMode = ConcurrencyMode.Single,
+		IncludeExceptionDetailInFaults = true,
+		IgnoreExtensionDataObject = true
+	)]
+	public class ServerService : IServerServiceContract
+	{
+		public Server GetServer()
+		{
+			return Server.Instance;
+		}
+
+		public void StartServer()
+		{
+			Server.Instance.StartServer();
+		}
+
+		public void StopServer()
+		{
+			Server.Instance.StopServer();
+		}
+
+		public void LoadServerConfig()
+		{
+			Server.Instance.LoadServerConfig();
+		}
+
+		public void SaveServerConfig()
+		{
+			Server.Instance.SaveServerConfig();
+		}
+	}
+
+	[DataContract(
+		Name = "ServerProxy",
+		IsReference = true
+	)]
 	public class Server
 	{
 		#region "Attributes"
 
+		private static Server m_instance;
+		private static bool m_isInitialized;
 		private static Thread m_runServerThread;
 		private static bool m_isServerRunning;
-		private static Program.CommandLineArgs m_commandLineArgs;
+		private static DateTime m_lastRestart;
+		private static int m_restartLimit;
+
+		private CommandLineArgs m_commandLineArgs;
 		private DedicatedConfigDefinition m_dedicatedConfigDefinition;
 		private GameInstallationInfo m_gameInstallationInfo;
-		private DateTime m_lastRestart;
-		private static int m_restartLimit;
 
 		//Managers
 		private PluginManager m_pluginManager;
@@ -58,16 +130,13 @@ namespace SEServerExtender
 
 		#region "Constructors and Initializers"
 
-		public Server(Program.CommandLineArgs args)
+		protected Server()
 		{
-			m_commandLineArgs = args;
+			if (m_isInitialized)
+				return;
 
 			m_lastRestart = DateTime.Now;
 			m_restartLimit = 3;
-
-			SetupGameInstallation();
-			SetupManagers();
-			ProcessCommandLineArgs();
 
 			m_pluginMainLoop = new System.Timers.Timer();
 			m_pluginMainLoop.Interval = 200;
@@ -77,8 +146,24 @@ namespace SEServerExtender
 			m_autosaveTimer.Interval = 120000;
 			m_autosaveTimer.Elapsed += AutoSaveMain;
 
-			if(m_commandLineArgs.instanceName != "")
-				PluginManager.Instance.LoadPlugins(m_commandLineArgs.instanceName);
+			Uri baseAddress = new Uri(InternalService.BaseURI + "Server/");
+			ServiceHost selfHost = new ServiceHost(typeof(ServerService), baseAddress);
+
+			try
+			{
+				selfHost.AddServiceEndpoint(typeof(IServerServiceContract), new WSHttpBinding(), "ServerService");
+				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+				smb.HttpGetEnabled = true;
+				selfHost.Description.Behaviors.Add(smb);
+				selfHost.Open();
+			}
+			catch (CommunicationException ex)
+			{
+				Console.WriteLine("An exception occurred: {0}", ex.Message);
+				selfHost.Abort();
+			}
+
+			Console.WriteLine("Finished creating server!");
 		}
 
 		private bool SetupGameInstallation()
@@ -150,27 +235,53 @@ namespace SEServerExtender
 
 		#region "Properties"
 
+		[IgnoreDataMember]
+		public static Server Instance
+		{
+			get
+			{
+				if (m_instance == null)
+					m_instance = new Server();
+
+				return m_instance;
+			}
+		}
+
+		[DataMember]
 		public bool IsRunning
 		{
 			get { return m_isServerRunning; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
-		public Program.CommandLineArgs CommandLineArgs
+		[DataMember]
+		public CommandLineArgs CommandLineArgs
 		{
 			get { return m_commandLineArgs; }
+			set { m_commandLineArgs = value; }
 		}
 
+		[IgnoreDataMember]
 		public DedicatedConfigDefinition Config
 		{
 			get { return m_dedicatedConfigDefinition; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[DataMember]
 		public string InstanceName
 		{
 			get { return m_commandLineArgs.instanceName; }
 			set { m_commandLineArgs.instanceName = value; }
 		}
 
+		[DataMember]
 		public double AutosaveInterval
 		{
 			get { return m_autosaveTimer.Interval; }
@@ -180,6 +291,21 @@ namespace SEServerExtender
 		#endregion
 
 		#region "Methods"
+
+		public void Init()
+		{
+			if (m_isInitialized)
+				return;
+
+			SetupGameInstallation();
+			SetupManagers();
+			ProcessCommandLineArgs();
+
+			if (m_commandLineArgs.instanceName != "")
+				PluginManager.Instance.LoadPlugins(m_commandLineArgs.instanceName);
+
+			m_isInitialized = true;
+		}
 
 		private void PluginManagerMain(object sender, EventArgs e)
 		{
@@ -255,6 +381,8 @@ namespace SEServerExtender
 		{
 			try
 			{
+				if (!m_isInitialized)
+					return;
 				if (m_isServerRunning)
 					return;
 

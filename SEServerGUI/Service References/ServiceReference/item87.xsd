@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/VRageMath" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/VRageMath" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="Vector3">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="X" type="xs:float" />
+      <xs:element name="Y" type="xs:float" />
+      <xs:element name="Z" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Vector3" nillable="true" type="tns:Vector3" />
+  <xs:complexType name="Vector2I">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="X" type="xs:int" />
+      <xs:element minOccurs="0" name="Y" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Vector2I" nillable="true" type="tns:Vector2I" />
+  <xs:complexType name="Quaternion">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="W" type="xs:float" />
+      <xs:element name="X" type="xs:float" />
+      <xs:element name="Y" type="xs:float" />
+      <xs:element name="Z" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Quaternion" nillable="true" type="tns:Quaternion" />
+  <xs:complexType name="Vector2">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="X" type="xs:float" />
+      <xs:element name="Y" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Vector2" nillable="true" type="tns:Vector2" />
+  <xs:complexType name="Vector4">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="W" type="xs:float" />
+      <xs:element name="X" type="xs:float" />
+      <xs:element name="Y" type="xs:float" />
+      <xs:element name="Z" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Vector4" nillable="true" type="tns:Vector4" />
+  <xs:simpleType name="Base6Directions.Direction">
+    <xs:annotation>
+      <xs:appinfo>
+        <ActualType Name="unsignedByte" Namespace="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Forward" />
+      <xs:enumeration value="Backward" />
+      <xs:enumeration value="Left" />
+      <xs:enumeration value="Right" />
+      <xs:enumeration value="Up" />
+      <xs:enumeration value="Down" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="Base6Directions.Direction" nillable="true" type="tns:Base6Directions.Direction" />
+  <xs:complexType name="ArrayOfVector3I">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Vector3I" type="tns:Vector3I" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfVector3I" nillable="true" type="tns:ArrayOfVector3I" />
+  <xs:complexType name="Vector3I">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="X" type="xs:int" />
+      <xs:element name="Y" type="xs:int" />
+      <xs:element name="Z" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Vector3I" nillable="true" type="tns:Vector3I" />
+  <xs:complexType name="ArrayOfVector3">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Vector3" type="tns:Vector3" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfVector3" nillable="true" type="tns:ArrayOfVector3" />
+  <xs:complexType name="Vector3S">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="X" type="xs:short" />
+      <xs:element minOccurs="0" name="Y" type="xs:short" />
+      <xs:element minOccurs="0" name="Z" type="xs:short" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Vector3S" nillable="true" type="tns:Vector3S" />
+  <xs:complexType name="MyBlockOrientation">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Forward" type="tns:Base6Directions.Direction" />
+      <xs:element minOccurs="0" name="Up" type="tns:Base6Directions.Direction" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyBlockOrientation" nillable="true" type="tns:MyBlockOrientation" />
+  <xs:complexType name="Color">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="packedValue" type="xs:unsignedInt" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Color" nillable="true" type="tns:Color" />
+</xs:schema>

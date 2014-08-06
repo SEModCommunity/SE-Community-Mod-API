@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd18" namespace="http://schemas.datacontract.org/2004/07/SEModAPI.API" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" />
+  <xs:complexType name="ArrayOfBaseEntityProxy">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="BaseEntityProxy" nillable="true" type="tns:BaseEntityProxy" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfBaseEntityProxy" nillable="true" type="tns:ArrayOfBaseEntityProxy" />
+  <xs:complexType name="BaseEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:BaseObjectProxy">
+        <xs:sequence>
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/SEModAPI.API" minOccurs="0" name="AngularVelocity" type="q1:Vector3Wrapper" />
+          <xs:element minOccurs="0" name="EntityId" type="xs:long" />
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/SEModAPI.API" minOccurs="0" name="LinearVelocity" type="q2:Vector3Wrapper" />
+          <xs:element minOccurs="0" name="Mass" type="xs:float" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/SEModAPI.API" minOccurs="0" name="Position" type="q3:Vector3Wrapper" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="BaseEntityProxy" nillable="true" type="tns:BaseEntityProxy" />
+  <xs:complexType name="BaseObjectProxy">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IsDisposed" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="BaseObjectProxy" nillable="true" type="tns:BaseObjectProxy" />
+  <xs:complexType name="InventoryEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:BaseObjectProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="InventoryEntityProxy" nillable="true" type="tns:InventoryEntityProxy" />
+  <xs:complexType name="InventoryItemEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:BaseObjectProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Amount" type="xs:float" />
+          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" minOccurs="0" name="Id" type="q4:SerializableDefinitionId" />
+          <xs:element minOccurs="0" name="ItemId" type="xs:unsignedInt" />
+          <xs:element minOccurs="0" name="Mass" type="xs:float" />
+          <xs:element minOccurs="0" name="Volume" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="InventoryItemEntityProxy" nillable="true" type="tns:InventoryItemEntityProxy" />
+  <xs:complexType name="ArrayOfInventoryItemEntityProxy">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="InventoryItemEntityProxy" nillable="true" type="tns:InventoryItemEntityProxy" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfInventoryItemEntityProxy" nillable="true" type="tns:ArrayOfInventoryItemEntityProxy" />
+</xs:schema>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -16,6 +17,7 @@ using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "GyroEntityProxy")]
 	public class GyroEntity : FunctionalBlockEntity
 	{
 		#region "Attributes"
@@ -50,6 +52,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Gyro")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -67,6 +70,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Gyro")]
 		[Browsable(true)]
 		[ReadOnly(false)]
@@ -87,6 +91,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Gyro")]
 		[Browsable(true)]
 		[ReadOnly(false)]
@@ -107,6 +112,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Gyro")]
 		[Browsable(true)]
 		[ReadOnly(false)]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -14,6 +15,8 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "TerminalBlockEntityProxy")]
+	[KnownType(typeof(InventoryEntity))]
 	public class TerminalBlockEntity : CubeBlockEntity
 	{
 		#region "Attributes"
@@ -43,6 +46,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[DataMember]
 		[Category("Terminal Block")]
 		public override string Name
 		{
@@ -55,6 +59,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Terminal Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -70,6 +75,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Terminal Block")]
 		public string CustomName
 		{

@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using System.ServiceModel;
+using System.ServiceModel.Description;
 
 using SEModAPI.Support;
 
@@ -9,22 +11,12 @@ using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 
 using SEModAPIExtensions.API;
+using SEModAPIExtensions.API.IPC;
 
 namespace SEServerExtender
 {
 	public static class Program
 	{
-		public struct CommandLineArgs
-		{
-			public bool autoStart;
-			public string worldName;
-			public string instanceName;
-			public bool noGUI;
-			public bool noConsole;
-			public bool debug;
-			public string gamePath;
-		}
-
 		static SEServerExtender m_serverExtenderForm;
 		static Server m_server;
 
@@ -34,6 +26,23 @@ namespace SEServerExtender
 		[STAThread]
 		static void Main(string[] args)
 		{
+			Uri baseAddress = new Uri(InternalService.BaseURI);
+			ServiceHost selfHost = new ServiceHost(typeof(InternalService), baseAddress);
+
+			try
+			{
+				selfHost.AddServiceEndpoint(typeof(IInternalServiceContract), new WSHttpBinding(), "InternalService");
+				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+				smb.HttpGetEnabled = true;
+				selfHost.Description.Behaviors.Add(smb);
+				selfHost.Open();
+			}
+			catch (CommunicationException ex)
+			{
+				Console.WriteLine("An exception occurred: {0}", ex.Message);
+				selfHost.Abort();
+			}
+
 			//Setup error handling for unmanaged exceptions
 			AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
 			Application.ThreadException += Application_ThreadException;
@@ -109,7 +118,9 @@ namespace SEServerExtender
 				if (!unitTestResult)
 					SandboxGameAssemblyWrapper.IsInSafeMode = true;
 
-				m_server = new Server(extenderArgs);
+				m_server = Server.Instance;
+				m_server.CommandLineArgs = extenderArgs;
+				m_server.Init();
 				if (extenderArgs.autoStart)
 				{
 					m_server.StartServer();

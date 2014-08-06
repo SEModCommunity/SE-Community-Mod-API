@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd19" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd18" namespace="http://schemas.datacontract.org/2004/07/SEModAPI.API" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" />
+  <xs:complexType name="TerminalBlockEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" base="q1:CubeBlockEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CustomName" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TerminalBlockEntityProxy" nillable="true" type="tns:TerminalBlockEntityProxy" />
+  <xs:complexType name="FunctionalBlockEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:TerminalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CurrentInput" type="xs:float" />
+          <xs:element minOccurs="0" name="Enabled" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="FunctionalBlockEntityProxy" nillable="true" type="tns:FunctionalBlockEntityProxy" />
+  <xs:complexType name="ProductionBlockEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" minOccurs="0" name="InputInventory" nillable="true" type="q2:InventoryEntityProxy" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" minOccurs="0" name="OutputInventory" nillable="true" type="q3:InventoryEntityProxy" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ProductionBlockEntityProxy" nillable="true" type="tns:ProductionBlockEntityProxy" />
+  <xs:complexType name="DoorEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="State" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DoorEntityProxy" nillable="true" type="tns:DoorEntityProxy" />
+  <xs:complexType name="LightEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Color" type="q4:Color" />
+          <xs:element minOccurs="0" name="Falloff" type="xs:float" />
+          <xs:element minOccurs="0" name="Intensity" type="xs:float" />
+          <xs:element minOccurs="0" name="Radius" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="LightEntityProxy" nillable="true" type="tns:LightEntityProxy" />
+  <xs:complexType name="InteriorLightEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:LightEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="InteriorLightEntityProxy" nillable="true" type="tns:InteriorLightEntityProxy" />
+  <xs:complexType name="MergeBlockEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MergeBlockEntityProxy" nillable="true" type="tns:MergeBlockEntityProxy" />
+  <xs:complexType name="GatlingTurretEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GatlingTurretEntityProxy" nillable="true" type="tns:GatlingTurretEntityProxy" />
+  <xs:complexType name="MissileTurretEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MissileTurretEntityProxy" nillable="true" type="tns:MissileTurretEntityProxy" />
+  <xs:complexType name="ConveyorTubeEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q5="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" base="q5:CubeBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ConveyorTubeEntityProxy" nillable="true" type="tns:ConveyorTubeEntityProxy" />
+  <xs:complexType name="BatteryBlockEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CurrentStoredPower" type="xs:float" />
+          <xs:element minOccurs="0" name="MaxPowerOutput" type="xs:float" />
+          <xs:element minOccurs="0" name="MaxStoredPower" type="xs:float" />
+          <xs:element minOccurs="0" name="ProducerEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="RequiredPowerInput" type="xs:float" />
+          <xs:element minOccurs="0" name="SemiautoEnabled" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="BatteryBlockEntityProxy" nillable="true" type="tns:BatteryBlockEntityProxy" />
+  <xs:complexType name="BeaconEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="BroadcastRadius" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="BeaconEntityProxy" nillable="true" type="tns:BeaconEntityProxy" />
+  <xs:complexType name="RefineryEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ProductionBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RefineryEntityProxy" nillable="true" type="tns:RefineryEntityProxy" />
+  <xs:complexType name="ShipToolBaseEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" minOccurs="0" name="Inventory" nillable="true" type="q6:InventoryEntityProxy" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ShipToolBaseEntityProxy" nillable="true" type="tns:ShipToolBaseEntityProxy" />
+  <xs:complexType name="ShipGrinderEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ShipToolBaseEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ShipGrinderEntityProxy" nillable="true" type="tns:ShipGrinderEntityProxy" />
+  <xs:complexType name="CockpitEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:TerminalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ControlThrusters" type="xs:boolean" />
+          <xs:element minOccurs="0" name="ControlWheels" type="xs:boolean" />
+          <xs:element minOccurs="0" name="IsPassengerSeat" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CockpitEntityProxy" nillable="true" type="tns:CockpitEntityProxy" />
+  <xs:complexType name="CargoContainerEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:TerminalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" minOccurs="0" name="Inventory" nillable="true" type="q7:InventoryEntityProxy" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CargoContainerEntityProxy" nillable="true" type="tns:CargoContainerEntityProxy" />
+  <xs:complexType name="MedicalRoomEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q8="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" base="q8:CubeBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MedicalRoomEntityProxy" nillable="true" type="tns:MedicalRoomEntityProxy" />
+  <xs:complexType name="AntennaEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="BroadcastRadius" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AntennaEntityProxy" nillable="true" type="tns:AntennaEntityProxy" />
+  <xs:complexType name="ThrustEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/SEModAPI.API" minOccurs="0" name="MaxThrustVector" type="q9:Vector3Wrapper" />
+          <xs:element minOccurs="0" name="Override" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ThrustEntityProxy" nillable="true" type="tns:ThrustEntityProxy" />
+  <xs:complexType name="LandingGearEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="LandingGearEntityProxy" nillable="true" type="tns:LandingGearEntityProxy" />
+  <xs:complexType name="ConveyorBlockEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q10="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" base="q10:CubeBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ConveyorBlockEntityProxy" nillable="true" type="tns:ConveyorBlockEntityProxy" />
+  <xs:complexType name="GravityGeneratorEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="FieldSize" type="q11:SerializableVector3" />
+          <xs:element minOccurs="0" name="GravityAcceleration" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GravityGeneratorEntityProxy" nillable="true" type="tns:GravityGeneratorEntityProxy" />
+  <xs:complexType name="ShipWelderEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ShipToolBaseEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ShipWelderEntityProxy" nillable="true" type="tns:ShipWelderEntityProxy" />
+  <xs:complexType name="ReflectorLightEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:LightEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ReflectorLightEntityProxy" nillable="true" type="tns:ReflectorLightEntityProxy" />
+  <xs:complexType name="ShipDrillEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" minOccurs="0" name="Inventory" nillable="true" type="q12:InventoryEntityProxy" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ShipDrillEntityProxy" nillable="true" type="tns:ShipDrillEntityProxy" />
+  <xs:complexType name="AssemblerEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ProductionBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AssemblerEntityProxy" nillable="true" type="tns:AssemblerEntityProxy" />
+  <xs:complexType name="ReactorEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Fuel" type="xs:float" />
+          <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" minOccurs="0" name="Inventory" nillable="true" type="q13:InventoryEntityProxy" />
+          <xs:element minOccurs="0" name="MaxPower" type="xs:float" />
+          <xs:element minOccurs="0" name="Power" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ReactorEntityProxy" nillable="true" type="tns:ReactorEntityProxy" />
+  <xs:complexType name="SolarPanelEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SolarPanelEntityProxy" nillable="true" type="tns:SolarPanelEntityProxy" />
+  <xs:complexType name="GyroEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:FunctionalBlockEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="GyroOverride" type="xs:boolean" />
+          <xs:element minOccurs="0" name="GyroPower" type="xs:float" />
+          <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/SEModAPI.API" minOccurs="0" name="TargetAngularVelocity" type="q14:Vector3Wrapper" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GyroEntityProxy" nillable="true" type="tns:GyroEntityProxy" />
+</xs:schema>

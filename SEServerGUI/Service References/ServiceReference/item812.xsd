@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Gui" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Gui" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd13" namespace="http://schemas.datacontract.org/2004/07/VRage" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.Localization" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd14" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="MyObjectBuilder_GuiControlBase">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q1:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="BackgroundColor" type="q2:Vector4" />
+          <xs:element minOccurs="0" name="ControlAlign" type="xs:int" />
+          <xs:element minOccurs="0" name="ControlTexture" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/VRage" minOccurs="0" name="OriginAlign" type="q3:MyGuiDrawAlignEnum" />
+          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Position" type="q4:Vector2" />
+          <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Size" type="q5:Vector2" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlBase" nillable="true" type="tns:MyObjectBuilder_GuiControlBase" />
+  <xs:complexType name="MyObjectBuilder_GuiControlButton">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DrawCrossTextureWhenDisabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="DrawRedTextureWhenDisabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TextAlignment" type="xs:int" />
+          <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Sandbox.Common.Localization" minOccurs="0" name="TextEnum" type="q6:MyTextsWrapperEnum" />
+          <xs:element minOccurs="0" name="TextScale" type="xs:float" />
+          <xs:element minOccurs="0" name="VisualStyle" type="tns:MyGuiControlButtonStyleEnum" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlButton" nillable="true" type="tns:MyObjectBuilder_GuiControlButton" />
+  <xs:simpleType name="MyGuiControlButtonStyleEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="Small" />
+      <xs:enumeration value="Red" />
+      <xs:enumeration value="Close" />
+      <xs:enumeration value="Info" />
+      <xs:enumeration value="InventoryTrash" />
+      <xs:enumeration value="Debug" />
+      <xs:enumeration value="ControlSetting" />
+      <xs:enumeration value="ClickableText" />
+      <xs:enumeration value="Increase" />
+      <xs:enumeration value="Decrease" />
+      <xs:enumeration value="Rectangular" />
+      <xs:enumeration value="Tiny" />
+      <xs:enumeration value="ArrowLeft" />
+      <xs:enumeration value="ArrowRight" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyGuiControlButtonStyleEnum" nillable="true" type="tns:MyGuiControlButtonStyleEnum" />
+  <xs:complexType name="MyObjectBuilder_GuiControlCheckbox">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CheckedTexture" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="IsChecked" type="xs:boolean" />
+          <xs:element minOccurs="0" name="VisualStyle" type="tns:MyGuiControlCheckboxStyleEnum" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlCheckbox" nillable="true" type="tns:MyObjectBuilder_GuiControlCheckbox" />
+  <xs:simpleType name="MyGuiControlCheckboxStyleEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="Debug" />
+      <xs:enumeration value="SwitchOnOffLeft" />
+      <xs:enumeration value="SwitchOnOffRight" />
+      <xs:enumeration value="Repeat" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyGuiControlCheckboxStyleEnum" nillable="true" type="tns:MyGuiControlCheckboxStyleEnum" />
+  <xs:complexType name="MyObjectBuilder_GuiControlCombobox">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlCombobox" nillable="true" type="tns:MyObjectBuilder_GuiControlCombobox" />
+  <xs:complexType name="MyObjectBuilder_GuiControlCompositePanel">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlPanel">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="InnerHeight" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlCompositePanel" nillable="true" type="tns:MyObjectBuilder_GuiControlCompositePanel" />
+  <xs:complexType name="MyObjectBuilder_GuiControlPanel">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlPanel" nillable="true" type="tns:MyObjectBuilder_GuiControlPanel" />
+  <xs:complexType name="MyObjectBuilder_GuiControlGrid">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DisplayColumnsCount" type="xs:int" />
+          <xs:element minOccurs="0" name="DisplayRowsCount" type="xs:int" />
+          <xs:element minOccurs="0" name="VisualStyle" type="tns:MyGuiControlGridStyleEnum" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlGrid" nillable="true" type="tns:MyObjectBuilder_GuiControlGrid" />
+  <xs:simpleType name="MyGuiControlGridStyleEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="Toolbar" />
+      <xs:enumeration value="ToolsBlocks" />
+      <xs:enumeration value="ToolsWeapons" />
+      <xs:enumeration value="Inventory" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyGuiControlGridStyleEnum" nillable="true" type="tns:MyGuiControlGridStyleEnum" />
+  <xs:complexType name="MyObjectBuilder_GuiControlLabel">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Sandbox.Common" minOccurs="0" name="Font" type="q7:MyFontEnum" />
+          <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string" />
+          <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Sandbox.Common.Localization" minOccurs="0" name="TextEnum" type="q8:MyTextsWrapperEnum" />
+          <xs:element minOccurs="0" name="TextScale" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlLabel" nillable="true" type="tns:MyObjectBuilder_GuiControlLabel" />
+  <xs:complexType name="MyObjectBuilder_GuiControlList">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlParent">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="VisualStyle" type="tns:MyGuiControlListStyleEnum" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlList" nillable="true" type="tns:MyObjectBuilder_GuiControlList" />
+  <xs:complexType name="MyObjectBuilder_GuiControlParent">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Controls" nillable="true" type="tns:MyObjectBuilder_GuiControls" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlParent" nillable="true" type="tns:MyObjectBuilder_GuiControlParent" />
+  <xs:complexType name="MyObjectBuilder_GuiControls">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q9="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q9:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Controls" nillable="true" type="tns:ArrayOfMyObjectBuilder_GuiControlBase" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControls" nillable="true" type="tns:MyObjectBuilder_GuiControls" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_GuiControlBase">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_GuiControlBase" nillable="true" type="tns:MyObjectBuilder_GuiControlBase" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_GuiControlBase" nillable="true" type="tns:ArrayOfMyObjectBuilder_GuiControlBase" />
+  <xs:simpleType name="MyGuiControlListStyleEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="Simple" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyGuiControlListStyleEnum" nillable="true" type="tns:MyGuiControlListStyleEnum" />
+  <xs:complexType name="MyObjectBuilder_GuiControlListbox">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="VisibleRows" type="xs:int" />
+          <xs:element minOccurs="0" name="VisualStyle" type="tns:MyGuiControlListboxStyleEnum" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlListbox" nillable="true" type="tns:MyObjectBuilder_GuiControlListbox" />
+  <xs:simpleType name="MyGuiControlListboxStyleEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="ContextMenu" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyGuiControlListboxStyleEnum" nillable="true" type="tns:MyGuiControlListboxStyleEnum" />
+  <xs:complexType name="MyObjectBuilder_GuiControlMultilineLabel">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Sandbox.Common" minOccurs="0" name="Font" type="q10:MyFontEnum" />
+          <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TextAlign" type="xs:int" />
+          <xs:element minOccurs="0" name="TextBoxAlign" type="xs:int" />
+          <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="TextColor" type="q11:Vector4" />
+          <xs:element minOccurs="0" name="TextScale" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlMultilineLabel" nillable="true" type="tns:MyObjectBuilder_GuiControlMultilineLabel" />
+  <xs:complexType name="MyObjectBuilder_GuiControlOnOffSwitch">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlOnOffSwitch" nillable="true" type="tns:MyObjectBuilder_GuiControlOnOffSwitch" />
+  <xs:complexType name="MyObjectBuilder_GuiControlProgressBar">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="ProgressColor" nillable="true" type="q12:Vector4" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlProgressBar" nillable="true" type="tns:MyObjectBuilder_GuiControlProgressBar" />
+  <xs:complexType name="MyObjectBuilder_GuiControlRadioButton">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Key" type="xs:int" />
+          <xs:element minOccurs="0" name="VisualStyle" type="tns:MyGuiControlRadioButtonStyleEnum" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlRadioButton" nillable="true" type="tns:MyObjectBuilder_GuiControlRadioButton" />
+  <xs:simpleType name="MyGuiControlRadioButtonStyleEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FilterCharacter" />
+      <xs:enumeration value="FilterGrid" />
+      <xs:enumeration value="FilterAll" />
+      <xs:enumeration value="FilterEnergy" />
+      <xs:enumeration value="FilterStorage" />
+      <xs:enumeration value="FilterSystem" />
+      <xs:enumeration value="ScenarioButton" />
+      <xs:enumeration value="Rectangular" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyGuiControlRadioButtonStyleEnum" nillable="true" type="tns:MyGuiControlRadioButtonStyleEnum" />
+  <xs:complexType name="MyObjectBuilder_GuiControlSeparatorList">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Separators" nillable="true" type="tns:ArrayOfMyObjectBuilder_GuiControlSeparatorList.Separator" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlSeparatorList" nillable="true" type="tns:MyObjectBuilder_GuiControlSeparatorList" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_GuiControlSeparatorList.Separator">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_GuiControlSeparatorList.Separator" type="tns:MyObjectBuilder_GuiControlSeparatorList.Separator" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMyObjectBuilder_GuiControlSeparatorList.Separator" nillable="true" type="tns:ArrayOfMyObjectBuilder_GuiControlSeparatorList.Separator" />
+  <xs:complexType name="MyObjectBuilder_GuiControlSeparatorList.Separator">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SizeX" type="xs:float" />
+      <xs:element minOccurs="0" name="SizeY" type="xs:float" />
+      <xs:element minOccurs="0" name="StartX" type="xs:float" />
+      <xs:element minOccurs="0" name="StartY" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlSeparatorList.Separator" nillable="true" type="tns:MyObjectBuilder_GuiControlSeparatorList.Separator" />
+  <xs:complexType name="MyObjectBuilder_GuiControlTabControl">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlParent">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlTabControl" nillable="true" type="tns:MyObjectBuilder_GuiControlTabControl" />
+  <xs:complexType name="MyObjectBuilder_GuiControlTabPage">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlParent">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PageKey" type="xs:int" />
+          <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Sandbox.Common.Localization" minOccurs="0" name="TextEnum" type="q13:MyTextsWrapperEnum" />
+          <xs:element minOccurs="0" name="TextScale" type="xs:float" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlTabPage" nillable="true" type="tns:MyObjectBuilder_GuiControlTabPage" />
+  <xs:complexType name="MyObjectBuilder_GuiControlTextbox">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MyObjectBuilder_GuiControlBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiControlTextbox" nillable="true" type="tns:MyObjectBuilder_GuiControlTextbox" />
+  <xs:complexType name="MyObjectBuilder_GuiScreen">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q14="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q14:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="BackgroundColor" nillable="true" type="q15:Vector4" />
+          <xs:element minOccurs="0" name="BackgroundTexture" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CloseButtonEnabled" type="xs:boolean" />
+          <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="CloseButtonOffset" type="q16:Vector2" />
+          <xs:element minOccurs="0" name="Controls" nillable="true" type="tns:MyObjectBuilder_GuiControls" />
+          <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Size" nillable="true" type="q17:Vector2" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_GuiScreen" nillable="true" type="tns:MyObjectBuilder_GuiScreen" />
+</xs:schema>

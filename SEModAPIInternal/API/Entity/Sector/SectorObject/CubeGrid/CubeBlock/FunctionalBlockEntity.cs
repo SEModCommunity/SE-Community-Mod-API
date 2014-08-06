@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -14,6 +15,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "FunctionalBlockEntityProxy")]
 	public class FunctionalBlockEntity : TerminalBlockEntity
 	{
 		#region "Attributes"
@@ -46,6 +48,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Functional Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -61,6 +64,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Functional Block")]
 		public bool Enabled
 		{
@@ -80,6 +84,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Functional Block")]
 		public float CurrentInput
 		{
@@ -87,8 +92,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				return PowerReceiver.CurrentInput;
 			}
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Functional Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]

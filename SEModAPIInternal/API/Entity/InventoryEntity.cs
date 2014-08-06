@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 
@@ -18,6 +19,8 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity
 {
+	[DataContract(Name = "InventoryEntityProxy")]
+	[KnownType(typeof(InventoryItemEntity))]
 	public class InventoryEntity : BaseObject
 	{
 		#region "Attributes"
@@ -71,6 +74,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Container Inventory")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -83,6 +87,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Container Inventory")]
 		[ReadOnly(true)]
 		public override string Name
@@ -90,6 +95,7 @@ namespace SEModAPIInternal.API.Entity
 			get { return "Inventory"; }
 		}
 
+		[IgnoreDataMember]
 		[Category("Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -108,6 +114,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Container Inventory")]
 		[ReadOnly(true)]
 		public uint NextItemId
@@ -121,6 +128,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Container Inventory")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -138,6 +146,10 @@ namespace SEModAPIInternal.API.Entity
 					LogManager.GameLog.WriteLine(ex);
 					return new List<InventoryItemEntity>();
 				}
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 
@@ -310,6 +322,7 @@ namespace SEModAPIInternal.API.Entity
 		#endregion
 	}
 
+	[DataContract(Name = "InventoryItemEntityProxy")]
 	public class InventoryItemEntity : BaseObject
 	{
 		#region "Attributes"
@@ -381,6 +394,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal static Type InternalType
@@ -392,6 +406,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Container Item")]
 		[ReadOnly(true)]
 		public override string Name
@@ -399,6 +414,7 @@ namespace SEModAPIInternal.API.Entity
 			get { return Id.SubtypeName; }
 		}
 
+		[IgnoreDataMember]
 		[Category("Container Item")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -414,6 +430,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Container Item")]
 		[Browsable(false)]
 		public InventoryEntity Container
@@ -422,6 +439,7 @@ namespace SEModAPIInternal.API.Entity
 			set { m_parentContainer = value; }
 		}
 
+		[DataMember]
 		[Category("Container Item")]
 		[ReadOnly(false)]
 		[TypeConverter(typeof(ItemSerializableDefinitionIdTypeConverter))]
@@ -444,6 +462,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Container Item")]
 		[ReadOnly(true)]
 		public uint ItemId
@@ -457,6 +476,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Container Item")]
 		public float Amount
 		{
@@ -474,6 +494,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Container Item")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -488,6 +509,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[IgnoreDataMember]
 		[Category("Container Item")]
 		[ReadOnly(true)]
 		public float TotalMass
@@ -495,6 +517,7 @@ namespace SEModAPIInternal.API.Entity
 			get { return ObjectBuilder.Amount * m_itemMass; }
 		}
 
+		[IgnoreDataMember]
 		[Category("Container Item")]
 		[ReadOnly(true)]
 		public float TotalVolume
@@ -502,6 +525,7 @@ namespace SEModAPIInternal.API.Entity
 			get { return ObjectBuilder.Amount * m_itemVolume; }
 		}
 
+		[DataMember]
 		[Category("Container Item")]
 		[ReadOnly(true)]
 		public float Mass
@@ -515,6 +539,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
 		[Category("Container Item")]
 		[ReadOnly(true)]
 		public float Volume

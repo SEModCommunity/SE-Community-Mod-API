@@ -54,7 +54,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="API\Client\ClientNetworkManager.cs" />
-    <Compile Include="API\Common\CheckpointManager.cs" />
     <Compile Include="API\Common\EntityEvents.cs" />
     <Compile Include="API\Common\FactionsManager.cs" />
     <Compile Include="API\Common\NetworkManager.cs" />
@@ -64,7 +63,6 @@
     <Compile Include="API\Common\WorldManager.cs" />
     <Compile Include="API\Entity\BaseEntity.cs" />
     <Compile Include="API\Entity\BaseObject.cs" />
-    <Compile Include="API\Entity\BatteryEntity.cs" />
     <Compile Include="API\Entity\PowerProducer.cs" />
     <Compile Include="API\Entity\PowerReceiver.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\AntennaEntity.cs" />
@@ -137,6 +135,8 @@
       <HintPath>..\GameLibraries\SteamSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.XML" />
     <Reference Include="VRage.Common">
       <HintPath>..\GameLibraries\VRage.Common.dll</HintPath>
@@ -157,7 +157,6 @@
       <Name>SEModAPI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>

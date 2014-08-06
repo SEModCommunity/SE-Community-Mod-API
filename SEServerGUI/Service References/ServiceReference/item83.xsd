@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/System.Collections" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/System.Collections" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ArrayOfDictionaryEntry">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DictionaryEntry" type="tns:DictionaryEntry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDictionaryEntry" nillable="true" type="tns:ArrayOfDictionaryEntry" />
+  <xs:complexType name="DictionaryEntry">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="_key" nillable="true" type="xs:anyType" />
+      <xs:element name="_value" nillable="true" type="xs:anyType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DictionaryEntry" nillable="true" type="tns:DictionaryEntry" />
+</xs:schema>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -13,6 +14,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
+	[DataContract(Name = "VoxelMapProxy")]
 	public class VoxelMap : BaseEntity
 	{
 		#region "Attributes"
@@ -38,6 +40,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Voxel Map")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -51,6 +54,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Voxel Map")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -59,6 +63,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			get { return Filename; }
 		}
 
+		[IgnoreDataMember]
 		[Category("Voxel Map")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -74,22 +79,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
+		[DataMember]
 		[Category("Voxel Map")]
 		[ReadOnly(true)]
 		public string Filename
 		{
 			get { return ObjectBuilder.Filename; }
-			set
+			private set
 			{
-				if (ObjectBuilder.Filename == value) return;
-				ObjectBuilder.Filename = value;
-				Changed = true;
-
-				if (BackingObject != null)
-				{
-					Action action = InternalUpdateVoxelMap;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				}
+				//Do nothing!
 			}
 		}
 

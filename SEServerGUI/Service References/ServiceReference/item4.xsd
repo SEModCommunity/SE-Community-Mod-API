@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd19" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" />
+  <xs:element name="GetConnectedPlayers">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetConnectedPlayersResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="GetConnectedPlayersResult" nillable="true" type="q1:ArrayOfunsignedLong" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPlayerName">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="steamId" type="xs:unsignedLong" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPlayerNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetPlayerNameResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSectorEntities">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSectorEntitiesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" minOccurs="0" name="GetSectorEntitiesResult" nillable="true" type="q2:ArrayOfBaseEntityProxy" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSectorCubeGridEntities">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSectorCubeGridEntitiesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" minOccurs="0" name="GetSectorCubeGridEntitiesResult" nillable="true" type="q3:ArrayOfCubeGridEntityProxy" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCubeBlocks">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="cubeGridEntityId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCubeBlocksResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" minOccurs="0" name="GetCubeBlocksResult" nillable="true" type="q4:ArrayOfCubeBlockEntityProxy" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetInventoryItems">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="cubeGridEntityId" type="xs:long" />
+        <xs:element minOccurs="0" name="containerBlockEntityId" type="xs:long" />
+        <xs:element minOccurs="0" name="inventoryIndex" type="xs:unsignedShort" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetInventoryItemsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" minOccurs="0" name="GetInventoryItemsResult" nillable="true" type="q5:ArrayOfInventoryItemEntityProxy" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

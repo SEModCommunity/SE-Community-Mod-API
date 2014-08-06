@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
@@ -13,6 +14,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	[DataContract(Name = "BeaconEntityProxy")]
 	public class BeaconEntity : FunctionalBlockEntity
 	{
 		#region "Attributes"
@@ -44,6 +46,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
 		[Category("Beacon")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -62,6 +65,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
 		[Category("Beacon")]
 		public float BroadcastRadius
 		{
@@ -85,6 +89,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
+		[Category("Beacon")]
+		[Browsable(false)]
+		[ReadOnly(true)]
 		internal RadioManager RadioManager
 		{
 			get { return m_radioManager; }
