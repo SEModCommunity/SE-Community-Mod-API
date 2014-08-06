@@ -16,6 +16,20 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="GetPlayerName">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="steamId" type="xs:unsignedLong" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPlayerNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetPlayerNameResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="GetSectorEntities">
     <xs:complexType>
       <xs:sequence />

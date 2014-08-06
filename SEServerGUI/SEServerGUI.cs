@@ -1052,7 +1052,7 @@ namespace SEServerGUI
 				LST_Chat_ConnectedPlayers.Items.Clear();
 				foreach (ulong remoteUserId in connectedPlayers)
 				{
-					string playerName = remoteUserId.ToString();//PlayerMap.Instance.GetPlayerNameFromSteamId(remoteUserId);
+					string playerName = m_serviceClient.GetPlayerName(remoteUserId);
 
 					LST_Chat_ConnectedPlayers.Items.Add(playerName);
 				}

@@ -18,6 +18,9 @@ namespace SEModAPIExtensions.API.IPC
 		List<ulong> GetConnectedPlayers();
 
 		[OperationContract]
+		string GetPlayerName(ulong steamId);
+
+		[OperationContract]
 		List<BaseEntity> GetSectorEntities();
 
 		[OperationContract]

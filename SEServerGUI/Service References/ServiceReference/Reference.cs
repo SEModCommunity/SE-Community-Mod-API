@@ -1989,6 +1989,9 @@ namespace SEServerGUI.ServiceReference {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInternalServiceContract/GetConnectedPlayers", ReplyAction="http://tempuri.org/IInternalServiceContract/GetConnectedPlayersResponse")]
         System.Collections.Generic.List<ulong> GetConnectedPlayers();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInternalServiceContract/GetPlayerName", ReplyAction="http://tempuri.org/IInternalServiceContract/GetPlayerNameResponse")]
+        string GetPlayerName(ulong steamId);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInternalServiceContract/GetSectorEntities", ReplyAction="http://tempuri.org/IInternalServiceContract/GetSectorEntitiesResponse")]
         System.Collections.Generic.List<SEServerGUI.ServiceReference.BaseEntityProxy> GetSectorEntities();
         
@@ -2031,6 +2034,10 @@ namespace SEServerGUI.ServiceReference {
         
         public System.Collections.Generic.List<ulong> GetConnectedPlayers() {
             return base.Channel.GetConnectedPlayers();
+        }
+        
+        public string GetPlayerName(ulong steamId) {
+            return base.Channel.GetPlayerName(steamId);
         }
         
         public System.Collections.Generic.List<SEServerGUI.ServiceReference.BaseEntityProxy> GetSectorEntities() {
