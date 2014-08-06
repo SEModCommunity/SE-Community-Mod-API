@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 using SEServerGUI.ServiceReference;
 using SEServerGUI.ServerServiceReference;
+using SEServerGUI.ChatServiceReference;
 
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
@@ -22,9 +23,14 @@ namespace SEServerGUI
 
 		private InternalServiceContractClient client;
 		private ServerServiceContractClient m_serverClient;
+		private ChatServiceContractClient m_chatClient;
+
 		private List<BaseEntityProxy> m_sectorEntities;
 		private List<CubeGridEntityProxy> m_sectorCubeGridEntities;
+
 		private System.Windows.Forms.Timer m_entityTreeRefreshTimer;
+		private System.Windows.Forms.Timer m_chatViewRefreshTimer;
+
 		private ServerProxy m_serverProxy;
 
 		#endregion
@@ -37,6 +43,7 @@ namespace SEServerGUI
 
 			client = new InternalServiceContractClient();
 			m_serverClient = new ServerServiceContractClient();
+			m_chatClient = new ChatServiceContractClient();
 
 			m_sectorEntities = new List<BaseEntityProxy>();
 			m_sectorCubeGridEntities = new List<CubeGridEntityProxy>();
@@ -44,11 +51,33 @@ namespace SEServerGUI
 			m_entityTreeRefreshTimer = new System.Windows.Forms.Timer();
 			m_entityTreeRefreshTimer.Interval = 1000;
 			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
+
+			m_chatViewRefreshTimer = new System.Windows.Forms.Timer();
+			m_chatViewRefreshTimer.Interval = 1000;
+			m_chatViewRefreshTimer.Tick += new EventHandler(ChatViewRefresh);
 		}
 
 		#endregion
 
 		#region "Methods"
+
+		private void Disconnect()
+		{
+			m_serverProxy = null;
+
+			TRV_Entities.Nodes.Clear();
+			LST_Chat_Messages.Items.Clear();
+
+			m_entityTreeRefreshTimer.Stop();
+			m_chatViewRefreshTimer.Stop();
+
+			BTN_StartServer.Enabled = false;
+			BTN_StopServer.Enabled = false;
+			BTN_Connect.Enabled = true;
+			BTN_Chat_Send.Enabled = false;
+		}
+
+		#region "Control"
 
 		private void BTN_Connect_Click(object sender, EventArgs e)
 		{
@@ -58,15 +87,14 @@ namespace SEServerGUI
 			}
 			catch (Exception ex)
 			{
-				TRV_Entities.Nodes.Clear();
-				BTN_StartServer.Enabled = false;
-				BTN_StopServer.Enabled = false;
-				BTN_Connect.Enabled = true;
+				Disconnect();
 				return;
 			}
 
 			if (!m_entityTreeRefreshTimer.Enabled)
 				m_entityTreeRefreshTimer.Start();
+			if (!m_chatViewRefreshTimer.Enabled)
+				m_chatViewRefreshTimer.Start();
 
 			BTN_Connect.Enabled = false;
 		}
@@ -78,8 +106,12 @@ namespace SEServerGUI
 
 		private void BTN_StopServer_Click(object sender, EventArgs e)
 		{
+			Disconnect();
+
 			m_serverClient.StopServer();
 		}
+
+		#endregion
 
 		#region "Entities"
 
@@ -129,11 +161,7 @@ namespace SEServerGUI
 			}
 			catch (Exception ex)
 			{
-				TRV_Entities.Nodes.Clear();
-				m_entityTreeRefreshTimer.Stop();
-				BTN_StartServer.Enabled = false;
-				BTN_StopServer.Enabled = false;
-				BTN_Connect.Enabled = true;
+				Disconnect();
 				return;
 			}
 
@@ -141,11 +169,13 @@ namespace SEServerGUI
 			{
 				BTN_StartServer.Enabled = false;
 				BTN_StopServer.Enabled = true;
+				BTN_Chat_Send.Enabled = true;
 			}
 			else
 			{
 				BTN_StartServer.Enabled = true;
 				BTN_StopServer.Enabled = false;
+				BTN_Chat_Send.Enabled = false;
 			}
 
 			if (!m_serverProxy.IsRunning)
@@ -158,11 +188,7 @@ namespace SEServerGUI
 			}
 			catch (Exception ex)
 			{
-				TRV_Entities.Nodes.Clear();
-				m_entityTreeRefreshTimer.Stop();
-				BTN_StartServer.Enabled = false;
-				BTN_StopServer.Enabled = false;
-				BTN_Connect.Enabled = true;
+				Disconnect();
 				return;
 			}
 
@@ -960,6 +986,82 @@ namespace SEServerGUI
 				return;
 			var linkedObject = node.Tag;
 			PG_Entities_Details.SelectedObject = linkedObject;
+		}
+
+		#endregion
+
+		#region "Chat"
+
+		private void ChatViewRefresh(object sender, EventArgs e)
+		{
+			if (m_serverProxy == null)
+				return;
+			if (!m_serverProxy.IsRunning)
+				return;
+
+			//Refresh the chat messages
+			string[] chatMessages;
+			try
+			{
+				chatMessages = m_chatClient.GetChatMessages().ToArray();
+			}
+			catch (Exception ex)
+			{
+				Disconnect();
+				return;
+			}
+
+			LST_Chat_Messages.BeginUpdate();
+
+			if (chatMessages.Length != LST_Chat_Messages.Items.Count)
+			{
+				LST_Chat_Messages.Items.Clear();
+				LST_Chat_Messages.Items.AddRange(chatMessages);
+
+				//Auto-scroll to the bottom of the list
+				LST_Chat_Messages.SelectedIndex = LST_Chat_Messages.Items.Count - 1;
+				LST_Chat_Messages.SelectedIndex = -1;
+			}
+			LST_Chat_Messages.EndUpdate();
+
+			LST_Chat_ConnectedPlayers.BeginUpdate();
+
+			List<ulong> connectedPlayers = client.GetConnectedPlayers();
+			if (connectedPlayers.Count != LST_Chat_ConnectedPlayers.Items.Count)
+			{
+				LST_Chat_ConnectedPlayers.Items.Clear();
+				foreach (ulong remoteUserId in connectedPlayers)
+				{
+					string playerName = remoteUserId.ToString();//PlayerMap.Instance.GetPlayerNameFromSteamId(remoteUserId);
+
+					LST_Chat_ConnectedPlayers.Items.Add(playerName);
+				}
+			}
+
+			LST_Chat_ConnectedPlayers.EndUpdate();
+		}
+
+		private void BTN_Chat_Send_Click(object sender, EventArgs e)
+		{
+			string message = TXT_Chat_Message.Text;
+			if (message != null && message != "")
+			{
+				m_chatClient.SendPublicChatMessage(message);
+				TXT_Chat_Message.Text = "";
+			}
+		}
+
+		private void TXT_Chat_Message_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+				string message = TXT_Chat_Message.Text;
+				if (message != null && message != "")
+				{
+					m_chatClient.SendPublicChatMessage(message);
+					TXT_Chat_Message.Text = "";
+				}
+			}
 		}
 
 		#endregion
