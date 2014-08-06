@@ -465,7 +465,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -509,7 +509,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -604,7 +604,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 					return typeof(Object);
 				}
 			}
@@ -651,7 +651,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -666,7 +666,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

@@ -29,8 +29,12 @@
 		private void InitializeComponent()
 		{
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+			this.CHK_Control_Debugging = new System.Windows.Forms.CheckBox();
 			this.BTN_StopServer = new System.Windows.Forms.Button();
+			this.LBL_Control_AutosaveInterval = new System.Windows.Forms.Label();
 			this.BTN_StartServer = new System.Windows.Forms.Button();
+			this.CMB_Control_AutosaveInterval = new System.Windows.Forms.ComboBox();
 			this.BTN_Connect = new System.Windows.Forms.Button();
 			this.TAB_MainTabs = new System.Windows.Forms.TabControl();
 			this.TAB_Control_Page = new System.Windows.Forms.TabPage();
@@ -61,8 +65,12 @@
 			this.PG_Plugins = new System.Windows.Forms.PropertyGrid();
 			this.TAB_Utilities_Page = new System.Windows.Forms.TabPage();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+			this.splitContainer3.Panel1.SuspendLayout();
+			this.splitContainer3.SuspendLayout();
 			this.TAB_MainTabs.SuspendLayout();
 			this.TAB_Control_Page.SuspendLayout();
 			this.TAB_Entities_Page.SuspendLayout();
@@ -106,41 +114,93 @@
 			this.splitContainer1.Name = "splitContainer1";
 			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
+			// splitContainer1.Panel1
+			// 
+			this.splitContainer1.Panel1.Controls.Add(this.splitContainer3);
+			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.BTN_StopServer);
-			this.splitContainer1.Panel2.Controls.Add(this.BTN_StartServer);
 			this.splitContainer1.Panel2.Controls.Add(this.BTN_Connect);
 			this.splitContainer1.Size = new System.Drawing.Size(570, 530);
 			this.splitContainer1.SplitterDistance = 495;
 			this.splitContainer1.TabIndex = 0;
 			// 
+			// splitContainer3
+			// 
+			this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+			this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer3.Name = "splitContainer3";
+			// 
+			// splitContainer3.Panel1
+			// 
+			this.splitContainer3.Panel1.Controls.Add(this.CHK_Control_Debugging);
+			this.splitContainer3.Panel1.Controls.Add(this.BTN_StopServer);
+			this.splitContainer3.Panel1.Controls.Add(this.LBL_Control_AutosaveInterval);
+			this.splitContainer3.Panel1.Controls.Add(this.BTN_StartServer);
+			this.splitContainer3.Panel1.Controls.Add(this.CMB_Control_AutosaveInterval);
+			this.splitContainer3.Size = new System.Drawing.Size(570, 495);
+			this.splitContainer3.SplitterDistance = 165;
+			this.splitContainer3.TabIndex = 0;
+			// 
+			// CHK_Control_Debugging
+			// 
+			this.CHK_Control_Debugging.AutoSize = true;
+			this.CHK_Control_Debugging.Enabled = false;
+			this.CHK_Control_Debugging.Location = new System.Drawing.Point(5, 61);
+			this.CHK_Control_Debugging.Name = "CHK_Control_Debugging";
+			this.CHK_Control_Debugging.Size = new System.Drawing.Size(87, 17);
+			this.CHK_Control_Debugging.TabIndex = 10;
+			this.CHK_Control_Debugging.Text = "Debug mode";
+			this.CHK_Control_Debugging.UseVisualStyleBackColor = true;
+			this.CHK_Control_Debugging.CheckedChanged += new System.EventHandler(this.CHK_Control_Debugging_CheckedChanged);
+			// 
 			// BTN_StopServer
 			// 
 			this.BTN_StopServer.Enabled = false;
-			this.BTN_StopServer.Location = new System.Drawing.Point(84, 3);
+			this.BTN_StopServer.Location = new System.Drawing.Point(5, 32);
 			this.BTN_StopServer.Name = "BTN_StopServer";
-			this.BTN_StopServer.Size = new System.Drawing.Size(75, 23);
+			this.BTN_StopServer.Size = new System.Drawing.Size(87, 23);
 			this.BTN_StopServer.TabIndex = 2;
-			this.BTN_StopServer.Text = "Stop";
+			this.BTN_StopServer.Text = "Stop Server";
 			this.BTN_StopServer.UseVisualStyleBackColor = true;
 			this.BTN_StopServer.Click += new System.EventHandler(this.BTN_StopServer_Click);
+			// 
+			// LBL_Control_AutosaveInterval
+			// 
+			this.LBL_Control_AutosaveInterval.AutoSize = true;
+			this.LBL_Control_AutosaveInterval.Location = new System.Drawing.Point(2, 81);
+			this.LBL_Control_AutosaveInterval.Name = "LBL_Control_AutosaveInterval";
+			this.LBL_Control_AutosaveInterval.Size = new System.Drawing.Size(92, 13);
+			this.LBL_Control_AutosaveInterval.TabIndex = 9;
+			this.LBL_Control_AutosaveInterval.Text = "Auto-save interval";
 			// 
 			// BTN_StartServer
 			// 
 			this.BTN_StartServer.Enabled = false;
-			this.BTN_StartServer.Location = new System.Drawing.Point(3, 3);
+			this.BTN_StartServer.Location = new System.Drawing.Point(5, 3);
 			this.BTN_StartServer.Name = "BTN_StartServer";
-			this.BTN_StartServer.Size = new System.Drawing.Size(75, 23);
+			this.BTN_StartServer.Size = new System.Drawing.Size(87, 23);
 			this.BTN_StartServer.TabIndex = 1;
-			this.BTN_StartServer.Text = "Start";
+			this.BTN_StartServer.Text = "Start Server";
 			this.BTN_StartServer.UseVisualStyleBackColor = true;
 			this.BTN_StartServer.Click += new System.EventHandler(this.BTN_StartServer_Click);
 			// 
+			// CMB_Control_AutosaveInterval
+			// 
+			this.CMB_Control_AutosaveInterval.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.CMB_Control_AutosaveInterval.Enabled = false;
+			this.CMB_Control_AutosaveInterval.FormattingEnabled = true;
+			this.CMB_Control_AutosaveInterval.Location = new System.Drawing.Point(5, 97);
+			this.CMB_Control_AutosaveInterval.Name = "CMB_Control_AutosaveInterval";
+			this.CMB_Control_AutosaveInterval.Size = new System.Drawing.Size(150, 21);
+			this.CMB_Control_AutosaveInterval.TabIndex = 8;
+			this.CMB_Control_AutosaveInterval.SelectedIndexChanged += new System.EventHandler(this.CMB_Control_AutosaveInterval_SelectedIndexChanged);
+			// 
 			// BTN_Connect
 			// 
-			this.BTN_Connect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.BTN_Connect.Location = new System.Drawing.Point(492, 2);
+			this.BTN_Connect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.BTN_Connect.Location = new System.Drawing.Point(492, 5);
 			this.BTN_Connect.Name = "BTN_Connect";
 			this.BTN_Connect.Size = new System.Drawing.Size(75, 23);
 			this.BTN_Connect.TabIndex = 0;
@@ -513,9 +573,14 @@
 			this.Controls.Add(this.TAB_MainTabs);
 			this.Name = "SEServerGUIForm";
 			this.Text = "SEServerGUI";
+			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
+			this.splitContainer3.Panel1.ResumeLayout(false);
+			this.splitContainer3.Panel1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+			this.splitContainer3.ResumeLayout(false);
 			this.TAB_MainTabs.ResumeLayout(false);
 			this.TAB_Control_Page.ResumeLayout(false);
 			this.TAB_Entities_Page.ResumeLayout(false);
@@ -588,6 +653,10 @@
 		private System.Windows.Forms.Button BTN_Plugins_Load;
 		private System.Windows.Forms.Button BTN_Plugins_Unload;
 		private System.Windows.Forms.PropertyGrid PG_Plugins;
+		private System.Windows.Forms.SplitContainer splitContainer3;
+		private System.Windows.Forms.ComboBox CMB_Control_AutosaveInterval;
+		private System.Windows.Forms.Label LBL_Control_AutosaveInterval;
+		private System.Windows.Forms.CheckBox CHK_Control_Debugging;
 	}
 }
 

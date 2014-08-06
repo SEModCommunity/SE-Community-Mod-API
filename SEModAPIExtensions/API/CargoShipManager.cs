@@ -173,7 +173,7 @@ namespace SEModAPIExtensions.API
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 	}

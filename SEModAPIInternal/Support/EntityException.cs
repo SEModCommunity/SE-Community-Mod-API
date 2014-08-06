@@ -21,7 +21,7 @@ namespace SEModAPIInternal.Support
 		public EntityException(EntityExceptionState state, string additionnalInfo = "", Exception original = null)
 			: base(state, additionnalInfo)
 		{
-			LogManager.GameLog.WriteLine(original);
+			LogManager.ErrorLog.WriteLine(original);
 		}
 
 		public new string[] StateRepresentation =

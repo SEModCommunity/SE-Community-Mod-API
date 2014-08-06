@@ -286,6 +286,44 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IServerServiceContract_SetAutosaveInterval_Input_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IServerServiceContract_SetAutosaveInterval_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/Server/?xsd=xsd0" namespace="http://tempuri.org/" />
@@ -323,6 +361,12 @@
   <wsdl:message name="IServerServiceContract_SaveServerConfig_OutputMessage">
     <wsdl:part name="parameters" element="tns:SaveServerConfigResponse" />
   </wsdl:message>
+  <wsdl:message name="IServerServiceContract_SetAutosaveInterval_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetAutosaveInterval" />
+  </wsdl:message>
+  <wsdl:message name="IServerServiceContract_SetAutosaveInterval_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetAutosaveIntervalResponse" />
+  </wsdl:message>
   <wsdl:portType name="IServerServiceContract">
     <wsdl:operation name="GetServer">
       <wsdl:input wsaw:Action="http://tempuri.org/IServerServiceContract/GetServer" message="tns:IServerServiceContract_GetServer_InputMessage" />
@@ -343,6 +387,10 @@
     <wsdl:operation name="SaveServerConfig">
       <wsdl:input wsaw:Action="http://tempuri.org/IServerServiceContract/SaveServerConfig" message="tns:IServerServiceContract_SaveServerConfig_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IServerServiceContract/SaveServerConfigResponse" message="tns:IServerServiceContract_SaveServerConfig_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetAutosaveInterval">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServerServiceContract/SetAutosaveInterval" message="tns:IServerServiceContract_SetAutosaveInterval_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServerServiceContract/SetAutosaveIntervalResponse" message="tns:IServerServiceContract_SetAutosaveInterval_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSHttpBinding_IServerServiceContract" type="tns:IServerServiceContract">
@@ -403,6 +451,17 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="SetAutosaveInterval">
+      <soap12:operation soapAction="http://tempuri.org/IServerServiceContract/SetAutosaveInterval" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSHttpBinding_IServerServiceContract_SetAutosaveInterval_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsp:PolicyReference URI="#WSHttpBinding_IServerServiceContract_SetAutosaveInterval_output_policy" />
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="ServerService">
     <wsdl:port name="WSHttpBinding_IServerServiceContract" binding="tns:WSHttpBinding_IServerServiceContract">
@@ -410,7 +469,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>http://localhost:8000/SEServerExtender/Server/ServerService</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>Overlord\Joseph</Upn>
+          <Upn>rr815104@ad.sprint.com</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>

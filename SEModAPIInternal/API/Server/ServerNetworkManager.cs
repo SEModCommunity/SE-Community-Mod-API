@@ -54,7 +54,7 @@ namespace SEModAPIInternal.API.Server
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return new List<ulong>();
 			}
 		}
@@ -69,7 +69,7 @@ namespace SEModAPIInternal.API.Server
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

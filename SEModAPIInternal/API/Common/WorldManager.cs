@@ -88,7 +88,7 @@ namespace SEModAPIInternal.API.Common
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 					return null;
 				}
 			}
@@ -125,7 +125,7 @@ namespace SEModAPIInternal.API.Common
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 					return new MySessionSettings();
 				}
 			}
@@ -205,7 +205,7 @@ namespace SEModAPIInternal.API.Common
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -229,7 +229,7 @@ namespace SEModAPIInternal.API.Common
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -249,18 +249,18 @@ namespace SEModAPIInternal.API.Common
 				if (result)
 				{
 					TimeSpan timeToSave = DateTime.Now - saveStartTime;
-					LogManager.GameLog.WriteLineAndConsole("Save complete and took " + timeToSave.TotalSeconds + " seconds");
+					LogManager.APILog.WriteLineAndConsole("Save complete and took " + timeToSave.TotalSeconds + " seconds");
 					m_isSaving = false;
 				}
 				else
 				{
-					LogManager.GameLog.WriteLineAndConsole("Save failed!");
+					LogManager.APILog.WriteLineAndConsole("Save failed!");
 					m_isSaving = false;
 				}
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

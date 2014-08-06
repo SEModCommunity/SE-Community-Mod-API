@@ -175,10 +175,10 @@ namespace SEServerExtender
 				LogManager.APILog.WriteLine("Application.ThreadException");
 				LogManager.APILog.WriteLine(e.Exception);
 			}
-			if (LogManager.GameLog != null && LogManager.GameLog.LogEnabled)
+			if (LogManager.ErrorLog != null && LogManager.ErrorLog.LogEnabled)
 			{
-				LogManager.GameLog.WriteLine("Application.ThreadException");
-				LogManager.GameLog.WriteLine(e.Exception);
+				LogManager.ErrorLog.WriteLine("Application.ThreadException");
+				LogManager.ErrorLog.WriteLine(e.Exception);
 			}
 		}
 
@@ -191,10 +191,10 @@ namespace SEServerExtender
 				LogManager.APILog.WriteLine("AppDomain.UnhandledException");
 				LogManager.APILog.WriteLine((Exception)e.ExceptionObject);
 			}
-			if (LogManager.GameLog != null && LogManager.GameLog.LogEnabled)
+			if (LogManager.ErrorLog != null && LogManager.ErrorLog.LogEnabled)
 			{
-				LogManager.GameLog.WriteLine("AppDomain.UnhandledException");
-				LogManager.GameLog.WriteLine((Exception)e.ExceptionObject);
+				LogManager.ErrorLog.WriteLine("AppDomain.UnhandledException");
+				LogManager.ErrorLog.WriteLine((Exception)e.ExceptionObject);
 			}
 		}
 	}
