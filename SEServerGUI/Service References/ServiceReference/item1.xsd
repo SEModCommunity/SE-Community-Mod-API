@@ -1,39 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" />
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
-  <xs:complexType name="CharacterEntityProxy">
-    <xs:complexContent mixed="false">
-      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q1:BaseEntityProxy">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="BatteryLevel" type="xs:float" />
-          <xs:element minOccurs="0" name="DampenersEnabled" type="xs:boolean" />
-          <xs:element minOccurs="0" name="Health" type="xs:float" />
-          <xs:element minOccurs="0" name="Inventory" nillable="true" type="q1:InventoryEntityProxy" />
-          <xs:element minOccurs="0" name="JetpackEnabled" type="xs:boolean" />
-          <xs:element minOccurs="0" name="LightEnabled" type="xs:boolean" />
-          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ObjectBuilder" nillable="true" type="q2:MyObjectBuilder_Character" />
-          <xs:element minOccurs="0" name="SteamId" type="xs:unsignedLong" />
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:element name="CharacterEntityProxy" nillable="true" type="tns:CharacterEntityProxy" />
-  <xs:complexType name="MeteorProxy">
-    <xs:complexContent mixed="false">
-      <xs:extension xmlns:q3="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q3:BaseEntityProxy">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="Integrity" type="xs:float" />
-          <xs:element minOccurs="0" name="Item" nillable="true" type="q3:InventoryItemEntityProxy" />
-          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ObjectBuilder" nillable="true" type="q4:MyObjectBuilder_Meteor" />
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:element name="MeteorProxy" nillable="true" type="tns:MeteorProxy" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
   <xs:complexType name="VoxelMapProxy">
     <xs:complexContent mixed="false">
-      <xs:extension xmlns:q5="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q5:BaseEntityProxy">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q1:BaseEntityProxy">
         <xs:sequence>
           <xs:element minOccurs="0" name="Filename" nillable="true" type="xs:string" />
         </xs:sequence>
@@ -43,9 +14,9 @@
   <xs:element name="VoxelMapProxy" nillable="true" type="tns:VoxelMapProxy" />
   <xs:complexType name="CubeGridEntityProxy">
     <xs:complexContent mixed="false">
-      <xs:extension xmlns:q6="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q6:BaseEntityProxy">
+      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q2:BaseEntityProxy">
         <xs:sequence>
-          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="GridSizeEnum" type="q7:MyCubeSize" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="GridSizeEnum" type="q3:MyCubeSize" />
           <xs:element minOccurs="0" name="IsDampenersEnabled" type="xs:boolean" />
           <xs:element minOccurs="0" name="IsStatic" type="xs:boolean" />
         </xs:sequence>
@@ -55,15 +26,43 @@
   <xs:element name="CubeGridEntityProxy" nillable="true" type="tns:CubeGridEntityProxy" />
   <xs:complexType name="FloatingObjectProxy">
     <xs:complexContent mixed="false">
-      <xs:extension xmlns:q8="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q8:BaseEntityProxy">
+      <xs:extension xmlns:q4="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q4:BaseEntityProxy">
         <xs:sequence>
-          <xs:element minOccurs="0" name="Item" nillable="true" type="q8:InventoryItemEntityProxy" />
-          <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ObjectBuilder" nillable="true" type="q9:MyObjectBuilder_FloatingObject" />
+          <xs:element minOccurs="0" name="Item" nillable="true" type="q4:InventoryItemEntityProxy" />
+          <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ObjectBuilder" nillable="true" type="q5:MyObjectBuilder_FloatingObject" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="FloatingObjectProxy" nillable="true" type="tns:FloatingObjectProxy" />
+  <xs:complexType name="MeteorProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q6="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q6:BaseEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Integrity" type="xs:float" />
+          <xs:element minOccurs="0" name="Item" nillable="true" type="q6:InventoryItemEntityProxy" />
+          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ObjectBuilder" nillable="true" type="q7:MyObjectBuilder_Meteor" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MeteorProxy" nillable="true" type="tns:MeteorProxy" />
+  <xs:complexType name="CharacterEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q8="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q8:BaseEntityProxy">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="BatteryLevel" type="xs:float" />
+          <xs:element minOccurs="0" name="DampenersEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Health" type="xs:float" />
+          <xs:element minOccurs="0" name="JetpackEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" name="LightEnabled" type="xs:boolean" />
+          <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ObjectBuilder" nillable="true" type="q9:MyObjectBuilder_Character" />
+          <xs:element minOccurs="0" name="SteamId" type="xs:unsignedLong" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CharacterEntityProxy" nillable="true" type="tns:CharacterEntityProxy" />
   <xs:complexType name="ArrayOfCubeGridEntityProxy">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="CubeGridEntityProxy" nillable="true" type="tns:CubeGridEntityProxy" />

@@ -84,6 +84,8 @@ namespace SEServerGUI
 
 		#region "Methods"
 
+		#region "General"
+
 		protected void EntityPropertyChangedCallback(Object sender, PropertyChangedEventArgs e)
 		{
 			if (sender is BaseEntityProxy)
@@ -96,7 +98,34 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					//LogManager.ErrorLog.WriteLine(ex);
+					MessageBox.Show(ex.ToString());
+				}
+			}
+		}
+
+		protected void CubeBlockPropertyChangedCallback(Object sender, PropertyChangedEventArgs e)
+		{
+			if (sender is CubeBlockEntityProxy)
+			{
+				try
+				{
+					if (TRV_Entities.SelectedNode == null)
+						return;
+
+					TreeNode selectedNode = TRV_Entities.SelectedNode;
+					if (selectedNode.Tag == null)
+						return;
+					Object linkedObject = selectedNode.Tag;
+					if (linkedObject != sender)
+						return;
+
+					CubeGridEntityProxy cubeGrid = (CubeGridEntityProxy)selectedNode.Parent.Parent.Tag;
+					CubeBlockEntityProxy entity = (CubeBlockEntityProxy)sender;
+
+					m_serviceClient.UpdateCubeBlock(cubeGrid, entity);
+				}
+				catch (Exception ex)
+				{
 					MessageBox.Show(ex.ToString());
 				}
 			}
@@ -131,6 +160,8 @@ namespace SEServerGUI
 			CHK_Control_Debugging.Enabled = false;
 			CHK_Control_Debugging.Checked = false;
 		}
+
+		#endregion
 
 		#region "Control"
 
@@ -793,6 +824,8 @@ namespace SEServerGUI
 
 			foreach (var cubeBlock in cubeBlocks)
 			{
+				cubeBlock.PropertyChanged += this.CubeBlockPropertyChangedCallback;
+
 				TreeNode newNode = new TreeNode(cubeBlock.Name);
 				newNode.Name = newNode.Text;
 				newNode.Tag = cubeBlock;
@@ -960,7 +993,7 @@ namespace SEServerGUI
 					e.Node.Nodes.Clear();
 					TreeNode itemsNode = e.Node.Nodes.Add("Items");
 					itemsNode.Name = itemsNode.Text;
-					itemsNode.Tag = character.Inventory;
+					//itemsNode.Tag = character.Inventory;
 
 					TRV_Entities.EndUpdate();
 				}

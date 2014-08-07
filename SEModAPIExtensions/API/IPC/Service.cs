@@ -12,6 +12,7 @@ using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.Support;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
+using VRageMath;
 
 namespace SEModAPIExtensions.API.IPC
 {
@@ -110,8 +111,6 @@ namespace SEModAPIExtensions.API.IPC
 
 		public void UpdateEntity(BaseEntity entity)
 		{
-			LogManager.APILog.WriteLineAndConsole("WCF Service - Received base entity '" + entity.Name + "' with id '" + entity.EntityId.ToString() + "'");
-
 			foreach (BaseEntity baseEntity in GetSectorEntities())
 			{
 				if (baseEntity.EntityId == entity.EntityId)
@@ -152,8 +151,63 @@ namespace SEModAPIExtensions.API.IPC
 			}
 		}
 
-		public void UpdateCubeBlock(CubeBlockEntity cubeBlock)
+		public void UpdateCubeBlock(CubeGridEntity parent, CubeBlockEntity cubeBlock)
 		{
+			LogManager.APILog.WriteLineAndConsole("WCF Service - Received cube block entity '" + cubeBlock.Name + "' with id '" + cubeBlock.EntityId.ToString() + "'");
+
+			foreach (CubeGridEntity cubeGrid in GetSectorCubeGridEntities())
+			{
+				if (cubeGrid.EntityId == parent.EntityId)
+				{
+					//Find the matching block by either the entity id or the position of the block in the grid
+					foreach (CubeBlockEntity baseBlock in cubeGrid.CubeBlocks)
+					{
+						//If entity id is defined but there is a mismatch, skip this block
+						if (baseBlock.EntityId != 0 && baseBlock.EntityId != cubeBlock.EntityId)
+							continue;
+
+						//If entity is is NOT defined but there is a position mismatch, skip this block
+						if (baseBlock.EntityId == 0 && (Vector3I)baseBlock.Min != (Vector3I)cubeBlock.Min)
+							continue;
+
+						//Copy over the deserialized dummy cube block to the actual cube block
+						Type type = baseBlock.GetType();
+						PropertyInfo[] properties = type.GetProperties();
+						foreach (PropertyInfo property in properties)
+						{
+							try
+							{
+								//Check if the property can be publicly set
+								if (!property.CanWrite)
+									continue;
+								if (property.GetSetMethod() == null)
+									continue;
+
+								//Check if the property has the [DataMember] attribute
+								object[] dataMemberAttributes = property.GetCustomAttributes(typeof(DataMemberAttribute), true);
+								if (dataMemberAttributes == null || dataMemberAttributes.Length == 0)
+									continue;
+
+								Object newValue = property.GetValue(cubeBlock, new object[] { });
+								if (newValue == null)
+									continue;
+
+								Object oldValue = property.GetValue(baseBlock, new object[] { });
+								if (newValue.Equals(oldValue))
+									continue;
+
+								property.SetValue(baseBlock, newValue, new object[] { });
+							}
+							catch (Exception ex)
+							{
+								//Do nothing
+							}
+						}
+						break;
+					}
+					break;
+				}
+			}
 		}
 	}
 }
