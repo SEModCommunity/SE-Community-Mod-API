@@ -224,6 +224,7 @@ namespace SEModAPIExtensions.API
 
 											//And add it to the dictionary
 											m_plugins.Add(guidValue, pluginObject);
+
 											break;
 										}
 										catch (Exception ex)
@@ -258,9 +259,7 @@ namespace SEModAPIExtensions.API
 
 			foreach (var key in m_plugins.Keys)
 			{
-				
 				InitPlugin(key);
-
 			}
 
 			Console.WriteLine("Finished initializing plugins");
@@ -398,7 +397,7 @@ namespace SEModAPIExtensions.API
 							}
 							catch (Exception ex)
 							{
-								LogManager.GameLog.WriteLine(ex);
+								LogManager.ErrorLog.WriteLine(ex);
 							}
 							break;
 						case EntityEventManager.EntityEventType.OnPlayerLeft:
@@ -414,7 +413,7 @@ namespace SEModAPIExtensions.API
 							}
 							catch (Exception ex)
 							{
-								LogManager.GameLog.WriteLine(ex);
+								LogManager.ErrorLog.WriteLine(ex);
 							}
 							break;
 						default:
@@ -427,7 +426,7 @@ namespace SEModAPIExtensions.API
 							}
 							catch (Exception ex)
 							{
-								LogManager.GameLog.WriteLine(ex);
+								LogManager.ErrorLog.WriteLine(ex);
 							}
 							break;
 					}
@@ -445,7 +444,7 @@ namespace SEModAPIExtensions.API
 					}
 					catch (Exception ex)
 					{
-						LogManager.GameLog.WriteLine(ex);
+						LogManager.ErrorLog.WriteLine(ex);
 					}
 				}
 

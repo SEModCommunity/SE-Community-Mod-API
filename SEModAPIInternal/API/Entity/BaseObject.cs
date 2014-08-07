@@ -230,7 +230,7 @@ namespace SEModAPIInternal.API.Entity
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Failed to find field '" + fieldName + "' in type '" + objectType.FullName + "': " + ex.Message);
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return false;
 			}
 		}
@@ -282,7 +282,7 @@ namespace SEModAPIInternal.API.Entity
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine("Failed to find method '" + methodName + "' in type '" + objectType.FullName + "': " + ex.Message);
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return false;
 			}
 		}
@@ -300,8 +300,8 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.APILog.WriteLine("Failed to get static field '" + fieldName + "'");
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.GameLog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -319,8 +319,8 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.APILog.WriteLine("Failed to get entity field '" + fieldName + "'");
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.GameLog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -342,8 +342,8 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.APILog.WriteLine("Failed to get static method '" + methodName + "'");
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.GameLog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -370,8 +370,8 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "': " + ex.Message);
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.GameLog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -396,8 +396,8 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.APILog.WriteLine("Failed to invoke static method '" + methodName + "': " + ex.Message);
 				if(SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.GameLog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -423,9 +423,9 @@ namespace SEModAPIInternal.API.Entity
 				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "' on type '" + gameEntity.GetType().FullName + "': " + ex.Message);
 				
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.GameLog.WriteLine(Environment.StackTrace);
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
 
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -741,7 +741,7 @@ namespace SEModAPIInternal.API.Entity
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 		}
@@ -763,7 +763,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -779,7 +779,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -792,7 +792,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -822,7 +822,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				m_rawDataHashSetResourceLock.ReleaseExclusive();
 			}
 		}
@@ -853,7 +853,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				m_rawDataListResourceLock.ReleaseExclusive();
 			}
 		}
@@ -896,7 +896,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch(Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.ConfigFileCorrupted, filePath);
 			}
 
@@ -1059,7 +1059,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return new List<T>();
 			}
 		}

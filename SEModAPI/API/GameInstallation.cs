@@ -53,11 +53,6 @@ namespace SEModAPI.API
 
 			if (!IsValidGamePath(m_GamePath))
 				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory, "The game directory is broken");
-
-			if(IsBaseAssembliesChanged())
-			{
-				UpdateBaseFiles();
-			}
 		}
 
 		/// <summary>
@@ -72,11 +67,6 @@ namespace SEModAPI.API
 
 			if (!IsValidGamePath(m_GamePath))
 				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.BrokenGameDirectory, "The gamePath provided is invalid");
-
-			if (IsBaseAssembliesChanged())
-			{
-				UpdateBaseFiles();
-			}
 		}
 
 		#endregion

@@ -59,6 +59,9 @@ namespace SEModAPIExtensions.API
 
 		[OperationContract]
 		void SaveServerConfig();
+
+		[OperationContract]
+		void SetAutosaveInterval(double interval);
 	}
 
 	[ServiceBehavior(
@@ -91,6 +94,11 @@ namespace SEModAPIExtensions.API
 		public void SaveServerConfig()
 		{
 			Server.Instance.SaveServerConfig();
+		}
+
+		public void SetAutosaveInterval(double interval)
+		{
+			Server.Instance.AutosaveInterval = interval;
 		}
 	}
 
@@ -159,7 +167,7 @@ namespace SEModAPIExtensions.API
 			}
 			catch (CommunicationException ex)
 			{
-				Console.WriteLine("An exception occurred: {0}", ex.Message);
+				LogManager.ErrorLog.WriteLine(ex);
 				selfHost.Abort();
 			}
 
@@ -170,16 +178,21 @@ namespace SEModAPIExtensions.API
 		{
 			try
 			{
-				m_gameInstallationInfo = new GameInstallationInfo();
-			}
-			catch (AutoException)
-			{
 				string gamePath = m_commandLineArgs.gamePath;
-				if (!Directory.Exists(gamePath))
+				if (gamePath.Length > 0)
 				{
-					return false;
+					if (!GameInstallationInfo.IsValidGamePath(gamePath))
+						return false;
+					m_gameInstallationInfo = new GameInstallationInfo(gamePath);
 				}
-				m_gameInstallationInfo = new GameInstallationInfo(gamePath);
+				else
+				{
+					m_gameInstallationInfo = new GameInstallationInfo();
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 
 			if (m_gameInstallationInfo != null)
@@ -223,8 +236,9 @@ namespace SEModAPIExtensions.API
 					SandboxGameAssemblyWrapper.IsDebugging = true;
 				}
 			}
-			catch (AutoException)
+			catch (Exception ex)
 			{
+				LogManager.ErrorLog.WriteLine(ex);
 				return false;
 			}
 
@@ -297,18 +311,31 @@ namespace SEModAPIExtensions.API
 			if (m_isInitialized)
 				return;
 
-			SetupGameInstallation();
-			SetupManagers();
-			ProcessCommandLineArgs();
+			bool setupResult = true;
+			setupResult &= SetupGameInstallation();
+			setupResult &= SetupManagers();
+			setupResult &= ProcessCommandLineArgs();
 
-			if (m_commandLineArgs.instanceName != "")
-				PluginManager.Instance.LoadPlugins(m_commandLineArgs.instanceName);
+			if (!setupResult)
+				return;
 
 			m_isInitialized = true;
 		}
 
 		private void PluginManagerMain(object sender, EventArgs e)
 		{
+			if (!Server.Instance.IsRunning)
+			{
+				m_pluginMainLoop.Stop();
+				return;
+			}
+
+			if (m_pluginManager == null)
+			{
+				m_pluginMainLoop.Stop();
+				return;
+			}
+
 			if (!m_pluginManager.Initialized)
 			{
 				if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
@@ -331,6 +358,12 @@ namespace SEModAPIExtensions.API
 		
 		private void AutoSaveMain(object sender, EventArgs e)
 		{
+			if (!Server.Instance.IsRunning)
+			{
+				m_autosaveTimer.Stop();
+				return;
+			}
+
 			WorldManager.Instance.SaveWorld();
 		}
 
@@ -345,10 +378,12 @@ namespace SEModAPIExtensions.API
 			{
 				bool result = m_serverWrapper.StartServer(m_commandLineArgs.worldName, m_commandLineArgs.instanceName, !m_commandLineArgs.noConsole);
 
-				m_pluginMainLoop.Stop();
-				m_pluginManager.Shutdown();
-
 				m_isServerRunning = false;
+
+				m_pluginMainLoop.Stop();
+				m_autosaveTimer.Stop();
+
+				m_pluginManager.Shutdown();
 
 				Console.WriteLine("Server has stopped running");
 				/*
@@ -373,7 +408,7 @@ namespace SEModAPIExtensions.API
 			}
 			catch(Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -397,6 +432,7 @@ namespace SEModAPIExtensions.API
 			}
 			catch (Exception ex)
 			{
+				LogManager.ErrorLog.WriteLine(ex);
 				m_isServerRunning = false;
 			}
 		}
@@ -404,6 +440,8 @@ namespace SEModAPIExtensions.API
 		public void StopServer()
 		{
 			m_pluginMainLoop.Stop();
+			m_autosaveTimer.Stop();
+
 			m_pluginManager.Shutdown();
 
 			//m_serverWrapper.StopServer();

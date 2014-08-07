@@ -31,5 +31,11 @@ namespace SEModAPIExtensions.API.IPC
 
 		[OperationContract]
 		List<InventoryItemEntity> GetInventoryItems(long cubeGridEntityId, long containerBlockEntityId, ushort inventoryIndex);
+
+		[OperationContract]
+		void UpdateEntity(BaseEntity entity);
+
+		[OperationContract]
+		void UpdateCubeBlock(CubeBlockEntity cubeBlock);
 	}
 }

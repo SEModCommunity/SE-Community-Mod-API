@@ -171,8 +171,8 @@ namespace SEModAPIInternal.API.Server
 
 				LogManager.APILog.WriteLine(ex);
 				LogManager.APILog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
-				LogManager.GameLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(Environment.StackTrace);
 
 				return false;
 			}
@@ -182,8 +182,8 @@ namespace SEModAPIInternal.API.Server
 
 				LogManager.APILog.WriteLine(ex);
 				LogManager.APILog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
-				LogManager.GameLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(Environment.StackTrace);
 
 				return false;
 			}
@@ -193,8 +193,8 @@ namespace SEModAPIInternal.API.Server
 
 				LogManager.APILog.WriteLine(ex);
 				LogManager.APILog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
-				LogManager.GameLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(Environment.StackTrace);
 
 				return false;
 			}
@@ -204,8 +204,8 @@ namespace SEModAPIInternal.API.Server
 
 				LogManager.APILog.WriteLine(ex);
 				LogManager.APILog.WriteLine(Environment.StackTrace);
-				LogManager.GameLog.WriteLine(ex);
-				LogManager.GameLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(Environment.StackTrace);
 
 				return false;
 			}
@@ -231,7 +231,7 @@ namespace SEModAPIInternal.API.Server
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

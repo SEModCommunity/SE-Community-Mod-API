@@ -37,7 +37,7 @@ namespace SEModAPIInternal.API.Utility
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return new HashSet<object>();
 			}
 		}
@@ -56,7 +56,7 @@ namespace SEModAPIInternal.API.Utility
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return new List<object>();
 			}
 		}
@@ -75,7 +75,7 @@ namespace SEModAPIInternal.API.Utility
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return new Dictionary<long, Object>();
 			}
 		}
@@ -93,7 +93,7 @@ namespace SEModAPIInternal.API.Utility
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 
 			return dataSet;
@@ -112,7 +112,7 @@ namespace SEModAPIInternal.API.Utility
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 
 			return dataSet;
@@ -131,7 +131,7 @@ namespace SEModAPIInternal.API.Utility
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 
 			return dataSet;
@@ -149,7 +149,7 @@ namespace SEModAPIInternal.API.Utility
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return source;
 			}
 		}
@@ -170,7 +170,7 @@ namespace SEModAPIInternal.API.Utility
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return source;
 			}
 		}
@@ -188,7 +188,7 @@ namespace SEModAPIInternal.API.Utility
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLine("Failed to generate entity id");
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return 0;
 			}
 		}

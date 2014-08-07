@@ -130,7 +130,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return false;
 			}
 		}
@@ -156,7 +156,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

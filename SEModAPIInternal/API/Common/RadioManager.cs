@@ -49,7 +49,7 @@ namespace SEModAPIInternal.API.Common
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

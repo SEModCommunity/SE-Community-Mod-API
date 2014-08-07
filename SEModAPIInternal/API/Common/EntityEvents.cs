@@ -115,7 +115,7 @@ namespace SEModAPIInternal.API.Common
 			catch (Exception ex)
 			{
 				if(SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

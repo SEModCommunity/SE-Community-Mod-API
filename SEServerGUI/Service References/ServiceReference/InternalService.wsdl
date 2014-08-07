@@ -324,6 +324,82 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IInternalServiceContract_UpdateEntity_Input_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IInternalServiceContract_UpdateEntity_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IInternalServiceContract_UpdateCubeBlock_Input_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IInternalServiceContract_UpdateCubeBlock_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd0" namespace="http://tempuri.org/" />
@@ -385,6 +461,18 @@
   <wsdl:message name="IInternalServiceContract_GetInventoryItems_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetInventoryItemsResponse" />
   </wsdl:message>
+  <wsdl:message name="IInternalServiceContract_UpdateEntity_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateEntity" />
+  </wsdl:message>
+  <wsdl:message name="IInternalServiceContract_UpdateEntity_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateEntityResponse" />
+  </wsdl:message>
+  <wsdl:message name="IInternalServiceContract_UpdateCubeBlock_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateCubeBlock" />
+  </wsdl:message>
+  <wsdl:message name="IInternalServiceContract_UpdateCubeBlock_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateCubeBlockResponse" />
+  </wsdl:message>
   <wsdl:portType name="IInternalServiceContract">
     <wsdl:operation name="GetConnectedPlayers">
       <wsdl:input wsaw:Action="http://tempuri.org/IInternalServiceContract/GetConnectedPlayers" message="tns:IInternalServiceContract_GetConnectedPlayers_InputMessage" />
@@ -409,6 +497,14 @@
     <wsdl:operation name="GetInventoryItems">
       <wsdl:input wsaw:Action="http://tempuri.org/IInternalServiceContract/GetInventoryItems" message="tns:IInternalServiceContract_GetInventoryItems_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IInternalServiceContract/GetInventoryItemsResponse" message="tns:IInternalServiceContract_GetInventoryItems_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEntity">
+      <wsdl:input wsaw:Action="http://tempuri.org/IInternalServiceContract/UpdateEntity" message="tns:IInternalServiceContract_UpdateEntity_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IInternalServiceContract/UpdateEntityResponse" message="tns:IInternalServiceContract_UpdateEntity_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCubeBlock">
+      <wsdl:input wsaw:Action="http://tempuri.org/IInternalServiceContract/UpdateCubeBlock" message="tns:IInternalServiceContract_UpdateCubeBlock_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IInternalServiceContract/UpdateCubeBlockResponse" message="tns:IInternalServiceContract_UpdateCubeBlock_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSHttpBinding_IInternalServiceContract" type="tns:IInternalServiceContract">
@@ -477,6 +573,28 @@
       </wsdl:input>
       <wsdl:output>
         <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_GetInventoryItems_output_policy" />
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEntity">
+      <soap12:operation soapAction="http://tempuri.org/IInternalServiceContract/UpdateEntity" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_UpdateEntity_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_UpdateEntity_output_policy" />
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCubeBlock">
+      <soap12:operation soapAction="http://tempuri.org/IInternalServiceContract/UpdateCubeBlock" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_UpdateCubeBlock_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsp:PolicyReference URI="#WSHttpBinding_IInternalServiceContract_UpdateCubeBlock_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>

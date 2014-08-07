@@ -15,6 +15,7 @@ using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.Support;
 
 using VRageMath;
+using System.ComponentModel;
 
 namespace SEServerGUI
 {
@@ -30,6 +31,7 @@ namespace SEServerGUI
 		private List<BaseEntityProxy> m_sectorEntities;
 		private List<CubeGridEntityProxy> m_sectorCubeGridEntities;
 
+		private System.Windows.Forms.Timer m_serverStatusCheckTimer;
 		private System.Windows.Forms.Timer m_entityTreeRefreshTimer;
 		private System.Windows.Forms.Timer m_chatViewRefreshTimer;
 		private System.Windows.Forms.Timer m_pluginManagerRefreshTimer;
@@ -52,6 +54,10 @@ namespace SEServerGUI
 			m_sectorEntities = new List<BaseEntityProxy>();
 			m_sectorCubeGridEntities = new List<CubeGridEntityProxy>();
 
+			m_serverStatusCheckTimer = new System.Windows.Forms.Timer();
+			m_serverStatusCheckTimer.Interval = 4000;
+			m_serverStatusCheckTimer.Tick += new EventHandler(ServerStatusRefresh);
+
 			m_entityTreeRefreshTimer = new System.Windows.Forms.Timer();
 			m_entityTreeRefreshTimer.Interval = 1000;
 			m_entityTreeRefreshTimer.Tick += new EventHandler(TreeViewRefresh);
@@ -63,11 +69,38 @@ namespace SEServerGUI
 			m_pluginManagerRefreshTimer = new System.Windows.Forms.Timer();
 			m_pluginManagerRefreshTimer.Interval = 10000;
 			m_pluginManagerRefreshTimer.Tick += new EventHandler(PluginManagerRefresh);
+
+			CMB_Control_AutosaveInterval.BeginUpdate();
+			CMB_Control_AutosaveInterval.Items.Add(1);
+			CMB_Control_AutosaveInterval.Items.Add(2);
+			CMB_Control_AutosaveInterval.Items.Add(5);
+			CMB_Control_AutosaveInterval.Items.Add(10);
+			CMB_Control_AutosaveInterval.Items.Add(30);
+			CMB_Control_AutosaveInterval.SelectedIndex = 2;
+			CMB_Control_AutosaveInterval.EndUpdate();
 		}
 
 		#endregion
 
 		#region "Methods"
+
+		protected void EntityPropertyChangedCallback(Object sender, PropertyChangedEventArgs e)
+		{
+			if (sender is BaseEntityProxy)
+			{
+				BaseEntityProxy entity = (BaseEntityProxy)sender;
+
+				try
+				{
+					m_serviceClient.UpdateEntity(entity);
+				}
+				catch (Exception ex)
+				{
+					//LogManager.ErrorLog.WriteLine(ex);
+					MessageBox.Show(ex.ToString());
+				}
+			}
+		}
 
 		private void Disconnect()
 		{
@@ -78,6 +111,7 @@ namespace SEServerGUI
 			LST_Chat_ConnectedPlayers.Items.Clear();
 			LST_Plugins.Items.Clear();
 
+			m_serverStatusCheckTimer.Stop();
 			m_entityTreeRefreshTimer.Stop();
 			m_chatViewRefreshTimer.Stop();
 			m_pluginManagerRefreshTimer.Stop();
@@ -90,12 +124,19 @@ namespace SEServerGUI
 			BTN_Plugins_Unload.Enabled = false;
 
 			TXT_Chat_Message.Enabled = false;
+
+			CMB_Control_AutosaveInterval.Enabled = false;
+			CMB_Control_AutosaveInterval.SelectedIndex = 2;
+
+			CHK_Control_Debugging.Enabled = false;
+			CHK_Control_Debugging.Checked = false;
 		}
 
 		#region "Control"
 
-		private void BTN_Connect_Click(object sender, EventArgs e)
+		private void ServerStatusRefresh(object sender, EventArgs e)
 		{
+			//Refresh the server
 			try
 			{
 				m_serverProxy = m_serverClient.GetServer();
@@ -106,6 +147,35 @@ namespace SEServerGUI
 				return;
 			}
 
+			CMB_Control_AutosaveInterval.Enabled = true;
+			//CHK_Control_Debugging.Enabled = true;
+
+			if (m_serverProxy.IsRunning)
+			{
+				BTN_StartServer.Enabled = false;
+				BTN_StopServer.Enabled = true;
+				BTN_Chat_Send.Enabled = true;
+
+				TXT_Chat_Message.Enabled = true;
+			}
+			else
+			{
+				BTN_StartServer.Enabled = true;
+				BTN_StopServer.Enabled = false;
+				BTN_Chat_Send.Enabled = false;
+
+				TXT_Chat_Message.Enabled = false;
+			}
+
+			int intervalMinutes = (int)Math.Round(m_serverProxy.AutosaveInterval / 60000.0);
+			if(!CMB_Control_AutosaveInterval.ContainsFocus)
+				CMB_Control_AutosaveInterval.SelectedItem = intervalMinutes;
+		}
+
+		private void BTN_Connect_Click(object sender, EventArgs e)
+		{
+			if (!m_serverStatusCheckTimer.Enabled)
+				m_serverStatusCheckTimer.Start();
 			if (!m_entityTreeRefreshTimer.Enabled)
 				m_entityTreeRefreshTimer.Start();
 			if (!m_chatViewRefreshTimer.Enabled)
@@ -126,6 +196,30 @@ namespace SEServerGUI
 			Disconnect();
 
 			m_serverClient.StopServer();
+		}
+
+		private void CMB_Control_AutosaveInterval_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (!CMB_Control_AutosaveInterval.Enabled || CMB_Control_AutosaveInterval.SelectedIndex == -1) return;
+			if (m_serverProxy == null)
+				return;
+
+			double interval = 2;
+			try
+			{
+				interval = double.Parse(CMB_Control_AutosaveInterval.Text);
+			}
+			catch (Exception ex)
+			{
+				//Do something
+			}
+
+			m_serverClient.SetAutosaveInterval(interval * 60000);
+		}
+
+		private void CHK_Control_Debugging_CheckedChanged(object sender, EventArgs e)
+		{
+
 		}
 
 		#endregion
@@ -165,36 +259,14 @@ namespace SEServerGUI
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
 		private void TreeViewRefresh(object sender, EventArgs e)
 		{
-			//Refresh the server
-			try
-			{
-				m_serverProxy = m_serverClient.GetServer();
-			}
-			catch (Exception ex)
-			{
-				Disconnect();
+			if (m_serverProxy == null)
 				return;
-			}
-
-			if (m_serverProxy.IsRunning)
-			{
-				BTN_StartServer.Enabled = false;
-				BTN_StopServer.Enabled = true;
-				BTN_Chat_Send.Enabled = true;
-			}
-			else
-			{
-				BTN_StartServer.Enabled = true;
-				BTN_StopServer.Enabled = false;
-				BTN_Chat_Send.Enabled = false;
-			}
-
 			if (!m_serverProxy.IsRunning)
 				return;
 
@@ -226,6 +298,11 @@ namespace SEServerGUI
 			{
 				sectorObjectsNode = TRV_Entities.Nodes[0];
 				sectorEventsNode = TRV_Entities.Nodes[1];
+			}
+
+			foreach (BaseEntityProxy entity in m_sectorEntities)
+			{
+				entity.PropertyChanged += EntityPropertyChangedCallback;
 			}
 
 			RenderSectorObjectChildNodes(sectorObjectsNode);
@@ -330,7 +407,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -354,7 +431,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -402,7 +479,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -426,7 +503,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -474,7 +551,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -498,7 +575,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -546,7 +623,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -572,7 +649,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -620,7 +697,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -642,7 +719,7 @@ namespace SEServerGUI
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 

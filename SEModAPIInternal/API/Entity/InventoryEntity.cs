@@ -143,7 +143,7 @@ namespace SEModAPIInternal.API.Entity
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 					return new List<InventoryItemEntity>();
 				}
 			}
@@ -254,7 +254,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -313,7 +313,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -672,7 +672,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return false;
 			}
 		}
@@ -709,7 +709,7 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 		}
@@ -765,7 +765,7 @@ namespace SEModAPIInternal.API.Entity
 					}
 					catch (Exception ex)
 					{
-						LogManager.GameLog.WriteLine(ex);
+						LogManager.ErrorLog.WriteLine(ex);
 					}
 				}
 
@@ -779,13 +779,13 @@ namespace SEModAPIInternal.API.Entity
 					}
 					catch (Exception ex)
 					{
-						LogManager.GameLog.WriteLine(ex);
+						LogManager.ErrorLog.WriteLine(ex);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

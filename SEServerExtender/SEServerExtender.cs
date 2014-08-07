@@ -379,6 +379,9 @@ namespace SEServerExtender
 			{
 				BTN_Plugins_Refresh.Enabled = true;
 			}
+
+			if (!CMB_Control_AutosaveInterval.ContainsFocus)
+				CMB_Control_AutosaveInterval.SelectedItem = (int)Math.Round(m_server.AutosaveInterval / 60000.0);
 		}
 
 		#endregion
@@ -418,7 +421,7 @@ namespace SEServerExtender
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -559,7 +562,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -583,7 +586,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -627,7 +630,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -651,7 +654,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -695,7 +698,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -719,7 +722,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -763,7 +766,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -791,7 +794,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -838,7 +841,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -860,7 +863,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 
@@ -1371,7 +1374,7 @@ namespace SEServerExtender
 					}
 					catch (Exception ex)
 					{
-						LogManager.GameLog.WriteLine(ex);
+						LogManager.ErrorLog.WriteLine(ex);
 						MessageBox.Show(this, ex.ToString());
 					}
 				}
@@ -1514,7 +1517,7 @@ namespace SEServerExtender
 						}
 						catch (Exception ex)
 						{
-							LogManager.GameLog.WriteLine(ex);
+							LogManager.ErrorLog.WriteLine(ex);
 						}
 					}
 
@@ -1551,7 +1554,7 @@ namespace SEServerExtender
 						}
 						catch (Exception ex)
 						{
-							LogManager.GameLog.WriteLine(ex);
+							LogManager.ErrorLog.WriteLine(ex);
 						}
 					}
 
@@ -1560,7 +1563,7 @@ namespace SEServerExtender
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

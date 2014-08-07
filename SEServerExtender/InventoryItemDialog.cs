@@ -111,7 +111,7 @@ namespace SEServerExtender
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 					return 0;
 				}
 			}
@@ -141,7 +141,7 @@ namespace SEServerExtender
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

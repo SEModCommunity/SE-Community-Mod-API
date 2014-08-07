@@ -62,6 +62,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Constructors and Initializers"
 
+		protected CubeGridEntity()
+			: base(new MyObjectBuilder_CubeGrid())
+		{
+			m_cubeBlockManager = new CubeBlockManager(this);
+			m_lastNameRefresh = DateTime.Now;
+			m_name = "Cube Grid";
+		}
+
 		public CubeGridEntity(FileInfo prefabFile)
 			: base(BaseObjectManager.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile))
 		{
@@ -210,7 +218,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			{
 				MyObjectBuilder_CubeGrid objectBuilder = (MyObjectBuilder_CubeGrid)base.ObjectBuilder;
 				if (objectBuilder == null)
-					return (MyObjectBuilder_CubeGrid)null;
+				{
+					objectBuilder = new MyObjectBuilder_CubeGrid();
+					ObjectBuilder = objectBuilder;
+				}
 
 				objectBuilder.LinearVelocity = LinearVelocity;
 				objectBuilder.AngularVelocity = AngularVelocity;
@@ -465,7 +476,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
 		}
@@ -509,7 +520,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -604,7 +615,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				}
 				catch (Exception ex)
 				{
-					LogManager.GameLog.WriteLine(ex);
+					LogManager.ErrorLog.WriteLine(ex);
 					return typeof(Object);
 				}
 			}
@@ -651,7 +662,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -666,7 +677,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 			catch (Exception ex)
 			{
-				LogManager.GameLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
