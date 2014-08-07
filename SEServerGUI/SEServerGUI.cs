@@ -15,6 +15,7 @@ using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.Support;
 
 using VRageMath;
+using System.ComponentModel;
 
 namespace SEServerGUI
 {
@@ -82,6 +83,24 @@ namespace SEServerGUI
 		#endregion
 
 		#region "Methods"
+
+		protected void EntityPropertyChangedCallback(Object sender, PropertyChangedEventArgs e)
+		{
+			if (sender is BaseEntityProxy)
+			{
+				BaseEntityProxy entity = (BaseEntityProxy)sender;
+
+				try
+				{
+					m_serviceClient.UpdateEntity(entity);
+				}
+				catch (Exception ex)
+				{
+					//LogManager.ErrorLog.WriteLine(ex);
+					MessageBox.Show(ex.ToString());
+				}
+			}
+		}
 
 		private void Disconnect()
 		{
@@ -279,6 +298,11 @@ namespace SEServerGUI
 			{
 				sectorObjectsNode = TRV_Entities.Nodes[0];
 				sectorEventsNode = TRV_Entities.Nodes[1];
+			}
+
+			foreach (BaseEntityProxy entity in m_sectorEntities)
+			{
+				entity.PropertyChanged += EntityPropertyChangedCallback;
 			}
 
 			RenderSectorObjectChildNodes(sectorObjectsNode);

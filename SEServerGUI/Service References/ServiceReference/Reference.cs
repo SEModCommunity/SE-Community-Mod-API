@@ -2003,6 +2003,12 @@ namespace SEServerGUI.ServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInternalServiceContract/GetInventoryItems", ReplyAction="http://tempuri.org/IInternalServiceContract/GetInventoryItemsResponse")]
         System.Collections.Generic.List<SEServerGUI.ServiceReference.InventoryItemEntityProxy> GetInventoryItems(long cubeGridEntityId, long containerBlockEntityId, ushort inventoryIndex);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInternalServiceContract/UpdateEntity", ReplyAction="http://tempuri.org/IInternalServiceContract/UpdateEntityResponse")]
+        void UpdateEntity(SEServerGUI.ServiceReference.BaseEntityProxy entity);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInternalServiceContract/UpdateCubeBlock", ReplyAction="http://tempuri.org/IInternalServiceContract/UpdateCubeBlockResponse")]
+        void UpdateCubeBlock(SEServerGUI.ServiceReference.CubeBlockEntityProxy cubeBlock);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -2054,6 +2060,14 @@ namespace SEServerGUI.ServiceReference {
         
         public System.Collections.Generic.List<SEServerGUI.ServiceReference.InventoryItemEntityProxy> GetInventoryItems(long cubeGridEntityId, long containerBlockEntityId, ushort inventoryIndex) {
             return base.Channel.GetInventoryItems(cubeGridEntityId, containerBlockEntityId, inventoryIndex);
+        }
+        
+        public void UpdateEntity(SEServerGUI.ServiceReference.BaseEntityProxy entity) {
+            base.Channel.UpdateEntity(entity);
+        }
+        
+        public void UpdateCubeBlock(SEServerGUI.ServiceReference.CubeBlockEntityProxy cubeBlock) {
+            base.Channel.UpdateCubeBlock(cubeBlock);
         }
     }
 }

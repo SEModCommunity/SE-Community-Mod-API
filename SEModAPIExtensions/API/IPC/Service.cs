@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
@@ -111,6 +112,54 @@ namespace SEModAPIExtensions.API.IPC
 			}
 
 			return inventoryItems;
+		}
+
+		public void UpdateEntity(BaseEntity entity)
+		{
+			LogManager.APILog.WriteLineAndConsole("WCF Service - Received base entity '" + entity.Name + "' with id '" + entity.EntityId.ToString() + "'");
+
+			foreach (BaseEntity baseEntity in GetSectorEntities())
+			{
+				if (baseEntity.EntityId == entity.EntityId)
+				{
+					//Copy over the deserialized dummy entity to the actual entity
+					Type type = baseEntity.GetType();
+					PropertyInfo[] properties = type.GetProperties();
+					foreach (PropertyInfo property in properties)
+					{
+						try
+						{
+							if (!property.CanWrite)
+								continue;
+							if (property.GetSetMethod() == null)
+								continue;
+
+							object[] dataMemberAttributes = property.GetCustomAttributes(typeof(DataMemberAttribute), true);
+							if (dataMemberAttributes == null || dataMemberAttributes.Length == 0)
+								continue;
+
+							Object newValue = property.GetValue(entity, new object[] { });
+							if (newValue == null)
+								continue;
+
+							Object oldValue = property.GetValue(baseEntity, new object[] { });
+							if (newValue.Equals(oldValue))
+								continue;
+
+							property.SetValue(baseEntity, newValue, new object[] { });
+						}
+						catch (Exception ex)
+						{
+							//Do nothing
+						}
+					}
+					break;
+				}
+			}
+		}
+
+		public void UpdateCubeBlock(CubeBlockEntity cubeBlock)
+		{
 		}
 	}
 }

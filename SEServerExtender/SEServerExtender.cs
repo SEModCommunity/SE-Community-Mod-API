@@ -379,6 +379,9 @@ namespace SEServerExtender
 			{
 				BTN_Plugins_Refresh.Enabled = true;
 			}
+
+			if (!CMB_Control_AutosaveInterval.ContainsFocus)
+				CMB_Control_AutosaveInterval.SelectedItem = (int)Math.Round(m_server.AutosaveInterval / 60000.0);
 		}
 
 		#endregion
