@@ -37,22 +37,16 @@ namespace SEModAPIExtensions.API.IPC
 
 		public List<BaseEntity> GetSectorEntities()
 		{
-			//LogManager.APILog.WriteLineAndConsole("WCF Service requested all entities!");
-
 			return SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
 		}
 
 		public List<CubeGridEntity> GetSectorCubeGridEntities()
 		{
-			//LogManager.APILog.WriteLineAndConsole("WCF Service requested cubegrid entities!");
-
 			return SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
 		}
 
 		public List<CubeBlockEntity> GetCubeBlocks(long cubeGridEntityId)
 		{
-			//LogManager.APILog.WriteLineAndConsole("WCF Service requested cubeblock entities!");
-
 			List<CubeBlockEntity> cubeBlocks = new List<CubeBlockEntity>();
 			foreach (CubeGridEntity cubeGrid in GetSectorCubeGridEntities())
 			{
