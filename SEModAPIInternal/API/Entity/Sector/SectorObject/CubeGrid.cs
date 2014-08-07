@@ -39,6 +39,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		private static Type m_internalType;
 		private string m_name;
 		private DateTime m_lastNameRefresh;
+		private DateTime m_lastBaseCubeBlockRefresh;
 
 		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
@@ -67,6 +68,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			m_cubeBlockManager = new CubeBlockManager(this);
 			m_lastNameRefresh = DateTime.Now;
+			m_lastBaseCubeBlockRefresh = DateTime.Now;
 			m_name = "Cube Grid";
 		}
 
@@ -87,6 +89,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			m_cubeBlockManager.Load(cubeBlockList);
 
 			m_lastNameRefresh = DateTime.Now;
+			m_lastBaseCubeBlockRefresh = DateTime.Now;
 			m_name = "Cube Grid";
 		}
 
@@ -103,6 +106,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			m_cubeBlockManager.Load(cubeBlockList);
 
 			m_lastNameRefresh = DateTime.Now;
+			m_lastBaseCubeBlockRefresh = DateTime.Now;
 			m_name = "Cube Grid";
 		}
 
@@ -125,6 +129,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			EntityEventManager.Instance.AddEvent(newEvent);
 
 			m_lastNameRefresh = DateTime.Now;
+			m_lastBaseCubeBlockRefresh = DateTime.Now;
 			m_name = "Cube Grid";
 		}
 
@@ -157,8 +162,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 					return "Cube Grid";
 
 				string name = "";
-				if (BackingObject == null)
+				TimeSpan timeSinceLastNameRefresh = DateTime.Now - m_lastNameRefresh;
+				if (timeSinceLastNameRefresh.TotalSeconds < 1)
 				{
+					name = m_name;
+				}
+				else
+				{
+					m_lastNameRefresh = DateTime.Now;
+
 					foreach (var cubeBlock in ObjectBuilder.CubeBlocks)
 					{
 						if (cubeBlock.TypeId == typeof(MyObjectBuilder_Beacon))
@@ -169,31 +181,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 							string customName = ((MyObjectBuilder_Beacon)cubeBlock).CustomName;
 							if (customName == "")
 								customName = "Beacon";
-							name += customName;
-						}
-					}
-				}
-				else
-				{
-					TimeSpan timeSinceLastNameRefresh = DateTime.Now - m_lastNameRefresh;
-					if (timeSinceLastNameRefresh.TotalMilliseconds < 5000)
-					{
-						name = m_name;
-					}
-					else
-					{
-						m_lastNameRefresh = DateTime.Now;
-
-						List<BeaconEntity> beaconBlocks = m_cubeBlockManager.GetTypedInternalData<BeaconEntity>();
-						foreach (BeaconEntity cubeBlock in beaconBlocks)
-						{
-							if (name.Length > 0)
-								name += "|";
-
-							string customName = cubeBlock.Name;
-							if (customName == "")
-								customName = "Beacon";
-
 							name += customName;
 						}
 					}
@@ -221,6 +208,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				{
 					objectBuilder = new MyObjectBuilder_CubeGrid();
 					ObjectBuilder = objectBuilder;
+				}
+
+				if (BackingObject != null)
+				{
+					TimeSpan timeSinceLastBaseCubeBlockRefresh = DateTime.Now - m_lastBaseCubeBlockRefresh;
+					if (timeSinceLastBaseCubeBlockRefresh.TotalSeconds > 30)
+					{
+						m_lastBaseCubeBlockRefresh = DateTime.Now;
+						RefreshBaseCubeBlocks();
+					}
 				}
 
 				objectBuilder.LinearVelocity = LinearVelocity;
@@ -431,7 +428,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public override void Export(FileInfo fileInfo)
 		{
-			RefreshCubeBlocks();
+			RefreshBaseCubeBlocks();
 
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(ObjectBuilder, fileInfo);
 		}
@@ -481,13 +478,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		public void RefreshCubeBlocks()
+		protected void RefreshBaseCubeBlocks()
 		{
 			MyObjectBuilder_CubeGrid cubeGrid = (MyObjectBuilder_CubeGrid)ObjectBuilder;
 
 			//Refresh the cube blocks content in the cube grid from the cube blocks manager
 			cubeGrid.CubeBlocks.Clear();
-			foreach (var item in m_cubeBlockManager.GetTypedInternalData<CubeBlockEntity>())
+			foreach (var item in CubeBlocks)
 			{
 				cubeGrid.CubeBlocks.Add((MyObjectBuilder_CubeBlock)item.ObjectBuilder);
 			}

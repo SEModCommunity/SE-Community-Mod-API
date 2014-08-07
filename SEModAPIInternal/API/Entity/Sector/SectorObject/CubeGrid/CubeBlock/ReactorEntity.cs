@@ -23,6 +23,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		private InventoryEntity m_Inventory;
 		private PowerProducer m_powerProducer;
 		private float m_maxPowerOutput;
+		private DateTime m_lastInventoryRefresh;
 
 		public static string ReactorNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ReactorClass = "714451095FE0D12C399607EAC612A6FE";
@@ -39,6 +40,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			m_Inventory = new InventoryEntity(definition.Inventory);
 			m_powerProducer = new PowerProducer(Parent.PowerManager, null);
+
+			m_lastInventoryRefresh = DateTime.Now;
 		}
 
 		public ReactorEntity(CubeGridEntity parent, MyObjectBuilder_Reactor definition, Object backingObject)
@@ -46,6 +49,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			m_Inventory = new InventoryEntity(definition.Inventory, InternalGetReactorInventory());
 			m_powerProducer = new PowerProducer(Parent.PowerManager, ActualObject);
+
+			m_lastInventoryRefresh = DateTime.Now;
 		}
 
 		#endregion
@@ -60,11 +65,17 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			get
 			{
-				MyObjectBuilder_Reactor reactor = (MyObjectBuilder_Reactor)ObjectBuilder;
+				MyObjectBuilder_Reactor reactor = (MyObjectBuilder_Reactor)base.ObjectBuilder;
 
-				//Make sure the inventory is up-to-date
-				Inventory.RefreshInventory();
-				reactor.Inventory = Inventory.ObjectBuilder;
+				TimeSpan timeSinceLastInventoryRefresh = DateTime.Now - m_lastInventoryRefresh;
+				if (timeSinceLastInventoryRefresh.TotalSeconds > 10)
+				{
+					m_lastInventoryRefresh = DateTime.Now;
+
+					//Make sure the inventory is up-to-date
+					Inventory.RefreshInventory();
+					reactor.Inventory = Inventory.ObjectBuilder;
+				}
 
 				return reactor;
 			}
@@ -96,7 +107,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get
 			{
 				float fuelMass = 0;
-				foreach (var item in Inventory.Items)
+				foreach (var item in ObjectBuilder.Inventory.Items)
 				{
 					fuelMass += item.Amount;
 				}

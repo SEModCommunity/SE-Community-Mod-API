@@ -36,6 +36,9 @@ namespace SEModAPIInternal.API.Common
 		protected static bool m_isInSafeMode;
 
 		protected bool m_isGameLoaded;
+		protected DateTime m_lastProfilingOutput;
+		protected int m_countQueuedActions;
+		protected double m_averageQueuedActions;
 
 		public static string GameConstantsNamespace = "00DD5482C0A3DF0D94B151167E77A6D9";
 		public static string GameConstantsClass = "5FBC15A83966C3D53201318E6F912741";
@@ -94,6 +97,10 @@ namespace SEModAPIInternal.API.Common
 
 			m_configContainerDedicatedDataField = m_configContainerType.GetField(ConfigContainerDedicatedDataField, BindingFlags.NonPublic | BindingFlags.Instance);
 			m_setConfigWorldName = m_configContainerType.GetMethod(ConfigContainerSetWorldName, BindingFlags.Public | BindingFlags.Instance);
+
+			m_lastProfilingOutput = DateTime.Now;
+			m_countQueuedActions = 0;
+			m_averageQueuedActions = 0;
 
 			Console.WriteLine("Finished loading SandboxGameAssemblyWrapper");
 		}
@@ -327,6 +334,22 @@ namespace SEModAPIInternal.API.Common
 			{
 				MethodInfo enqueue = m_mainGameType.GetMethod(MainGameEnqueueActionMethod);
 				enqueue.Invoke(GetMainGameInstance(), new object[] { action });
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+				{
+					m_countQueuedActions++;
+
+					TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastProfilingOutput;
+					if (timeSinceLastProfilingOutput.TotalSeconds > 60)
+					{
+						m_averageQueuedActions = m_countQueuedActions / timeSinceLastProfilingOutput.TotalSeconds;
+
+						LogManager.APILog.WriteLine("Average actions queued per second: " + Math.Round(m_averageQueuedActions, 2).ToString());
+
+						m_countQueuedActions = 0;
+						m_lastProfilingOutput = DateTime.Now;
+					}
+				}
 
 				return true;
 			}
