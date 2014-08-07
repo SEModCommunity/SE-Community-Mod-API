@@ -133,7 +133,30 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[DataMember]
+		[DataMember(Order = 0)]
+		[Category("Cube Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_CubeBlock ObjectBuilder
+		{
+			get
+			{
+				MyObjectBuilder_CubeBlock objectBuilder = (MyObjectBuilder_CubeBlock)base.ObjectBuilder;
+				if (objectBuilder == null)
+				{
+					objectBuilder = new MyObjectBuilder_CubeBlock();
+					ObjectBuilder = objectBuilder;
+				}
+
+				return objectBuilder;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[DataMember(Order = 1)]
 		[Category("Cube Block")]
 		[ReadOnly(true)]
 		public override string Name
@@ -151,23 +174,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[IgnoreDataMember]
-		[Category("Cube Block")]
-		[Browsable(false)]
-		[ReadOnly(true)]
-		internal new MyObjectBuilder_CubeBlock ObjectBuilder
-		{
-			get
-			{
-				return (MyObjectBuilder_CubeBlock)base.ObjectBuilder;
-			}
-			set
-			{
-				base.ObjectBuilder = value;
-			}
-		}
-
-		[DataMember]
+		[DataMember(Order = 1)]
 		[Category("Cube Block")]
 		[Browsable(true)]
 		[ReadOnly(true)]
@@ -184,7 +191,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[DataMember]
+		[DataMember(Order = 2)]
 		[Category("Cube Block")]
 		[ReadOnly(true)]
 		[TypeConverter(typeof(Vector3ITypeConverter))]
@@ -199,7 +206,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[DataMember]
+		[DataMember(Order = 2)]
 		[Category("Cube Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -214,7 +221,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[DataMember]
+		[DataMember(Order = 2)]
 		[Category("Cube Block")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
 		public Vector3Wrapper ColorMaskHSV
@@ -234,7 +241,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[DataMember]
+		[DataMember(Order = 2)]
 		[Category("Cube Block")]
 		public float BuildPercent
 		{
@@ -255,7 +262,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[DataMember]
+		[DataMember(Order = 2)]
 		[Category("Cube Block")]
 		public float IntegrityPercent
 		{
@@ -276,7 +283,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[DataMember]
+		[DataMember(Order = 2)]
 		[Category("Cube Block")]
 		public long Owner
 		{
@@ -295,7 +302,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[DataMember]
+		[DataMember(Order = 2)]
 		[Category("Cube Block")]
 		public MyOwnershipShareModeEnum ShareMode
 		{

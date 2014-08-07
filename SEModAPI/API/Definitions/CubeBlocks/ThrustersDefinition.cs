@@ -16,40 +16,6 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		#region "Properties"
 
 		/// <summary>
-		/// The current Thruster Damage Area Size
-		/// </summary>
-		[Browsable(true)]
-		[ReadOnly(false)]
-		[Description("Get or set the current Thruster Damage Area Size.")]
-		public float DamageAreaSize
-		{
-			get { return GetSubTypeDefinition().DamageAreaSize; }
-			set
-			{
-				if (GetSubTypeDefinition().DamageAreaSize.Equals(value)) return;
-				GetSubTypeDefinition().DamageAreaSize = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The current Thruster flame scale, or "Flame volume"
-		/// </summary>
-		[Browsable(true)]
-		[ReadOnly(false)]
-		[Description("Get or set the current Thruster flame scale, or 'Flame volume'.")]
-		public float FlameScale
-		{
-			get { return GetSubTypeDefinition().FlameScale; }
-			set
-			{
-				if (GetSubTypeDefinition().FlameScale.Equals(value)) return;
-				GetSubTypeDefinition().FlameScale = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
 		/// The current Thruster force magnitude, or "push capacity"
 		/// </summary>
 		[Browsable(true)]
@@ -96,23 +62,6 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 			{
 				if (GetSubTypeDefinition().MinPowerConsumption.Equals(value)) return;
 				GetSubTypeDefinition().MinPowerConsumption = value;
-				Changed = true;
-			}
-		}
-
-		/// <summary>
-		/// The current Thruster movement coefficient
-		/// </summary>
-		[Browsable(true)]
-		[ReadOnly(false)]
-		[Description("Get or set the current Thruster movement coefficient.")]
-		public float MovementCoefficient
-		{
-			get { return GetSubTypeDefinition().MovementCoefficient; }
-			set
-			{
-				if (GetSubTypeDefinition().MovementCoefficient.Equals(value)) return;
-				GetSubTypeDefinition().MovementCoefficient = value;
 				Changed = true;
 			}
 		}
