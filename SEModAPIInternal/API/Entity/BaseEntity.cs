@@ -58,7 +58,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityGetIsDisposedMethod = "6D8F627C1C0F9F166031C3B600FEDA60";
 		public static string BaseEntityGetOrientationMatrixMethod = "FD50436D896ACC794550210055349FE0";
 		public static string BaseEntityGetNetManagerMethod = "F4456F82186EC3AE6C73294FA6C0A11D";
-		public static string BaseEntityGetEntityIdMethod = "45C74DC9A22EABBBA5C56EDD15ABF01A";
+		public static string BaseEntityGetEntityIdMethod = "D375F9CCBD9813573075E664DE71537C";
 		public static string BaseEntitySetEntityIdMethod = "D3D6702587D6336FEE37725E8D2C52CD";
 
 		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
@@ -787,7 +787,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
-		public static string BaseEntityBroadcastRemovalMethod = "47024C1AA8D2D191CF96242C1F587152";
+		public static string BaseEntityBroadcastRemovalMethod = "F9B21909ACDD17B83644D733770FBD1F";
 
 		#endregion
 
