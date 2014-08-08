@@ -456,10 +456,12 @@ namespace SEModAPIInternal.API.Entity
 		private string m_backingSourceMethod;
 		private InternalBackingType m_backingSourceType;
 		private DateTime m_lastLoadTime;
+		private double m_refreshInterval;
 
 		private static double m_averageLoadTime;
 		private static DateTime m_lastProfilingOutput;
-		private static int m_refreshCount;
+		private static int m_staticRefreshCount;
+		private static Dictionary<Type, int> m_staticRefreshCountMap;
 
 		protected FastResourceLock m_resourceLock = new FastResourceLock();
 		protected FastResourceLock m_rawDataHashSetResourceLock = new FastResourceLock();
@@ -495,8 +497,12 @@ namespace SEModAPIInternal.API.Entity
 
 			m_lastLoadTime = DateTime.Now;
 
-			if(m_lastProfilingOutput == null)
+			if (m_lastProfilingOutput == null)
 				m_lastProfilingOutput = DateTime.Now;
+			if (m_staticRefreshCountMap == null)
+				m_staticRefreshCountMap = new Dictionary<Type, int>();
+
+			m_refreshInterval = 250;
 		}
 
 		public BaseObjectManager(Object backingSource, string backingMethodName, InternalBackingType backingSourceType)
@@ -513,8 +519,13 @@ namespace SEModAPIInternal.API.Entity
 			m_backingSourceType = backingSourceType;
 
 			m_lastLoadTime = DateTime.Now;
-			m_averageLoadTime = 0;
-			m_lastProfilingOutput = DateTime.Now;
+
+			if (m_lastProfilingOutput == null)
+				m_lastProfilingOutput = DateTime.Now;
+			if (m_staticRefreshCountMap == null)
+				m_staticRefreshCountMap = new Dictionary<Type, int>();
+
+			m_refreshInterval = 250;
 		}
 
 		public BaseObjectManager(BaseObject[] baseDefinitions)
@@ -664,34 +675,43 @@ namespace SEModAPIInternal.API.Entity
 			if (IsInternalResourceLocked)
 				return;
 			TimeSpan timeSinceLastLoad = DateTime.Now - m_lastLoadTime;
-			if (timeSinceLastLoad.TotalMilliseconds < 250)
+			if (timeSinceLastLoad.TotalMilliseconds < m_refreshInterval)
 				return;
 
-			m_refreshCount++;
-
 			m_lastLoadTime = DateTime.Now;
-
 			RefreshInternalData();
 
-			TimeSpan timeToLoad = DateTime.Now - m_lastLoadTime;
-			m_averageLoadTime = (m_averageLoadTime + timeToLoad.TotalMilliseconds) / 2.0;
+			//Update the refresh counts
+			if (!m_staticRefreshCountMap.ContainsKey(this.GetType()))
+				m_staticRefreshCountMap.Add(this.GetType(), 1);
+			else
+				m_staticRefreshCountMap[this.GetType()]++;
+			int typeRefreshCount = m_staticRefreshCountMap[this.GetType()];
+			m_staticRefreshCount++;
 
-			TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastProfilingOutput;
-			if (timeSinceLastProfilingOutput.TotalSeconds > 30)
+			//Adjust the refresh interval based on percentage of total refreshes for this type
+			m_refreshInterval = (typeRefreshCount / m_staticRefreshCount) * 400 + 100;
+
+			if (SandboxGameAssemblyWrapper.IsDebugging)
 			{
-				m_lastProfilingOutput = DateTime.Now;
-				double refreshesPerSecond = m_refreshCount / timeSinceLastProfilingOutput.TotalSeconds;
-				m_refreshCount = 0;
+				TimeSpan timeToLoad = DateTime.Now - m_lastLoadTime;
+				m_averageLoadTime = (m_averageLoadTime + timeToLoad.TotalMilliseconds) / 2.0;
 
-				if (SandboxGameAssemblyWrapper.IsDebugging)
+				TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastProfilingOutput;
+				if (timeSinceLastProfilingOutput.TotalSeconds > 30)
 				{
+					m_lastProfilingOutput = DateTime.Now;
+					double refreshesPerSecond = m_staticRefreshCount / timeSinceLastProfilingOutput.TotalSeconds;
+					m_staticRefreshCount = 0;
+					m_staticRefreshCountMap.Clear();
+
 					LogManager.APILog.WriteLine("ObjectManager - Average data load time: " + Math.Round(m_averageLoadTime, 2).ToString() + "ms");
 					LogManager.APILog.WriteLine("ObjectManager - Refreshes per second: " + Math.Round(refreshesPerSecond, 2).ToString());
 				}
-			}
-			if (timeSinceLastProfilingOutput.TotalSeconds > 40)
-			{
-				LogManager.APILog.WriteLine("Debug point! ObjectManager profiling output took longer than 40 seconds!");
+				if (timeSinceLastProfilingOutput.TotalSeconds > 60)
+				{
+					LogManager.APILog.WriteLine("Debug point! ObjectManager profiling output took longer than 60 seconds!");
+				}
 			}
 		}
 

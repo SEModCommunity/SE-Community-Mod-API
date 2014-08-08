@@ -49,7 +49,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CharacterBatteryNamespace = "FB8C11741B7126BD9C97FE76747E087F";
 		public static string CharacterBatteryClass = "328929D5EC05DF770D51383F6FC0B025";
 
-		public static string CharacterBatteryGetBatteryCapacityMethod = "801FC39A6BCF0D54870FF69685C9FB74";
 		public static string CharacterBatterySetBatteryCapacityMethod = "C3BF60F3540A8A48CB8FEE0CDD3A95C6";
 
 		public static string CharacterBatteryCapacityField = "0BAEC0F968A4BEAE30E7C46D9406765C";
@@ -300,7 +299,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CharacterBatteryNamespace, CharacterBatteryClass);
 				if (type2 == null)
 					throw new Exception("Could not find battery type for CharacterEntity");
-				result &= BaseObject.HasMethod(type2, CharacterBatteryGetBatteryCapacityMethod);
 				result &= BaseObject.HasMethod(type2, CharacterBatterySetBatteryCapacityMethod);
 				result &= BaseObject.HasField(type2, CharacterBatteryCapacityField);
 
