@@ -58,7 +58,6 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityGetIsDisposedMethod = "6D8F627C1C0F9F166031C3B600FEDA60";
 		public static string BaseEntityGetOrientationMatrixMethod = "FD50436D896ACC794550210055349FE0";
 		public static string BaseEntityGetNetManagerMethod = "F4456F82186EC3AE6C73294FA6C0A11D";
-		public static string BaseEntityGetEntityIdMethod = "D375F9CCBD9813573075E664DE71537C";
 		public static string BaseEntitySetEntityIdMethod = "D3D6702587D6336FEE37725E8D2C52CD";
 
 		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
@@ -516,7 +515,6 @@ namespace SEModAPIInternal.API.Entity
 				result &= HasMethod(type, BaseEntityGetIsDisposedMethod);
 				result &= HasMethod(type, BaseEntityGetOrientationMatrixMethod);
 				result &= HasMethod(type, BaseEntityGetNetManagerMethod);
-				result &= HasMethod(type, BaseEntityGetEntityIdMethod);
 				result &= HasMethod(type, BaseEntitySetEntityIdMethod);
 				result &= HasField(type, BaseEntityEntityIdField);
 
@@ -590,25 +588,14 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				long entityId = 0L;
-				bool oldDebuggingSetting = SandboxGameAssemblyWrapper.IsDebugging;
-				SandboxGameAssemblyWrapper.IsDebugging = false;
-				bool hasGetter = HasMethod(InternalType, BaseEntityGetEntityIdMethod);
-				SandboxGameAssemblyWrapper.IsDebugging = oldDebuggingSetting;
-				if (hasGetter)
+				try
 				{
-					entityId = (long)InvokeEntityMethod(entity, BaseEntityGetEntityIdMethod);
+					FieldInfo field = GetEntityField(entity, BaseEntityEntityIdField);
+					entityId = (long)field.GetValue(entity);
 				}
-				else
+				catch (Exception ex)
 				{
-					try
-					{
-						FieldInfo field = GetEntityField(entity, BaseEntityEntityIdField);
-						entityId = (long)field.GetValue(entity);
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 				return entityId;
 			}
@@ -787,7 +774,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
-		public static string BaseEntityBroadcastRemovalMethod = "F9B21909ACDD17B83644D733770FBD1F";
+		public static string BaseEntityBroadcastRemovalMethod = "0FB4C6258DADADC26F68B0E66F5F8880";
 
 		#endregion
 
