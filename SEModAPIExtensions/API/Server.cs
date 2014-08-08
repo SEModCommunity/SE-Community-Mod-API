@@ -345,13 +345,6 @@ namespace SEModAPIExtensions.API
 			}
 			else
 			{
-				if (!m_isServerRunning)
-					return;
-
-				if (m_commandLineArgs.noGUI)
-				{
-					List<BaseEntity> entityList = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-				}
 				m_pluginManager.Update();
 			}
 		}

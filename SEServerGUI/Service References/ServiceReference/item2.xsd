@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd18" namespace="http://schemas.datacontract.org/2004/07/SEModAPI.API" />
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" />
   <xs:complexType name="ArrayOfBaseEntityProxy">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="BaseEntityProxy" nillable="true" type="tns:BaseEntityProxy" />
@@ -29,14 +29,6 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="BaseObjectProxy" nillable="true" type="tns:BaseObjectProxy" />
-  <xs:complexType name="InventoryEntityProxy">
-    <xs:complexContent mixed="false">
-      <xs:extension base="tns:BaseObjectProxy">
-        <xs:sequence />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:element name="InventoryEntityProxy" nillable="true" type="tns:InventoryEntityProxy" />
   <xs:complexType name="InventoryItemEntityProxy">
     <xs:complexContent mixed="false">
       <xs:extension base="tns:BaseObjectProxy">
@@ -51,6 +43,14 @@
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="InventoryItemEntityProxy" nillable="true" type="tns:InventoryItemEntityProxy" />
+  <xs:complexType name="InventoryEntityProxy">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:BaseObjectProxy">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="InventoryEntityProxy" nillable="true" type="tns:InventoryEntityProxy" />
   <xs:complexType name="ArrayOfInventoryItemEntityProxy">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="InventoryItemEntityProxy" nillable="true" type="tns:InventoryItemEntityProxy" />

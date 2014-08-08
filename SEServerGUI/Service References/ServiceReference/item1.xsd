@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" />
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
   <xs:complexType name="CharacterEntityProxy">
     <xs:complexContent mixed="false">
       <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q1:BaseEntityProxy">
@@ -9,7 +9,6 @@
           <xs:element minOccurs="0" name="BatteryLevel" type="xs:float" />
           <xs:element minOccurs="0" name="DampenersEnabled" type="xs:boolean" />
           <xs:element minOccurs="0" name="Health" type="xs:float" />
-          <xs:element minOccurs="0" name="Inventory" nillable="true" type="q1:InventoryEntityProxy" />
           <xs:element minOccurs="0" name="JetpackEnabled" type="xs:boolean" />
           <xs:element minOccurs="0" name="LightEnabled" type="xs:boolean" />
           <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ObjectBuilder" nillable="true" type="q2:MyObjectBuilder_Character" />

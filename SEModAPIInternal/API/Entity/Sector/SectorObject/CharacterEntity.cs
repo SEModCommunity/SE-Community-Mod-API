@@ -213,7 +213,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			}
 		}
 
-		[DataMember]
+		[IgnoreDataMember]
 		[Category("Character")]
 		[Browsable(false)]
 		[ReadOnly(true)]
@@ -232,6 +232,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public bool DampenersEnabled
 		{
 			get { return ObjectBuilder.DampenersEnabled; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		[DataMember]
@@ -241,6 +245,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public bool JetpackEnabled
 		{
 			get { return ObjectBuilder.JetpackEnabled; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		[DataMember]
@@ -250,6 +258,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public bool LightEnabled
 		{
 			get { return ObjectBuilder.LightEnabled; }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		[DataMember]
@@ -259,6 +271,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public ulong SteamId
 		{
 			get { return PlayerMap.Instance.GetSteamId(EntityId); }
+			private set
+			{
+				//Do nothing!
+			}
 		}
 
 		#endregion

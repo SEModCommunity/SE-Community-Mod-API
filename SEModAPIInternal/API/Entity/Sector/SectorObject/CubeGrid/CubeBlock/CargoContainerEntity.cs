@@ -46,6 +46,29 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
+		[Category("Cargo Container")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_CargoContainer ObjectBuilder
+		{
+			get
+			{
+				MyObjectBuilder_CargoContainer objectBuilder = (MyObjectBuilder_CargoContainer)base.ObjectBuilder;
+				if (objectBuilder == null)
+				{
+					objectBuilder = new MyObjectBuilder_CargoContainer();
+					ObjectBuilder = objectBuilder;
+				}
+
+				return objectBuilder;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
 		[DataMember]
 		[Category("Cargo Container")]
 		[Browsable(false)]
@@ -68,7 +91,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get
 			{
 				float count = 0;
-				foreach (var item in Inventory.Items)
+				foreach (var item in ObjectBuilder.Inventory.Items)
 				{
 					count += item.Amount;
 				}
@@ -83,10 +106,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get
 			{
 				float mass = 0;
-				foreach (var item in Inventory.Items)
-				{
-					mass += item.Mass;
-				}
+				//foreach (var item in Inventory.Items)
+				//{
+				//	mass += item.Mass;
+				//}
 				return mass;
 			}
 		}
@@ -98,10 +121,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get
 			{
 				float volume = 0;
-				foreach (var item in Inventory.Items)
-				{
-					volume += item.Volume;
-				}
+				//foreach (var item in Inventory.Items)
+				//{
+				//	volume += item.Volume;
+				//}
 				return volume;
 			}
 		}

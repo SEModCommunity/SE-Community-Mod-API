@@ -2,9 +2,9 @@
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd19" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" />
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" />
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd18" namespace="http://schemas.datacontract.org/2004/07/SEModAPI.API" />
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" />
   <xs:complexType name="TerminalBlockEntityProxy">
     <xs:complexContent mixed="false">
       <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" base="q1:CubeBlockEntityProxy">

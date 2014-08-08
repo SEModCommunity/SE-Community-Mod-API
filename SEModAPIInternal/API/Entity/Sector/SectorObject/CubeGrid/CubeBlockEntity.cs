@@ -133,7 +133,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		[DataMember(Order = 0)]
+		[IgnoreDataMember]
 		[Category("Cube Block")]
 		[Browsable(false)]
 		[ReadOnly(true)]

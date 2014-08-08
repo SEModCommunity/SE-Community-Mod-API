@@ -243,6 +243,9 @@ namespace SEServerGUI.ServiceReference {
     public partial class CubeBlockEntityProxy : SEServerGUI.ServiceReference.BaseObjectProxy {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private long EntityIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private VRageMath.MyBlockOrientation BlockOrientationField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -250,9 +253,6 @@ namespace SEServerGUI.ServiceReference {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private SEModAPI.API.Vector3Wrapper ColorMaskHSVField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private long EntityIdField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private float IntegrityPercentField;
@@ -267,45 +267,6 @@ namespace SEServerGUI.ServiceReference {
         private Sandbox.Common.ObjectBuilders.MyOwnershipShareModeEnum ShareModeField;
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public VRageMath.MyBlockOrientation BlockOrientation {
-            get {
-                return this.BlockOrientationField;
-            }
-            set {
-                if ((this.BlockOrientationField.Equals(value) != true)) {
-                    this.BlockOrientationField = value;
-                    this.RaisePropertyChanged("BlockOrientation");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float BuildPercent {
-            get {
-                return this.BuildPercentField;
-            }
-            set {
-                if ((this.BuildPercentField.Equals(value) != true)) {
-                    this.BuildPercentField = value;
-                    this.RaisePropertyChanged("BuildPercent");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public SEModAPI.API.Vector3Wrapper ColorMaskHSV {
-            get {
-                return this.ColorMaskHSVField;
-            }
-            set {
-                if ((this.ColorMaskHSVField.Equals(value) != true)) {
-                    this.ColorMaskHSVField = value;
-                    this.RaisePropertyChanged("ColorMaskHSV");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
         public long EntityId {
             get {
                 return this.EntityIdField;
@@ -318,7 +279,46 @@ namespace SEServerGUI.ServiceReference {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
+        [System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+        public VRageMath.MyBlockOrientation BlockOrientation {
+            get {
+                return this.BlockOrientationField;
+            }
+            set {
+                if ((this.BlockOrientationField.Equals(value) != true)) {
+                    this.BlockOrientationField = value;
+                    this.RaisePropertyChanged("BlockOrientation");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+        public float BuildPercent {
+            get {
+                return this.BuildPercentField;
+            }
+            set {
+                if ((this.BuildPercentField.Equals(value) != true)) {
+                    this.BuildPercentField = value;
+                    this.RaisePropertyChanged("BuildPercent");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+        public SEModAPI.API.Vector3Wrapper ColorMaskHSV {
+            get {
+                return this.ColorMaskHSVField;
+            }
+            set {
+                if ((this.ColorMaskHSVField.Equals(value) != true)) {
+                    this.ColorMaskHSVField = value;
+                    this.RaisePropertyChanged("ColorMaskHSV");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
         public float IntegrityPercent {
             get {
                 return this.IntegrityPercentField;
@@ -331,7 +331,7 @@ namespace SEServerGUI.ServiceReference {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
+        [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
         public Sandbox.Common.ObjectBuilders.VRageData.SerializableVector3I Min {
             get {
                 return this.MinField;
@@ -344,7 +344,7 @@ namespace SEServerGUI.ServiceReference {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
+        [System.Runtime.Serialization.DataMemberAttribute(Order=6)]
         public long Owner {
             get {
                 return this.OwnerField;
@@ -357,7 +357,7 @@ namespace SEServerGUI.ServiceReference {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute()]
+        [System.Runtime.Serialization.DataMemberAttribute(Order=7)]
         public Sandbox.Common.ObjectBuilders.MyOwnershipShareModeEnum ShareMode {
             get {
                 return this.ShareModeField;
@@ -1325,13 +1325,13 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.DataContractAttribute(Name="CharacterEntityProxy", Namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.Sector" +
         "Object")]
     [System.SerializableAttribute()]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Meteor))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_AngleGrinder))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_AutomaticRifle))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_CubeGrid))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_CubePlacer))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_FloatingObject))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_HandDrill))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Meteor))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_WallPlacer))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Welder))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Voxels.MyObjectBuilder_VoxelMap))]
@@ -1345,9 +1345,6 @@ namespace SEServerGUI.ServiceReference {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private float HealthField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private SEServerGUI.ServiceReference.InventoryEntityProxy InventoryField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private bool JetpackEnabledField;
@@ -1396,19 +1393,6 @@ namespace SEServerGUI.ServiceReference {
                 if ((this.HealthField.Equals(value) != true)) {
                     this.HealthField = value;
                     this.RaisePropertyChanged("Health");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public SEServerGUI.ServiceReference.InventoryEntityProxy Inventory {
-            get {
-                return this.InventoryField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.InventoryField, value) != true)) {
-                    this.InventoryField = value;
-                    this.RaisePropertyChanged("Inventory");
                 }
             }
         }
@@ -1471,50 +1455,8 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.DataContractAttribute(Name="MeteorProxy", Namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.Sector" +
         "Object")]
     [System.SerializableAttribute()]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_DefinitionBase))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PhysicalItemDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AmmoMagazineDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ComponentDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CubeBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ProductionBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AssemblerDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_RefineryDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PowerProducerDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_BatteryBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ReactorDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_SolarPanelDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CargoContainerDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CockpitDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GravityGeneratorDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GyroDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_LightingBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MergeBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MotorStatorDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MotorSuspensionDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_OreDetectorDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PistonBaseDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ShipDrillDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ThrustDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_VirtualMassDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_BlueprintDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CharacterDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ContainerTypeDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_EnvironmentDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GlobalEventDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_HandItemDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ScenarioDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorPlayerStartingState))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorPlayerStartingState_Transform))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddAsteroidPrefab))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddObjectsPrefab))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddShipPrefab))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_SetupBasePrefab))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_SpawnGroupDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_Configuration))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_Definitions))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.VRageData.MyObjectBuilder_TransparentMaterial))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_VoxelMaterialDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Battery))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Inventory))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_PhysicalObject))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_AmmoMagazine))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Component))]
@@ -1522,7 +1464,6 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Ore))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_PhysicalGunObject))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_CubeBlock))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Inventory))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ConstructionStockpile))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_StockpileItem))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_TerminalBlock))]
@@ -1571,6 +1512,7 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Toolbar))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItem))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemAnimation))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemCubeBlock))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemWallBlock))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemWeapon))]
@@ -1578,6 +1520,7 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemTerminal))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemTerminalBlock))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemTerminalGroup))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ControlPanel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Conveyor))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ConveyorConnector))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Decoy))]
@@ -1589,7 +1532,6 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_SignalLight))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Warhead))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Wheel))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Battery))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_BlockGroup))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Checkpoint))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_FactionCollection))]
@@ -1604,9 +1546,54 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ModInfo))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Sector))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_World))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.VRageData.MyObjectBuilder_TransparentMaterial))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.VRageData.MyObjectBuilder_TransparentMaterials))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Audio.MyObjectBuilder_CueDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Audio.MyObjectBuilder_CueDefinitions))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_DefinitionBase))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PhysicalItemDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AmmoMagazineDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ComponentDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AnimationDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CubeBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ProductionBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AssemblerDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_RefineryDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PowerProducerDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_BatteryBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ReactorDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_SolarPanelDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CargoContainerDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CockpitDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GravityGeneratorDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GyroDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_LightingBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MergeBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MotorStatorDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MotorSuspensionDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_OreDetectorDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PistonBaseDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ShipDrillDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ThrustDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_VirtualMassDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_BlueprintDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CharacterDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ContainerTypeDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_EnvironmentDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GlobalEventDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_HandItemDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_SpawnGroupDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_TransparentMaterialDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ScenarioDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorPlayerStartingState))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorPlayerStartingState_Transform))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddAsteroidPrefab))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddObjectsPrefab))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddShipPrefab))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_SetupBasePrefab))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_Configuration))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_Definitions))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_VoxelMaterialDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ScenarioDefinitions))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlBase))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlButton))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlCheckbox))]
@@ -1628,6 +1615,8 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlSeparatorList))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlTextbox))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiScreen))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Audio.MyObjectBuilder_CueDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Audio.MyObjectBuilder_CueDefinitions))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Voxels.MyObjectBuilder_VoxelMap_MergeContent))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Voxels.MyObjectBuilder_VoxelMap_MergeMaterial))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_EntityBase))]
@@ -1777,50 +1766,8 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.DataContractAttribute(Name="FloatingObjectProxy", Namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.Sector" +
         "Object")]
     [System.SerializableAttribute()]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_DefinitionBase))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PhysicalItemDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AmmoMagazineDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ComponentDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CubeBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ProductionBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AssemblerDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_RefineryDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PowerProducerDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_BatteryBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ReactorDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_SolarPanelDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CargoContainerDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CockpitDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GravityGeneratorDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GyroDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_LightingBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MergeBlockDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MotorStatorDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MotorSuspensionDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_OreDetectorDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PistonBaseDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ShipDrillDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ThrustDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_VirtualMassDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_BlueprintDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CharacterDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ContainerTypeDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_EnvironmentDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GlobalEventDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_HandItemDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ScenarioDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorPlayerStartingState))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorPlayerStartingState_Transform))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddAsteroidPrefab))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddObjectsPrefab))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddShipPrefab))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_SetupBasePrefab))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_SpawnGroupDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_Configuration))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_Definitions))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.VRageData.MyObjectBuilder_TransparentMaterial))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_VoxelMaterialDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Battery))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Inventory))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_PhysicalObject))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_AmmoMagazine))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Component))]
@@ -1828,7 +1775,6 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Ore))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_PhysicalGunObject))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_CubeBlock))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Inventory))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ConstructionStockpile))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_StockpileItem))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_TerminalBlock))]
@@ -1877,6 +1823,7 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Toolbar))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItem))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemAnimation))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemCubeBlock))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemWallBlock))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemWeapon))]
@@ -1884,6 +1831,7 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemTerminal))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemTerminalBlock))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ToolbarItemTerminalGroup))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ControlPanel))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Conveyor))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ConveyorConnector))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Decoy))]
@@ -1895,7 +1843,6 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_SignalLight))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Warhead))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Wheel))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Battery))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_BlockGroup))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Checkpoint))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_FactionCollection))]
@@ -1910,9 +1857,54 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_ModInfo))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Sector))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_World))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.VRageData.MyObjectBuilder_TransparentMaterial))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.VRageData.MyObjectBuilder_TransparentMaterials))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Audio.MyObjectBuilder_CueDefinition))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Audio.MyObjectBuilder_CueDefinitions))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_DefinitionBase))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PhysicalItemDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AmmoMagazineDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ComponentDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AnimationDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CubeBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ProductionBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_AssemblerDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_RefineryDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PowerProducerDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_BatteryBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ReactorDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_SolarPanelDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CargoContainerDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CockpitDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GravityGeneratorDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GyroDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_LightingBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MergeBlockDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MotorStatorDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_MotorSuspensionDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_OreDetectorDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_PistonBaseDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ShipDrillDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ThrustDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_VirtualMassDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_BlueprintDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_CharacterDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ContainerTypeDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_EnvironmentDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_GlobalEventDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_HandItemDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_SpawnGroupDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_TransparentMaterialDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ScenarioDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorPlayerStartingState))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorPlayerStartingState_Transform))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddAsteroidPrefab))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddObjectsPrefab))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_AddShipPrefab))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_WorldGeneratorOperation_SetupBasePrefab))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_Configuration))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_Definitions))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_VoxelMaterialDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Definitions.MyObjectBuilder_ScenarioDefinitions))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlBase))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlButton))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlCheckbox))]
@@ -1934,15 +1926,17 @@ namespace SEServerGUI.ServiceReference {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlSeparatorList))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiControlTextbox))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Gui.MyObjectBuilder_GuiScreen))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Audio.MyObjectBuilder_CueDefinition))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Audio.MyObjectBuilder_CueDefinitions))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Voxels.MyObjectBuilder_VoxelMap_MergeContent))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Voxels.MyObjectBuilder_VoxelMap_MergeMaterial))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_EntityBase))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Meteor))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_AngleGrinder))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_AutomaticRifle))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_CubeGrid))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_CubePlacer))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_HandDrill))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Meteor))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_WallPlacer))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.MyObjectBuilder_Welder))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Sandbox.Common.ObjectBuilders.Voxels.MyObjectBuilder_VoxelMap))]
@@ -2008,7 +2002,7 @@ namespace SEServerGUI.ServiceReference {
         void UpdateEntity(SEServerGUI.ServiceReference.BaseEntityProxy entity);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IInternalServiceContract/UpdateCubeBlock", ReplyAction="http://tempuri.org/IInternalServiceContract/UpdateCubeBlockResponse")]
-        void UpdateCubeBlock(SEServerGUI.ServiceReference.CubeBlockEntityProxy cubeBlock);
+        void UpdateCubeBlock(SEServerGUI.ServiceReference.CubeGridEntityProxy parent, SEServerGUI.ServiceReference.CubeBlockEntityProxy cubeBlock);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -2066,8 +2060,8 @@ namespace SEServerGUI.ServiceReference {
             base.Channel.UpdateEntity(entity);
         }
         
-        public void UpdateCubeBlock(SEServerGUI.ServiceReference.CubeBlockEntityProxy cubeBlock) {
-            base.Channel.UpdateCubeBlock(cubeBlock);
+        public void UpdateCubeBlock(SEServerGUI.ServiceReference.CubeGridEntityProxy parent, SEServerGUI.ServiceReference.CubeBlockEntityProxy cubeBlock) {
+            base.Channel.UpdateCubeBlock(parent, cubeBlock);
         }
     }
 }

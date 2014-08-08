@@ -36,6 +36,6 @@ namespace SEModAPIExtensions.API.IPC
 		void UpdateEntity(BaseEntity entity);
 
 		[OperationContract]
-		void UpdateCubeBlock(CubeBlockEntity cubeBlock);
+		void UpdateCubeBlock(CubeGridEntity parent, CubeBlockEntity cubeBlock);
 	}
 }

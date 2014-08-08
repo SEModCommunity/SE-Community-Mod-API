@@ -1,146 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/VRageMath" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/VRageMath" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Audio" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Audio" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:complexType name="Vector3">
-    <xs:annotation>
-      <xs:appinfo>
-        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
-      </xs:appinfo>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element name="X" type="xs:float" />
-      <xs:element name="Y" type="xs:float" />
-      <xs:element name="Z" type="xs:float" />
-    </xs:sequence>
+  <xs:complexType name="MyObjectBuilder_CueDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q1:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Alternative2D" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Category" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Loopable" type="xs:boolean" />
+          <xs:element minOccurs="0" name="MaxDistance" type="xs:float" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PitchVariation" type="xs:float" />
+          <xs:element minOccurs="0" name="UseOcclusion" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Volume" type="xs:float" />
+          <xs:element minOccurs="0" name="VolumeCurve" type="tns:MyAudioHelpers.CurveType" />
+          <xs:element minOccurs="0" name="VolumeVariation" type="xs:float" />
+          <xs:element minOccurs="0" name="Waves" nillable="true" type="tns:ArrayOfMyAudioHelpers.Wave" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
-  <xs:element name="Vector3" nillable="true" type="tns:Vector3" />
-  <xs:complexType name="Vector2I">
-    <xs:annotation>
-      <xs:appinfo>
-        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
-      </xs:appinfo>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element minOccurs="0" name="X" type="xs:int" />
-      <xs:element minOccurs="0" name="Y" type="xs:int" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Vector2I" nillable="true" type="tns:Vector2I" />
-  <xs:complexType name="Quaternion">
-    <xs:annotation>
-      <xs:appinfo>
-        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
-      </xs:appinfo>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element name="W" type="xs:float" />
-      <xs:element name="X" type="xs:float" />
-      <xs:element name="Y" type="xs:float" />
-      <xs:element name="Z" type="xs:float" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Quaternion" nillable="true" type="tns:Quaternion" />
-  <xs:complexType name="Vector2">
-    <xs:annotation>
-      <xs:appinfo>
-        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
-      </xs:appinfo>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element name="X" type="xs:float" />
-      <xs:element name="Y" type="xs:float" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Vector2" nillable="true" type="tns:Vector2" />
-  <xs:complexType name="Vector4">
-    <xs:annotation>
-      <xs:appinfo>
-        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
-      </xs:appinfo>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element name="W" type="xs:float" />
-      <xs:element name="X" type="xs:float" />
-      <xs:element name="Y" type="xs:float" />
-      <xs:element name="Z" type="xs:float" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Vector4" nillable="true" type="tns:Vector4" />
-  <xs:simpleType name="Base6Directions.Direction">
-    <xs:annotation>
-      <xs:appinfo>
-        <ActualType Name="unsignedByte" Namespace="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
-      </xs:appinfo>
-    </xs:annotation>
+  <xs:element name="MyObjectBuilder_CueDefinition" nillable="true" type="tns:MyObjectBuilder_CueDefinition" />
+  <xs:simpleType name="MyAudioHelpers.CurveType">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Forward" />
-      <xs:enumeration value="Backward" />
-      <xs:enumeration value="Left" />
-      <xs:enumeration value="Right" />
-      <xs:enumeration value="Up" />
-      <xs:enumeration value="Down" />
+      <xs:enumeration value="Linear" />
+      <xs:enumeration value="Quadratic" />
+      <xs:enumeration value="Poly2" />
+      <xs:enumeration value="Custom_1" />
     </xs:restriction>
   </xs:simpleType>
-  <xs:element name="Base6Directions.Direction" nillable="true" type="tns:Base6Directions.Direction" />
-  <xs:complexType name="ArrayOfVector3I">
+  <xs:element name="MyAudioHelpers.CurveType" nillable="true" type="tns:MyAudioHelpers.CurveType" />
+  <xs:complexType name="ArrayOfMyAudioHelpers.Wave">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="Vector3I" type="tns:Vector3I" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyAudioHelpers.Wave" type="tns:MyAudioHelpers.Wave" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfVector3I" nillable="true" type="tns:ArrayOfVector3I" />
-  <xs:complexType name="Vector3I">
+  <xs:element name="ArrayOfMyAudioHelpers.Wave" nillable="true" type="tns:ArrayOfMyAudioHelpers.Wave" />
+  <xs:complexType name="MyAudioHelpers.Wave">
     <xs:annotation>
       <xs:appinfo>
         <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
       </xs:appinfo>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="X" type="xs:int" />
-      <xs:element name="Y" type="xs:int" />
-      <xs:element name="Z" type="xs:int" />
+      <xs:element minOccurs="0" name="End" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Loop" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Start" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Type" type="tns:MyAudioHelpers.Dimensions" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="Vector3I" nillable="true" type="tns:Vector3I" />
-  <xs:complexType name="ArrayOfVector3">
+  <xs:element name="MyAudioHelpers.Wave" nillable="true" type="tns:MyAudioHelpers.Wave" />
+  <xs:simpleType name="MyAudioHelpers.Dimensions">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="D2" />
+      <xs:enumeration value="D3" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MyAudioHelpers.Dimensions" nillable="true" type="tns:MyAudioHelpers.Dimensions" />
+  <xs:complexType name="MyObjectBuilder_CueDefinitions">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q2:MyObjectBuilder_Base">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Cues" nillable="true" type="tns:ArrayOfMyObjectBuilder_CueDefinition" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MyObjectBuilder_CueDefinitions" nillable="true" type="tns:MyObjectBuilder_CueDefinitions" />
+  <xs:complexType name="ArrayOfMyObjectBuilder_CueDefinition">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="Vector3" type="tns:Vector3" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MyObjectBuilder_CueDefinition" nillable="true" type="tns:MyObjectBuilder_CueDefinition" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfVector3" nillable="true" type="tns:ArrayOfVector3" />
-  <xs:complexType name="Vector3S">
-    <xs:annotation>
-      <xs:appinfo>
-        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
-      </xs:appinfo>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element minOccurs="0" name="X" type="xs:short" />
-      <xs:element minOccurs="0" name="Y" type="xs:short" />
-      <xs:element minOccurs="0" name="Z" type="xs:short" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Vector3S" nillable="true" type="tns:Vector3S" />
-  <xs:complexType name="MyBlockOrientation">
-    <xs:annotation>
-      <xs:appinfo>
-        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
-      </xs:appinfo>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Forward" type="tns:Base6Directions.Direction" />
-      <xs:element minOccurs="0" name="Up" type="tns:Base6Directions.Direction" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="MyBlockOrientation" nillable="true" type="tns:MyBlockOrientation" />
-  <xs:complexType name="Color">
-    <xs:annotation>
-      <xs:appinfo>
-        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
-      </xs:appinfo>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element name="packedValue" type="xs:unsignedInt" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Color" nillable="true" type="tns:Color" />
+  <xs:element name="ArrayOfMyObjectBuilder_CueDefinition" nillable="true" type="tns:ArrayOfMyObjectBuilder_CueDefinition" />
 </xs:schema>
