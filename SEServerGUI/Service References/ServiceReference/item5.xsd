@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Definitions" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.Localization" />
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.Localization" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" />
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd11" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.Voxels" />
+  <xs:complexType name="SerializableDefinitionId">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SubtypeId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SubtypeName" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="TypeId" type="q1:MyObjectBuilderType" />
+      <xs:element minOccurs="0" name="TypeIdString" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableDefinitionId" nillable="true" type="tns:SerializableDefinitionId" />
   <xs:complexType name="MyObjectBuilder_AmmoMagazineDefinition">
     <xs:complexContent mixed="false">
       <xs:extension base="tns:MyObjectBuilder_PhysicalItemDefinition">
@@ -21,10 +35,10 @@
     <xs:complexContent mixed="false">
       <xs:extension base="tns:MyObjectBuilder_DefinitionBase">
         <xs:sequence>
-          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Sandbox.Common.Localization" minOccurs="0" name="IconSymbol" nillable="true" type="q1:MyTextsWrapperEnum" />
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Sandbox.Common.Localization" minOccurs="0" name="IconSymbol" nillable="true" type="q2:MyTextsWrapperEnum" />
           <xs:element minOccurs="0" name="Mass" type="xs:float" />
           <xs:element minOccurs="0" name="Model" nillable="true" type="xs:string" />
-          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Size" type="q2:Vector3" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="Size" type="q3:Vector3" />
           <xs:element minOccurs="0" name="Volume" nillable="true" type="xs:float" />
         </xs:sequence>
       </xs:extension>
@@ -33,7 +47,7 @@
   <xs:element name="MyObjectBuilder_PhysicalItemDefinition" nillable="true" type="tns:MyObjectBuilder_PhysicalItemDefinition" />
   <xs:complexType name="MyObjectBuilder_DefinitionBase">
     <xs:complexContent mixed="false">
-      <xs:extension xmlns:q3="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q3:MyObjectBuilder_Base">
+      <xs:extension xmlns:q4="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" base="q4:MyObjectBuilder_Base">
         <xs:sequence>
           <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
           <xs:element minOccurs="0" name="DisplayName" nillable="true" type="xs:string" />
@@ -46,20 +60,6 @@
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="MyObjectBuilder_DefinitionBase" nillable="true" type="tns:MyObjectBuilder_DefinitionBase" />
-  <xs:complexType name="SerializableDefinitionId">
-    <xs:annotation>
-      <xs:appinfo>
-        <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
-      </xs:appinfo>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:element minOccurs="0" name="SubtypeId" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="SubtypeName" nillable="true" type="xs:string" />
-      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="TypeId" type="q4:MyObjectBuilderType" />
-      <xs:element minOccurs="0" name="TypeIdString" nillable="true" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="SerializableDefinitionId" nillable="true" type="tns:SerializableDefinitionId" />
   <xs:simpleType name="MyAmmoCategoryEnum">
     <xs:restriction base="xs:string">
       <xs:enumeration value="SmallCaliber" />

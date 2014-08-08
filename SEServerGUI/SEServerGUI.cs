@@ -1131,9 +1131,11 @@ namespace SEServerGUI
 
 			//Refresh the chat messages
 			string[] chatMessages;
+			List<ulong> connectedPlayers;
 			try
 			{
 				chatMessages = m_chatClient.GetChatMessages().ToArray();
+				connectedPlayers = m_serviceClient.GetConnectedPlayers();
 			}
 			catch (Exception ex)
 			{
@@ -1156,7 +1158,6 @@ namespace SEServerGUI
 
 			LST_Chat_ConnectedPlayers.BeginUpdate();
 
-			List<ulong> connectedPlayers = m_serviceClient.GetConnectedPlayers();
 			if (connectedPlayers.Count != LST_Chat_ConnectedPlayers.Items.Count)
 			{
 				LST_Chat_ConnectedPlayers.Items.Clear();

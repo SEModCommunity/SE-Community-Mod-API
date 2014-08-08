@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/VRageMath" />
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd18" namespace="http://schemas.datacontract.org/2004/07/SEModAPI.API" />
-  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" />
+  <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" />
   <xs:import schemaLocation="http://localhost:8000/SEServerExtender/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" />
   <xs:complexType name="ArrayOfCubeBlockEntityProxy">
     <xs:sequence>
@@ -15,15 +15,14 @@
     <xs:complexContent mixed="false">
       <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/SEModAPIInternal.API.Entity" base="q1:BaseObjectProxy">
         <xs:sequence>
-          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ObjectBuilder" nillable="true" type="q2:MyObjectBuilder_CubeBlock" />
           <xs:element minOccurs="0" name="EntityId" type="xs:long" />
-          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="BlockOrientation" type="q3:MyBlockOrientation" />
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/VRageMath" minOccurs="0" name="BlockOrientation" type="q2:MyBlockOrientation" />
           <xs:element minOccurs="0" name="BuildPercent" type="xs:float" />
-          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/SEModAPI.API" minOccurs="0" name="ColorMaskHSV" type="q4:Vector3Wrapper" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/SEModAPI.API" minOccurs="0" name="ColorMaskHSV" type="q3:Vector3Wrapper" />
           <xs:element minOccurs="0" name="IntegrityPercent" type="xs:float" />
-          <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="Min" type="q5:SerializableVector3I" />
+          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders.VRageData" minOccurs="0" name="Min" type="q4:SerializableVector3I" />
           <xs:element minOccurs="0" name="Owner" type="xs:long" />
-          <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ShareMode" type="q6:MyOwnershipShareModeEnum" />
+          <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Sandbox.Common.ObjectBuilders" minOccurs="0" name="ShareMode" type="q5:MyOwnershipShareModeEnum" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
