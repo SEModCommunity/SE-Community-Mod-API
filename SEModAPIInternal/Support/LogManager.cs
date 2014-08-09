@@ -92,20 +92,27 @@ namespace SEModAPIInternal.Support
 		{
 			if (m_filePath == null)
 				return;
+			try
+			{
+				StreamWriter file = new StreamWriter(m_filePath.ToString(), true);
 
-			StreamWriter file = new StreamWriter(m_filePath.ToString(), true);
+				m_stringBuilder.Clear();
+				AppendDateAndTime(m_stringBuilder);
+				m_stringBuilder.Append(" - ");
+				AppendThreadInfo(m_stringBuilder);
+				m_stringBuilder.Append(" -> ");
+				m_stringBuilder.Append(msg);
 
-			m_stringBuilder.Clear();
-			AppendDateAndTime(m_stringBuilder);
-			m_stringBuilder.Append(" - ");
-			AppendThreadInfo(m_stringBuilder);
-			m_stringBuilder.Append(" -> ");
-			m_stringBuilder.Append(msg);
+				file.WriteLine(m_stringBuilder.ToString());
 
-			file.WriteLine(m_stringBuilder.ToString());
+				file.Close();
+				m_stringBuilder.Clear();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Failed to write to log: " + ex.ToString());
+			}
 
-			file.Close();
-			m_stringBuilder.Clear();
 		}
 
 		public void WriteLine(string message, LoggingOptions option)
