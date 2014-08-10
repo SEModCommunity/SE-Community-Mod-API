@@ -43,6 +43,7 @@ namespace SEModAPIExtensions.API
 		public bool noConsole;
 		public bool debug;
 		public string gamePath;
+		public bool noWCF;
 	}
 
 	[ServiceContract]
@@ -377,15 +378,21 @@ namespace SEModAPIExtensions.API
 
 				if (m_isWCFEnabled)
 				{
-					m_serverHost.Open();
-					m_webHost.Open();
-					m_baseHost.Open();
+					if (m_serverHost != null)
+						m_serverHost.Open();
+					if (m_webHost != null)
+						m_webHost.Open();
+					if (m_baseHost != null)
+						m_baseHost.Open();
 				}
 				else
 				{
-					m_serverHost.Close();
-					m_webHost.Close();
-					m_baseHost.Close();
+					if(m_serverHost != null)
+						m_serverHost.Close();
+					if (m_webHost != null)
+						m_webHost.Close();
+					if (m_baseHost != null)
+						m_baseHost.Close();
 				}
 			}
 		}

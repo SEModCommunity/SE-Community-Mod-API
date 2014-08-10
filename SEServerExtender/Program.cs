@@ -42,6 +42,7 @@ namespace SEServerExtender
 			extenderArgs.noConsole = false;
 			extenderArgs.debug = false;
 			extenderArgs.gamePath = "";
+			extenderArgs.noWCF = false;
 
 			//Process the args
 			foreach (string arg in args)
@@ -87,6 +88,10 @@ namespace SEServerExtender
 					{
 						extenderArgs.debug = true;
 					}
+					if (arg.ToLower().Equals("nowcf"))
+					{
+						extenderArgs.noWCF = true;
+					}
 				}
 			}
 
@@ -104,6 +109,7 @@ namespace SEServerExtender
 
 				m_server = Server.Instance;
 				m_server.CommandLineArgs = extenderArgs;
+				m_server.IsWCFEnabled = !extenderArgs.noWCF;
 				m_server.Init();
 				if (extenderArgs.autoStart)
 				{
