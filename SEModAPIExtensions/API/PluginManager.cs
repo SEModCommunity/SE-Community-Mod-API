@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.Text;
 using System.Timers;
+using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
 
@@ -254,6 +255,7 @@ namespace SEModAPIExtensions.API
 		public void Init()
 		{
 			Console.WriteLine("Initializing plugins ...");
+			m_initialized = true;
 
 			foreach (var key in m_plugins.Keys)
 			{
@@ -262,7 +264,7 @@ namespace SEModAPIExtensions.API
 
 			Console.WriteLine("Finished initializing plugins");
 
-			m_initialized = true;
+			
 		}
 
 		public void Update()
@@ -280,17 +282,10 @@ namespace SEModAPIExtensions.API
 
 			List<EntityEventManager.EntityEvent> events = EntityEventManager.Instance.EntityEvents;
 			List<ChatManager.ChatEvent> chatEvents = ChatManager.Instance.ChatEvents;
-
-			foreach (var key in m_plugins.Keys)
-			{
-				var plugin = m_plugins[key];
-
-				//Skip un-initialized plugins
-				if (!m_pluginState.ContainsKey(key))
-					continue;
-
 				//Generate the player join/leave events here
 				List<ulong> connectedPlayers = PlayerManager.Instance.ConnectedPlayers;
+			try
+			{
 				foreach (ulong steamId in connectedPlayers)
 				{
 					if (!m_lastConnectedPlayerList.Contains(steamId))
@@ -299,12 +294,9 @@ namespace SEModAPIExtensions.API
 						playerEvent.priority = 1;
 						playerEvent.timestamp = DateTime.Now;
 						playerEvent.type = EntityEventManager.EntityEventType.OnPlayerJoined;
-						//TODO - Find a way to stall the event long enough for a linked character entity to exist
+						//TODO - Find a way to stall the event long enough for a linked character entity to exist - this is impossible because of cockpits and respawnships
 						//For now, create a dummy entity just for passing the player's steam id along
-						BaseEntity dummyObject = new BaseEntity(null);
-						dummyObject.EntityId = (long)steamId;
-						playerEvent.entity = dummyObject;
-
+						playerEvent.entity = (Object)steamId;
 						events.Add(playerEvent);
 					}
 				}
@@ -316,16 +308,65 @@ namespace SEModAPIExtensions.API
 						playerEvent.priority = 1;
 						playerEvent.timestamp = DateTime.Now;
 						playerEvent.type = EntityEventManager.EntityEventType.OnPlayerLeft;
-						//TODO - Find a way to stall the event long enough for a linked character entity to exist
+						//TODO - Find a way to stall the event long enough for a linked character entity to exist - this is impossible because of cockpits and respawnships
 						//For now, create a dummy entity just for passing the player's steam id along
-						BaseEntity dummyObject = new BaseEntity(null);
-						dummyObject.EntityId = (long)steamId;
-						playerEvent.entity = dummyObject;
-
+						playerEvent.entity = (Object)steamId;
 						events.Add(playerEvent);
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("PluginManager.Update() Exception in player discovery: " + ex.ToString());
+				}
 				m_lastConnectedPlayerList = new List<ulong>(connectedPlayers);
+			foreach (var key in m_plugins.Keys)
+			{
+				var plugin = m_plugins[key];
+
+				if (!m_pluginState.ContainsKey(key))
+					continue;
+				PluginManagerThreadParams parameters = new PluginManagerThreadParams();
+				parameters.plugin = plugin;
+				parameters.key = key;
+				parameters.events = new List<EntityEventManager.EntityEvent>(events);
+				parameters.chatEvents = new List<ChatManager.ChatEvent>(chatEvents);
+
+				Thread pluginThread = new Thread(doUpdate);
+				pluginThread.Start(parameters);
+
+			}
+
+			m_averageEvents = (m_averageEvents + (events.Count + chatEvents.Count)) / 2;
+
+			TimeSpan updateTime = DateTime.Now - m_lastUpdate;
+			m_averageUpdateTime = (m_averageUpdateTime + updateTime.TotalMilliseconds) / 2;
+
+			TimeSpan timeSinceAverageOutput = DateTime.Now - m_lastAverageOutput;
+			if (timeSinceAverageOutput.TotalSeconds > 30)
+			{
+				m_lastAverageOutput = DateTime.Now;
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+				{
+					LogManager.APILog.WriteLine("PluginManager - Update interval = " + m_averageUpdateInterval.ToString() + "ms");
+					LogManager.APILog.WriteLine("PluginManager - Update time = " + m_averageUpdateTime.ToString() + "ms");
+					LogManager.APILog.WriteLine("PluginManager - Events per update = " + m_averageEvents.ToString());
+				}
+			}
+
+			EntityEventManager.Instance.ClearEvents();
+			EntityEventManager.Instance.ResourceLocked = false;
+			ChatManager.Instance.ClearEvents();
+		}
+		public static void doUpdate(object _parameters)
+		{
+			if (_parameters == null) return;
+			PluginManagerThreadParams parameters = (PluginManagerThreadParams)_parameters;
+
+			List<EntityEventManager.EntityEvent> events = parameters.events;
+			List<ChatManager.ChatEvent> chatEvents = parameters.chatEvents;
+			Object plugin = parameters.plugin;
 
 				//Run entity events
 				foreach (EntityEventManager.EntityEvent entityEvent in events)
@@ -350,8 +391,8 @@ namespace SEModAPIExtensions.API
 								if (updateMethod != null)
 								{
 									//FIXME - Temporary hack to pass along the player's steam id
-									ulong steamId = (entityEvent.entity != null) ? (ulong)((BaseEntity)entityEvent.entity).EntityId : 0L;
-									updateMethod.Invoke(plugin, new object[] { steamId, null });
+								ulong steamId = (ulong)entityEvent.entity;
+								updateMethod.Invoke(plugin, new object[] { steamId });
 								}
 							}
 							catch (Exception ex)
@@ -366,8 +407,8 @@ namespace SEModAPIExtensions.API
 								if (updateMethod != null)
 								{
 									//FIXME - Temporary hack to pass along the player's steam id
-									ulong steamId = (entityEvent.entity != null) ? (ulong)((BaseEntity)entityEvent.entity).EntityId : 0L;
-									updateMethod.Invoke(plugin, new object[] { steamId, null });
+								ulong steamId = (ulong)entityEvent.entity;
+								updateMethod.Invoke(plugin, new object[] { steamId });
 								}
 							}
 							catch (Exception ex)
@@ -417,31 +458,7 @@ namespace SEModAPIExtensions.API
 				{
 					LogManager.APILog.WriteLine(ex);
 				}
-			}
-
-			m_averageEvents = (m_averageEvents + (events.Count + chatEvents.Count)) / 2;
-
-			TimeSpan updateTime = DateTime.Now - m_lastUpdate;
-			m_averageUpdateTime = (m_averageUpdateTime + updateTime.TotalMilliseconds) / 2;
-
-			TimeSpan timeSinceAverageOutput = DateTime.Now - m_lastAverageOutput;
-			if (timeSinceAverageOutput.TotalSeconds > 30)
-			{
-				m_lastAverageOutput = DateTime.Now;
-
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-				{
-					LogManager.APILog.WriteLine("PluginManager - Update interval = " + m_averageUpdateInterval.ToString() + "ms");
-					LogManager.APILog.WriteLine("PluginManager - Update time = " + m_averageUpdateTime.ToString() + "ms");
-					LogManager.APILog.WriteLine("PluginManager - Events per update = " + m_averageEvents.ToString());
-				}
-			}
-
-			EntityEventManager.Instance.ClearEvents();
-			EntityEventManager.Instance.ResourceLocked = false;
-			ChatManager.Instance.ClearEvents();
 		}
-
 		public void Shutdown()
 		{
 			foreach (var key in m_plugins.Keys)

@@ -54,6 +54,7 @@
     <Compile Include="API\Plugin\IPlugin.cs" />
     <Compile Include="API\Plugin\PluginBase.cs" />
     <Compile Include="API\PluginManager.cs" />
+    <Compile Include="API\PluginManagerThreadParams.cs" />
     <Compile Include="API\Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

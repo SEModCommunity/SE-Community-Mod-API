@@ -21,6 +21,7 @@ namespace SEModAPIInternal.Support
 		private DirectoryInfo m_libraryPath;
 		private FileInfo m_filePath;
 		private StringBuilder m_stringBuilder;
+		private static readonly object _logLock = new object();
 
 		#endregion
 
@@ -92,20 +93,28 @@ namespace SEModAPIInternal.Support
 		{
 			if (m_filePath == null)
 				return;
+			try
+			{
+				lock(_logLock)
+				{
+					m_stringBuilder.Clear();
+					AppendDateAndTime(m_stringBuilder);
+					m_stringBuilder.Append(" - ");
+					AppendThreadInfo(m_stringBuilder);
+					m_stringBuilder.Append(" -> ");
+					m_stringBuilder.Append(msg);
+					TextWriter m_Writer = new StreamWriter(m_filePath.ToString(), true);
+					TextWriter.Synchronized(m_Writer).WriteLine(m_stringBuilder.ToString());
+					m_Writer.Close();
+					m_stringBuilder.Clear();
+				}
+				
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Failed to write to log: " + ex.ToString());
+			}
 
-			StreamWriter file = new StreamWriter(m_filePath.ToString(), true);
-
-			m_stringBuilder.Clear();
-			AppendDateAndTime(m_stringBuilder);
-			m_stringBuilder.Append(" - ");
-			AppendThreadInfo(m_stringBuilder);
-			m_stringBuilder.Append(" -> ");
-			m_stringBuilder.Append(msg);
-
-			file.WriteLine(m_stringBuilder.ToString());
-
-			file.Close();
-			m_stringBuilder.Clear();
 		}
 
 		public void WriteLine(string message, LoggingOptions option)

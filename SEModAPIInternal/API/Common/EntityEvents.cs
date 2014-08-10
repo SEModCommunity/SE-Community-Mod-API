@@ -30,7 +30,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			public EntityEventType type;
 			public DateTime timestamp;
-			public BaseObject entity;
+			public Object entity;
 			public ushort priority;
 		}
 
