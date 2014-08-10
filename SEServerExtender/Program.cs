@@ -12,6 +12,7 @@ using SEModAPIInternal.Support;
 
 using SEModAPIExtensions.API;
 using SEModAPIExtensions.API.IPC;
+using System.ServiceModel.Web;
 
 namespace SEServerExtender
 {
@@ -26,23 +27,6 @@ namespace SEServerExtender
 		[STAThread]
 		static void Main(string[] args)
 		{
-			Uri baseAddress = new Uri(InternalService.BaseURI);
-			ServiceHost selfHost = new ServiceHost(typeof(InternalService), baseAddress);
-
-			try
-			{
-				selfHost.AddServiceEndpoint(typeof(IInternalServiceContract), new WSHttpBinding(), "InternalService");
-				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-				smb.HttpGetEnabled = true;
-				selfHost.Description.Behaviors.Add(smb);
-				selfHost.Open();
-			}
-			catch (CommunicationException ex)
-			{
-				Console.WriteLine("An exception occurred: {0}", ex.Message);
-				selfHost.Abort();
-			}
-
 			//Setup error handling for unmanaged exceptions
 			AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
 			Application.ThreadException += Application_ThreadException;

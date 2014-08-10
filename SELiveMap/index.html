@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Space Engineers Live Map</title>
+		
+		<link href="css/main.css" rel="stylesheet" />
+		
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js"></script>
+		<script type="text/javascript" src="js/TrackballControls.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+	</head>
+	<body onLoad="webGLStart();">
+		<div style="border: 1px solid; margin: 10px; width: 800px; height: 800px;" id="container" name="container">
+		</div>
+		<input type="button" onClick="refreshEntities();" value="Refresh"/>
+	</body>
+</html>

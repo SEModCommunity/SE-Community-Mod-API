@@ -28,6 +28,9 @@ using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
 using SEModAPIExtensions.API.IPC;
+using System.ServiceModel.Web;
+using System.IdentityModel.Selectors;
+using System.ServiceModel.Security;
 
 namespace SEModAPIExtensions.API
 {
@@ -116,10 +119,14 @@ namespace SEModAPIExtensions.API
 		private static bool m_isServerRunning;
 		private static DateTime m_lastRestart;
 		private static int m_restartLimit;
+		private static bool m_isWCFEnabled;
 
 		private CommandLineArgs m_commandLineArgs;
 		private DedicatedConfigDefinition m_dedicatedConfigDefinition;
 		private GameInstallationInfo m_gameInstallationInfo;
+		private ServiceHost m_serverHost;
+		private ServiceHost m_baseHost;
+		private WebServiceHost m_webHost;
 
 		//Managers
 		private PluginManager m_pluginManager;
@@ -154,24 +161,81 @@ namespace SEModAPIExtensions.API
 			m_autosaveTimer.Interval = 120000;
 			m_autosaveTimer.Elapsed += AutoSaveMain;
 
-			Uri baseAddress = new Uri(InternalService.BaseURI + "Server/");
-			ServiceHost selfHost = new ServiceHost(typeof(ServerService), baseAddress);
+			m_isWCFEnabled = true;
 
+			Console.WriteLine("Finished creating server!");
+		}
+
+		private bool SetupServerService()
+		{
+			Uri serverAddress = new Uri(InternalService.BaseURI + "Server/");
+			m_serverHost = new ServiceHost(typeof(ServerService), serverAddress);
 			try
 			{
-				selfHost.AddServiceEndpoint(typeof(IServerServiceContract), new WSHttpBinding(), "ServerService");
+				m_serverHost.AddServiceEndpoint(typeof(IServerServiceContract), new WSHttpBinding(), "ServerService");
 				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
 				smb.HttpGetEnabled = true;
-				selfHost.Description.Behaviors.Add(smb);
-				selfHost.Open();
+				m_serverHost.Description.Behaviors.Add(smb);
+				m_serverHost.Open();
 			}
 			catch (CommunicationException ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-				selfHost.Abort();
+				m_serverHost.Abort();
+				return false;
 			}
 
-			Console.WriteLine("Finished creating server!");
+			return true;
+		}
+
+		private bool SetupMainService()
+		{
+			Uri baseAddress = new Uri(InternalService.BaseURI);
+			m_baseHost = new ServiceHost(typeof(InternalService), baseAddress);
+			try
+			{
+				WSHttpBinding binding = new WSHttpBinding();
+				m_baseHost.AddServiceEndpoint(typeof(IInternalServiceContract), binding, "InternalService");
+				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+				smb.HttpGetEnabled = true;
+				m_baseHost.Description.Behaviors.Add(smb);
+				m_baseHost.Open();
+			}
+			catch (CommunicationException ex)
+			{
+				Console.WriteLine("An exception occurred: {0}", ex.Message);
+				m_baseHost.Abort();
+				return false;
+			}
+
+			return true;
+		}
+
+		private bool SetupWebService()
+		{
+			Uri webServiceAddress = new Uri(InternalService.BaseURI + "Web/");
+			m_webHost = new WebServiceHost(typeof(WebService), webServiceAddress);
+			try
+			{
+				//WebHttpBinding binding = new WebHttpBinding(WebHttpSecurityMode.TransportCredentialOnly);
+				//binding.AllowCookies = false;
+				//binding.Security.Mode = WebHttpSecurityMode.TransportCredentialOnly;
+				//binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Windows;
+				//ServiceEndpoint endpoint = m_webHost.AddServiceEndpoint(typeof(IWebServiceContract), binding, "WebService");
+				//m_webHost.Credentials.UserNameAuthentication.UserNamePasswordValidationMode = UserNamePasswordValidationMode.Custom;
+				//m_webHost.Credentials.UserNameAuthentication.CustomUserNamePasswordValidator = new UserNameValidator();
+				EnableCorsBehavior ecb = new EnableCorsBehavior();
+				m_webHost.Description.Behaviors.Add(ecb);
+				m_webHost.Open();
+			}
+			catch (CommunicationException ex)
+			{
+				Console.WriteLine("An exception occurred: {0}", ex.Message);
+				m_webHost.Abort();
+				return false;
+			}
+
+			return true;
 		}
 
 		private bool SetupGameInstallation()
@@ -302,6 +366,30 @@ namespace SEModAPIExtensions.API
 			set { m_autosaveTimer.Interval = value; }
 		}
 
+		[IgnoreDataMember]
+		public bool IsWCFEnabled
+		{
+			get { return m_isWCFEnabled; }
+			set
+			{
+				if (m_isWCFEnabled == value) return;
+				m_isWCFEnabled = value;
+
+				if (m_isWCFEnabled)
+				{
+					m_serverHost.Open();
+					m_webHost.Open();
+					m_baseHost.Open();
+				}
+				else
+				{
+					m_serverHost.Close();
+					m_webHost.Close();
+					m_baseHost.Close();
+				}
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -315,6 +403,13 @@ namespace SEModAPIExtensions.API
 			setupResult &= SetupGameInstallation();
 			setupResult &= SetupManagers();
 			setupResult &= ProcessCommandLineArgs();
+
+			if (IsWCFEnabled)
+			{
+				SetupServerService();
+				SetupMainService();
+				SetupWebService();
+			}
 
 			if (!setupResult)
 				return;
@@ -340,6 +435,7 @@ namespace SEModAPIExtensions.API
 			{
 				if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				{
+					m_pluginManager.LoadPlugins(m_commandLineArgs.instanceName);
 					m_pluginManager.Init();
 				}
 			}
@@ -413,8 +509,7 @@ namespace SEModAPIExtensions.API
 					return;
 				if (m_isServerRunning)
 					return;
-
-				PluginManager.Instance.LoadPlugins(m_commandLineArgs.instanceName);
+				
 				m_pluginMainLoop.Start();
 				m_autosaveTimer.Start();
 
