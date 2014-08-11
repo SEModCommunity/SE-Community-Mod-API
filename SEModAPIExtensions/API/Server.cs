@@ -44,6 +44,9 @@ namespace SEModAPIExtensions.API
 		public bool debug;
 		public string gamePath;
 		public bool noWCF;
+		public ushort wcfPort;
+		public int autosave;
+		public string path;
 	}
 
 	[ServiceContract]
@@ -159,7 +162,7 @@ namespace SEModAPIExtensions.API
 			m_pluginMainLoop.Elapsed += PluginManagerMain;
 
 			m_autosaveTimer = new System.Timers.Timer();
-			m_autosaveTimer.Interval = 120000;
+			m_autosaveTimer.Interval = 300000;
 			m_autosaveTimer.Elapsed += AutoSaveMain;
 
 			m_isWCFEnabled = true;
@@ -169,7 +172,7 @@ namespace SEModAPIExtensions.API
 
 		private bool SetupServerService()
 		{
-			Uri serverAddress = new Uri(InternalService.BaseURI + "Server/");
+			Uri serverAddress = new Uri("http://localhost:" + WCFPort.ToString() + "/SEServerExtender/Server/");
 			m_serverHost = new ServiceHost(typeof(ServerService), serverAddress);
 			try
 			{
@@ -191,7 +194,7 @@ namespace SEModAPIExtensions.API
 
 		private bool SetupMainService()
 		{
-			Uri baseAddress = new Uri(InternalService.BaseURI);
+			Uri baseAddress = new Uri("http://localhost:" + WCFPort.ToString() + "/SEServerExtender/");
 			m_baseHost = new ServiceHost(typeof(InternalService), baseAddress);
 			try
 			{
@@ -214,7 +217,7 @@ namespace SEModAPIExtensions.API
 
 		private bool SetupWebService()
 		{
-			Uri webServiceAddress = new Uri(InternalService.BaseURI + "Web/");
+			Uri webServiceAddress = new Uri("http://localhost:" + WCFPort.ToString() + "/SEServerExtender/Web/");
 			m_webHost = new WebServiceHost(typeof(WebService), webServiceAddress);
 			try
 			{
@@ -293,12 +296,28 @@ namespace SEModAPIExtensions.API
 				}
 				if (m_commandLineArgs.noGUI)
 				{
-					Console.WriteLine("No GUI enabled");
+					Console.WriteLine("GUI disabled");
 				}
 				if (m_commandLineArgs.debug)
 				{
 					Console.WriteLine("Debugging enabled");
 					SandboxGameAssemblyWrapper.IsDebugging = true;
+				}
+				if (m_commandLineArgs.noWCF)
+				{
+					Console.WriteLine("WCF disabled");
+				}
+				if (m_commandLineArgs.wcfPort > 0)
+				{
+					Console.WriteLine("WCF port: " + m_commandLineArgs.wcfPort.ToString());
+				}
+				if (m_commandLineArgs.autosave > 0)
+				{
+					Console.WriteLine("Autosave interval: " + m_commandLineArgs.autosave.ToString());
+				}
+				if (m_commandLineArgs.path.Length != 0)
+				{
+					Console.WriteLine("Full path pre-selected: '" + m_commandLineArgs.path + "'");
 				}
 			}
 			catch (Exception ex)
@@ -363,8 +382,20 @@ namespace SEModAPIExtensions.API
 		[DataMember]
 		public double AutosaveInterval
 		{
-			get { return m_autosaveTimer.Interval; }
-			set { m_autosaveTimer.Interval = value; }
+			get
+			{
+				m_commandLineArgs.autosave = (int)Math.Round(m_autosaveTimer.Interval / 60000.0);
+				return m_autosaveTimer.Interval;
+			}
+			set
+			{
+				m_autosaveTimer.Interval = value;
+
+				if (m_autosaveTimer.Interval <= 0)
+					m_autosaveTimer.Interval = 300000;
+
+				m_commandLineArgs.autosave = (int)Math.Round(m_autosaveTimer.Interval / 60000.0);
+			}
 		}
 
 		[IgnoreDataMember]
@@ -397,6 +428,36 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
+		[IgnoreDataMember]
+		public ushort WCFPort
+		{
+			get
+			{
+				ushort port = m_commandLineArgs.wcfPort;
+				if (port == 0)
+					port = 8000;
+
+				return port;
+			}
+			set { m_commandLineArgs.wcfPort = value; }
+		}
+
+		[IgnoreDataMember]
+		public string Path
+		{
+			get
+			{
+				string path = m_commandLineArgs.path;
+				if (path == null || string.IsNullOrEmpty(path))
+				{
+					path = m_gameAssemblyWrapper.GetUserDataPath(InstanceName);
+				}
+
+				return path;
+			}
+			set { m_commandLineArgs.path = value; }
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -418,8 +479,14 @@ namespace SEModAPIExtensions.API
 				SetupWebService();
 			}
 
+			if(m_commandLineArgs.autosave > 0)
+				m_autosaveTimer.Interval = m_commandLineArgs.autosave * 60000;
+
 			if (!setupResult)
+			{
+				LogManager.ErrorLog.WriteLineAndConsole("Failed to initialize server");
 				return;
+			}
 
 			m_isInitialized = true;
 		}
@@ -442,7 +509,7 @@ namespace SEModAPIExtensions.API
 			{
 				if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				{
-					m_pluginManager.LoadPlugins(m_commandLineArgs.instanceName);
+					m_pluginManager.LoadPlugins();
 					m_pluginManager.Init();
 				}
 			}
@@ -472,7 +539,7 @@ namespace SEModAPIExtensions.API
 
 			try
 			{
-				bool result = m_serverWrapper.StartServer(m_commandLineArgs.worldName, m_commandLineArgs.instanceName, !m_commandLineArgs.noConsole);
+				bool result = m_serverWrapper.StartServer(m_commandLineArgs.instanceName, m_commandLineArgs.path, !m_commandLineArgs.noConsole);
 
 				m_isServerRunning = false;
 
@@ -549,8 +616,7 @@ namespace SEModAPIExtensions.API
 
 		public void LoadServerConfig()
 		{
-			string appdata = m_gameAssemblyWrapper.GetUserDataPath(m_commandLineArgs.instanceName);
-			FileInfo fileInfo = new FileInfo(appdata + @"\SpaceEngineers-Dedicated.cfg");
+			FileInfo fileInfo = new FileInfo(Path + @"\SpaceEngineers-Dedicated.cfg");
 			if (fileInfo.Exists)
 			{
 				MyConfigDedicatedData config = DedicatedConfigDefinition.Load(fileInfo);
@@ -560,8 +626,7 @@ namespace SEModAPIExtensions.API
 
 		public void SaveServerConfig()
 		{
-			string appdata = m_gameAssemblyWrapper.GetUserDataPath(m_commandLineArgs.instanceName);
-			FileInfo fileInfo = new FileInfo(appdata + @"\SpaceEngineers-Dedicated.cfg");
+			FileInfo fileInfo = new FileInfo(Path + @"\SpaceEngineers-Dedicated.cfg");
 			if (m_dedicatedConfigDefinition != null)
 				m_dedicatedConfigDefinition.Save(fileInfo);
 		}

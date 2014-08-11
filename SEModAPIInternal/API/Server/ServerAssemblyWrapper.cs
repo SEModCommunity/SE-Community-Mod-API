@@ -136,7 +136,7 @@ namespace SEModAPIInternal.API.Server
 			PhysicsReset();
 		}
 
-		public bool StartServer(string worldName = "", string instanceName = "", bool useConsole = true)
+		public bool StartServer(string instanceName = "", string overridePath = "", bool useConsole = true)
 		{
 			try
 			{
@@ -154,7 +154,7 @@ namespace SEModAPIInternal.API.Server
 				object[] methodParams = new object[]
 				{
 					instanceName,
-					(string) null,
+					overridePath,
 					isUsingInstance,
 					useConsole
 				};

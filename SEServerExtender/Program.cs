@@ -43,6 +43,9 @@ namespace SEServerExtender
 			extenderArgs.debug = false;
 			extenderArgs.gamePath = "";
 			extenderArgs.noWCF = false;
+			extenderArgs.autosave = 0;
+			extenderArgs.wcfPort = 0;
+			extenderArgs.path = "";
 
 			//Process the args
 			foreach (string arg in args)
@@ -61,6 +64,32 @@ namespace SEServerExtender
 					if (argName.ToLower().Equals("gamepath"))
 					{
 						extenderArgs.gamePath = argValue;
+					}
+					if (argName.ToLower().Equals("autosave"))
+					{
+						try
+						{
+							extenderArgs.autosave = int.Parse(argValue);
+						}
+						catch (Exception)
+						{
+							//Do nothing
+						}
+					}
+					if (argName.ToLower().Equals("wcfport"))
+					{
+						try
+						{
+							extenderArgs.wcfPort = ushort.Parse(argValue);
+						}
+						catch (Exception)
+						{
+							//Do nothing
+						}
+					}
+					if (argName.ToLower().Equals("path"))
+					{
+						extenderArgs.path = argValue;
 					}
 				}
 				else
@@ -93,6 +122,14 @@ namespace SEServerExtender
 						extenderArgs.noWCF = true;
 					}
 				}
+			}
+
+			if (extenderArgs.noWCF)
+				extenderArgs.wcfPort = 0;
+
+			if (!string.IsNullOrEmpty(extenderArgs.path))
+			{
+				extenderArgs.instanceName = "";
 			}
 
 			if (!Environment.UserInteractive)

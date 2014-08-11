@@ -61,8 +61,6 @@ namespace SEModAPIExtensions.API.IPC
 	)]
 	public class InternalService : IInternalServiceContract
 	{
-		public static string BaseURI = "http://localhost:8000/SEServerExtender/";
-
 		public List<ulong> GetConnectedPlayers()
 		{
 			return PlayerManager.Instance.ConnectedPlayers;

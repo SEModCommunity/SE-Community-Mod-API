@@ -107,7 +107,17 @@ namespace SEModAPIExtensions.API
 			m_chatHandlerSetup = false;
 			m_chatEvents = new List<ChatEvent>();
 
-			Uri baseAddress = new Uri(InternalService.BaseURI + "Chat/");
+			SetupWCFService();
+
+			Console.WriteLine("Finished loading ChatManager");
+		}
+
+		private bool SetupWCFService()
+		{
+			if (!Server.Instance.IsWCFEnabled)
+				return true;
+
+			Uri baseAddress = new Uri("http://localhost:" + Server.Instance.WCFPort.ToString() + "/SEServerExtender/Chat/");
 			ServiceHost selfHost = new ServiceHost(typeof(ChatService), baseAddress);
 
 			try
@@ -122,9 +132,10 @@ namespace SEModAPIExtensions.API
 			{
 				Console.WriteLine("An exception occurred: {0}", ex.Message);
 				selfHost.Abort();
+				return false;
 			}
 
-			Console.WriteLine("Finished loading ChatManager");
+			return true;
 		}
 
 		#endregion

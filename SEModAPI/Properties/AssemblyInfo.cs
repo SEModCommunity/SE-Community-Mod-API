@@ -27,5 +27,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify each value or set default values with '*', like showed below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.2.6.2")]
-[assembly: AssemblyFileVersion("0.2.6.2")]
+[assembly: AssemblyVersion("0.2.6.3")]
+[assembly: AssemblyFileVersion("0.2.6.3")]

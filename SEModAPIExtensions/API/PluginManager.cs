@@ -108,7 +108,17 @@ namespace SEModAPIExtensions.API
 			m_averageEvents = 0;
 			m_lastConnectedPlayerList = new List<ulong>();
 
-			Uri baseAddress = new Uri(InternalService.BaseURI + "Plugin/");
+			SetupWCFService();
+
+			Console.WriteLine("Finished loading PluginManager");
+		}
+
+		private bool SetupWCFService()
+		{
+			if (!Server.Instance.IsWCFEnabled)
+				return true;
+
+			Uri baseAddress = new Uri("http://localhost:" + Server.Instance.WCFPort.ToString() + "/SEServerExtender/Plugin/");
 			ServiceHost selfHost = new ServiceHost(typeof(PluginService), baseAddress);
 
 			try
@@ -123,9 +133,10 @@ namespace SEModAPIExtensions.API
 			{
 				Console.WriteLine("An exception occurred: {0}", ex.Message);
 				selfHost.Abort();
+				return false;
 			}
 
-			Console.WriteLine("Finished loading PluginManager");
+			return true;
 		}
 
 		#endregion
@@ -165,18 +176,15 @@ namespace SEModAPIExtensions.API
 				return false;
 		}
 
-		public void LoadPlugins(string instanceName = "")
+		public void LoadPlugins()
 		{
 			Console.WriteLine("Loading plugins ...");
 
 			try
 			{
-				//m_plugins.Clear();
 				m_initialized = false;
 
-				SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(instanceName);
-
-				string modsPath = MyFileSystem.ModsPath;
+				string modsPath = Path.Combine(Server.Instance.Path, "Mods");
 				if (!Directory.Exists(modsPath))
 					return;
 

@@ -125,12 +125,15 @@ namespace SEServerExtender
 		{
 			try
 			{
-				List<String> instanceList = SandboxGameAssemblyWrapper.Instance.GetCommonInstanceList();
-				CMB_Control_CommonInstanceList.BeginUpdate();
-				CMB_Control_CommonInstanceList.Items.AddRange(instanceList.ToArray());
-				if (CMB_Control_CommonInstanceList.Items.Count > 0)
-					CMB_Control_CommonInstanceList.SelectedIndex = 0;
-				CMB_Control_CommonInstanceList.EndUpdate();
+				if (string.IsNullOrEmpty(m_server.CommandLineArgs.path))
+				{
+					List<String> instanceList = SandboxGameAssemblyWrapper.Instance.GetCommonInstanceList();
+					CMB_Control_CommonInstanceList.BeginUpdate();
+					CMB_Control_CommonInstanceList.Items.AddRange(instanceList.ToArray());
+					if (CMB_Control_CommonInstanceList.Items.Count > 0)
+						CMB_Control_CommonInstanceList.SelectedIndex = 0;
+					CMB_Control_CommonInstanceList.EndUpdate();
+				}
 
 				CMB_Control_AutosaveInterval.BeginUpdate();
 				CMB_Control_AutosaveInterval.Items.Add(1);
@@ -138,7 +141,6 @@ namespace SEServerExtender
 				CMB_Control_AutosaveInterval.Items.Add(5);
 				CMB_Control_AutosaveInterval.Items.Add(10);
 				CMB_Control_AutosaveInterval.Items.Add(30);
-				CMB_Control_AutosaveInterval.SelectedIndex = 2;
 				CMB_Control_AutosaveInterval.EndUpdate();
 			}
 			catch (AutoException)
@@ -317,12 +319,12 @@ namespace SEServerExtender
 			if (m_server.Config == null)
 				SandboxGameAssemblyWrapper.UseCommonProgramData = true;
 
-			if (m_server.CommandLineArgs.instanceName.Length != 0)
+			if (m_server.InstanceName.Length != 0)
 			{
 				CHK_Control_CommonDataPath.Checked = true;
 				foreach (var item in CMB_Control_CommonInstanceList.Items)
 				{
-					if (item.ToString().Equals(m_server.CommandLineArgs.instanceName))
+					if (item.ToString().Equals(m_server.InstanceName))
 					{
 						CMB_Control_CommonInstanceList.SelectedItem = item;
 						break;
@@ -332,8 +334,8 @@ namespace SEServerExtender
 
 			CHK_Control_Debugging.Checked = SandboxGameAssemblyWrapper.IsDebugging;
 
-			if (!CMB_Control_CommonInstanceList.ContainsFocus && m_server.CommandLineArgs.instanceName.Length > 0)
-				CMB_Control_CommonInstanceList.SelectedText = m_server.CommandLineArgs.instanceName;
+			if (!CMB_Control_CommonInstanceList.ContainsFocus && m_server.InstanceName.Length > 0)
+				CMB_Control_CommonInstanceList.SelectedText = m_server.InstanceName;
 
 			BTN_ServerControl_Stop.Enabled = m_server.IsRunning;
 			BTN_ServerControl_Start.Enabled = !m_server.IsRunning;
@@ -356,7 +358,10 @@ namespace SEServerExtender
 
 			if (m_server.Config != null)
 			{
-				CHK_Control_CommonDataPath.Enabled = !m_server.IsRunning;
+				if (string.IsNullOrEmpty(m_server.CommandLineArgs.path) && CMB_Control_CommonInstanceList.Items.Count > 0)
+					CHK_Control_CommonDataPath.Enabled = !m_server.IsRunning;
+				else
+					CHK_Control_CommonDataPath.Enabled = false;
 
 				BTN_Control_Server_Save.Enabled = m_server.Config.Changed;
 				BTN_Control_Server_Reset.Enabled = m_server.Config.Changed;
@@ -1680,7 +1685,7 @@ namespace SEServerExtender
 
 		private void BTN_Plugins_Refresh_Click(object sender, EventArgs e)
 		{
-			PluginManager.Instance.LoadPlugins(m_server.CommandLineArgs.instanceName);
+			PluginManager.Instance.LoadPlugins();
 		}
 
 		#endregion

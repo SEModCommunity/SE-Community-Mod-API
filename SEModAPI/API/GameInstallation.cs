@@ -46,7 +46,11 @@ namespace SEModAPI.API
 				m_GamePath = GetGameSteamPath();
 				if (m_GamePath == null || m_GamePath == "")
 				{
-					throw new GameInstallationInfoException(GameInstallationInfoExceptionState.GameNotRegistered, "Can't find the steam path in registry");	
+					m_GamePath = GetGameEXEPath();
+					if (m_GamePath == null || m_GamePath == "")
+					{
+						throw new GameInstallationInfoException(GameInstallationInfoExceptionState.EmptyGamePath, "Can't find the game path");
+					}
 				}
 					
 			}
@@ -84,12 +88,25 @@ namespace SEModAPI.API
 
 		public static bool IsValidGamePath(string gamePath)
 		{
-			if (string.IsNullOrEmpty(gamePath)) { return false; }
-			if (!Directory.Exists(gamePath)) return false;
-			if (!Directory.Exists(Path.Combine(gamePath, "Content"))) { return false; }
+			if (string.IsNullOrEmpty(gamePath))
+			{
+				return false;
+			}
 
-			//Binaries folder check disabled until we can verify if checking for either of these is okay or if we need to check for something else
-			//if (!Directory.Exists(Path.Combine(gamePath, "Bin64")) && !Directory.Exists(Path.Combine(gamePath, "DedicatedServer64"))) { return false; }
+			if (!Directory.Exists(gamePath))
+			{
+				return false;
+			}
+
+			if (!Directory.Exists(Path.Combine(gamePath, "Content")))
+			{
+				return false;
+			}
+
+			if (!Directory.Exists(Path.Combine(gamePath, "DedicatedServer64")))
+			{
+				return false;
+			}
 
 			return true;
 		}
@@ -109,7 +126,11 @@ namespace SEModAPI.API
 
 			if (key != null)
 			{
-				return key.GetValue("InstallLocation") as string;
+				string path = key.GetValue("InstallLocation") as string;
+				if (Directory.Exists(path))
+					return path;
+				else
+					return null;
 			}
 
 			return null;
@@ -132,10 +153,36 @@ namespace SEModAPI.API
 			if (key != null)
 			{
 				string steamBasePath = (string)key.GetValue("InstallPath");
-				return Path.Combine(steamBasePath, "steamapps", "common", "spaceengineers");
+				string path = Path.Combine(steamBasePath, "steamapps", "common", "spaceengineers");
+				if (Directory.Exists(path))
+					return path;
+				else
+					return null;
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Looks for the game install by going to the parent directory of this application
+		/// </summary>
+		/// <returns>The parent path of this application</returns>
+		public static string GetGameEXEPath()
+		{
+			try
+			{
+				string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+				UriBuilder uri = new UriBuilder(codeBase);
+				string path = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
+				DirectoryInfo directory = new DirectoryInfo(path);
+				string finalPath = directory.Parent.FullName;
+
+				return finalPath;
+			}
+			catch (Exception ex)
+			{
+				return "";
+			}
 		}
 
 		public bool IsBaseAssembliesChanged()
