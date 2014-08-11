@@ -330,9 +330,9 @@ namespace SEServerExtender
 				}
 			}
 
-			if (m_server.IsRunning)
-				CHK_Control_Debugging.Checked = SandboxGameAssemblyWrapper.IsDebugging;
-			if (m_server.IsRunning && m_server.CommandLineArgs.instanceName.Length > 0)
+			CHK_Control_Debugging.Checked = SandboxGameAssemblyWrapper.IsDebugging;
+
+			if (!CMB_Control_CommonInstanceList.ContainsFocus && m_server.CommandLineArgs.instanceName.Length > 0)
 				CMB_Control_CommonInstanceList.SelectedText = m_server.CommandLineArgs.instanceName;
 
 			BTN_ServerControl_Stop.Enabled = m_server.IsRunning;

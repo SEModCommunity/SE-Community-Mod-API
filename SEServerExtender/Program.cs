@@ -12,6 +12,7 @@ using SEModAPIInternal.Support;
 
 using SEModAPIExtensions.API;
 using SEModAPIExtensions.API.IPC;
+using System.ServiceModel.Web;
 
 namespace SEServerExtender
 {
@@ -26,23 +27,6 @@ namespace SEServerExtender
 		[STAThread]
 		static void Main(string[] args)
 		{
-			Uri baseAddress = new Uri(InternalService.BaseURI);
-			ServiceHost selfHost = new ServiceHost(typeof(InternalService), baseAddress);
-
-			try
-			{
-				selfHost.AddServiceEndpoint(typeof(IInternalServiceContract), new WSHttpBinding(), "InternalService");
-				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-				smb.HttpGetEnabled = true;
-				selfHost.Description.Behaviors.Add(smb);
-				selfHost.Open();
-			}
-			catch (CommunicationException ex)
-			{
-				Console.WriteLine("An exception occurred: {0}", ex.Message);
-				selfHost.Abort();
-			}
-
 			//Setup error handling for unmanaged exceptions
 			AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
 			Application.ThreadException += Application_ThreadException;
@@ -58,6 +42,7 @@ namespace SEServerExtender
 			extenderArgs.noConsole = false;
 			extenderArgs.debug = false;
 			extenderArgs.gamePath = "";
+			extenderArgs.noWCF = false;
 
 			//Process the args
 			foreach (string arg in args)
@@ -103,6 +88,10 @@ namespace SEServerExtender
 					{
 						extenderArgs.debug = true;
 					}
+					if (arg.ToLower().Equals("nowcf"))
+					{
+						extenderArgs.noWCF = true;
+					}
 				}
 			}
 
@@ -120,6 +109,7 @@ namespace SEServerExtender
 
 				m_server = Server.Instance;
 				m_server.CommandLineArgs = extenderArgs;
+				m_server.IsWCFEnabled = !extenderArgs.noWCF;
 				m_server.Init();
 				if (extenderArgs.autoStart)
 				{

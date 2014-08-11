@@ -13,9 +13,46 @@ using SEModAPIInternal.Support;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using VRageMath;
+using System.ServiceModel.Web;
+using System.Security.Permissions;
 
 namespace SEModAPIExtensions.API.IPC
 {
+	public class WebService : IWebServiceContract
+	{
+		public void GetOptions()
+		{
+			WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Allow-Origin", "*");
+			WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Request-Method", "POST,GET,PUT,DELETE,OPTIONS");
+			WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+		}
+
+		public List<BaseEntity> GetSectorEntities()
+		{
+			return SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+		}
+
+		public List<CubeGridEntity> GetSectorCubeGridEntities()
+		{
+			return SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+		}
+
+		public List<CubeBlockEntity> GetCubeBlocks(long cubeGridEntityId)
+		{
+			List<CubeBlockEntity> cubeBlocks = new List<CubeBlockEntity>();
+			foreach (CubeGridEntity cubeGrid in GetSectorCubeGridEntities())
+			{
+				if (cubeGrid.EntityId == cubeGridEntityId)
+				{
+					cubeBlocks = cubeGrid.CubeBlocks;
+					break;
+				}
+			}
+
+			return cubeBlocks;
+		}
+	}
+
 	[ServiceBehavior(
 		ConcurrencyMode=ConcurrencyMode.Single,
 		InstanceContextMode=InstanceContextMode.PerSession,

@@ -41,8 +41,10 @@
     <Compile Include="API\BasicUnitTestManager.cs" />
     <Compile Include="API\CargoShipManager.cs" />
     <Compile Include="API\ChatManager.cs" />
+    <Compile Include="API\IPC\CorsInspector.cs" />
     <Compile Include="API\IPC\IService.cs" />
     <Compile Include="API\IPC\Service.cs" />
+    <Compile Include="API\IPC\UserNameValidator.cs" />
     <Compile Include="API\MultiblockStructure.cs" />
     <Compile Include="API\Plugin\Events\IBaseEntityHandler.cs" />
     <Compile Include="API\Plugin\Events\IChatEventHandler.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="API\Plugin\IPlugin.cs" />
     <Compile Include="API\Plugin\PluginBase.cs" />
     <Compile Include="API\PluginManager.cs" />
+    <Compile Include="API\PluginManagerThreadParams.cs" />
     <Compile Include="API\Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -67,8 +70,10 @@
       <HintPath>..\GameLibraries\SteamSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.XML" />
     <Reference Include="VRage.Common">
