@@ -118,21 +118,17 @@ namespace SEModAPIExtensions.API
 			if (!Server.Instance.IsWCFEnabled)
 				return true;
 
-			Uri baseAddress = new Uri("http://localhost:" + Server.Instance.WCFPort.ToString() + "/SEServerExtender/Plugin/");
-			ServiceHost selfHost = new ServiceHost(typeof(PluginService), baseAddress);
-
+			ServiceHost selfHost = null;
 			try
 			{
-				selfHost.AddServiceEndpoint(typeof(IPluginServiceContract), new WSHttpBinding(), "PluginService");
-				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-				smb.HttpGetEnabled = true;
-				selfHost.Description.Behaviors.Add(smb);
+				selfHost = Server.CreateServiceHost(typeof(PluginService), typeof(IPluginServiceContract), "Plugin/", "PluginService");
 				selfHost.Open();
 			}
 			catch (CommunicationException ex)
 			{
-				Console.WriteLine("An exception occurred: {0}", ex.Message);
-				selfHost.Abort();
+				LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+				if (selfHost != null)
+					selfHost.Abort();
 				return false;
 			}
 

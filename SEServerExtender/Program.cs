@@ -138,6 +138,9 @@ namespace SEServerExtender
 				extenderArgs.noGUI = true;
 			}
 
+			if (extenderArgs.debug)
+				SandboxGameAssemblyWrapper.IsDebugging = true;
+
 			try
 			{
 				bool unitTestResult = BasicUnitTestManager.Instance.Run();

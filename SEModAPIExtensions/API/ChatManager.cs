@@ -117,21 +117,17 @@ namespace SEModAPIExtensions.API
 			if (!Server.Instance.IsWCFEnabled)
 				return true;
 
-			Uri baseAddress = new Uri("http://localhost:" + Server.Instance.WCFPort.ToString() + "/SEServerExtender/Chat/");
-			ServiceHost selfHost = new ServiceHost(typeof(ChatService), baseAddress);
-
+			ServiceHost selfHost = null;
 			try
 			{
-				selfHost.AddServiceEndpoint(typeof(IChatServiceContract), new WSHttpBinding(), "ChatService");
-				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-				smb.HttpGetEnabled = true;
-				selfHost.Description.Behaviors.Add(smb);
+				selfHost = Server.CreateServiceHost(typeof(ChatService), typeof(IChatServiceContract), "Chat/", "ChatService");
 				selfHost.Open();
 			}
 			catch (CommunicationException ex)
 			{
-				Console.WriteLine("An exception occurred: {0}", ex.Message);
-				selfHost.Abort();
+				LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+				if(selfHost != null)
+					selfHost.Abort();
 				return false;
 			}
 

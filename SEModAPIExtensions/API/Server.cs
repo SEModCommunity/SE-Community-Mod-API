@@ -172,20 +172,15 @@ namespace SEModAPIExtensions.API
 
 		private bool SetupServerService()
 		{
-			Uri serverAddress = new Uri("http://localhost:" + WCFPort.ToString() + "/SEServerExtender/Server/");
-			m_serverHost = new ServiceHost(typeof(ServerService), serverAddress);
 			try
 			{
-				m_serverHost.AddServiceEndpoint(typeof(IServerServiceContract), new WSHttpBinding(), "ServerService");
-				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-				smb.HttpGetEnabled = true;
-				m_serverHost.Description.Behaviors.Add(smb);
-				m_serverHost.Open();
+				m_baseHost = CreateServiceHost(typeof(ServerService), typeof(IServerServiceContract), "Server/", "ServerService");
+				m_baseHost.Open();
 			}
 			catch (CommunicationException ex)
 			{
-				LogManager.ErrorLog.WriteLine(ex);
-				m_serverHost.Abort();
+				LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+				m_baseHost.Abort();
 				return false;
 			}
 
@@ -194,20 +189,14 @@ namespace SEModAPIExtensions.API
 
 		private bool SetupMainService()
 		{
-			Uri baseAddress = new Uri("http://localhost:" + WCFPort.ToString() + "/SEServerExtender/");
-			m_baseHost = new ServiceHost(typeof(InternalService), baseAddress);
 			try
 			{
-				WSHttpBinding binding = new WSHttpBinding();
-				m_baseHost.AddServiceEndpoint(typeof(IInternalServiceContract), binding, "InternalService");
-				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-				smb.HttpGetEnabled = true;
-				m_baseHost.Description.Behaviors.Add(smb);
+				m_baseHost = CreateServiceHost(typeof(InternalService), typeof(IInternalServiceContract), "", "InternalService");
 				m_baseHost.Open();
 			}
 			catch (CommunicationException ex)
 			{
-				Console.WriteLine("An exception occurred: {0}", ex.Message);
+				LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
 				m_baseHost.Abort();
 				return false;
 			}
@@ -222,7 +211,6 @@ namespace SEModAPIExtensions.API
 			try
 			{
 				//WebHttpBinding binding = new WebHttpBinding(WebHttpSecurityMode.TransportCredentialOnly);
-				//binding.AllowCookies = false;
 				//binding.Security.Mode = WebHttpSecurityMode.TransportCredentialOnly;
 				//binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Windows;
 				//ServiceEndpoint endpoint = m_webHost.AddServiceEndpoint(typeof(IWebServiceContract), binding, "WebService");
@@ -461,6 +449,36 @@ namespace SEModAPIExtensions.API
 		#endregion
 
 		#region "Methods"
+
+		public static ServiceHost CreateServiceHost(Type serviceType, Type contractType, string urlExtension, string name)
+		{
+			try
+			{
+				Uri baseAddress = new Uri("http://localhost:" + Server.Instance.WCFPort.ToString() + "/SEServerExtender/" + urlExtension);
+				ServiceHost selfHost = new ServiceHost(serviceType, baseAddress);
+
+				WSHttpBinding binding = new WSHttpBinding();
+				binding.Security.Mode = SecurityMode.Message;
+				binding.Security.Message.ClientCredentialType = MessageCredentialType.Windows;
+				selfHost.AddServiceEndpoint(contractType, binding, name);
+
+				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+				smb.HttpGetEnabled = true;
+				selfHost.Description.Behaviors.Add(smb);
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+				{
+					Console.WriteLine("Created WCF service at '" + baseAddress.ToString() + "'");
+				}
+
+				return selfHost;
+			}
+			catch (CommunicationException ex)
+			{
+				LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+				return null;
+			}
+		}
 
 		public void Init()
 		{
