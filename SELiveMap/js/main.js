@@ -12,6 +12,7 @@ var entityList = [];
 var entitySceneMeshes = [];
 var entityPickingSceneMeshes = [];
 var entitySceneObjects = [];
+var entitySceneArrows = [];
 var cubeBlockList = [];
 var previewMesh;
 var previewObject;
@@ -22,7 +23,7 @@ function webGLStart()
 	initPreview();
 	animate();
 	
-	setInterval(function(){refreshEntities();}, 5000);
+	setInterval(function(){refreshEntities();}, 1000);
 }
 
 function getEntityId(entity)
@@ -46,6 +47,21 @@ function getEntityPosition(entity)
 	position.z = z;
 
 	return position;				
+}
+
+function getEntityLinearVelocity(entity)
+{
+	var rawVelocity = $(entity).children("linearvelocity");
+	var x = parseFloat(rawVelocity.children()[0].innerHTML);
+	var y = parseFloat(rawVelocity.children()[1].innerHTML);
+	var z = parseFloat(rawVelocity.children()[2].innerHTML);
+	
+	var velocity = new THREE.Vector3();
+	velocity.x = x;
+	velocity.y = y;
+	velocity.z = z;
+
+	return velocity;				
 }
 
 function getEntityMass(entity)
@@ -160,14 +176,37 @@ function updateEntity(entity)
 {
 	var entityId = getEntityId(entity);
 	var position = getEntityPosition(entity);
+	var linearVelocity = getEntityLinearVelocity(entity);
 
 	var mesh = entitySceneMeshes[entityId];
 	var pickingMesh = entityPickingSceneMeshes[entityId];
+	var arrowHelper = entitySceneArrows[entityId];
 
 	pickingData[ packEntityId(entityId) ].position.set(position.x, position.y, position.z);
 	
 	mesh.position.set(position.x, position.y, position.z);
 	pickingMesh.position.set(position.x, position.y, position.z);
+	
+	if(linearVelocity.length() > 1 && isCubeGrid(entity))
+	{
+		if(!arrowHelper)
+		{
+			var length = linearVelocity.length();
+			var hex = 0x00ff00;
+			arrowHelper = new THREE.ArrowHelper( linearVelocity.normalize(), position, length, hex );
+			scene.add( arrowHelper );
+			entitySceneArrows[ entityId ] = arrowHelper;
+		}
+		
+		arrowHelper.setDirection(linearVelocity.normalize());
+		arrowHelper.position.set(position.x, position.y, position.z);
+	} else {
+		if(arrowHelper)
+		{
+			arrowHelper.dispose();
+			entitySceneArrows[ entityId ] = null;
+		}
+	}
 }
 
 function addEntityToScene(entity)
@@ -179,6 +218,7 @@ function addEntityToScene(entity)
 
 	var entityId = getEntityId(entity);
 	var position = getEntityPosition(entity);
+	var linearVelocity = new THREE.Vector3();
 	var mass = 0;
 	
 	var geom;
@@ -191,11 +231,12 @@ function addEntityToScene(entity)
 	{
 		geom = new THREE.BoxGeometry( 1, 1, 1 );
 		mass = getEntityMass(entity);
+		linearVelocity = getEntityLinearVelocity(entity);
 	}
 	if(!geom)
 	{
-		geom = new THREE.BoxGeometry( 1, 1, 1 );
-		mass = 100;
+		geom = new THREE.CylinderGeometry( 1, 1, 1 );
+		mass = 10;
 	}
 	
 	var color = new THREE.Color();
@@ -214,9 +255,9 @@ function addEntityToScene(entity)
 	rotation.z = Math.random() * 2 * Math.PI;
 
 	var scale = new THREE.Vector3();
-	scale.x = Math.log(mass) * 4 + 10;
-	scale.y = Math.log(mass) * 4 + 10;
-	scale.z = Math.log(mass) * 4 + 10;
+	scale.x = Math.log(mass) * 7 + 1;
+	scale.y = Math.log(mass) * 7 + 1;
+	scale.z = Math.log(mass) * 7 + 1;
 
 	//Finish building the position-orientation matrix
 	quaternion.setFromEuler( rotation, false );
@@ -239,6 +280,15 @@ function addEntityToScene(entity)
 	drawnObject.position.set(position.x, position.y, position.z);
 	scene.add( drawnObject );
 	
+	var arrowHelper;
+	if(linearVelocity.length() > 1 && isCubeGrid(entity))
+	{
+		var length = linearVelocity.length();
+		var hex = 0x00ff00;
+		var arrowHelper = new THREE.ArrowHelper( linearVelocity.normalize(), position, length, hex );
+		scene.add( arrowHelper );
+	}
+	
 	var pickingDrawnObject = new THREE.Mesh( pickingGeometry, pickingMaterial );
 	pickingDrawnObject.position.set(position.x, position.y, position.z);
 	pickingScene.add( pickingDrawnObject );
@@ -246,6 +296,7 @@ function addEntityToScene(entity)
 	entitySceneObjects[ entityId ] = geometry;
 	entitySceneMeshes[ entityId ] = drawnObject;
 	entityPickingSceneMeshes[ entityId ] = pickingDrawnObject;
+	entitySceneArrows[ entityId ] = arrowHelper;
 }
 
 function reloadPreviewGeometry()
@@ -292,10 +343,13 @@ function reloadPreviewGeometry()
 	}
 	
 	previewMesh = new THREE.Mesh( previewObject, defaultMaterial );
+	var center = previewObject.center();
+	previewMesh.position.set(center.x, center.y, center.z);
 	previewScene.add( previewMesh );
 	
-	previewCamera.position.z = farthestCubePos.length() + 10;
-	previewCamera.position.y = previewCamera.position.z / 2;
+	previewCamera.position.x = 0;
+	previewCamera.position.y = center.y + 5;
+	previewCamera.position.z = 0 + farthestCubePos.length() + 10;
 	previewCamera.lookAt(new THREE.Vector3());
 }
 
@@ -325,8 +379,8 @@ function init()
 
 	scene.add( new THREE.AmbientLight( 0x555555 ) );
 
-	var light = new THREE.SpotLight( 0xffffff, 1.5 );
-	light.position.set( 0, 500, 2000 );
+	var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
+	light.position.set( 0, 20000, 20000 );
 	scene.add( light );
 
 	highlightBox = new THREE.Mesh(
@@ -338,7 +392,7 @@ function init()
 	projector = new THREE.Projector();
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
-	renderer.setClearColor( 0xffffff, 1 );
+	renderer.setClearColor( 0x000000, 1 );
 	renderer.setSize( renderWidth, renderHeight );
 	renderer.sortObjects = false;
 	container.appendChild( renderer.domElement );
@@ -361,7 +415,7 @@ function initPreview()
 	
 	previewScene.add( new THREE.AmbientLight( 0x555555 ) );
 	
-	var light = new THREE.SpotLight( 0xffffff, 1.5 );
+	var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
 	light.position.set( 0, 50, 200 );
 	previewScene.add( light );
 	
@@ -419,14 +473,17 @@ function pick()
 			
 			var mass = 0;
 			var name = getEntityName(entity);
+			var linearVelocity = new THREE.Vector3();
 			if(isCubeGrid(entity))
 			{
 				mass = getEntityMass(entity);
+				linearVelocity = getEntityLinearVelocity(entity);
 			}
 			
 			$("#entityIdCell").html(data.entityId);
 			$("#nameCell").html(name);
 			$("#positionCell").html(data.position.x + "," + data.position.y + "," + data.position.z);
+			$("#linearVelocityCell").html(linearVelocity.x + "," + linearVelocity.y + "," + linearVelocity.z);
 			$("#massCell").html(mass);
 			
 			if(previewMesh)
@@ -446,6 +503,7 @@ function pick()
 		$("#entityIdCell").html("");
 		$("#nameCell").html("");
 		$("#positionCell").html("");
+		$("#linearVelocityCell").html("");
 		$("#massCell").html("");
 	}
 }
