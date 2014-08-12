@@ -59,10 +59,14 @@ namespace SEServerExtender
 
 					if (argName.ToLower().Equals("instance"))
 					{
+						if (argValue[argValue.Length - 1] == '"')
+							argValue = argValue.Substring(0, argValue.Length - 1);
 						extenderArgs.instanceName = argValue;
 					}
 					if (argName.ToLower().Equals("gamepath"))
 					{
+						if (argValue[argValue.Length - 1] == '"')
+							argValue = argValue.Substring(0, argValue.Length - 1);
 						extenderArgs.gamePath = argValue;
 					}
 					if (argName.ToLower().Equals("autosave"))
@@ -89,6 +93,8 @@ namespace SEServerExtender
 					}
 					if (argName.ToLower().Equals("path"))
 					{
+						if (argValue[argValue.Length - 1] == '"')
+							argValue = argValue.Substring(0, argValue.Length - 1);
 						extenderArgs.path = argValue;
 					}
 				}

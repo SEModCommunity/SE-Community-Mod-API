@@ -37,14 +37,25 @@ namespace SEModAPIExtensions.API.IPC
 			return SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
 		}
 
-		public List<CubeBlockEntity> GetCubeBlocks(long cubeGridEntityId)
+		public List<CubeBlockEntity> GetCubeBlocks(string cubeGridEntityId)
 		{
-			List<CubeBlockEntity> cubeBlocks = new List<CubeBlockEntity>();
-			foreach (CubeGridEntity cubeGrid in GetSectorCubeGridEntities())
+			long entityId = 0;
+			try
 			{
-				if (cubeGrid.EntityId == cubeGridEntityId)
+				entityId = long.Parse(cubeGridEntityId);
+			}
+			catch (Exception)
+			{
+			}
+			List<CubeBlockEntity> cubeBlocks = new List<CubeBlockEntity>();
+			List<CubeGridEntity> cubeGrids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+			bool foundMatch = false;
+			foreach (CubeGridEntity cubeGrid in cubeGrids)
+			{
+				if (cubeGrid.EntityId == entityId)
 				{
 					cubeBlocks = cubeGrid.CubeBlocks;
+					foundMatch = true;
 					break;
 				}
 			}

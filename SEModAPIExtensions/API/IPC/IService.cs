@@ -29,8 +29,8 @@ namespace SEModAPIExtensions.API.IPC
 		List<CubeGridEntity> GetSectorCubeGridEntities();
 
 		[OperationContract]
-		[WebGet]
-		List<CubeBlockEntity> GetCubeBlocks(long cubeGridEntityId);
+		[WebGet(UriTemplate = "GetCubeBlocks/{cubeGridEntityId}")]
+		List<CubeBlockEntity> GetCubeBlocks(string cubeGridEntityId);
 	}
 
 	[ServiceContract]

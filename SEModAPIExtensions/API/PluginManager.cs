@@ -26,6 +26,14 @@ using VRage.Common.Utils;
 
 namespace SEModAPIExtensions.API
 {
+	public class PluginManagerThreadParams
+	{
+		public Object plugin;
+		public Guid key;
+		public List<EntityEventManager.EntityEvent> events;
+		public List<ChatManager.ChatEvent> chatEvents;
+	}
+
 	[ServiceContract]
 	public interface IPluginServiceContract
 	{

@@ -459,6 +459,7 @@ namespace SEModAPIInternal.API.Entity
 		private double m_refreshInterval;
 
 		private static double m_averageLoadTime;
+		private static double m_averageRefreshInterval;
 		private static DateTime m_lastProfilingOutput;
 		private static int m_staticRefreshCount;
 		private static Dictionary<Type, int> m_staticRefreshCountMap;
@@ -694,6 +695,8 @@ namespace SEModAPIInternal.API.Entity
 
 			if (SandboxGameAssemblyWrapper.IsDebugging)
 			{
+				m_averageRefreshInterval = (m_averageRefreshInterval + m_refreshInterval) / 2.0;
+
 				TimeSpan timeToLoad = DateTime.Now - m_lastLoadTime;
 				m_averageLoadTime = (m_averageLoadTime + timeToLoad.TotalMilliseconds) / 2.0;
 
@@ -707,6 +710,7 @@ namespace SEModAPIInternal.API.Entity
 
 					LogManager.APILog.WriteLine("ObjectManager - Average data load time: " + Math.Round(m_averageLoadTime, 2).ToString() + "ms");
 					LogManager.APILog.WriteLine("ObjectManager - Refreshes per second: " + Math.Round(refreshesPerSecond, 2).ToString());
+					LogManager.APILog.WriteLine("ObjectManager - Average refresh interval: " + Math.Round(m_refreshInterval, 0).ToString() + "ms");
 				}
 				if (timeSinceLastProfilingOutput.TotalSeconds > 60)
 				{

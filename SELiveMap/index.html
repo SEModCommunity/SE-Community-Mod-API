@@ -12,8 +12,38 @@
 		<script type="text/javascript" src="js/main.js"></script>
 	</head>
 	<body onLoad="webGLStart();">
-		<div style="border: 1px solid; margin: 10px; width: 800px; height: 800px;" id="container" name="container">
-		</div>
+		<table>
+			<tr>
+				<td>
+					<div style="border: 1px solid; margin: 10px; width: 800px; height: 800px;" id="container" name="container">
+					</div>
+				</td>
+				<td>
+					<div style="border: 1px solid; margin: 10px;" id="details" name="details">
+						<div style="border: 1px solid; margin: 10px; width: 400px; height: 400px;" id="preview" name="preview">
+						</div>
+						<table>
+							<tr>
+								<td>Entity ID:</td>
+								<td id="entityIdCell"></td>
+							</tr>
+							<tr>
+								<td>Name:</td>
+								<td id="nameCell"></td>
+							</tr>
+							<tr>
+								<td>Position:</td>
+								<td id="positionCell"></td>
+							</tr>
+							<tr>
+								<td>Mass:</td>
+								<td id="massCell"></td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
 		<input type="button" onClick="refreshEntities();" value="Refresh"/>
 	</body>
 </html>
