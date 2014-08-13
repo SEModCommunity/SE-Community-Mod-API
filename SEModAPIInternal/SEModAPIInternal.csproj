@@ -54,8 +54,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="API\Client\ClientNetworkManager.cs" />
+    <Compile Include="API\Common\BlockRegistry.cs" />
     <Compile Include="API\Common\EntityEvents.cs" />
+    <Compile Include="API\Common\EntityRegistry.cs" />
     <Compile Include="API\Common\FactionsManager.cs" />
+    <Compile Include="API\Common\GameObjectRegistry.cs" />
     <Compile Include="API\Common\NetworkManager.cs" />
     <Compile Include="API\Common\PlayerManager.cs" />
     <Compile Include="API\Common\PowerManager.cs" />

@@ -763,81 +763,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						{
 							CubeBlockEntity newCubeBlock = null;
 
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_CargoContainer))
-								newCubeBlock = new CargoContainerEntity(m_parent, (MyObjectBuilder_CargoContainer)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Reactor))
-								newCubeBlock = new ReactorEntity(m_parent, (MyObjectBuilder_Reactor)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Beacon))
-								newCubeBlock = new BeaconEntity(m_parent, (MyObjectBuilder_Beacon)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Cockpit))
-								newCubeBlock = new CockpitEntity(m_parent, (MyObjectBuilder_Cockpit)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_GravityGenerator))
-								newCubeBlock = new GravityGeneratorEntity(m_parent, (MyObjectBuilder_GravityGenerator)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_MedicalRoom))
-								newCubeBlock = new MedicalRoomEntity(m_parent, (MyObjectBuilder_MedicalRoom)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_InteriorLight))
-								newCubeBlock = new InteriorLightEntity(m_parent, (MyObjectBuilder_InteriorLight)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_ReflectorLight))
-								newCubeBlock = new ReflectorLightEntity(m_parent, (MyObjectBuilder_ReflectorLight)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_BatteryBlock))
-								newCubeBlock = new BatteryBlockEntity(m_parent, (MyObjectBuilder_BatteryBlock)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Door))
-								newCubeBlock = new DoorEntity(m_parent, (MyObjectBuilder_Door)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Refinery))
-								newCubeBlock = new RefineryEntity(m_parent, (MyObjectBuilder_Refinery)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Assembler))
-								newCubeBlock = new AssemblerEntity(m_parent, (MyObjectBuilder_Assembler)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Thrust))
-								newCubeBlock = new ThrustEntity(m_parent, (MyObjectBuilder_Thrust)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_MergeBlock))
-								newCubeBlock = new MergeBlockEntity(m_parent, (MyObjectBuilder_MergeBlock)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_LandingGear))
-								newCubeBlock = new LandingGearEntity(m_parent, (MyObjectBuilder_LandingGear)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Conveyor))
-								newCubeBlock = new ConveyorBlockEntity(m_parent, (MyObjectBuilder_Conveyor)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_ConveyorConnector))
-								newCubeBlock = new ConveyorTubeEntity(m_parent, (MyObjectBuilder_ConveyorConnector)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_SolarPanel))
-								newCubeBlock = new SolarPanelEntity(m_parent, (MyObjectBuilder_SolarPanel)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Gyro))
-								newCubeBlock = new GyroEntity(m_parent, (MyObjectBuilder_Gyro)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeGatlingTurret))
-								newCubeBlock = new GatlingTurretEntity(m_parent, (MyObjectBuilder_LargeGatlingTurret)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_LargeMissileTurret))
-								newCubeBlock = new MissileTurretEntity(m_parent, (MyObjectBuilder_LargeMissileTurret)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipGrinder))
-								newCubeBlock = new ShipGrinderEntity(m_parent, (MyObjectBuilder_ShipGrinder)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_ShipWelder))
-								newCubeBlock = new ShipWelderEntity(m_parent, (MyObjectBuilder_ShipWelder)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Drill))
-								newCubeBlock = new ShipDrillEntity(m_parent, (MyObjectBuilder_Drill)baseEntity, entity);
-							else
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_RadioAntenna))
-								newCubeBlock = new AntennaEntity(m_parent, (MyObjectBuilder_RadioAntenna)baseEntity, entity);
-							else
+							if (BlockRegistry.Instance.Registry.ContainsKey(baseEntity.TypeId))
+							{
+								//Get the matching API type from the registry
+								Type apiType = BlockRegistry.Instance.Registry[baseEntity.TypeId];
+
+								//Create a new API cube block
+								newCubeBlock = (CubeBlockEntity)Activator.CreateInstance(apiType, new object[] { m_parent, baseEntity, entity });
+							}
+
+							if(newCubeBlock == null)
 								newCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 
 							AddEntry(packedBlockCoordinates, newCubeBlock);

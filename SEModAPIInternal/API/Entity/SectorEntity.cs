@@ -527,16 +527,11 @@ namespace SEModAPIInternal.API.Entity
 						{
 							BaseEntity newEntity = null;
 
-							if (baseEntity.TypeId == typeof(MyObjectBuilder_Character))
-								newEntity = new CharacterEntity((MyObjectBuilder_Character)baseEntity, entity);
-							else if (baseEntity.TypeId == typeof(MyObjectBuilder_CubeGrid))
-								newEntity = new CubeGridEntity((MyObjectBuilder_CubeGrid)baseEntity, entity);
-							else if (baseEntity.TypeId == typeof(MyObjectBuilder_FloatingObject))
-								newEntity = new FloatingObject((MyObjectBuilder_FloatingObject)baseEntity, entity);
-							else if (baseEntity.TypeId == typeof(MyObjectBuilder_Meteor))
-								newEntity = new Meteor((MyObjectBuilder_Meteor)baseEntity, entity);
-							else if (baseEntity.TypeId == typeof(MyObjectBuilder_VoxelMap))
-								newEntity = new VoxelMap((MyObjectBuilder_VoxelMap)baseEntity, entity);
+							//Get the matching API type from the registry
+							Type apiType = EntityRegistry.Instance.Registry[baseEntity.TypeId];
+
+							//Create a new API entity
+							newEntity = (BaseEntity) Activator.CreateInstance(apiType, new object[] { baseEntity, entity });
 
 							if(newEntity != null)
 								AddEntry(newEntity.EntityId, newEntity);
