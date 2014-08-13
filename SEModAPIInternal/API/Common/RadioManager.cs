@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 using SEModAPIInternal.API.Common;
@@ -15,6 +16,8 @@ namespace SEModAPIInternal.API.Common
 		#region "Attributes"
 
 		private Object m_backingObject;
+		private RadioManagerNetworkManager m_networkManager;
+
 		private float m_broadcastRadius;
 		private Object m_linkedEntity;
 		private bool m_isEnabled;
@@ -32,6 +35,8 @@ namespace SEModAPIInternal.API.Common
 		public static string RadioManagerGetAABBTreeIdMethod = "20FCED684DEC4EA0CCEE92D67DB109F1";
 		public static string RadioManagerSetAABBTreeIdMethod = "10D69A54D5F2CE65056EBB10BCF3D8B3";
 
+		public static string RadioManagerNetworkManagerField = "74012B9403A8C0F8C32FE86DA34CA0F6";
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -41,6 +46,7 @@ namespace SEModAPIInternal.API.Common
 			try
 			{
 				m_backingObject = backingObject;
+				m_networkManager = new RadioManagerNetworkManager(this);
 
 				m_broadcastRadius = (float)BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetBroadcastRadiusMethod);
 				m_linkedEntity = BaseObject.InvokeEntityMethod(BackingObject, RadioManagerGetLinkedEntityMethod);
@@ -153,6 +159,7 @@ namespace SEModAPIInternal.API.Common
 				result &= BaseObject.HasMethod(type1, RadioManagerSetEnabledMethod);
 				result &= BaseObject.HasMethod(type1, RadioManagerGetAABBTreeIdMethod);
 				result &= BaseObject.HasMethod(type1, RadioManagerSetAABBTreeIdMethod);
+				result &= BaseObject.HasField(type1, RadioManagerNetworkManagerField);
 
 				return result;
 			}
@@ -163,8 +170,24 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
+		internal Object GetNetworkManager()
+		{
+			try
+			{
+				FieldInfo field = BaseObject.GetEntityField(BackingObject, RadioManagerNetworkManagerField);
+				Object result = field.GetValue(BackingObject);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return null;
+			}
+		}
+
 		protected void InternalUpdateBroadcastRadius()
 		{
+			m_networkManager.BroadcastRadius();
 			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetBroadcastRadiusMethod, new object[] { BroadcastRadius });
 		}
 
@@ -175,6 +198,7 @@ namespace SEModAPIInternal.API.Common
 
 		protected void InternalUpdateEnabled()
 		{
+			m_networkManager.BroadcastEnabled();
 			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetEnabledMethod, new object[] { Enabled });
 		}
 
@@ -182,6 +206,93 @@ namespace SEModAPIInternal.API.Common
 		{
 			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerSetAABBTreeIdMethod, new object[] { TreeId });
 		}
+
+		#endregion
+	}
+
+	public class RadioManagerNetworkManager
+	{
+		#region "Attributes"
+
+		private RadioManager m_parent;
+
+		public static string RadioManagerNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string RadioManagerNetManagerClass = "1CE6F03E36FA552A8223DEBF0554411C";
+
+		public static string RadioManagerNetManagerBroadcastRadiusMethod = "D98F28A89752B53473A94214E2D0E0EA";
+		public static string RadioManagerNetManagerBroadcastEnabledMethod = "CCB8371C1B91E687E88786806386E87C";
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public RadioManagerNetworkManager(RadioManager parent)
+		{
+			m_parent = parent;
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		public Object BackingObject
+		{
+			get
+			{
+				Object result = m_parent.GetNetworkManager();
+				return result;
+			}
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(RadioManagerNetManagerNamespace, RadioManagerNetManagerClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for RadioManagerNetworkManager");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, RadioManagerNetManagerBroadcastRadiusMethod);
+				result &= BaseObject.HasMethod(type1, RadioManagerNetManagerBroadcastEnabledMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
+
+		public void BroadcastRadius()
+		{
+			Action action = InternalBroadcastRadius;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+		}
+
+		public void BroadcastEnabled()
+		{
+			Action action = InternalBroadcastEnabled;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+		}
+
+		#region "Internal"
+
+		protected void InternalBroadcastRadius()
+		{
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerNetManagerBroadcastRadiusMethod, new object[] { m_parent.BroadcastRadius });
+		}
+
+		protected void InternalBroadcastEnabled()
+		{
+			BaseObject.InvokeEntityMethod(BackingObject, RadioManagerNetManagerBroadcastEnabledMethod, new object[] { m_parent.Enabled });
+		}
+
+		#endregion
 
 		#endregion
 	}

@@ -150,6 +150,12 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("RadioManager reflection validation failed!");
 			}
 
+			if (!RadioManagerNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("RadioManagerNetworkManager reflection validation failed!");
+			}
+
 			if (!PowerManager.ReflectionUnitTest())
 			{
 				result = false;

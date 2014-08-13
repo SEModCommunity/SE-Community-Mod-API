@@ -73,8 +73,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				float result = ObjectBuilder.BroadcastRadius;
 
-				if (m_radioManager != null)
-					result = m_radioManager.BroadcastRadius;
+				if (RadioManager != null)
+					result = RadioManager.BroadcastRadius;
 
 				return result;
 			}
@@ -84,8 +84,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				ObjectBuilder.BroadcastRadius = value;
 				Changed = true;
 
-				if(m_radioManager != null)
-					m_radioManager.BroadcastRadius = value;
+				if (RadioManager != null)
+					RadioManager.BroadcastRadius = value;
 			}
 		}
 
