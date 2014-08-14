@@ -19,22 +19,11 @@ namespace SEModAPI.API.Definitions
 
 		new public string Name
 		{
-			get { return m_baseDefinition.Name; }
+			get { return m_baseDefinition.DisplayName; }
 			set
 			{
-				if (m_baseDefinition.Name == value) return;
-				m_baseDefinition.Name = value;
-				Changed = true;
-			}
-		}
-
-		public string AssetName
-		{
-			get { return m_baseDefinition.AssetName; }
-			set
-			{
-				if (m_baseDefinition.AssetName == value) return;
-				m_baseDefinition.AssetName = value;
+				if (m_baseDefinition.DisplayName == value) return;
+				m_baseDefinition.DisplayName = value;
 				Changed = true;
 			}
 		}
@@ -133,7 +122,7 @@ namespace SEModAPI.API.Definitions
 
 		protected override string GetNameFrom(MyObjectBuilder_VoxelMaterialDefinition definition)
 		{
-			return definition.Name;
+			return definition.DisplayName;
 		}
 
 		#endregion

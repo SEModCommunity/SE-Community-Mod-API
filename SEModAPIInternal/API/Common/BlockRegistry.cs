@@ -65,6 +65,7 @@ namespace SEModAPIInternal.API.Common
 			Register(typeof(MyObjectBuilder_Door), typeof(DoorEntity), utility);
 			Register(typeof(MyObjectBuilder_LargeGatlingTurret), typeof(GatlingTurretEntity), weapons);
 			Register(typeof(MyObjectBuilder_GravityGenerator), typeof(GravityGeneratorEntity), utility);
+			Register(typeof(MyObjectBuilder_GravityGeneratorSphere), typeof(GravitySphereEntity), utility);
 			Register(typeof(MyObjectBuilder_Gyro), typeof(GyroEntity), utility);
 			Register(typeof(MyObjectBuilder_InteriorLight), typeof(InteriorLightEntity), lights);
 			Register(typeof(MyObjectBuilder_LandingGear), typeof(LandingGearEntity), utility);

@@ -218,10 +218,22 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("DoorEntity reflection validation failed!");
 			}
 
+			if (!GravityBaseEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("GravityBaseEntity reflection validation failed!");
+			}
+
 			if (!GravityGeneratorEntity.ReflectionUnitTest())
 			{
 				result = false;
 				Console.WriteLine("GravityGeneratorEntity reflection validation failed!");
+			}
+
+			if (!GravitySphereEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("GravitySphereEntity reflection validation failed!");
 			}
 
 			if (!BeaconEntity.ReflectionUnitTest())

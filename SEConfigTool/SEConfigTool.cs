@@ -2495,7 +2495,7 @@ namespace SEConfigTool
 			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(LST_VoxelMaterialsConfig.SelectedIndex);
 
 			TXT_VoxelMaterialConfig_Details_Name.Text = voxelMaterial.Name;
-			TXT_VoxelMaterialConfig_Details_AssetName.Text = voxelMaterial.AssetName;
+			TXT_VoxelMaterialConfig_Details_AssetName.Text = voxelMaterial.Name;
 			TXT_VoxelMaterialConfig_Details_MinedOre.Text = voxelMaterial.MinedOre;
 
 			TXT_VoxelMaterialConfig_Details_MinedOreRatio.Text = voxelMaterial.MinedOreRatio.ToString(m_numberFormatInfo);
@@ -2542,7 +2542,6 @@ namespace SEConfigTool
 			VoxelMaterialsDefinition voxelMaterial = m_voxelMaterialsDefinitionsManager.DefinitionOf(index);
 
 			voxelMaterial.Name = TXT_VoxelMaterialConfig_Details_Name.Text;
-			voxelMaterial.AssetName = TXT_VoxelMaterialConfig_Details_AssetName.Text;
 			voxelMaterial.MinedOre = TXT_VoxelMaterialConfig_Details_MinedOre.Text;
 
 			voxelMaterial.MinedOreRatio = Convert.ToSingle(TXT_VoxelMaterialConfig_Details_MinedOreRatio.Text, m_numberFormatInfo);
