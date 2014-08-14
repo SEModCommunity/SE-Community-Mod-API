@@ -9,12 +9,19 @@ using SEModAPIInternal.API.Entity;
 
 namespace SEModAPIInternal.API.Common
 {
+	public struct GameObjectCategory
+	{
+		public ushort id;
+		public string name;
+	}
+
 	public class GameObjectRegistry
 	{
 		#region "Attributes"
 
 		private static GameObjectRegistry m_instance;
 		private Dictionary<Type, Type> m_typeMap;
+		private Dictionary<GameObjectCategory, List<Type>> m_categoryMap;
 
 		#endregion
 
@@ -23,6 +30,7 @@ namespace SEModAPIInternal.API.Common
 		protected GameObjectRegistry()
 		{
 			m_typeMap = new Dictionary<Type, Type>();
+			m_categoryMap = new Dictionary<GameObjectCategory, List<Type>>();
 		}
 
 		#endregion
@@ -45,9 +53,37 @@ namespace SEModAPIInternal.API.Common
 			get { return m_typeMap; }
 		}
 
+		public Dictionary<GameObjectCategory, List<Type>> CategoryMap
+		{
+			get { return m_categoryMap; }
+		}
+
 		#endregion
 
 		#region "Methods"
+
+		public void Register(Type gameType, Type apiType, GameObjectCategory category)
+		{
+			if (CategoryMap.ContainsKey(category))
+			{
+				//Update the existing category list with the new game type
+				List<Type> types = CategoryMap[category];
+				if (!types.Contains(gameType))
+				{
+					types.Add(gameType);
+				}
+			}
+			else
+			{
+				//Create a new entry in the category map with the new game type
+				List<Type> types = new List<Type>();
+				types.Add(gameType);
+				m_categoryMap.Add(category, types);
+			}
+
+			//Register the game type
+			Register(gameType, apiType);
+		}
 
 		public virtual void Register(Type gameType, Type apiType)
 		{
@@ -73,6 +109,15 @@ namespace SEModAPIInternal.API.Common
 				return;
 
 			Registry.Remove(gameType);
+
+			foreach (var entry in m_categoryMap)
+			{
+				List<Type> types = entry.Value;
+				if (types.Contains(gameType))
+				{
+					types.Remove(gameType);
+				}
+			}
 		}
 
 		#endregion

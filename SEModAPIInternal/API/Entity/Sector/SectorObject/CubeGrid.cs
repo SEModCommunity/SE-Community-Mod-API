@@ -41,12 +41,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		private DateTime m_lastNameRefresh;
 		private DateTime m_lastBaseCubeBlockRefresh;
 
+		private CubeBlockEntity m_cubeBlockToAdd;
+		private Vector3I m_cubeBlockToRemove;
+
 		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
 
 		public static string CubeGridGetCubeBlocksHashSetMethod = "E38F3E9D7A76CD246B99F6AE91CC3E4A";
 		public static string CubeGridGetPowerManagerMethod = "D92A57E3478304C8F8F780A554C6D6C4";
 		public static string CubeGridGetDampenersPowerReceiverMethod = "0D142C5CB93281BA2431FB266E8E3CA8";
+		public static string CubeGridAddCubeBlockMethod = "1DB9998AAA470204B79C22C0E7F21D87";
 
 		public static string CubeGridIsStaticField = "";
 		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
@@ -444,7 +448,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
 				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
 				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
-				//result &= HasField(type, CubeGridIsStaticField);
+				result &= HasMethod(type, CubeGridAddCubeBlockMethod);
 				result &= HasField(type, CubeGridBlockGroupsField);
 
 				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridDampenersPowerReceiverNamespace, CubeGridDampenersPowerReceiverClass);
@@ -476,6 +480,19 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
+		}
+
+		public void AddCubeBlock(CubeBlockEntity cubeBlock)
+		{
+			m_cubeBlockToAdd = cubeBlock;
+
+			Action action = InternalAddCubeBlock;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+		}
+
+		public void DeleteCubeBlock(Vector3I cubePosition)
+		{
+			//TODO
 		}
 
 		protected void RefreshBaseCubeBlocks()
@@ -519,6 +536,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			{
 				LogManager.ErrorLog.WriteLine(ex);
 			}
+		}
+
+		protected void InternalAddCubeBlock()
+		{
+			if (m_cubeBlockToAdd == null)
+				return;
+
+			//TODO - Find out how to broadcast this
+
+			InvokeEntityMethod(BackingObject, CubeGridAddCubeBlockMethod, new object[] { m_cubeBlockToAdd.ObjectBuilder, false });
+
+			m_cubeBlockToAdd = null;
 		}
 
 		#endregion
