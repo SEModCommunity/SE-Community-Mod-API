@@ -45,6 +45,7 @@ namespace SEModAPIInternal.API.Entity
 		private Vector3 m_linearVelocity;
 		private Vector3 m_angularVelocity;
 		private BaseEntityNetworkManager m_networkManager;
+		private string m_displayName;
 
 		//Definition
 		public static string BaseEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
@@ -59,6 +60,8 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityGetOrientationMatrixMethod = "FD50436D896ACC794550210055349FE0";
 		public static string BaseEntityGetNetManagerMethod = "F4456F82186EC3AE6C73294FA6C0A11D";
 		public static string BaseEntitySetEntityIdMethod = "D3D6702587D6336FEE37725E8D2C52CD";
+		public static string BaseEntityGetDisplayNameMethod = "DB913685BC5152DC19A4796E9E8CF659";
+		public static string BaseEntitySetDisplayNameMethod = "DFF609C956C433D5F03DAA6AA8814223";
 
 		public static string BaseEntityEntityIdField = "F7E51DBA5F2FD0CCF8BBE66E3573BEAC";
 
@@ -193,6 +196,25 @@ namespace SEModAPIInternal.API.Entity
 			set
 			{
 				base.ObjectBuilder = value;
+			}
+		}
+
+		[DataMember]
+		[Category("Entity")]
+		public virtual string DisplayName
+		{
+			get { return m_displayName; }
+			set
+			{
+				if (m_displayName == value) return;
+				m_displayName = value;
+				Changed = true;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateDisplayName;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
 			}
 		}
 
@@ -516,6 +538,8 @@ namespace SEModAPIInternal.API.Entity
 				result &= HasMethod(type, BaseEntityGetOrientationMatrixMethod);
 				result &= HasMethod(type, BaseEntityGetNetManagerMethod);
 				result &= HasMethod(type, BaseEntitySetEntityIdMethod);
+				result &= HasMethod(type, BaseEntityGetDisplayNameMethod);
+				result &= HasMethod(type, BaseEntitySetDisplayNameMethod);
 				result &= HasField(type, BaseEntityEntityIdField);
 
 				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(PhysicsManagerNamespace, PhysicsManagerClass);
@@ -757,6 +781,11 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.ErrorLog.WriteLine(ex);
 			}
+		}
+
+		protected void InternalUpdateDisplayName()
+		{
+			InvokeEntityMethod(BackingObject, BaseEntitySetDisplayNameMethod, new object[] { m_displayName });
 		}
 
 		#endregion

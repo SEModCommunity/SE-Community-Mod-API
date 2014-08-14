@@ -108,17 +108,22 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[ReadOnly(true)]
 		public override string Name
 		{
-			get
-			{
-				string name = base.Name;
-				if (BackingObject != null)
-				{
-					string internalName = InternalGetDisplayName();
-					if (internalName != "")
-						name = internalName;
-				}
+			get { return DisplayName; }
+		}
 
-				return base.Name;
+		[DataMember]
+		[Category("Character")]
+		[ReadOnly(true)]
+		public override string DisplayName
+		{
+			get { return ObjectBuilder.DisplayName; }
+			set
+			{
+				if (ObjectBuilder.DisplayName == value) return;
+				ObjectBuilder.DisplayName = value;
+				Changed = true;
+
+				base.DisplayName = value;
 			}
 		}
 

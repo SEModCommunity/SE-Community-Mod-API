@@ -41,8 +41,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		private DateTime m_lastNameRefresh;
 		private DateTime m_lastBaseCubeBlockRefresh;
 
-		private CubeBlockEntity m_cubeBlockToAdd;
-		private Vector3I m_cubeBlockToRemove;
+		private CubeBlockEntity m_cubeBlockToAddRemove;
 
 		public static string CubeGridNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
@@ -51,6 +50,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CubeGridGetPowerManagerMethod = "D92A57E3478304C8F8F780A554C6D6C4";
 		public static string CubeGridGetDampenersPowerReceiverMethod = "0D142C5CB93281BA2431FB266E8E3CA8";
 		public static string CubeGridAddCubeBlockMethod = "1DB9998AAA470204B79C22C0E7F21D87";
+		public static string CubeGridRemoveCubeBlockMethod = "5980C21045AAAAEC22416165FF409455";
 
 		public static string CubeGridIsStaticField = "";
 		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
@@ -196,6 +196,22 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				m_name = name;
 
 				return name;
+			}
+		}
+
+		[DataMember]
+		[Category("Cube Grid")]
+		[ReadOnly(true)]
+		public override string DisplayName
+		{
+			get { return ObjectBuilder.DisplayName; }
+			set
+			{
+				if (ObjectBuilder.DisplayName == value) return;
+				ObjectBuilder.DisplayName = value;
+				Changed = true;
+
+				base.DisplayName = value;
 			}
 		}
 
@@ -449,6 +465,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
 				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
 				result &= HasMethod(type, CubeGridAddCubeBlockMethod);
+				result &= HasMethod(type, CubeGridRemoveCubeBlockMethod);
 				result &= HasField(type, CubeGridBlockGroupsField);
 
 				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridDampenersPowerReceiverNamespace, CubeGridDampenersPowerReceiverClass);
@@ -484,15 +501,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public void AddCubeBlock(CubeBlockEntity cubeBlock)
 		{
-			m_cubeBlockToAdd = cubeBlock;
+			m_cubeBlockToAddRemove = cubeBlock;
 
 			Action action = InternalAddCubeBlock;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
-		public void DeleteCubeBlock(Vector3I cubePosition)
+		public void DeleteCubeBlock(CubeBlockEntity cubeBlock)
 		{
-			//TODO
+			m_cubeBlockToAddRemove = cubeBlock;
+
+			Action action = InternalRemoveCubeBlock;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		protected void RefreshBaseCubeBlocks()
@@ -540,14 +560,26 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		protected void InternalAddCubeBlock()
 		{
-			if (m_cubeBlockToAdd == null)
+			if (m_cubeBlockToAddRemove == null)
 				return;
 
-			//TODO - Find out how to broadcast this
+			//TODO - Figure out how to broadcast this
 
-			InvokeEntityMethod(BackingObject, CubeGridAddCubeBlockMethod, new object[] { m_cubeBlockToAdd.ObjectBuilder, false });
+			InvokeEntityMethod(BackingObject, CubeGridAddCubeBlockMethod, new object[] { m_cubeBlockToAddRemove.ObjectBuilder, false });
 
-			m_cubeBlockToAdd = null;
+			m_cubeBlockToAddRemove = null;
+		}
+
+		protected void InternalRemoveCubeBlock()
+		{
+			if (m_cubeBlockToAddRemove == null)
+				return;
+
+			//NOTE - We don't broadcast the removal because the game internals take care of that by broadcasting the removal delta lists every frame update
+
+			InvokeEntityMethod(BackingObject, CubeGridRemoveCubeBlockMethod, new object[] { m_cubeBlockToAddRemove.BackingObject, Type.Missing });
+
+			m_cubeBlockToAddRemove = null;
 		}
 
 		#endregion
@@ -564,24 +596,26 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			Packet1_2 = 15,
 			Packet1_3 = 16,
 			CubeBlockPositionList = 17,			//..5A55EA00576BB526436F3708D1F55455
-			Packet1_5 = 18,
+			CubeBlockRemoveLists = 18,			//..94E4EFFF7257EEC85C3D8FA0F1EC9E69
 			AllPowerStatus = 19,				//..782C8DC19A883BCB6A43C3006F456A2F
 
-			Packet2_1 = 24,
+			//Construction/Item packets
 			CubeBlockBuildIntegrityValues = 25,	//..EF2D90F50F1E378F0495FFB906D1C6C6
 			CubeBlockItemList = 26,				//..3FD479635EACD6C3047ACB77CBAB645D
 			Packet2_4 = 27,
 			Packet2_5 = 28,
 			Packet2_6 = 29,
 
-			SomePacket1 = 4711,
-			SomePacket2 = 4712,
-			SomePacket3 = 4713,
-			SomePacket4 = 4714,
+			Packet3_1 = 4711,
+			Packet3_2 = 4712,
+			Packet3_3 = 4713,
+			Packet3_4 = 4714,
 
-			Packet3_1 = 15262,
-			Packet3_2 = 15263,
-			Packet3_3 = 15264,
+			Packet4_1 = 11212,
+
+			Packet5_1 = 15262,
+			Packet5_2 = 15263,
+			Packet5_3 = 15264,
 			CubeBlockOrientationIsh = 15265,	//..69FB43596400BF997D806DF041F2B54D
 			CubeBlockFactionData = 15266,		//..090EFC311778552F418C0835D1248D60
 			CubeBlockOwnershipMode = 15267,		//..F62F6360C3B7B7D32C525D5987F70A68
@@ -589,6 +623,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			AllPowerStatus2 = 15271,			//..903CC5CD740D130E90DB6CBF79F80F4F
 
 			ShipToggle1 = 15275,				//..4DCFFCEE8D5BA392C7A57ACD6470D7CD
+			Packet7_1 = 15276,
+
+			Packet8_1 = 15278,
+			Packet8_2 = 15279,
+			Packet8_3 = 15280,
 		}
 
 		#region "Attributes"
@@ -605,6 +644,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		//Methods
 		public static string CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod = "F7C40254F25941842EA6558205FAC160";
 		public static string CubeGridNetManagerBroadcastCubeBlockFactionDataMethod = "EF45C83059E3CD5A2C5354ABB687D861";
+		public static string CubeGridNetManagerBroadcastCubeBlockRemoveListsMethod = "4A75379DE89606408396FDADD89822F3";
 
 		//Fields
 		public static string CubeGridNetManagerCubeBlocksToDestroyField = "8E76EFAC4EED3B61D48795B2CD5AF989";
@@ -665,6 +705,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				bool result = true;
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod);
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockFactionDataMethod);
+				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockRemoveListsMethod);
 				result &= BaseObject.HasField(type, CubeGridNetManagerCubeBlocksToDestroyField);
 
 				Type type2 = CubeGridEntity.InternalType.GetNestedType(CubeGridIntegrityChangeEnumClass);
@@ -705,6 +746,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			{
 				LogManager.ErrorLog.WriteLine(ex);
 			}
+		}
+
+		public void BroadcastCubeBlockRemoveLists()
+		{
+			BaseObject.InvokeEntityMethod(m_netManager, CubeGridNetManagerBroadcastCubeBlockRemoveListsMethod);
 		}
 
 		#endregion
