@@ -95,6 +95,8 @@ namespace SEModAPIExtensions.API
 		private DateTime m_lastAverageOutput;
 		private double m_averageEvents;
 		private List<ulong> m_lastConnectedPlayerList;
+		private EntityRegistry m_entityRegistry;
+		private BlockRegistry m_blockRegistry;
 
 		#endregion
 
@@ -115,6 +117,8 @@ namespace SEModAPIExtensions.API
 			m_lastAverageOutput = DateTime.Now;
 			m_averageEvents = 0;
 			m_lastConnectedPlayerList = new List<ulong>();
+			m_entityRegistry = EntityRegistry.Instance;
+			m_blockRegistry = BlockRegistry.Instance;
 
 			SetupWCFService();
 
