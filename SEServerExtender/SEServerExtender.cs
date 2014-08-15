@@ -1089,6 +1089,11 @@ namespace SEServerExtender
 				}
 			}
 
+			if (parentNode.Tag != null && parentNode.Tag is CubeGridEntity)
+			{
+				BTN_Entities_New.Enabled = true;
+			}
+
 			if (selectedNode.Tag == null)
 				return;
 
@@ -1101,8 +1106,14 @@ namespace SEServerExtender
 				BTN_Entities_Export.Enabled = true;
 			}
 
-			//Enable new and delete for all objects that inherit from BaseEntity
+			//Enable delete for all objects that inherit from BaseEntity
 			if (linkedObject is BaseEntity)
+			{
+				BTN_Entities_Delete.Enabled = true;
+			}
+
+			//Enable delete for all objects that inherit from CubeBlockEntity
+			if (linkedObject is CubeBlockEntity)
 			{
 				BTN_Entities_Delete.Enabled = true;
 			}
@@ -1286,6 +1297,14 @@ namespace SEServerExtender
 					CreateCubeGridImportDialog();
 					return;
 				}
+			}
+
+			if (parentNode.Tag != null && parentNode.Tag is CubeGridEntity)
+			{
+				CubeBlockDialog dialog = new CubeBlockDialog();
+				dialog.ParentCubeGrid = (CubeGridEntity)parentNode.Tag;
+				dialog.ShowDialog(this);
+				return;
 			}
 
 			if (selectedNode.Tag == null)

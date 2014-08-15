@@ -12,6 +12,8 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
 
+using Sandbox.Definitions;
+
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
 
@@ -49,7 +51,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CubeGridGetCubeBlocksHashSetMethod = "E38F3E9D7A76CD246B99F6AE91CC3E4A";
 		public static string CubeGridGetPowerManagerMethod = "D92A57E3478304C8F8F780A554C6D6C4";
 		public static string CubeGridGetDampenersPowerReceiverMethod = "0D142C5CB93281BA2431FB266E8E3CA8";
-		public static string CubeGridAddCubeBlockMethod = "1DB9998AAA470204B79C22C0E7F21D87";
+		public static string CubeGridAddCubeBlockMethod = "2B757AF5C8F1CC2EC5F738B54EFBDF23";
 		public static string CubeGridRemoveCubeBlockMethod = "5980C21045AAAAEC22416165FF409455";
 
 		public static string CubeGridIsStaticField = "";
@@ -177,15 +179,24 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 					foreach (var cubeBlock in ObjectBuilder.CubeBlocks)
 					{
-						if (cubeBlock.TypeId == typeof(MyObjectBuilder_Beacon))
+						try
 						{
-							if (name.Length > 0)
-								name += "|";
+							if (cubeBlock == null)
+								continue;
+							if (cubeBlock.TypeId == typeof(MyObjectBuilder_Beacon))
+							{
+								if (name.Length > 0)
+									name += "|";
 
-							string customName = ((MyObjectBuilder_Beacon)cubeBlock).CustomName;
-							if (customName == "")
-								customName = "Beacon";
-							name += customName;
+								string customName = ((MyObjectBuilder_Beacon)cubeBlock).CustomName;
+								if (customName == "")
+									customName = "Beacon";
+								name += customName;
+							}
+						}
+						catch (Exception ex)
+						{
+							LogManager.ErrorLog.WriteLine(ex);
 						}
 					}
 				}
@@ -563,9 +574,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			if (m_cubeBlockToAddRemove == null)
 				return;
 
-			//TODO - Figure out how to broadcast this
+			try
+			{
+				MyObjectBuilder_CubeBlock objectBuilder = m_cubeBlockToAddRemove.ObjectBuilder;
+				MyCubeBlockDefinition blockDef = MyDefinitionManager.Static.GetCubeBlockDefinition(objectBuilder);
 
-			InvokeEntityMethod(BackingObject, CubeGridAddCubeBlockMethod, new object[] { m_cubeBlockToAddRemove.ObjectBuilder, false });
+				//TODO - Figure out how to broadcast this
+
+				Object result = InvokeEntityMethod(BackingObject, CubeGridAddCubeBlockMethod, new object[] { objectBuilder, true, blockDef });
+				m_cubeBlockToAddRemove.BackingObject = result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
 
 			m_cubeBlockToAddRemove = null;
 		}
@@ -589,7 +611,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 	public class CubeGridNetworkManager
 	{
-		//24 Packets
+		//28 Packets
 		public enum CubeGridPacketIds
 		{
 			CubeBlockHashSet = 14,				//..AAC558DB3CA968D0D3B965EA00DF05D4

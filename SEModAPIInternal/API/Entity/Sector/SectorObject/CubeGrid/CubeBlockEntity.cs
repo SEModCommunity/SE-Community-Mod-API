@@ -363,6 +363,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			if(SandboxGameAssemblyWrapper.IsDebugging)
 				LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
 
+			Parent.DeleteCubeBlock(this);
+
 			//Only enable events for non-structural blocks, for now
 			if (ObjectBuilder.EntityId != 0)
 			{

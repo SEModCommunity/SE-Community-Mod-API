@@ -6,12 +6,51 @@ using System.Runtime.Serialization;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Common.ObjectBuilders.Definitions;
 
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
+using SEModAPIInternal.API.Utility;
+using System.Reflection;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
+	public struct ProductionQueueItem
+	{
+		public decimal Amount;
+		public SerializableDefinitionId Id;
+		public uint ItemId;
+
+		public ProductionQueueItem(decimal amount, SerializableDefinitionId id, uint itemId)
+		{
+			Amount = amount;
+			Id = id;
+			ItemId = itemId;
+		}
+
+		public ProductionQueueItem(MyObjectBuilder_ProductionBlock.QueueItem q)
+		{
+			Amount = q.Amount;
+			Id = q.Id;
+			ItemId = q.ItemId.GetValueOrDefault(0);
+		}
+
+		public static implicit operator ProductionQueueItem(MyObjectBuilder_ProductionBlock.QueueItem q)
+		{
+			return new ProductionQueueItem(q);
+		}
+
+		public static implicit operator MyObjectBuilder_ProductionBlock.QueueItem(ProductionQueueItem q)
+		{
+			MyObjectBuilder_ProductionBlock.QueueItem item = new MyObjectBuilder_ProductionBlock.QueueItem();
+			item.Amount = q.Amount;
+			item.Id = q.Id;
+			item.ItemId = q.ItemId;
+
+			return item;
+		}
+	}
+
 	[DataContract(Name = "ProductionBlockEntityProxy")]
 	public class ProductionBlockEntity : FunctionalBlockEntity
 	{
@@ -25,6 +64,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public static string ProductionBlockGetInputInventoryMethod = "GetInventory";
 		public static string ProductionBlockGetOutputInventoryMethod = "GetInventory";
+		public static string ProductionBlockGetQueueMethod = "BE739740ACEA08DBE2BC8E60DCF3AD42";
+		public static string ProductionBlockSetQueueMethod = "085AE1F1D53C2471B793D78F54DD314F";
+		public static string ProductionBlockRemoveQueueItemAtIndexMethod = "BA7899D145811C9F475076688113C573";
+		public static string ProductionBlockTriggerQueueChangedCallbackMethod = "D93A5588B8D3B36CC7E26EE291389FD6";
+
+		public static string ProductionBlockQueueField = "EBACD061EEA690B3C34E39E516F4EDCF";
 
 		#endregion
 
@@ -47,6 +92,22 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Properties"
+
+		[IgnoreDataMember]
+		[Category("Production Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_ProductionBlock ObjectBuilder
+		{
+			get
+			{
+				return (MyObjectBuilder_ProductionBlock)base.ObjectBuilder;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
 
 		[DataMember]
 		[Category("Production Block")]
@@ -78,9 +139,69 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[IgnoreDataMember]
+		[Category("Production Block")]
+		[Browsable(false)]
+		public List<ProductionQueueItem> Queue
+		{
+			get
+			{
+				List<ProductionQueueItem> list = new List<ProductionQueueItem>();
+				foreach (var item in ObjectBuilder.Queue)
+					list.Add(item);
+				return list;
+			}
+			set
+			{
+				MyObjectBuilder_ProductionBlock.QueueItem[] newQueue = new MyObjectBuilder_ProductionBlock.QueueItem[value.Count];
+				for(int i=0; i<value.Count; i++)
+				{
+					newQueue[i] = value[i];
+				}
+				ObjectBuilder.Queue = newQueue;
+
+				if (BackingObject != null)
+				{
+					Action action = InternalUpdateQueue;
+					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				}
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ProductionBlockNamespace, ProductionBlockClass);
+				if (type == null)
+					throw new Exception("Could not find internal type for ProductionBlockEntity");
+				bool result = true;
+				result &= HasMethod(type, ProductionBlockGetInputInventoryMethod);
+				result &= HasMethod(type, ProductionBlockGetOutputInventoryMethod);
+				result &= HasMethod(type, ProductionBlockGetQueueMethod);
+				result &= HasMethod(type, ProductionBlockSetQueueMethod);
+				result &= HasMethod(type, ProductionBlockRemoveQueueItemAtIndexMethod);
+				result &= HasMethod(type, ProductionBlockTriggerQueueChangedCallbackMethod);
+				result &= HasField(type, ProductionBlockQueueField);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
+
+		public void ClearQueue()
+		{
+			Action action = InternalClearQueue;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+		}
 
 		#region "Internal"
 
@@ -116,6 +237,38 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
+		}
+
+		protected void InternalClearQueue()
+		{
+			try
+			{
+				FieldInfo field = GetEntityField(ActualObject, ProductionBlockQueueField);
+				Object result = field.GetValue(ActualObject);
+				InvokeEntityMethod(result, "Clear");
+				InvokeEntityMethod(ActualObject, ProductionBlockTriggerQueueChangedCallbackMethod);
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+			/*
+			Object source = InvokeEntityMethod(ActualObject, ProductionBlockGetQueueMethod);
+			List<Object> queue = UtilityFunctions.ConvertList(source);
+
+			for (var i = 0; i < queue.Count; i++)
+			{
+				InvokeEntityMethod(ActualObject, ProductionBlockRemoveQueueItemAtIndexMethod, new object[] { i });
+			}*/
+		}
+
+		protected void InternalUpdateQueue()
+		{
+			List<Object> newQueue = new List<object>();
+
+			//TODO - Copy the API queue into the new queue list
+
+			InvokeEntityMethod(ActualObject, ProductionBlockSetQueueMethod, new object[] { newQueue });
 		}
 
 		#endregion

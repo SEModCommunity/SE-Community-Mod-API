@@ -84,24 +84,6 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("CubeGridNetworkManager reflection validation failed!");
 			}
 
-			if (!CubeBlockEntity.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("CubeBlockEntity reflection validation failed!");
-			}
-
-			if (!TerminalBlockEntity.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("TerminalBlockEntity reflection validation failed!");
-			}
-
-			if (!FunctionalBlockEntity.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("FunctionalBlockEntity reflection validation failed!");
-			}
-
 			if (!SectorObjectManager.ReflectionUnitTest())
 			{
 				result = false;
@@ -199,6 +181,30 @@ namespace SEModAPIExtensions.API
 		protected bool RunCubeBlockReflectionTests()
 		{
 			bool result = true;
+
+			if (!CubeBlockEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("CubeBlockEntity reflection validation failed!");
+			}
+
+			if (!TerminalBlockEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("TerminalBlockEntity reflection validation failed!");
+			}
+
+			if (!FunctionalBlockEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("FunctionalBlockEntity reflection validation failed!");
+			}
+
+			if (!ProductionBlockEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ProductionBlockEntity reflection validation failed!");
+			}
 
 			if (!LightEntity.ReflectionUnitTest())
 			{

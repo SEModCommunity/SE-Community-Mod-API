@@ -26,6 +26,7 @@ using SEModAPIInternal.Support;
 using VRageMath;
 using VRage.Common.Utils;
 using SEModAPIExtensions.API.IPC;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 
 namespace SEModAPIExtensions.API
 {
@@ -691,6 +692,28 @@ namespace SEModAPIExtensions.API
 					{
 						CargoShipManager.Instance.SpawnCargoShipGroup(remoteUserId);
 					}
+				}
+			}
+			if (command.Equals("/clear"))
+			{
+				if (paramCount == 1 && commandParts[1].ToLower().Equals("productionqueue"))
+				{
+					List<CubeGridEntity> cubeGrids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					int queueCount = 0;
+					foreach (var cubeGrid in cubeGrids)
+					{
+						foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+						{
+							if (cubeBlock is ProductionBlockEntity)
+							{
+								ProductionBlockEntity block = (ProductionBlockEntity)cubeBlock;
+								block.ClearQueue();
+								queueCount++;
+							}
+						}
+					}
+
+					SendPrivateChatMessage(remoteUserId, "Cleared the production queue of " + queueCount.ToString() + " blocks");
 				}
 			}
 
