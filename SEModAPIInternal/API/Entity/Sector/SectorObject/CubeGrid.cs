@@ -733,7 +733,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod);
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockFactionDataMethod);
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockRemoveListsMethod);
-				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastAddCubeBlockMethod);
+				Type packedStructType = CubeGridEntity.InternalType.GetNestedType(CubeGridEntity.CubeGridPackedCubeBlockClass);
+				Type[] typeArgs = {
+					typeof(long),
+					packedStructType.MakeByRefType()
+				};
+				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastAddCubeBlockMethod, typeArgs);
 				result &= BaseObject.HasField(type, CubeGridNetManagerCubeBlocksToDestroyField);
 
 				Type type2 = CubeGridEntity.InternalType.GetNestedType(CubeGridIntegrityChangeEnumClass);
