@@ -66,8 +66,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string ProductionBlockGetOutputInventoryMethod = "GetInventory";
 		public static string ProductionBlockGetQueueMethod = "BE739740ACEA08DBE2BC8E60DCF3AD42";
 		public static string ProductionBlockSetQueueMethod = "085AE1F1D53C2471B793D78F54DD314F";
-		public static string ProductionBlockRemoveQueueItemAtIndexMethod = "D2C02FB5961F3DB992B83E8B2550982D";
-		public static string ProductionBlockTriggerQueueChangedCallbackMethod = "1D1D6B8BF81E722D2E8298A25E15D77A";
+		public static string ProductionBlockRemoveQueueItemAtIndexMethod = "C653BBBDDD3CFF9156E55C0C89C48D97";
+		public static string ProductionBlockTriggerQueueChangedCallbackMethod = "38B01E5A2B7E5F602656131A037F2EEE";
 
 		public static string ProductionBlockQueueField = "EBACD061EEA690B3C34E39E516F4EDCF";
 
