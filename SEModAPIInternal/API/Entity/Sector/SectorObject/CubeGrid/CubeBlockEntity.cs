@@ -25,6 +25,7 @@ using SEModAPIInternal.Support;
 
 using VRageMath;
 using VRageMath.PackedVector;
+using Sandbox.Definitions;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 {
@@ -52,6 +53,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 		public static string CubeBlockColorMaskHSVField = "80392678992D8667596D700F61290E02";
 		public static string CubeBlockConstructionManagerField = "C7EFFDDD3AD38830FE93363F3327C724";
+		public static string CubeBlockCubeBlockDefinitionField = "0944AA251CC68A0DA0AACFAC2E7E487A";
 
 		/////////////////////////////////////////////////////
 
@@ -403,6 +405,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				result &= HasField(type, CubeBlockParentCubeGridField);
 				result &= HasField(type, CubeBlockColorMaskHSVField);
 				result &= HasField(type, CubeBlockConstructionManagerField);
+				result &= HasField(type, CubeBlockCubeBlockDefinitionField);
 
 				type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ActualCubeBlockNamespace, ActualCubeBlockClass);
 				if (type == null)
@@ -439,6 +442,24 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		}
 
 		#region "Internal"
+
+		internal MyCubeBlockDefinition GetBlockDefinition()
+		{
+			if (BackingObject == null)
+				return null;
+
+			try
+			{
+				FieldInfo field = GetEntityField(BackingObject, CubeBlockCubeBlockDefinitionField);
+				MyCubeBlockDefinition result = (MyCubeBlockDefinition)field.GetValue(BackingObject);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return null;
+			}
+		}
 
 		protected Object GetActualObject()
 		{

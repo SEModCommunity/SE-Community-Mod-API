@@ -65,6 +65,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CubeGridDampenersPowerReceiverGetEnabled = "51FDDFF9224B3F717EEFFEBEA5F1BAF6";
 		public static string CubeGridDampenersPowerReceiverSetEnabled = "86B66668D555E1C1B744C17D2AFA77F7";
 
+		//////////////////////////////////////////////////////////////
+
+		public static string CubeGridPackedCubeBlockClass = "904EBABB7F499A29EBFA14472321E896";
+
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -579,7 +583,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				MyObjectBuilder_CubeBlock objectBuilder = m_cubeBlockToAddRemove.ObjectBuilder;
 				MyCubeBlockDefinition blockDef = MyDefinitionManager.Static.GetCubeBlockDefinition(objectBuilder);
 
-				//TODO - Figure out how to broadcast this
+				NetworkManager.BroadcastAddCubeBlock(m_cubeBlockToAddRemove);
 
 				Object result = InvokeEntityMethod(BackingObject, CubeGridAddCubeBlockMethod, new object[] { objectBuilder, true, blockDef });
 				m_cubeBlockToAddRemove.BackingObject = result;
@@ -667,6 +671,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod = "F7C40254F25941842EA6558205FAC160";
 		public static string CubeGridNetManagerBroadcastCubeBlockFactionDataMethod = "EF45C83059E3CD5A2C5354ABB687D861";
 		public static string CubeGridNetManagerBroadcastCubeBlockRemoveListsMethod = "4A75379DE89606408396FDADD89822F3";
+		public static string CubeGridNetManagerBroadcastAddCubeBlockMethod = "40AE39479BFB3B7D9BE14825996C3167";
 
 		//Fields
 		public static string CubeGridNetManagerCubeBlocksToDestroyField = "8E76EFAC4EED3B61D48795B2CD5AF989";
@@ -728,6 +733,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod);
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockFactionDataMethod);
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockRemoveListsMethod);
+				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastAddCubeBlockMethod);
 				result &= BaseObject.HasField(type, CubeGridNetManagerCubeBlocksToDestroyField);
 
 				Type type2 = CubeGridEntity.InternalType.GetNestedType(CubeGridIntegrityChangeEnumClass);
@@ -773,6 +779,51 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public void BroadcastCubeBlockRemoveLists()
 		{
 			BaseObject.InvokeEntityMethod(m_netManager, CubeGridNetManagerBroadcastCubeBlockRemoveListsMethod);
+		}
+
+		public void BroadcastAddCubeBlock(CubeBlockEntity cubeBlock)
+		{
+			try
+			{
+				//TODO - Get this working. This code was a valiant effort but still isn't working >.<
+
+				Type packedStructType = CubeGridEntity.InternalType.GetNestedType(CubeGridEntity.CubeGridPackedCubeBlockClass);
+				Object packedStruct = Activator.CreateInstance(packedStructType);
+
+				//Set def id
+				FieldInfo field = BaseObject.GetEntityField(packedStruct, "35E024D9E3B721592FB9B6FC1A1E239A");
+				field.SetValue(packedStruct, (DefinitionIdBlit)MyDefinitionManager.Static.GetCubeBlockDefinition(cubeBlock.ObjectBuilder).Id);
+
+				//Set position
+				field = BaseObject.GetEntityField(packedStruct, "5C3938C9B8CED1D0057CCF12F04329AB");
+				field.SetValue(packedStruct, (Vector3I)cubeBlock.Min);
+
+				//Set orientation
+				Quaternion rot;
+				cubeBlock.BlockOrientation.GetQuaternion(out rot);
+				field = BaseObject.GetEntityField(packedStruct, "F1AAFF5C8F200592F313BC7E02140A38");
+				field.SetValue(packedStruct, Base6Directions.GetForward(rot));
+				field = BaseObject.GetEntityField(packedStruct, "E80AA7B84131E39F9F88209A109EED59");
+				field.SetValue(packedStruct, Base6Directions.GetUp(rot));
+
+				//Set color
+				field = BaseObject.GetEntityField(packedStruct, "556976F2528411FF5F95FC75DC13FEED");
+				field.SetValue(packedStruct, ColorExtensions.PackHSVToUint(cubeBlock.ColorMaskHSV));
+
+				object[] parameters = {
+					cubeBlock.EntityId,
+					packedStruct
+				};
+				Type[] typeArgs = {
+					typeof(long),
+					packedStructType.MakeByRefType()
+				};
+				BaseObject.InvokeEntityMethod(m_netManager, CubeGridNetManagerBroadcastAddCubeBlockMethod, parameters, typeArgs);
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

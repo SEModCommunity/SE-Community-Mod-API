@@ -376,6 +376,37 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		internal static MethodInfo GetEntityMethod(Object gameEntity, string methodName, Type[] argTypes)
+		{
+			try
+			{
+				if (argTypes == null || argTypes.Length == 0)
+					return GetEntityMethod(gameEntity, methodName);
+
+				if (gameEntity == null)
+					throw new Exception("Game entity was null");
+				if (methodName == null || methodName.Length == 0)
+					throw new Exception("Method name was empty");
+				Type entityType = gameEntity.GetType();
+				MethodInfo method = entityType.GetMethod(methodName, argTypes);
+				if (method == null)
+					method = entityType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy, Type.DefaultBinder, argTypes, null);
+				if (method == null && entityType.BaseType != null)
+					method = entityType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy, Type.DefaultBinder, argTypes, null);
+				if (method == null)
+					throw new Exception("Method not found");
+				return method;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to get entity method '" + methodName + "': " + ex.Message);
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
+				return null;
+			}
+		}
+
 		internal static Object InvokeStaticMethod(Type objectType, string methodName)
 		{
 			return InvokeStaticMethod(objectType, methodName, new object[] { });
@@ -409,9 +440,14 @@ namespace SEModAPIInternal.API.Entity
 
 		internal static Object InvokeEntityMethod(Object gameEntity, string methodName, Object[] parameters)
 		{
+			return InvokeEntityMethod(gameEntity, methodName, parameters, null);
+		}
+
+		internal static Object InvokeEntityMethod(Object gameEntity, string methodName, Object[] parameters, Type[] argTypes)
+		{
 			try
 			{
-				MethodInfo method = GetEntityMethod(gameEntity, methodName);
+				MethodInfo method = GetEntityMethod(gameEntity, methodName, argTypes);
 				if (method == null)
 					throw new Exception("Method is empty");
 				Object result = method.Invoke(gameEntity, parameters);
@@ -421,7 +457,7 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLine("Failed to invoke entity method '" + methodName + "' on type '" + gameEntity.GetType().FullName + "': " + ex.Message);
-				
+
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
 
