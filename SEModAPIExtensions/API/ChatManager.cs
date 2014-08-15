@@ -68,6 +68,13 @@ namespace SEModAPIExtensions.API
 
 	public class ChatManager
 	{
+		public struct ChatCommand
+		{
+			public string command;
+			public Action<ChatEvent> callback;
+			public bool requiresAdmin;
+		}
+
 		public enum ChatEventType
 		{
 			OnChatReceived,
@@ -92,6 +99,7 @@ namespace SEModAPIExtensions.API
 		private static bool m_chatHandlerSetup;
 
 		private List<ChatEvent> m_chatEvents;
+		private List<ChatCommand> m_chatCommands;
 
 		public static string ChatMessageStruct = "C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668";
 		public static string ChatMessageMessageField = "EDCBEBB604B287DFA90A5A46DC7AD28D";
@@ -107,6 +115,80 @@ namespace SEModAPIExtensions.API
 			m_chatMessages = new List<string>();
 			m_chatHandlerSetup = false;
 			m_chatEvents = new List<ChatEvent>();
+			m_chatCommands = new List<ChatCommand>();
+
+			ChatCommand deleteCommand = new ChatCommand();
+			deleteCommand.command = "delete";
+			deleteCommand.callback = Command_Delete;
+			deleteCommand.requiresAdmin = true;
+
+			ChatCommand tpCommand = new ChatCommand();
+			tpCommand.command = "tp";
+			tpCommand.callback = Command_Teleport;
+			tpCommand.requiresAdmin = true;
+
+			ChatCommand stopCommand = new ChatCommand();
+			stopCommand.command = "stop";
+			stopCommand.callback = Command_Stop;
+			stopCommand.requiresAdmin = true;
+
+			ChatCommand getIdCommand = new ChatCommand();
+			getIdCommand.command = "getid";
+			getIdCommand.callback = Command_GetId;
+			getIdCommand.requiresAdmin = true;
+
+			ChatCommand saveCommand = new ChatCommand();
+			saveCommand.command = "save";
+			saveCommand.callback = Command_Save;
+			saveCommand.requiresAdmin = true;
+
+			ChatCommand ownerCommand = new ChatCommand();
+			ownerCommand.command = "owner";
+			ownerCommand.callback = Command_Owner;
+			ownerCommand.requiresAdmin = true;
+
+			ChatCommand exportCommand = new ChatCommand();
+			exportCommand.command = "export";
+			exportCommand.callback = Command_Export;
+			exportCommand.requiresAdmin = true;
+
+			ChatCommand importCommand = new ChatCommand();
+			importCommand.command = "import";
+			importCommand.callback = Command_Import;
+			importCommand.requiresAdmin = true;
+
+			ChatCommand spawnCommand = new ChatCommand();
+			spawnCommand.command = "spawn";
+			spawnCommand.callback = Command_Spawn;
+			spawnCommand.requiresAdmin = true;
+
+			ChatCommand clearCommand = new ChatCommand();
+			clearCommand.command = "clear";
+			clearCommand.callback = Command_Clear;
+			clearCommand.requiresAdmin = true;
+
+			ChatCommand listCommand = new ChatCommand();
+			listCommand.command = "list";
+			listCommand.callback = Command_List;
+			listCommand.requiresAdmin = true;
+
+			ChatCommand offCommand = new ChatCommand();
+			offCommand.command = "off";
+			offCommand.callback = Command_Off;
+			offCommand.requiresAdmin = true;
+
+			RegisterChatCommand(deleteCommand);
+			RegisterChatCommand(tpCommand);
+			RegisterChatCommand(stopCommand);
+			RegisterChatCommand(getIdCommand);
+			RegisterChatCommand(saveCommand);
+			RegisterChatCommand(ownerCommand);
+			RegisterChatCommand(exportCommand);
+			RegisterChatCommand(importCommand);
+			RegisterChatCommand(spawnCommand);
+			RegisterChatCommand(clearCommand);
+			RegisterChatCommand(listCommand);
+			RegisterChatCommand(offCommand);
 
 			SetupWCFService();
 
@@ -316,9 +398,6 @@ namespace SEModAPIExtensions.API
 
 		protected bool ParseChatCommands(string message, ulong remoteUserId = 0)
 		{
-			if (remoteUserId != 0 && !SandboxGameAssemblyWrapper.Instance.IsUserAdmin(remoteUserId))
-				return false;
-
 			string[] commandParts = message.Split(' ');
 			int paramCount = commandParts.Length - 1;
 			if (paramCount < 0)
@@ -328,449 +407,46 @@ namespace SEModAPIExtensions.API
 			if(command[0] != '/')
 				return false;
 
-			#region Delete Commands
+			//Strip off the starting slash
+			command = command.Substring(1);
 
-			//Delete
-			if (command.Equals("/delete"))
+			//Search for a matching, registered command
+			bool foundMatch = false;
+			foreach (ChatCommand chatCommand in m_chatCommands)
 			{
-				//All entities
-				if (paramCount > 1 && commandParts[1].ToLower().Equals("all"))
+				if (chatCommand.requiresAdmin && remoteUserId != 0 && !SandboxGameAssemblyWrapper.Instance.IsUserAdmin(remoteUserId))
+					continue;
+
+				if (command.Equals(chatCommand.command.ToLower()))
 				{
-					//All cube grids that have no beacon or only a beacon with no name
-					if (commandParts[2].ToLower().Equals("nobeacon"))
-					{
-						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-						List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
-						foreach (CubeGridEntity entity in entities)
-						{
-							if (entity.Name.Equals(entity.EntityId.ToString()))
-							{
-								entitiesToDispose.Add(entity);
-							}
-						}
+					ChatEvent chatEvent = new ChatEvent();
+					chatEvent.message = message;
+					chatEvent.remoteUserId = remoteUserId;
+					chatEvent.timestamp = DateTime.Now;
 
-						foreach (BaseEntity entity in entitiesToDispose)
-						{
-							entity.Dispose();
-						}
+					chatCommand.callback(chatEvent);
 
-						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed");
-					}
-					else if (commandParts[2].ToLower().Equals("floatingobjects"))	//All floating objects
-					{
-						List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
-						int floatingObjectCount = entities.Count;
-						foreach (FloatingObject entity in entities)
-						{
-							entity.Dispose();
-						}
-
-						SendPrivateChatMessage(remoteUserId, floatingObjectCount.ToString() + " floating objects have been removed");
-					}
-					else
-					{
-						string entityName = commandParts[2];
-						if (commandParts.Length > 3)
-						{
-							for (int i = 3; i < commandParts.Length; i++)
-							{
-								entityName += " " + commandParts[i];
-							}
-						}
-
-						int matchingEntitiesCount = 0;
-						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-						foreach (BaseEntity entity in entities)
-						{
-							bool isMatch = Regex.IsMatch(entity.Name, entityName, RegexOptions.IgnoreCase);
-							if (!isMatch)
-								continue;
-
-							entity.Dispose();
-
-							matchingEntitiesCount++;
-						}
-
-						SendPrivateChatMessage(remoteUserId, matchingEntitiesCount.ToString() + " objects have been removed");
-					}
-				}
-
-				//All non-static cube grids
-				if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
-				{
-					//That have no beacon or only a beacon with no name
-					if (commandParts[2].ToLower().Equals("nobeacon"))
-					{
-						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-						List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
-						foreach (CubeGridEntity entity in entities)
-						{
-							//Skip static cube grids
-							if (((CubeGridEntity)entity).IsStatic)
-								continue;
-
-							if (entity.Name.Equals(entity.EntityId.ToString()))
-							{
-								entitiesToDispose.Add(entity);
-							}
-						}
-
-						foreach (BaseEntity entity in entitiesToDispose)
-						{
-							entity.Dispose();
-						}
-
-						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " ships have been removed");
-					}
-				}
-
-				//All static cube grids
-				if (paramCount > 1 && commandParts[1].ToLower().Equals("station"))
-				{
-					//That have no beacon or only a beacon with no name
-					if (commandParts[2].ToLower().Equals("nobeacon"))
-					{
-						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-						List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
-						foreach (CubeGridEntity entity in entities)
-						{
-							//Skip non-static cube grids
-							if (!((CubeGridEntity)entity).IsStatic)
-								continue;
-
-							if (entity.Name.Equals(entity.EntityId.ToString()))
-							{
-								entitiesToDispose.Add(entity);
-							}
-						}
-
-						foreach (BaseEntity entity in entitiesToDispose)
-						{
-							entity.Dispose();
-						}
-
-						SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " stations have been removed");
-					}
-				}
-
-				//Single entity
-				if (paramCount == 1)
-				{
-					string rawEntityId = commandParts[1];
-
-					try
-					{
-						long entityId = long.Parse(rawEntityId);
-
-						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-						foreach (BaseEntity entity in entities)
-						{
-							if (entity.EntityId != entityId)
-								continue;
-
-							entity.Dispose();
-						}
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
+					foundMatch = true;
+					break;
 				}
 			}
 
-			#endregion
+			if (foundMatch)
+				return true;
+			else
+				return false;
+		}
 
-			#region Utility Commands
-
-			//Utility
-			if (command.Equals("/tp"))
+		public void RegisterChatCommand(ChatCommand command)
+		{
+			//Check if the given command already is registered
+			foreach (ChatCommand chatCommand in m_chatCommands)
 			{
-				if (paramCount == 2)
-				{
-					string rawEntityId = commandParts[1];
-					string rawPosition = commandParts[2];
-
-					try
-					{
-						long entityId = long.Parse(rawEntityId);
-
-						string[] rawCoordinateValues = rawPosition.Split(',');
-						if (rawCoordinateValues.Length < 3)
-							return true;
-
-						float x = float.Parse(rawCoordinateValues[0]);
-						float y = float.Parse(rawCoordinateValues[1]);
-						float z = float.Parse(rawCoordinateValues[2]);
-
-						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-						foreach (BaseEntity entity in entities)
-						{
-							if (entity.EntityId != entityId)
-								continue;
-
-							Vector3 newPosition = new Vector3(x, y, z);
-							entity.Position = newPosition;
-
-							SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been moved to '" + newPosition.ToString() + "'");
-						}
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-			}
-			if (command.Equals("/stop"))
-			{
-				if (paramCount == 1)
-				{
-					string rawEntityId = commandParts[1];
-
-					try
-					{
-						long entityId = long.Parse(rawEntityId);
-
-						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-						foreach (BaseEntity entity in entities)
-						{
-							if (entity.EntityId != entityId)
-								continue;
-
-							entity.LinearVelocity = Vector3.Zero;
-							entity.AngularVelocity = Vector3.Zero;
-
-							SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' is no longer moving or rotating");
-						}
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-			}
-			if (command.Equals("/getid"))
-			{
-				if (paramCount > 0)
-				{
-					string entityName = commandParts[1];
-					if (commandParts.Length > 2)
-					{
-						for (int i = 2; i < commandParts.Length; i++ )
-						{
-							entityName += " " + commandParts[i];
-						}
-					}
-
-					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-					foreach (BaseEntity entity in entities)
-					{
-						if (!entity.Name.ToLower().Equals(entityName.ToLower()))
-							continue;
-
-						SendPrivateChatMessage(remoteUserId, "Entity ID is '" + entity.EntityId.ToString() + "'");
-					}
-				}
-			}
-			if (command.Equals("/save"))
-			{
-				WorldManager.Instance.SaveWorld();
-
-				SendPrivateChatMessage(remoteUserId, "World has been saved!");
-			}
-			if (command.Equals("/owner"))
-			{
-				if (paramCount == 2)
-				{
-					string rawEntityId = commandParts[1];
-					string rawOwnerId = commandParts[2];
-
-					try
-					{
-						long entityId = long.Parse(rawEntityId);
-						long ownerId = long.Parse(rawOwnerId);
-
-						List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-						foreach (CubeGridEntity cubeGrid in entities)
-						{
-							if (cubeGrid.EntityId != entityId)
-								continue;
-
-							//Update the owner of the blocks on the cube grid
-							foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
-							{
-								//Skip blocks that don't have an entity id
-								if (cubeBlock.EntityId == 0)
-									continue;
-
-								cubeBlock.Owner = ownerId;
-							}
-
-							SendPrivateChatMessage(remoteUserId, "CubeGridEntity '" + cubeGrid.EntityId.ToString() + "' owner has been changed to '" + ownerId.ToString() + "'");
-						}
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-			}
-			if (command.Equals("/export"))
-			{
-				if (paramCount == 1)
-				{
-					string rawEntityId = commandParts[1];
-
-					try
-					{
-						long entityId = long.Parse(rawEntityId);
-
-						List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-						foreach (BaseEntity entity in entities)
-						{
-							if (entity.EntityId != entityId)
-								continue;
-
-							string modPath = MyFileSystem.ModsPath;
-							if (!Directory.Exists(modPath))
-								break;
-
-							string fileName = entity.Name.ToLower();
-							Regex rgx = new Regex("[^a-zA-Z0-9]");
-							string cleanFileName = rgx.Replace(fileName, "");
-
-							string exportPath = Path.Combine(modPath, "Exports");
-							if (!Directory.Exists(exportPath))
-								Directory.CreateDirectory(exportPath);
-							FileInfo exportFile = new FileInfo(Path.Combine(exportPath, cleanFileName + ".sbc"));
-							entity.Export(exportFile);
-
-							SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been exported to Mods/Exports");
-						}
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-			}
-			if (command.Equals("/import"))
-			{
-				if (paramCount == 1)
-				{
-					string fileName = commandParts[1];
-					Regex rgx = new Regex("[^a-zA-Z0-9]");
-					string cleanFileName = rgx.Replace(fileName, "");
-
-					string modPath = MyFileSystem.ModsPath;
-					if(Directory.Exists(modPath))
-					{
-						string exportPath = Path.Combine(modPath, "Exports");
-						if (Directory.Exists(exportPath))
-						{
-							FileInfo importFile = new FileInfo(Path.Combine(exportPath, cleanFileName));
-							if (importFile.Exists)
-							{
-								//TODO - Find a clean way to determine what type of entity is in the file so that we can import
-
-								SendPrivateChatMessage(remoteUserId, "Feature is not yet completed");
-							}
-						}
-					}
-				}
-			}
-			if (command.Equals("/spawn"))
-			{
-				if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
-				{
-					if (commandParts[2].ToLower().Equals("all"))
-					{
-					}
-					if (commandParts[2].ToLower().Equals("exports"))
-					{
-					}
-					if (commandParts[2].ToLower().Equals("cargo"))
-					{
-						CargoShipManager.Instance.SpawnCargoShipGroup(remoteUserId);
-					}
-				}
-			}
-			if (command.Equals("/clear"))
-			{
-				if (paramCount == 1 && commandParts[1].ToLower().Equals("productionqueue"))
-				{
-					List<CubeGridEntity> cubeGrids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-					int queueCount = 0;
-					foreach (var cubeGrid in cubeGrids)
-					{
-						foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
-						{
-							if (cubeBlock is ProductionBlockEntity)
-							{
-								ProductionBlockEntity block = (ProductionBlockEntity)cubeBlock;
-								block.ClearQueue();
-								queueCount++;
-							}
-						}
-					}
-
-					SendPrivateChatMessage(remoteUserId, "Cleared the production queue of " + queueCount.ToString() + " blocks");
-				}
+				if (chatCommand.command.ToLower().Equals(command.command.ToLower()))
+					return;
 			}
 
-			#endregion
-
-			#region Diagnostic Commands
-
-			//Diagnostic
-			if (command.Equals("/list"))
-			{
-				if (paramCount == 1 && commandParts[1].ToLower().Equals("all"))
-				{
-					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-					LogManager.APILog.WriteLineAndConsole("Total entities: '" + entities.Count.ToString() + "'");
-
-					SendPrivateChatMessage(remoteUserId, "Total entities: '" + entities.Count.ToString() + "'");
-				}
-				if (paramCount == 1 && commandParts[1].ToLower().Equals("cubegrid"))
-				{
-					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-					LogManager.APILog.WriteLineAndConsole("Cubegrid entities: '" + entities.Count.ToString() + "'");
-
-					SendPrivateChatMessage(remoteUserId, "Cubegrid entities: '" + entities.Count.ToString() + "'");
-				}
-				if (paramCount == 1 && commandParts[1].ToLower().Equals("character"))
-				{
-					List<CharacterEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CharacterEntity>();
-					LogManager.APILog.WriteLineAndConsole("Character entities: '" + entities.Count.ToString() + "'");
-
-					SendPrivateChatMessage(remoteUserId, "Character entities: '" + entities.Count.ToString() + "'");
-				}
-				if (paramCount == 1 && commandParts[1].ToLower().Equals("voxelmap"))
-				{
-					List<VoxelMap> entities = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
-					LogManager.APILog.WriteLineAndConsole("Voxelmap entities: '" + entities.Count.ToString() + "'");
-
-					SendPrivateChatMessage(remoteUserId, "Voxelmap entities: '" + entities.Count.ToString() + "'");
-				}
-				if (paramCount == 1 && commandParts[1].ToLower().Equals("meteor"))
-				{
-					List<Meteor> entities = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
-					LogManager.APILog.WriteLineAndConsole("Meteor entities: '" + entities.Count.ToString() + "'");
-
-					SendPrivateChatMessage(remoteUserId, "Meteor entities: '" + entities.Count.ToString() + "'");
-				}
-				if (paramCount == 1 && commandParts[1].ToLower().Equals("floatingobject"))
-				{
-					List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
-					LogManager.APILog.WriteLineAndConsole("Floating object entities: '" + entities.Count.ToString() + "'");
-
-					SendPrivateChatMessage(remoteUserId, "Floating object entities: '" + entities.Count.ToString() + "'");
-				}
-			}
-
-			#endregion
-
-			return true;
+			m_chatCommands.Add(command);
 		}
 
 		public void AddEvent(ChatEvent newEvent)
@@ -782,6 +458,550 @@ namespace SEModAPIExtensions.API
 		{
 			m_chatEvents.Clear();
 		}
+
+		#region "Chat Command Callbacks"
+
+		protected void Command_Delete(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			//All entities
+			if (paramCount > 1 && commandParts[1].ToLower().Equals("all"))
+			{
+				//All cube grids that have no beacon or only a beacon with no name
+				if (commandParts[2].ToLower().Equals("nobeacon"))
+				{
+					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+					foreach (CubeGridEntity entity in entities)
+					{
+						if (entity.Name.Equals(entity.EntityId.ToString()))
+						{
+							entitiesToDispose.Add(entity);
+						}
+					}
+
+					foreach (BaseEntity entity in entitiesToDispose)
+					{
+						entity.Dispose();
+					}
+
+					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed");
+				}
+				else if (commandParts[2].ToLower().Equals("floatingobjects"))	//All floating objects
+				{
+					List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+					int floatingObjectCount = entities.Count;
+					foreach (FloatingObject entity in entities)
+					{
+						entity.Dispose();
+					}
+
+					SendPrivateChatMessage(remoteUserId, floatingObjectCount.ToString() + " floating objects have been removed");
+				}
+				else
+				{
+					string entityName = commandParts[2];
+					if (commandParts.Length > 3)
+					{
+						for (int i = 3; i < commandParts.Length; i++)
+						{
+							entityName += " " + commandParts[i];
+						}
+					}
+
+					int matchingEntitiesCount = 0;
+					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+					foreach (BaseEntity entity in entities)
+					{
+						bool isMatch = Regex.IsMatch(entity.Name, entityName, RegexOptions.IgnoreCase);
+						if (!isMatch)
+							continue;
+
+						entity.Dispose();
+
+						matchingEntitiesCount++;
+					}
+
+					SendPrivateChatMessage(remoteUserId, matchingEntitiesCount.ToString() + " objects have been removed");
+				}
+			}
+
+			//All non-static cube grids
+			if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
+			{
+				//That have no beacon or only a beacon with no name
+				if (commandParts[2].ToLower().Equals("nobeacon"))
+				{
+					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+					foreach (CubeGridEntity entity in entities)
+					{
+						//Skip static cube grids
+						if (((CubeGridEntity)entity).IsStatic)
+							continue;
+
+						if (entity.Name.Equals(entity.EntityId.ToString()))
+						{
+							entitiesToDispose.Add(entity);
+						}
+					}
+
+					foreach (BaseEntity entity in entitiesToDispose)
+					{
+						entity.Dispose();
+					}
+
+					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " ships have been removed");
+				}
+			}
+
+			//All static cube grids
+			if (paramCount > 1 && commandParts[1].ToLower().Equals("station"))
+			{
+				//That have no beacon or only a beacon with no name
+				if (commandParts[2].ToLower().Equals("nobeacon"))
+				{
+					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+					foreach (CubeGridEntity entity in entities)
+					{
+						//Skip non-static cube grids
+						if (!((CubeGridEntity)entity).IsStatic)
+							continue;
+
+						if (entity.Name.Equals(entity.EntityId.ToString()))
+						{
+							entitiesToDispose.Add(entity);
+						}
+					}
+
+					foreach (BaseEntity entity in entitiesToDispose)
+					{
+						entity.Dispose();
+					}
+
+					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " stations have been removed");
+				}
+			}
+
+			//Single entity
+			if (paramCount == 1)
+			{
+				string rawEntityId = commandParts[1];
+
+				try
+				{
+					long entityId = long.Parse(rawEntityId);
+
+					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+					foreach (BaseEntity entity in entities)
+					{
+						if (entity.EntityId != entityId)
+							continue;
+
+						entity.Dispose();
+					}
+				}
+				catch (Exception ex)
+				{
+					LogManager.ErrorLog.WriteLine(ex);
+				}
+			}
+		}
+
+		protected void Command_Teleport(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount == 2)
+			{
+				string rawEntityId = commandParts[1];
+				string rawPosition = commandParts[2];
+
+				try
+				{
+					long entityId = long.Parse(rawEntityId);
+
+					string[] rawCoordinateValues = rawPosition.Split(',');
+					if (rawCoordinateValues.Length < 3)
+						return;
+
+					float x = float.Parse(rawCoordinateValues[0]);
+					float y = float.Parse(rawCoordinateValues[1]);
+					float z = float.Parse(rawCoordinateValues[2]);
+
+					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+					foreach (BaseEntity entity in entities)
+					{
+						if (entity.EntityId != entityId)
+							continue;
+
+						Vector3 newPosition = new Vector3(x, y, z);
+						entity.Position = newPosition;
+
+						SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been moved to '" + newPosition.ToString() + "'");
+					}
+				}
+				catch (Exception ex)
+				{
+					LogManager.ErrorLog.WriteLine(ex);
+				}
+			}
+		}
+
+		protected void Command_Stop(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount == 1)
+			{
+				string rawEntityId = commandParts[1];
+
+				try
+				{
+					long entityId = long.Parse(rawEntityId);
+
+					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+					foreach (BaseEntity entity in entities)
+					{
+						if (entity.EntityId != entityId)
+							continue;
+
+						entity.LinearVelocity = Vector3.Zero;
+						entity.AngularVelocity = Vector3.Zero;
+
+						SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' is no longer moving or rotating");
+					}
+				}
+				catch (Exception ex)
+				{
+					LogManager.ErrorLog.WriteLine(ex);
+				}
+			}
+		}
+
+		protected void Command_GetId(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount > 0)
+			{
+				string entityName = commandParts[1];
+				if (commandParts.Length > 2)
+				{
+					for (int i = 2; i < commandParts.Length; i++)
+					{
+						entityName += " " + commandParts[i];
+					}
+				}
+
+				List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+				foreach (BaseEntity entity in entities)
+				{
+					if (!entity.Name.ToLower().Equals(entityName.ToLower()))
+						continue;
+
+					SendPrivateChatMessage(remoteUserId, "Entity ID is '" + entity.EntityId.ToString() + "'");
+				}
+			}
+		}
+
+		protected void Command_Save(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			WorldManager.Instance.SaveWorld();
+
+			SendPrivateChatMessage(remoteUserId, "World has been saved!");
+		}
+
+		protected void Command_Owner(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount == 2)
+			{
+				string rawEntityId = commandParts[1];
+				string rawOwnerId = commandParts[2];
+
+				try
+				{
+					long entityId = long.Parse(rawEntityId);
+					long ownerId = long.Parse(rawOwnerId);
+
+					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					foreach (CubeGridEntity cubeGrid in entities)
+					{
+						if (cubeGrid.EntityId != entityId)
+							continue;
+
+						//Update the owner of the blocks on the cube grid
+						foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+						{
+							//Skip blocks that don't have an entity id
+							if (cubeBlock.EntityId == 0)
+								continue;
+
+							cubeBlock.Owner = ownerId;
+						}
+
+						SendPrivateChatMessage(remoteUserId, "CubeGridEntity '" + cubeGrid.EntityId.ToString() + "' owner has been changed to '" + ownerId.ToString() + "'");
+					}
+				}
+				catch (Exception ex)
+				{
+					LogManager.ErrorLog.WriteLine(ex);
+				}
+			}
+		}
+
+		protected void Command_Export(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount == 1)
+			{
+				string rawEntityId = commandParts[1];
+
+				try
+				{
+					long entityId = long.Parse(rawEntityId);
+
+					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+					foreach (BaseEntity entity in entities)
+					{
+						if (entity.EntityId != entityId)
+							continue;
+
+						string modPath = MyFileSystem.ModsPath;
+						if (!Directory.Exists(modPath))
+							break;
+
+						string fileName = entity.Name.ToLower();
+						Regex rgx = new Regex("[^a-zA-Z0-9]");
+						string cleanFileName = rgx.Replace(fileName, "");
+
+						string exportPath = Path.Combine(modPath, "Exports");
+						if (!Directory.Exists(exportPath))
+							Directory.CreateDirectory(exportPath);
+						FileInfo exportFile = new FileInfo(Path.Combine(exportPath, cleanFileName + ".sbc"));
+						entity.Export(exportFile);
+
+						SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been exported to Mods/Exports");
+					}
+				}
+				catch (Exception ex)
+				{
+					LogManager.ErrorLog.WriteLine(ex);
+				}
+			}
+		}
+
+		protected void Command_Import(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount == 1)
+			{
+				string fileName = commandParts[1];
+				Regex rgx = new Regex("[^a-zA-Z0-9]");
+				string cleanFileName = rgx.Replace(fileName, "");
+
+				string modPath = MyFileSystem.ModsPath;
+				if (Directory.Exists(modPath))
+				{
+					string exportPath = Path.Combine(modPath, "Exports");
+					if (Directory.Exists(exportPath))
+					{
+						FileInfo importFile = new FileInfo(Path.Combine(exportPath, cleanFileName));
+						if (importFile.Exists)
+						{
+							//TODO - Find a clean way to determine what type of entity is in the file so that we can import
+
+							SendPrivateChatMessage(remoteUserId, "Feature is not yet completed");
+						}
+					}
+				}
+			}
+		}
+
+		protected void Command_Spawn(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
+			{
+				if (commandParts[2].ToLower().Equals("all"))
+				{
+				}
+				if (commandParts[2].ToLower().Equals("exports"))
+				{
+				}
+				if (commandParts[2].ToLower().Equals("cargo"))
+				{
+					CargoShipManager.Instance.SpawnCargoShipGroup(remoteUserId);
+				}
+			}
+		}
+
+		protected void Command_Clear(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount != 1)
+				return;
+
+			List<CubeGridEntity> cubeGrids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+			int queueCount = 0;
+			foreach (var cubeGrid in cubeGrids)
+			{
+				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+				{
+					if (commandParts[1].ToLower().Equals("productionqueue") && cubeBlock is ProductionBlockEntity)
+					{
+						ProductionBlockEntity block = (ProductionBlockEntity)cubeBlock;
+						block.ClearQueue();
+						queueCount++;
+					}
+					if (commandParts[1].ToLower().Equals("refineryqueue") && cubeBlock is RefineryEntity)
+					{
+						RefineryEntity block = (RefineryEntity)cubeBlock;
+						block.ClearQueue();
+						queueCount++;
+					}
+					if (commandParts[1].ToLower().Equals("assemblerqueue") && cubeBlock is AssemblerEntity)
+					{
+						AssemblerEntity block = (AssemblerEntity)cubeBlock;
+						block.ClearQueue();
+						queueCount++;
+					}
+				}
+			}
+
+			SendPrivateChatMessage(remoteUserId, "Cleared the production queue of " + queueCount.ToString() + " blocks");
+		}
+
+		protected void Command_List(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount != 1)
+				return;
+
+			if (commandParts[1].ToLower().Equals("all"))
+			{
+				List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+				LogManager.APILog.WriteLineAndConsole("Total entities: '" + entities.Count.ToString() + "'");
+
+				SendPrivateChatMessage(remoteUserId, "Total entities: '" + entities.Count.ToString() + "'");
+			}
+			if (commandParts[1].ToLower().Equals("cubegrid"))
+			{
+				List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+				LogManager.APILog.WriteLineAndConsole("Cubegrid entities: '" + entities.Count.ToString() + "'");
+
+				SendPrivateChatMessage(remoteUserId, "Cubegrid entities: '" + entities.Count.ToString() + "'");
+			}
+			if (commandParts[1].ToLower().Equals("character"))
+			{
+				List<CharacterEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CharacterEntity>();
+				LogManager.APILog.WriteLineAndConsole("Character entities: '" + entities.Count.ToString() + "'");
+
+				SendPrivateChatMessage(remoteUserId, "Character entities: '" + entities.Count.ToString() + "'");
+			}
+			if (commandParts[1].ToLower().Equals("voxelmap"))
+			{
+				List<VoxelMap> entities = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
+				LogManager.APILog.WriteLineAndConsole("Voxelmap entities: '" + entities.Count.ToString() + "'");
+
+				SendPrivateChatMessage(remoteUserId, "Voxelmap entities: '" + entities.Count.ToString() + "'");
+			}
+			if (commandParts[1].ToLower().Equals("meteor"))
+			{
+				List<Meteor> entities = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
+				LogManager.APILog.WriteLineAndConsole("Meteor entities: '" + entities.Count.ToString() + "'");
+
+				SendPrivateChatMessage(remoteUserId, "Meteor entities: '" + entities.Count.ToString() + "'");
+			}
+			if (commandParts[1].ToLower().Equals("floatingobject"))
+			{
+				List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
+				LogManager.APILog.WriteLineAndConsole("Floating object entities: '" + entities.Count.ToString() + "'");
+
+				SendPrivateChatMessage(remoteUserId, "Floating object entities: '" + entities.Count.ToString() + "'");
+			}
+		}
+
+		protected void Command_Off(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount != 1)
+				return;
+
+			List<CubeGridEntity> cubeGrids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+			int poweredOffCount = 0;
+			foreach (var cubeGrid in cubeGrids)
+			{
+				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+				{
+					if (!(cubeBlock is FunctionalBlockEntity))
+						continue;
+
+					FunctionalBlockEntity functionalBlock = (FunctionalBlockEntity)cubeBlock;
+
+					if (commandParts[1].ToLower().Equals("all"))
+					{
+						functionalBlock.Enabled = false;
+						poweredOffCount++;
+					}
+					if (commandParts[1].ToLower().Equals("production") && cubeBlock is ProductionBlockEntity)
+					{
+						functionalBlock.Enabled = false;
+						poweredOffCount++;
+					}
+					if (commandParts[1].ToLower().Equals("beacon") && cubeBlock is BeaconEntity)
+					{
+						functionalBlock.Enabled = false;
+						poweredOffCount++;
+					}
+					if (commandParts[1].ToLower().Equals("tools") && (cubeBlock is ShipToolBaseEntity || cubeBlock is ShipDrillEntity))
+					{
+						functionalBlock.Enabled = false;
+						poweredOffCount++;
+					}
+				}
+			}
+
+			SendPrivateChatMessage(remoteUserId, "Cleared the production queue of " + poweredOffCount.ToString() + " blocks");
+		}
+		
+		#endregion
 
 		#endregion
 	}

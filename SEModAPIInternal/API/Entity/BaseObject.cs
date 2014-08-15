@@ -221,7 +221,7 @@ namespace SEModAPIInternal.API.Entity
 				if (field == null)
 				{
 					if(SandboxGameAssemblyWrapper.IsDebugging)
-						Console.WriteLine("Failed to find field '" + fieldName + "' in type '" + objectType.FullName + "'");
+						LogManager.ErrorLog.WriteLineAndConsole("Failed to find field '" + fieldName + "' in type '" + objectType.FullName + "'");
 					return false;
 				}
 				return true;
@@ -229,7 +229,7 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Failed to find field '" + fieldName + "' in type '" + objectType.FullName + "': " + ex.Message);
+					LogManager.ErrorLog.WriteLineAndConsole("Failed to find field '" + fieldName + "' in type '" + objectType.FullName + "': " + ex.Message);
 				LogManager.ErrorLog.WriteLine(ex);
 				return false;
 			}
@@ -257,7 +257,7 @@ namespace SEModAPIInternal.API.Entity
 					if (method == null)
 					{
 						if (SandboxGameAssemblyWrapper.IsDebugging)
-							Console.WriteLine("Failed to find method '" + methodName + "' in type '" + objectType.FullName + "'");
+							LogManager.ErrorLog.WriteLineAndConsole("Failed to find method '" + methodName + "' in type '" + objectType.FullName + "'");
 						return false;
 					}
 				}
@@ -271,7 +271,7 @@ namespace SEModAPIInternal.API.Entity
 					if (method == null)
 					{
 						if (SandboxGameAssemblyWrapper.IsDebugging)
-							Console.WriteLine("Failed to find method '" + methodName + "' in type '" + objectType.FullName + "'");
+							LogManager.ErrorLog.WriteLineAndConsole("Failed to find method '" + methodName + "' in type '" + objectType.FullName + "'");
 						return false;
 					}
 				}
@@ -281,7 +281,7 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine("Failed to find method '" + methodName + "' in type '" + objectType.FullName + "': " + ex.Message);
+					LogManager.ErrorLog.WriteLineAndConsole("Failed to find method '" + methodName + "' in type '" + objectType.FullName + "': " + ex.Message);
 				LogManager.ErrorLog.WriteLine(ex);
 				return false;
 			}
