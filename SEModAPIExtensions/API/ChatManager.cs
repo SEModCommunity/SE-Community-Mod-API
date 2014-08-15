@@ -172,6 +172,11 @@ namespace SEModAPIExtensions.API
 			listCommand.callback = Command_List;
 			listCommand.requiresAdmin = true;
 
+			ChatCommand offCommand = new ChatCommand();
+			offCommand.command = "off";
+			offCommand.callback = Command_Off;
+			offCommand.requiresAdmin = true;
+
 			RegisterChatCommand(deleteCommand);
 			RegisterChatCommand(tpCommand);
 			RegisterChatCommand(stopCommand);
@@ -183,6 +188,7 @@ namespace SEModAPIExtensions.API
 			RegisterChatCommand(spawnCommand);
 			RegisterChatCommand(clearCommand);
 			RegisterChatCommand(listCommand);
+			RegisterChatCommand(offCommand);
 
 			SetupWCFService();
 
@@ -863,25 +869,37 @@ namespace SEModAPIExtensions.API
 			string[] commandParts = chatEvent.message.Split(' ');
 			int paramCount = commandParts.Length - 1;
 
-			if (paramCount == 1 && commandParts[1].ToLower().Equals("productionqueue"))
+			if (paramCount != 1)
+				return;
+
+			List<CubeGridEntity> cubeGrids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+			int queueCount = 0;
+			foreach (var cubeGrid in cubeGrids)
 			{
-				List<CubeGridEntity> cubeGrids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-				int queueCount = 0;
-				foreach (var cubeGrid in cubeGrids)
+				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
 				{
-					foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+					if (commandParts[1].ToLower().Equals("productionqueue") && cubeBlock is ProductionBlockEntity)
 					{
-						if (cubeBlock is ProductionBlockEntity)
-						{
-							ProductionBlockEntity block = (ProductionBlockEntity)cubeBlock;
-							block.ClearQueue();
-							queueCount++;
-						}
+						ProductionBlockEntity block = (ProductionBlockEntity)cubeBlock;
+						block.ClearQueue();
+						queueCount++;
+					}
+					if (commandParts[1].ToLower().Equals("refineryqueue") && cubeBlock is RefineryEntity)
+					{
+						RefineryEntity block = (RefineryEntity)cubeBlock;
+						block.ClearQueue();
+						queueCount++;
+					}
+					if (commandParts[1].ToLower().Equals("assemblerqueue") && cubeBlock is AssemblerEntity)
+					{
+						AssemblerEntity block = (AssemblerEntity)cubeBlock;
+						block.ClearQueue();
+						queueCount++;
 					}
 				}
-
-				SendPrivateChatMessage(remoteUserId, "Cleared the production queue of " + queueCount.ToString() + " blocks");
 			}
+
+			SendPrivateChatMessage(remoteUserId, "Cleared the production queue of " + queueCount.ToString() + " blocks");
 		}
 
 		protected void Command_List(ChatEvent chatEvent)
@@ -890,42 +908,45 @@ namespace SEModAPIExtensions.API
 			string[] commandParts = chatEvent.message.Split(' ');
 			int paramCount = commandParts.Length - 1;
 
-			if (paramCount == 1 && commandParts[1].ToLower().Equals("all"))
+			if (paramCount != 1)
+				return;
+
+			if (commandParts[1].ToLower().Equals("all"))
 			{
 				List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
 				LogManager.APILog.WriteLineAndConsole("Total entities: '" + entities.Count.ToString() + "'");
 
 				SendPrivateChatMessage(remoteUserId, "Total entities: '" + entities.Count.ToString() + "'");
 			}
-			if (paramCount == 1 && commandParts[1].ToLower().Equals("cubegrid"))
+			if (commandParts[1].ToLower().Equals("cubegrid"))
 			{
 				List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
 				LogManager.APILog.WriteLineAndConsole("Cubegrid entities: '" + entities.Count.ToString() + "'");
 
 				SendPrivateChatMessage(remoteUserId, "Cubegrid entities: '" + entities.Count.ToString() + "'");
 			}
-			if (paramCount == 1 && commandParts[1].ToLower().Equals("character"))
+			if (commandParts[1].ToLower().Equals("character"))
 			{
 				List<CharacterEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CharacterEntity>();
 				LogManager.APILog.WriteLineAndConsole("Character entities: '" + entities.Count.ToString() + "'");
 
 				SendPrivateChatMessage(remoteUserId, "Character entities: '" + entities.Count.ToString() + "'");
 			}
-			if (paramCount == 1 && commandParts[1].ToLower().Equals("voxelmap"))
+			if (commandParts[1].ToLower().Equals("voxelmap"))
 			{
 				List<VoxelMap> entities = SectorObjectManager.Instance.GetTypedInternalData<VoxelMap>();
 				LogManager.APILog.WriteLineAndConsole("Voxelmap entities: '" + entities.Count.ToString() + "'");
 
 				SendPrivateChatMessage(remoteUserId, "Voxelmap entities: '" + entities.Count.ToString() + "'");
 			}
-			if (paramCount == 1 && commandParts[1].ToLower().Equals("meteor"))
+			if (commandParts[1].ToLower().Equals("meteor"))
 			{
 				List<Meteor> entities = SectorObjectManager.Instance.GetTypedInternalData<Meteor>();
 				LogManager.APILog.WriteLineAndConsole("Meteor entities: '" + entities.Count.ToString() + "'");
 
 				SendPrivateChatMessage(remoteUserId, "Meteor entities: '" + entities.Count.ToString() + "'");
 			}
-			if (paramCount == 1 && commandParts[1].ToLower().Equals("floatingobject"))
+			if (commandParts[1].ToLower().Equals("floatingobject"))
 			{
 				List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
 				LogManager.APILog.WriteLineAndConsole("Floating object entities: '" + entities.Count.ToString() + "'");
@@ -934,6 +955,52 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
+		protected void Command_Off(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount != 1)
+				return;
+
+			List<CubeGridEntity> cubeGrids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+			int poweredOffCount = 0;
+			foreach (var cubeGrid in cubeGrids)
+			{
+				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+				{
+					if (!(cubeBlock is FunctionalBlockEntity))
+						continue;
+
+					FunctionalBlockEntity functionalBlock = (FunctionalBlockEntity)cubeBlock;
+
+					if (commandParts[1].ToLower().Equals("all"))
+					{
+						functionalBlock.Enabled = false;
+						poweredOffCount++;
+					}
+					if (commandParts[1].ToLower().Equals("production") && cubeBlock is ProductionBlockEntity)
+					{
+						functionalBlock.Enabled = false;
+						poweredOffCount++;
+					}
+					if (commandParts[1].ToLower().Equals("beacon") && cubeBlock is BeaconEntity)
+					{
+						functionalBlock.Enabled = false;
+						poweredOffCount++;
+					}
+					if (commandParts[1].ToLower().Equals("tools") && (cubeBlock is ShipToolBaseEntity || cubeBlock is ShipDrillEntity))
+					{
+						functionalBlock.Enabled = false;
+						poweredOffCount++;
+					}
+				}
+			}
+
+			SendPrivateChatMessage(remoteUserId, "Cleared the production queue of " + poweredOffCount.ToString() + " blocks");
+		}
+		
 		#endregion
 
 		#endregion
