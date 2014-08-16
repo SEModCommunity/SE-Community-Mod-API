@@ -803,7 +803,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
-		public static string BaseEntityBroadcastRemovalMethod = "B42608628A12B652DD868E02D4846475";
+		public static string BaseEntityBroadcastRemovalMethod = "059822E72A1398A55B9CD2D8220517FA";
 
 		#endregion
 

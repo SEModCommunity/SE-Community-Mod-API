@@ -24,6 +24,7 @@ using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
+using VRage;
 using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
@@ -633,7 +634,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			Packet2_6 = 29,
 
 			Packet3_1 = 4711,
-			Packet3_2 = 4712,
+			NewCubeBlock = 4712,				//..64F0E2C1B88DAB5903379AB2206F9A43
 			Packet3_3 = 4713,
 			Packet3_4 = 4714,
 
@@ -671,7 +672,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod = "F7C40254F25941842EA6558205FAC160";
 		public static string CubeGridNetManagerBroadcastCubeBlockFactionDataMethod = "EF45C83059E3CD5A2C5354ABB687D861";
 		public static string CubeGridNetManagerBroadcastCubeBlockRemoveListsMethod = "4A75379DE89606408396FDADD89822F3";
-		public static string CubeGridNetManagerBroadcastAddCubeBlockMethod = "40AE39479BFB3B7D9BE14825996C3167";
+		public static string CubeGridNetManagerBroadcastAddCubeBlockMethod = "0B27B2B92323D75DF73055AD0A6DB4B6";
 
 		//Fields
 		public static string CubeGridNetManagerCubeBlocksToDestroyField = "8E76EFAC4EED3B61D48795B2CD5AF989";
@@ -733,12 +734,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockBuildIntegrityValuesMethod);
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockFactionDataMethod);
 				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastCubeBlockRemoveListsMethod);
-				Type packedStructType = CubeGridEntity.InternalType.GetNestedType(CubeGridEntity.CubeGridPackedCubeBlockClass);
-				Type[] typeArgs = {
-					typeof(long),
-					packedStructType.MakeByRefType()
-				};
-				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastAddCubeBlockMethod, typeArgs);
+				result &= BaseObject.HasMethod(type, CubeGridNetManagerBroadcastAddCubeBlockMethod);
 				result &= BaseObject.HasField(type, CubeGridNetManagerCubeBlocksToDestroyField);
 
 				Type type2 = CubeGridEntity.InternalType.GetNestedType(CubeGridIntegrityChangeEnumClass);
@@ -794,14 +790,29 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 				Type packedStructType = CubeGridEntity.InternalType.GetNestedType(CubeGridEntity.CubeGridPackedCubeBlockClass);
 				Object packedStruct = Activator.CreateInstance(packedStructType);
+				MyCubeBlockDefinition def = MyDefinitionManager.Static.GetCubeBlockDefinition(cubeBlock.ObjectBuilder);
 
 				//Set def id
 				FieldInfo field = BaseObject.GetEntityField(packedStruct, "35E024D9E3B721592FB9B6FC1A1E239A");
-				field.SetValue(packedStruct, (DefinitionIdBlit)MyDefinitionManager.Static.GetCubeBlockDefinition(cubeBlock.ObjectBuilder).Id);
+				field.SetValue(packedStruct, (DefinitionIdBlit)def.Id);
 
 				//Set position
 				field = BaseObject.GetEntityField(packedStruct, "5C3938C9B8CED1D0057CCF12F04329AB");
 				field.SetValue(packedStruct, (Vector3I)cubeBlock.Min);
+
+				//Set block size
+				field = BaseObject.GetEntityField(packedStruct, "0DDB53EB9299ECC9826DF9A47E5E4F38");
+				field.SetValue(packedStruct, new Vector3UByte(def.Size));
+
+				//Set block margins
+				field = BaseObject.GetEntityField(packedStruct, "4045ED59A8C93DE0B41218EF2E947E55");
+				field.SetValue(packedStruct, new Vector3B(0, 0, 0));
+				field = BaseObject.GetEntityField(packedStruct, "096897446D5BD5243D3D6E5C53CE1772");
+				field.SetValue(packedStruct, new Vector3B(0, 0, 0));
+
+				//Set block margin scale
+				field = BaseObject.GetEntityField(packedStruct, "E28B9725868E18B339D1E0594EF14444");
+				field.SetValue(packedStruct, new Vector3B(0, 0, 0));
 
 				//Set orientation
 				Quaternion rot;
@@ -816,14 +827,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				field.SetValue(packedStruct, ColorExtensions.PackHSVToUint(cubeBlock.ColorMaskHSV));
 
 				object[] parameters = {
+					packedStruct,
+					new HashSet<Vector3UByte>(),
 					cubeBlock.EntityId,
-					packedStruct
+					MyRandom.Instance.CreateRandomSeed()
 				};
-				Type[] typeArgs = {
-					typeof(long),
-					packedStructType.MakeByRefType()
-				};
-				BaseObject.InvokeEntityMethod(m_netManager, CubeGridNetManagerBroadcastAddCubeBlockMethod, parameters, typeArgs);
+				BaseObject.InvokeEntityMethod(m_netManager, CubeGridNetManagerBroadcastAddCubeBlockMethod, parameters);
 			}
 			catch (Exception ex)
 			{
