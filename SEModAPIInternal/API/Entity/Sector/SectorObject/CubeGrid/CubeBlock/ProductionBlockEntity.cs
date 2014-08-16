@@ -66,8 +66,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string ProductionBlockGetOutputInventoryMethod = "GetInventory";
 		public static string ProductionBlockGetQueueMethod = "BE739740ACEA08DBE2BC8E60DCF3AD42";
 		public static string ProductionBlockSetQueueMethod = "085AE1F1D53C2471B793D78F54DD314F";
-		public static string ProductionBlockRemoveQueueItemAtIndexMethod = "C653BBBDDD3CFF9156E55C0C89C48D97";
-		public static string ProductionBlockTriggerQueueChangedCallbackMethod = "38B01E5A2B7E5F602656131A037F2EEE";
+		public static string ProductionBlockTriggerQueueChangedCallbackMethod = "38E4776C2449FA869644A62230444C18";
 
 		public static string ProductionBlockQueueField = "EBACD061EEA690B3C34E39E516F4EDCF";
 
@@ -184,7 +183,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				result &= HasMethod(type, ProductionBlockGetOutputInventoryMethod);
 				result &= HasMethod(type, ProductionBlockGetQueueMethod);
 				result &= HasMethod(type, ProductionBlockSetQueueMethod);
-				result &= HasMethod(type, ProductionBlockRemoveQueueItemAtIndexMethod);
 				result &= HasMethod(type, ProductionBlockTriggerQueueChangedCallbackMethod);
 				result &= HasField(type, ProductionBlockQueueField);
 
@@ -252,14 +250,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				LogManager.ErrorLog.WriteLine(ex);
 			}
-			/*
-			Object source = InvokeEntityMethod(ActualObject, ProductionBlockGetQueueMethod);
-			List<Object> queue = UtilityFunctions.ConvertList(source);
-
-			for (var i = 0; i < queue.Count; i++)
-			{
-				InvokeEntityMethod(ActualObject, ProductionBlockRemoveQueueItemAtIndexMethod, new object[] { i });
-			}*/
 		}
 
 		protected void InternalUpdateQueue()

@@ -215,6 +215,9 @@ namespace SEModAPIExtensions.API
 							GuidAttribute guid = (GuidAttribute)pluginAssembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
 							Guid guidValue = new Guid(guid.Value);
 
+							if(m_pluginAssemblies.ContainsKey(guidValue))
+								continue;
+
 							m_pluginAssemblies.Add(guidValue, pluginAssembly);
 
 							//Look through the exported types to find the one that implements PluginBase
@@ -245,7 +248,7 @@ namespace SEModAPIExtensions.API
 										}
 										catch (Exception ex)
 										{
-											Console.WriteLine(ex.ToString());
+											LogManager.ErrorLog.WriteLine(ex);
 										}
 									}
 								}
@@ -255,14 +258,14 @@ namespace SEModAPIExtensions.API
 						}
 						catch (Exception ex)
 						{
-							Console.WriteLine(ex.ToString());
+							LogManager.ErrorLog.WriteLine(ex);
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 
 			Console.WriteLine("Finished loading plugins");
@@ -476,7 +479,7 @@ namespace SEModAPIExtensions.API
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -505,7 +508,7 @@ namespace SEModAPIExtensions.API
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -532,7 +535,7 @@ namespace SEModAPIExtensions.API
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 
 			m_pluginState.Remove(key);

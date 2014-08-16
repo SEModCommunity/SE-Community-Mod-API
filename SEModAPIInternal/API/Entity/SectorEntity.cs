@@ -445,11 +445,14 @@ namespace SEModAPIInternal.API.Entity
 				if (WorldManager.Instance.InternalGetResourceLock().Owned)
 					return;
 
-				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
 				m_rawDataHashSetResourceLock.AcquireExclusive();
+				HashSet<object> entityList = new HashSet<object>(GetBackingDataHashSet());
+				m_rawDataHashSetResourceLock.ReleaseExclusive();
+
+				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
 
 				m_rawDataObjectBuilderList.Clear();
-				foreach (Object entity in GetBackingDataHashSet())
+				foreach (Object entity in entityList)
 				{
 					try
 					{
@@ -468,7 +471,6 @@ namespace SEModAPIInternal.API.Entity
 					}
 				}
 
-				m_rawDataHashSetResourceLock.ReleaseExclusive();
 				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
