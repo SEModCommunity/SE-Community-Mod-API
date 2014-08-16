@@ -550,7 +550,7 @@ namespace SEServerExtender
 
 							Vector3 rawPosition = item.Position;
 							double distance = Math.Round(rawPosition.Length(), 0);
-							string newNodeText = item.Name + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
+							string newNodeText = item.DisplayName + " | Mass: " + Math.Floor(item.Mass).ToString() + "kg | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 
 							list.Remove(listItem);
@@ -623,7 +623,7 @@ namespace SEServerExtender
 						{
 							Vector3 rawPosition = item.Position;
 							double distance = Math.Round(rawPosition.Length(), 0);
-							string newNodeText = item.Name + " | Dist: " + distance.ToString() + "m";
+							string newNodeText = item.DisplayName + " | Dist: " + distance.ToString() + "m";
 							node.Text = newNodeText;
 						}
 						list.Remove(item);
