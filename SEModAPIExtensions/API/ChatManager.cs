@@ -263,6 +263,8 @@ namespace SEModAPIExtensions.API
 
 		#region "Methods"
 
+		#region "General"
+
 		private void SetupChatHandlers()
 		{
 			try
@@ -322,6 +324,8 @@ namespace SEModAPIExtensions.API
 		{
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
+			if (string.IsNullOrEmpty(message))
+				return;
 
 			try
 			{
@@ -353,6 +357,8 @@ namespace SEModAPIExtensions.API
 		public void SendPublicChatMessage(string message)
 		{
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+				return;
+			if (string.IsNullOrEmpty(message))
 				return;
 
 			bool commandParsed = ParseChatCommands(message);
@@ -398,43 +404,62 @@ namespace SEModAPIExtensions.API
 
 		protected bool ParseChatCommands(string message, ulong remoteUserId = 0)
 		{
-			string[] commandParts = message.Split(' ');
-			int paramCount = commandParts.Length - 1;
-			if (paramCount < 0)
-				return false;
-
-			string command = commandParts[0].ToLower();
-			if(command[0] != '/')
-				return false;
-
-			//Strip off the starting slash
-			command = command.Substring(1);
-
-			//Search for a matching, registered command
-			bool foundMatch = false;
-			foreach (ChatCommand chatCommand in m_chatCommands)
+			try
 			{
-				if (chatCommand.requiresAdmin && remoteUserId != 0 && !SandboxGameAssemblyWrapper.Instance.IsUserAdmin(remoteUserId))
-					continue;
+				if (string.IsNullOrEmpty(message))
+					return false;
 
-				if (command.Equals(chatCommand.command.ToLower()))
+				string[] commandParts = message.Split(' ');
+				if (commandParts == null || commandParts.Length == 0)
+					return false;
+
+				//Skip if message doesn't have leading forward slash
+				if (!message.Substring(0, 1).Equals("/"))
+					return false;
+
+				//Get the base command and strip off the leading slash
+				string command = commandParts[0].ToLower().Substring(1);
+				if (string.IsNullOrEmpty(command))
+					return false;
+
+				//Search for a matching, registered command
+				bool foundMatch = false;
+				foreach (ChatCommand chatCommand in m_chatCommands)
 				{
-					ChatEvent chatEvent = new ChatEvent();
-					chatEvent.message = message;
-					chatEvent.remoteUserId = remoteUserId;
-					chatEvent.timestamp = DateTime.Now;
+					try
+					{
+						if (chatCommand.requiresAdmin && remoteUserId != 0 && !SandboxGameAssemblyWrapper.Instance.IsUserAdmin(remoteUserId))
+							continue;
 
-					chatCommand.callback(chatEvent);
+						if (command.Equals(chatCommand.command.ToLower()))
+						{
+							ChatEvent chatEvent = new ChatEvent();
+							chatEvent.message = message;
+							chatEvent.remoteUserId = remoteUserId;
+							chatEvent.timestamp = DateTime.Now;
 
-					foundMatch = true;
-					break;
+							chatCommand.callback(chatEvent);
+
+							foundMatch = true;
+							break;
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.ErrorLog.WriteLine(ex);
+					}
 				}
-			}
 
-			if (foundMatch)
-				return true;
-			else
+				if (foundMatch)
+					return true;
+				else
+					return false;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
 				return false;
+			}
 		}
 
 		public void RegisterChatCommand(ChatCommand command)
@@ -458,6 +483,8 @@ namespace SEModAPIExtensions.API
 		{
 			m_chatEvents.Clear();
 		}
+
+		#endregion
 
 		#region "Chat Command Callbacks"
 

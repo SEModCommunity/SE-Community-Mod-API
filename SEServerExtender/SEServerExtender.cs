@@ -83,7 +83,8 @@ namespace SEServerExtender
 				Close();
 			if (!SetupControls())
 				Close();
-			m_server.LoadServerConfig();
+			if(!m_server.IsRunning)
+				m_server.LoadServerConfig();
 			UpdateControls();
 			PG_Control_Server_Properties.SelectedObject = m_server.Config;
 
