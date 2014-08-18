@@ -90,6 +90,8 @@ namespace SEServerExtender
 
 			//Update the title bar text with the assembly version
 			this.Text = "SEServerExtender " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+			this.FormClosing += OnFormClosing;
 		}
 
 		private bool SetupTimers()
@@ -152,6 +154,16 @@ namespace SEServerExtender
 			return true;
 		}
 
+		private void OnFormClosing(object sender, EventArgs e)
+		{
+			m_entityTreeRefreshTimer.Stop();
+			m_chatViewRefreshTimer.Stop();
+			m_factionRefreshTimer.Stop();
+			m_pluginManagerRefreshTimer.Stop();
+			m_statusCheckTimer.Stop();
+			m_utilitiesCleanFloatingObjectsTimer.Stop();
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -173,45 +185,6 @@ namespace SEServerExtender
 				if (!m_pluginManagerRefreshTimer.Enabled)
 					m_pluginManagerRefreshTimer.Start();
 			}
-		}
-
-		private string GetGamePath()
-		{
-			bool continueLoad = true;
-
-			OpenFileDialog OFD_GamePath = new OpenFileDialog();
-
-			string steamPath = GameInstallationInfo.GetGameSteamPath();
-			if (steamPath != null)
-				OFD_GamePath.InitialDirectory = Path.Combine(steamPath, "SteamApps", "common");
-
-			while (continueLoad)
-			{
-				DialogResult resultOpen = OFD_GamePath.ShowDialog();
-				if (resultOpen == DialogResult.OK)
-				{
-					string selectedPath = Path.GetDirectoryName(OFD_GamePath.FileName);
-					string gamePath = Path.Combine(selectedPath, "..");
-					if (GameInstallationInfo.IsValidGamePath(gamePath))
-						return gamePath;
-					else
-					{
-						DialogResult resultRetry = MessageBox.Show("The selected location is an invalid SpaceEngineers installation.",
-							"Invalid installation", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-
-						if (resultRetry != DialogResult.Retry)
-							continueLoad = false;
-					}
-				}
-				else
-					continueLoad = false;
-			}
-
-			//If this point is reached, then the user must have cancelled it.
-			MessageBox.Show("The game installation location could not be found. The application can not run without it.",
-				"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-			return null;
 		}
 
 		#endregion
@@ -1281,91 +1254,105 @@ namespace SEServerExtender
 
 		private void BTN_Entities_New_Click(object sender, EventArgs e)
 		{
-			TreeNode selectedNode = TRV_Entities.SelectedNode;
-
-			if (selectedNode == null)
-				return;
-
-			TreeNode parentNode = selectedNode.Parent;
-
-			if (parentNode == null)
-				return;
-
-			if (parentNode.Tag != null && parentNode.Tag is SectorObjectManager)
+			try
 			{
-				if (selectedNode == parentNode.Nodes[0])
+				TreeNode selectedNode = TRV_Entities.SelectedNode;
+
+				if (selectedNode == null)
+					return;
+
+				TreeNode parentNode = selectedNode.Parent;
+
+				if (parentNode == null)
+					return;
+
+				if (parentNode.Tag != null && parentNode.Tag is SectorObjectManager)
+				{
+					if (selectedNode == parentNode.Nodes[0])
+					{
+						CreateCubeGridImportDialog();
+						return;
+					}
+				}
+
+				if (parentNode.Tag != null && parentNode.Tag is CubeGridEntity)
+				{
+					CubeBlockDialog dialog = new CubeBlockDialog();
+					dialog.ParentCubeGrid = (CubeGridEntity)parentNode.Tag;
+					dialog.ShowDialog(this);
+					return;
+				}
+
+				if (selectedNode.Tag == null)
+					return;
+
+				if (!(selectedNode.Tag is BaseObject))
+					return;
+
+				BaseObject linkedObject = (BaseObject)selectedNode.Tag;
+
+				if (linkedObject is InventoryEntity)
+				{
+					InventoryItemDialog newItemDialog = new InventoryItemDialog();
+					newItemDialog.Container = (InventoryEntity)linkedObject;
+					newItemDialog.ShowDialog(this);
+					return;
+				}
+
+				if (linkedObject is InventoryItemEntity)
+				{
+					InventoryItemDialog newItemDialog = new InventoryItemDialog();
+					newItemDialog.Container = ((InventoryItemEntity)linkedObject).Container;
+					newItemDialog.ShowDialog(this);
+					return;
+				}
+
+				if (linkedObject is CubeGridEntity)
 				{
 					CreateCubeGridImportDialog();
 					return;
 				}
 			}
-
-			if (parentNode.Tag != null && parentNode.Tag is CubeGridEntity)
+			catch (Exception ex)
 			{
-				CubeBlockDialog dialog = new CubeBlockDialog();
-				dialog.ParentCubeGrid = (CubeGridEntity)parentNode.Tag;
-				dialog.ShowDialog(this);
-				return;
-			}
-
-			if (selectedNode.Tag == null)
-				return;
-
-			if (!(selectedNode.Tag is BaseObject))
-				return;
-
-			BaseObject linkedObject = (BaseObject)selectedNode.Tag;
-
-			if (linkedObject is InventoryEntity)
-			{
-				InventoryItemDialog newItemDialog = new InventoryItemDialog();
-				newItemDialog.Container = (InventoryEntity)linkedObject;
-				newItemDialog.ShowDialog(this);
-				return;
-			}
-
-			if(linkedObject is InventoryItemEntity)
-			{
-				InventoryItemDialog newItemDialog = new InventoryItemDialog();
-				newItemDialog.Container = ((InventoryItemEntity)linkedObject).Container;
-				newItemDialog.ShowDialog(this);
-				return;
-			}
-
-			if(linkedObject is CubeGridEntity)
-			{
-				CreateCubeGridImportDialog();
-				return;
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
 		private void BTN_Entities_Export_Click(object sender, EventArgs e)
 		{
-			if (TRV_Entities.SelectedNode == null)
-				return;
-			Object linkedObject = TRV_Entities.SelectedNode.Tag;
-			if (linkedObject == null)
-				return;
-			if (!(linkedObject is BaseObject))
-				return;
-
-			BaseObject objectToExport = (BaseObject)linkedObject;
-
-			SaveFileDialog saveFileDialog = new SaveFileDialog();
-			saveFileDialog.Filter = "sbc file (*.sbc)|*.sbc|All files (*.*)|*.*";
-			saveFileDialog.InitialDirectory = GameInstallationInfo.GamePath;
-
-			if (saveFileDialog.ShowDialog() == DialogResult.OK)
+			try
 			{
-				FileInfo fileInfo = new FileInfo(saveFileDialog.FileName);
-				try
+				if (TRV_Entities.SelectedNode == null)
+					return;
+				Object linkedObject = TRV_Entities.SelectedNode.Tag;
+				if (linkedObject == null)
+					return;
+				if (!(linkedObject is BaseObject))
+					return;
+
+				BaseObject objectToExport = (BaseObject)linkedObject;
+
+				SaveFileDialog saveFileDialog = new SaveFileDialog();
+				saveFileDialog.Filter = "sbc file (*.sbc)|*.sbc|All files (*.*)|*.*";
+				saveFileDialog.InitialDirectory = GameInstallationInfo.GamePath;
+
+				if (saveFileDialog.ShowDialog() == DialogResult.OK)
 				{
-					objectToExport.Export(fileInfo);
+					FileInfo fileInfo = new FileInfo(saveFileDialog.FileName);
+					try
+					{
+						objectToExport.Export(fileInfo);
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(this, ex.Message);
+					}
 				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(this, ex.Message);
-				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 
@@ -1386,7 +1373,7 @@ namespace SEServerExtender
 				DefaultExt = "sbc file (*.sbc)"
 			};
 
-			if (openFileDialog.ShowDialog() == DialogResult.OK)
+			if (openFileDialog.ShowDialog(this) == DialogResult.OK)
 			{
 				FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
 				if (fileInfo.Exists)
@@ -1400,7 +1387,6 @@ namespace SEServerExtender
 					catch (Exception ex)
 					{
 						LogManager.ErrorLog.WriteLine(ex);
-						MessageBox.Show(this, ex.ToString());
 					}
 				}
 			}

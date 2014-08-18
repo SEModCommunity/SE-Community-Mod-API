@@ -24,7 +24,6 @@ namespace SEServerExtender
 		/// <summary>
 		/// Main entry point of the application
 		/// </summary>
-		[STAThread]
 		static void Main(string[] args)
 		{
 			//Setup error handling for unmanaged exceptions
@@ -170,13 +169,9 @@ namespace SEServerExtender
 
 				if (!extenderArgs.noGUI)
 				{
-					Application.EnableVisualStyles();
-					Application.SetCompatibleTextRenderingDefault(false);
-
-					m_serverExtenderForm = new SEServerExtender(m_server);
-					m_serverExtenderForm.Show();
-
-					Application.Run();
+					Thread uiThread = new Thread(new ThreadStart(StartGUI));
+					uiThread.SetApartmentState(ApartmentState.STA);
+					uiThread.Start();
 				}
 			}
 			catch (AutoException eEx)
@@ -246,9 +241,11 @@ namespace SEServerExtender
 		static void ChatCommand_GUI(ChatManager.ChatEvent chatEvent)
 		{
 			Thread uiThread = new Thread(new ThreadStart(StartGUI));
+			uiThread.SetApartmentState(ApartmentState.STA);
 			uiThread.Start();
 		}
 
+		[STAThread]
 		static void StartGUI()
 		{
 			if (!Environment.UserInteractive)

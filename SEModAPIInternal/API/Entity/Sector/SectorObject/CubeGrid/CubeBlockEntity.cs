@@ -705,36 +705,43 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
-				if (m_rawDataObjectBuilderListResourceLock.Owned)
-					return;
-				if (WorldManager.Instance.IsWorldSaving)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock() == null)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+				if (!CanRefresh)
 					return;
 
+				m_rawDataHashSetResourceLock.AcquireShared();
 				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
 
 				m_rawDataObjectBuilderList.Clear();
 				foreach (Object entity in GetBackingDataHashSet())
 				{
-					if (!IsValidEntity(entity))
-						continue;
+					try
+					{
+						if (!IsValidEntity(entity))
+							continue;
 
-					MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
-					if (baseEntity == null)
-						continue;
+						//TODO - Find a faster way to get updated data. This call takes ~0.15ms per entity which adds up quickly
+						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
+						if (baseEntity == null)
+							continue;
 
-					m_rawDataObjectBuilderList.Add(entity, baseEntity);
+						m_rawDataObjectBuilderList.Add(entity, baseEntity);
+					}
+					catch (Exception ex)
+					{
+						LogManager.ErrorLog.WriteLine(ex);
+					}
 				}
 
+				m_rawDataHashSetResourceLock.ReleaseShared();
 				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
+				if (m_rawDataHashSetResourceLock.Owned)
+					m_rawDataHashSetResourceLock.ReleaseShared();
+				if (m_rawDataObjectBuilderListResourceLock.Owned)
+					m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 		}
 

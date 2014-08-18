@@ -38,6 +38,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		private CubeBlockManager m_cubeBlockManager;
 		private CubeGridNetworkManager m_networkManager;
 		private PowerManager m_powerManager;
+		private CubeGridThrusterManager m_thrusterManager;
 
 		private static Type m_internalType;
 		private string m_name;
@@ -51,20 +52,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public static string CubeGridGetCubeBlocksHashSetMethod = "E38F3E9D7A76CD246B99F6AE91CC3E4A";
 		public static string CubeGridGetPowerManagerMethod = "D92A57E3478304C8F8F780A554C6D6C4";
-		public static string CubeGridGetDampenersPowerReceiverMethod = "0D142C5CB93281BA2431FB266E8E3CA8";
+		public static string CubeGridGetThrusterManagerMethod = "0D142C5CB93281BA2431FB266E8E3CA8";
 		public static string CubeGridAddCubeBlockMethod = "2B757AF5C8F1CC2EC5F738B54EFBDF23";
 		public static string CubeGridRemoveCubeBlockMethod = "5980C21045AAAAEC22416165FF409455";
 
-		public static string CubeGridIsStaticField = "";
 		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
-
-		//////////////////////////////////////////////////////////////
-
-		public static string CubeGridDampenersPowerReceiverNamespace = "8EAF60352312606996BD8147B0A3C880";
-		public static string CubeGridDampenersPowerReceiverClass = "958ADAA3423FBDC5DE98C1A32DE7258C";
-
-		public static string CubeGridDampenersPowerReceiverGetEnabled = "51FDDFF9224B3F717EEFFEBEA5F1BAF6";
-		public static string CubeGridDampenersPowerReceiverSetEnabled = "86B66668D555E1C1B744C17D2AFA77F7";
 
 		//////////////////////////////////////////////////////////////
 
@@ -131,6 +123,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 			Object powerManager = InvokeEntityMethod(BackingObject, CubeGridGetPowerManagerMethod);
 			m_powerManager = new PowerManager(powerManager);
+
+			m_thrusterManager = new CubeGridThrusterManager(GetThrusterManager(), this);
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridCreated;
@@ -302,10 +296,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				ObjectBuilder.DampenersEnabled = value;
 				Changed = true;
 
-				if (BackingObject != null)
+				if (ThrusterManager != null)
 				{
-					Action action = InternalUpdateDampenersEnabled;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+					ThrusterManager.DampenersEnabled = value;
 				}
 			}
 		}
@@ -383,6 +376,19 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public PowerManager PowerManager
 		{
 			get { return m_powerManager; }
+			private set
+			{
+				//Do nothing!
+			}
+		}
+
+		[IgnoreDataMember]
+		[Category("Cube Grid")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		public CubeGridThrusterManager ThrusterManager
+		{
+			get { return m_thrusterManager; }
 			private set
 			{
 				//Do nothing!
@@ -478,17 +484,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 					throw new Exception("Could not find internal type for CubeGridEntity");
 				bool result = true;
 				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
-				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
-				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
+				result &= HasMethod(type, CubeGridGetPowerManagerMethod);
+				result &= HasMethod(type, CubeGridGetThrusterManagerMethod);
 				result &= HasMethod(type, CubeGridAddCubeBlockMethod);
 				result &= HasMethod(type, CubeGridRemoveCubeBlockMethod);
 				result &= HasField(type, CubeGridBlockGroupsField);
-
-				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridDampenersPowerReceiverNamespace, CubeGridDampenersPowerReceiverClass);
-				if (type2 == null)
-					throw new Exception("Could not find type for CubeGridEntity-CubeGridDampenersPowerReceiver");
-				result &= HasMethod(type2, CubeGridDampenersPowerReceiverGetEnabled);
-				result &= HasMethod(type2, CubeGridDampenersPowerReceiverSetEnabled);
 
 				return result;
 			}
@@ -545,16 +545,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Internal"
 
-		protected Object GetDampenersPowerReceiver()
+		private Object GetThrusterManager()
 		{
-			Object result = InvokeEntityMethod(BackingObject, CubeGridGetDampenersPowerReceiverMethod);
+			Object result = InvokeEntityMethod(BackingObject, CubeGridGetThrusterManagerMethod);
 
 			return result;
-		}
-
-		protected void InternalUpdateDampenersEnabled()
-		{
-			InvokeEntityMethod(GetDampenersPowerReceiver(), CubeGridDampenersPowerReceiverSetEnabled, new object[] { IsDampenersEnabled });
 		}
 
 		protected void InternalCubeGridMovedEvent(Object entity)
@@ -649,7 +644,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 			AllPowerStatus2 = 15271,			//..903CC5CD740D130E90DB6CBF79F80F4F
 
-			ShipToggle1 = 15275,				//..4DCFFCEE8D5BA392C7A57ACD6470D7CD
+			HandbrakeStatus = 15275,			//..4DCFFCEE8D5BA392C7A57ACD6470D7CD
 			Packet7_1 = 15276,
 
 			Packet8_1 = 15278,
@@ -838,6 +833,106 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			{
 				LogManager.ErrorLog.WriteLine(ex);
 			}
+		}
+
+		#endregion
+	}
+
+	public class CubeGridThrusterManager
+	{
+		#region "Attributes"
+
+		private Object m_thrusterManager;
+		private CubeGridEntity m_parent;
+
+		private bool m_dampenersEnabled;
+
+		public static string CubeGridThrusterManagerNamespace = "8EAF60352312606996BD8147B0A3C880";
+		public static string CubeGridThrusterManagerClass = "958ADAA3423FBDC5DE98C1A32DE7258C";
+
+		public static string CubeGridThrusterManagerGetEnabled = "51FDDFF9224B3F717EEFFEBEA5F1BAF6";
+		public static string CubeGridThrusterManagerSetEnabled = "86B66668D555E1C1B744C17D2AFA77F7";
+		public static string CubeGridThrusterManagerSetControlEnabled = "BC83851AFAE183711CFB864BA6F62CC6";
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public CubeGridThrusterManager(Object thrusterManager, CubeGridEntity parent)
+		{
+			m_thrusterManager = thrusterManager;
+			m_parent = parent;
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		public Object BackingObject
+		{
+			get { return m_thrusterManager; }
+		}
+
+		public bool DampenersEnabled
+		{
+			get { return InternalGetDampenersEnabled(); }
+			set
+			{
+				m_dampenersEnabled = value;
+
+				Action action = InternalUpdateDampenersEnabled;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+			}
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				bool result = true;
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridThrusterManagerNamespace, CubeGridThrusterManagerClass);
+				if (type == null)
+					throw new Exception("Could not find type for CubeGridThrusterManager");
+				result &= BaseObject.HasMethod(type, CubeGridThrusterManagerGetEnabled);
+				result &= BaseObject.HasMethod(type, CubeGridThrusterManagerSetEnabled);
+				result &= BaseObject.HasMethod(type, CubeGridThrusterManagerSetControlEnabled);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
+
+		protected bool InternalGetDampenersEnabled()
+		{
+			bool result = (bool)BaseObject.InvokeEntityMethod(BackingObject, CubeGridThrusterManagerGetEnabled);
+			return result;
+		}
+
+		protected void InternalUpdateDampenersEnabled()
+		{
+			foreach (CubeBlockEntity cubeBlock in m_parent.CubeBlocks)
+			{
+				if (cubeBlock is CockpitEntity)
+				{
+					CockpitEntity cockpit = (CockpitEntity)cubeBlock;
+					if (cockpit.IsPassengerSeat)
+						continue;
+
+					cockpit.NetworkManager.BroadcastDampenersStatus(m_dampenersEnabled);
+					break;
+				}
+			}
+
+			BaseObject.InvokeEntityMethod(BackingObject, CubeGridThrusterManagerSetEnabled, new object[] { m_dampenersEnabled });
+			//BaseObject.InvokeEntityMethod(BackingObject, CubeGridThrusterManagerSetControlEnabled, new object[] { m_dampenersEnabled });
 		}
 
 		#endregion
