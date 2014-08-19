@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.ServiceModel;
 using System.ServiceModel.Description;
+using System.ServiceModel.Web;
 
 using SEModAPI.Support;
 
@@ -12,7 +13,6 @@ using SEModAPIInternal.Support;
 
 using SEModAPIExtensions.API;
 using SEModAPIExtensions.API.IPC;
-using System.ServiceModel.Web;
 
 namespace SEServerExtender
 {
@@ -24,7 +24,6 @@ namespace SEServerExtender
 		/// <summary>
 		/// Main entry point of the application
 		/// </summary>
-		[STAThread]
 		static void Main(string[] args)
 		{
 			//Setup error handling for unmanaged exceptions
@@ -156,18 +155,23 @@ namespace SEServerExtender
 				m_server = Server.Instance;
 				m_server.CommandLineArgs = extenderArgs;
 				m_server.IsWCFEnabled = !extenderArgs.noWCF;
+				m_server.WCFPort = extenderArgs.wcfPort;
 				m_server.Init();
 				if (extenderArgs.autoStart)
 				{
 					m_server.StartServer();
 				}
 
+				ChatManager.ChatCommand guiCommand = new ChatManager.ChatCommand();
+				guiCommand.command = "gui";
+				guiCommand.callback = ChatCommand_GUI;
+				ChatManager.Instance.RegisterChatCommand(guiCommand);
+
 				if (!extenderArgs.noGUI)
 				{
-					Application.EnableVisualStyles();
-					Application.SetCompatibleTextRenderingDefault(false);
-					m_serverExtenderForm = new SEServerExtender(m_server);
-					Application.Run(m_serverExtenderForm);
+					Thread uiThread = new Thread(new ThreadStart(StartGUI));
+					uiThread.SetApartmentState(ApartmentState.STA);
+					uiThread.Start();
 				}
 			}
 			catch (AutoException eEx)
@@ -232,6 +236,29 @@ namespace SEServerExtender
 				LogManager.ErrorLog.WriteLine("AppDomain.UnhandledException");
 				LogManager.ErrorLog.WriteLine((Exception)e.ExceptionObject);
 			}
+		}
+
+		static void ChatCommand_GUI(ChatManager.ChatEvent chatEvent)
+		{
+			Thread uiThread = new Thread(new ThreadStart(StartGUI));
+			uiThread.SetApartmentState(ApartmentState.STA);
+			uiThread.Start();
+		}
+
+		[STAThread]
+		static void StartGUI()
+		{
+			if (!Environment.UserInteractive)
+				return;
+
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+			if (m_serverExtenderForm == null || m_serverExtenderForm.IsDisposed)
+				m_serverExtenderForm = new SEServerExtender(m_server);
+			else if (m_serverExtenderForm.Visible)
+				return;
+
+			Application.Run(m_serverExtenderForm);
 		}
 	}
 }

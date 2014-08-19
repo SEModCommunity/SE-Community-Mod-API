@@ -605,6 +605,9 @@ namespace SEModAPIExtensions.API
 				m_pluginMainLoop.Start();
 				m_autosaveTimer.Start();
 
+				if (m_dedicatedConfigDefinition == null)
+					LoadServerConfig();
+
 				m_isServerRunning = true;
 
 				m_runServerThread = new Thread(new ThreadStart(this.RunServer));

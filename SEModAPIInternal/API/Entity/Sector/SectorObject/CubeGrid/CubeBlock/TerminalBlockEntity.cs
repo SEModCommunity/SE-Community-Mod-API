@@ -137,7 +137,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					Console.WriteLine("TerminalBlock '" + Name + "': Setting custom name to '" + CustomName + "'");
+					LogManager.APILog.WriteLine(this.GetType().Name + ": Setting custom name to '" + CustomName + "'");
 				}
 
 				StringBuilder newCustomName = new StringBuilder(CustomName);

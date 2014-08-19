@@ -493,10 +493,14 @@ namespace SEModAPIInternal.API.Entity
 		private InternalBackingType m_backingSourceType;
 		private DateTime m_lastLoadTime;
 		private double m_refreshInterval;
+		private bool m_internalRefreshComplete;
 
-		private static double m_averageLoadTime;
-		private static double m_averageRefreshInterval;
+		private static double m_averageRefreshDataTime;
+		private static double m_averageRefreshInternalDataTime;
+		private static double m_averageRefreshInternalObjectBuilderDataTime;
 		private static DateTime m_lastProfilingOutput;
+		private static DateTime m_lastInternalProfilingOutput;
+
 		private static int m_staticRefreshCount;
 		private static Dictionary<Type, int> m_staticRefreshCountMap;
 
@@ -536,6 +540,9 @@ namespace SEModAPIInternal.API.Entity
 
 			if (m_lastProfilingOutput == null)
 				m_lastProfilingOutput = DateTime.Now;
+			if (m_lastInternalProfilingOutput == null)
+				m_lastInternalProfilingOutput = DateTime.Now;
+
 			if (m_staticRefreshCountMap == null)
 				m_staticRefreshCountMap = new Dictionary<Type, int>();
 
@@ -559,6 +566,9 @@ namespace SEModAPIInternal.API.Entity
 
 			if (m_lastProfilingOutput == null)
 				m_lastProfilingOutput = DateTime.Now;
+			if (m_lastInternalProfilingOutput == null)
+				m_lastInternalProfilingOutput = DateTime.Now;
+
 			if (m_staticRefreshCountMap == null)
 				m_staticRefreshCountMap = new Dictionary<Type, int>();
 
@@ -633,6 +643,31 @@ namespace SEModAPIInternal.API.Entity
 			get { return (m_rawDataHashSetResourceLock.Owned || m_rawDataListResourceLock.Owned || m_rawDataObjectBuilderListResourceLock.Owned); }
 		}
 
+		public bool CanRefresh
+		{
+			get
+			{
+				if (!IsDynamic)
+					return false;
+				if (!IsMutable)
+					return false;
+				if (IsResourceLocked)
+					return false;
+				if (IsInternalResourceLocked)
+					return false;
+				if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+					return false;
+				if (WorldManager.Instance.IsWorldSaving)
+					return false;
+				if (WorldManager.Instance.InternalGetResourceLock() == null)
+					return false;
+				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+					return false;
+
+				return true;
+			}
+		}
+
 		public int Count
 		{
 			get { return m_definitions.Count; }
@@ -703,20 +738,16 @@ namespace SEModAPIInternal.API.Entity
 
 		public void Refresh()
 		{
-			if (!IsDynamic)
+			if (!CanRefresh)
 				return;
-			if (!IsMutable)
-				return;
-			if (IsResourceLocked)
-				return;
-			if (IsInternalResourceLocked)
-				return;
+
 			TimeSpan timeSinceLastLoad = DateTime.Now - m_lastLoadTime;
 			if (timeSinceLastLoad.TotalMilliseconds < m_refreshInterval)
 				return;
-
 			m_lastLoadTime = DateTime.Now;
-			RefreshInternalData();
+
+			//Run the refresh
+			RefreshData();
 
 			//Update the refresh counts
 			if (!m_staticRefreshCountMap.ContainsKey(this.GetType()))
@@ -727,81 +758,96 @@ namespace SEModAPIInternal.API.Entity
 			m_staticRefreshCount++;
 
 			//Adjust the refresh interval based on percentage of total refreshes for this type
-			m_refreshInterval = (typeRefreshCount / m_staticRefreshCount) * 400 + 100;
-
-			if (SandboxGameAssemblyWrapper.IsDebugging)
-			{
-				m_averageRefreshInterval = (m_averageRefreshInterval + m_refreshInterval) / 2.0;
-
-				TimeSpan timeToLoad = DateTime.Now - m_lastLoadTime;
-				m_averageLoadTime = (m_averageLoadTime + timeToLoad.TotalMilliseconds) / 2.0;
-
-				TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastProfilingOutput;
-				if (timeSinceLastProfilingOutput.TotalSeconds > 30)
-				{
-					m_lastProfilingOutput = DateTime.Now;
-					double refreshesPerSecond = m_staticRefreshCount / timeSinceLastProfilingOutput.TotalSeconds;
-					m_staticRefreshCount = 0;
-					m_staticRefreshCountMap.Clear();
-
-					LogManager.APILog.WriteLine("ObjectManager - Average data load time: " + Math.Round(m_averageLoadTime, 2).ToString() + "ms");
-					LogManager.APILog.WriteLine("ObjectManager - Refreshes per second: " + Math.Round(refreshesPerSecond, 2).ToString());
-					LogManager.APILog.WriteLine("ObjectManager - Average refresh interval: " + Math.Round(m_refreshInterval, 0).ToString() + "ms");
-				}
-				if (timeSinceLastProfilingOutput.TotalSeconds > 60)
-				{
-					LogManager.APILog.WriteLine("Debug point! ObjectManager profiling output took longer than 60 seconds!");
-				}
-			}
+			m_refreshInterval = (typeRefreshCount / m_staticRefreshCount) * 850 + 150;
 		}
 
-		private void RefreshRawData()
+		private void RefreshData()
 		{
-			//Request refreshes of all internal raw data
-			RefreshBackingDataHashSet();
-			RefreshBackingDataList();
-			RefreshObjectBuilderMap();
+			if (!CanRefresh)
+				return;
+
+			try
+			{
+				DateTime startRefreshTime = DateTime.Now;
+
+				Action action = RefreshInternalData;
+				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+
+				//Lock the main data
+				m_resourceLock.AcquireExclusive();
+
+				//Lock all of the raw data
+				if (m_backingSourceType == InternalBackingType.Hashset)
+					m_rawDataHashSetResourceLock.AcquireShared();
+				if (m_backingSourceType == InternalBackingType.List)
+					m_rawDataListResourceLock.AcquireShared();
+				m_rawDataObjectBuilderListResourceLock.AcquireShared();
+
+				//Refresh the main data
+				LoadDynamic();
+
+				//Unlock the main data
+				m_resourceLock.ReleaseExclusive();
+
+				//Unlock all of the raw data
+				if (m_backingSourceType == InternalBackingType.Hashset)
+					m_rawDataHashSetResourceLock.ReleaseShared();
+				if (m_backingSourceType == InternalBackingType.List)
+					m_rawDataListResourceLock.ReleaseShared();
+				m_rawDataObjectBuilderListResourceLock.ReleaseShared();
+
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+				{
+					TimeSpan timeToRefresh = DateTime.Now - startRefreshTime;
+					m_averageRefreshDataTime = (m_averageRefreshDataTime + timeToRefresh.TotalMilliseconds) / 2;
+					TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastProfilingOutput;
+					if (timeSinceLastProfilingOutput.TotalSeconds > 30)
+					{
+						m_lastProfilingOutput = DateTime.Now;
+						LogManager.APILog.WriteLine("ObjectManager - Average of " + Math.Round(m_averageRefreshDataTime, 2).ToString() + "ms to refresh API data");
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
 		}
 
 		private void RefreshInternalData()
 		{
-			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
-				return;
-			if (WorldManager.Instance.IsWorldSaving)
-				return;
-			if (WorldManager.Instance.InternalGetResourceLock() == null)
-				return;
-			if (WorldManager.Instance.InternalGetResourceLock().Owned)
-				return;
+			DateTime startRefreshTime = DateTime.Now;
 
-			if (IsDynamic)
+			//Request refreshes of all internal raw data
+			if (m_backingSourceType == InternalBackingType.Hashset)
+				InternalRefreshBackingDataHashSet();
+			if (m_backingSourceType == InternalBackingType.List)
+				InternalRefreshBackingDataList();
+
+			if (SandboxGameAssemblyWrapper.IsDebugging)
 			{
-				try
+				TimeSpan timeToRefresh = DateTime.Now - startRefreshTime;
+				m_averageRefreshInternalDataTime = (m_averageRefreshInternalDataTime + timeToRefresh.TotalMilliseconds) / 2;
+			}
+
+			startRefreshTime = DateTime.Now;
+
+			InternalRefreshObjectBuilderMap();
+
+			if (SandboxGameAssemblyWrapper.IsDebugging)
+			{
+				TimeSpan timeToRefresh = DateTime.Now - startRefreshTime;
+				m_averageRefreshInternalObjectBuilderDataTime = (m_averageRefreshInternalObjectBuilderDataTime + timeToRefresh.TotalMilliseconds) / 2;
+			}
+
+			if (SandboxGameAssemblyWrapper.IsDebugging)
+			{
+				TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastInternalProfilingOutput;
+				if (timeSinceLastProfilingOutput.TotalSeconds > 30)
 				{
-					//Lock the main data
-					m_resourceLock.AcquireExclusive();
-
-					RefreshRawData();
-
-					//Lock all of the raw data
-					m_rawDataHashSetResourceLock.AcquireExclusive();
-					m_rawDataListResourceLock.AcquireExclusive();
-					m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
-
-					//Refresh the main data
-					LoadDynamic();
-
-					//Unlock all of the raw data
-					m_rawDataHashSetResourceLock.ReleaseExclusive();
-					m_rawDataListResourceLock.ReleaseExclusive();
-					m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-
-					//Unlock the main data
-					m_resourceLock.ReleaseExclusive();
-				}
-				catch (Exception ex)
-				{
-					LogManager.ErrorLog.WriteLine(ex);
+					m_lastInternalProfilingOutput = DateTime.Now;
+					LogManager.APILog.WriteLine("ObjectManager - Average of " + Math.Round(m_averageRefreshInternalDataTime, 2).ToString() + "ms to refresh internal entity data");
+					LogManager.APILog.WriteLine("ObjectManager - Average of " + Math.Round(m_averageRefreshInternalObjectBuilderDataTime, 2).ToString() + "ms to refresh internal object builder data");
 				}
 			}
 		}
@@ -811,62 +857,11 @@ namespace SEModAPIInternal.API.Entity
 			return;
 		}
 
-		private void RefreshBackingDataHashSet()
-		{
-			try
-			{
-				if (m_backingSourceType != InternalBackingType.Hashset)
-					return;
-
-				Action action = InternalRefreshBackingDataHashSet;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-			}
-		}
-
-		private void RefreshBackingDataList()
-		{
-			try
-			{
-				if (m_backingSourceType != InternalBackingType.List)
-					return;
-
-				Action action = InternalRefreshBackingDataList;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-			}
-		}
-
-		private void RefreshObjectBuilderMap()
-		{
-			try
-			{
-				Action action = InternalRefreshObjectBuilderMap;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-			}
-		}
-
 		protected virtual void InternalRefreshBackingDataHashSet()
 		{
 			try
 			{
-				if (m_rawDataHashSetResourceLock.Owned)
-					return;
-				if (WorldManager.Instance.IsWorldSaving)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock() == null)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+				if (!CanRefresh)
 					return;
 
 				m_rawDataHashSetResourceLock.AcquireExclusive();
@@ -883,7 +878,8 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-				m_rawDataHashSetResourceLock.ReleaseExclusive();
+				if(m_rawDataHashSetResourceLock.Owned)
+					m_rawDataHashSetResourceLock.ReleaseExclusive();
 			}
 		}
 
@@ -891,13 +887,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_rawDataListResourceLock.Owned)
-					return;
-				if (WorldManager.Instance.IsWorldSaving)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock() == null)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+				if (!CanRefresh)
 					return;
 
 				m_rawDataListResourceLock.AcquireExclusive();
@@ -914,7 +904,8 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-				m_rawDataListResourceLock.ReleaseExclusive();
+				if(m_rawDataListResourceLock.Owned)
+					m_rawDataListResourceLock.ReleaseExclusive();
 			}
 		}
 
@@ -1100,9 +1091,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				Refresh();
-
-				m_resourceLock.AcquireExclusive();
+				m_resourceLock.AcquireShared();
 
 				List<T> newList = new List<T>();
 				foreach (var def in GetInternalData().Values)
@@ -1113,13 +1102,17 @@ namespace SEModAPIInternal.API.Entity
 					newList.Add((T)def);
 				}
 
-				m_resourceLock.ReleaseExclusive();
+				m_resourceLock.ReleaseShared();
+
+				Refresh();
 
 				return newList;
 			}
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
+				if(m_resourceLock.Owned)
+					m_resourceLock.ReleaseShared();
 				return new List<T>();
 			}
 		}

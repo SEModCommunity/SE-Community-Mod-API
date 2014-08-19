@@ -662,7 +662,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Changing position of '" + Name + "' from '" + havokBody.Position.ToString() + "' to '" + newPosition.ToString() + "'");
+					LogManager.APILog.WriteLine(this.GetType().Name + " - Changing position of '" + Name + "' from '" + havokBody.Position.ToString() + "' to '" + newPosition.ToString() + "'");
 				}
 
 				havokBody.Position = newPosition;
@@ -701,7 +701,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Changing linear velocity of '" + Name + "' from '" + havokBody.LinearVelocity.ToString() + "' to '" + m_linearVelocity.ToString() + "'");
+					LogManager.APILog.WriteLine(this.GetType().Name + " - Changing linear velocity of '" + Name + "' from '" + havokBody.LinearVelocity.ToString() + "' to '" + m_linearVelocity.ToString() + "'");
 				}
 
 				havokBody.LinearVelocity = m_linearVelocity;
@@ -722,7 +722,7 @@ namespace SEModAPIInternal.API.Entity
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " - Changing angular velocity of '" + Name + "' from '" + havokBody.AngularVelocity.ToString() + "' to '" + m_angularVelocity.ToString() + "'");
+					LogManager.APILog.WriteLine(this.GetType().Name + " - Changing angular velocity of '" + Name + "' from '" + havokBody.AngularVelocity.ToString() + "' to '" + m_angularVelocity.ToString() + "'");
 				}
 
 				havokBody.AngularVelocity = m_angularVelocity;
@@ -738,7 +738,7 @@ namespace SEModAPIInternal.API.Entity
 			try
 			{
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.APILog.WriteLineAndConsole(this.GetType().Name + " '" + Name + "': Calling 'Close' to remove entity");
+					LogManager.APILog.WriteLine(this.GetType().Name + " '" + Name + "': Calling 'Close' to remove entity");
 
 				BaseObject.InvokeEntityMethod(BackingObject, "Close");
 			}

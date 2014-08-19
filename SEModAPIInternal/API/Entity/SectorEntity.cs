@@ -393,13 +393,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_rawDataHashSetResourceLock.Owned)
-					return;
-				if (WorldManager.Instance.IsWorldSaving)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock() == null)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+				if (!CanRefresh)
 					return;
 
 				m_rawDataHashSetResourceLock.AcquireExclusive();
@@ -428,7 +422,8 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-				m_rawDataHashSetResourceLock.ReleaseExclusive();
+				if(m_rawDataHashSetResourceLock.Owned)
+					m_rawDataHashSetResourceLock.ReleaseExclusive();
 			}
 		}
 
@@ -436,29 +431,21 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_rawDataObjectBuilderListResourceLock.Owned)
-					return;
-				if (WorldManager.Instance.IsWorldSaving)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock() == null)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+				if (!CanRefresh)
 					return;
 
-				m_rawDataHashSetResourceLock.AcquireExclusive();
-				HashSet<object> entityList = new HashSet<object>(GetBackingDataHashSet());
-				m_rawDataHashSetResourceLock.ReleaseExclusive();
-
+				m_rawDataHashSetResourceLock.AcquireShared();
 				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
 
 				m_rawDataObjectBuilderList.Clear();
-				foreach (Object entity in entityList)
+				foreach (Object entity in GetBackingDataHashSet())
 				{
 					try
 					{
 						if (!IsValidEntity(entity))
 							continue;
 
+						//TODO - Find a faster way to get updated data. This call takes ~0.15ms per entity which adds up quickly
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
 						if (baseEntity == null)
 							continue;
@@ -471,13 +458,16 @@ namespace SEModAPIInternal.API.Entity
 					}
 				}
 
+				m_rawDataHashSetResourceLock.ReleaseShared();
 				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-				m_rawDataHashSetResourceLock.ReleaseExclusive();
-				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
+				if (m_rawDataHashSetResourceLock.Owned)
+					m_rawDataHashSetResourceLock.ReleaseShared();
+				if (m_rawDataObjectBuilderListResourceLock.Owned)
+					m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 		}
 
@@ -492,7 +482,7 @@ namespace SEModAPIInternal.API.Entity
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if(SandboxGameAssemblyWrapper.IsDebugging)
-						LogManager.APILog.WriteLine("SectorObjectManager - Mismatch between raw entities and object builders");
+						LogManager.ErrorLog.WriteLine("SectorObjectManager - Mismatch between raw entities and object builders");
 					return;
 				}
 
@@ -513,6 +503,8 @@ namespace SEModAPIInternal.API.Entity
 
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
 						if (baseEntity == null)
+							continue;
+						if (!EntityRegistry.Instance.Registry.ContainsKey(baseEntity.TypeId))
 							continue;
 
 						//If the original data already contains an entry for this, skip creation and just update values

@@ -84,6 +84,12 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("CubeGridNetworkManager reflection validation failed!");
 			}
 
+			if (!CubeGridThrusterManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("CubeGridThrusterManager reflection validation failed!");
+			}
+
 			if (!SectorObjectManager.ReflectionUnitTest())
 			{
 				result = false;
@@ -276,6 +282,18 @@ namespace SEModAPIExtensions.API
 			{
 				result = false;
 				Console.WriteLine("GyroNetworkManager reflection validation failed!");
+			}
+
+			if (!CockpitEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("CockpitEntity reflection validation failed!");
+			}
+
+			if (!CockpitNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("CockpitNetworkManager reflection validation failed!");
 			}
 
 			if (result)
