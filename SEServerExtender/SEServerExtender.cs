@@ -1367,28 +1367,35 @@ namespace SEServerExtender
 
 		private void CreateCubeGridImportDialog()
 		{
-			OpenFileDialog openFileDialog = new OpenFileDialog
+			try
 			{
-				InitialDirectory = GameInstallationInfo.GamePath,
-				DefaultExt = "sbc file (*.sbc)"
-			};
-
-			if (openFileDialog.ShowDialog(this) == DialogResult.OK)
-			{
-				FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
-				if (fileInfo.Exists)
+				OpenFileDialog openFileDialog = new OpenFileDialog
 				{
-					try
-					{
-						CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
+					InitialDirectory = GameInstallationInfo.GamePath,
+					DefaultExt = "sbc file (*.sbc)"
+				};
 
-						SectorObjectManager.Instance.AddEntity(cubeGrid);
-					}
-					catch (Exception ex)
+				if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+				{
+					FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
+					if (fileInfo.Exists)
 					{
-						LogManager.ErrorLog.WriteLine(ex);
+						try
+						{
+							CubeGridEntity cubeGrid = new CubeGridEntity(fileInfo);
+
+							SectorObjectManager.Instance.AddEntity(cubeGrid);
+						}
+						catch (Exception ex)
+						{
+							LogManager.ErrorLog.WriteLine(ex);
+						}
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

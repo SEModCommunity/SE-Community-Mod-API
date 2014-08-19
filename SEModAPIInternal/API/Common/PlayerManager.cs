@@ -13,6 +13,7 @@ using SEModAPIInternal.Support;
 
 using VRage.Serialization;
 using VRage.Collections;
+using SteamSDK;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -140,6 +141,34 @@ namespace SEModAPIInternal.API.Common
 			}
 
 			return playerName;
+		}
+
+		public ulong GetSteamIdFromPlayerName(string playerName)
+		{
+			ulong steamId = 0;
+
+			foreach (var entry in InternalGetPlayerItemMappping().Keys)
+			{
+				MyObjectBuilder_Checkpoint.PlayerItem playerItem = PlayerMap.Instance.GetPlayerItemFromPlayerId(entry);
+				if (!playerItem.Name.Equals(playerName))
+					continue;
+
+				steamId = playerItem.SteamId;
+			}
+
+			if (steamId == 0)
+			{
+				try
+				{
+					steamId = ulong.Parse(playerName);
+				}
+				catch (Exception ex)
+				{
+					LogManager.ErrorLog.WriteLine(ex);
+				}
+			}
+
+			return steamId;
 		}
 
 		public long GetPlayerEntityId(ulong steamId)
@@ -433,6 +462,18 @@ namespace SEModAPIInternal.API.Common
 			Object playerMap = playerMapField.GetValue(BackingObject);
 
 			return playerMap;
+		}
+
+		public void KickPlayer(ulong steamId)
+		{
+			try
+			{
+				ServerNetworkManager.Instance.KickPlayer(steamId);
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

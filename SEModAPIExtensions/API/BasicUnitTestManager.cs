@@ -54,6 +54,18 @@ namespace SEModAPIExtensions.API
 		{
 			bool result = true;
 
+			if (!ServerAssemblyWrapper.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ServerAssemblyWrapper reflection validation failed!");
+			}
+
+			if (!ServerNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ServerNetworkManager reflection validation failed!");
+			}
+
 			if (!BaseObject.ReflectionUnitTest())
 			{
 				result = false;

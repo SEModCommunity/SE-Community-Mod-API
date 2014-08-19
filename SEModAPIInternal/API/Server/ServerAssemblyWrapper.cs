@@ -32,6 +32,7 @@ namespace SEModAPIInternal.API.Server
 
 		public static string DedicatedServerNamespace = "83BCBFA49B3A2A6EC1BC99583DA2D399";
 		public static string DedicatedServerClass = "49BCFF86BA276A9C7C0D269C2924DE2D";
+
 		public static string DedicatedServerStartupBaseMethod = "26A7ABEA729FAE1F24679E21470F8E98";
 
 		#endregion
@@ -66,6 +67,9 @@ namespace SEModAPIInternal.API.Server
 		{
 			get
 			{
+				if(m_assembly == null)
+					m_assembly = Assembly.UnsafeLoadFrom("SpaceEngineersDedicated.exe");
+
 				Type dedicatedServerType = m_assembly.GetType(DedicatedServerNamespace + "." + DedicatedServerClass);
 				return dedicatedServerType;
 			}
@@ -74,6 +78,25 @@ namespace SEModAPIInternal.API.Server
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = InternalType;
+				if (type1 == null)
+					throw new Exception("Could not find internal type for ServerAssemblyWrapper");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, DedicatedServerStartupBaseMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		private void SteamReset()
 		{

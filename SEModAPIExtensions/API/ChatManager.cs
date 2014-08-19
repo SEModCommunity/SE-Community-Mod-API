@@ -27,6 +27,7 @@ using VRageMath;
 using VRage.Common.Utils;
 using SEModAPIExtensions.API.IPC;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
+using System.Xml;
 
 namespace SEModAPIExtensions.API
 {
@@ -177,6 +178,11 @@ namespace SEModAPIExtensions.API
 			offCommand.callback = Command_Off;
 			offCommand.requiresAdmin = true;
 
+			ChatCommand kickCommand = new ChatCommand();
+			kickCommand.command = "kick";
+			kickCommand.callback = Command_Kick;
+			kickCommand.requiresAdmin = true;
+
 			RegisterChatCommand(deleteCommand);
 			RegisterChatCommand(tpCommand);
 			RegisterChatCommand(stopCommand);
@@ -189,6 +195,7 @@ namespace SEModAPIExtensions.API
 			RegisterChatCommand(clearCommand);
 			RegisterChatCommand(listCommand);
 			RegisterChatCommand(offCommand);
+			RegisterChatCommand(kickCommand);
 
 			SetupWCFService();
 
@@ -517,6 +524,26 @@ namespace SEModAPIExtensions.API
 
 					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed");
 				}
+				//All cube grids that have no power
+				else if (commandParts[2].ToLower().Equals("nopower"))
+				{
+					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
+					foreach (CubeGridEntity entity in entities)
+					{
+						if (entity.TotalPower <= 0)
+						{
+							entitiesToDispose.Add(entity);
+						}
+					}
+
+					foreach (BaseEntity entity in entitiesToDispose)
+					{
+						entity.Dispose();
+					}
+
+					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed");
+				}
 				else if (commandParts[2].ToLower().Equals("floatingobjects"))	//All floating objects
 				{
 					List<FloatingObject> entities = SectorObjectManager.Instance.GetTypedInternalData<FloatingObject>();
@@ -687,7 +714,29 @@ namespace SEModAPIExtensions.API
 			string[] commandParts = chatEvent.message.Split(' ');
 			int paramCount = commandParts.Length - 1;
 
-			if (paramCount == 1)
+			if (paramCount != 1)
+				return;
+
+			if (commandParts[1].ToLower().Equals("all"))
+			{
+				List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
+				int entitiesStoppedCount = 0;
+				foreach (BaseEntity entity in entities)
+				{
+					double linear = Math.Round(((Vector3)entity.LinearVelocity).LengthSquared(), 1);
+					double angular = Math.Round(((Vector3)entity.AngularVelocity).LengthSquared(), 1);
+
+					if (linear > 0 || angular > 0)
+					{
+						entity.LinearVelocity = Vector3.Zero;
+						entity.AngularVelocity = Vector3.Zero;
+
+						entitiesStoppedCount++;
+					}
+				}
+				SendPrivateChatMessage(remoteUserId, entitiesStoppedCount.ToString() + " entities are no longer moving or rotating");
+			}
+			else
 			{
 				string rawEntityId = commandParts[1];
 
@@ -847,24 +896,56 @@ namespace SEModAPIExtensions.API
 
 			if (paramCount == 1)
 			{
-				string fileName = commandParts[1];
-				Regex rgx = new Regex("[^a-zA-Z0-9]");
-				string cleanFileName = rgx.Replace(fileName, "");
-
-				string modPath = MyFileSystem.ModsPath;
-				if (Directory.Exists(modPath))
+				try
 				{
-					string exportPath = Path.Combine(modPath, "Exports");
-					if (Directory.Exists(exportPath))
-					{
-						FileInfo importFile = new FileInfo(Path.Combine(exportPath, cleanFileName));
-						if (importFile.Exists)
-						{
-							//TODO - Find a clean way to determine what type of entity is in the file so that we can import
+					string fileName = commandParts[1];
+					Regex rgx = new Regex("[^a-zA-Z0-9]");
+					string cleanFileName = rgx.Replace(fileName, "");
 
-							SendPrivateChatMessage(remoteUserId, "Feature is not yet completed");
+					string modPath = MyFileSystem.ModsPath;
+					if (Directory.Exists(modPath))
+					{
+						string exportPath = Path.Combine(modPath, "Exports");
+						if (Directory.Exists(exportPath))
+						{
+							FileInfo importFile = new FileInfo(Path.Combine(exportPath, cleanFileName));
+							if (importFile.Exists)
+							{
+								string objectBuilderTypeName = "";
+								using (XmlReader reader = XmlReader.Create(importFile.OpenText()))
+								{
+									while (reader.Read())
+									{
+										if (reader.NodeType == XmlNodeType.XmlDeclaration)
+											continue;
+
+										if (reader.NodeType != XmlNodeType.Element)
+											continue;
+
+										objectBuilderTypeName = reader.Name;
+										break;
+									}
+								}
+
+								if (string.IsNullOrEmpty(objectBuilderTypeName))
+									return;
+
+								switch (objectBuilderTypeName)
+								{
+									case "MyObjectBuilder_CubeGrid":
+										CubeGridEntity cubeGrid = new CubeGridEntity(importFile);
+										SectorObjectManager.Instance.AddEntity(cubeGrid);
+										break;
+									default:
+										break;
+								}
+							}
 						}
 					}
+				}
+				catch (Exception ex)
+				{
+					LogManager.ErrorLog.WriteLine(ex);
 				}
 			}
 		}
@@ -1027,7 +1108,27 @@ namespace SEModAPIExtensions.API
 
 			SendPrivateChatMessage(remoteUserId, "Cleared the production queue of " + poweredOffCount.ToString() + " blocks");
 		}
-		
+
+		protected void Command_Kick(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount != 1)
+				return;
+
+			//Get the steam id of the player
+			string rawSteamId = commandParts[1];
+			ulong steamId = PlayerManager.Instance.PlayerMap.GetSteamIdFromPlayerName(rawSteamId);
+			if (steamId == 0)
+				return;
+
+			PlayerManager.Instance.KickPlayer(steamId);
+
+			SendPrivateChatMessage(remoteUserId, "Kicked '" + rawSteamId + "' off of the server");
+		}
+
 		#endregion
 
 		#endregion
