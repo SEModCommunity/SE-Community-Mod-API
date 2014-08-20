@@ -43,16 +43,24 @@ namespace SEModAPIExtensions.API
 			SandboxGameAssemblyWrapper.IsDebugging = true;
 
 			bool result = true;
-			result &= RunReflectionUnitTests();
+			result &= RunBaseReflectionUnitTests();
+			result &= RunEntityReflectionUnitTests();
+			result &= RunCubeBlockReflectionTests();
 
 			SandboxGameAssemblyWrapper.IsDebugging = oldDebuggingSetting;
 
 			return result;
 		}
 
-		protected bool RunReflectionUnitTests()
+		protected bool RunBaseReflectionUnitTests()
 		{
 			bool result = true;
+
+			if (!SandboxGameAssemblyWrapper.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("SandboxGameAssemblyWrapper reflection validation failed!");
+			}
 
 			if (!ServerAssemblyWrapper.ReflectionUnitTest())
 			{
@@ -65,6 +73,78 @@ namespace SEModAPIExtensions.API
 				result = false;
 				Console.WriteLine("ServerNetworkManager reflection validation failed!");
 			}
+
+			if (!UtilityFunctions.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("UtilityFunctions reflection validation failed!");
+			}
+
+			if (!ChatManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ChatManager reflection validation failed!");
+			}
+
+			if (!PlayerMap.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("PlayerMap reflection validation failed!");
+			}
+
+			if (!PlayerManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("PlayerManager reflection validation failed!");
+			}
+
+			if (!WorldManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("WorldManager reflection validation failed!");
+			}
+
+			if (!RadioManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("RadioManager reflection validation failed!");
+			}
+
+			if (!RadioManagerNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("RadioManagerNetworkManager reflection validation failed!");
+			}
+
+			if (!PowerManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("PowerManager reflection validation failed!");
+			}
+
+			if (!FactionsManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("FactionsManager reflection validation failed!");
+			}
+
+			if (!Faction.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("Faction reflection validation failed!");
+			}
+
+			if (result)
+			{
+				Console.WriteLine("All main types passed reflection unit tests!");
+			}
+
+			return result;
+		}
+
+		protected bool RunEntityReflectionUnitTests()
+		{
+			bool result = true;
 
 			if (!BaseObject.ReflectionUnitTest())
 			{
@@ -126,54 +206,6 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("InventoryItemEntity reflection validation failed!");
 			}
 
-			if (!PlayerMap.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("PlayerMap reflection validation failed!");
-			}
-
-			if (!PlayerManager.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("PlayerManager reflection validation failed!");
-			}
-
-			if (!WorldManager.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("WorldManager reflection validation failed!");
-			}
-
-			if (!RadioManager.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("RadioManager reflection validation failed!");
-			}
-
-			if (!RadioManagerNetworkManager.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("RadioManagerNetworkManager reflection validation failed!");
-			}
-
-			if (!PowerManager.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("PowerManager reflection validation failed!");
-			}
-
-			if (!FactionsManager.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("FactionsManager reflection validation failed!");
-			}
-
-			if (!Faction.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("Faction reflection validation failed!");
-			}
-
 			if (!PowerProducer.ReflectionUnitTest())
 			{
 				result = false;
@@ -186,11 +218,9 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("PowerReceiver reflection validation failed!");
 			}
 
-			result &= RunCubeBlockReflectionTests();
-
 			if (result)
 			{
-				Console.WriteLine("All main types passed reflection unit tests!");
+				Console.WriteLine("All entity types passed reflection unit tests!");
 			}
 
 			return result;

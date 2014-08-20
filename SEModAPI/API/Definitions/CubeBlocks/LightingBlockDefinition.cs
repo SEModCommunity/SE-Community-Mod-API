@@ -91,7 +91,7 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// Method to get the casted instance from parent signature
 		/// </summary>
 		/// <returns>The casted instance into the class type</returns>
-		public virtual MyObjectBuilder_LightingBlockDefinition GetSubTypeDefinition()
+		new public MyObjectBuilder_LightingBlockDefinition GetSubTypeDefinition()
 		{
 			return (MyObjectBuilder_LightingBlockDefinition)m_baseDefinition;
 		}

@@ -251,6 +251,11 @@ namespace SEModAPIInternal.API.Common
 			return matchingPlayerIds;
 		}
 
+		public List<long> GetPlayerIds()
+		{
+			return new List<long>(InternalGetPlayerItemMappping().Keys);
+		}
+
 		protected Object GetPlayerFromSteamId(ulong steamId)
 		{
 			try
@@ -466,14 +471,34 @@ namespace SEModAPIInternal.API.Common
 
 		public void KickPlayer(ulong steamId)
 		{
-			try
+			ServerNetworkManager.Instance.KickPlayer(steamId);
+		}
+
+		public void BanPlayer(ulong steamId)
+		{
+			ServerNetworkManager.Instance.SetPlayerBan(steamId, true);
+		}
+
+		public void UnBanPlayer(ulong steamId)
+		{
+			ServerNetworkManager.Instance.SetPlayerBan(steamId, false);
+		}
+
+		public bool IsUserAdmin(ulong remoteUserId)
+		{
+			bool result = false;
+
+			List<ulong> adminUsers = SandboxGameAssemblyWrapper.Instance.GetServerConfig().Administrators;
+			foreach (ulong userId in adminUsers)
 			{
-				ServerNetworkManager.Instance.KickPlayer(steamId);
+				if (remoteUserId == userId)
+				{
+					result = true;
+					break;
+				}
 			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-			}
+
+			return result;
 		}
 
 		#endregion

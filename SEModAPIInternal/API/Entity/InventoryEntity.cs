@@ -157,7 +157,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		public static bool ReflectionUnitTest()
+		new public static bool ReflectionUnitTest()
 		{
 			try
 			{
@@ -557,7 +557,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		public static bool ReflectionUnitTest()
+		new public static bool ReflectionUnitTest()
 		{
 			try
 			{

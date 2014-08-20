@@ -157,15 +157,16 @@ namespace SEServerExtender
 				m_server.IsWCFEnabled = !extenderArgs.noWCF;
 				m_server.WCFPort = extenderArgs.wcfPort;
 				m_server.Init();
-				if (extenderArgs.autoStart)
-				{
-					m_server.StartServer();
-				}
 
 				ChatManager.ChatCommand guiCommand = new ChatManager.ChatCommand();
 				guiCommand.command = "gui";
 				guiCommand.callback = ChatCommand_GUI;
 				ChatManager.Instance.RegisterChatCommand(guiCommand);
+
+				if (extenderArgs.autoStart)
+				{
+					m_server.StartServer();
+				}
 
 				if (!extenderArgs.noGUI)
 				{

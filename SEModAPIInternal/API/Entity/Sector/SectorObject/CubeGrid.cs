@@ -697,17 +697,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				try
-				{
-					Assembly assembly = SandboxGameAssemblyWrapper.Instance.GameAssembly;
-					Type type = assembly.GetType(CubeGridNetManagerNamespace + "." + CubeGridNetManagerClass);
-					return type;
-				}
-				catch (Exception ex)
-				{
-					LogManager.ErrorLog.WriteLine(ex);
-					return typeof(Object);
-				}
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridNetManagerNamespace, CubeGridNetManagerClass);
+				return type;
 			}
 			private set
 			{

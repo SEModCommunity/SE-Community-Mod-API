@@ -11,6 +11,7 @@ using SEModAPIInternal;
 using SEModAPIInternal.API.Common;
 using System.Threading;
 using VRage.Common.Utils;
+using SEModAPIInternal.API.Entity;
 
 namespace SEModAPIInternal.Support
 {
@@ -189,8 +190,6 @@ namespace SEModAPIInternal.Support
 		private static ApplicationLog m_chatLog;
 		private static ApplicationLog m_errorLog;
 
-		public static string MainGameMyLogField = "1976E5D4FE6E8C1BD369273DEE0025AC";
-
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -217,6 +216,7 @@ namespace SEModAPIInternal.Support
 			}
 		}
 
+		[Obsolete]
 		public static MyLog GameLog
 		{
 			get
@@ -227,8 +227,7 @@ namespace SEModAPIInternal.Support
 
 					try
 					{
-						Type mainGameType = SandboxGameAssemblyWrapper.Instance.MainGameType;
-						FieldInfo myLogField = mainGameType.GetField(MainGameMyLogField, BindingFlags.Public | BindingFlags.Static);
+						FieldInfo myLogField = BaseObject.GetStaticField(SandboxGameAssemblyWrapper.MainGameType, SandboxGameAssemblyWrapper.MainGameMyLogField);
 						m_gameLog = (MyLog)myLogField.GetValue(null);
 					}
 					catch (Exception ex)

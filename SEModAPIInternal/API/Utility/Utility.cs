@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
@@ -16,12 +17,33 @@ namespace SEModAPIInternal.API.Utility
 	{
 		#region "Attributes"
 
-		public static string UtilityClass = "5BCAC68007431E61367F5B2CF24E2D6F.226D9974B43A7269CDD3E322CC8110D5";
-		public static string UtilityGenerateEntityId = "3B4924802BEBD1AE13B29920376CE914";
+		public static string UtilityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
+		public static string UtilityClass = "226D9974B43A7269CDD3E322CC8110D5";
+
+		public static string UtilityGenerateEntityIdMethod = "3B4924802BEBD1AE13B29920376CE914";
 
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(UtilityNamespace, UtilityClass);
+				if (type == null)
+					throw new Exception("Could not find internal type for UtilityFunctions");
+				bool result = true;
+				result &= BaseObject.HasMethod(type, UtilityGenerateEntityIdMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public static HashSet<Object> ConvertHashSet(Object source)
 		{
@@ -179,8 +201,8 @@ namespace SEModAPIInternal.API.Utility
 		{
 			try
 			{
-				Type utilityType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(UtilityClass);
-				MethodInfo generateIdMethod = utilityType.GetMethod(UtilityGenerateEntityId, BindingFlags.Public | BindingFlags.Static);
+				Type utilityType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(UtilityNamespace, UtilityClass);
+				MethodInfo generateIdMethod = utilityType.GetMethod(UtilityGenerateEntityIdMethod, BindingFlags.Public | BindingFlags.Static);
 				long entityId = (long)generateIdMethod.Invoke(null, new object[] { Type.Missing });
 
 				return entityId;

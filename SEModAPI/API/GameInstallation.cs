@@ -179,7 +179,7 @@ namespace SEModAPI.API
 
 				return finalPath;
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return "";
 			}

@@ -207,7 +207,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Internal"
 
-		internal static bool HasField(Type objectType, string fieldName)
+		public static bool HasField(Type objectType, string fieldName)
 		{
 			try
 			{
@@ -235,12 +235,12 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		internal static bool HasMethod(Type objectType, string methodName)
+		public static bool HasMethod(Type objectType, string methodName)
 		{
 			return HasMethod(objectType, methodName, null);
 		}
 
-		internal static bool HasMethod(Type objectType, string methodName, Type[] argTypes)
+		public static bool HasMethod(Type objectType, string methodName, Type[] argTypes)
 		{
 			try
 			{
@@ -493,7 +493,6 @@ namespace SEModAPIInternal.API.Entity
 		private InternalBackingType m_backingSourceType;
 		private DateTime m_lastLoadTime;
 		private double m_refreshInterval;
-		private bool m_internalRefreshComplete;
 
 		private static double m_averageRefreshDataTime;
 		private static double m_averageRefreshInternalDataTime;

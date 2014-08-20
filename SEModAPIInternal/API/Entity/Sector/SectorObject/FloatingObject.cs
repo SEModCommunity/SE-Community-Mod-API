@@ -48,7 +48,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Floating Object")]
 		[Browsable(false)]
 		[ReadOnly(true)]
-		internal static Type InternalType
+		new internal static Type InternalType
 		{
 			get
 			{

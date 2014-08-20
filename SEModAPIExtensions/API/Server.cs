@@ -438,6 +438,11 @@ namespace SEModAPIExtensions.API
 				string path = m_commandLineArgs.path;
 				if (path == null || string.IsNullOrEmpty(path))
 				{
+					if (InstanceName.Length != 0)
+					{
+						SandboxGameAssemblyWrapper.UseCommonProgramData = true;
+						SandboxGameAssemblyWrapper.Instance.InitMyFileSystem(InstanceName, false);
+					}
 					path = m_gameAssemblyWrapper.GetUserDataPath(InstanceName);
 				}
 
@@ -601,12 +606,12 @@ namespace SEModAPIExtensions.API
 					return;
 				if (m_isServerRunning)
 					return;
-				
-				m_pluginMainLoop.Start();
-				m_autosaveTimer.Start();
 
 				if (m_dedicatedConfigDefinition == null)
 					LoadServerConfig();
+
+				m_pluginMainLoop.Start();
+				m_autosaveTimer.Start();
 
 				m_isServerRunning = true;
 

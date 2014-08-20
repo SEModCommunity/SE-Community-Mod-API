@@ -10,24 +10,25 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 using Sandbox.Common.ObjectBuilders;
 
 using SEModAPI.API.Definitions;
+
+using SEModAPIExtensions.API.IPC;
 
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRageMath;
 using VRage.Common.Utils;
-using SEModAPIExtensions.API.IPC;
-using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
-using System.Xml;
 
 namespace SEModAPIExtensions.API
 {
@@ -102,7 +103,11 @@ namespace SEModAPIExtensions.API
 		private List<ChatEvent> m_chatEvents;
 		private List<ChatCommand> m_chatCommands;
 
-		public static string ChatMessageStruct = "C42525D7DE28CE4CFB44651F3D03A50D.12AEE9CB08C9FC64151B8A094D6BB668";
+		/////////////////////////////////////////////////////////////////////////////
+
+		public static string ChatMessageStructNamespace = "C42525D7DE28CE4CFB44651F3D03A50D";
+		public static string ChatMessageStructClass = "12AEE9CB08C9FC64151B8A094D6BB668";
+
 		public static string ChatMessageMessageField = "EDCBEBB604B287DFA90A5A46DC7AD28D";
 
 		#endregion
@@ -182,6 +187,16 @@ namespace SEModAPIExtensions.API
 			kickCommand.command = "kick";
 			kickCommand.callback = Command_Kick;
 			kickCommand.requiresAdmin = true;
+
+			ChatCommand banCommand = new ChatCommand();
+			banCommand.command = "ban";
+			banCommand.callback = Command_Ban;
+			banCommand.requiresAdmin = true;
+
+			ChatCommand unbanCommand = new ChatCommand();
+			unbanCommand.command = "unban";
+			unbanCommand.callback = Command_Unban;
+			unbanCommand.requiresAdmin = true;
 
 			RegisterChatCommand(deleteCommand);
 			RegisterChatCommand(tpCommand);
@@ -272,6 +287,25 @@ namespace SEModAPIExtensions.API
 
 		#region "General"
 
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ChatMessageStructNamespace, ChatMessageStructClass);
+				if (type == null)
+					throw new Exception("Could not find internal type for ChatMessageStruct");
+				bool result = true;
+				result &= BaseObject.HasField(type, ChatMessageMessageField);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
+
 		private void SetupChatHandlers()
 		{
 			try
@@ -296,7 +330,7 @@ namespace SEModAPIExtensions.API
 
 		protected Object CreateChatMessageStruct(string message)
 		{
-			Type chatMessageStructType = SandboxGameAssemblyWrapper.Instance.GameAssembly.GetType(ChatMessageStruct);
+			Type chatMessageStructType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ChatMessageStructNamespace, ChatMessageStructClass);
 			FieldInfo messageField = chatMessageStructType.GetField(ChatMessageMessageField);
 
 			Object chatMessageStruct = Activator.CreateInstance(chatMessageStructType);
@@ -435,7 +469,7 @@ namespace SEModAPIExtensions.API
 				{
 					try
 					{
-						if (chatCommand.requiresAdmin && remoteUserId != 0 && !SandboxGameAssemblyWrapper.Instance.IsUserAdmin(remoteUserId))
+						if (chatCommand.requiresAdmin && remoteUserId != 0 && !PlayerManager.Instance.IsUserAdmin(remoteUserId))
 							continue;
 
 						if (command.Equals(chatCommand.command.ToLower()))
@@ -639,6 +673,123 @@ namespace SEModAPIExtensions.API
 
 					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " stations have been removed");
 				}
+			}
+
+			//Prunes defunct player entries in the faction data
+			if (paramCount > 1 && commandParts[1].ToLower().Equals("player"))
+			{
+				List<MyObjectBuilder_Checkpoint.PlayerItem> playersToRemove = new List<MyObjectBuilder_Checkpoint.PlayerItem>();
+				int playersRemovedCount = 0;
+				if (commandParts[2].ToLower().Equals("dead"))
+				{
+					List<long> playerIds = PlayerMap.Instance.GetPlayerIds();
+					foreach (long playerId in playerIds)
+					{
+						MyObjectBuilder_Checkpoint.PlayerItem item = PlayerMap.Instance.GetPlayerItemFromPlayerId(playerId);
+						if (item.IsDead)
+							playersToRemove.Add(item);
+					}
+
+					//TODO - This is VERY slow. Need to find a much faster way to do this
+					//TODO - Need to find a way to remove the player entries from the main list, not just from the blocks and factions
+					foreach (var item in playersToRemove)
+					{
+						bool playerRemoved = false;
+
+						//Check if any of the players we're about to remove own blocks
+						//If so, set the owner to 0 and set the share mode to None
+						foreach (var cubeGrid in SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>())
+						{
+							foreach (var cubeBlock in cubeGrid.CubeBlocks)
+							{
+								if (cubeBlock.Owner == item.PlayerId)
+								{
+									cubeBlock.Owner = 0;
+									cubeBlock.ShareMode = MyOwnershipShareModeEnum.None;
+
+									playerRemoved = true;
+								}
+							}
+						}
+
+						foreach (var entry in FactionsManager.Instance.Factions)
+						{
+							foreach (var member in entry.Members)
+							{
+								if (member.PlayerId == item.PlayerId)
+								{
+									entry.RemoveMember(member.PlayerId);
+
+									playerRemoved = true;
+								}
+							}
+						}
+
+						if (playerRemoved)
+							playersRemovedCount++;
+					}
+				}
+
+				SendPrivateChatMessage(remoteUserId, "Deleted " + playersRemovedCount.ToString() + " player entries");
+			}
+
+			//Prunes defunct faction entries in the faction data
+			if (paramCount > 1 && commandParts[1].ToLower().Equals("faction"))
+			{
+				List<Faction> factionsToRemove = new List<Faction>();
+				if (commandParts[2].ToLower().Equals("empty"))
+				{
+					foreach(var entry in FactionsManager.Instance.Factions)
+					{
+						if (entry.Members.Count == 0)
+							factionsToRemove.Add(entry);
+					}
+				}
+				if (commandParts[2].ToLower().Equals("nofounder"))
+				{
+					foreach (var entry in FactionsManager.Instance.Factions)
+					{
+						bool founderMatch = false;
+
+						foreach (var member in entry.Members)
+						{
+							if (member.IsFounder)
+							{
+								founderMatch = true;
+								break;
+							}
+						}
+
+						if (!founderMatch)
+							factionsToRemove.Add(entry);
+					}
+				}
+				if (commandParts[2].ToLower().Equals("noleader"))
+				{
+					foreach (var entry in FactionsManager.Instance.Factions)
+					{
+						bool founderMatch = false;
+
+						foreach (var member in entry.Members)
+						{
+							if (member.IsFounder || member.IsLeader)
+							{
+								founderMatch = true;
+								break;
+							}
+						}
+
+						if (!founderMatch)
+							factionsToRemove.Add(entry);
+					}
+				}
+
+				foreach (var entry in factionsToRemove)
+				{
+					FactionsManager.Instance.RemoveFaction(entry.Id);
+				}
+
+				SendPrivateChatMessage(remoteUserId, "Deleted " + factionsToRemove.Count.ToString() + " factions");
 			}
 
 			//Single entity
@@ -1127,6 +1278,46 @@ namespace SEModAPIExtensions.API
 			PlayerManager.Instance.KickPlayer(steamId);
 
 			SendPrivateChatMessage(remoteUserId, "Kicked '" + rawSteamId + "' off of the server");
+		}
+
+		protected void Command_Ban(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount != 1)
+				return;
+
+			//Get the steam id of the player
+			string rawSteamId = commandParts[1];
+			ulong steamId = PlayerManager.Instance.PlayerMap.GetSteamIdFromPlayerName(rawSteamId);
+			if (steamId == 0)
+				return;
+
+			PlayerManager.Instance.BanPlayer(steamId);
+
+			SendPrivateChatMessage(remoteUserId, "Banned '" + rawSteamId + "' and kicked them off of the server");
+		}
+
+		protected void Command_Unban(ChatEvent chatEvent)
+		{
+			ulong remoteUserId = chatEvent.remoteUserId;
+			string[] commandParts = chatEvent.message.Split(' ');
+			int paramCount = commandParts.Length - 1;
+
+			if (paramCount != 1)
+				return;
+
+			//Get the steam id of the player
+			string rawSteamId = commandParts[1];
+			ulong steamId = PlayerManager.Instance.PlayerMap.GetSteamIdFromPlayerName(rawSteamId);
+			if (steamId == 0)
+				return;
+
+			PlayerManager.Instance.UnBanPlayer(steamId);
+
+			SendPrivateChatMessage(remoteUserId, "Unbanned '" + rawSteamId + "'");
 		}
 
 		#endregion

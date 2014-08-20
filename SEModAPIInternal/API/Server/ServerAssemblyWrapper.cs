@@ -106,7 +106,7 @@ namespace SEModAPIInternal.API.Server
 				{
 					SteamServerAPI.Instance.GameServer.Dispose();
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
 					//Do nothing
 				}
@@ -126,7 +126,7 @@ namespace SEModAPIInternal.API.Server
 					MyGuiGameControlsHelpers.UnloadContent();
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				//Do nothing
 			}
@@ -142,7 +142,7 @@ namespace SEModAPIInternal.API.Server
 				//TODO - Find out the proper way to get Havok to clean everything up so we don't get pointer errors on the next start
 				//HkBaseSystem.Quit();
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				//Do nothing for now
 			}
@@ -247,7 +247,7 @@ namespace SEModAPIInternal.API.Server
 				TimeSpan cleanupTime = DateTime.Now - startedEntityCleanup;
 				Console.WriteLine("Took " + cleanupTime.TotalSeconds.ToString() + " seconds to clean up entities");
 				*/
-				Object mainGame = SandboxGameAssemblyWrapper.Instance.GetMainGameInstance();
+				Object mainGame = SandboxGameAssemblyWrapper.MainGame;
 				BaseObject.InvokeEntityMethod(mainGame, "Dispose");
 
 				//Reset();
