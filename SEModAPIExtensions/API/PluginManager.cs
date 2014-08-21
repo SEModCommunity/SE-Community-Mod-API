@@ -387,12 +387,8 @@ namespace SEModAPIExtensions.API
 			if (_parameters == null) return;
 			PluginManagerThreadParams parameters = (PluginManagerThreadParams)_parameters;
 
-			List<EntityEventManager.EntityEvent> events = parameters.events;
-			List<ChatManager.ChatEvent> chatEvents = parameters.chatEvents;
-			Object plugin = parameters.plugin;
-
 			//Run entity events
-			foreach (EntityEventManager.EntityEvent entityEvent in events)
+			foreach (EntityEventManager.EntityEvent entityEvent in parameters.events)
 			{
 				//If this is a cube block created event and the parent cube grid is still loading then defer the event
 				if (entityEvent.type == EntityEventManager.EntityEventType.OnCubeBlockCreated)
@@ -410,12 +406,12 @@ namespace SEModAPIExtensions.API
 					case EntityEventManager.EntityEventType.OnPlayerJoined:
 						try
 						{
-							MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerJoined");
+							MethodInfo updateMethod = parameters.plugin.GetType().GetMethod("OnPlayerJoined");
 							if (updateMethod != null)
 							{
 								//FIXME - Temporary hack to pass along the player's steam id
 								ulong steamId = (ulong)entityEvent.entity;
-								updateMethod.Invoke(plugin, new object[] { steamId });
+								updateMethod.Invoke(parameters.plugin, new object[] { steamId });
 							}
 						}
 						catch (Exception ex)
@@ -426,12 +422,12 @@ namespace SEModAPIExtensions.API
 					case EntityEventManager.EntityEventType.OnPlayerLeft:
 						try
 						{
-							MethodInfo updateMethod = plugin.GetType().GetMethod("OnPlayerLeft");
+							MethodInfo updateMethod = parameters.plugin.GetType().GetMethod("OnPlayerLeft");
 							if (updateMethod != null)
 							{
 								//FIXME - Temporary hack to pass along the player's steam id
 								ulong steamId = (ulong)entityEvent.entity;
-								updateMethod.Invoke(plugin, new object[] { steamId });
+								updateMethod.Invoke(parameters.plugin, new object[] { steamId });
 							}
 						}
 						catch (Exception ex)
@@ -443,9 +439,9 @@ namespace SEModAPIExtensions.API
 						try
 						{
 							string methodName = entityEvent.type.ToString();
-							MethodInfo updateMethod = plugin.GetType().GetMethod(methodName);
+							MethodInfo updateMethod = parameters.plugin.GetType().GetMethod(methodName);
 							if (updateMethod != null)
-								updateMethod.Invoke(plugin, new object[] { entityEvent.entity });
+								updateMethod.Invoke(parameters.plugin, new object[] { entityEvent.entity });
 						}
 						catch (Exception ex)
 						{
@@ -456,14 +452,14 @@ namespace SEModAPIExtensions.API
 			}
 
 			//Run chat events
-			foreach (ChatManager.ChatEvent chatEvent in chatEvents)
+			foreach (ChatManager.ChatEvent chatEvent in parameters.chatEvents)
 			{
 				try
 				{
 					string methodName = chatEvent.type.ToString();
-					MethodInfo updateMethod = plugin.GetType().GetMethod(methodName);
+					MethodInfo updateMethod = parameters.plugin.GetType().GetMethod(methodName);
 					if (updateMethod != null)
-						updateMethod.Invoke(plugin, new object[] { chatEvent });
+						updateMethod.Invoke(parameters.plugin, new object[] { chatEvent });
 				}
 				catch (Exception ex)
 				{
@@ -474,13 +470,15 @@ namespace SEModAPIExtensions.API
 			//Run update
 			try
 			{
-				MethodInfo updateMethod = plugin.GetType().GetMethod("Update");
-				updateMethod.Invoke(plugin, new object[] { });
+				MethodInfo updateMethod = parameters.plugin.GetType().GetMethod("Update");
+				updateMethod.Invoke(parameters.plugin, new object[] { });
 			}
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
 			}
+			parameters.events.Clear();
+			parameters.chatEvents.Clear();
 		}
 
 		public void Shutdown()
