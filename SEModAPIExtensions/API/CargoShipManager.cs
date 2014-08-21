@@ -125,7 +125,7 @@ namespace SEModAPIExtensions.API
 				Matrix orientation = Matrix.CreateLookAt(startPosition, stopPosition, new Vector3(0, 1, 0));
 				foreach (SpawnGroupPrefab entry in randomSpawnGroup.Prefabs)
 				{
-					FileInfo prefabFile = new FileInfo(Path.Combine(MyFileSystem.ContentPath, "Data", "Prefabs", entry.File + ".sbc"));
+					FileInfo prefabFile = new FileInfo(Path.Combine(MyFileSystem.ContentPath, "Data", "Prefabs", entry.SubtypeId + ".sbc"));
 					if (!prefabFile.Exists)
 						continue;
 

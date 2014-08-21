@@ -17,6 +17,8 @@ using SEModAPI.API.Definitions.CubeBlocks;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
 
+using VRage;
+
 namespace SEServerExtender
 {
 	public partial class InventoryItemDialog : Form
@@ -88,7 +90,7 @@ namespace SEServerExtender
 
 		#region "Properties"
 
-		public InventoryEntity Container
+		public InventoryEntity InventoryContainer
 		{
 			get { return m_container; }
 			set { m_container = value; }
@@ -132,10 +134,10 @@ namespace SEServerExtender
 			{
 				MyObjectBuilder_InventoryItem objectBuilder = MyObjectBuilder_Base.CreateNewObject<MyObjectBuilder_InventoryItem>();
 				objectBuilder.Content = MyObjectBuilder_Base.CreateNewObject(SelectedType.TypeId, SelectedType.SubtypeId);
-				objectBuilder.Amount = Amount;
+				objectBuilder.Amount = (MyFixedPoint)Amount;
 				InventoryItemEntity newItem = new InventoryItemEntity(objectBuilder);
 
-				Container.NewEntry(newItem);
+				InventoryContainer.NewEntry(newItem);
 
 				this.Close();
 			}

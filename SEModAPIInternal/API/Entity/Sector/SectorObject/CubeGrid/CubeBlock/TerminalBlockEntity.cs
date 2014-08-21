@@ -74,7 +74,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 					return (MyObjectBuilder_TerminalBlock)base.ObjectBuilder;
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
 					return new MyObjectBuilder_TerminalBlock();
 				}

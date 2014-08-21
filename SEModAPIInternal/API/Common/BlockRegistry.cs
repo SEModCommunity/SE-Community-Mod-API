@@ -91,7 +91,7 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Properties"
 
-		public static BlockRegistry Instance
+		new public static BlockRegistry Instance
 		{
 			get
 			{

@@ -63,7 +63,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 					return (MyObjectBuilder_FunctionalBlock)base.ObjectBuilder;
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
 					return new MyObjectBuilder_FunctionalBlock();
 				}

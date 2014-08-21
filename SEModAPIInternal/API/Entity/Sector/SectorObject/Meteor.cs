@@ -52,7 +52,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Meteor")]
 		[Browsable(false)]
 		[ReadOnly(true)]
-		internal static Type InternalType
+		new internal static Type InternalType
 		{
 			get
 			{

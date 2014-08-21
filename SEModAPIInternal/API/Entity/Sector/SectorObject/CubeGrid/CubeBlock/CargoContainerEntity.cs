@@ -86,14 +86,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		[IgnoreDataMember]
 		[Category("Cargo Container")]
-		public float ItemCount
+		public long ItemCount
 		{
 			get
 			{
-				float count = 0;
+				long count = 0;
 				foreach (var item in ObjectBuilder.Inventory.Items)
 				{
-					count += item.Amount;
+					count += item.Amount.RawValue;
 				}
 				return count;
 			}

@@ -17,6 +17,8 @@ using SEModAPI.API.Definitions;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 
+using VRage;
+
 namespace SEModAPIInternal.API.Entity
 {
 	[DataContract(Name = "InventoryEntityProxy")]
@@ -175,7 +177,7 @@ namespace SEModAPIInternal.API.Entity
 				result &= BaseObject.HasMethod(type, InventoryAddItemAmountMethod);
 
 				Type[] argTypes = new Type[3];
-				argTypes[0] = typeof(Decimal);
+				argTypes[0] = typeof(MyFixedPoint);
 				argTypes[1] = typeof(MyObjectBuilder_PhysicalObject);
 				argTypes[2] = typeof(bool);
 				result &= BaseObject.HasMethod(type, InventoryRemoveItemAmountMethod, argTypes);
@@ -293,13 +295,13 @@ namespace SEModAPIInternal.API.Entity
 				else
 				{
 					Type[] argTypes = new Type[3];
-					argTypes[0] = typeof(Decimal);
+					argTypes[0] = typeof(MyFixedPoint);
 					argTypes[1] = typeof(MyObjectBuilder_PhysicalObject);
 					argTypes[2] = typeof(bool);
 
 					method = BackingObject.GetType().GetMethod(InventoryRemoveItemAmountMethod, argTypes);
 					parameters = new object[] {
-						-delta,
+						(MyFixedPoint)(-delta),
 						m_itemToUpdate.ObjectBuilder.PhysicalContent,
 						Type.Missing
 					};
@@ -480,16 +482,16 @@ namespace SEModAPIInternal.API.Entity
 		[Category("Container Item")]
 		public float Amount
 		{
-			get { return ObjectBuilder.Amount; }
+			get { return (float)ObjectBuilder.Amount; }
 			set
 			{
 				var baseEntity = ObjectBuilder;
-				if (baseEntity.Amount == value) return;
+				if ((float)baseEntity.Amount == value) return;
 
 				if(Container != null)
 					Container.UpdateItemAmount(this, (Decimal)value);
 
-				baseEntity.Amount = value;
+				baseEntity.Amount = (MyFixedPoint)value;
 				Changed = true;
 			}
 		}
@@ -514,7 +516,7 @@ namespace SEModAPIInternal.API.Entity
 		[ReadOnly(true)]
 		public float TotalMass
 		{
-			get { return ObjectBuilder.Amount * m_itemMass; }
+			get { return (float)ObjectBuilder.Amount * m_itemMass; }
 		}
 
 		[IgnoreDataMember]
@@ -522,7 +524,7 @@ namespace SEModAPIInternal.API.Entity
 		[ReadOnly(true)]
 		public float TotalVolume
 		{
-			get { return ObjectBuilder.Amount * m_itemVolume; }
+			get { return (float)ObjectBuilder.Amount * m_itemVolume; }
 		}
 
 		[DataMember]

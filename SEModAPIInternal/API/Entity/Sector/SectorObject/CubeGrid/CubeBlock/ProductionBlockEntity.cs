@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -9,9 +10,10 @@ using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 
 using SEModAPIInternal.API.Common;
-using SEModAPIInternal.Support;
 using SEModAPIInternal.API.Utility;
-using System.Reflection;
+using SEModAPIInternal.Support;
+
+using VRage;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
@@ -30,7 +32,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public ProductionQueueItem(MyObjectBuilder_ProductionBlock.QueueItem q)
 		{
-			Amount = q.Amount;
+			Amount = (decimal)q.Amount;
 			Id = q.Id;
 			ItemId = q.ItemId.GetValueOrDefault(0);
 		}
@@ -43,7 +45,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static implicit operator MyObjectBuilder_ProductionBlock.QueueItem(ProductionQueueItem q)
 		{
 			MyObjectBuilder_ProductionBlock.QueueItem item = new MyObjectBuilder_ProductionBlock.QueueItem();
-			item.Amount = q.Amount;
+			item.Amount = (MyFixedPoint)q.Amount;
 			item.Id = q.Id;
 			item.ItemId = q.ItemId;
 
@@ -66,7 +68,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string ProductionBlockGetOutputInventoryMethod = "GetInventory";
 		public static string ProductionBlockGetQueueMethod = "BE739740ACEA08DBE2BC8E60DCF3AD42";
 		public static string ProductionBlockSetQueueMethod = "085AE1F1D53C2471B793D78F54DD314F";
-		public static string ProductionBlockTriggerQueueChangedCallbackMethod = "38E4776C2449FA869644A62230444C18";
+		public static string ProductionBlockTriggerQueueChangedCallbackMethod = "443FB7A455126FFCAD9B22C5B4480376";
 
 		public static string ProductionBlockQueueField = "EBACD061EEA690B3C34E39E516F4EDCF";
 

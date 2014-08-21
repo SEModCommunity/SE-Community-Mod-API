@@ -386,7 +386,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlockSerializer>(ObjectBuilder, fileInfo);
 		}
 
-		public static bool ReflectionUnitTest()
+		new public static bool ReflectionUnitTest()
 		{
 			try
 			{
