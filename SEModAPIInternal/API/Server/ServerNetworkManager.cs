@@ -5,7 +5,9 @@ using System.Reflection;
 using System.Text;
 
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
+using SteamSDK;
 
 namespace SEModAPIInternal.API.Server
 {
@@ -17,8 +19,12 @@ namespace SEModAPIInternal.API.Server
 
 		public static string ServerNetworkManagerNamespace = "C42525D7DE28CE4CFB44651F3D03A50D";
 		public static string ServerNetworkManagerClass = "3B0B7A338600A7B9313DE1C3723DAD14";
+
+		public static string ServerNetworkManagerSetPlayerBannedMethod = "E86666618C5A8DF4F362823711A073AE";
+		public static string ServerNetworkManagerDisconnectPlayerMethod = "09FDD2D9700A7E602BE8722F81A55AC6";
+		public static string ServerNetworkManagerKickPlayerMethod = "95DF441086C982283C996086CE2046DE";
+
 		public static string ServerNetworkManagerConnectedPlayersField = "89E92B070228A8BC746EFB57A3F6D2E5";
-		public static string ServerNetworkManagerSetPlayerBannedMethod = "E65F4CDD9FACA817DB685540E98F318C";
 
 		#endregion
 
@@ -38,6 +44,28 @@ namespace SEModAPIInternal.API.Server
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type1 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ServerNetworkManagerNamespace, ServerNetworkManagerClass);
+				if (type1 == null)
+					throw new Exception("Could not find internal type for ServerNetworkManager");
+				bool result = true;
+				result &= BaseObject.HasMethod(type1, ServerNetworkManagerSetPlayerBannedMethod);
+				result &= BaseObject.HasMethod(type1, ServerNetworkManagerDisconnectPlayerMethod);
+				result &= BaseObject.HasMethod(type1, ServerNetworkManagerKickPlayerMethod);
+				result &= BaseObject.HasField(type1, ServerNetworkManagerConnectedPlayersField);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public override List<ulong> GetConnectedPlayers()
 		{
@@ -64,8 +92,23 @@ namespace SEModAPIInternal.API.Server
 			try
 			{
 				Object steamServerManager = GetNetworkManager();
-				MethodInfo banPlayerMethod = steamServerManager.GetType().GetMethod(ServerNetworkManagerSetPlayerBannedMethod);
-				banPlayerMethod.Invoke(steamServerManager, new object[] { remoteUserId, isBanned });
+				BaseObject.InvokeEntityMethod(steamServerManager, ServerNetworkManagerSetPlayerBannedMethod, new object[] { remoteUserId, isBanned });
+
+				KickPlayer(remoteUserId);
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		public void KickPlayer(ulong remoteUserId)
+		{
+			try
+			{
+				Object steamServerManager = GetNetworkManager();
+				BaseObject.InvokeEntityMethod(steamServerManager, ServerNetworkManagerKickPlayerMethod, new object[] { remoteUserId });
+				BaseObject.InvokeEntityMethod(steamServerManager, ServerNetworkManagerDisconnectPlayerMethod, new object[] { remoteUserId, ChatMemberStateChangeEnum.Kicked });
 			}
 			catch (Exception ex)
 			{

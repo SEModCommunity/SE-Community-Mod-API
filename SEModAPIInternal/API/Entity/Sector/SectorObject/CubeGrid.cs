@@ -78,6 +78,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public CubeGridEntity(FileInfo prefabFile)
 			: base(BaseObjectManager.LoadContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(prefabFile))
 		{
+			EntityId = 0;
 			ObjectBuilder.EntityId = 0;
 			if(ObjectBuilder.PositionAndOrientation != null)
 				PositionAndOrientation = ObjectBuilder.PositionAndOrientation.GetValueOrDefault();
@@ -696,17 +697,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				try
-				{
-					Assembly assembly = SandboxGameAssemblyWrapper.Instance.GameAssembly;
-					Type type = assembly.GetType(CubeGridNetManagerNamespace + "." + CubeGridNetManagerClass);
-					return type;
-				}
-				catch (Exception ex)
-				{
-					LogManager.ErrorLog.WriteLine(ex);
-					return typeof(Object);
-				}
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridNetManagerNamespace, CubeGridNetManagerClass);
+				return type;
 			}
 			private set
 			{

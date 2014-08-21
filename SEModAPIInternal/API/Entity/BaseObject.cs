@@ -207,7 +207,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Internal"
 
-		internal static bool HasField(Type objectType, string fieldName)
+		public static bool HasField(Type objectType, string fieldName)
 		{
 			try
 			{
@@ -235,12 +235,12 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		internal static bool HasMethod(Type objectType, string methodName)
+		public static bool HasMethod(Type objectType, string methodName)
 		{
 			return HasMethod(objectType, methodName, null);
 		}
 
-		internal static bool HasMethod(Type objectType, string methodName, Type[] argTypes)
+		public static bool HasMethod(Type objectType, string methodName, Type[] argTypes)
 		{
 			try
 			{
@@ -493,7 +493,6 @@ namespace SEModAPIInternal.API.Entity
 		private InternalBackingType m_backingSourceType;
 		private DateTime m_lastLoadTime;
 		private double m_refreshInterval;
-		private bool m_internalRefreshComplete;
 
 		private static double m_averageRefreshDataTime;
 		private static double m_averageRefreshInternalDataTime;
@@ -871,7 +870,21 @@ namespace SEModAPIInternal.API.Entity
 				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
 				if (rawValue == null)
 					return;
-				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				//Create/Clear the hash set
+				if (m_rawDataHashSet == null)
+					m_rawDataHashSet = new HashSet<object>();
+				else
+					m_rawDataHashSet.Clear();
+
+				//Only allow valid entities in the hash set
+				foreach (var entry in UtilityFunctions.ConvertHashSet(rawValue))
+				{
+					if (!IsValidEntity(entry))
+						continue;
+
+					m_rawDataHashSet.Add(entry);
+				}
 
 				m_rawDataHashSetResourceLock.ReleaseExclusive();
 			}
@@ -897,7 +910,21 @@ namespace SEModAPIInternal.API.Entity
 				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
 				if (rawValue == null)
 					return;
-				m_rawDataList = UtilityFunctions.ConvertList(rawValue);
+
+				//Create/Clear the list
+				if (m_rawDataList == null)
+					m_rawDataList = new List<object>();
+				else
+					m_rawDataList.Clear();
+
+				//Only allow valid entities in the list
+				foreach (var entry in UtilityFunctions.ConvertList(rawValue))
+				{
+					if (!IsValidEntity(entry))
+						continue;
+
+					m_rawDataList.Add(entry);
+				}
 
 				m_rawDataListResourceLock.ReleaseExclusive();
 			}

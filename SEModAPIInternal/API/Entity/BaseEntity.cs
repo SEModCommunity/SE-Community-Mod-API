@@ -522,7 +522,7 @@ namespace SEModAPIInternal.API.Entity
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_EntityBase, MyObjectBuilder_EntityBaseSerializer>(ObjectBuilder, fileInfo);
 		}
 
-		public static bool ReflectionUnitTest()
+		new public static bool ReflectionUnitTest()
 		{
 			try
 			{

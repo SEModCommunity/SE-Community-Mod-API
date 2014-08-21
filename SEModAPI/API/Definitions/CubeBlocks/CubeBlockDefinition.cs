@@ -19,7 +19,7 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// Method to get the casted instance from parent signature
 		/// </summary>
 		/// <returns>The casted instance into the class type</returns>
-		public virtual MyObjectBuilder_CubeBlockDefinition GetSubTypeDefinition()
+		new public MyObjectBuilder_CubeBlockDefinition GetSubTypeDefinition()
 		{
 			return (MyObjectBuilder_CubeBlockDefinition)m_baseDefinition;
 		}

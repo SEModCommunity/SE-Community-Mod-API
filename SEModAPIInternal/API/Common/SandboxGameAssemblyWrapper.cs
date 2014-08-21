@@ -10,6 +10,7 @@ using Sandbox.Common.ObjectBuilders;
 using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
+using SEModAPIInternal.API.Entity;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -19,59 +20,64 @@ namespace SEModAPIInternal.API.Common
 
 		private Assembly m_assembly;
 
-		private Type m_mainGameType;
-		private Type m_serverCoreType;
-		private Type m_configContainerType;
-
-		private MethodInfo m_setConfigWorldName;
-
-		private FieldInfo m_mainGameInstanceField;
-		private FieldInfo m_configContainerField;
-		private FieldInfo m_configContainerDedicatedDataField;
-		private FieldInfo m_serverCoreNullRender;
-
 		protected static SandboxGameAssemblyWrapper m_instance;
 		protected static bool m_isDebugging;
 		protected static bool m_isUsingCommonProgramData;
 		protected static bool m_isInSafeMode;
 
 		protected bool m_isGameLoaded;
+
 		protected DateTime m_lastProfilingOutput;
 		protected int m_countQueuedActions;
 		protected double m_averageQueuedActions;
 
-		public static string GameConstantsNamespace = "00DD5482C0A3DF0D94B151167E77A6D9";
-		public static string GameConstantsClass = "5FBC15A83966C3D53201318E6F912741";
-		public static string GameConstantsGamePausedField = "6F202682A23A6CD845931A94886C4872";
-
-		public static string ServerCoreClass = "168638249D29224100DB50BB468E7C07.7BAD4AFD06B91BCD63EA57F7C0D4F408";
-		public static string ServerCoreNullRenderField = "53A34747D8E8EDA65E601C194BECE141";
+		/////////////////////////////////////////////////////////////////////////////
 
 		public static string MainGameNamespace = "B337879D0C82A5F9C44D51D954769590";
 		public static string MainGameClass = "B3531963E948FB4FA1D057C4340C61B4";
-		public static string MainGameClientClass = "C47C2A2584662292007B04D8AD796E3D";
-		public static string MainGameInstanceField = "392503BDB6F8C1E34A232489E2A0C6D4";
+
 		public static string MainGameEnqueueActionMethod = "0172226C0BA7DAE0B1FCE0AF8BC7F735";
-		public static string MainGameConfigContainerField = "4895ADD02F2C27ED00C63E7E506EE808";
-		public static string MainGameAction1 = "0CAB22C866086930782A91BA5F21A936";	//() Entity loading complete
-		public static string MainGameAction2 = "736ABFDB88EC08BFEA24D3A2AB06BE80";	//(Bool) ??
-		public static string MainGameAction3 = "F7E4614DB0033215C446B502BA17BDDB";	//() Triggers Action1
-		public static string MainGameAction4 = "B43682C38AD089E0EE792C74E4503633";	//() Triggered by 'Ctrl+C'
-		public static string MainGameInitializeMethod = "2AA66FBD3F2C5EC250558B3136F3974A";
-		public static string MainGameExitMethod = "246E732EE67F7F6F88C4FF63B3901107";
-		public static string MainGameIsLoadedField = "76E577DA6C1683D13B1C0BE5D704C241";
 		public static string MainGameGetTimeMillisMethod = "676C50EDDF93A0D8452B6BAFE7A33F32";
 
-		public static string ConfigContainerGetConfigData = "4DD64FD1D45E514D01C925D07B69B3BE";
-		public static string ConfigContainerSetWorldName = "493E0E7BC7A617699C44A9A5FB8FF679";
+		public static string MainGameInstanceField = "392503BDB6F8C1E34A232489E2A0C6D4";
+		public static string MainGameConfigContainerField = "4895ADD02F2C27ED00C63E7E506EE808";
+		public static string MainGameIsLoadedField = "76E577DA6C1683D13B1C0BE5D704C241";
+		public static string MainGameLoadingCompleteActionField = "0CAB22C866086930782A91BA5F21A936";
+		public static string MainGameMyLogField = "1976E5D4FE6E8C1BD369273DEE0025AC";
+
+		/////////////////////////////////////////////////////////////////////////////
+
+		public static string ServerCoreNamespace = "168638249D29224100DB50BB468E7C07";
+		public static string ServerCoreClass = "7BAD4AFD06B91BCD63EA57F7C0D4F408";
+
+		public static string ServerCoreNullRenderField = "53A34747D8E8EDA65E601C194BECE141";
+
+		/////////////////////////////////////////////////////////////////////////////
+
+		public static string GameConstantsNamespace = "00DD5482C0A3DF0D94B151167E77A6D9";
+		public static string GameConstantsClass = "5FBC15A83966C3D53201318E6F912741";
+
+		/////////////////////////////////////////////////////////////////////////////
+
+		public static string ConfigContainerNamespace = "00DD5482C0A3DF0D94B151167E77A6D9";
+		public static string ConfigContainerClass = "EB0B0448CDB2C619C686429C597589BC";
+
+		public static string ConfigContainerGetConfigDataMethod = "4DD64FD1D45E514D01C925D07B69B3BE";
+
 		public static string ConfigContainerDedicatedDataField = "44A1510B70FC1BBE3664969D47820439";
+
+		/////////////////////////////////////////////////////////////////////////////
 
 		public static string CubeBlockObjectFactoryNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string CubeBlockObjectFactoryClass = "8E009F375CE3CE0A06E67CA053084252";
+
 		public static string CubeBlockObjectFactoryGetBuilderFromEntityMethod = "967C934A80A75642EADF86455E924134";
+
+		/////////////////////////////////////////////////////////////////////////////
 
 		public static string EntityBaseObjectFactoryNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string EntityBaseObjectFactoryClass = "E825333D6467D99DD83FB850C600395C";
+
 		public static string EntityBaseObjectFactoryGetBuilderFromEntityMethod = "85DD00A89AFE64DF0A1B3FD4A5139A04";
 
 		#endregion
@@ -86,17 +92,6 @@ namespace SEModAPIInternal.API.Common
 			m_isInSafeMode = false;
 
 			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
-
-			m_mainGameType = m_assembly.GetType(MainGameNamespace + "." + MainGameClass);
-			m_serverCoreType = m_assembly.GetType(ServerCoreClass);
-
-			m_mainGameInstanceField = m_mainGameType.GetField(MainGameInstanceField, BindingFlags.Static | BindingFlags.Public);
-			m_configContainerField = m_mainGameType.GetField(MainGameConfigContainerField, BindingFlags.Static | BindingFlags.Public);
-			m_configContainerType = m_configContainerField.FieldType;
-			m_serverCoreNullRender = m_serverCoreType.GetField(ServerCoreNullRenderField, BindingFlags.Public | BindingFlags.Static);
-
-			m_configContainerDedicatedDataField = m_configContainerType.GetField(ConfigContainerDedicatedDataField, BindingFlags.NonPublic | BindingFlags.Instance);
-			m_setConfigWorldName = m_configContainerType.GetMethod(ConfigContainerSetWorldName, BindingFlags.Public | BindingFlags.Instance);
 
 			m_lastProfilingOutput = DateTime.Now;
 			m_countQueuedActions = 0;
@@ -164,12 +159,43 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public Type MainGameType
+		public static Type MainGameType
 		{
-			get { return m_mainGameType; }
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(MainGameNamespace, MainGameClass);
+				return type;
+			}
 		}
 
-		public Type CubeBlockObjectFactoryType
+		public static Type ServerCoreType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ServerCoreNamespace, ServerCoreClass);
+				return type;
+			}
+		}
+
+		public static Type GameConstantsType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(GameConstantsNamespace, GameConstantsClass);
+				return type;
+			}
+		}
+
+		public static Type ConfigContainerType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ConfigContainerNamespace, ConfigContainerClass);
+				return type;
+			}
+		}
+
+		public static Type CubeBlockObjectFactoryType
 		{
 			get
 			{
@@ -178,7 +204,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public Type EntityBaseObjectFactoryType
+		public static Type EntityBaseObjectFactoryType
 		{
 			get
 			{
@@ -187,9 +213,23 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public Assembly GameAssembly
+		public static Object MainGame
 		{
-			get { return m_assembly; }
+			get
+			{
+				try
+				{
+					FieldInfo field = BaseObject.GetStaticField(MainGameType, MainGameInstanceField);
+					Object mainGame = field.GetValue(null);
+
+					return mainGame;
+				}
+				catch (Exception ex)
+				{
+					LogManager.ErrorLog.WriteLine(ex);
+					return null;
+				}
+			}
 		}
 
 		public bool IsGameStarted
@@ -198,14 +238,13 @@ namespace SEModAPIInternal.API.Common
 			{
 				try
 				{
-					var mainGame = GetMainGameInstance();
-					if (mainGame == null)
+					if (MainGame == null)
 						return false;
 
 					if (!m_isGameLoaded)
 					{
 						FieldInfo gameLoadedField = MainGameType.BaseType.GetField(MainGameIsLoadedField, BindingFlags.NonPublic | BindingFlags.Instance);
-						bool someValue = (bool)gameLoadedField.GetValue(mainGame);
+						bool someValue = (bool)gameLoadedField.GetValue(MainGame);
 						if (someValue)
 						{
 							m_isGameLoaded = true;
@@ -230,17 +269,13 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Methods"
 
-		#region "Actions"
-
-		public void MainGameEvent1()
+		private void EntitiesLoadedEvent()
 		{
 			try
 			{
-				Console.WriteLine("MainGameEvent - Entity loading complete");
+				LogManager.APILog.WriteLineAndConsole("MainGameEvent - Entity loading complete");
 
-				FieldInfo actionField = m_mainGameType.GetField(MainGameAction1, BindingFlags.NonPublic | BindingFlags.Static);
-				Action newAction = MainGameEvent1;
-				actionField.SetValue(null, newAction);
+				//TODO - Do stuff
 			}
 			catch (Exception ex)
 			{
@@ -248,53 +283,61 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public void MainGameEvent2(bool param0)
+		private Object GetServerConfigContainer()
 		{
 			try
 			{
-				Console.WriteLine("MainGameEvent - '2' - " + param0.ToString());
+				FieldInfo field = BaseObject.GetEntityField(MainGame, MainGameConfigContainerField);
+				Object configObject = field.GetValue(null);
 
-				FieldInfo actionField = m_mainGameType.GetField(MainGameAction2, BindingFlags.NonPublic | BindingFlags.Instance);
-				Action<bool> newAction = MainGameEvent2;
-				actionField.SetValue(GetMainGameInstance(), newAction);
+				return configObject;
 			}
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
+				return null;
 			}
 		}
 
-		public void MainGameEvent3()
+		public static bool ReflectionUnitTest()
 		{
 			try
 			{
-				Console.WriteLine("MainGameEvent - Game loaded!");
+				Type type = MainGameType;
+				if (type == null)
+					throw new Exception("Could not find internal type for MainGame");
+				bool result = true;
+				result &= BaseObject.HasMethod(type, MainGameEnqueueActionMethod);
+				result &= BaseObject.HasMethod(type, MainGameGetTimeMillisMethod);
+				result &= BaseObject.HasField(type, MainGameInstanceField);
+				result &= BaseObject.HasField(type, MainGameConfigContainerField);
+				result &= BaseObject.HasField(type, MainGameIsLoadedField);
+				result &= BaseObject.HasField(type, MainGameLoadingCompleteActionField);
+				result &= BaseObject.HasField(type, MainGameMyLogField);
 
-				m_isGameLoaded = true;
+				Type type2 = ServerCoreType;
+				if (type2 == null)
+					throw new Exception("Could not find physics manager type for ServerCore");
+				result &= BaseObject.HasField(type2, ServerCoreNullRenderField);
+
+				Type type3 = GameConstantsType;
+				if (type3 == null)
+					throw new Exception("Could not find physics manager type for GameConstants");
+
+				Type type4 = ConfigContainerType;
+				if (type4 == null)
+					throw new Exception("Could not find physics manager type for ConfigContainer");
+				result &= BaseObject.HasMethod(type4, ConfigContainerGetConfigDataMethod);
+				result &= BaseObject.HasField(type4, ConfigContainerDedicatedDataField);
+
+				return result;
 			}
 			catch (Exception ex)
 			{
-				LogManager.ErrorLog.WriteLine(ex);
+				Console.WriteLine(ex);
+				return false;
 			}
 		}
-
-		public void MainGameEvent4()
-		{
-			try
-			{
-				Console.WriteLine("MainGameEvent - 'Ctrl+C' pressed");
-
-				FieldInfo actionField = m_mainGameType.GetField(MainGameAction4, BindingFlags.NonPublic | BindingFlags.Static);
-				Action newAction = MainGameEvent4;
-				actionField.SetValue(null, newAction);
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-			}
-		}
-
-		#endregion
 
 		public MyObjectBuilder_CubeBlock GetCubeBlockObjectBuilderFromEntity(Object entity)
 		{
@@ -332,8 +375,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				MethodInfo enqueue = m_mainGameType.GetMethod(MainGameEnqueueActionMethod);
-				enqueue.Invoke(GetMainGameInstance(), new object[] { action });
+				BaseObject.InvokeEntityMethod(MainGame, MainGameEnqueueActionMethod, new object[] { action });
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
@@ -360,51 +402,20 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public Object GetServerConfigContainer()
-		{
-			try
-			{
-				Object configObject = m_configContainerField.GetValue(null);
-
-				return configObject;
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-				return null;
-			}
-		}
-
 		public MyConfigDedicatedData GetServerConfig()
 		{
 			try
 			{
 				Object configContainer = GetServerConfigContainer();
-				MyConfigDedicatedData config = (MyConfigDedicatedData)m_configContainerDedicatedDataField.GetValue(configContainer);
+				FieldInfo field = BaseObject.GetEntityField(configContainer, ConfigContainerDedicatedDataField);
+				MyConfigDedicatedData config = (MyConfigDedicatedData)field.GetValue(configContainer);
 				if (config == null)
 				{
-					MethodInfo loadConfigDataMethod = m_configContainerField.FieldType.GetMethod(ConfigContainerGetConfigData, BindingFlags.Public | BindingFlags.Instance);
-					loadConfigDataMethod.Invoke(configContainer, new object[] { });
-					config = (MyConfigDedicatedData)m_configContainerDedicatedDataField.GetValue(configContainer);
+					BaseObject.InvokeEntityMethod(configContainer, ConfigContainerGetConfigDataMethod);
+					config = (MyConfigDedicatedData)field.GetValue(configContainer);
 				}
 
 				return config;
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-				return null;
-			}
-		}
-
-		public Object GetMainGameInstance()
-		{
-			try
-			{
-				FieldInfo mainGameInstanceField = m_mainGameType.GetField(MainGameInstanceField, BindingFlags.Static | BindingFlags.Public);
-				Object mainGame = mainGameInstanceField.GetValue(null);
-
-				return mainGame;
 			}
 			catch (Exception ex)
 			{
@@ -417,22 +428,8 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				m_serverCoreNullRender.SetValue(null, nullRender);
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-				return;
-			}
-		}
-
-		public void SetConfigWorld(string worldName)
-		{
-			try
-			{
-				MyConfigDedicatedData config = GetServerConfig();
-
-				m_setConfigWorldName.Invoke(GetServerConfigContainer(), new object[] { worldName });
+				FieldInfo field = BaseObject.GetStaticField(ServerCoreType, ServerCoreNullRenderField);
+				field.SetValue(null, nullRender);
 			}
 			catch (Exception ex)
 			{
@@ -445,7 +442,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				Type type = GameAssembly.GetType(namespaceName + "." + className);
+				Type type = m_assembly.GetType(namespaceName + "." + className);
 
 				return type;
 			}
@@ -487,12 +484,23 @@ namespace SEModAPIInternal.API.Common
 			return userDataPath;
 		}
 
-		public void InitMyFileSystem(string instanceName = "")
+		public void InitMyFileSystem(string instanceName = "", bool reset = true)
 		{
 			string contentPath = Path.Combine(new FileInfo(MyFileSystem.ExePath).Directory.FullName, "Content");
 			string userDataPath = SandboxGameAssemblyWrapper.Instance.GetUserDataPath(instanceName);
 
-			MyFileSystem.Reset();
+			if (reset)
+			{
+				MyFileSystem.Reset();
+			}
+			else
+			{
+				if (!string.IsNullOrWhiteSpace(MyFileSystem.ContentPath))
+					return;
+				if (!string.IsNullOrWhiteSpace(MyFileSystem.UserDataPath))
+					return;
+			}
+
 			MyFileSystem.Init(contentPath, userDataPath);
 			MyFileSystem.InitUserSpecific((string)null);
 
@@ -522,23 +530,6 @@ namespace SEModAPIInternal.API.Common
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.ToString());
-			}
-
-			return result;
-		}
-
-		public bool IsUserAdmin(ulong remoteUserId)
-		{
-			bool result = false;
-
-			List<ulong> adminUsers = GetServerConfig().Administrators;
-			foreach (ulong userId in adminUsers)
-			{
-				if (remoteUserId == userId)
-				{
-					result = true;
-					break;
-				}
 			}
 
 			return result;

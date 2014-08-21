@@ -40,7 +40,7 @@ namespace SEModAPI.API.Definitions.CubeBlocks
 		/// Method to get the casted instance from parent signature
 		/// </summary>
 		/// <returns>The casted instance into the class type</returns>
-		public virtual MyObjectBuilder_GravityGeneratorDefinition GetSubTypeDefinition()
+		new public MyObjectBuilder_GravityGeneratorDefinition GetSubTypeDefinition()
 		{
 			return (MyObjectBuilder_GravityGeneratorDefinition)m_baseDefinition;
 		}

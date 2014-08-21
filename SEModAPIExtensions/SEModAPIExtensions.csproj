@@ -47,6 +47,7 @@
     <Compile Include="API\IPC\UserNameValidator.cs" />
     <Compile Include="API\MultiblockStructure.cs" />
     <Compile Include="API\Plugin\Events\IBaseEntityHandler.cs" />
+    <Compile Include="API\Plugin\Events\ICharacterEventHandler.cs" />
     <Compile Include="API\Plugin\Events\IChatEventHandler.cs" />
     <Compile Include="API\Plugin\Events\ICubeBlockEventHandler.cs" />
     <Compile Include="API\Plugin\Events\ICubeGridHandler.cs" />

@@ -13,6 +13,7 @@ using SEModAPIInternal.Support;
 
 using VRage.Serialization;
 using VRage.Collections;
+using SteamSDK;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -142,6 +143,34 @@ namespace SEModAPIInternal.API.Common
 			return playerName;
 		}
 
+		public ulong GetSteamIdFromPlayerName(string playerName)
+		{
+			ulong steamId = 0;
+
+			foreach (var entry in InternalGetPlayerItemMappping().Keys)
+			{
+				MyObjectBuilder_Checkpoint.PlayerItem playerItem = PlayerMap.Instance.GetPlayerItemFromPlayerId(entry);
+				if (!playerItem.Name.Equals(playerName))
+					continue;
+
+				steamId = playerItem.SteamId;
+			}
+
+			if (steamId == 0)
+			{
+				try
+				{
+					steamId = ulong.Parse(playerName);
+				}
+				catch (Exception ex)
+				{
+					LogManager.ErrorLog.WriteLine(ex);
+				}
+			}
+
+			return steamId;
+		}
+
 		public long GetPlayerEntityId(ulong steamId)
 		{
 			SerializableDictionary<long, ulong> map = InternalGetSerializableDictionary();
@@ -220,6 +249,11 @@ namespace SEModAPIInternal.API.Common
 			}
 
 			return matchingPlayerIds;
+		}
+
+		public List<long> GetPlayerIds()
+		{
+			return new List<long>(InternalGetPlayerItemMappping().Keys);
 		}
 
 		protected Object GetPlayerFromSteamId(ulong steamId)
@@ -433,6 +467,38 @@ namespace SEModAPIInternal.API.Common
 			Object playerMap = playerMapField.GetValue(BackingObject);
 
 			return playerMap;
+		}
+
+		public void KickPlayer(ulong steamId)
+		{
+			ServerNetworkManager.Instance.KickPlayer(steamId);
+		}
+
+		public void BanPlayer(ulong steamId)
+		{
+			ServerNetworkManager.Instance.SetPlayerBan(steamId, true);
+		}
+
+		public void UnBanPlayer(ulong steamId)
+		{
+			ServerNetworkManager.Instance.SetPlayerBan(steamId, false);
+		}
+
+		public bool IsUserAdmin(ulong remoteUserId)
+		{
+			bool result = false;
+
+			List<ulong> adminUsers = SandboxGameAssemblyWrapper.Instance.GetServerConfig().Administrators;
+			foreach (ulong userId in adminUsers)
+			{
+				if (remoteUserId == userId)
+				{
+					result = true;
+					break;
+				}
+			}
+
+			return result;
 		}
 
 		#endregion

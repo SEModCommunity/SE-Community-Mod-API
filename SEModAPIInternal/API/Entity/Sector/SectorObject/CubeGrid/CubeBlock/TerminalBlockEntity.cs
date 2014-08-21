@@ -108,7 +108,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Methods"
 
-		public static bool ReflectionUnitTest()
+		new public static bool ReflectionUnitTest()
 		{
 			try
 			{

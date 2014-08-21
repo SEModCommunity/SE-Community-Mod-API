@@ -157,7 +157,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		public static bool ReflectionUnitTest()
+		new public static bool ReflectionUnitTest()
 		{
 			try
 			{
@@ -557,7 +557,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		public static bool ReflectionUnitTest()
+		new public static bool ReflectionUnitTest()
 		{
 			try
 			{
@@ -681,36 +681,39 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_rawDataObjectBuilderListResourceLock.Owned)
-					return;
-				if (WorldManager.Instance.IsWorldSaving)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock() == null)
-					return;
-				if (WorldManager.Instance.InternalGetResourceLock().Owned)
+				if (!CanRefresh)
 					return;
 
+				m_rawDataListResourceLock.AcquireShared();
 				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
 
 				m_rawDataObjectBuilderList.Clear();
 				foreach (Object entity in GetBackingDataList())
 				{
-					if (!IsValidEntity(entity))
-						continue;
+					try
+					{
+						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
+						if (baseEntity == null)
+							continue;
 
-					MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
-					if (baseEntity == null)
-						continue;
-
-					m_rawDataObjectBuilderList.Add(entity, baseEntity);
+						m_rawDataObjectBuilderList.Add(entity, baseEntity);
+					}
+					catch (Exception ex)
+					{
+						LogManager.ErrorLog.WriteLine(ex);
+					}
 				}
 
+				m_rawDataListResourceLock.ReleaseShared();
 				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
+				if (m_rawDataListResourceLock.Owned)
+					m_rawDataListResourceLock.ReleaseShared();
+				if(m_rawDataObjectBuilderListResourceLock.Owned)
+					m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
 			}
 		}
 
@@ -726,7 +729,6 @@ namespace SEModAPIInternal.API.Entity
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
 						LogManager.APILog.WriteLine("InventoryItemManager - Mismatch between raw entities and object builders");
-					m_resourceLock.ReleaseExclusive();
 					return;
 				}
 
@@ -751,6 +753,8 @@ namespace SEModAPIInternal.API.Entity
 						if (GetInternalData().ContainsKey(itemId))
 						{
 							InventoryItemEntity matchingItem = (InventoryItemEntity)GetEntry(itemId);
+							if (matchingItem == null || matchingItem.IsDisposed)
+								continue;
 
 							//Update the base entity (not the same as BackingObject which is the internal object)
 							matchingItem.ObjectBuilder = baseEntity;

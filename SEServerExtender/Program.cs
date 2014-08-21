@@ -54,8 +54,6 @@ namespace SEServerExtender
 					string argName = arg.Split('=')[0];
 					string argValue = arg.Split('=')[1];
 
-					Console.WriteLine("Name-Value Arg: name='" + argName + "' value='" + argValue + "'");
-
 					if (argName.ToLower().Equals("instance"))
 					{
 						if (argValue[argValue.Length - 1] == '"')
@@ -157,15 +155,16 @@ namespace SEServerExtender
 				m_server.IsWCFEnabled = !extenderArgs.noWCF;
 				m_server.WCFPort = extenderArgs.wcfPort;
 				m_server.Init();
-				if (extenderArgs.autoStart)
-				{
-					m_server.StartServer();
-				}
 
 				ChatManager.ChatCommand guiCommand = new ChatManager.ChatCommand();
 				guiCommand.command = "gui";
 				guiCommand.callback = ChatCommand_GUI;
 				ChatManager.Instance.RegisterChatCommand(guiCommand);
+
+				if (extenderArgs.autoStart)
+				{
+					m_server.StartServer();
+				}
 
 				if (!extenderArgs.noGUI)
 				{

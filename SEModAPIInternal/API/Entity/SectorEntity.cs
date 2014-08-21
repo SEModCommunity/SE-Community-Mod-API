@@ -442,9 +442,6 @@ namespace SEModAPIInternal.API.Entity
 				{
 					try
 					{
-						if (!IsValidEntity(entity))
-							continue;
-
 						//TODO - Find a faster way to get updated data. This call takes ~0.15ms per entity which adds up quickly
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
 						if (baseEntity == null)

@@ -38,25 +38,35 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Properties"
 
 		[IgnoreDataMember]
+		[Category("Medical Room")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_MedicalRoom ObjectBuilder
+		{
+			get
+			{
+				MyObjectBuilder_MedicalRoom block = (MyObjectBuilder_MedicalRoom)base.ObjectBuilder;
+
+
+				return block;
+			}
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
+		[IgnoreDataMember]
 		[Obsolete]
 		[Category("Medical Room")]
 		public ulong SteamUserId
 		{
-			get { return GetSubTypeEntity().SteamUserId; }
+			get { return ObjectBuilder.SteamUserId; }
 		}
 
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_MedicalRoom GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_MedicalRoom)ObjectBuilder;
-		}
 
 		#endregion
 	}

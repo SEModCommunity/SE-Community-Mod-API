@@ -49,13 +49,11 @@ namespace SEModAPIExtensions.API.IPC
 			}
 			List<CubeBlockEntity> cubeBlocks = new List<CubeBlockEntity>();
 			List<CubeGridEntity> cubeGrids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-			bool foundMatch = false;
 			foreach (CubeGridEntity cubeGrid in cubeGrids)
 			{
 				if (cubeGrid.EntityId == entityId)
 				{
 					cubeBlocks = cubeGrid.CubeBlocks;
-					foundMatch = true;
 					break;
 				}
 			}
@@ -187,7 +185,7 @@ namespace SEModAPIExtensions.API.IPC
 
 							property.SetValue(baseEntity, newValue, new object[] { });
 						}
-						catch (Exception ex)
+						catch (Exception)
 						{
 							//Do nothing
 						}
@@ -244,7 +242,7 @@ namespace SEModAPIExtensions.API.IPC
 
 								property.SetValue(baseBlock, newValue, new object[] { });
 							}
-							catch (Exception ex)
+							catch (Exception)
 							{
 								//Do nothing
 							}

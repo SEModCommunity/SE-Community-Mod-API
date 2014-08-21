@@ -37,18 +37,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Properties"
+
 		#endregion
 
 		#region "Methods"
-
-		/// <summary>
-		/// Method to get the casted instance from parent signature
-		/// </summary>
-		/// <returns>The casted instance into the class type</returns>
-		new internal MyObjectBuilder_LandingGear GetSubTypeEntity()
-		{
-			return (MyObjectBuilder_LandingGear)ObjectBuilder;
-		}
 
 		#endregion
 	}
