@@ -681,7 +681,7 @@ namespace SEModAPI.API.Definitions
 		/// <summary>
 		/// Get or set the list of administrators of the server
 		/// </summary>
-		public List<ulong> Administrators
+		public List<string> Administrators
 		{
 			get { return m_definition.Administrators; }
 			set

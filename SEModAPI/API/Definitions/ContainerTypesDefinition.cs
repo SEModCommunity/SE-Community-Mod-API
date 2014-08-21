@@ -139,7 +139,7 @@ namespace SEModAPI.API.Definitions
             }
         }
 
-        public decimal AmountMin
+        public string AmountMin
         {
             get { return m_baseDefinition.AmountMin; }
             set
@@ -150,7 +150,7 @@ namespace SEModAPI.API.Definitions
             }
         }
 
-        public decimal AmountMax
+		public string AmountMax
         {
             get { return m_baseDefinition.AmountMax; }
             set

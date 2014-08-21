@@ -1587,8 +1587,8 @@ namespace SEConfigTool
 			ContainerTypeItem containerItem = containerType.Items[index];
 
 			containerItem.Id = (SerializableDefinitionId)CMB_ContainerTypeConfig_Items_Type.SelectedItem;
-			containerItem.AmountMin = Convert.ToInt32(TXT_ContainerTypeConfig_Item_AmountMin.Text, m_numberFormatInfo);
-			containerItem.AmountMax = Convert.ToInt32(TXT_ContainerTypeConfig_Item_AmountMax.Text, m_numberFormatInfo);
+			containerItem.AmountMin = TXT_ContainerTypeConfig_Item_AmountMin.Text;
+			containerItem.AmountMax = TXT_ContainerTypeConfig_Item_AmountMax.Text;
 			containerItem.Frequency = Convert.ToSingle(TXT_ContainerTypeConfig_Item_Frequency.Text, m_numberFormatInfo);
 
 			BTN_ContainerTypeConfig_Items_Apply.Enabled = false;
@@ -1630,8 +1630,8 @@ namespace SEConfigTool
 
 			//Set some default values for the new entry
 			containerItem.Id = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_Ore)), "Stone");
-			containerItem.AmountMin = 1;
-			containerItem.AmountMax = 1;
+			containerItem.AmountMin = "1";
+			containerItem.AmountMax = "1";
 
 			LST_ContainerTypeConfig_Details_Items.Items.Clear();
 			foreach (var def in containerType.Items)
@@ -1916,7 +1916,7 @@ namespace SEConfigTool
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfig.SelectedIndex);
 			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex];
 
-			TXT_SpawnGroupConfig_Details_Prefabs_File.Text = spawnGroupPrefab.File;
+			TXT_SpawnGroupConfig_Details_Prefabs_File.Text = spawnGroupPrefab.SubtypeId;
 			TXT_SpawnGroupConfig_Details_Prefabs_Position.Text = spawnGroupPrefab.Position.ToString();
 			TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text = spawnGroupPrefab.BeaconText;
 			TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text = spawnGroupPrefab.Speed.ToString(m_numberFormatInfo);
@@ -1931,7 +1931,7 @@ namespace SEConfigTool
 			SpawnGroupDefinition spawnGroup = m_spawnGroupsDefinitionsManager.DefinitionOf(LST_SpawnGroupConfig.SelectedIndex);
 			SpawnGroupPrefab spawnGroupPrefab = spawnGroup.Prefabs[LST_SpawnGroupConfig_Details_Prefabs.SelectedIndex];
 
-			spawnGroupPrefab.File = TXT_SpawnGroupConfig_Details_Prefabs_File.Text;
+			spawnGroupPrefab.SubtypeId = TXT_SpawnGroupConfig_Details_Prefabs_File.Text;
 			spawnGroupPrefab.BeaconText = TXT_SpawnGroupConfig_Details_Prefabs_BeaconText.Text;
 			spawnGroupPrefab.Speed = Convert.ToSingle(TXT_SpawnGroupConfig_Details_Prefabs_Speed.Text, m_numberFormatInfo);
 
@@ -2298,7 +2298,7 @@ namespace SEConfigTool
 			SerializableDefinitionId selectedItem = (SerializableDefinitionId)CMB_BlueprintConfig_Details_Result_TypeId.SelectedValue;
 			blueprint.Result.TypeId = selectedItem.TypeId.ToString();
 			blueprint.Result.SubTypeId = selectedItem.SubtypeName;
-			blueprint.Result.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Result_Amount.Text, m_numberFormatInfo);
+			blueprint.Result.Amount = TXT_BlueprintConfig_Details_Result_Amount.Text;
 			blueprint.BaseProductionTimeInSeconds = Convert.ToSingle(TXT_BlueprintConfig_Details_Result_BaseProductionTime.Text, m_numberFormatInfo);
 
 			BTN_BlueprintConfig_Details_Result_Apply.Enabled = false;
@@ -2329,9 +2329,9 @@ namespace SEConfigTool
 			temp.Prerequisites[0] = new MyObjectBuilder_BlueprintDefinition.Item();
 			temp.Prerequisites[0].TypeId = selectedItem.TypeId.ToString();
 			temp.Prerequisites[0].SubtypeId = selectedItem.SubtypeName;
-			temp.Prerequisites[0].Amount = 1;
+			temp.Prerequisites[0].Amount = "1";
 			temp.Result = new MyObjectBuilder_BlueprintDefinition.Item();
-			temp.Result.Amount = 1;
+			temp.Result.Amount = "1";
 			temp.Result.TypeId = selectedItem.TypeId.ToString();
 			temp.Result.SubtypeId = selectedItem.SubtypeName;
 			BlueprintsDefinition blueprint = m_blueprintsDefinitionsManager.NewEntry(temp);
@@ -2401,7 +2401,7 @@ namespace SEConfigTool
 			SerializableDefinitionId selectedItem = (SerializableDefinitionId)CMB_BlueprintConfig_Details_Prerequisites_TypeId.SelectedItem;
 			prereq.TypeId = selectedItem.TypeId.ToString();
 			prereq.SubTypeId = selectedItem.SubtypeName;
-			prereq.Amount = Convert.ToDecimal(TXT_BlueprintConfig_Details_Prerequisites_Amount.Text, m_numberFormatInfo);
+			prereq.Amount = TXT_BlueprintConfig_Details_Prerequisites_Amount.Text;
 
 			BTN_BlueprintConfig_Details_Prerequisites_Apply.Enabled = false;
 

@@ -1255,39 +1255,6 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "LoadContent"
 
-		public void Load(FileInfo sourceFile)
-		{
-			m_fileInfo = sourceFile;
-
-			//Get the definitions content from the file
-			MyObjectBuilder_Definitions definitionsContainer = LoadContentFile<MyObjectBuilder_Definitions, MyObjectBuilder_DefinitionsSerializer>(m_fileInfo);
-
-			if (m_definitionsContainerField == null)
-				throw new SEConfigurationException(SEConfigurationExceptionState.InvalidConfigurationFile, "Failed to find matching definitions field in the specified file.");
-
-			//Get the data from the definitions container
-			MyObjectBuilder_Base[] baseDefinitions = (MyObjectBuilder_Base[])m_definitionsContainerField.GetValue(definitionsContainer);
-
-			Load(baseDefinitions);
-		}
-
-		[Obsolete]
-		public void Load(MyObjectBuilder_Base[] source)
-		{
-			//Copy the data into the manager
-			GetInternalData().Clear();
-			foreach (var definition in source)
-			{
-				NewEntry<BaseObject>(definition);
-			}
-		}
-
-		[Obsolete]
-		public void Load(List<MyObjectBuilder_Base> source)
-		{
-			Load(source.ToArray());
-		}
-
 		public void Load<T>(T[] source) where T : BaseObject
 		{
 			//Copy the data into the manager

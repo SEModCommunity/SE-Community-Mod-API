@@ -116,12 +116,11 @@ namespace SEModAPI.API.Definitions
 
 		#region "Properties"
 
-		public decimal Amount
+		public string Amount
 		{
 			get { return m_baseDefinition.Amount; }
 			set
 			{
-				if (value < 0) throw new ArgumentOutOfRangeException();
 				if (m_baseDefinition.Amount == value) return;
 				m_baseDefinition.Amount = value;
 				Changed = true;

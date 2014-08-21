@@ -488,10 +488,10 @@ namespace SEModAPIInternal.API.Common
 		{
 			bool result = false;
 
-			List<ulong> adminUsers = SandboxGameAssemblyWrapper.Instance.GetServerConfig().Administrators;
-			foreach (ulong userId in adminUsers)
+			List<string> adminUsers = SandboxGameAssemblyWrapper.Instance.GetServerConfig().Administrators;
+			foreach (string userId in adminUsers)
 			{
-				if (remoteUserId == userId)
+				if (remoteUserId.ToString().Equals(userId))
 				{
 					result = true;
 					break;

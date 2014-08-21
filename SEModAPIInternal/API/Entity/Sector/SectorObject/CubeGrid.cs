@@ -37,8 +37,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		private CubeBlockManager m_cubeBlockManager;
 		private CubeGridNetworkManager m_networkManager;
-		private PowerManager m_powerManager;
-		private CubeGridThrusterManager m_thrusterManager;
+		private CubeGridManagerManager m_managerManager;
 
 		private static Type m_internalType;
 		private string m_name;
@@ -51,10 +50,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CubeGridClass = "98262C3F38A1199E47F2B9338045794C";
 
 		public static string CubeGridGetCubeBlocksHashSetMethod = "E38F3E9D7A76CD246B99F6AE91CC3E4A";
-		public static string CubeGridGetPowerManagerMethod = "D92A57E3478304C8F8F780A554C6D6C4";
-		public static string CubeGridGetThrusterManagerMethod = "0D142C5CB93281BA2431FB266E8E3CA8";
 		public static string CubeGridAddCubeBlockMethod = "2B757AF5C8F1CC2EC5F738B54EFBDF23";
 		public static string CubeGridRemoveCubeBlockMethod = "5980C21045AAAAEC22416165FF409455";
+		public static string CubeGridGetManagerManagerMethod = "D17C9BE5AC3B00727F465C2305BA92CE";
 
 		public static string CubeGridBlockGroupsField = "24E0633A3442A1F605F37D69F241C970";
 
@@ -121,11 +119,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			m_cubeBlockManager.Refresh();
 
 			m_networkManager = new CubeGridNetworkManager(this);
-
-			Object powerManager = InvokeEntityMethod(BackingObject, CubeGridGetPowerManagerMethod);
-			m_powerManager = new PowerManager(powerManager);
-
-			m_thrusterManager = new CubeGridThrusterManager(GetThrusterManager(), this);
+			m_managerManager = new CubeGridManagerManager(this, GetManagerManager());
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridCreated;
@@ -147,7 +141,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Cube Grid")]
 		[Browsable(false)]
 		[ReadOnly(true)]
-		internal static Type InternalType
+		new internal static Type InternalType
 		{
 			get
 			{
@@ -376,7 +370,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[ReadOnly(true)]
 		public PowerManager PowerManager
 		{
-			get { return m_powerManager; }
+			get { return m_managerManager.PowerManager; }
 			private set
 			{
 				//Do nothing!
@@ -389,7 +383,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[ReadOnly(true)]
 		public CubeGridThrusterManager ThrusterManager
 		{
-			get { return m_thrusterManager; }
+			get { return m_managerManager.ThrusterManager; }
 			private set
 			{
 				//Do nothing!
@@ -476,7 +470,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(ObjectBuilder, fileInfo);
 		}
 
-		public static bool ReflectionUnitTest()
+		new public static bool ReflectionUnitTest()
 		{
 			try
 			{
@@ -485,10 +479,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 					throw new Exception("Could not find internal type for CubeGridEntity");
 				bool result = true;
 				result &= HasMethod(type, CubeGridGetCubeBlocksHashSetMethod);
-				result &= HasMethod(type, CubeGridGetPowerManagerMethod);
-				result &= HasMethod(type, CubeGridGetThrusterManagerMethod);
 				result &= HasMethod(type, CubeGridAddCubeBlockMethod);
 				result &= HasMethod(type, CubeGridRemoveCubeBlockMethod);
+				result &= HasMethod(type, CubeGridGetManagerManagerMethod);
 				result &= HasField(type, CubeGridBlockGroupsField);
 
 				return result;
@@ -546,10 +539,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Internal"
 
-		private Object GetThrusterManager()
+		protected Object GetManagerManager()
 		{
-			Object result = InvokeEntityMethod(BackingObject, CubeGridGetThrusterManagerMethod);
-
+			Object result = InvokeEntityMethod(BackingObject, CubeGridGetManagerManagerMethod);
 			return result;
 		}
 
@@ -606,6 +598,102 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		}
 
 		#endregion
+
+		#endregion
+	}
+
+	public class CubeGridManagerManager
+	{
+		#region "Attributes"
+
+		private CubeGridEntity m_parent;
+		private Object m_backingObject;
+
+		private PowerManager m_powerManager;
+		private CubeGridThrusterManager m_thrusterManager;
+
+		public static string CubeGridManagerManagerNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
+		public static string CubeGridManagerManagerClass = "0A0120EAD12D237F859BDAB2D84DA72B";
+
+		public static string CubeGridManagerManagerGetPowerManagerMethod = "F05ACB25E5255DA110249186EE895C73";
+		public static string CubeGridManagerManagerGetThrusterManagerMethod = "0EF76C91FA04B0B200A3F3AC155F089D";
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public CubeGridManagerManager(CubeGridEntity parent, Object backingObject)
+		{
+			m_parent = parent;
+			m_backingObject = backingObject;
+
+			m_powerManager = new PowerManager(GetPowerManager());
+			m_thrusterManager = new CubeGridThrusterManager(GetThrusterManager(), m_parent);
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		public static Type InternalType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CubeGridManagerManagerNamespace, CubeGridManagerManagerClass);
+				return type;
+			}
+		}
+
+		public Object BackingObject
+		{
+			get { return m_backingObject; }
+		}
+
+		public PowerManager PowerManager
+		{
+			get { return m_powerManager; }
+		}
+
+		public CubeGridThrusterManager ThrusterManager
+		{
+			get { return m_thrusterManager; }
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		new public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for CubeGridManagerManager");
+				bool result = true;
+				result &= BaseObject.HasMethod(type, CubeGridManagerManagerGetPowerManagerMethod);
+				result &= BaseObject.HasMethod(type, CubeGridManagerManagerGetThrusterManagerMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
+
+		private Object GetPowerManager()
+		{
+			Object manager = BaseObject.InvokeEntityMethod(BackingObject, CubeGridManagerManagerGetPowerManagerMethod);
+			return manager;
+		}
+
+		private Object GetThrusterManager()
+		{
+			Object manager = BaseObject.InvokeEntityMethod(BackingObject, CubeGridManagerManagerGetPowerManagerMethod);
+			return manager;
+		}
 
 		#endregion
 	}

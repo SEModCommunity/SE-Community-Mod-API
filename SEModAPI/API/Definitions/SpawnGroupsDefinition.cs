@@ -120,13 +120,13 @@ namespace SEModAPI.API.Definitions
 
         #region "Properties"
 
-        public string File
+		public string SubtypeId
         {
-            get { return m_baseDefinition.File; }
+            get { return m_baseDefinition.SubtypeId; }
             set
             {
-                if (m_baseDefinition.File == value) return;
-                m_baseDefinition.File = value;
+				if (m_baseDefinition.SubtypeId == value) return;
+				m_baseDefinition.SubtypeId = value;
                 Changed = true;
             }
         }

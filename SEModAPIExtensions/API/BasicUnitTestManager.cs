@@ -170,6 +170,12 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("CubeGridEntity reflection validation failed!");
 			}
 
+			if (!CubeGridManagerManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("CubeGridManagerManager reflection validation failed!");
+			}
+
 			if (!CubeGridNetworkManager.ReflectionUnitTest())
 			{
 				result = false;

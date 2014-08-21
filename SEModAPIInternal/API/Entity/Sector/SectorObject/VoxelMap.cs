@@ -44,7 +44,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[Category("Voxel Map")]
 		[Browsable(false)]
 		[ReadOnly(true)]
-		internal static Type InternalType
+		new internal static Type InternalType
 		{
 			get
 			{

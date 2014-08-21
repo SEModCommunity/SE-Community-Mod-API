@@ -109,7 +109,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				float fuelMass = 0;
 				foreach (var item in ObjectBuilder.Inventory.Items)
 				{
-					fuelMass += item.Amount;
+					fuelMass += (float)item.Amount;
 				}
 				return fuelMass;
 			}

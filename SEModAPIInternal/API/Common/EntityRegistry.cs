@@ -33,7 +33,7 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Properties"
 
-		public static EntityRegistry Instance
+		new public static EntityRegistry Instance
 		{
 			get
 			{

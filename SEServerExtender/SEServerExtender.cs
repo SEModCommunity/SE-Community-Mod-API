@@ -280,7 +280,7 @@ namespace SEServerExtender
 			{
 				interval = double.Parse(CMB_Control_AutosaveInterval.Text);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				//Do something
 			}
@@ -1294,7 +1294,7 @@ namespace SEServerExtender
 				if (linkedObject is InventoryEntity)
 				{
 					InventoryItemDialog newItemDialog = new InventoryItemDialog();
-					newItemDialog.Container = (InventoryEntity)linkedObject;
+					newItemDialog.InventoryContainer = (InventoryEntity)linkedObject;
 					newItemDialog.ShowDialog(this);
 					return;
 				}
@@ -1302,7 +1302,7 @@ namespace SEServerExtender
 				if (linkedObject is InventoryItemEntity)
 				{
 					InventoryItemDialog newItemDialog = new InventoryItemDialog();
-					newItemDialog.Container = ((InventoryItemEntity)linkedObject).Container;
+					newItemDialog.InventoryContainer = ((InventoryItemEntity)linkedObject).Container;
 					newItemDialog.ShowDialog(this);
 					return;
 				}
