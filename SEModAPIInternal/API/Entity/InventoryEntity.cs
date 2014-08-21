@@ -287,7 +287,7 @@ namespace SEModAPIInternal.API.Entity
 				{
 					method = BackingObject.GetType().GetMethod(InventoryAddItemAmountMethod);
 					parameters = new object[] {
-						delta,
+						(MyFixedPoint)delta,
 						m_itemToUpdate.ObjectBuilder.PhysicalContent,
 						Type.Missing
 					};
