@@ -528,7 +528,7 @@ namespace SEModAPIExtensions.API
 				return;
 			}
 
-			if (!m_pluginManager.Initialized)
+			if (!m_pluginManager.Initialized && !m_pluginManager.Loaded)
 			{
 				if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				{

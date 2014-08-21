@@ -870,7 +870,21 @@ namespace SEModAPIInternal.API.Entity
 				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
 				if (rawValue == null)
 					return;
-				m_rawDataHashSet = UtilityFunctions.ConvertHashSet(rawValue);
+
+				//Create/Clear the hash set
+				if (m_rawDataHashSet == null)
+					m_rawDataHashSet = new HashSet<object>();
+				else
+					m_rawDataHashSet.Clear();
+
+				//Only allow valid entities in the hash set
+				foreach (var entry in UtilityFunctions.ConvertHashSet(rawValue))
+				{
+					if (!IsValidEntity(entry))
+						continue;
+
+					m_rawDataHashSet.Add(entry);
+				}
 
 				m_rawDataHashSetResourceLock.ReleaseExclusive();
 			}
@@ -896,7 +910,21 @@ namespace SEModAPIInternal.API.Entity
 				var rawValue = BaseObject.InvokeEntityMethod(m_backingObject, m_backingSourceMethod);
 				if (rawValue == null)
 					return;
-				m_rawDataList = UtilityFunctions.ConvertList(rawValue);
+
+				//Create/Clear the list
+				if (m_rawDataList == null)
+					m_rawDataList = new List<object>();
+				else
+					m_rawDataList.Clear();
+
+				//Only allow valid entities in the list
+				foreach (var entry in UtilityFunctions.ConvertList(rawValue))
+				{
+					if (!IsValidEntity(entry))
+						continue;
+
+					m_rawDataList.Add(entry);
+				}
 
 				m_rawDataListResourceLock.ReleaseExclusive();
 			}

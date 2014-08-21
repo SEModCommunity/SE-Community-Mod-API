@@ -152,11 +152,6 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public MyObjectBuilder_Faction GetSubTypeEntity()
-		{
-			return m_faction;
-		}
-
 		public void RemoveMember(long memberId)
 		{
 			try
@@ -188,7 +183,7 @@ namespace SEModAPIInternal.API.Common
 
 		protected void RefreshFactionMembers()
 		{
-			List<MyObjectBuilder_FactionMember> memberList = GetSubTypeEntity().Members;
+			List<MyObjectBuilder_FactionMember> memberList = BaseEntity.Members;
 
 			//Cleanup missing members
 			List<FactionMember> membersToRemove = new List<FactionMember>();
@@ -217,7 +212,7 @@ namespace SEModAPIInternal.API.Common
 
 		protected void RefreshFactionJoinRequests()
 		{
-			List<MyObjectBuilder_FactionMember> memberList = GetSubTypeEntity().JoinRequests;
+			List<MyObjectBuilder_FactionMember> memberList = BaseEntity.JoinRequests;
 
 			//Cleanup missing members
 			List<FactionMember> membersToRemove = new List<FactionMember>();
@@ -450,7 +445,16 @@ namespace SEModAPIInternal.API.Common
 			List<Faction> factionsToRemove = new List<Faction>();
 			foreach (Faction faction in m_factions.Values)
 			{
-				if (factionList.Contains(faction.BaseEntity))
+				bool foundMatch = false;
+				foreach (var entry in factionList)
+				{
+					if (entry.FactionId == faction.Id)
+					{
+						foundMatch = true;
+						break;
+					}
+				}
+				if (foundMatch)
 					continue;
 
 				factionsToRemove.Add(faction);
@@ -474,6 +478,7 @@ namespace SEModAPIInternal.API.Common
 		public void RemoveFaction(long id)
 		{
 			m_factionToModify = id;
+			m_factions.Remove(id);
 
 			Action action = InternalRemoveFaction;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);

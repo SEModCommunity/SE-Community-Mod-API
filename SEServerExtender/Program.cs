@@ -54,8 +54,6 @@ namespace SEServerExtender
 					string argName = arg.Split('=')[0];
 					string argValue = arg.Split('=')[1];
 
-					Console.WriteLine("Name-Value Arg: name='" + argName + "' value='" + argValue + "'");
-
 					if (argName.ToLower().Equals("instance"))
 					{
 						if (argValue[argValue.Length - 1] == '"')

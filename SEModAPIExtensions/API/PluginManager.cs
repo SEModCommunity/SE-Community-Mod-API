@@ -87,6 +87,7 @@ namespace SEModAPIExtensions.API
 		private Dictionary<Guid, Object> m_plugins;
 		private Dictionary<Guid, bool> m_pluginState;
 		private Dictionary<Guid, Assembly> m_pluginAssemblies;
+		private bool m_loaded;
 		private bool m_initialized;
 		private DateTime m_lastUpdate;
 		private TimeSpan m_lastUpdateTime;
@@ -162,6 +163,11 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
+		public bool Loaded
+		{
+			get { return m_loaded; }
+		}
+
 		public bool Initialized
 		{
 			get { return m_initialized; }
@@ -184,12 +190,16 @@ namespace SEModAPIExtensions.API
 				return false;
 		}
 
-		public void LoadPlugins()
+		public void LoadPlugins(bool forceLoad = false)
 		{
+			if (m_loaded && !forceLoad)
+				return;
+
 			Console.WriteLine("Loading plugins ...");
 
 			try
 			{
+				m_loaded = true;
 				m_initialized = false;
 
 				string modsPath = Path.Combine(Server.Instance.Path, "Mods");
@@ -286,6 +296,8 @@ namespace SEModAPIExtensions.API
 
 		public void Update()
 		{
+			if (!Loaded)
+				return;
 			if (!Initialized)
 				return;
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)

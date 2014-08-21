@@ -1698,7 +1698,7 @@ namespace SEServerExtender
 
 		private void BTN_Plugins_Refresh_Click(object sender, EventArgs e)
 		{
-			PluginManager.Instance.LoadPlugins();
+			PluginManager.Instance.LoadPlugins(true);
 		}
 
 		#endregion
