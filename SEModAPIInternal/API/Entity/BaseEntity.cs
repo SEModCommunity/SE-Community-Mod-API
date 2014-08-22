@@ -480,6 +480,15 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[IgnoreDataMember]
+		[Category("Entity")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal BaseEntityNetworkManager BaseNetworkManager
+		{
+			get { return m_networkManager; }
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -872,7 +881,14 @@ namespace SEModAPIInternal.API.Entity
 
 		protected void InternalRemoveEntity()
 		{
-			BaseObject.InvokeEntityMethod(NetworkManager, BaseEntityBroadcastRemovalMethod);
+			try
+			{
+				BaseObject.InvokeEntityMethod(NetworkManager, BaseEntityBroadcastRemovalMethod);
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

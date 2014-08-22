@@ -161,14 +161,21 @@ namespace SEModAPIInternal.Support
 
 		private void AppendDateAndTime(StringBuilder sb)
 		{
-			DateTimeOffset now = DateTimeOffset.Now;
-			StringBuilderExtensions.Concat(sb, now.Year, 4U, '0', 10U, false).Append('-');
-			StringBuilderExtensions.Concat(sb, now.Month, 2U).Append('-');
-			StringBuilderExtensions.Concat(sb, now.Day, 2U).Append(' ');
-			StringBuilderExtensions.Concat(sb, now.Hour, 2U).Append(':');
-			StringBuilderExtensions.Concat(sb, now.Minute, 2U).Append(':');
-			StringBuilderExtensions.Concat(sb, now.Second, 2U).Append('.');
-			StringBuilderExtensions.Concat(sb, now.Millisecond, 3U);
+			try
+			{
+				DateTimeOffset now = DateTimeOffset.Now;
+				StringBuilderExtensions.Concat(sb, now.Year, 4U, '0', 10U, false).Append('-');
+				StringBuilderExtensions.Concat(sb, now.Month, 2U).Append('-');
+				StringBuilderExtensions.Concat(sb, now.Day, 2U).Append(' ');
+				StringBuilderExtensions.Concat(sb, now.Hour, 2U).Append(':');
+				StringBuilderExtensions.Concat(sb, now.Minute, 2U).Append(':');
+				StringBuilderExtensions.Concat(sb, now.Second, 2U).Append('.');
+				StringBuilderExtensions.Concat(sb, now.Millisecond, 3U);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
 		}
 
 		private void AppendThreadInfo(StringBuilder sb)
