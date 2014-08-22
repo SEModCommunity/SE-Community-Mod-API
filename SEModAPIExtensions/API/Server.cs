@@ -174,13 +174,13 @@ namespace SEModAPIExtensions.API
 		{
 			try
 			{
-				m_baseHost = CreateServiceHost(typeof(ServerService), typeof(IServerServiceContract), "Server/", "ServerService");
-				m_baseHost.Open();
+				m_serverHost = CreateServiceHost(typeof(ServerService), typeof(IServerServiceContract), "Server/", "ServerService");
+				m_serverHost.Open();
 			}
 			catch (CommunicationException ex)
 			{
 				LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
-				m_baseHost.Abort();
+				m_serverHost.Abort();
 				return false;
 			}
 

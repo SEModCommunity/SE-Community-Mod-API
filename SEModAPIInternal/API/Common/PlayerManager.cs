@@ -380,7 +380,6 @@ namespace SEModAPIInternal.API.Common
 		#region "Attributes"
 
 		private static PlayerManager m_instance;
-		private PlayerMap m_playerMap;
 
 		public static string PlayerManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string PlayerManagerClass = "08FBF1782D25BEBDA2070CAF8CE47D72";
