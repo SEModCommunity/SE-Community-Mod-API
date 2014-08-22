@@ -407,6 +407,70 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		internal static Object GetStaticFieldValue(Type objectType, string fieldName)
+		{
+			try
+			{
+				FieldInfo field = GetStaticField(objectType, fieldName);
+				if (field == null)
+					return null;
+				Object value = field.GetValue(null);
+				return value;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static void SetStaticFieldValue(Type objectType, string fieldName, Object value)
+		{
+			try
+			{
+				FieldInfo field = GetStaticField(objectType, fieldName);
+				if (field == null)
+					return;
+				field.SetValue(null, value);
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		internal static Object GetEntityFieldValue(Object gameEntity, string fieldName)
+		{
+			try
+			{
+				FieldInfo field = GetEntityField(gameEntity, fieldName);
+				if (field == null)
+					return null;
+				Object value = field.GetValue(gameEntity);
+				return value;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static void SetEntityFieldValue(Object gameEntity, string fieldName, Object value)
+		{
+			try
+			{
+				FieldInfo field = GetEntityField(gameEntity, fieldName);
+				if (field == null)
+					return;
+				field.SetValue(gameEntity, value);
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
 		internal static Object InvokeStaticMethod(Type objectType, string methodName)
 		{
 			return InvokeStaticMethod(objectType, methodName, new object[] { });

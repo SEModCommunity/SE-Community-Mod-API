@@ -690,7 +690,7 @@ namespace SEModAPIInternal.API.Entity
 
 		#region "Methods"
 
-		new public void Load(FileInfo fileInfo)
+		public void Load(FileInfo fileInfo)
 		{
 			//Save the file info to the property
 			FileInfo = fileInfo;

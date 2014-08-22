@@ -172,7 +172,7 @@ namespace SEServerGUI
 			{
 				m_serverProxy = m_serverClient.GetServer();
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Disconnect();
 				return;
@@ -240,7 +240,7 @@ namespace SEServerGUI
 			{
 				interval = double.Parse(CMB_Control_AutosaveInterval.Text);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				//Do something
 			}
@@ -306,7 +306,7 @@ namespace SEServerGUI
 			{
 				m_sectorEntities = m_serviceClient.GetSectorEntities();
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Disconnect();
 				return;
@@ -1137,7 +1137,7 @@ namespace SEServerGUI
 				chatMessages = m_chatClient.GetChatMessages().ToArray();
 				connectedPlayers = m_serviceClient.GetConnectedPlayers();
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Disconnect();
 				return;
@@ -1211,7 +1211,7 @@ namespace SEServerGUI
 			{
 				pluginGuids = m_pluginClient.GetPluginGuids();
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Disconnect();
 				return;
