@@ -2,11 +2,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using SEModAPIInternal.Support;
+using SEModAPIInternal.API.Entity;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -152,8 +151,7 @@ namespace SEModAPIInternal.API.Common
 			try
 			{
 				Type networkManagerWrapper = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(NetworkManagerWrapperNamespace, NetworkManagerWrapperClass);
-				FieldInfo networkManagerField = networkManagerWrapper.GetField(NetworkManagerWrapperManagerInstanceField, BindingFlags.NonPublic | BindingFlags.Static);
-				Object networkManager = networkManagerField.GetValue(null);
+				Object networkManager = BaseObject.GetStaticFieldValue(networkManagerWrapper, NetworkManagerWrapperManagerInstanceField);
 
 				return networkManager;
 			}
@@ -185,10 +183,8 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				MethodInfo registerChatHook = NetworkManagerType.GetMethod(NetworkManagerRegisterChatReceiverMethod);
-
 				var netManager = GetNetworkManager();
-				registerChatHook.Invoke(netManager, new object[] { action });
+				BaseObject.InvokeEntityMethod(netManager, NetworkManagerRegisterChatReceiverMethod, new object[] { action });
 			}
 			catch (Exception ex)
 			{
@@ -202,8 +198,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				FieldInfo internalNetManagerField = NetworkManagerType.GetField(NetworkManagerInternalNetManagerField);
-				Object internalNetManager = internalNetManagerField.GetValue(GetNetworkManager());
+				Object internalNetManager = BaseObject.GetEntityFieldValue(GetNetworkManager(), NetworkManagerInternalNetManagerField);
 
 				return internalNetManager;
 			}
@@ -219,8 +214,7 @@ namespace SEModAPIInternal.API.Common
 			try
 			{
 				Object internalNetManager = GetInternalNetManager();
-				FieldInfo packetRegistryField = internalNetManager.GetType().GetField(InternalNetManagerPacketRegistryField);
-				Object packetRegistry = packetRegistryField.GetValue(internalNetManager);
+				Object packetRegistry = BaseObject.GetEntityFieldValue(internalNetManager, InternalNetManagerPacketRegistryField);
 
 				return packetRegistry;
 			}
@@ -236,8 +230,7 @@ namespace SEModAPIInternal.API.Common
 			try
 			{
 				Object packetRegistry = GetPacketRegistry();
-				FieldInfo typeIdMapField = packetRegistry.GetType().GetField(PacketRegistryTypeIdMapField, BindingFlags.NonPublic | BindingFlags.Static);
-				Dictionary<Type, ushort> packetTypeIdMap = (Dictionary<Type, ushort>)typeIdMapField.GetValue(packetRegistry);
+				Dictionary<Type, ushort> packetTypeIdMap = (Dictionary<Type, ushort>)BaseObject.GetEntityFieldValue(packetRegistry, PacketRegistryTypeIdMapField);
 
 				return packetTypeIdMap;
 			}

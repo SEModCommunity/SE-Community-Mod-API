@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-
-using Sandbox.Definitions;
-using Sandbox.Common.ObjectBuilders;
 
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
@@ -142,12 +135,9 @@ namespace SEModAPIInternal.API.Entity
 				if (m_powerRateCallback == null)
 					return;
 
-				FieldInfo field = BaseObject.GetEntityField(BackingObject, PowerReceiverInputRateCallbackField);
-				if(m_powerRateCallback != null)
-					field.SetValue(BackingObject, m_powerRateCallback);
+				BaseObject.SetEntityFieldValue(BackingObject, PowerReceiverInputRateCallbackField, m_powerRateCallback);
 
-				FieldInfo field2 = BaseObject.GetEntityField(BackingObject, PowerReceiverMaxRequiredInputField);
-				field2.SetValue(BackingObject, m_maxRequiredInput);
+				BaseObject.SetEntityFieldValue(BackingObject, PowerReceiverMaxRequiredInputField, m_maxRequiredInput);
 
 				BaseObject.InvokeEntityMethod(BackingObject, PowerReceiverSetMaxRequiredInputMethod, new object[] { m_maxRequiredInput });
 

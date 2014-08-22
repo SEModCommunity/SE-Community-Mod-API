@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
@@ -236,8 +231,7 @@ namespace SEModAPIInternal.API.Entity
 				if (BackingObject != null)
 				{
 					//Update the base entity
-					MethodInfo getObjectBuilder = BackingObject.GetType().GetMethod(InventoryGetObjectBuilderMethod);
-					MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)getObjectBuilder.Invoke(BackingObject, new object[] { });
+					MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)InvokeEntityMethod(BackingObject, InventoryGetObjectBuilderMethod);
 					ObjectBuilder = inventory;
 				}
 				else
@@ -283,16 +277,15 @@ namespace SEModAPIInternal.API.Entity
 
 				MyObjectBuilder_PhysicalObject physicalContent = m_itemToUpdate.ObjectBuilder.PhysicalContent;
 
-				MethodInfo method;
-				Object[] parameters;
 				if (delta > 0)
 				{
-					method = BackingObject.GetType().GetMethod(InventoryAddItemAmountMethod);
-					parameters = new object[] {
+					Object[] parameters = new object[] {
 						(MyFixedPoint)delta,
 						physicalContent,
 						-1
 					};
+
+					InvokeEntityMethod(BackingObject, InventoryAddItemAmountMethod, parameters);
 				}
 				else
 				{
@@ -301,15 +294,14 @@ namespace SEModAPIInternal.API.Entity
 					argTypes[1] = typeof(MyObjectBuilder_PhysicalObject);
 					argTypes[2] = typeof(bool);
 
-					method = BackingObject.GetType().GetMethod(InventoryRemoveItemAmountMethod, argTypes);
-					parameters = new object[] {
+					Object[] parameters = new object[] {
 						(MyFixedPoint)(-delta),
 						physicalContent,
 						Type.Missing
 					};
-				}
 
-				method.Invoke(BackingObject, parameters);
+					InvokeEntityMethod(BackingObject, InventoryRemoveItemAmountMethod, parameters, argTypes);
+				}
 
 				m_itemToUpdate = null;
 				m_oldItemAmount = 0;
@@ -587,8 +579,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				FieldInfo field = GetEntityField(item, InventoryItemItemIdField);
-				uint result = (uint)field.GetValue(item);
+				uint result = (uint)GetEntityFieldValue(item, InventoryItemItemIdField);
 				return result;
 			} catch(Exception ex)
 			{

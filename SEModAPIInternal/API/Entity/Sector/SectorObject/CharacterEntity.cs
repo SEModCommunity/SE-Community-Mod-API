@@ -1,26 +1,15 @@
 ﻿using Microsoft.Xml.Serialization.GeneratedAssembly;
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Common.ObjectBuilders.VRageData;
 using Sandbox.Game.Weapons;
 
-using SEModAPI.API;
-
 using SEModAPIInternal.API.Common;
-using SEModAPIInternal.API.Server;
 using SEModAPIInternal.Support;
-
-using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {

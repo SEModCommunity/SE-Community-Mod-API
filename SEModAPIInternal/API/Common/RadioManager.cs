@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
-using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
 
@@ -174,8 +169,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				FieldInfo field = BaseObject.GetEntityField(BackingObject, RadioManagerNetworkManagerField);
-				Object result = field.GetValue(BackingObject);
+				Object result = BaseObject.GetEntityFieldValue(BackingObject, RadioManagerNetworkManagerField);
 				return result;
 			}
 			catch (Exception ex)

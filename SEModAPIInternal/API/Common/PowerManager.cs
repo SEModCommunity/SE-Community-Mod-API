@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
 
-using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
 
@@ -52,8 +46,7 @@ namespace SEModAPIInternal.API.Common
 			{
 				try
 				{
-					FieldInfo field = BaseObject.GetEntityField(m_powerManager, PowerManagerTotalPowerField);
-					float totalPower = (float)field.GetValue(m_powerManager);
+					float totalPower = (float)BaseObject.GetEntityFieldValue(m_powerManager, PowerManagerTotalPowerField);
 					return totalPower;
 				}
 				catch (Exception ex)
