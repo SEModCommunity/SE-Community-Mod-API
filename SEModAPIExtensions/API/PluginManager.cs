@@ -98,6 +98,7 @@ namespace SEModAPIExtensions.API
 		private List<ulong> m_lastConnectedPlayerList;
 		private EntityRegistry m_entityRegistry;
 		private BlockRegistry m_blockRegistry;
+        private Dictionary<Guid, String> m_pluginPaths;
 
 		#endregion
 
@@ -120,6 +121,7 @@ namespace SEModAPIExtensions.API
 			m_lastConnectedPlayerList = new List<ulong>();
 			m_entityRegistry = EntityRegistry.Instance;
 			m_blockRegistry = BlockRegistry.Instance;
+            m_pluginPaths = new Dictionary<Guid, string>();
 
 			SetupWCFService();
 
@@ -202,9 +204,10 @@ namespace SEModAPIExtensions.API
 				m_loaded = true;
 				m_initialized = false;
 
-				string modsPath = Path.Combine(Server.Instance.Path, "Mods");
-				if (!Directory.Exists(modsPath))
-					return;
+                string modsPath = Path.Combine(Server.Instance.Path, "Mods");
+                Console.WriteLine(String.Format("Scanning: {0}", modsPath));
+                if (!Directory.Exists(modsPath))
+                    return;
 
 				string[] subDirectories = Directory.GetDirectories(modsPath);
 				foreach (string path in subDirectories)
@@ -218,17 +221,23 @@ namespace SEModAPIExtensions.API
 							if (!fileInfo.Extension.ToLower().Equals(".dll"))
 								continue;
 
-							//Load the assembly
-							Assembly pluginAssembly = Assembly.UnsafeLoadFrom(file);
+                            // Load assembly from file into memory, so we can hotswap it if we want
+                            byte[] b = File.ReadAllBytes(file);
+                            Assembly pluginAssembly = Assembly.Load(b);
 
-							//Get the assembly GUID
-							GuidAttribute guid = (GuidAttribute)pluginAssembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
-							Guid guidValue = new Guid(guid.Value);
+                            //Get the assembly GUID
+                            GuidAttribute guid = (GuidAttribute)pluginAssembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
+                            Guid guidValue = new Guid(guid.Value);
 
-							if(m_pluginAssemblies.ContainsKey(guidValue))
-								continue;
+                            if (m_pluginPaths.ContainsKey(guidValue))
+                                m_pluginPaths[guidValue] = file;
+                            else
+                                m_pluginPaths.Add(guidValue, file);
 
-							m_pluginAssemblies.Add(guidValue, pluginAssembly);
+                            if (m_pluginAssemblies.ContainsKey(guidValue))
+                                m_pluginAssemblies[guidValue] = pluginAssembly;
+                            else
+                                m_pluginAssemblies.Add(guidValue, pluginAssembly);
 
 							//Look through the exported types to find the one that implements PluginBase
 							Type[] types = pluginAssembly.GetExportedTypes();
@@ -508,17 +517,26 @@ namespace SEModAPIExtensions.API
 			if (m_pluginState.ContainsKey(key))
 				return;
 
-			LogManager.APILog.WriteLineAndConsole("Initializing plugin '" + key.ToString() + "' ...");
+            String pluginPath = m_pluginPaths[key];
+            LogManager.APILog.WriteLineAndConsole(String.Format("Initializing plugin at {0} - {1}'", pluginPath, key));
 
-			try
-			{
-				var plugin = m_plugins[key];
-				MethodInfo initMethod = plugin.GetType().GetMethod("Init");
-				initMethod.Invoke(plugin, new object[] { });
+            try
+            {
+                var plugin = m_plugins[key];
+                MethodInfo initMethod = plugin.GetType().GetMethod("InitWithPath");
+                if (initMethod != null)
+                {
+                    initMethod.Invoke(plugin, new object[] { pluginPath });
+                }
+                if (initMethod == null)
+                {
+                    initMethod = plugin.GetType().GetMethod("Init");
+                    initMethod.Invoke(plugin, new object[] { });
+                }
 
-				m_pluginState.Add(key, true);
-			}
-			catch (Exception ex)
+                m_pluginState.Add(key, true);
+            }
+            catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
 			}
@@ -551,7 +569,8 @@ namespace SEModAPIExtensions.API
 			}
 
 			m_pluginState.Remove(key);
-		}
+            m_plugins.Remove(key);
+        }
 
 		public bool GetPluginState(Guid key)
 		{
