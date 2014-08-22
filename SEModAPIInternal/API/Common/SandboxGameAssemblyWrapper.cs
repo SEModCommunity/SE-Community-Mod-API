@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
 
@@ -219,8 +217,7 @@ namespace SEModAPIInternal.API.Common
 			{
 				try
 				{
-					FieldInfo field = BaseObject.GetStaticField(MainGameType, MainGameInstanceField);
-					Object mainGame = field.GetValue(null);
+					Object mainGame = BaseObject.GetStaticFieldValue(MainGameType, MainGameInstanceField);
 
 					return mainGame;
 				}
@@ -243,8 +240,7 @@ namespace SEModAPIInternal.API.Common
 
 					if (!m_isGameLoaded)
 					{
-						FieldInfo gameLoadedField = MainGameType.BaseType.GetField(MainGameIsLoadedField, BindingFlags.NonPublic | BindingFlags.Instance);
-						bool someValue = (bool)gameLoadedField.GetValue(MainGame);
+						bool someValue = (bool)BaseObject.GetEntityFieldValue(MainGame, MainGameIsLoadedField);
 						if (someValue)
 						{
 							m_isGameLoaded = true;
@@ -287,8 +283,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				FieldInfo field = BaseObject.GetEntityField(MainGame, MainGameConfigContainerField);
-				Object configObject = field.GetValue(null);
+				Object configObject = BaseObject.GetEntityFieldValue(MainGame, MainGameConfigContainerField);
 
 				return configObject;
 			}
@@ -343,8 +338,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				MethodInfo method = CubeBlockObjectFactoryType.GetMethod(CubeBlockObjectFactoryGetBuilderFromEntityMethod);
-				MyObjectBuilder_CubeBlock newObjectBuilder = (MyObjectBuilder_CubeBlock)method.Invoke(null, new object[] { entity });
+				MyObjectBuilder_CubeBlock newObjectBuilder = (MyObjectBuilder_CubeBlock)BaseObject.InvokeStaticMethod(CubeBlockObjectFactoryType, CubeBlockObjectFactoryGetBuilderFromEntityMethod, new object[] { entity });
 
 				return newObjectBuilder;
 			}
@@ -359,8 +353,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				MethodInfo method = EntityBaseObjectFactoryType.GetMethod(EntityBaseObjectFactoryGetBuilderFromEntityMethod);
-				MyObjectBuilder_EntityBase newObjectBuilder = (MyObjectBuilder_EntityBase)method.Invoke(null, new object[] { entity });
+				MyObjectBuilder_EntityBase newObjectBuilder = (MyObjectBuilder_EntityBase)BaseObject.InvokeStaticMethod(EntityBaseObjectFactoryType, EntityBaseObjectFactoryGetBuilderFromEntityMethod, new object[] { entity });
 
 				return newObjectBuilder;
 			}
@@ -407,12 +400,11 @@ namespace SEModAPIInternal.API.Common
 			try
 			{
 				Object configContainer = GetServerConfigContainer();
-				FieldInfo field = BaseObject.GetEntityField(configContainer, ConfigContainerDedicatedDataField);
-				MyConfigDedicatedData config = (MyConfigDedicatedData)field.GetValue(configContainer);
+				MyConfigDedicatedData config = (MyConfigDedicatedData)BaseObject.GetEntityFieldValue(configContainer, ConfigContainerDedicatedDataField);
 				if (config == null)
 				{
 					BaseObject.InvokeEntityMethod(configContainer, ConfigContainerGetConfigDataMethod);
-					config = (MyConfigDedicatedData)field.GetValue(configContainer);
+					config = (MyConfigDedicatedData)BaseObject.GetEntityFieldValue(configContainer, ConfigContainerDedicatedDataField);
 				}
 
 				return config;
@@ -428,8 +420,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				FieldInfo field = BaseObject.GetStaticField(ServerCoreType, ServerCoreNullRenderField);
-				field.SetValue(null, nullRender);
+				BaseObject.SetStaticFieldValue(ServerCoreType, ServerCoreNullRenderField, nullRender);
 			}
 			catch (Exception ex)
 			{
@@ -457,8 +448,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				MethodInfo getTimeMillisMethod = MainGameType.GetMethod(MainGameGetTimeMillisMethod);
-				int gameTimeMillis = (int)getTimeMillisMethod.Invoke(null, new object[] { });
+				int gameTimeMillis = (int)BaseObject.InvokeStaticMethod(MainGameType, MainGameGetTimeMillisMethod);
 
 				return gameTimeMillis;
 			}
@@ -495,10 +485,17 @@ namespace SEModAPIInternal.API.Common
 			}
 			else
 			{
-				if (!string.IsNullOrWhiteSpace(MyFileSystem.ContentPath))
-					return;
-				if (!string.IsNullOrWhiteSpace(MyFileSystem.UserDataPath))
-					return;
+				try
+				{
+					if (!string.IsNullOrWhiteSpace(MyFileSystem.ContentPath))
+						return;
+					if (!string.IsNullOrWhiteSpace(MyFileSystem.UserDataPath))
+						return;
+				}
+				catch (Exception)
+				{
+					//Do nothing
+				}
 			}
 
 			MyFileSystem.Init(contentPath, userDataPath);

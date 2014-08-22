@@ -4,28 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.VRageData;
-using Sandbox.Game.Weapons;
+using Sandbox.Definitions;
 
 using SEModAPI.API;
-using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
-using SEModAPIInternal.API.Entity;
-using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
-using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRageMath;
-using VRageMath.PackedVector;
-using Sandbox.Definitions;
+using SEModAPIInternal.API.Utility;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 {
@@ -347,23 +338,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public static List<Type> KnownTypes()
 		{
-			List<Type> types = new List<Type>();
-
-			Assembly assembly = Assembly.GetAssembly(typeof(CubeBlockEntity));
-			foreach (Type type in assembly.GetTypes())
-			{
-				if (typeof(CubeBlockEntity).IsAssignableFrom(type))
-					types.Add(type);
-			}
-			return types;
+			return UtilityFunctions.GetCubeBlockTypes();
 		}
 
 		public override void Dispose()
 		{
 			m_isDisposed = true;
 
-			if(SandboxGameAssemblyWrapper.IsDebugging)
-				LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
+			//if(SandboxGameAssemblyWrapper.IsDebugging)
+				//LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
 
 			Parent.DeleteCubeBlock(this);
 
@@ -450,9 +433,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 			try
 			{
-				FieldInfo field = GetEntityField(BackingObject, CubeBlockCubeBlockDefinitionField);
-				MyCubeBlockDefinition result = (MyCubeBlockDefinition)field.GetValue(BackingObject);
-				return result;
+				return (MyCubeBlockDefinition)GetEntityFieldValue(BackingObject, CubeBlockCubeBlockDefinitionField);
 			}
 			catch (Exception ex)
 			{
@@ -478,35 +459,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		protected Object GetParentCubeGrid()
 		{
-			try
-			{
-				FieldInfo parentGridField = BackingObject.GetType().GetField(CubeBlockParentCubeGridField);
-				Object parentGrid = parentGridField.GetValue(BackingObject);
-
-				return parentGrid;
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-				return null;
-			}
+			return GetEntityFieldValue(BackingObject, CubeBlockParentCubeGridField);
 		}
 
 		protected Object GetFactionData()
 		{
 			try
 			{
-				Object actualCubeObject = GetActualObject();
-
-				Type actualType = actualCubeObject.GetType();
-				while (actualType.Name != ActualCubeBlockClass && actualType.Name != "" && actualType.Name != "Object")
-				{
-					actualType = actualType.BaseType;
-				}
-
-				MethodInfo updateFactionsData = actualType.GetMethod(ActualCubeBlockGetFactionsObjectMethod);
-				Object factionData = updateFactionsData.Invoke(actualCubeObject, new object[] { });
-
+				Object factionData = InvokeEntityMethod(ActualObject, ActualCubeBlockGetFactionsObjectMethod);
 				return factionData;
 			}
 			catch (Exception ex)
@@ -518,35 +478,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		protected Object GetConstructionManager()
 		{
-			try
-			{
-				FieldInfo constructionManagerField = BackingObject.GetType().GetField(CubeBlockConstructionManagerField, BindingFlags.NonPublic | BindingFlags.Instance);
-				Object constructionManager = constructionManagerField.GetValue(BackingObject);
-
-				return constructionManager;
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-				return null;
-			}
+			return GetEntityFieldValue(BackingObject, CubeBlockConstructionManagerField);
 		}
 
 		protected void InternalSetOwner()
 		{
 			try
 			{
-				Object actualCubeObject = GetActualObject();
-
-				Type actualType = actualCubeObject.GetType();
-				while (actualType.Name != ActualCubeBlockClass && actualType.Name != "" && actualType.Name != "Object")
-				{
-					actualType = actualType.BaseType;
-				}
-
-				MethodInfo updateFactionsData = actualType.GetMethod(ActualCubeBlockSetFactionsDataMethod, BindingFlags.NonPublic | BindingFlags.Instance);
-				updateFactionsData.Invoke(actualCubeObject, new object[] { Owner, ShareMode });
-
+				InvokeEntityMethod(ActualObject, ActualCubeBlockSetFactionsDataMethod, new object[] { Owner, ShareMode });
 				m_parent.NetworkManager.BroadcastCubeBlockFactionData(this);
 			}
 			catch (Exception ex)
@@ -559,17 +498,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
-				Object actualCubeObject = GetActualObject();
-
-				Type actualType = actualCubeObject.GetType();
-				while (actualType.Name != ActualCubeBlockClass && actualType.Name != "" && actualType.Name != "Object")
-				{
-					actualType = actualType.BaseType;
-				}
-
-				MethodInfo updateFactionsData = actualType.GetMethod(ActualCubeBlockSetFactionsDataMethod, BindingFlags.NonPublic | BindingFlags.Instance);
-				updateFactionsData.Invoke(actualCubeObject, new object[] { Owner, ShareMode });
-
+				InvokeEntityMethod(ActualObject, ActualCubeBlockSetFactionsDataMethod, new object[] { Owner, ShareMode });
 				m_parent.NetworkManager.BroadcastCubeBlockFactionData(this);
 			}
 			catch (Exception ex)
@@ -628,15 +557,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		protected void InternalUpdateColorMaskHSV()
 		{
-			try
-			{
-				FieldInfo field = GetEntityField(BackingObject, CubeBlockColorMaskHSVField);
-				field.SetValue(BackingObject, (Vector3)ColorMaskHSV);
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-			}
+			SetEntityFieldValue(BackingObject, CubeBlockColorMaskHSVField, (Vector3)ColorMaskHSV);
 		}
 
 		#endregion
@@ -780,13 +701,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						long packedBlockCoordinates = (long)cubePosition.X + (long)cubePosition.Y * 10000 + (long)cubePosition.Z * 100000000;
 
 						//If the original data already contains an entry for this, skip creation
-						if (GetInternalData().ContainsKey(packedBlockCoordinates))
+						if (internalDataCopy.ContainsKey(packedBlockCoordinates))
 						{
 							CubeBlockEntity matchingCubeBlock = (CubeBlockEntity)GetEntry(packedBlockCoordinates);
 							if (matchingCubeBlock.IsDisposed)
 								continue;
 
-							//Update the base entity (not the same as BackingObject which is the internal object)
+							matchingCubeBlock.BackingObject = entity;
 							matchingCubeBlock.ObjectBuilder = baseEntity;
 						}
 						else

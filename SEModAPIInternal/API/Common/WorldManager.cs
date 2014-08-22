@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
 
@@ -81,8 +77,7 @@ namespace SEModAPIInternal.API.Common
 			{
 				try
 				{
-					FieldInfo field = BaseObject.GetStaticField(InternalType, WorldManagerInstanceField);
-					Object worldManager = field.GetValue(null);
+					Object worldManager = BaseObject.GetStaticFieldValue(InternalType, WorldManagerInstanceField);
 
 					return worldManager;
 				}
@@ -118,8 +113,7 @@ namespace SEModAPIInternal.API.Common
 			{
 				try
 				{
-					FieldInfo field = BaseObject.GetEntityField(BackingObject, WorldManagerSessionSettingsField);
-					MySessionSettings sessionSettings = (MySessionSettings)field.GetValue(BackingObject);
+					MySessionSettings sessionSettings = (MySessionSettings)BaseObject.GetEntityFieldValue(BackingObject, WorldManagerSessionSettingsField);
 
 					return sessionSettings;
 				}
@@ -198,8 +192,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				FieldInfo field = BaseObject.GetEntityField(BackingObject, WorldManagerFactionManagerField);
-				Object worldManager = field.GetValue(BackingObject);
+				Object worldManager = BaseObject.GetEntityFieldValue(BackingObject, WorldManagerFactionManagerField);
 
 				return worldManager;
 			}
@@ -222,8 +215,7 @@ namespace SEModAPIInternal.API.Common
 			try
 			{
 				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(WorldResourceManagerNamespace, WorldResourceManagerClass);
-				FieldInfo field = BaseObject.GetStaticField(type, WorldResourceManagerResourceLockField);
-				FastResourceLock result = (FastResourceLock)field.GetValue(null);
+				FastResourceLock result = (FastResourceLock)BaseObject.GetStaticFieldValue(type, WorldResourceManagerResourceLockField);
 
 				return result;
 			}
@@ -243,8 +235,7 @@ namespace SEModAPIInternal.API.Common
 				Type type = BackingObject.GetType();
 				Type[] argTypes = new Type[1];
 				argTypes[0] = typeof(string);
-				MethodInfo method = type.GetMethod(WorldManagerSaveWorldMethod, argTypes);
-				bool result = (bool)method.Invoke(BackingObject, new object[] { null });
+				bool result = (bool)BaseObject.InvokeEntityMethod(BackingObject, WorldManagerSaveWorldMethod, new object[] { null }, argTypes);
 
 				if (result)
 				{

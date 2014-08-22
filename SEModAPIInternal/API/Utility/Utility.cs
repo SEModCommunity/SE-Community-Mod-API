@@ -4,8 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
+using Sandbox.Common.ObjectBuilders;
+
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
@@ -221,6 +224,32 @@ namespace SEModAPIInternal.API.Utility
 			Vector3 result = MyVRageUtils.GetRandomBorderPosition(ref box);
 
 			return result;
+		}
+
+		public static List<Type> GetObjectBuilderTypes()
+		{
+			List<Type> types = new List<Type>();
+
+			Assembly assembly = Assembly.GetAssembly(typeof(MyObjectBuilder_Base));
+			foreach (Type type in assembly.GetTypes())
+			{
+				if (typeof(MyObjectBuilder_Base).IsAssignableFrom(type))
+					types.Add(type);
+			}
+			return types;
+		}
+
+		public static List<Type> GetCubeBlockTypes()
+		{
+			List<Type> types = new List<Type>();
+
+			Assembly assembly = Assembly.GetAssembly(typeof(CubeBlockEntity));
+			foreach (Type type in assembly.GetTypes())
+			{
+				if (typeof(CubeBlockEntity).IsAssignableFrom(type))
+					types.Add(type);
+			}
+			return types;
 		}
 
 		#endregion

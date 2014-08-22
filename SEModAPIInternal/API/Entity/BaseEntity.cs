@@ -3,31 +3,18 @@
 using Microsoft.Xml.Serialization.GeneratedAssembly;
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Common.ObjectBuilders.Voxels;
-using Sandbox.Common.ObjectBuilders.VRageData;
-using Sandbox.Game.Weapons;
 
 using SEModAPI.API;
-using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
-using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
-using VRage;
 using VRageMath;
 
 namespace SEModAPIInternal.API.Entity
@@ -480,6 +467,15 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[IgnoreDataMember]
+		[Category("Entity")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal BaseEntityNetworkManager BaseNetworkManager
+		{
+			get { return m_networkManager; }
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -614,8 +610,7 @@ namespace SEModAPIInternal.API.Entity
 				long entityId = 0L;
 				try
 				{
-					FieldInfo field = GetEntityField(entity, BaseEntityEntityIdField);
-					entityId = (long)field.GetValue(entity);
+					entityId = (long)GetEntityFieldValue(entity, BaseEntityEntityIdField);
 				}
 				catch (Exception ex)
 				{
@@ -803,7 +798,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
-		public static string BaseEntityBroadcastRemovalMethod = "F697CBD11E956415D8B314387B47FB26";
+		public static string BaseEntityBroadcastRemovalMethod = "3FC84604B0A44EDD4FAC259ED7F12DF8";
 
 		#endregion
 
@@ -872,7 +867,14 @@ namespace SEModAPIInternal.API.Entity
 
 		protected void InternalRemoveEntity()
 		{
-			BaseObject.InvokeEntityMethod(NetworkManager, BaseEntityBroadcastRemovalMethod);
+			try
+			{
+				BaseObject.InvokeEntityMethod(NetworkManager, BaseEntityBroadcastRemovalMethod);
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

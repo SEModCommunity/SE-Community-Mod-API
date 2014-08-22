@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
@@ -236,8 +231,7 @@ namespace SEModAPIInternal.API.Entity
 				if (BackingObject != null)
 				{
 					//Update the base entity
-					MethodInfo getObjectBuilder = BackingObject.GetType().GetMethod(InventoryGetObjectBuilderMethod);
-					MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)getObjectBuilder.Invoke(BackingObject, new object[] { });
+					MyObjectBuilder_Inventory inventory = (MyObjectBuilder_Inventory)InvokeEntityMethod(BackingObject, InventoryGetObjectBuilderMethod);
 					ObjectBuilder = inventory;
 				}
 				else
@@ -281,16 +275,17 @@ namespace SEModAPIInternal.API.Entity
 
 				Decimal delta = m_newItemAmount - m_oldItemAmount;
 
-				MethodInfo method;
-				Object[] parameters;
+				MyObjectBuilder_PhysicalObject physicalContent = m_itemToUpdate.ObjectBuilder.PhysicalContent;
+
 				if (delta > 0)
 				{
-					method = BackingObject.GetType().GetMethod(InventoryAddItemAmountMethod);
-					parameters = new object[] {
+					Object[] parameters = new object[] {
 						(MyFixedPoint)delta,
-						m_itemToUpdate.ObjectBuilder.PhysicalContent,
-						Type.Missing
+						physicalContent,
+						-1
 					};
+
+					InvokeEntityMethod(BackingObject, InventoryAddItemAmountMethod, parameters);
 				}
 				else
 				{
@@ -299,15 +294,14 @@ namespace SEModAPIInternal.API.Entity
 					argTypes[1] = typeof(MyObjectBuilder_PhysicalObject);
 					argTypes[2] = typeof(bool);
 
-					method = BackingObject.GetType().GetMethod(InventoryRemoveItemAmountMethod, argTypes);
-					parameters = new object[] {
+					Object[] parameters = new object[] {
 						(MyFixedPoint)(-delta),
-						m_itemToUpdate.ObjectBuilder.PhysicalContent,
+						physicalContent,
 						Type.Missing
 					};
-				}
 
-				method.Invoke(BackingObject, parameters);
+					InvokeEntityMethod(BackingObject, InventoryRemoveItemAmountMethod, parameters, argTypes);
+				}
 
 				m_itemToUpdate = null;
 				m_oldItemAmount = 0;
@@ -343,6 +337,8 @@ namespace SEModAPIInternal.API.Entity
 		public static string InventoryItemClass = "555069178719BB1B546FB026B906CE00";
 
 		public static string InventoryItemGetObjectBuilderMethod = "B45B0C201826847F0E087D82F9AD3DF1";
+
+		public static string InventoryItemItemIdField = "33FDC4CADA8125F411D1F07103A65358";
 
 		#endregion
 
@@ -568,6 +564,7 @@ namespace SEModAPIInternal.API.Entity
 					throw new Exception("Could not find internal type for InventoryItemEntity");
 				bool result = true;
 				result &= BaseObject.HasMethod(type, InventoryItemGetObjectBuilderMethod);
+				result &= BaseObject.HasField(type, InventoryItemItemIdField);
 
 				return result;
 			}
@@ -575,6 +572,19 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.APILog.WriteLine(ex);
 				return false;
+			}
+		}
+
+		public static uint GetInventoryItemId(object item)
+		{
+			try
+			{
+				uint result = (uint)GetEntityFieldValue(item, InventoryItemItemIdField);
+				return result;
+			} catch(Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return 0;
 			}
 		}
 
@@ -749,16 +759,17 @@ namespace SEModAPIInternal.API.Entity
 						if (baseEntity == null)
 							continue;
 
+						uint entityItemId = InventoryItemEntity.GetInventoryItemId(entity);
 						long itemId = baseEntity.ItemId;
 
 						//If the original data already contains an entry for this, skip creation
-						if (GetInternalData().ContainsKey(itemId))
+						if (internalDataCopy.ContainsKey(itemId))
 						{
 							InventoryItemEntity matchingItem = (InventoryItemEntity)GetEntry(itemId);
 							if (matchingItem == null || matchingItem.IsDisposed)
 								continue;
 
-							//Update the base entity (not the same as BackingObject which is the internal object)
+							matchingItem.BackingObject = entity;
 							matchingItem.ObjectBuilder = baseEntity;
 						}
 						else

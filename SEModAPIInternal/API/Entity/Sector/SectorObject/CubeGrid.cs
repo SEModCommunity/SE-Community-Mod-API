@@ -4,28 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Runtime.Serialization;
 
-using Sandbox.Common;
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Common.ObjectBuilders.VRageData;
 
 using Sandbox.Definitions;
 
-using SEModAPI.API;
-using SEModAPI.API.Definitions;
-
 using SEModAPIInternal.API.Common;
-using SEModAPIInternal.API.Server;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
-using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRage;
 using VRageMath;
+using SEModAPIInternal.API.Utility;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
@@ -439,21 +431,33 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public static List<Type> KnownTypes()
 		{
-			List<Type> types = new List<Type>();
-
-			Assembly assembly = Assembly.GetAssembly(typeof(MyObjectBuilder_Base));
-			foreach (Type type in assembly.GetTypes())
-			{
-				if (typeof(MyObjectBuilder_Base).IsAssignableFrom(type))
-					types.Add(type);
-			}
-			return types;
+			return UtilityFunctions.GetObjectBuilderTypes();
 		}
 
 		public override void Dispose()
 		{
-			LogManager.APILog.WriteLine("Disposing CubeGridEntity '" + Name + "'");
-			base.Dispose();
+			if(SandboxGameAssemblyWrapper.IsDebugging)
+				LogManager.APILog.WriteLine("Disposing CubeGridEntity '" + Name + "' ...");
+
+			//Dispose the cube grid by disposing all of the blocks
+			//This may be slow but it's reliable ... so far
+			List<CubeBlockEntity> blocks = CubeBlocks;
+			int blockCount = blocks.Count;
+			foreach (CubeBlockEntity cubeBlock in blocks)
+			{
+				cubeBlock.Dispose();
+			}
+
+			if (SandboxGameAssemblyWrapper.IsDebugging)
+				LogManager.APILog.WriteLine("Disposed " + blockCount.ToString() + " blocks on CubeGridEntity '" + Name + "'");
+
+			//Broadcast the removal to the clients just to save processing time for the clients
+			BaseNetworkManager.RemoveEntity();
+
+			m_isDisposed = true;
+
+			//base.Dispose();
+
 			/*
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridDeleted;
@@ -663,7 +667,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Methods"
 
-		new public static bool ReflectionUnitTest()
+		public static bool ReflectionUnitTest()
 		{
 			try
 			{
@@ -861,45 +865,34 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			try
 			{
-				//TODO - Get this working. This code was a valiant effort but still isn't working >.<
-
 				Type packedStructType = CubeGridEntity.InternalType.GetNestedType(CubeGridEntity.CubeGridPackedCubeBlockClass);
 				Object packedStruct = Activator.CreateInstance(packedStructType);
 				MyCubeBlockDefinition def = MyDefinitionManager.Static.GetCubeBlockDefinition(cubeBlock.ObjectBuilder);
 
 				//Set def id
-				FieldInfo field = BaseObject.GetEntityField(packedStruct, "35E024D9E3B721592FB9B6FC1A1E239A");
-				field.SetValue(packedStruct, (DefinitionIdBlit)def.Id);
+				BaseObject.SetEntityFieldValue(packedStruct, "35E024D9E3B721592FB9B6FC1A1E239A", (DefinitionIdBlit)def.Id);
 
 				//Set position
-				field = BaseObject.GetEntityField(packedStruct, "5C3938C9B8CED1D0057CCF12F04329AB");
-				field.SetValue(packedStruct, (Vector3I)cubeBlock.Min);
+				BaseObject.SetEntityFieldValue(packedStruct, "5C3938C9B8CED1D0057CCF12F04329AB", (Vector3I)cubeBlock.Min);
 
 				//Set block size
-				field = BaseObject.GetEntityField(packedStruct, "0DDB53EB9299ECC9826DF9A47E5E4F38");
-				field.SetValue(packedStruct, new Vector3UByte(def.Size));
+				BaseObject.SetEntityFieldValue(packedStruct, "0DDB53EB9299ECC9826DF9A47E5E4F38", new Vector3UByte(def.Size));
 
 				//Set block margins
-				field = BaseObject.GetEntityField(packedStruct, "4045ED59A8C93DE0B41218EF2E947E55");
-				field.SetValue(packedStruct, new Vector3B(0, 0, 0));
-				field = BaseObject.GetEntityField(packedStruct, "096897446D5BD5243D3D6E5C53CE1772");
-				field.SetValue(packedStruct, new Vector3B(0, 0, 0));
+				BaseObject.SetEntityFieldValue(packedStruct, "4045ED59A8C93DE0B41218EF2E947E55", new Vector3B(0, 0, 0));
+				BaseObject.SetEntityFieldValue(packedStruct, "096897446D5BD5243D3D6E5C53CE1772", new Vector3B(0, 0, 0));
 
 				//Set block margin scale
-				field = BaseObject.GetEntityField(packedStruct, "E28B9725868E18B339D1E0594EF14444");
-				field.SetValue(packedStruct, new Vector3B(0, 0, 0));
+				BaseObject.SetEntityFieldValue(packedStruct, "E28B9725868E18B339D1E0594EF14444", new Vector3B(0, 0, 0));
 
 				//Set orientation
 				Quaternion rot;
 				cubeBlock.BlockOrientation.GetQuaternion(out rot);
-				field = BaseObject.GetEntityField(packedStruct, "F1AAFF5C8F200592F313BC7E02140A38");
-				field.SetValue(packedStruct, Base6Directions.GetForward(rot));
-				field = BaseObject.GetEntityField(packedStruct, "E80AA7B84131E39F9F88209A109EED59");
-				field.SetValue(packedStruct, Base6Directions.GetUp(rot));
+				BaseObject.SetEntityFieldValue(packedStruct, "F1AAFF5C8F200592F313BC7E02140A38", Base6Directions.GetForward(rot));
+				BaseObject.SetEntityFieldValue(packedStruct, "E80AA7B84131E39F9F88209A109EED59", Base6Directions.GetUp(rot));
 
 				//Set color
-				field = BaseObject.GetEntityField(packedStruct, "556976F2528411FF5F95FC75DC13FEED");
-				field.SetValue(packedStruct, ColorExtensions.PackHSVToUint(cubeBlock.ColorMaskHSV));
+				BaseObject.SetEntityFieldValue(packedStruct, "556976F2528411FF5F95FC75DC13FEED", ColorExtensions.PackHSVToUint(cubeBlock.ColorMaskHSV));
 
 				object[] parameters = {
 					packedStruct,

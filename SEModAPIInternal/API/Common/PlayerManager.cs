@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
 
@@ -12,8 +9,6 @@ using SEModAPIInternal.API.Server;
 using SEModAPIInternal.Support;
 
 using VRage.Serialization;
-using VRage.Collections;
-using SteamSDK;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -28,16 +23,10 @@ namespace SEModAPIInternal.API.Common
 
 			public InternalPlayerItem(Object source)
 			{
-				Type type = source.GetType();
-				FieldInfo field1 = BaseObject.GetEntityField(source, "E520D0BC4EC9B47A81D9F52D4B70345F");
-				FieldInfo field2 = BaseObject.GetEntityField(source, "FE57DC9F46A21EA612B9769D5A7A9606");
-				FieldInfo field3 = BaseObject.GetEntityField(source, "F18302983BC40AE893A0E0E0F2263A93");
-				FieldInfo field4 = BaseObject.GetEntityField(source, "2E57D5D124FF88C06AD1DFF6FE070B73");
-
-				name = (string)field1.GetValue(source);
-				isDead = (bool)field2.GetValue(source);
-				steamId = (ulong)field3.GetValue(source);
-				model = (string)field4.GetValue(source);
+				name = (string)BaseObject.GetEntityFieldValue(source, "E520D0BC4EC9B47A81D9F52D4B70345F");
+				isDead = (bool)BaseObject.GetEntityFieldValue(source, "FE57DC9F46A21EA612B9769D5A7A9606");
+				steamId = (ulong)BaseObject.GetEntityFieldValue(source, "F18302983BC40AE893A0E0E0F2263A93");
+				model = (string)BaseObject.GetEntityFieldValue(source, "2E57D5D124FF88C06AD1DFF6FE070B73");
 			}
 		}
 
@@ -275,8 +264,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			try
 			{
-				FieldInfo steamIdField = BaseObject.GetEntityField(player, PlayerMapEntrySteamIdField);
-				ulong steamId = (ulong)steamIdField.GetValue(player);
+				ulong steamId = (ulong)BaseObject.GetEntityFieldValue(player, PlayerMapEntrySteamIdField);
 
 				return steamId;
 			}
@@ -380,7 +368,6 @@ namespace SEModAPIInternal.API.Common
 		#region "Attributes"
 
 		private static PlayerManager m_instance;
-		private PlayerMap m_playerMap;
 
 		public static string PlayerManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string PlayerManagerClass = "08FBF1782D25BEBDA2070CAF8CE47D72";
@@ -463,8 +450,7 @@ namespace SEModAPIInternal.API.Common
 
 		public Object InternalGetPlayerMap()
 		{
-			FieldInfo playerMapField = BaseObject.GetEntityField(BackingObject, PlayerManagerPlayerMapField);
-			Object playerMap = playerMapField.GetValue(BackingObject);
+			Object playerMap = BaseObject.GetEntityFieldValue(BackingObject, PlayerManagerPlayerMapField);
 
 			return playerMap;
 		}
