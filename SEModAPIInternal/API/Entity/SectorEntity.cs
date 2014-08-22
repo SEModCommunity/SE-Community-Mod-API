@@ -3,27 +3,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Common.ObjectBuilders.Voxels;
-using Sandbox.Common.ObjectBuilders.VRageData;
-
-using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.API.Entity.Sector;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
-
-using VRage;
-using VRageMath;
 
 namespace SEModAPIInternal.API.Entity
 {

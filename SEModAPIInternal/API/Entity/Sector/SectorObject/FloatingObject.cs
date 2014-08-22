@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-
-using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;

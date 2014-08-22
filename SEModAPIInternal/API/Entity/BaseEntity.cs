@@ -3,31 +3,18 @@
 using Microsoft.Xml.Serialization.GeneratedAssembly;
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Common.ObjectBuilders.Voxels;
-using Sandbox.Common.ObjectBuilders.VRageData;
-using Sandbox.Game.Weapons;
 
 using SEModAPI.API;
-using SEModAPI.API.Definitions;
 
 using SEModAPIInternal.API.Common;
-using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
-using VRage;
 using VRageMath;
 
 namespace SEModAPIInternal.API.Entity
@@ -623,8 +610,7 @@ namespace SEModAPIInternal.API.Entity
 				long entityId = 0L;
 				try
 				{
-					FieldInfo field = GetEntityField(entity, BaseEntityEntityIdField);
-					entityId = (long)field.GetValue(entity);
+					entityId = (long)GetEntityFieldValue(entity, BaseEntityEntityIdField);
 				}
 				catch (Exception ex)
 				{
