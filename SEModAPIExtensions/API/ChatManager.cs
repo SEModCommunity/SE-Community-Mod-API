@@ -548,10 +548,29 @@ namespace SEModAPIExtensions.API
 						if (entity.Name.Equals(entity.EntityId.ToString()))
 						{
 							entitiesToDispose.Add(entity);
+							continue;
+						}
+
+						List<CubeBlockEntity> blocks = entity.CubeBlocks;
+						if (blocks.Count > 0)
+						{
+							bool foundBeacon = false;
+							foreach (CubeBlockEntity cubeBlock in blocks)
+							{
+								if (cubeBlock is BeaconEntity)
+								{
+									foundBeacon = true;
+									break;
+								}
+							}
+							if (!foundBeacon)
+							{
+								entitiesToDispose.Add(entity);
+							}
 						}
 					}
 
-					foreach (BaseEntity entity in entitiesToDispose)
+					foreach (CubeGridEntity entity in entitiesToDispose)
 					{
 						entity.Dispose();
 					}
@@ -571,7 +590,7 @@ namespace SEModAPIExtensions.API
 						}
 					}
 
-					foreach (BaseEntity entity in entitiesToDispose)
+					foreach (CubeGridEntity entity in entitiesToDispose)
 					{
 						entity.Dispose();
 					}
@@ -634,10 +653,29 @@ namespace SEModAPIExtensions.API
 						if (entity.Name.Equals(entity.EntityId.ToString()))
 						{
 							entitiesToDispose.Add(entity);
+							continue;
+						}
+
+						List<CubeBlockEntity> blocks = entity.CubeBlocks;
+						if (blocks.Count > 0)
+						{
+							bool foundBeacon = false;
+							foreach (CubeBlockEntity cubeBlock in entity.CubeBlocks)
+							{
+								if (cubeBlock is BeaconEntity)
+								{
+									foundBeacon = true;
+									break;
+								}
+							}
+							if (!foundBeacon)
+							{
+								entitiesToDispose.Add(entity);
+							}
 						}
 					}
 
-					foreach (BaseEntity entity in entitiesToDispose)
+					foreach (CubeGridEntity entity in entitiesToDispose)
 					{
 						entity.Dispose();
 					}
@@ -663,10 +701,29 @@ namespace SEModAPIExtensions.API
 						if (entity.Name.Equals(entity.EntityId.ToString()))
 						{
 							entitiesToDispose.Add(entity);
+							continue;
+						}
+
+						List<CubeBlockEntity> blocks = entity.CubeBlocks;
+						if (blocks.Count > 0)
+						{
+							bool foundBeacon = false;
+							foreach (CubeBlockEntity cubeBlock in entity.CubeBlocks)
+							{
+								if (cubeBlock is BeaconEntity)
+								{
+									foundBeacon = true;
+									break;
+								}
+							}
+							if (!foundBeacon)
+							{
+								entitiesToDispose.Add(entity);
+							}
 						}
 					}
 
-					foreach (BaseEntity entity in entitiesToDispose)
+					foreach (CubeGridEntity entity in entitiesToDispose)
 					{
 						entity.Dispose();
 					}

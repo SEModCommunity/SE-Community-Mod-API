@@ -495,10 +495,17 @@ namespace SEModAPIInternal.API.Common
 			}
 			else
 			{
-				if (!string.IsNullOrWhiteSpace(MyFileSystem.ContentPath))
-					return;
-				if (!string.IsNullOrWhiteSpace(MyFileSystem.UserDataPath))
-					return;
+				try
+				{
+					if (!string.IsNullOrWhiteSpace(MyFileSystem.ContentPath))
+						return;
+					if (!string.IsNullOrWhiteSpace(MyFileSystem.UserDataPath))
+						return;
+				}
+				catch (Exception)
+				{
+					//Do nothing
+				}
 			}
 
 			MyFileSystem.Init(contentPath, userDataPath);

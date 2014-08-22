@@ -362,8 +362,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			m_isDisposed = true;
 
-			if(SandboxGameAssemblyWrapper.IsDebugging)
-				LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
+			//if(SandboxGameAssemblyWrapper.IsDebugging)
+				//LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
 
 			Parent.DeleteCubeBlock(this);
 

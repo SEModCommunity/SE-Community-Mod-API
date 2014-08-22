@@ -281,6 +281,8 @@ namespace SEModAPIInternal.API.Entity
 
 				Decimal delta = m_newItemAmount - m_oldItemAmount;
 
+				MyObjectBuilder_PhysicalObject physicalContent = m_itemToUpdate.ObjectBuilder.PhysicalContent;
+
 				MethodInfo method;
 				Object[] parameters;
 				if (delta > 0)
@@ -288,8 +290,8 @@ namespace SEModAPIInternal.API.Entity
 					method = BackingObject.GetType().GetMethod(InventoryAddItemAmountMethod);
 					parameters = new object[] {
 						(MyFixedPoint)delta,
-						m_itemToUpdate.ObjectBuilder.PhysicalContent,
-						Type.Missing
+						physicalContent,
+						-1
 					};
 				}
 				else
@@ -302,7 +304,7 @@ namespace SEModAPIInternal.API.Entity
 					method = BackingObject.GetType().GetMethod(InventoryRemoveItemAmountMethod, argTypes);
 					parameters = new object[] {
 						(MyFixedPoint)(-delta),
-						m_itemToUpdate.ObjectBuilder.PhysicalContent,
+						physicalContent,
 						Type.Missing
 					};
 				}
@@ -343,6 +345,8 @@ namespace SEModAPIInternal.API.Entity
 		public static string InventoryItemClass = "555069178719BB1B546FB026B906CE00";
 
 		public static string InventoryItemGetObjectBuilderMethod = "B45B0C201826847F0E087D82F9AD3DF1";
+
+		public static string InventoryItemItemIdField = "33FDC4CADA8125F411D1F07103A65358";
 
 		#endregion
 
@@ -568,6 +572,7 @@ namespace SEModAPIInternal.API.Entity
 					throw new Exception("Could not find internal type for InventoryItemEntity");
 				bool result = true;
 				result &= BaseObject.HasMethod(type, InventoryItemGetObjectBuilderMethod);
+				result &= BaseObject.HasField(type, InventoryItemItemIdField);
 
 				return result;
 			}
@@ -575,6 +580,20 @@ namespace SEModAPIInternal.API.Entity
 			{
 				LogManager.APILog.WriteLine(ex);
 				return false;
+			}
+		}
+
+		public static uint GetInventoryItemId(object item)
+		{
+			try
+			{
+				FieldInfo field = GetEntityField(item, InventoryItemItemIdField);
+				uint result = (uint)field.GetValue(item);
+				return result;
+			} catch(Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return 0;
 			}
 		}
 
@@ -749,16 +768,17 @@ namespace SEModAPIInternal.API.Entity
 						if (baseEntity == null)
 							continue;
 
+						uint entityItemId = InventoryItemEntity.GetInventoryItemId(entity);
 						long itemId = baseEntity.ItemId;
 
 						//If the original data already contains an entry for this, skip creation
-						if (GetInternalData().ContainsKey(itemId))
+						if (internalDataCopy.ContainsKey(itemId))
 						{
 							InventoryItemEntity matchingItem = (InventoryItemEntity)GetEntry(itemId);
 							if (matchingItem == null || matchingItem.IsDisposed)
 								continue;
 
-							//Update the base entity (not the same as BackingObject which is the internal object)
+							matchingItem.BackingObject = entity;
 							matchingItem.ObjectBuilder = baseEntity;
 						}
 						else
