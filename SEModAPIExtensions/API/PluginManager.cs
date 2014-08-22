@@ -202,7 +202,7 @@ namespace SEModAPIExtensions.API
 			try
 			{
 				m_loaded = true;
-				m_initialized = false;
+//				m_initialized = false;   // THIS CAUSES all plugins to stop working 
 
                 string modsPath = Path.Combine(Server.Instance.Path, "Mods");
                 Console.WriteLine(String.Format("Scanning: {0}", modsPath));
@@ -568,6 +568,7 @@ namespace SEModAPIExtensions.API
 				LogManager.ErrorLog.WriteLine(ex);
 			}
 
+            m_pluginAssemblies.Remove(key);
 			m_pluginState.Remove(key);
             m_plugins.Remove(key);
         }
