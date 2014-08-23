@@ -861,6 +861,9 @@ namespace SEModAPIInternal.API.Entity
 
 		public void RemoveEntity()
 		{
+			if (NetworkManager == null)
+				return;
+
 			Action action = InternalRemoveEntity;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
@@ -869,6 +872,9 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
+				if (NetworkManager == null)
+					return;
+
 				BaseObject.InvokeEntityMethod(NetworkManager, BaseEntityBroadcastRemovalMethod);
 			}
 			catch (Exception ex)

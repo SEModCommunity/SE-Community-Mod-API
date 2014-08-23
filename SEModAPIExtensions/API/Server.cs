@@ -538,6 +538,10 @@ namespace SEModAPIExtensions.API
 			}
 			else
 			{
+				//Force a refresh of the chat messages before running the plugin update
+				List<string> messages = ChatManager.Instance.ChatMessages;
+
+				//Run the plugin update
 				m_pluginManager.Update();
 			}
 		}
