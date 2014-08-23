@@ -200,6 +200,18 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("CharacterEntity reflection validation failed!");
 			}
 
+			if (!FloatingObject.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("FloatingObject reflection validation failed!");
+			}
+
+			if (!FloatingObjectManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("FloatingObjectManager reflection validation failed!");
+			}
+
 			if (!InventoryEntity.ReflectionUnitTest())
 			{
 				result = false;
