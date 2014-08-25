@@ -287,6 +287,34 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		public static bool HasProperty(Type objectType, string propertyName)
+		{
+			try
+			{
+				if (propertyName == null || propertyName.Length == 0)
+					return false;
+				PropertyInfo property = objectType.GetProperty(propertyName);
+				if (property == null)
+					property = objectType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (property == null)
+					property = objectType.BaseType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (property == null)
+				{
+					if (SandboxGameAssemblyWrapper.IsDebugging)
+						LogManager.ErrorLog.WriteLineAndConsole("Failed to find property '" + propertyName + "' in type '" + objectType.FullName + "'");
+					return false;
+				}
+				return true;
+			}
+			catch (Exception ex)
+			{
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.ErrorLog.WriteLineAndConsole("Failed to find property '" + propertyName + "' in type '" + objectType.FullName + "': " + ex.Message);
+				LogManager.ErrorLog.WriteLine(ex);
+				return false;
+			}
+		}
+
 		internal static FieldInfo GetStaticField(Type objectType, string fieldName)
 		{
 			try
@@ -310,9 +338,20 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				FieldInfo field = gameEntity.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				FieldInfo field = gameEntity.GetType().GetField(fieldName);
 				if (field == null)
-					field = gameEntity.GetType().BaseType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				{
+					//Recurse up through the class heirarchy to try to find the field
+					Type type = gameEntity.GetType();
+					while (type != typeof(Object))
+					{
+						field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+						if (field != null)
+							break;
+
+						type = type.BaseType;
+					}
+				}
 				return field;
 			}
 			catch (Exception ex)
@@ -356,12 +395,20 @@ namespace SEModAPIInternal.API.Entity
 					throw new Exception("Game entity was null");
 				if (methodName == null || methodName.Length == 0)
 					throw new Exception("Method name was empty");
-				Type entityType = gameEntity.GetType();
-				MethodInfo method = entityType.GetMethod(methodName);
+				MethodInfo method = gameEntity.GetType().GetMethod(methodName);
 				if (method == null)
-					method = entityType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-				if (method == null)
-					method = entityType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				{
+					//Recurse up through the class heirarchy to try to find the method
+					Type type = gameEntity.GetType();
+					while (type != typeof(Object))
+					{
+						method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+						if (method != null)
+							break;
+
+						type = type.BaseType;
+					}
+				}
 				if (method == null)
 					throw new Exception("Method not found");
 				return method;
@@ -387,12 +434,20 @@ namespace SEModAPIInternal.API.Entity
 					throw new Exception("Game entity was null");
 				if (methodName == null || methodName.Length == 0)
 					throw new Exception("Method name was empty");
-				Type entityType = gameEntity.GetType();
-				MethodInfo method = entityType.GetMethod(methodName, argTypes);
+				MethodInfo method = gameEntity.GetType().GetMethod(methodName, argTypes);
 				if (method == null)
-					method = entityType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy, Type.DefaultBinder, argTypes, null);
-				if (method == null && entityType.BaseType != null)
-					method = entityType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy, Type.DefaultBinder, argTypes, null);
+				{
+					//Recurse up through the class heirarchy to try to find the method
+					Type type = gameEntity.GetType();
+					while (type != typeof(Object))
+					{
+						method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy, Type.DefaultBinder, argTypes, null);
+						if (method != null)
+							break;
+
+						type = type.BaseType;
+					}
+				}
 				if (method == null)
 					throw new Exception("Method not found");
 				return method;
@@ -527,6 +582,67 @@ namespace SEModAPIInternal.API.Entity
 
 				LogManager.ErrorLog.WriteLine(ex);
 				return null;
+			}
+		}
+
+		internal static PropertyInfo GetEntityProperty(Object gameEntity, string propertyName)
+		{
+			try
+			{
+				PropertyInfo property = gameEntity.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				if (property == null)
+					property = gameEntity.GetType().BaseType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+
+				return property;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to get entity property '" + propertyName + "'");
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static Object GetEntityPropertyValue(Object gameEntity, string propertyName)
+		{
+			try
+			{
+				PropertyInfo property = GetEntityProperty(gameEntity, propertyName);
+				if (property == null)
+					return null;
+
+				Object result = property.GetValue(gameEntity, null);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to get entity property value '" + propertyName + "'");
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static void SetEntityPropertyValue(Object gameEntity, string propertyName, Object value)
+		{
+			try
+			{
+				PropertyInfo property = GetEntityProperty(gameEntity, propertyName);
+				if (property == null)
+					return;
+
+				property.SetValue(gameEntity, value, null);
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to set entity property value '" + propertyName + "'");
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
+				return;
 			}
 		}
 

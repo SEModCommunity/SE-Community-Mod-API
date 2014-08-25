@@ -13,7 +13,7 @@ using SEModAPIInternal.Support;
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
 	[DataContract(Name = "GatlingTurretEntityProxy")]
-	public class GatlingTurretEntity : FunctionalBlockEntity
+	public class GatlingTurretEntity : TurretBaseEntity
 	{
 		#region "Attributes"
 

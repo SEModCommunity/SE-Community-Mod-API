@@ -92,6 +92,7 @@
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\ShipWelderEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\SolarPanelEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\ThrustEntity.cs" />
+    <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\TurretBaseEntity.cs" />
     <Compile Include="API\Server\ServerNetworkManager.cs" />
     <Compile Include="API\Utility\Utility.cs" />
     <Compile Include="API\Entity\SectorEntity.cs" />
