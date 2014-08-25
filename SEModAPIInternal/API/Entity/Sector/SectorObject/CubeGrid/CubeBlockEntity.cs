@@ -186,8 +186,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		[DataMember(Order = 2)]
 		[Category("Cube Block")]
+		[Browsable(false)]
 		[ReadOnly(true)]
 		[TypeConverter(typeof(Vector3ITypeConverter))]
+		[Obsolete]
 		public SerializableVector3I Min
 		{
 			get { return ObjectBuilder.Min; }
@@ -196,6 +198,38 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (ObjectBuilder.Min.Equals(value)) return;
 				ObjectBuilder.Min = value;
 				Changed = true;
+			}
+		}
+
+		[DataMember(Order = 2)]
+		[Category("Cube Block")]
+		[ReadOnly(true)]
+		[TypeConverter(typeof(Vector3ITypeConverter))]
+		public Vector3I Position
+		{
+			get { return ObjectBuilder.Min; }
+			set
+			{
+				if (value.Equals((Vector3I)ObjectBuilder.Min)) return;
+				ObjectBuilder.Min = value;
+				Changed = true;
+			}
+		}
+
+		[DataMember(Order = 2)]
+		[Category("Cube Block")]
+		[ReadOnly(true)]
+		[TypeConverter(typeof(Vector3ITypeConverter))]
+		public Vector3I Size
+		{
+			get
+			{
+				MyCubeBlockDefinition def = MyDefinitionManager.Static.GetCubeBlockDefinition(ObjectBuilder);
+				return def.Size;
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 
@@ -714,10 +748,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						{
 							CubeBlockEntity newCubeBlock = null;
 
-							if (BlockRegistry.Instance.Registry.ContainsKey(baseEntity.TypeId))
+							if (BlockRegistry.Instance.ContainsGameType(baseEntity.TypeId))
 							{
 								//Get the matching API type from the registry
-								Type apiType = BlockRegistry.Instance.Registry[baseEntity.TypeId];
+								Type apiType = BlockRegistry.Instance.GetAPIType(baseEntity.TypeId);
 
 								//Create a new API cube block
 								newCubeBlock = (CubeBlockEntity)Activator.CreateInstance(apiType, new object[] { m_parent, baseEntity, entity });

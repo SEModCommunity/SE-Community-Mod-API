@@ -432,7 +432,7 @@ namespace SEModAPIInternal.API.Entity
 					try
 					{
 						//TODO - Find a faster way to get updated data. This call takes ~0.15ms per entity which adds up quickly
-						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+						MyObjectBuilder_EntityBase baseEntity = BaseEntity.GetObjectBuilder(entity);
 						if (baseEntity == null)
 							continue;
 
@@ -490,7 +490,7 @@ namespace SEModAPIInternal.API.Entity
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
 						if (baseEntity == null)
 							continue;
-						if (!EntityRegistry.Instance.Registry.ContainsKey(baseEntity.TypeId))
+						if (!EntityRegistry.Instance.ContainsGameType(baseEntity.TypeId))
 							continue;
 
 						//If the original data already contains an entry for this, skip creation and just update values
@@ -508,7 +508,7 @@ namespace SEModAPIInternal.API.Entity
 							BaseEntity newEntity = null;
 
 							//Get the matching API type from the registry
-							Type apiType = EntityRegistry.Instance.Registry[baseEntity.TypeId];
+							Type apiType = EntityRegistry.Instance.GetAPIType(baseEntity.TypeId);
 
 							//Create a new API entity
 							newEntity = (BaseEntity) Activator.CreateInstance(apiType, new object[] { baseEntity, entity });

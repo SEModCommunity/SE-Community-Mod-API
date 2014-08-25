@@ -870,7 +870,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				BaseObject.SetEntityFieldValue(packedStruct, "35E024D9E3B721592FB9B6FC1A1E239A", (DefinitionIdBlit)def.Id);
 
 				//Set position
-				BaseObject.SetEntityFieldValue(packedStruct, "5C3938C9B8CED1D0057CCF12F04329AB", (Vector3I)cubeBlock.Min);
+				BaseObject.SetEntityFieldValue(packedStruct, "5C3938C9B8CED1D0057CCF12F04329AB", cubeBlock.Position);
 
 				//Set block size
 				BaseObject.SetEntityFieldValue(packedStruct, "0DDB53EB9299ECC9826DF9A47E5E4F38", new Vector3UByte(def.Size));

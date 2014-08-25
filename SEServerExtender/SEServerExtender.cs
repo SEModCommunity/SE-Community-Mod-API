@@ -1120,6 +1120,32 @@ namespace SEServerExtender
 				}
 			}
 
+			if (linkedObject is CockpitEntity)
+			{
+				CockpitEntity cockpit = (CockpitEntity)linkedObject;
+
+				if (e.Node.Nodes.Count < 1)
+				{
+					TRV_Entities.BeginUpdate();
+
+					e.Node.Nodes.Clear();
+					TreeNode node = e.Node.Nodes.Add("Pilot");
+					node.Name = node.Text;
+					node.Tag = cockpit.PilotEntity;
+
+					TRV_Entities.EndUpdate();
+				}
+				else
+				{
+					TRV_Entities.BeginUpdate();
+
+					TreeNode node = e.Node.Nodes[0];
+					node.Tag = cockpit.PilotEntity;
+
+					TRV_Entities.EndUpdate();
+				}
+			}
+
 			if (linkedObject is CargoContainerEntity)
 			{
 				CargoContainerEntity container = (CargoContainerEntity)linkedObject;
