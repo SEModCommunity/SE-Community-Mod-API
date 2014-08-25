@@ -6,6 +6,7 @@ using System.Reflection;
 
 using SEModAPIInternal.Support;
 using SEModAPIInternal.API.Entity;
+using SEModAPIInternal.API.Utility;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -48,6 +49,7 @@ namespace SEModAPIInternal.API.Common
 		#region "Attributes"
 
 		protected static NetworkManager m_instance;
+		protected static MethodInfo m_registerPacketHandlerMethod;
 
 		//This class is just a container for some basic steam game values as well as the actual network manager instance
 		public static string NetworkManagerWrapperNamespace = "C42525D7DE28CE4CFB44651F3D03A50D";
@@ -86,16 +88,8 @@ namespace SEModAPIInternal.API.Common
 		public static string InventoryNetManagerClass = "98C1408628C42B9F7FDB1DE7B8FAE776";
 
 		//1 Packet Type
-		public static string GyroPowerNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
-		public static string GyroPowerNetManagerClass = "B4646791D7A57BE4E2EE21A1F22A4364";
-
-		//1 Packet Type
 		public static string ConveyorEnabledBlockNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string ConveyorEnabledBlockNetManagerClass = "C866709CB4D18071636E8389BEBA8508";
-
-		//3 Packet Types
-		public static string TurretNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
-		public static string TurretNetManagerClass = "D29C33B546169292854A4DECCDB53895";
 
 		//3 Packet Types
 		public static string FloatingObjectNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
@@ -105,10 +99,6 @@ namespace SEModAPIInternal.API.Common
 		public static string VoxelMapNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string VoxelMapNetManagerClass = "EA51F988BB36804CAE6371053AD2602E";
 
-		//3 Packet Types
-		public static string CockpitNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
-		public static string CockpitNetManagerClass = "F622141FE0D93611A749A5DB71DF471F";
-
 		//7 Packet Types
 		public static string CharacterNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string CharacterNetManagerClass = "FA70B722FFD1F55F5A5019DA2499E60B";
@@ -116,6 +106,11 @@ namespace SEModAPIInternal.API.Common
 		#endregion
 
 		#region "Constructors and Initializers"
+
+		static NetworkManager()
+		{
+			PreparePacketRegistrationMethod();
+		}
 
 		protected NetworkManager()
 		{
@@ -133,7 +128,7 @@ namespace SEModAPIInternal.API.Common
 			get { return m_instance; }
 		}
 
-		public Type NetworkManagerType
+		public static Type NetworkManagerType
 		{
 			get
 			{
@@ -145,6 +140,25 @@ namespace SEModAPIInternal.API.Common
 		#endregion
 
 		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				bool result = true;
+
+				Type type = NetworkManagerType;
+				if (type == null)
+					throw new Exception("Could not find internal type for NetworkManager");
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		public static Object GetNetworkManager()
 		{
@@ -238,6 +252,73 @@ namespace SEModAPIInternal.API.Common
 			{
 				LogManager.ErrorLog.WriteLine(ex);
 				return new Dictionary<Type, ushort>();
+			}
+		}
+
+		protected static void PreparePacketRegistrationMethod()
+		{
+			try
+			{
+				Type masterNetManagerType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(NetworkManager.InternalNetManagerNamespace, NetworkManager.InternalNetManagerClass);
+
+				MethodInfo[] methods = masterNetManagerType.GetMethods(BindingFlags.Public | BindingFlags.Static);
+				foreach (MethodInfo method in methods)
+				{
+					if (method.Name == "80EECA92933FCDB28F13F8A8A479BFBD")
+					{
+						ParameterInfo[] parameters = method.GetParameters();
+						if (parameters[0].ParameterType.Name == "BA9ED4CEE897B521F3D57A4EE3B3B8FC")
+						{
+							m_registerPacketHandlerMethod = method;
+							break;
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		internal static void RegisterCustomPacketHandler(Type packetType, MethodInfo handler)
+		{
+			try
+			{
+				if (m_registerPacketHandlerMethod == null)
+					return;
+
+				//Unregister the old packet handler
+				Type masterNetManagerType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(NetworkManager.InternalNetManagerNamespace, NetworkManager.InternalNetManagerClass);
+				FieldInfo packetRegisteryHashSetField = masterNetManagerType.GetField("9858E5CD512FFA5633683B9551FA4C30", BindingFlags.NonPublic | BindingFlags.Static);
+				Object packetRegisteryHashSetRaw = packetRegisteryHashSetField.GetValue(null);
+				HashSet<Object> packetRegisteryHashSet = UtilityFunctions.ConvertHashSet(packetRegisteryHashSetRaw);
+				if (packetRegisteryHashSet.Count == 0)
+					return;
+				foreach (var entry in packetRegisteryHashSet)
+				{
+					FieldInfo delegateField = entry.GetType().GetField("C2AEC105AF9AB1EF82105555583139FC");
+					Type fieldType = delegateField.FieldType;
+					Type[] genericArgs = fieldType.GetGenericArguments();
+					Type[] messageTypeArgs = genericArgs[1].GetGenericArguments();
+					Type messageType = messageTypeArgs[0];
+					if (messageType == packetType)
+					{
+						MethodInfo removeMethod = packetRegisteryHashSetRaw.GetType().GetMethod("Remove");
+						removeMethod.Invoke(packetRegisteryHashSetRaw, new object[] { entry });
+						break;
+					}
+				}
+
+				//Register the new packet handler
+				Type firstArgType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("5F381EA9388E0A32A8C817841E192BE8", "BA9ED4CEE897B521F3D57A4EE3B3B8FC");
+				firstArgType = firstArgType.MakeGenericType(packetType);
+				Object firstArg = Delegate.CreateDelegate(firstArgType, handler);
+				m_registerPacketHandlerMethod.Invoke(null, new object[] { firstArg, 3, Type.Missing, Type.Missing });
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

@@ -154,6 +154,27 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Methods"
 
+		new public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				bool result = true;
+
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(ReactorNamespace, ReactorClass);
+				if (type == null)
+					throw new Exception("Could not find internal type for ReactorEntity");
+				result &= HasMethod(type, ReactorGetInventoryMethod);
+				result &= HasMethod(type, ReactorSetMaxPowerOutputMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
+
 		#region "Internal"
 
 		protected Object InternalGetReactorInventory()
