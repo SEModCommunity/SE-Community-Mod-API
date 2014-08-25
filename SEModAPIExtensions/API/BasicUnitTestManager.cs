@@ -356,6 +356,18 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("CockpitNetworkManager reflection validation failed!");
 			}
 
+			if (!TurretBaseEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("TurretBaseEntity reflection validation failed!");
+			}
+
+			if (!TurretNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("TurretNetworkManager reflection validation failed!");
+			}
+
 			if (result)
 			{
 				Console.WriteLine("All block types passed reflection unit tests!");

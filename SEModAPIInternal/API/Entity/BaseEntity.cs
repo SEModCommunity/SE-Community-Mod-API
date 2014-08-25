@@ -625,6 +625,12 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		internal static MyObjectBuilder_EntityBase GetObjectBuilder(Object entity)
+		{
+			MyObjectBuilder_EntityBase objectBuilder = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+			return objectBuilder;
+		}
+
 		protected void InternalUpdateMaxLinearVelocity()
 		{
 			try

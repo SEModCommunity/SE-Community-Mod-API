@@ -42,7 +42,7 @@ namespace SEServerExtender
 			InitializeComponent();
 
 			CMB_BlockType.BeginUpdate();
-			foreach (var entry in BlockRegistry.Instance.Registry)
+			foreach (var entry in BlockRegistry.Instance.TypeMap)
 			{
 				CMB_BlockType.Items.Add(entry.Value.Name);
 			}
@@ -67,7 +67,7 @@ namespace SEServerExtender
 		{
 			get
 			{
-				KeyValuePair<Type, Type> entry = BlockRegistry.Instance.Registry.ElementAt(CMB_BlockType.SelectedIndex);
+				KeyValuePair<Type, Type> entry = BlockRegistry.Instance.TypeMap.ElementAt(CMB_BlockType.SelectedIndex);
 				return entry;
 			}
 		}
