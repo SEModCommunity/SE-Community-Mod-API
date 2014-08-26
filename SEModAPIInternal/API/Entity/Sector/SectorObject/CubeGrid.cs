@@ -457,6 +457,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 			m_isDisposed = true;
 
+			if (EntityId != 0)
+			{
+				GameEntityManager.RemoveEntity(EntityId);
+			}
+
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnCubeGridDeleted;
 			newEvent.timestamp = DateTime.Now;

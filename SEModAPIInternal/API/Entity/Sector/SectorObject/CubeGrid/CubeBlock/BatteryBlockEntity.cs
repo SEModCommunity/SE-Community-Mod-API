@@ -483,8 +483,29 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			try
 			{
-				//For now we ignore any inbound packets that set the battery's current power
-				//This prevents the clients from having any control over the battery power level
+				object result = BaseObject.InvokeEntityMethod(packet, "C63090F5DDF53DD7CBCB767D94148E5E");
+				if (result == null)
+					return;
+				long entityId = (long)result;
+				BaseObject matchedEntity = GameEntityManager.GetEntity(entityId);
+				if (matchedEntity == null)
+					return;
+				if (!(matchedEntity is BatteryBlockEntity))
+					return;
+				BatteryBlockEntity battery = (BatteryBlockEntity)matchedEntity;
+
+				result = BaseObject.GetEntityFieldValue(packet, "ADC3AB91A03B31875821D57B8B718AF5");
+				if (result == null)
+					return;
+				float packetPowerLevel = (float)result;
+				if (packetPowerLevel == 1.0f)
+					return;
+
+				BaseObject.SetEntityFieldValue(packet, "ADC3AB91A03B31875821D57B8B718AF5", battery.CurrentStoredPower);
+
+				Type refPacketType = packet.GetType().MakeByRefType();
+				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(InternalType, "F512BA7EF29F6A8B7DE3D56BAAC0207B", new Type[] { refPacketType, netManager.GetType() });
+				basePacketHandlerMethod.Invoke(null, new object[] { packet, netManager });
 			}
 			catch (Exception ex)
 			{
