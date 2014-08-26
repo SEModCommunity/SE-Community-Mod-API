@@ -10,10 +10,10 @@ using Sandbox.Definitions;
 using Sandbox.Common.ObjectBuilders;
 
 using SEModAPIInternal.API.Common;
+using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRage.Serialization;
-using SEModAPIInternal.API.Utility;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
@@ -371,7 +371,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		private BatteryBlockEntity m_parent;
 		private Object m_backingObject;
 
-		private static MethodInfo m_registerCurrentPowerOverrideHandler;
 		private static bool m_isRegistered;
 
 		public static string BatteryBlockNetworkManagerNamespace = BatteryBlockEntity.BatteryBlockNamespace + "." + BatteryBlockEntity.BatteryBlockClass;
@@ -396,7 +395,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			m_parent = parent;
 			m_backingObject = backingObject;
 
-			Action action = RegisterCurrentPowerPacketHandler;
+			Action action = RegisterPacketHandlers;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
@@ -459,7 +458,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			BaseObject.InvokeEntityMethod(BackingObject, BatteryBlockNetManagerBroadcastSemiautoEnabledMethod, new object[] { m_parent.SemiautoEnabled });
 		}
 
-		protected static void RegisterCurrentPowerPacketHandler()
+		protected static void RegisterPacketHandlers()
 		{
 			try
 			{
@@ -468,7 +467,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 				Type packetType = InternalType.GetNestedType("59DE66D2ECADE0929A1C776D7FA907E2", BindingFlags.Public | BindingFlags.NonPublic);
 				MethodInfo method = typeof(BatteryBlockNetworkManager).GetMethod("ReceiveCurrentPowerPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-				bool result = NetworkManager.RegisterCustomPacketHandler(packetType, method);
+				bool result = NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Static, packetType, method, InternalType);
 				if (!result)
 					return;
 

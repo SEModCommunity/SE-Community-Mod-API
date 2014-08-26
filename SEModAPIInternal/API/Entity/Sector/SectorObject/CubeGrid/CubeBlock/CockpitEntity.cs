@@ -11,6 +11,7 @@ using Sandbox.Common.ObjectBuilders.VRageData;
 
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
+using System.Reflection;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
@@ -46,6 +47,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			: base(parent, definition, backingObject)
 		{
 			m_controlShip = true;
+			m_networkManager = new CockpitNetworkManager(GetCockpitNetworkManager(), this);
 		}
 
 		#endregion
@@ -238,7 +240,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Cockpit")]
 		[Browsable(false)]
 		[ReadOnly(true)]
-		public CockpitNetworkManager NetworkManager
+		internal CockpitNetworkManager NetworkManager
 		{
 			get
 			{
@@ -307,6 +309,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		private Object m_networkManager;
 		private CockpitEntity m_parent;
 
+		private static bool m_isRegistered;
+
 		//Packets
 		//2480 - Pilot Relative World PositionOrientation
 		//2481 - Dampeners On/Off
@@ -327,6 +331,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			m_networkManager = networkManager;
 			m_parent = parent;
+
+			Action action = RegisterPacketHandlers;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		#endregion
@@ -338,6 +345,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			get { return m_networkManager; }
 		}
 
+		public static Type InternalType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CockpitNetworkManagerNamespace, CockpitNetworkManagerClass);
+				return type;
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
@@ -347,9 +363,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			try
 			{
 				bool result = true;
-				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CockpitNetworkManagerNamespace, CockpitNetworkManagerClass);
+				Type type = InternalType;
 				if (type == null)
 					throw new Exception("Could not find type for CockpitNetworkManager");
+
 				result &= BaseObject.HasMethod(type, CockpitNetworkManagerBroadcastDampenersStatus);
 
 				return result;
@@ -364,6 +381,40 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public void BroadcastDampenersStatus(bool status)
 		{
 			BaseObject.InvokeEntityMethod(BackingObject, CockpitNetworkManagerBroadcastDampenersStatus, new object[] { status });
+		}
+
+		protected static void RegisterPacketHandlers()
+		{
+			try
+			{
+				if (m_isRegistered)
+					return;
+
+				Type packetType = InternalType.GetNestedType("8368ACD3E728CDA04FE741CDC05B1D16", BindingFlags.Public | BindingFlags.NonPublic);
+				MethodInfo method = typeof(CockpitNetworkManager).GetMethod("ReceivePositionOrientationPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+				bool result = NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType, method, InternalType);
+				if (!result)
+					return;
+
+				m_isRegistered = true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		protected static void ReceivePositionOrientationPacket<T>(Object instanceNetManager, ref T packet, Object masterNetManager) where T : struct
+		{
+			try
+			{
+				//For now we ignore any inbound packets that set the positionorientation
+				//This prevents the clients from having any control over the actual ship position
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

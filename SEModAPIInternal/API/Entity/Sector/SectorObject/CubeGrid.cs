@@ -18,6 +18,7 @@ using SEModAPIInternal.Support;
 using VRage;
 using VRageMath;
 using SEModAPIInternal.API.Utility;
+using System.Reflection;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
@@ -723,9 +724,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			Packet3_3 = 4713,
 			Packet3_4 = 4714,
 
-			Packet4_1 = 11212,
+			ThrusterOverrideVector = 11212,		//..08CDB5B2B7DD39CF2E3D29D787045D83
 
-			Packet5_1 = 15262,
+			ThrusterGyroForceVectors = 15262,	//..632113536EC30663C6FF30251EFE637A
 			Packet5_2 = 15263,
 			Packet5_3 = 15264,
 			CubeBlockOrientationIsh = 15265,	//..69FB43596400BF997D806DF041F2B54D
@@ -746,6 +747,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		private CubeGridEntity m_cubeGrid;
 		private Object m_netManager;
+
+		private static bool m_isRegistered;
 
 		public static string CubeGridGetNetManagerMethod = "AF2DACDED0370C8DBA03A53FDA4E2C47";
 
@@ -776,13 +779,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			m_cubeGrid = cubeGrid;
 			var entity = m_cubeGrid.BackingObject;
 			m_netManager = BaseObject.InvokeEntityMethod(entity, CubeGridGetNetManagerMethod);
+
+			Action action = RegisterPacketHandlers;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		#endregion
 
 		#region "Properties"
 
-		public static Type NetManagerType
+		public static Type InternalType
 		{
 			get
 			{
@@ -803,7 +809,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			try
 			{
-				Type type = NetManagerType;
+				Type type = InternalType;
 				if (type == null)
 					throw new Exception("Could not find internal type for CubeGridNetworkManager");
 				bool result = true;
@@ -898,6 +904,59 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 					MyRandom.Instance.CreateRandomSeed()
 				};
 				BaseObject.InvokeEntityMethod(m_netManager, CubeGridNetManagerBroadcastAddCubeBlockMethod, parameters);
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		protected static void RegisterPacketHandlers()
+		{
+			try
+			{
+				if (m_isRegistered)
+					return;
+
+				bool result = true;
+
+				Type packetType = InternalType.GetNestedType("08CDB5B2B7DD39CF2E3D29D787045D83", BindingFlags.Public | BindingFlags.NonPublic);
+				MethodInfo method = typeof(CubeGridNetworkManager).GetMethod("ReceiveThrusterManagerVectorPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType, method, InternalType);
+				Type packetType2 = InternalType.GetNestedType("632113536EC30663C6FF30251EFE637A", BindingFlags.Public | BindingFlags.NonPublic);
+				MethodInfo method2 = typeof(CubeGridNetworkManager).GetMethod("ReceiveThrusterGyroForceVectorPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType2, method2, InternalType);
+
+				if (!result)
+					return;
+
+				m_isRegistered = true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		protected static void ReceiveThrusterManagerVectorPacket<T>(Object instanceNetManager, ref T packet, Object masterNetManager) where T : struct
+		{
+			try
+			{
+				//For now we ignore any inbound packets that set the positionorientation
+				//This prevents the clients from having any control over the actual ship position
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		protected static void ReceiveThrusterGyroForceVectorPacket<T>(Object instanceNetManager, ref T packet, Object masterNetManager) where T : struct
+		{
+			try
+			{
+				//For now we ignore any inbound packets that set the positionorientation
+				//This prevents the clients from having any control over the actual ship position
 			}
 			catch (Exception ex)
 			{
