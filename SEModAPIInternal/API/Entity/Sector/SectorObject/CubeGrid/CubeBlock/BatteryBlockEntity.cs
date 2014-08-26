@@ -467,8 +467,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 					return;
 
 				Type packetType = InternalType.GetNestedType("59DE66D2ECADE0929A1C776D7FA907E2", BindingFlags.Public | BindingFlags.NonPublic);
-
-				NetworkManager.RegisterCustomPacketHandler(packetType, typeof(BatteryBlockNetworkManager).GetMethod("ReceiveCurrentPowerPacket", BindingFlags.NonPublic | BindingFlags.Static));
+				MethodInfo method = typeof(BatteryBlockNetworkManager).GetMethod("ReceiveCurrentPowerPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+				bool result = NetworkManager.RegisterCustomPacketHandler(packetType, method);
+				if (!result)
+					return;
 
 				m_isRegistered = true;
 			}
@@ -478,10 +480,17 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
-		protected static void ReceiveCurrentPowerPacket(ref Object packet, Object netManager)
+		protected static void ReceiveCurrentPowerPacket<T>(ref T packet, Object netManager) where T : struct
 		{
-			//For now we ignore any inbound packets that set the battery's current power
-			//This prevents the clients from having any control over the battery power level
+			try
+			{
+				//For now we ignore any inbound packets that set the battery's current power
+				//This prevents the clients from having any control over the battery power level
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
 		}
 
 		#endregion

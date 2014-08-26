@@ -452,6 +452,23 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
+		[Category("Entity")]
+		[Browsable(true)]
+		[ReadOnly(true)]
+		[TypeConverter(typeof(Vector3TypeConverter))]
+		public Vector3 CenterOfMass
+		{
+			get
+			{
+				return PhysicsBody.CenterOfMassWorld;
+			}
+			private set
+			{
+				//Do nothing!
+			}
+		}
+
 		[IgnoreDataMember]
 		[Category("Entity")]
 		[Browsable(false)]

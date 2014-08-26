@@ -7,6 +7,8 @@ using System.Reflection;
 using SEModAPIInternal.Support;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Utility;
+using System.Linq.Expressions;
+using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
 
 namespace SEModAPIInternal.API.Common
 {
@@ -43,6 +45,8 @@ namespace SEModAPIInternal.API.Common
 		TerminalFunctionalBlockEnabled = 15268,			//..7F2B3C2BC4F8C6F50583C135CA112213
 		TerminalFunctionalBlockName = 15269,			//..721B404F9CB193B34D5353A019A57DAB
 	}
+
+	public delegate void PacketCallback<T>(ref T packet, Object netManager) where T : struct;
 
 	public abstract class NetworkManager
 	{
@@ -255,6 +259,14 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
+		protected static Delegate CreatePacketHandlerDelegate(Type packetType, MethodInfo handler)
+		{
+			Type genericType = typeof(NetworkManager.ReceivePacket<>).MakeGenericType(packetType);
+			handler = handler.MakeGenericMethod(packetType);
+			Delegate action = Delegate.CreateDelegate(genericType, handler);
+			return action;
+		}
+
 		protected static void PreparePacketRegistrationMethod()
 		{
 			try
@@ -281,12 +293,12 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		internal static void RegisterCustomPacketHandler(Type packetType, MethodInfo handler)
+		internal static bool RegisterCustomPacketHandler(Type packetType, MethodInfo handler)
 		{
 			try
 			{
 				if (m_registerPacketHandlerMethod == null)
-					return;
+					return false;
 
 				//Unregister the old packet handler
 				Type masterNetManagerType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(NetworkManager.InternalNetManagerNamespace, NetworkManager.InternalNetManagerClass);
@@ -294,7 +306,8 @@ namespace SEModAPIInternal.API.Common
 				Object packetRegisteryHashSetRaw = packetRegisteryHashSetField.GetValue(null);
 				HashSet<Object> packetRegisteryHashSet = UtilityFunctions.ConvertHashSet(packetRegisteryHashSetRaw);
 				if (packetRegisteryHashSet.Count == 0)
-					return;
+					return false;
+				Object matchedHandler = null;
 				foreach (var entry in packetRegisteryHashSet)
 				{
 					FieldInfo delegateField = entry.GetType().GetField("C2AEC105AF9AB1EF82105555583139FC");
@@ -306,21 +319,52 @@ namespace SEModAPIInternal.API.Common
 					{
 						MethodInfo removeMethod = packetRegisteryHashSetRaw.GetType().GetMethod("Remove");
 						removeMethod.Invoke(packetRegisteryHashSetRaw, new object[] { entry });
+						matchedHandler = entry;
 						break;
 					}
 				}
 
+				if (matchedHandler == null)
+					return false;
+
+				FieldInfo field = matchedHandler.GetType().GetField("C2AEC105AF9AB1EF82105555583139FC", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				Object value = field.GetValue(matchedHandler);
+				MulticastDelegate action = (MulticastDelegate)value;
+				object target = action.Target;
+				FieldInfo field2 = target.GetType().GetField("F774FA5087F549F79181BD64E7B7FF30", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				Object value2 = field2.GetValue(target);
+				MulticastDelegate action2 = (MulticastDelegate)value2;
+				object target2 = action2.Target;
+				FieldInfo field3 = target2.GetType().GetField("2919BD18904683E267BFC1B48709D971", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				Object value3 = field3.GetValue(target2);
+				MulticastDelegate action3 = (MulticastDelegate)value3;
+				Delegate[] list = action3.GetInvocationList();
+				MethodInfo method = action3.Method;
+				object target3 = action3.Target;
+
+				FieldInfo methodBaseField = action3.GetType().GetField("_methodBase", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				FieldInfo methodPtrField = action3.GetType().GetField("_methodPtr", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				FieldInfo methodPtrAuxField = action3.GetType().GetField("_methodPtrAux", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+				Delegate handlerAction = CreatePacketHandlerDelegate(packetType, handler);
+
+				methodBaseField.SetValue(action3, handlerAction.Method);
+				methodPtrField.SetValue(action3, methodPtrField.GetValue(handlerAction));
+				methodPtrAuxField.SetValue(action3, methodPtrAuxField.GetValue(handlerAction));
+
 				//Register the new packet handler
-				Type firstArgType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("5F381EA9388E0A32A8C817841E192BE8", "BA9ED4CEE897B521F3D57A4EE3B3B8FC");
-				firstArgType = firstArgType.MakeGenericType(packetType);
-				Object firstArg = Delegate.CreateDelegate(firstArgType, handler);
-				m_registerPacketHandlerMethod.Invoke(null, new object[] { firstArg, 3, Type.Missing, Type.Missing });
+				MethodInfo registerMethod = m_registerPacketHandlerMethod.MakeGenericMethod(packetType);
+				registerMethod.Invoke(null, new object[] { action3, 3, Type.Missing, Type.Missing });
+				return true;
 			}
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
+				return false;
 			}
 		}
+
+		internal delegate void ReceivePacket<T>(ref T packet, Object netManager) where T : struct;
 
 		#endregion
 	}
