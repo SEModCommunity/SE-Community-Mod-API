@@ -40,6 +40,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string CubeBlockGetIntegrityValueMethod = "get_Integrity";
 		public static string CubeBlockGetMaxIntegrityValueMethod = "4D4887346D2D13A2C6B46A258BAD29DD";
 		public static string CubeBlockUpdateWeldProgressMethod = "A8DDA0AEB3B67EA1E62B927C9D831279";
+		public static string CubeBlockGetMatrixMethod = "FD50436D896ACC794550210055349FE0";
 
 		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 		public static string CubeBlockColorMaskHSVField = "80392678992D8667596D700F61290E02";
@@ -254,6 +255,46 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
+		[IgnoreDataMember]
+		[Category("Cube Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		[TypeConverter(typeof(Vector3TypeConverter))]
+		public Vector3Wrapper Up
+		{
+			get
+			{
+				if (BackingObject == null || ActualObject == null)
+					return Vector3.Zero;
+
+				return GetBlockEntityMatrix().Up;
+			}
+			private set
+			{
+				//Do nothing!
+			}
+		}
+
+		[IgnoreDataMember]
+		[Category("Cube Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		[TypeConverter(typeof(Vector3TypeConverter))]
+		public Vector3Wrapper Forward
+		{
+			get
+			{
+				if (BackingObject == null || ActualObject == null)
+					return Vector3.Zero;
+
+				return GetBlockEntityMatrix().Forward;
+			}
+			private set
+			{
+				//Do nothing!
+			}
+		}
+
 		[DataMember(Order = 2)]
 		[Category("Cube Block")]
 		[TypeConverter(typeof(Vector3TypeConverter))]
@@ -422,6 +463,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (type == null)
 					throw new Exception("Could not find internal type for CubeBlockEntity");
 				bool result = true;
+
 				result &= HasMethod(type, CubeBlockGetObjectBuilderMethod);
 				result &= HasMethod(type, CubeBlockGetActualBlockMethod);
 				result &= HasMethod(type, CubeBlockDamageBlockMethod);
@@ -430,6 +472,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				result &= HasMethod(type, CubeBlockGetIntegrityValueMethod);
 				result &= HasMethod(type, CubeBlockGetMaxIntegrityValueMethod);
 				result &= HasMethod(type, CubeBlockUpdateWeldProgressMethod);
+				result &= HasMethod(type, CubeBlockGetMatrixMethod);
+
 				result &= HasField(type, CubeBlockParentCubeGridField);
 				result &= HasField(type, CubeBlockColorMaskHSVField);
 				result &= HasField(type, CubeBlockConstructionManagerField);
@@ -470,6 +514,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		}
 
 		#region "Internal"
+
+		internal Matrix GetBlockEntityMatrix()
+		{
+			try
+			{
+				Matrix result = (Matrix)InvokeEntityMethod(ActualObject, CubeBlockGetMatrixMethod);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return new Matrix();
+			}
+		}
 
 		internal MyCubeBlockDefinition GetBlockDefinition()
 		{

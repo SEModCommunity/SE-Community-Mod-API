@@ -81,6 +81,8 @@ namespace SEModAPIInternal.API.Common
 			Register(typeof(MyObjectBuilder_SolarPanel), typeof(SolarPanelEntity), energy);
 			Register(typeof(MyObjectBuilder_Thrust), typeof(ThrustEntity), misc);
 			Register(typeof(MyObjectBuilder_SmallGatlingGun), typeof(SmallGatlingGunEntity), weapons);
+			Register(typeof(MyObjectBuilder_MotorBase), typeof(RotorEntity), misc);
+			Register(typeof(MyObjectBuilder_PistonBase), typeof(PistonEntity), misc);
 
 			//Base Types
 			Register(typeof(MyObjectBuilder_CubeBlock), typeof(CubeBlockEntity), structural);

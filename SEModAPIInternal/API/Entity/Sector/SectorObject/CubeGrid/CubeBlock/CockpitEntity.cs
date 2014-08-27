@@ -12,6 +12,7 @@ using Sandbox.Common.ObjectBuilders.VRageData;
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 using System.Reflection;
+using VRageMath;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
@@ -277,6 +278,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		public void FireWeapons()
+		{
+			NetworkManager.BroadcastWeaponAction();
+		}
+
 		protected Object GetCockpitNetworkManager()
 		{
 			Object result = InvokeEntityMethod(ActualObject, CockpitEntityGetNetworkManager);
@@ -322,6 +328,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string CockpitNetworkManagerClass = "F622141FE0D93611A749A5DB71DF471F";
 
 		public static string CockpitNetworkManagerBroadcastDampenersStatus = "CF03B0F414BEA9134AFC06C2F31333E8";
+		public static string CockpitNetworkManagerBroadcastWeaponActionMethod = "1D1345BB3B40C08D45FB81048E3D55FE";
 
 		#endregion
 
@@ -368,6 +375,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 					throw new Exception("Could not find type for CockpitNetworkManager");
 
 				result &= BaseObject.HasMethod(type, CockpitNetworkManagerBroadcastDampenersStatus);
+				result &= BaseObject.HasMethod(type, CockpitNetworkManagerBroadcastWeaponActionMethod);
 
 				return result;
 			}
@@ -381,6 +389,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public void BroadcastDampenersStatus(bool status)
 		{
 			BaseObject.InvokeEntityMethod(BackingObject, CockpitNetworkManagerBroadcastDampenersStatus, new object[] { status });
+		}
+
+		public void BroadcastWeaponAction()
+		{
+			Vector3 weaponDirection = m_parent.Forward;
+			BaseObject.InvokeEntityMethod(BackingObject, CockpitNetworkManagerBroadcastWeaponActionMethod, new object[] { weaponDirection, Type.Missing });
 		}
 
 		protected static void RegisterPacketHandlers()
