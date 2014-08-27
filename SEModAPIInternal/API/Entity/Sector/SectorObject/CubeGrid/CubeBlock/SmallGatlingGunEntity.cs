@@ -23,6 +23,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public static string SmallGatlingGunGetInventoryMethod = "GetInventory";
 		public static string SmallGatlingGunShootMethod = "Shoot";
+		public static string SmallGatlingGunGetDirectionToTargetMethod = "DirectionToTarget";
 
 		#endregion
 
@@ -97,6 +98,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 				result &= HasMethod(type, SmallGatlingGunGetInventoryMethod);
 				result &= HasMethod(type, SmallGatlingGunShootMethod);
+				result &= HasMethod(type, SmallGatlingGunGetDirectionToTargetMethod);
 
 				return result;
 			}
@@ -117,9 +119,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			try
 			{
-				//TODO - Fix this to get the proper direction
-				Vector3 direction = Parent.LinearVelocity;
-				direction.Normalize();
+				Vector3 direction = (Vector3)InvokeEntityMethod(ActualObject, SmallGatlingGunGetDirectionToTargetMethod, new object[] { Vector3.Zero });
 
 				InvokeEntityMethod(ActualObject, SmallGatlingGunShootMethod, new object[] { null, direction });
 			}
