@@ -68,6 +68,12 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("ServerAssemblyWrapper reflection validation failed!");
 			}
 
+			if (!NetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("NetworkManager reflection validation failed!");
+			}
+
 			if (!ServerNetworkManager.ReflectionUnitTest())
 			{
 				result = false;
@@ -200,6 +206,12 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("CharacterEntity reflection validation failed!");
 			}
 
+			if (!CharacterEntityNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("CharacterEntityNetworkManager reflection validation failed!");
+			}
+
 			if (!FloatingObject.ReflectionUnitTest())
 			{
 				result = false;
@@ -284,6 +296,12 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("BatteryBlockEntity reflection validation failed!");
 			}
 
+			if (!BatteryBlockNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("BatteryBlockNetworkManager reflection validation failed!");
+			}
+
 			if (!DoorEntity.ReflectionUnitTest())
 			{
 				result = false;
@@ -366,6 +384,36 @@ namespace SEModAPIExtensions.API
 			{
 				result = false;
 				Console.WriteLine("TurretNetworkManager reflection validation failed!");
+			}
+
+			if (!LandingGearEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("LandingGearEntity reflection validation failed!");
+			}
+
+			if (!LandingGearNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("LandingGearNetworkManager reflection validation failed!");
+			}
+
+			if (!ReactorEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ReactorEntity reflection validation failed!");
+			}
+
+			if (!SolarPanelEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("SolarPanelEntity reflection validation failed!");
+			}
+
+			if (!SmallGatlingGunEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("SmallGatlingGunEntity reflection validation failed!");
 			}
 
 			if (result)

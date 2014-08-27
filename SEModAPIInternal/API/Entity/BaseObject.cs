@@ -372,7 +372,55 @@ namespace SEModAPIInternal.API.Entity
 					throw new Exception("Method name was empty");
 				MethodInfo method = objectType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 				if (method == null)
-					method = objectType.BaseType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+				{
+					//Recurse up through the class heirarchy to try to find the method
+					Type type = objectType;
+					while (type != typeof(Object))
+					{
+						method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+						if (method != null)
+							break;
+
+						type = type.BaseType;
+					}
+				}
+				if (method == null)
+					throw new Exception("Method not found");
+				return method;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine("Failed to get static method '" + methodName + "'");
+				if (SandboxGameAssemblyWrapper.IsDebugging)
+					LogManager.ErrorLog.WriteLine(Environment.StackTrace);
+				LogManager.ErrorLog.WriteLine(ex);
+				return null;
+			}
+		}
+
+		internal static MethodInfo GetStaticMethod(Type objectType, string methodName, Type[] argTypes)
+		{
+			try
+			{
+				if (argTypes == null || argTypes.Length == 0)
+					return GetStaticMethod(objectType, methodName);
+
+				if (methodName == null || methodName.Length == 0)
+					throw new Exception("Method name was empty");
+				MethodInfo method = objectType.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy, Type.DefaultBinder, argTypes, null);
+				if (method == null)
+				{
+					//Recurse up through the class heirarchy to try to find the method
+					Type type = objectType;
+					while (type != typeof(Object))
+					{
+						method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy, Type.DefaultBinder, argTypes, null);
+						if (method != null)
+							break;
+
+						type = type.BaseType;
+					}
+				}
 				if (method == null)
 					throw new Exception("Method not found");
 				return method;

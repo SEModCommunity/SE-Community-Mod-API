@@ -58,6 +58,7 @@
     <Compile Include="API\Common\EntityEvents.cs" />
     <Compile Include="API\Common\EntityRegistry.cs" />
     <Compile Include="API\Common\FactionsManager.cs" />
+    <Compile Include="API\Common\GameEntityManager.cs" />
     <Compile Include="API\Common\GameObjectRegistry.cs" />
     <Compile Include="API\Common\NetworkManager.cs" />
     <Compile Include="API\Common\PlayerManager.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\ShipGrinderEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\ShipToolBaseEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\ShipWelderEntity.cs" />
+    <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\SmallGatlingGunEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\SolarPanelEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\ThrustEntity.cs" />
     <Compile Include="API\Entity\Sector\SectorObject\CubeGrid\CubeBlock\TurretBaseEntity.cs" />

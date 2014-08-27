@@ -106,6 +106,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					newEvent.priority = 1;
 				EntityEventManager.Instance.AddEvent(newEvent);
 			}
+
+			if (EntityId != 0)
+			{
+				GameEntityManager.AddEntity(EntityId, this);
+			}
+
 		}
 
 		#endregion
@@ -393,6 +399,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				newEvent.entity = this;
 				newEvent.priority = 1;
 				EntityEventManager.Instance.AddEvent(newEvent);
+			}
+
+			if (EntityId != 0)
+			{
+				GameEntityManager.RemoveEntity(EntityId);
 			}
 
 			base.Dispose();

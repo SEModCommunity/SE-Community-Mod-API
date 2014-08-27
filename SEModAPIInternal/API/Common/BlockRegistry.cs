@@ -80,6 +80,7 @@ namespace SEModAPIInternal.API.Common
 			Register(typeof(MyObjectBuilder_ShipWelder), typeof(ShipWelderEntity), tools);
 			Register(typeof(MyObjectBuilder_SolarPanel), typeof(SolarPanelEntity), energy);
 			Register(typeof(MyObjectBuilder_Thrust), typeof(ThrustEntity), misc);
+			Register(typeof(MyObjectBuilder_SmallGatlingGun), typeof(SmallGatlingGunEntity), weapons);
 
 			//Base Types
 			Register(typeof(MyObjectBuilder_CubeBlock), typeof(CubeBlockEntity), structural);
