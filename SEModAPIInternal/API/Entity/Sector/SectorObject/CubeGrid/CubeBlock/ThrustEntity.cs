@@ -194,8 +194,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		protected void InternalUpdateOverride()
 		{
+			m_networkManager.BroadcastOverride(m_thrustOverride);
 			InvokeEntityMethod(ActualObject, ThrustSetOverrideMethod, new object[] { m_thrustOverride });
-			m_networkManager.BroadcastOverride();
 		}
 
 		#endregion
@@ -255,21 +255,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
-		public void BroadcastOverride()
+		public void BroadcastOverride(float overrideValue)
 		{
-			Action action = InternalBroadcastOverride;
-			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+			BaseObject.InvokeEntityMethod(m_backingObject, ThrustNetManagerBroadcastOverrideMethod, new object[] { overrideValue });
 		}
-
-		#region "Internal"
-
-		protected void InternalBroadcastOverride()
-		{
-			float thrustOverride = m_parent.Override;
-			BaseObject.InvokeEntityMethod(m_backingObject, ThrustNetManagerBroadcastOverrideMethod, new object[] { thrustOverride });
-		}
-
-		#endregion
 
 		#endregion
 	}
