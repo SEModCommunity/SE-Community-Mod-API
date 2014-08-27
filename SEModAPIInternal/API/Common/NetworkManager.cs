@@ -41,8 +41,6 @@ namespace SEModAPIInternal.API.Common
 		Timespan,
 	}
 
-	public delegate void PacketCallback<T>(ref T packet, Object netManager) where T : struct;
-
 	public abstract class NetworkManager
 	{
 		#region "Attributes"
