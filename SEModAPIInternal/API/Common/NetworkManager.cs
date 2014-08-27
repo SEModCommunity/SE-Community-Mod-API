@@ -16,28 +16,16 @@ namespace SEModAPIInternal.API.Common
 
 	public enum PacketIds
 	{
-		CharacterSomething1 = 2,						//..7847F8340783A392D3C9E07718737962
-		CharacterSomething2 = 3,						//..93DF818852230694BC15B90773A66870
-		CharacterSomething3 = 4,						//..06F1DF314B7D765E189DFBBF84C09B00
 		CharacterDamage = 5,							//..D666899DBA69CE94D9A0975FDAB80BEC
 		VoxelSomething = 13,							//..8B85E2DD7354BDB570B8F448FF105601
-		CharacterSomething6 = 22,						//..0375BD13880985CF806BF38D80ABE4DB
 		VoxelSomething2 = 36,							//..630C381F251A7EBADB91135C8E343D17
 		EntityBase = 37,								//..4F06732E7F1BD73CCF9AA12C9675A0F6
 		EntityBaseSerialized = 38,						//..9163D0037A92C9B6DBF801EF5D53998E
 		GravitySettings = 666,							//..4E427F5D20ED55F40EFFE0F6D0E179D8
-		TurretTarget = 686,								//..DABFCC05F372B902A14FEFB1B6B889B3
-		TurretRange = 687,								//..78F7C65371191C7D0BA7C46BC9F112DE
-		TurretSettings = 688,							//..65BD9CBA6B21F560415090186DE389B6
 		FloatingObjectPositionOrientation = 1630,		//..D5E5BAF9064D0C9A26E2BB899ED3BED8
 		InventoryTransferItem = 2467,					//..5D0E63127AEA2BE91B98D448983B0647
 		InventoryUpdateItemAmount = 2468,				//..8305AA2AB275DF34165B55263A6A7AA5
 		EnabledConveyorSystem = 2476,					//..696B1F840A189ED6F234D7875793AF6D
-		CockpitPositionOrientation = 2480,				//..8368ACD3E728CDA04FE741CDC05B1D16
-		CockpitBool = 2481,								//..E59C3103AA8B11FF99C28DA074A47BBA
-		CockpitAutopilotBase = 2487,					//..CCA7807F519575CCBA69CA2492CC90ED
-		CharacterModelName = 4758,						//..4757FDF8DAF0EB6F0D0346ECEFD6E719
-		CharacterSomething5 = 7414,						//..3BEB0A4A04463445218D632E2CD94536
 		GyroPower = 7586,								//..BB19174225804BB5035228F5477D82C9
 		FloatingObjectAltPositionOrientation = 10150,	//..564E654F19DA5C21E7869B4744304993
 		FloatingObjectContents = 10151,					//..0008E59AE36FA0F2E7ED91037507E4E8
@@ -111,10 +99,6 @@ namespace SEModAPIInternal.API.Common
 		//2 Packet Types
 		public static string VoxelMapNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string VoxelMapNetManagerClass = "EA51F988BB36804CAE6371053AD2602E";
-
-		//7 Packet Types
-		public static string CharacterNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
-		public static string CharacterNetManagerClass = "FA70B722FFD1F55F5A5019DA2499E60B";
 
 		#endregion
 

@@ -206,6 +206,12 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("CharacterEntity reflection validation failed!");
 			}
 
+			if (!CharacterEntityNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("CharacterEntityNetworkManager reflection validation failed!");
+			}
+
 			if (!FloatingObject.ReflectionUnitTest())
 			{
 				result = false;
@@ -402,6 +408,12 @@ namespace SEModAPIExtensions.API
 			{
 				result = false;
 				Console.WriteLine("SolarPanelEntity reflection validation failed!");
+			}
+
+			if (!SmallGatlingGunEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("SmallGatlingGunEntity reflection validation failed!");
 			}
 
 			if (result)

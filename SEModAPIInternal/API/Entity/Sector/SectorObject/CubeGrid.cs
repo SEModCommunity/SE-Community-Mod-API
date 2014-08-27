@@ -189,6 +189,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				}
 
 				if (name.Length == 0)
+					name = DisplayName;
+
+				if (name.Length == 0)
 					name = ObjectBuilder.EntityId.ToString();
 
 				m_name = name;
@@ -925,12 +928,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 				bool result = true;
 
+				//Skip the overrides for now until we figure out more about client controlled position packets
+				/*
 				Type packetType = InternalType.GetNestedType("08CDB5B2B7DD39CF2E3D29D787045D83", BindingFlags.Public | BindingFlags.NonPublic);
 				MethodInfo method = typeof(CubeGridNetworkManager).GetMethod("ReceiveThrusterManagerVectorPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType, method, InternalType);
 				Type packetType2 = InternalType.GetNestedType("632113536EC30663C6FF30251EFE637A", BindingFlags.Public | BindingFlags.NonPublic);
 				MethodInfo method2 = typeof(CubeGridNetworkManager).GetMethod("ReceiveThrusterGyroForceVectorPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType2, method2, InternalType);
+				*/
 
 				if (!result)
 					return;
