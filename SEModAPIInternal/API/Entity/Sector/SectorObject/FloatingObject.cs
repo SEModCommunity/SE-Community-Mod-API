@@ -194,7 +194,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Methods"
 
-		new public static bool ReflectionUnitTest()
+		public static bool ReflectionUnitTest()
 		{
 			try
 			{

@@ -253,7 +253,7 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private static SectorObjectManager m_instance;
-		private static BaseEntity m_nextEntityToUpdate;
+		private static Queue<BaseEntity> m_addEntityQueue = new Queue<BaseEntity>();
 
 		public static string ObjectManagerNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ObjectManagerClass = "CAF1EB435F77C7B77580E2E16F988BED";
@@ -432,7 +432,7 @@ namespace SEModAPIInternal.API.Entity
 					try
 					{
 						//TODO - Find a faster way to get updated data. This call takes ~0.15ms per entity which adds up quickly
-						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entity, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+						MyObjectBuilder_EntityBase baseEntity = BaseEntity.GetObjectBuilder(entity);
 						if (baseEntity == null)
 							continue;
 
@@ -490,7 +490,7 @@ namespace SEModAPIInternal.API.Entity
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
 						if (baseEntity == null)
 							continue;
-						if (!EntityRegistry.Instance.Registry.ContainsKey(baseEntity.TypeId))
+						if (!EntityRegistry.Instance.ContainsGameType(baseEntity.TypeId))
 							continue;
 
 						//If the original data already contains an entry for this, skip creation and just update values
@@ -508,7 +508,7 @@ namespace SEModAPIInternal.API.Entity
 							BaseEntity newEntity = null;
 
 							//Get the matching API type from the registry
-							Type apiType = EntityRegistry.Instance.Registry[baseEntity.TypeId];
+							Type apiType = EntityRegistry.Instance.GetAPIType(baseEntity.TypeId);
 
 							//Create a new API entity
 							newEntity = (BaseEntity) Activator.CreateInstance(apiType, new object[] { baseEntity, entity });
@@ -550,7 +550,7 @@ namespace SEModAPIInternal.API.Entity
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine(entity.GetType().Name + " '" + entity.Name + "' is being added ...");
 
-				m_nextEntityToUpdate = entity;
+				m_addEntityQueue.Enqueue(entity);
 
 				Action action = InternalAddEntity;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
@@ -565,93 +565,70 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_nextEntityToUpdate == null)
+				if (m_addEntityQueue.Count == 0)
 					return;
 
+				BaseEntity entityToAdd = m_addEntityQueue.Dequeue();
+
 				if (SandboxGameAssemblyWrapper.IsDebugging)
-					Console.WriteLine(m_nextEntityToUpdate.GetType().Name + " '" + m_nextEntityToUpdate.GetType().Name + "': Adding to scene ...");
+					Console.WriteLine(entityToAdd.GetType().Name + " '" + entityToAdd.GetType().Name + "': Adding to scene ...");
 
 				//Create the backing object
-				Type entityType = m_nextEntityToUpdate.GetType();
+				Type entityType = entityToAdd.GetType();
 				Type internalType = (Type)BaseEntity.InvokeStaticMethod(entityType, "get_InternalType");
 				if (internalType == null)
 					throw new Exception("Could not get internal type of entity");
-				m_nextEntityToUpdate.BackingObject = Activator.CreateInstance(internalType);
+				entityToAdd.BackingObject = Activator.CreateInstance(internalType);
 
 				//Initialize the backing object
-				BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate.BackingObject, "Init", new object[] { m_nextEntityToUpdate.ObjectBuilder });
+				BaseEntity.InvokeEntityMethod(entityToAdd.BackingObject, "Init", new object[] { entityToAdd.ObjectBuilder });
 
 				//Add the backing object to the main game object manager
-				BaseEntity.InvokeStaticMethod(InternalType, ObjectManagerAddEntity, new object[] { m_nextEntityToUpdate.BackingObject, true });
+				BaseEntity.InvokeStaticMethod(InternalType, ObjectManagerAddEntity, new object[] { entityToAdd.BackingObject, true });
 
-				if (m_nextEntityToUpdate is FloatingObject)
+				if (entityToAdd is FloatingObject)
 				{
-					InternalBroadcastAddFloatingObject();
+					try
+					{
+						//Broadcast the new entity to the clients
+						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entityToAdd.BackingObject, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+						//TODO - Do stuff
+
+						entityToAdd.ObjectBuilder = baseEntity;
+					}
+					catch (Exception ex)
+					{
+						LogManager.APILog.WriteLineAndConsole("Failed to broadcast new floating object");
+						LogManager.ErrorLog.WriteLine(ex);
+					}
 				}
 				else
 				{
-					InternalBroadcastAddEntity();
+					try
+					{
+						//Broadcast the new entity to the clients
+						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(entityToAdd.BackingObject, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
+						Type someManager = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(EntityBaseNetManagerNamespace, EntityBaseNetManagerClass);
+						BaseEntity.InvokeStaticMethod(someManager, EntityBaseNetManagerSendEntity, new object[] { baseEntity });
+
+						entityToAdd.ObjectBuilder = baseEntity;
+					}
+					catch (Exception ex)
+					{
+						LogManager.APILog.WriteLineAndConsole("Failed to broadcast new entity");
+						LogManager.ErrorLog.WriteLine(ex);
+					}
 				}
 
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 				{
-					Type type = m_nextEntityToUpdate.GetType();
-					Console.WriteLine(type.Name + " '" + m_nextEntityToUpdate.Name + "': Finished adding to scene");
+					Type type = entityToAdd.GetType();
+					Console.WriteLine(type.Name + " '" + entityToAdd.Name + "': Finished adding to scene");
 				}
-
-                EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
-                newEvent.type = EntityEventManager.EntityEventType.OnCubeGridAdded;
-                newEvent.timestamp = DateTime.Now;
-                newEvent.entity = this;
-                newEvent.priority = 9;
-                EntityEventManager.Instance.AddEvent(newEvent);
-
-				m_nextEntityToUpdate = null;
 			}
 			catch (Exception ex)
 			{
 				LogManager.APILog.WriteLineAndConsole("Failed to add new entity");
-				LogManager.ErrorLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalBroadcastAddEntity()
-		{
-			try
-			{
-				if (m_nextEntityToUpdate == null)
-					return;
-
-				//Broadcast the new entity to the clients
-				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate.BackingObject, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
-				Type someManager = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(EntityBaseNetManagerNamespace, EntityBaseNetManagerClass);
-				BaseEntity.InvokeStaticMethod(someManager, EntityBaseNetManagerSendEntity, new object[] { baseEntity });
-
-				m_nextEntityToUpdate.ObjectBuilder = baseEntity;
-			}
-			catch (Exception ex)
-			{
-				LogManager.APILog.WriteLineAndConsole("Failed to broadcast new entity");
-				LogManager.ErrorLog.WriteLine(ex);
-			}
-		}
-
-		protected void InternalBroadcastAddFloatingObject()
-		{
-			try
-			{
-				if (m_nextEntityToUpdate == null)
-					return;
-
-				//Broadcast the new entity to the clients
-				MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)BaseEntity.InvokeEntityMethod(m_nextEntityToUpdate.BackingObject, BaseEntity.BaseEntityGetObjectBuilderMethod, new object[] { Type.Missing });
-				//TODO - Do stuff
-
-				m_nextEntityToUpdate.ObjectBuilder = baseEntity;
-			}
-			catch (Exception ex)
-			{
-				LogManager.APILog.WriteLineAndConsole("Failed to broadcast new floating object");
 				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}

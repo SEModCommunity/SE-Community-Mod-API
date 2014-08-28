@@ -1,14 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 using Sandbox.Common.ObjectBuilders;
 
 using SEModAPIInternal.API.Entity;
+using System.Runtime.InteropServices;
 
 namespace SEModAPIInternal.API.Common
 {
+	public struct GameObjectTypeEntry
+	{
+		public Guid source;
+		public Type gameType;
+		public Type apiType;
+		public bool enabled;
+		public GameObjectCategory category;
+
+		public override int GetHashCode()
+		{
+			return gameType.GetHashCode();
+		}
+	}
+
 	public struct GameObjectCategory
 	{
 		public ushort id;
@@ -20,8 +36,10 @@ namespace SEModAPIInternal.API.Common
 		#region "Attributes"
 
 		private static GameObjectRegistry m_instance;
+
+		private Dictionary<Guid, HashSet<GameObjectTypeEntry>> m_registry;
 		private Dictionary<Type, Type> m_typeMap;
-		private Dictionary<GameObjectCategory, List<Type>> m_categoryMap;
+		private GameObjectCategory m_generalCategory;
 
 		#endregion
 
@@ -29,8 +47,11 @@ namespace SEModAPIInternal.API.Common
 
 		protected GameObjectRegistry()
 		{
+			m_registry = new Dictionary<Guid, HashSet<GameObjectTypeEntry>>();
 			m_typeMap = new Dictionary<Type, Type>();
-			m_categoryMap = new Dictionary<GameObjectCategory, List<Type>>();
+			m_generalCategory = new GameObjectCategory();
+			m_generalCategory.id = 0;
+			m_generalCategory.name = "General";
 		}
 
 		#endregion
@@ -48,44 +69,60 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public Dictionary<Type, Type> Registry
+		public Dictionary<Type, Type> TypeMap
 		{
-			get { return m_typeMap; }
-		}
-
-		public Dictionary<GameObjectCategory, List<Type>> CategoryMap
-		{
-			get { return m_categoryMap; }
+			get
+			{
+				return new Dictionary<Type, Type>(m_typeMap);
+			}
 		}
 
 		#endregion
 
 		#region "Methods"
 
-		public void Register(Type gameType, Type apiType, GameObjectCategory category)
+		public bool ContainsGameType(Type gameType)
 		{
-			if (CategoryMap.ContainsKey(category))
-			{
-				//Update the existing category list with the new game type
-				List<Type> types = CategoryMap[category];
-				if (!types.Contains(gameType))
-				{
-					types.Add(gameType);
-				}
-			}
-			else
-			{
-				//Create a new entry in the category map with the new game type
-				List<Type> types = new List<Type>();
-				types.Add(gameType);
-				m_categoryMap.Add(category, types);
-			}
+			if (gameType == null)
+				return false;
 
-			//Register the game type
-			Register(gameType, apiType);
+			return m_typeMap.ContainsKey(gameType);
 		}
 
-		public virtual void Register(Type gameType, Type apiType)
+		public bool ContainsAPIType(Type apiType)
+		{
+			if (apiType == null)
+				return false;
+
+			return m_typeMap.ContainsValue(apiType);
+		}
+
+		public Type GetAPIType(Type gameType)
+		{
+			if (!ContainsGameType(gameType))
+				return null;
+
+			return m_typeMap[gameType];
+		}
+
+		public List<Type> GetGameTypes()
+		{
+			List<Type> types = new List<Type>(m_typeMap.Keys.ToList());
+			return types;
+		}
+
+		public List<Type> GetAPITypes()
+		{
+			List<Type> types = new List<Type>(m_typeMap.Values.ToList());
+			return types;
+		}
+
+		public void Register(Type gameType, Type apiType)
+		{
+			Register(gameType, apiType, m_generalCategory);
+		}
+
+		public void Register(Type gameType, Type apiType, GameObjectCategory category)
 		{
 			if (apiType == null || gameType == null)
 				return;
@@ -93,31 +130,82 @@ namespace SEModAPIInternal.API.Common
 				return;
 			if (!typeof(BaseObject).IsAssignableFrom(apiType))
 				return;
-			if (Registry.ContainsKey(apiType))
+			if (m_typeMap.ContainsKey(gameType))
 				return;
-			if (Registry.ContainsValue(gameType))
+			if (m_typeMap.ContainsValue(apiType))
+				return;
+			if (!ValidateRegistration(gameType, apiType))
 				return;
 
-			Registry.Add(gameType, apiType);
+			GuidAttribute guid = (GuidAttribute)Assembly.GetCallingAssembly().GetCustomAttributes(typeof(GuidAttribute), true)[0];
+			Guid guidValue = new Guid(guid.Value);
+
+			GameObjectTypeEntry entry = new GameObjectTypeEntry();
+			entry.source = guidValue;
+			entry.gameType = gameType;
+			entry.apiType = apiType;
+			entry.enabled = true;
+			entry.category = category;
+
+			m_typeMap.Add(gameType, apiType);
+
+			if (m_registry.ContainsKey(guidValue))
+			{
+				HashSet<GameObjectTypeEntry> hashSet = m_registry[guidValue];
+				hashSet.Add(entry);
+			}
+			else
+			{
+				HashSet<GameObjectTypeEntry> hashSet = new HashSet<GameObjectTypeEntry>();
+				hashSet.Add(entry);
+				m_registry.Add(guidValue, hashSet);
+			}
 		}
 
-		public virtual void Unregister(Type gameType)
+		public void Unregister()
+		{
+			GuidAttribute guid = (GuidAttribute)Assembly.GetCallingAssembly().GetCustomAttributes(typeof(GuidAttribute), true)[0];
+			Guid guidValue = new Guid(guid.Value);
+
+			if (!m_registry.ContainsKey(guidValue))
+				return;
+
+			HashSet<GameObjectTypeEntry> hashSet = m_registry[guidValue];
+			foreach (var entry in hashSet)
+			{
+				if (m_typeMap.ContainsKey(entry.gameType) || m_typeMap.ContainsValue(entry.apiType))
+					m_typeMap.Remove(entry.gameType);
+			}
+
+			m_registry.Remove(guidValue);
+		}
+
+		public void Unregister(Type gameType)
 		{
 			if (gameType == null)
 				return;
-			if (!Registry.ContainsKey(gameType))
+			if (!m_typeMap.ContainsKey(gameType))
 				return;
 
-			Registry.Remove(gameType);
+			GuidAttribute guid = (GuidAttribute)Assembly.GetCallingAssembly().GetCustomAttributes(typeof(GuidAttribute), true)[0];
+			Guid guidValue = new Guid(guid.Value);
 
-			foreach (var entry in m_categoryMap)
+			HashSet<GameObjectTypeEntry> hashSet = m_registry[guidValue];
+			foreach (var entry in hashSet)
 			{
-				List<Type> types = entry.Value;
-				if (types.Contains(gameType))
+				if (entry.gameType == gameType)
 				{
-					types.Remove(gameType);
+					hashSet.Remove(entry);
+					break;
 				}
 			}
+
+			m_typeMap.Remove(gameType);
+		}
+
+		protected virtual bool ValidateRegistration(Type gameType, Type apiType)
+		{
+			return true;
 		}
 
 		#endregion

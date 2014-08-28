@@ -80,6 +80,9 @@ namespace SEModAPIInternal.API.Common
 			Register(typeof(MyObjectBuilder_ShipWelder), typeof(ShipWelderEntity), tools);
 			Register(typeof(MyObjectBuilder_SolarPanel), typeof(SolarPanelEntity), energy);
 			Register(typeof(MyObjectBuilder_Thrust), typeof(ThrustEntity), misc);
+			Register(typeof(MyObjectBuilder_SmallGatlingGun), typeof(SmallGatlingGunEntity), weapons);
+			Register(typeof(MyObjectBuilder_MotorBase), typeof(RotorEntity), misc);
+			Register(typeof(MyObjectBuilder_PistonBase), typeof(PistonEntity), misc);
 
 			//Base Types
 			Register(typeof(MyObjectBuilder_CubeBlock), typeof(CubeBlockEntity), structural);
@@ -106,16 +109,16 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Methods"
 
-		public override void Register(Type gameType, Type apiType)
+		protected override bool ValidateRegistration(Type gameType, Type apiType)
 		{
 			if (apiType == null || gameType == null)
-				return;
+				return false;
 			if (!typeof(MyObjectBuilder_CubeBlock).IsAssignableFrom(gameType))
-				return;
+				return false;
 			if (!typeof(CubeBlockEntity).IsAssignableFrom(apiType))
-				return;
+				return false;
 
-			base.Register(gameType, apiType);
+			return true;
 		}
 
 		#endregion

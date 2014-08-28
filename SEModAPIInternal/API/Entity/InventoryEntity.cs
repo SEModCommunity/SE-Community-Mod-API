@@ -16,6 +16,13 @@ using VRage;
 
 namespace SEModAPIInternal.API.Entity
 {
+	public struct InventoryDelta
+	{
+		public InventoryItemEntity item;
+		public float oldAmount;
+		public float newAmount;
+	}
+
 	[DataContract(Name = "InventoryEntityProxy")]
 	[KnownType(typeof(InventoryItemEntity))]
 	public class InventoryEntity : BaseObject
@@ -23,10 +30,7 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		private InventoryItemManager m_itemManager;
-
-		protected InventoryItemEntity m_itemToUpdate;
-		protected Decimal m_oldItemAmount;
-		protected Decimal m_newItemAmount;
+		private Queue<InventoryDelta> m_itemDeltaQueue;
 
 		public static string InventoryNamespace = "33FB6E717989660631E6772B99F502AD";
 		public static string InventoryClass = "DE48496EE9812E665B802D5FE9E7AD77";
@@ -58,6 +62,7 @@ namespace SEModAPIInternal.API.Entity
 				itemList.Add(newItem);
 			}
 			m_itemManager.Load(itemList);
+			m_itemDeltaQueue = new Queue<InventoryDelta>();
 		}
 
 		public InventoryEntity(MyObjectBuilder_Inventory definition, Object backingObject)
@@ -65,6 +70,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			m_itemManager = new InventoryItemManager(this, backingObject, InventoryGetItemListMethod);
 			m_itemManager.Refresh();
+			m_itemDeltaQueue = new Queue<InventoryDelta>();
 		}
 
 		#endregion
@@ -193,8 +199,10 @@ namespace SEModAPIInternal.API.Entity
 			defaults.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(itemTypeId);
 			defaults.Amount = 1;
 
-			InventoryItemEntity newItem = m_itemManager.NewEntry<InventoryItemEntity>(defaults);
+			InventoryItemEntity newItem = new InventoryItemEntity(defaults);
 			newItem.ItemId = NextItemId;
+			m_itemManager.NewEntry<InventoryItemEntity>(newItem);
+
 			NextItemId = NextItemId + 1;
 
 			RefreshInventory();
@@ -208,7 +216,7 @@ namespace SEModAPIInternal.API.Entity
 
 			//TODO - Figure out the right way to add new items
 			//Just updating an item amount doesn't seem to work right
-			UpdateItemAmount(source, (Decimal)(source.Amount * 2));
+			UpdateItemAmount(source, source.Amount * 2);
 
 			RefreshInventory();
 
@@ -254,11 +262,20 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[Obsolete]
 		public void UpdateItemAmount(InventoryItemEntity item, Decimal newAmount)
 		{
-			m_itemToUpdate = item;
-			m_oldItemAmount = (Decimal)item.Amount;
-			m_newItemAmount = newAmount;
+			UpdateItemAmount(item, (float)newAmount);
+		}
+
+		public void UpdateItemAmount(InventoryItemEntity item, float newAmount)
+		{
+			InventoryDelta delta = new InventoryDelta();
+			delta.item = item;
+			delta.oldAmount = item.Amount;
+			delta.newAmount = newAmount;
+
+			m_itemDeltaQueue.Enqueue(delta);
 
 			Action action = InternalUpdateItemAmount;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
@@ -270,12 +287,14 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				if (m_itemToUpdate == null)
+				if (m_itemDeltaQueue.Count == 0)
 					return;
 
-				Decimal delta = m_newItemAmount - m_oldItemAmount;
+				InventoryDelta itemDelta = m_itemDeltaQueue.Dequeue();
 
-				MyObjectBuilder_PhysicalObject physicalContent = m_itemToUpdate.ObjectBuilder.PhysicalContent;
+				float delta = itemDelta.newAmount - itemDelta.oldAmount;
+
+				MyObjectBuilder_PhysicalObject physicalContent = itemDelta.item.ObjectBuilder.PhysicalContent;
 
 				if (delta > 0)
 				{
@@ -302,10 +321,6 @@ namespace SEModAPIInternal.API.Entity
 
 					InvokeEntityMethod(BackingObject, InventoryRemoveItemAmountMethod, parameters, argTypes);
 				}
-
-				m_itemToUpdate = null;
-				m_oldItemAmount = 0;
-				m_newItemAmount = 0;
 			}
 			catch (Exception ex)
 			{
@@ -485,7 +500,7 @@ namespace SEModAPIInternal.API.Entity
 				if ((float)baseEntity.Amount == value) return;
 
 				if(Container != null)
-					Container.UpdateItemAmount(this, (Decimal)value);
+					Container.UpdateItemAmount(this, value);
 
 				baseEntity.Amount = (MyFixedPoint)value;
 				Changed = true;

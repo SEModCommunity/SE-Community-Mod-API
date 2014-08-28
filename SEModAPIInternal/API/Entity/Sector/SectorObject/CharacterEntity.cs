@@ -10,6 +10,7 @@ using Sandbox.Game.Weapons;
 
 using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
+using System.Reflection;
 
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 {
@@ -18,6 +19,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 	{
 		#region "Attributes"
 
+		private CharacterEntityNetworkManager m_networkManager;
 		private InventoryEntity m_inventory;
 		private static Type m_internalType;
 
@@ -30,6 +32,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CharacterGetBatteryMethod = "CF72A89940254CB8F535F177150FC743";
 		public static string CharacterGetInventoryMethod = "GetInventory";
 		public static string CharacterGetDisplayNameMethod = "DB913685BC5152DC19A4796E9E8CF659";
+		public static string CharacterGetNetworkManagerMethod = "7605238EEE4275E4AD5608E7BD34D9C2";
 
 		public static string CharacterItemListField = "02F6468D864F3203482135334BEB58AD";
 
@@ -65,6 +68,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			: base(definition, backingObject)
 		{
 			m_inventory = new InventoryEntity(definition.Inventory, InternalGetCharacterInventory());
+			m_networkManager = new CharacterEntityNetworkManager(this, GetCharacterNetworkManager());
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 			newEvent.type = EntityEventManager.EntityEventType.OnCharacterCreated;
@@ -97,7 +101,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[ReadOnly(true)]
 		public override string Name
 		{
-			get { return DisplayName; }
+			get
+			{
+				if(BackingObject == null || SteamId == 0)
+					return DisplayName;
+
+				string name = PlayerMap.Instance.GetPlayerNameFromSteamId(SteamId);
+				return name;
+			}
 		}
 
 		[DataMember]
@@ -288,6 +299,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				result &= BaseObject.HasMethod(type, CharacterGetBatteryMethod);
 				result &= BaseObject.HasMethod(type, CharacterGetInventoryMethod);
 				result &= BaseObject.HasMethod(type, CharacterGetDisplayNameMethod);
+				result &= BaseObject.HasMethod(type, CharacterGetNetworkManagerMethod);
 				result &= BaseObject.HasField(type, CharacterItemListField);
 
 				Type type2 = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CharacterBatteryNamespace, CharacterBatteryClass);
@@ -328,6 +340,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		#region "Internal"
 
+		protected Object GetCharacterNetworkManager()
+		{
+			Object result = InvokeEntityMethod(BackingObject, CharacterGetNetworkManagerMethod);
+			return result;
+		}
+
 		protected string InternalGetDisplayName()
 		{
 			try
@@ -363,7 +381,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			try
 			{
 				float damage = InternalGetCharacterHealth() - Health;
-				InvokeEntityMethod(BackingObject, CharacterDamageCharacterMethod, new object[] { damage, MyDamageType.Unknown, true });
+				MyDamageType damageType = MyDamageType.Unknown;
+				if (Health <= 0)
+					damageType = MyDamageType.Suicide;
+				InvokeEntityMethod(BackingObject, CharacterDamageCharacterMethod, new object[] { damage, damageType, true });
 			}
 			catch (Exception ex)
 			{
@@ -416,6 +437,157 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		}
 
 		#endregion
+
+		#endregion
+	}
+
+	public class CharacterEntityNetworkManager
+	{
+		#region "Attributes"
+
+		private static bool m_isRegistered;
+
+		private CharacterEntity m_parent;
+		private Object m_backingObject;
+
+		public static string CharacterNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
+		public static string CharacterNetManagerClass = "FA70B722FFD1F55F5A5019DA2499E60B";
+
+		//Packets
+		//2
+		//3
+		//4 - Character orientation
+		//22
+		//4758 - Character model name and color HSV
+		//7414 - Character main data
+		//7415
+		//7416
+
+		#endregion
+
+		#region "Constructors and Initializers"
+
+		public CharacterEntityNetworkManager(CharacterEntity parent, Object backingObject)
+		{
+			m_parent = parent;
+			m_backingObject = backingObject;
+
+			Action action = RegisterPacketHandlers;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+		}
+
+		#endregion
+
+		#region "Properties"
+
+		public static Type InternalType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(CharacterNetManagerNamespace, CharacterNetManagerClass);
+				return type;
+			}
+		}
+
+		public Object BackingObject
+		{
+			get { return m_backingObject; }
+		}
+
+		#endregion
+
+		#region "Methods"
+
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for CharacterEntityNetworkManager");
+				bool result = true;
+				//result &= BaseObject.HasMethod(type, CharacterGetHealthMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.APILog.WriteLine(ex);
+				return false;
+			}
+		}
+
+		protected static void RegisterPacketHandlers()
+		{
+			try
+			{
+				if (m_isRegistered)
+					return;
+
+				bool result = true;
+
+				Type packetType = InternalType.GetNestedType("3BEB0A4A04463445218D632E2CD94536", BindingFlags.Public | BindingFlags.NonPublic);
+				MethodInfo method = typeof(CharacterEntityNetworkManager).GetMethod("ReceiveMainDataPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType, method, InternalType);
+				packetType = InternalType.GetNestedType("06F1DF314B7D765E189DFBBF84C09B00", BindingFlags.Public | BindingFlags.NonPublic);
+				method = typeof(CharacterEntityNetworkManager).GetMethod("ReceiveOrientationPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType, method, InternalType);
+
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("AAC05F537A6F0F6775339593FBDFC564", "7B40EEB62BF9EBADF967050BFA3976CA");
+				packetType = type.GetNestedType("4850B8A3B1027F683755D493244815AA", BindingFlags.Public | BindingFlags.NonPublic);
+				method = typeof(CharacterEntityNetworkManager).GetMethod("ReceiveSpawnPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Static, packetType, method, InternalType);
+
+				if (!result)
+					return;
+
+				m_isRegistered = true;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		protected static void ReceiveMainDataPacket<T>(Object instanceNetManager, ref T packet, Object masterNetManager) where T : struct
+		{
+			try
+			{
+				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(InternalType, "4055A1176BF0FA0C554491A3206CD656");
+				basePacketHandlerMethod.Invoke(null, new object[] { instanceNetManager, packet, masterNetManager });
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		protected static void ReceiveOrientationPacket<T>(Object instanceNetManager, ref T packet, Object masterNetManager) where T : struct
+		{
+			try
+			{
+				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(InternalType, "F990CA0A818DDC8A56001B3D630EE54C");
+				basePacketHandlerMethod.Invoke(null, new object[] { instanceNetManager, packet, masterNetManager });
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		protected static void ReceiveSpawnPacket<T>(ref T packet, Object masterNetManager) where T : struct
+		{
+			try
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("AAC05F537A6F0F6775339593FBDFC564", "7B40EEB62BF9EBADF967050BFA3976CA");
+				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(type, "364216D779218E8D22F3991B8FBA170A");
+				basePacketHandlerMethod.Invoke(null, new object[] { packet, masterNetManager });
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
 
 		#endregion
 	}

@@ -38,9 +38,56 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Properties"
 
+		[IgnoreDataMember]
+		[Category("Merge Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new static Type InternalType
+		{
+			get
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(MergeBlockNamespace, MergeBlockClass);
+				return type;
+			}
+		}
+
+		[IgnoreDataMember]
+		[Category("Merge Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		internal new MyObjectBuilder_MergeBlock ObjectBuilder
+		{
+			get { return (MyObjectBuilder_MergeBlock)base.ObjectBuilder; }
+			set
+			{
+				base.ObjectBuilder = value;
+			}
+		}
+
 		#endregion
 
 		#region "Methods"
+
+		new public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				bool result = true;
+
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for MergeBlockEntity");
+
+				//result &= HasMethod(type, BatteryBlockGetCurrentStoredPowerMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
 
 		#endregion
 	}
