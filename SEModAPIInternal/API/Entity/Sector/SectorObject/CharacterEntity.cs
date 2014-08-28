@@ -456,7 +456,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		//Packets
 		//2
 		//3
-		//4
+		//4 - Character orientation
 		//22
 		//4758 - Character model name and color HSV
 		//7414 - Character main data
@@ -529,6 +529,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				Type packetType = InternalType.GetNestedType("3BEB0A4A04463445218D632E2CD94536", BindingFlags.Public | BindingFlags.NonPublic);
 				MethodInfo method = typeof(CharacterEntityNetworkManager).GetMethod("ReceiveMainDataPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType, method, InternalType);
+				packetType = InternalType.GetNestedType("06F1DF314B7D765E189DFBBF84C09B00", BindingFlags.Public | BindingFlags.NonPublic);
+				method = typeof(CharacterEntityNetworkManager).GetMethod("ReceiveOrientationPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType, method, InternalType);
+
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("AAC05F537A6F0F6775339593FBDFC564", "7B40EEB62BF9EBADF967050BFA3976CA");
+				packetType = type.GetNestedType("4850B8A3B1027F683755D493244815AA", BindingFlags.Public | BindingFlags.NonPublic);
+				method = typeof(CharacterEntityNetworkManager).GetMethod("ReceiveSpawnPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Static, packetType, method, InternalType);
 
 				if (!result)
 					return;
@@ -545,9 +553,35 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			try
 			{
-				Type refPacketType = packet.GetType().MakeByRefType();
-				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(InternalType, "4055A1176BF0FA0C554491A3206CD656", new Type[] { instanceNetManager.GetType(), refPacketType, masterNetManager.GetType() });
-				basePacketHandlerMethod.Invoke(null, new object[] { instanceNetManager.GetType(), packet, masterNetManager });
+				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(InternalType, "4055A1176BF0FA0C554491A3206CD656");
+				basePacketHandlerMethod.Invoke(null, new object[] { instanceNetManager, packet, masterNetManager });
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		protected static void ReceiveOrientationPacket<T>(Object instanceNetManager, ref T packet, Object masterNetManager) where T : struct
+		{
+			try
+			{
+				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(InternalType, "F990CA0A818DDC8A56001B3D630EE54C");
+				basePacketHandlerMethod.Invoke(null, new object[] { instanceNetManager, packet, masterNetManager });
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		protected static void ReceiveSpawnPacket<T>(ref T packet, Object masterNetManager) where T : struct
+		{
+			try
+			{
+				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("AAC05F537A6F0F6775339593FBDFC564", "7B40EEB62BF9EBADF967050BFA3976CA");
+				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(type, "364216D779218E8D22F3991B8FBA170A");
+				basePacketHandlerMethod.Invoke(null, new object[] { packet, masterNetManager });
 			}
 			catch (Exception ex)
 			{

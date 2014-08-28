@@ -40,7 +40,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string CubeBlockGetIntegrityValueMethod = "get_Integrity";
 		public static string CubeBlockGetMaxIntegrityValueMethod = "4D4887346D2D13A2C6B46A258BAD29DD";
 		public static string CubeBlockUpdateWeldProgressMethod = "A8DDA0AEB3B67EA1E62B927C9D831279";
-		public static string CubeBlockGetMatrixMethod = "FD50436D896ACC794550210055349FE0";
 
 		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
 		public static string CubeBlockColorMaskHSVField = "80392678992D8667596D700F61290E02";
@@ -55,6 +54,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string ActualCubeBlockGetObjectBuilderMethod = "GetObjectBuilderCubeBlock";
 		public static string ActualCubeBlockGetFactionsObjectMethod = "3E8AC70E5FAAA9C8C4992B71E12CDE28";
 		public static string ActualCubeBlockSetFactionsDataMethod = "7161368A8164DF15904DC82476F7EBBA";
+		public static string ActualCubeBlockGetMatrixMethod = "FD50436D896ACC794550210055349FE0";
 
 		/////////////////////////////////////////////////////
 
@@ -472,7 +472,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				result &= HasMethod(type, CubeBlockGetIntegrityValueMethod);
 				result &= HasMethod(type, CubeBlockGetMaxIntegrityValueMethod);
 				result &= HasMethod(type, CubeBlockUpdateWeldProgressMethod);
-				result &= HasMethod(type, CubeBlockGetMatrixMethod);
 
 				result &= HasField(type, CubeBlockParentCubeGridField);
 				result &= HasField(type, CubeBlockColorMaskHSVField);
@@ -485,6 +484,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				result &= HasMethod(type, ActualCubeBlockGetObjectBuilderMethod);
 				result &= HasMethod(type, ActualCubeBlockGetFactionsObjectMethod);
 				result &= HasMethod(type, ActualCubeBlockSetFactionsDataMethod);
+				result &= HasMethod(type, ActualCubeBlockGetMatrixMethod);
 
 				type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FactionsDataNamespace, FactionsDataClass);
 				if (type == null)
@@ -519,7 +519,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
-				Matrix result = (Matrix)InvokeEntityMethod(ActualObject, CubeBlockGetMatrixMethod);
+				Matrix result = (Matrix)InvokeEntityMethod(ActualObject, ActualCubeBlockGetMatrixMethod);
 				return result;
 			}
 			catch (Exception ex)
