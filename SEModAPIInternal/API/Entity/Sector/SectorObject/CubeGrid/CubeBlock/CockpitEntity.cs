@@ -280,7 +280,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public void FireWeapons()
 		{
-			NetworkManager.BroadcastWeaponAction();
+			Action action = InternalFireWeapons;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
 		protected Object GetCockpitNetworkManager()
@@ -303,6 +304,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		protected void InternalUpdatePilotEntity()
 		{
 			BaseObject.InvokeEntityMethod(ActualObject, CockpitEntitySetPilotEntityMethod, new object[] { PilotEntity.BackingObject });
+		}
+
+		protected void InternalFireWeapons()
+		{
+			NetworkManager.BroadcastWeaponAction();
 		}
 
 		#endregion
