@@ -41,8 +41,6 @@ namespace SEModAPIInternal.API.Common
 		Timespan,
 	}
 
-	public delegate void PacketCallback<T>(ref T packet, Object netManager) where T : struct;
-
 	public abstract class NetworkManager
 	{
 		#region "Attributes"
@@ -347,6 +345,8 @@ namespace SEModAPIInternal.API.Common
 				if (packetRegisteryHashSet.Count == 0)
 					return false;
 				Object matchedHandler = null;
+				List<Object> matchedHandlerList = new List<object>();
+				List<Type> messageTypes = new List<Type>();
 				foreach (var entry in packetRegisteryHashSet)
 				{
 					FieldInfo delegateField = entry.GetType().GetField("C2AEC105AF9AB1EF82105555583139FC");
@@ -357,8 +357,16 @@ namespace SEModAPIInternal.API.Common
 					if (messageType == packetType)
 					{
 						matchedHandler = entry;
-						break;
+						matchedHandlerList.Add(entry);
 					}
+
+					messageTypes.Add(messageType);
+				}
+
+				if (matchedHandlerList.Count > 1)
+				{
+					LogManager.APILog.WriteLine("Found more than 1 packet handler match for type '" + packetType.Name + "'");
+					return false;
 				}
 
 				if (matchedHandler == null)
