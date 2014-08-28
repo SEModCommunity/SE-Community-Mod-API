@@ -29,7 +29,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string ThrustClass = "A52459FBA230B557AC325120832EB494";
 
 		public static string ThrustGetOverrideMethod = "1223DF2E5F66BA5F65ADACCA781A5C96";
-		public static string ThrustSetOverrideMethod = "93422020A3B0D5FF9ABC998955038E04";
+		public static string ThrustSetOverrideMethod = "A30205C8B7B8FBE317E86931BDFF6029";
 		public static string ThrustGetMaxThrustVectorMethod = "8243DD42600709719ECFE7B7BEA0AAE6";
 		public static string ThrustGetMaxPowerConsumptionMethod = "7C636D47F30E12E7A784FEAF91430C12";
 		public static string ThrustGetMinPowerConsumptionMethod = "A86E949F21293FFCCC0A736D01F85167";
@@ -194,8 +194,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		protected void InternalUpdateOverride()
 		{
-			m_networkManager.BroadcastOverride(m_thrustOverride);
 			InvokeEntityMethod(ActualObject, ThrustSetOverrideMethod, new object[] { m_thrustOverride });
+			m_networkManager.BroadcastOverride(m_thrustOverride);
 		}
 
 		#endregion
@@ -210,13 +210,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		private ThrustEntity m_parent;
 		private Object m_backingObject;
 
+		private float m_lastOverride;
+
 		public static string ThrustNetManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string ThrustNetManagerClass = "648783FEE567EB6633169761E312362D";
 
 		public static string ThrustNetManagerBroadcastOverrideMethod = "836153C49F86AF1526ABA97002D09721";
 
-		//Packet ID 7416
-		public static string ThrustNetManagerOverridePacket = "330002FC250DECBB7D7A5F94ABC33BB0";
+		//Packets
+		//7416 - Thrust override
 
 		#endregion
 
@@ -231,6 +233,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#endregion
 
 		#region "Properties"
+
 		#endregion
 
 		#region "Methods"
@@ -257,7 +260,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public void BroadcastOverride(float overrideValue)
 		{
-			BaseObject.InvokeEntityMethod(m_backingObject, ThrustNetManagerBroadcastOverrideMethod, new object[] { overrideValue });
+			if (m_backingObject == null)
+				return;
+
+			m_lastOverride = overrideValue;
+
+			Action action = InternalBroadcastOverride;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+		}
+
+		protected void InternalBroadcastOverride()
+		{
+			BaseObject.InvokeEntityMethod(m_backingObject, ThrustNetManagerBroadcastOverrideMethod, new object[] { m_lastOverride });
 		}
 
 		#endregion
