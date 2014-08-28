@@ -320,7 +320,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		protected void InternalUpdatePilotEntity()
 		{
-			BaseObject.InvokeEntityMethod(ActualObject, CockpitEntitySetPilotEntityMethod, new object[] { PilotEntity.BackingObject });
+			if (m_pilot == null || m_pilot.BackingObject == null)
+				return;
+
+			BaseObject.InvokeEntityMethod(ActualObject, CockpitEntitySetPilotEntityMethod, new object[] { m_pilot.BackingObject });
 		}
 
 		protected void InternalFireWeapons()
