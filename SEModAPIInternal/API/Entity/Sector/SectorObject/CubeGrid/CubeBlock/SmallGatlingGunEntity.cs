@@ -128,6 +128,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				else
 				{
 					status = 0;
+					bool foundMatch = false;
 					Object internalStatus = parameters[2];
 					Type statusEnumType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("5BCAC68007431E61367F5B2CF24E2D6F", "220605D12B47D27E7750E2D6B70FC453");
 					enumValues = statusEnumType.GetEnumValues();
@@ -136,9 +137,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 						if (internalStatus == enumValues.GetValue(i))
 						{
 							status = i;
+							foundMatch = true;
 							break;
 						}
 					}
+					if (!foundMatch)
+						status = -1;
 
 					return false;
 				}
