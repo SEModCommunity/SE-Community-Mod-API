@@ -24,6 +24,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		private CockpitNetworkManager m_networkManager;
 		private CharacterEntity m_pilot;
 		private bool m_controlShip;
+		private bool m_weaponStatus;
 
 		public static string CockpitEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CockpitEntityClass = "0A875207E28B2C7707366CDD300684DF";
@@ -280,7 +281,23 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public void FireWeapons()
 		{
+			if (m_weaponStatus)
+				return;
+
+			m_weaponStatus = true;
+
 			Action action = InternalFireWeapons;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+		}
+
+		public void StopWeapons()
+		{
+			if (!m_weaponStatus)
+				return;
+
+			m_weaponStatus = false;
+
+			Action action = InternalStopWeapons;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
 
@@ -308,7 +325,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		protected void InternalFireWeapons()
 		{
-			NetworkManager.BroadcastWeaponAction();
+			NetworkManager.BroadcastWeaponActionOn();
+		}
+
+		protected void InternalStopWeapons()
+		{
+			NetworkManager.BroadcastWeaponActionOff();
 		}
 
 		#endregion
@@ -334,7 +356,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string CockpitNetworkManagerClass = "F622141FE0D93611A749A5DB71DF471F";
 
 		public static string CockpitNetworkManagerBroadcastDampenersStatus = "CF03B0F414BEA9134AFC06C2F31333E8";
-		public static string CockpitNetworkManagerBroadcastWeaponActionMethod = "1D1345BB3B40C08D45FB81048E3D55FE";
+		public static string CockpitNetworkManagerBroadcastWeaponActionOnMethod = "1D1345BB3B40C08D45FB81048E3D55FE";
+		public static string CockpitNetworkManagerBroadcastWeaponActionOffMethod = "B3B9BD9A7BEB261390495E63154E5B85";
 
 		#endregion
 
@@ -381,7 +404,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 					throw new Exception("Could not find type for CockpitNetworkManager");
 
 				result &= BaseObject.HasMethod(type, CockpitNetworkManagerBroadcastDampenersStatus);
-				result &= BaseObject.HasMethod(type, CockpitNetworkManagerBroadcastWeaponActionMethod);
+				result &= BaseObject.HasMethod(type, CockpitNetworkManagerBroadcastWeaponActionOnMethod);
+				result &= BaseObject.HasMethod(type, CockpitNetworkManagerBroadcastWeaponActionOffMethod);
 
 				return result;
 			}
@@ -392,15 +416,20 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
-		public void BroadcastDampenersStatus(bool status)
+		internal void BroadcastDampenersStatus(bool status)
 		{
 			BaseObject.InvokeEntityMethod(BackingObject, CockpitNetworkManagerBroadcastDampenersStatus, new object[] { status });
 		}
 
-		public void BroadcastWeaponAction()
+		internal void BroadcastWeaponActionOn()
 		{
 			Vector3 weaponDirection = m_parent.Forward;
-			BaseObject.InvokeEntityMethod(BackingObject, CockpitNetworkManagerBroadcastWeaponActionMethod, new object[] { weaponDirection, Type.Missing });
+			BaseObject.InvokeEntityMethod(BackingObject, CockpitNetworkManagerBroadcastWeaponActionOnMethod, new object[] { weaponDirection, Type.Missing });
+		}
+
+		internal void BroadcastWeaponActionOff()
+		{
+			BaseObject.InvokeEntityMethod(BackingObject, CockpitNetworkManagerBroadcastWeaponActionOffMethod, new object[] { Type.Missing });
 		}
 
 		protected static void RegisterPacketHandlers()
