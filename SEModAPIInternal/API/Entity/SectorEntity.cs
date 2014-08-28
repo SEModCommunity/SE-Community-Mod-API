@@ -599,6 +599,13 @@ namespace SEModAPIInternal.API.Entity
 					Console.WriteLine(type.Name + " '" + m_nextEntityToUpdate.Name + "': Finished adding to scene");
 				}
 
+                EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+                newEvent.type = EntityEventManager.EntityEventType.OnCubeGridAdded;
+                newEvent.timestamp = DateTime.Now;
+                newEvent.entity = this;
+                newEvent.priority = 9;
+                EntityEventManager.Instance.AddEvent(newEvent);
+
 				m_nextEntityToUpdate = null;
 			}
 			catch (Exception ex)
