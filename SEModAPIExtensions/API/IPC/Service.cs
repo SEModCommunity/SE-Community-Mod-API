@@ -211,7 +211,7 @@ namespace SEModAPIExtensions.API.IPC
 							continue;
 
 						//If entity is is NOT defined but there is a position mismatch, skip this block
-						if (baseBlock.EntityId == 0 && (Vector3I)baseBlock.Min != (Vector3I)cubeBlock.Min)
+						if (baseBlock.EntityId == 0 && baseBlock.Position != cubeBlock.Position)
 							continue;
 
 						//Copy over the deserialized dummy cube block to the actual cube block
