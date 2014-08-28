@@ -552,7 +552,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		#region "Methods"
 
-		new public static bool ReflectionUnitTest()
+		public static bool ReflectionUnitTest()
 		{
 			try
 			{
