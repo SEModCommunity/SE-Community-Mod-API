@@ -23,6 +23,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public static string SmallGatlingGunGetInventoryMethod = "GetInventory";
 		public static string SmallGatlingGunShootMethod = "Shoot";
+		public static string SmallGatlingGunCanShootMethod = "CanShoot";
 		public static string SmallGatlingGunGetDirectionToTargetMethod = "DirectionToTarget";
 
 		#endregion
@@ -98,6 +99,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 				result &= HasMethod(type, SmallGatlingGunGetInventoryMethod);
 				result &= HasMethod(type, SmallGatlingGunShootMethod);
+				result &= HasMethod(type, SmallGatlingGunCanShootMethod);
 				result &= HasMethod(type, SmallGatlingGunGetDirectionToTargetMethod);
 
 				return result;
@@ -105,6 +107,46 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex);
+				return false;
+			}
+		}
+
+		public bool CanShoot(out int status, long shooterId = 0)
+		{
+			try
+			{
+				Type actionEnumType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("5BCAC68007431E61367F5B2CF24E2D6F", "E13AB8F7D57289161816AAA5BC8AD0C9");
+				Array enumValues = actionEnumType.GetEnumValues();
+				Object actionFire = enumValues.GetValue(0);
+				Object[] parameters = { actionFire, shooterId, null };
+				bool result = (bool)InvokeEntityMethod(ActualObject, SmallGatlingGunCanShootMethod, parameters);
+				if (result)
+				{
+					status = 0;
+					return true;
+				}
+				else
+				{
+					status = 0;
+					Object internalStatus = parameters[2];
+					Type statusEnumType = SandboxGameAssemblyWrapper.Instance.GetAssemblyType("5BCAC68007431E61367F5B2CF24E2D6F", "220605D12B47D27E7750E2D6B70FC453");
+					enumValues = statusEnumType.GetEnumValues();
+					for (int i = 0; i < enumValues.Length; i++)
+					{
+						if (internalStatus == enumValues.GetValue(i))
+						{
+							status = i;
+							break;
+						}
+					}
+
+					return false;
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				status = -1;
 				return false;
 			}
 		}
