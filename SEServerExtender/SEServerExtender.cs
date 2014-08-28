@@ -1120,6 +1120,40 @@ namespace SEServerExtender
 				}
 			}
 
+			if (linkedObject is SmallGatlingGunEntity)
+			{
+				SmallGatlingGunEntity gun = (SmallGatlingGunEntity)linkedObject;
+
+				if (e.Node.Nodes.Count < 1)
+				{
+					TRV_Entities.BeginUpdate();
+
+					e.Node.Nodes.Clear();
+					TreeNode itemsNode = e.Node.Nodes.Add("Ammo");
+					itemsNode.Name = itemsNode.Text;
+					itemsNode.Tag = gun.Inventory;
+
+					TRV_Entities.EndUpdate();
+				}
+			}
+
+			if (linkedObject is TurretBaseEntity)
+			{
+				TurretBaseEntity gun = (TurretBaseEntity)linkedObject;
+
+				if (e.Node.Nodes.Count < 1)
+				{
+					TRV_Entities.BeginUpdate();
+
+					e.Node.Nodes.Clear();
+					TreeNode itemsNode = e.Node.Nodes.Add("Ammo");
+					itemsNode.Name = itemsNode.Text;
+					itemsNode.Tag = gun.Inventory;
+
+					TRV_Entities.EndUpdate();
+				}
+			}
+
 			if (linkedObject is CockpitEntity)
 			{
 				CockpitEntity cockpit = (CockpitEntity)linkedObject;
