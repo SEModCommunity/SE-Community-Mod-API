@@ -199,8 +199,10 @@ namespace SEModAPIInternal.API.Entity
 			defaults.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(itemTypeId);
 			defaults.Amount = 1;
 
-			InventoryItemEntity newItem = m_itemManager.NewEntry<InventoryItemEntity>(defaults);
+			InventoryItemEntity newItem = new InventoryItemEntity(defaults);
 			newItem.ItemId = NextItemId;
+			m_itemManager.NewEntry<InventoryItemEntity>(newItem);
+
 			NextItemId = NextItemId + 1;
 
 			RefreshInventory();
@@ -214,7 +216,7 @@ namespace SEModAPIInternal.API.Entity
 
 			//TODO - Figure out the right way to add new items
 			//Just updating an item amount doesn't seem to work right
-			UpdateItemAmount(source, (Decimal)(source.Amount * 2));
+			UpdateItemAmount(source, source.Amount * 2);
 
 			RefreshInventory();
 

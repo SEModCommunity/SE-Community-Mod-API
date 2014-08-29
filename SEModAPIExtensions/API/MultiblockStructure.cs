@@ -125,10 +125,10 @@ namespace SEModAPIExtensions.API
 
 				foreach (FunctionalBlockEntity cubeBlock in m_blocks)
 				{
-					if (((Vector3I)cubeBlock.Min).CompareTo(min) < 0)
-						min = cubeBlock.Min;
-					if (((Vector3I)cubeBlock.Min).CompareTo(max) > 0)
-						max = cubeBlock.Min;
+					if (cubeBlock.Position.CompareTo(min) < 0)
+						min = cubeBlock.Position;
+					if (cubeBlock.Position.CompareTo(max) > 0)
+						max = cubeBlock.Position;
 				}
 
 				BoundingBox bounds = new BoundingBox(min, max);
@@ -147,7 +147,7 @@ namespace SEModAPIExtensions.API
 			m_blocks.Clear();
 			foreach (Vector3I key in def.Keys)
 			{
-				Vector3I blockPos = m_anchor.Min + key;
+				Vector3I blockPos = m_anchor.Position + key;
 				CubeBlockEntity cubeBlock = Parent.GetCubeBlock(blockPos);
 				if (cubeBlock == null)
 				{
@@ -191,7 +191,7 @@ namespace SEModAPIExtensions.API
 				return false;
 
 			bool isMatch = false;
-			Vector3I cubePos = cubeToCheck.Min;
+			Vector3I cubePos = cubeToCheck.Position;
 			Type cubeType = cubeToCheck.GetType();
 
 			Dictionary<Vector3I, StructureEntry> structureDef = GetMultiblockDefinition();
@@ -289,7 +289,7 @@ namespace SEModAPIExtensions.API
 				foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
 				{
 					if(IsDefinitionMatch(cubeBlock))
-						anchorList.Add(m_anchor.Min);
+						anchorList.Add(m_anchor.Position);
 				}
 
 				return anchorList;
