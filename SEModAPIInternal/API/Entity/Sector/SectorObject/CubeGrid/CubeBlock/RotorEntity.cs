@@ -17,8 +17,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Attributes"
 
-		public static string RotorNamespace = "";
-		public static string RotorClass = "";
+		public static string RotorNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
+		public static string RotorClass = "28EDB1838133C5D80B080389DBB2C9DB";
 
 		#endregion
 
@@ -39,7 +39,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Properties"
 
 		[IgnoreDataMember]
-		[Category("Merge Block")]
+		[Category("Rotor")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal new static Type InternalType
