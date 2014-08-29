@@ -20,7 +20,6 @@ namespace SEModAPIInternal.API.Common
 			OnCubeGridMoved,
 			OnCubeGridCreated,
 			OnCubeGridDeleted,
-            OnCubeGridAdded,
 			OnCubeBlockCreated,
 			OnCubeBlockDeleted,
 			OnCharacterCreated,

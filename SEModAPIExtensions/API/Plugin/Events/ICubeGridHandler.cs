@@ -12,6 +12,6 @@ namespace SEModAPIExtensions.API.Plugin.Events
 		void OnCubeGridCreated(CubeGridEntity cubeGrid);
 		void OnCubeGridDeleted(CubeGridEntity cubeGrid);
 		void OnCubeGridMoved(CubeGridEntity cubeGrid);
-        void OnCubeGridAdded(CubeGridEntity cubeGrid);
+		void OnCubeGridLoaded(CubeGridEntity cubeGrid);
 	}
 }
