@@ -547,6 +547,11 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
+				if (m_addEntityQueue.Count >= 5)
+				{
+					throw new Exception("AddEntity queue is full. Cannot add more entities yet");
+				}
+
 				if (SandboxGameAssemblyWrapper.IsDebugging)
 					Console.WriteLine(entity.GetType().Name + " '" + entity.Name + "' is being added ...");
 
@@ -628,7 +633,6 @@ namespace SEModAPIInternal.API.Entity
 			}
 			catch (Exception ex)
 			{
-				LogManager.APILog.WriteLineAndConsole("Failed to add new entity");
 				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}

@@ -525,7 +525,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 					return;
 
 				bool result = true;
-
+				/*
 				Type packetType = InternalType.GetNestedType("3BEB0A4A04463445218D632E2CD94536", BindingFlags.Public | BindingFlags.NonPublic);
 				MethodInfo method = typeof(CharacterEntityNetworkManager).GetMethod("ReceiveMainDataPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType, method, InternalType);
@@ -537,7 +537,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				packetType = type.GetNestedType("4850B8A3B1027F683755D493244815AA", BindingFlags.Public | BindingFlags.NonPublic);
 				method = typeof(CharacterEntityNetworkManager).GetMethod("ReceiveSpawnPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 				result &= NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Static, packetType, method, InternalType);
-
+				*/
 				if (!result)
 					return;
 
