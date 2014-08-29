@@ -164,7 +164,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				{
 					m_lastNameRefresh = DateTime.Now;
 
-					foreach (var cubeBlock in ObjectBuilder.CubeBlocks)
+					List<MyObjectBuilder_CubeBlock> blocks = new List<MyObjectBuilder_CubeBlock>(ObjectBuilder.CubeBlocks);
+					foreach (var cubeBlock in blocks)
 					{
 						try
 						{

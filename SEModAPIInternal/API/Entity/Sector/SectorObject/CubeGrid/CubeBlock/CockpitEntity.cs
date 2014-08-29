@@ -441,13 +441,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				if (m_isRegistered)
 					return;
-
+				/*
 				Type packetType = InternalType.GetNestedType("8368ACD3E728CDA04FE741CDC05B1D16", BindingFlags.Public | BindingFlags.NonPublic);
 				MethodInfo method = typeof(CockpitNetworkManager).GetMethod("ReceivePositionOrientationPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 				bool result = NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Instance, packetType, method, InternalType);
 				if (!result)
 					return;
-
+				*/
 				m_isRegistered = true;
 			}
 			catch (Exception ex)

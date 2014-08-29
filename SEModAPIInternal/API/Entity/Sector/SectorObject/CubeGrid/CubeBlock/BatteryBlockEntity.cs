@@ -483,7 +483,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			try
 			{
-				object result = BaseObject.InvokeEntityMethod(packet, "C63090F5DDF53DD7CBCB767D94148E5E");
+				object result = BaseObject.InvokeEntityMethod(packet, "552425B7A9EDD20DA3AD6309E9A5A6C9");
 				if (result == null)
 					return;
 				long entityId = (long)result;
