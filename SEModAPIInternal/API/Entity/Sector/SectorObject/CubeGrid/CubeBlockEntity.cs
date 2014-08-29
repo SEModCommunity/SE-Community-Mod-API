@@ -515,6 +515,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Internal"
 
+		internal static Object GetInternalParentCubeGrid(Object backingActualBlock)
+		{
+			if (backingActualBlock == null)
+				return null;
+
+			return GetEntityFieldValue(backingActualBlock, CubeBlockParentCubeGridField);
+		}
+
 		internal Matrix GetBlockEntityMatrix()
 		{
 			try
@@ -558,11 +566,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
-		}
-
-		protected Object GetParentCubeGrid()
-		{
-			return GetEntityFieldValue(BackingObject, CubeBlockParentCubeGridField);
 		}
 
 		protected Object GetFactionData()
@@ -852,8 +855,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					}
 				}
 
-				if(GetInternalData().Count > 0)
+				if (GetInternalData().Count > 0 && m_isLoading)
+				{
+					//Trigger an event now that this cube grid has finished loading
+					EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+					newEvent.type = EntityEventManager.EntityEventType.OnCubeGridLoaded;
+					newEvent.timestamp = DateTime.Now;
+					newEvent.entity = this;
+					newEvent.priority = 1;
+					EntityEventManager.Instance.AddEvent(newEvent);
+
 					m_isLoading = false;
+				}
 			}
 			catch (Exception ex)
 			{
