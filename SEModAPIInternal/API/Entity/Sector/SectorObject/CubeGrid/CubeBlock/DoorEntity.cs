@@ -69,6 +69,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		[IgnoreDataMember]
 		[Category("Door")]
+		[ReadOnly(true)]
 		public float Opening
 		{
 			get { return ObjectBuilder.Opening; }
@@ -87,7 +88,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 			set
 			{
-				if (m_state == value) return;
+				if (State == value) return;
 				m_state = value;
 				ObjectBuilder.State = value;
 				Changed = true;
@@ -146,8 +147,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			try
 			{
-				InvokeEntityMethod(ActualObject, DoorBroadcastStateMethod, new object[] { m_state });
 				InvokeEntityMethod(ActualObject, DoorSetStateMethod, new object[] { m_state });
+				InvokeEntityMethod(ActualObject, DoorBroadcastStateMethod, new object[] { m_state });
 			}
 			catch (Exception ex)
 			{
