@@ -17,19 +17,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Attributes"
 
-		public static string RotorNamespace = "";
-		public static string RotorClass = "";
+		public static string RotorNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
+		public static string RotorClass = "28EDB1838133C5D80B080389DBB2C9DB";
+
+		public static string RotorTopBlockEntityIdField = "8B5AF0B1A3FABB9647F639CBBCEE6B9B";
 
 		#endregion
 
 		#region "Constructors and Intializers"
 
-		public RotorEntity(CubeGridEntity parent, MyObjectBuilder_MotorBase definition)
+		public RotorEntity(CubeGridEntity parent, MyObjectBuilder_MotorStator definition)
 			: base(parent, definition)
 		{
 		}
 
-		public RotorEntity(CubeGridEntity parent, MyObjectBuilder_MotorBase definition, Object backingObject)
+		public RotorEntity(CubeGridEntity parent, MyObjectBuilder_MotorStator definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
 		}
@@ -39,7 +41,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Properties"
 
 		[IgnoreDataMember]
-		[Category("Merge Block")]
+		[Category("Rotor")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		internal new static Type InternalType
@@ -55,12 +57,56 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Rotor")]
 		[Browsable(false)]
 		[ReadOnly(true)]
-		internal new MyObjectBuilder_MotorBase ObjectBuilder
+		internal new MyObjectBuilder_MotorStator ObjectBuilder
 		{
-			get { return (MyObjectBuilder_MotorBase)base.ObjectBuilder; }
+			get { return (MyObjectBuilder_MotorStator)base.ObjectBuilder; }
 			set
 			{
 				base.ObjectBuilder = value;
+			}
+		}
+
+		[IgnoreDataMember]
+		[Category("Rotor")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		public CubeBlockEntity TopBlock
+		{
+			get
+			{
+				if (BackingObject == null || ActualObject == null)
+					return null;
+
+				long topBlockEntityId = GetTopBlockEntityId();
+				if (topBlockEntityId == 0)
+					return null;
+				BaseObject baseObject = GameEntityManager.GetEntity(topBlockEntityId);
+				if (!(baseObject is CubeBlockEntity))
+					return null;
+				CubeBlockEntity block = (CubeBlockEntity)baseObject;
+				return block;
+			}
+			private set
+			{
+				//Do nothing!
+			}
+		}
+
+		[DataMember]
+		[Category("Rotor")]
+		[ReadOnly(true)]
+		public long TopBlockId
+		{
+			get
+			{
+				if (BackingObject == null || ActualObject == null)
+					return ObjectBuilder.RotorEntityId;
+
+				return GetTopBlockEntityId();
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 
@@ -78,7 +124,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				if (type == null)
 					throw new Exception("Could not find internal type for RotorEntity");
 
-				//result &= HasMethod(type, BatteryBlockGetCurrentStoredPowerMethod);
+				result &= HasField(type, RotorTopBlockEntityIdField);
 
 				return result;
 			}
@@ -87,6 +133,15 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				Console.WriteLine(ex);
 				return false;
 			}
+		}
+
+		protected long GetTopBlockEntityId()
+		{
+			Object rawResult = GetEntityFieldValue(ActualObject, RotorTopBlockEntityIdField);
+			if (rawResult == null)
+				return 0;
+			long result = (long)rawResult;
+			return result;
 		}
 
 		#endregion

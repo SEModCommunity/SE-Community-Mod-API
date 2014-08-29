@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Description;
@@ -101,7 +102,7 @@ namespace SEModAPIExtensions.API
 		private static bool m_chatHandlerSetup;
 
 		private List<ChatEvent> m_chatEvents;
-		private List<ChatCommand> m_chatCommands;
+		private Dictionary<ChatCommand, Guid> m_chatCommands;
 
 		/////////////////////////////////////////////////////////////////////////////
 
@@ -121,7 +122,7 @@ namespace SEModAPIExtensions.API
 			m_chatMessages = new List<string>();
 			m_chatHandlerSetup = false;
 			m_chatEvents = new List<ChatEvent>();
-			m_chatCommands = new List<ChatCommand>();
+			m_chatCommands = new Dictionary<ChatCommand, Guid>();
 
 			ChatCommand deleteCommand = new ChatCommand();
 			deleteCommand.command = "delete";
@@ -465,7 +466,7 @@ namespace SEModAPIExtensions.API
 
 				//Search for a matching, registered command
 				bool foundMatch = false;
-				foreach (ChatCommand chatCommand in m_chatCommands)
+				foreach (ChatCommand chatCommand in m_chatCommands.Keys)
 				{
 					try
 					{
@@ -506,13 +507,33 @@ namespace SEModAPIExtensions.API
 		public void RegisterChatCommand(ChatCommand command)
 		{
 			//Check if the given command already is registered
-			foreach (ChatCommand chatCommand in m_chatCommands)
+			foreach (ChatCommand chatCommand in m_chatCommands.Keys)
 			{
 				if (chatCommand.command.ToLower().Equals(command.command.ToLower()))
 					return;
 			}
 
-			m_chatCommands.Add(command);
+			GuidAttribute guid = (GuidAttribute)Assembly.GetCallingAssembly().GetCustomAttributes(typeof(GuidAttribute), true)[0];
+			Guid guidValue = new Guid(guid.Value);
+
+			m_chatCommands.Add(command, guidValue);
+		}
+
+		public void UnregisterChatCommands()
+		{
+			GuidAttribute guid = (GuidAttribute)Assembly.GetCallingAssembly().GetCustomAttributes(typeof(GuidAttribute), true)[0];
+			Guid guidValue = new Guid(guid.Value);
+
+			List<ChatCommand> commandsToRemove = new List<ChatCommand>();
+			foreach (var entry in m_chatCommands)
+			{
+				if (entry.Value.Equals(guidValue))
+					commandsToRemove.Add(entry.Key);
+			}
+			foreach (var entry in commandsToRemove)
+			{
+				m_chatCommands.Remove(entry);
+			}
 		}
 
 		public void AddEvent(ChatEvent newEvent)
