@@ -461,28 +461,17 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-<<<<<<< HEAD
 				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
-=======
-				//Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
-				HashSet<Object> rawEntities = GetBackingDataHashSet();
-				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
-				/*
->>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if(SandboxGameAssemblyWrapper.IsDebugging)
 						LogManager.ErrorLog.WriteLine("SectorObjectManager - Mismatch between raw entities and object builders");
 					return;
 				}
-<<<<<<< HEAD
 
-=======
-				*/
->>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
 				{
@@ -495,18 +484,10 @@ namespace SEModAPIInternal.API.Entity
 						if (!IsValidEntity(entity))
 							continue;
 
-<<<<<<< HEAD
 						if (!objectBuilderList.ContainsKey(entity))
 							continue;
 
 						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
-=======
-						//if (!objectBuilderList.ContainsKey(entity))
-							//continue;
-
-						MyObjectBuilder_EntityBase baseEntity = BaseEntity.GetObjectBuilder(entity);
-						//MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
->>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 						if (baseEntity == null)
 							continue;
 						if (!EntityRegistry.Instance.ContainsGameType(baseEntity.TypeId))

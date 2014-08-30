@@ -776,17 +776,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
-<<<<<<< HEAD
 				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
-=======
-				//Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
-				HashSet<Object> rawEntities = GetBackingDataHashSet();
-				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
-				/*
->>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
@@ -794,11 +787,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					m_resourceLock.ReleaseExclusive();
 					return;
 				}
-<<<<<<< HEAD
 
-=======
-				*/
->>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
 				{
@@ -807,18 +796,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						if (!IsValidEntity(entity))
 							continue;
 
-<<<<<<< HEAD
 						if (!objectBuilderList.ContainsKey(entity))
 							continue;
 
 						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
-=======
-						//if (!objectBuilderList.ContainsKey(entity))
-							//continue;
-
-						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
-						//MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
->>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 						if (baseEntity == null)
 							continue;
 
