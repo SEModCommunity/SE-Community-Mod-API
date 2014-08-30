@@ -103,6 +103,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				if(topBlockEntityId == 0)
 					return null;
 				BaseObject baseObject = GameEntityManager.GetEntity(topBlockEntityId);
+				if (baseObject == null)
+					return null;
 				if(!(baseObject is CubeBlockEntity))
 					return null;
 				CubeBlockEntity block = (CubeBlockEntity)baseObject;
