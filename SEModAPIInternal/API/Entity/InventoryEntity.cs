@@ -704,10 +704,51 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		protected override void InternalRefreshObjectBuilderMap()
+		{
+			try
+			{
+				if (!CanRefresh)
+					return;
+
+				m_rawDataListResourceLock.AcquireShared();
+				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
+
+				m_rawDataObjectBuilderList.Clear();
+				foreach (Object entity in GetBackingDataList())
+				{
+					try
+					{
+						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
+						if (baseEntity == null)
+							continue;
+
+						m_rawDataObjectBuilderList.Add(entity, baseEntity);
+					}
+					catch (Exception ex)
+					{
+						LogManager.ErrorLog.WriteLine(ex);
+					}
+				}
+
+				m_rawDataListResourceLock.ReleaseShared();
+				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				if (m_rawDataListResourceLock.Owned)
+					m_rawDataListResourceLock.ReleaseShared();
+				if(m_rawDataObjectBuilderListResourceLock.Owned)
+					m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
+			}
+		}
+
 		protected override void LoadDynamic()
 		{
 			try
 			{
+<<<<<<< HEAD
 <<<<<<< HEAD
 				List<Object> rawEntities = GetBackingDataList();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
@@ -717,14 +758,24 @@ namespace SEModAPIInternal.API.Entity
 				List<Object> rawEntities = GetBackingDataList();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
+=======
+				//Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
+				List<Object> rawEntities = GetBackingDataList();
+				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
+				/*
+>>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
 						LogManager.APILog.WriteLine("InventoryItemManager - Mismatch between raw entities and object builders");
 					return;
 				}
+<<<<<<< HEAD
 
 >>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
+=======
+				*/
+>>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
 				{
@@ -734,6 +785,7 @@ namespace SEModAPIInternal.API.Entity
 							continue;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
 =======
 						if (!objectBuilderList.ContainsKey(entity))
@@ -741,6 +793,13 @@ namespace SEModAPIInternal.API.Entity
 
 						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)objectBuilderList[entity];
 >>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
+=======
+						//if (!objectBuilderList.ContainsKey(entity))
+							//continue;
+
+						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
+						//MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)objectBuilderList[entity];
+>>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 						if (baseEntity == null)
 							continue;
 

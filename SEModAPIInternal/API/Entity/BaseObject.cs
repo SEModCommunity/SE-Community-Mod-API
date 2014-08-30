@@ -975,6 +975,10 @@ namespace SEModAPIInternal.API.Entity
 
 			//Run the refresh
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+			//RefreshData();
+>>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 			Action action = RefreshData;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 =======
@@ -1003,6 +1007,7 @@ namespace SEModAPIInternal.API.Entity
 				DateTime startRefreshTime = DateTime.Now;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 				if (m_backingSourceType == InternalBackingType.Hashset)
 					InternalRefreshBackingDataHashSet();
 				if (m_backingSourceType == InternalBackingType.List)
@@ -1011,6 +1016,11 @@ namespace SEModAPIInternal.API.Entity
 				Action action = RefreshInternalData;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 >>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
+=======
+				//Action action = RefreshInternalData;
+				//SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				RefreshInternalData();
+>>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 
 				//Lock the main data
 				m_resourceLock.AcquireExclusive();
@@ -1054,7 +1064,10 @@ namespace SEModAPIInternal.API.Entity
 		}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 		private void RefreshInternalData()
 		{
 			DateTime startRefreshTime = DateTime.Now;
@@ -1073,7 +1086,11 @@ namespace SEModAPIInternal.API.Entity
 
 			startRefreshTime = DateTime.Now;
 
+<<<<<<< HEAD
 			InternalRefreshObjectBuilderMap();
+=======
+			//InternalRefreshObjectBuilderMap();
+>>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 
 			if (SandboxGameAssemblyWrapper.IsDebugging)
 			{
@@ -1093,7 +1110,10 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+<<<<<<< HEAD
 >>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
+=======
+>>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 		protected virtual void LoadDynamic()
 		{
 			return;
@@ -1177,6 +1197,11 @@ namespace SEModAPIInternal.API.Entity
 				if(m_rawDataListResourceLock.Owned)
 					m_rawDataListResourceLock.ReleaseExclusive();
 			}
+		}
+
+		protected virtual void InternalRefreshObjectBuilderMap()
+		{
+			
 		}
 
 		#endregion
