@@ -593,52 +593,6 @@ namespace SEModAPIExtensions.API
 
 					foreach (CubeGridEntity entity in entitiesToDispose)
 					{
-						bool isLinkedShip = false;
-						List<CubeBlockEntity> blocks = entity.CubeBlocks;
-						foreach (CubeBlockEntity cubeBlock in blocks)
-						{
-							if (cubeBlock is MergeBlockEntity)
-							{
-								MergeBlockEntity block = (MergeBlockEntity)cubeBlock;
-								if (block.IsAttached)
-								{
-									if (!entitiesToDispose.Contains(block.AttachedCubeGrid))
-									{
-										isLinkedShip = true;
-										break;
-									}
-								}
-							}
-							if (cubeBlock is PistonEntity)
-							{
-								PistonEntity block = (PistonEntity)cubeBlock;
-								CubeBlockEntity topBlock = block.TopBlock;
-								if (topBlock != null)
-								{
-									if (!entitiesToDispose.Contains(topBlock.Parent))
-									{
-										isLinkedShip = true;
-										break;
-									}
-								}
-							}
-							if (cubeBlock is RotorEntity)
-							{
-								RotorEntity block = (RotorEntity)cubeBlock;
-								CubeBlockEntity topBlock = block.TopBlock;
-								if (topBlock != null)
-								{
-									if (!entitiesToDispose.Contains(topBlock.Parent))
-									{
-										isLinkedShip = true;
-										break;
-									}
-								}
-							}
-						}
-						if (isLinkedShip)
-							continue;
-
 						entity.Dispose();
 					}
 
