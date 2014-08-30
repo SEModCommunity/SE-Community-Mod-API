@@ -974,7 +974,9 @@ namespace SEModAPIInternal.API.Entity
 			m_lastLoadTime = DateTime.Now;
 
 			//Run the refresh
-			RefreshData();
+			//RefreshData();
+			Action action = RefreshData;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
 			//Update the refresh counts
 			if (!m_staticRefreshCountMap.ContainsKey(this.GetType()))
@@ -997,8 +999,9 @@ namespace SEModAPIInternal.API.Entity
 			{
 				DateTime startRefreshTime = DateTime.Now;
 
-				Action action = RefreshInternalData;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				//Action action = RefreshInternalData;
+				//SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				RefreshInternalData();
 
 				//Lock the main data
 				m_resourceLock.AcquireExclusive();
@@ -1059,7 +1062,7 @@ namespace SEModAPIInternal.API.Entity
 
 			startRefreshTime = DateTime.Now;
 
-			InternalRefreshObjectBuilderMap();
+			//InternalRefreshObjectBuilderMap();
 
 			if (SandboxGameAssemblyWrapper.IsDebugging)
 			{
