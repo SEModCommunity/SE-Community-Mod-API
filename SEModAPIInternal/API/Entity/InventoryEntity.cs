@@ -748,17 +748,28 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
+<<<<<<< HEAD
 				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				List<Object> rawEntities = GetBackingDataList();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
+=======
+				//Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
+				List<Object> rawEntities = GetBackingDataList();
+				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
+				/*
+>>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
 						LogManager.APILog.WriteLine("InventoryItemManager - Mismatch between raw entities and object builders");
 					return;
 				}
+<<<<<<< HEAD
 
+=======
+				*/
+>>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
 				{
@@ -767,10 +778,18 @@ namespace SEModAPIInternal.API.Entity
 						if (!IsValidEntity(entity))
 							continue;
 
+<<<<<<< HEAD
 						if (!objectBuilderList.ContainsKey(entity))
 							continue;
 
 						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)objectBuilderList[entity];
+=======
+						//if (!objectBuilderList.ContainsKey(entity))
+							//continue;
+
+						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
+						//MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)objectBuilderList[entity];
+>>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 						if (baseEntity == null)
 							continue;
 

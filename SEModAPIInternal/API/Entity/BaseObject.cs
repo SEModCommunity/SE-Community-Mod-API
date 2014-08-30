@@ -974,7 +974,13 @@ namespace SEModAPIInternal.API.Entity
 			m_lastLoadTime = DateTime.Now;
 
 			//Run the refresh
+<<<<<<< HEAD
 			RefreshData();
+=======
+			//RefreshData();
+			Action action = RefreshData;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+>>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 
 			//Update the refresh counts
 			if (!m_staticRefreshCountMap.ContainsKey(this.GetType()))
@@ -997,8 +1003,14 @@ namespace SEModAPIInternal.API.Entity
 			{
 				DateTime startRefreshTime = DateTime.Now;
 
+<<<<<<< HEAD
 				Action action = RefreshInternalData;
 				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+=======
+				//Action action = RefreshInternalData;
+				//SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				RefreshInternalData();
+>>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 
 				//Lock the main data
 				m_resourceLock.AcquireExclusive();
@@ -1059,7 +1071,11 @@ namespace SEModAPIInternal.API.Entity
 
 			startRefreshTime = DateTime.Now;
 
+<<<<<<< HEAD
 			InternalRefreshObjectBuilderMap();
+=======
+			//InternalRefreshObjectBuilderMap();
+>>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 
 			if (SandboxGameAssemblyWrapper.IsDebugging)
 			{
