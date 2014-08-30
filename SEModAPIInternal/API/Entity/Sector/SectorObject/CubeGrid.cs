@@ -702,7 +702,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		private Object GetThrusterManager()
 		{
-			Object manager = BaseObject.InvokeEntityMethod(BackingObject, CubeGridManagerManagerGetPowerManagerMethod);
+			Object manager = BaseObject.InvokeEntityMethod(BackingObject, CubeGridManagerManagerGetThrusterManagerMethod);
 			return manager;
 		}
 
