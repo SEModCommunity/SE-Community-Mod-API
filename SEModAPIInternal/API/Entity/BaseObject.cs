@@ -974,6 +974,7 @@ namespace SEModAPIInternal.API.Entity
 			m_lastLoadTime = DateTime.Now;
 
 			//Run the refresh
+			//RefreshData();
 			Action action = RefreshData;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
@@ -998,10 +999,9 @@ namespace SEModAPIInternal.API.Entity
 			{
 				DateTime startRefreshTime = DateTime.Now;
 
-				if (m_backingSourceType == InternalBackingType.Hashset)
-					InternalRefreshBackingDataHashSet();
-				if (m_backingSourceType == InternalBackingType.List)
-					InternalRefreshBackingDataList();
+				//Action action = RefreshInternalData;
+				//SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				RefreshInternalData();
 
 				//Lock the main data
 				m_resourceLock.AcquireExclusive();
@@ -1041,6 +1041,44 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
+			}
+		}
+
+		private void RefreshInternalData()
+		{
+			DateTime startRefreshTime = DateTime.Now;
+
+			//Request refreshes of all internal raw data
+			if (m_backingSourceType == InternalBackingType.Hashset)
+				InternalRefreshBackingDataHashSet();
+			if (m_backingSourceType == InternalBackingType.List)
+				InternalRefreshBackingDataList();
+
+			if (SandboxGameAssemblyWrapper.IsDebugging)
+			{
+				TimeSpan timeToRefresh = DateTime.Now - startRefreshTime;
+				m_averageRefreshInternalDataTime = (m_averageRefreshInternalDataTime + timeToRefresh.TotalMilliseconds) / 2;
+			}
+
+			startRefreshTime = DateTime.Now;
+
+			//InternalRefreshObjectBuilderMap();
+
+			if (SandboxGameAssemblyWrapper.IsDebugging)
+			{
+				TimeSpan timeToRefresh = DateTime.Now - startRefreshTime;
+				m_averageRefreshInternalObjectBuilderDataTime = (m_averageRefreshInternalObjectBuilderDataTime + timeToRefresh.TotalMilliseconds) / 2;
+			}
+
+			if (SandboxGameAssemblyWrapper.IsDebugging)
+			{
+				TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastInternalProfilingOutput;
+				if (timeSinceLastProfilingOutput.TotalSeconds > 30)
+				{
+					m_lastInternalProfilingOutput = DateTime.Now;
+					LogManager.APILog.WriteLine("ObjectManager - Average of " + Math.Round(m_averageRefreshInternalDataTime, 2).ToString() + "ms to refresh internal entity data");
+					LogManager.APILog.WriteLine("ObjectManager - Average of " + Math.Round(m_averageRefreshInternalObjectBuilderDataTime, 2).ToString() + "ms to refresh internal object builder data");
+				}
 			}
 		}
 
@@ -1127,6 +1165,11 @@ namespace SEModAPIInternal.API.Entity
 				if(m_rawDataListResourceLock.Owned)
 					m_rawDataListResourceLock.ReleaseExclusive();
 			}
+		}
+
+		protected virtual void InternalRefreshObjectBuilderMap()
+		{
+			
 		}
 
 		#endregion
