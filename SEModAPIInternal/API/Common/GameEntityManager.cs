@@ -9,7 +9,7 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIInternal.API.Common
 {
-	internal class GameEntityManager
+	public class GameEntityManager
 	{
 		#region "Attributes"
 
@@ -45,7 +45,7 @@ namespace SEModAPIInternal.API.Common
 			return m_entityMap[entityId];
 		}
 
-		public static void AddEntity(long entityId, BaseObject entity)
+		internal static void AddEntity(long entityId, BaseObject entity)
 		{
 			if (m_entityMap.ContainsKey(entityId))
 				return;
@@ -53,7 +53,7 @@ namespace SEModAPIInternal.API.Common
 			m_entityMap.Add(entityId, entity);
 		}
 
-		public static void RemoveEntity(long entityId)
+		internal static void RemoveEntity(long entityId)
 		{
 			if (!m_entityMap.ContainsKey(entityId))
 				return;
@@ -61,7 +61,7 @@ namespace SEModAPIInternal.API.Common
 			m_entityMap.Remove(entityId);
 		}
 
-		public static Object GetGameEntity(long entityId, Type entityType)
+		internal static Object GetGameEntity(long entityId, Type entityType)
 		{
 			try
 			{
