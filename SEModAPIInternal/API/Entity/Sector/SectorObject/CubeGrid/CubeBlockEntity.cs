@@ -776,10 +776,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
-				//Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
+				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
-				/*
+
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
@@ -787,7 +787,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					m_resourceLock.ReleaseExclusive();
 					return;
 				}
-				*/
+
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
 				{
@@ -796,11 +796,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						if (!IsValidEntity(entity))
 							continue;
 
-						//if (!objectBuilderList.ContainsKey(entity))
-							//continue;
+						if (!objectBuilderList.ContainsKey(entity))
+							continue;
 
-						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
-						//MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
+						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
 						if (baseEntity == null)
 							continue;
 

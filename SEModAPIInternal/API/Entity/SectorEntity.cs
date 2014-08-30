@@ -461,17 +461,17 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				//Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
+				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
-				/*
+
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if(SandboxGameAssemblyWrapper.IsDebugging)
 						LogManager.ErrorLog.WriteLine("SectorObjectManager - Mismatch between raw entities and object builders");
 					return;
 				}
-				*/
+
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
 				{
@@ -484,11 +484,10 @@ namespace SEModAPIInternal.API.Entity
 						if (!IsValidEntity(entity))
 							continue;
 
-						//if (!objectBuilderList.ContainsKey(entity))
-							//continue;
+						if (!objectBuilderList.ContainsKey(entity))
+							continue;
 
-						MyObjectBuilder_EntityBase baseEntity = BaseEntity.GetObjectBuilder(entity);
-						//MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
+						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
 						if (baseEntity == null)
 							continue;
 						if (!EntityRegistry.Instance.ContainsGameType(baseEntity.TypeId))
