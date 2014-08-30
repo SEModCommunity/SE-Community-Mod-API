@@ -728,55 +728,10 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			}
 		}
 
-		protected override void InternalRefreshObjectBuilderMap()
-		{
-			try
-			{
-				if (!CanRefresh)
-					return;
-
-				m_rawDataHashSetResourceLock.AcquireShared();
-				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
-
-				m_rawDataObjectBuilderList.Clear();
-				foreach (Object entity in GetBackingDataHashSet())
-				{
-					try
-					{
-						if (!IsValidEntity(entity))
-							continue;
-
-						//TODO - Find a faster way to get updated data. This call takes ~0.15ms per entity which adds up quickly
-						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
-						if (baseEntity == null)
-							continue;
-
-						m_rawDataObjectBuilderList.Add(entity, baseEntity);
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-
-				m_rawDataHashSetResourceLock.ReleaseShared();
-				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-				if (m_rawDataHashSetResourceLock.Owned)
-					m_rawDataHashSetResourceLock.ReleaseShared();
-				if (m_rawDataObjectBuilderListResourceLock.Owned)
-					m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-			}
-		}
-
 		protected override void LoadDynamic()
 		{
 			try
 			{
-<<<<<<< HEAD
 <<<<<<< HEAD
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
@@ -786,12 +741,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
-=======
-				//Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
-				HashSet<Object> rawEntities = GetBackingDataHashSet();
-				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
-				/*
->>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 				if (objectBuilderList.Count != rawEntities.Count)
 				{
 					if (SandboxGameAssemblyWrapper.IsDebugging)
@@ -799,12 +748,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					m_resourceLock.ReleaseExclusive();
 					return;
 				}
-<<<<<<< HEAD
 
 >>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
-=======
-				*/
->>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
 				{
@@ -814,7 +759,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 							continue;
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
 =======
 						if (!objectBuilderList.ContainsKey(entity))
@@ -822,13 +766,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
 >>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
-=======
-						//if (!objectBuilderList.ContainsKey(entity))
-							//continue;
-
-						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
-						//MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
->>>>>>> parent of 729bc0c... -Cleaned up unused code from last performance overhaul of object managers
 						if (baseEntity == null)
 							continue;
 
