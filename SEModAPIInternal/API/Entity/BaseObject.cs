@@ -977,6 +977,7 @@ namespace SEModAPIInternal.API.Entity
 			//RefreshData();
 			Action action = RefreshData;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+>>>>>>> parent of 1ff4a5b... Merge remote-tracking branch 'upstream/master'
 
 			//Update the refresh counts
 			if (!m_staticRefreshCountMap.ContainsKey(this.GetType()))
