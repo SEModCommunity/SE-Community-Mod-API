@@ -54,6 +54,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string ActualCubeBlockGetObjectBuilderMethod = "GetObjectBuilderCubeBlock";
 		public static string ActualCubeBlockGetFactionsObjectMethod = "3E8AC70E5FAAA9C8C4992B71E12CDE28";
 		public static string ActualCubeBlockSetFactionsDataMethod = "7161368A8164DF15904DC82476F7EBBA";
+		public static string ActualCubeBlockGetMatrixMethod = "FD50436D896ACC794550210055349FE0";
 
 		/////////////////////////////////////////////////////
 
@@ -106,6 +107,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					newEvent.priority = 1;
 				EntityEventManager.Instance.AddEvent(newEvent);
 			}
+
+			if (EntityId != 0)
+			{
+				GameEntityManager.AddEntity(EntityId, this);
+			}
+
 		}
 
 		#endregion
@@ -245,6 +252,46 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (ObjectBuilder.BlockOrientation.Equals(value)) return;
 				ObjectBuilder.BlockOrientation = value;
 				Changed = true;
+			}
+		}
+
+		[IgnoreDataMember]
+		[Category("Cube Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		[TypeConverter(typeof(Vector3TypeConverter))]
+		public Vector3Wrapper Up
+		{
+			get
+			{
+				if (BackingObject == null || ActualObject == null)
+					return Vector3.Zero;
+
+				return GetBlockEntityMatrix().Up;
+			}
+			private set
+			{
+				//Do nothing!
+			}
+		}
+
+		[IgnoreDataMember]
+		[Category("Cube Block")]
+		[Browsable(false)]
+		[ReadOnly(true)]
+		[TypeConverter(typeof(Vector3TypeConverter))]
+		public Vector3Wrapper Forward
+		{
+			get
+			{
+				if (BackingObject == null || ActualObject == null)
+					return Vector3.Zero;
+
+				return GetBlockEntityMatrix().Forward;
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 
@@ -395,6 +442,11 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				EntityEventManager.Instance.AddEvent(newEvent);
 			}
 
+			if (EntityId != 0)
+			{
+				GameEntityManager.RemoveEntity(EntityId);
+			}
+
 			base.Dispose();
 		}
 
@@ -411,6 +463,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				if (type == null)
 					throw new Exception("Could not find internal type for CubeBlockEntity");
 				bool result = true;
+
 				result &= HasMethod(type, CubeBlockGetObjectBuilderMethod);
 				result &= HasMethod(type, CubeBlockGetActualBlockMethod);
 				result &= HasMethod(type, CubeBlockDamageBlockMethod);
@@ -419,6 +472,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				result &= HasMethod(type, CubeBlockGetIntegrityValueMethod);
 				result &= HasMethod(type, CubeBlockGetMaxIntegrityValueMethod);
 				result &= HasMethod(type, CubeBlockUpdateWeldProgressMethod);
+
 				result &= HasField(type, CubeBlockParentCubeGridField);
 				result &= HasField(type, CubeBlockColorMaskHSVField);
 				result &= HasField(type, CubeBlockConstructionManagerField);
@@ -430,6 +484,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				result &= HasMethod(type, ActualCubeBlockGetObjectBuilderMethod);
 				result &= HasMethod(type, ActualCubeBlockGetFactionsObjectMethod);
 				result &= HasMethod(type, ActualCubeBlockSetFactionsDataMethod);
+				result &= HasMethod(type, ActualCubeBlockGetMatrixMethod);
 
 				type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FactionsDataNamespace, FactionsDataClass);
 				if (type == null)
@@ -460,6 +515,28 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		#region "Internal"
 
+		internal static Object GetInternalParentCubeGrid(Object backingActualBlock)
+		{
+			if (backingActualBlock == null)
+				return null;
+
+			return GetEntityFieldValue(backingActualBlock, CubeBlockParentCubeGridField);
+		}
+
+		internal Matrix GetBlockEntityMatrix()
+		{
+			try
+			{
+				Matrix result = (Matrix)InvokeEntityMethod(ActualObject, ActualCubeBlockGetMatrixMethod);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return new Matrix();
+			}
+		}
+
 		internal MyCubeBlockDefinition GetBlockDefinition()
 		{
 			if (BackingObject == null)
@@ -489,11 +566,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				LogManager.ErrorLog.WriteLine(ex);
 				return null;
 			}
-		}
-
-		protected Object GetParentCubeGrid()
-		{
-			return GetEntityFieldValue(BackingObject, CubeBlockParentCubeGridField);
 		}
 
 		protected Object GetFactionData()
@@ -783,8 +855,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					}
 				}
 
-				if(GetInternalData().Count > 0)
+				if (GetInternalData().Count > 0 && m_isLoading)
+				{
+					//Trigger an event now that this cube grid has finished loading
+					EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+					newEvent.type = EntityEventManager.EntityEventType.OnCubeGridLoaded;
+					newEvent.timestamp = DateTime.Now;
+					newEvent.entity = this;
+					newEvent.priority = 1;
+					EntityEventManager.Instance.AddEvent(newEvent);
+
 					m_isLoading = false;
+				}
 			}
 			catch (Exception ex)
 			{

@@ -20,9 +20,9 @@ namespace SEModAPIInternal.API.Server
 		public static string ServerNetworkManagerNamespace = "C42525D7DE28CE4CFB44651F3D03A50D";
 		public static string ServerNetworkManagerClass = "3B0B7A338600A7B9313DE1C3723DAD14";
 
-		public static string ServerNetworkManagerSetPlayerBannedMethod = "E655D148C88F30FC96F4CF0F65E25897";
 		public static string ServerNetworkManagerDisconnectPlayerMethod = "09FDD2D9700A7E602BE8722F81A55AC6";
-		public static string ServerNetworkManagerKickPlayerMethod = "8F6EEFDDC583B19919D7226A25B2C67F";
+		public static string ServerNetworkManagerSetPlayerBannedMethod = "A246527F58423CEBF0BB2D8093B49FFA";
+		public static string ServerNetworkManagerKickPlayerMethod = "3FAE81FF031B80F7DFF713562824B03E";
 
 		public static string ServerNetworkManagerConnectedPlayersField = "89E92B070228A8BC746EFB57A3F6D2E5";
 
@@ -45,7 +45,7 @@ namespace SEModAPIInternal.API.Server
 
 		#region "Methods"
 
-		public static bool ReflectionUnitTest()
+		new public static bool ReflectionUnitTest()
 		{
 			try
 			{

@@ -128,6 +128,11 @@ namespace SEModAPIInternal.API.Entity
 			m_angularVelocity = new Vector3(0, 0, 0);
 			m_maxLinearVelocity = (float)104.7;
 
+			if (EntityId != 0)
+			{
+				GameEntityManager.AddEntity(EntityId, this);
+			}
+
 			Action action = InternalRegisterEntityMovedEvent;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 		}
@@ -217,6 +222,8 @@ namespace SEModAPIInternal.API.Entity
 					return m_entityId;
 
 				long entityId = BaseEntity.GetEntityId(BackingObject);
+				if (entityId == 0)
+					return m_entityId;
 
 				return entityId;
 			}
@@ -452,6 +459,23 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
+		[DataMember]
+		[Category("Entity")]
+		[Browsable(true)]
+		[ReadOnly(true)]
+		[TypeConverter(typeof(Vector3TypeConverter))]
+		public Vector3 CenterOfMass
+		{
+			get
+			{
+				return PhysicsBody.CenterOfMassWorld;
+			}
+			private set
+			{
+				//Do nothing!
+			}
+		}
+
 		[IgnoreDataMember]
 		[Category("Entity")]
 		[Browsable(false)]
@@ -503,6 +527,11 @@ namespace SEModAPIInternal.API.Entity
 					Action action = InternalRemoveEntity;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
+			}
+
+			if (EntityId != 0)
+			{
+				GameEntityManager.RemoveEntity(EntityId);
 			}
 
 			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
@@ -804,7 +833,13 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerNamespace = "5F381EA9388E0A32A8C817841E192BE8";
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
-		public static string BaseEntityBroadcastRemovalMethod = "3FC84604B0A44EDD4FAC259ED7F12DF8";
+		public static string BaseEntityBroadcastRemovalMethod = "07A10B3299467BA857722A4CF44C08FA";
+		
+		//Packets
+		//10 - ??
+		//11 - ??
+		//12 - Remove entity
+		//5741 - ??
 
 		#endregion
 

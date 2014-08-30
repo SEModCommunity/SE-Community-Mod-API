@@ -23,7 +23,6 @@ namespace SEModAPIExtensions.API.Plugin.Events
 		/// </summary>
 		/// <param name="cubeGrid">The moving CubeGrid</param>
 		void OnCubeGridMoved(CubeGridEntity cubeGrid);
-
-		#endregion
+		void OnCubeGridLoaded(CubeGridEntity cubeGrid);
 	}
 }
