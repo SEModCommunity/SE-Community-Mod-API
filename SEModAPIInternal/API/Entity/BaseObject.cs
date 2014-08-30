@@ -974,12 +974,8 @@ namespace SEModAPIInternal.API.Entity
 			m_lastLoadTime = DateTime.Now;
 
 			//Run the refresh
-<<<<<<< HEAD
 			Action action = RefreshData;
 			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-=======
-			RefreshData();
->>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
 
 			//Update the refresh counts
 			if (!m_staticRefreshCountMap.ContainsKey(this.GetType()))
@@ -1002,15 +998,10 @@ namespace SEModAPIInternal.API.Entity
 			{
 				DateTime startRefreshTime = DateTime.Now;
 
-<<<<<<< HEAD
 				if (m_backingSourceType == InternalBackingType.Hashset)
 					InternalRefreshBackingDataHashSet();
 				if (m_backingSourceType == InternalBackingType.List)
 					InternalRefreshBackingDataList();
-=======
-				Action action = RefreshInternalData;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
->>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
 
 				//Lock the main data
 				m_resourceLock.AcquireExclusive();
@@ -1053,47 +1044,6 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-<<<<<<< HEAD
-=======
-		private void RefreshInternalData()
-		{
-			DateTime startRefreshTime = DateTime.Now;
-
-			//Request refreshes of all internal raw data
-			if (m_backingSourceType == InternalBackingType.Hashset)
-				InternalRefreshBackingDataHashSet();
-			if (m_backingSourceType == InternalBackingType.List)
-				InternalRefreshBackingDataList();
-
-			if (SandboxGameAssemblyWrapper.IsDebugging)
-			{
-				TimeSpan timeToRefresh = DateTime.Now - startRefreshTime;
-				m_averageRefreshInternalDataTime = (m_averageRefreshInternalDataTime + timeToRefresh.TotalMilliseconds) / 2;
-			}
-
-			startRefreshTime = DateTime.Now;
-
-			InternalRefreshObjectBuilderMap();
-
-			if (SandboxGameAssemblyWrapper.IsDebugging)
-			{
-				TimeSpan timeToRefresh = DateTime.Now - startRefreshTime;
-				m_averageRefreshInternalObjectBuilderDataTime = (m_averageRefreshInternalObjectBuilderDataTime + timeToRefresh.TotalMilliseconds) / 2;
-			}
-
-			if (SandboxGameAssemblyWrapper.IsDebugging)
-			{
-				TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastInternalProfilingOutput;
-				if (timeSinceLastProfilingOutput.TotalSeconds > 30)
-				{
-					m_lastInternalProfilingOutput = DateTime.Now;
-					LogManager.APILog.WriteLine("ObjectManager - Average of " + Math.Round(m_averageRefreshInternalDataTime, 2).ToString() + "ms to refresh internal entity data");
-					LogManager.APILog.WriteLine("ObjectManager - Average of " + Math.Round(m_averageRefreshInternalObjectBuilderDataTime, 2).ToString() + "ms to refresh internal object builder data");
-				}
-			}
-		}
-
->>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
 		protected virtual void LoadDynamic()
 		{
 			return;

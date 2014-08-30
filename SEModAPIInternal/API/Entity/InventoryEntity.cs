@@ -708,23 +708,9 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-<<<<<<< HEAD
 				List<Object> rawEntities = GetBackingDataList();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
-=======
-				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
-				List<Object> rawEntities = GetBackingDataList();
-				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
-
-				if (objectBuilderList.Count != rawEntities.Count)
-				{
-					if (SandboxGameAssemblyWrapper.IsDebugging)
-						LogManager.APILog.WriteLine("InventoryItemManager - Mismatch between raw entities and object builders");
-					return;
-				}
-
->>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
 				{
@@ -733,14 +719,7 @@ namespace SEModAPIInternal.API.Entity
 						if (!IsValidEntity(entity))
 							continue;
 
-<<<<<<< HEAD
 						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
-=======
-						if (!objectBuilderList.ContainsKey(entity))
-							continue;
-
-						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)objectBuilderList[entity];
->>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
 						if (baseEntity == null)
 							continue;
 

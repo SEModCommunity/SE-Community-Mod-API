@@ -732,24 +732,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			try
 			{
-<<<<<<< HEAD
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
 
-=======
-				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
-				HashSet<Object> rawEntities = GetBackingDataHashSet();
-				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
-
-				if (objectBuilderList.Count != rawEntities.Count)
-				{
-					if (SandboxGameAssemblyWrapper.IsDebugging)
-						LogManager.APILog.WriteLine("CubeBlockManager - Mismatch between raw entities and object builders");
-					m_resourceLock.ReleaseExclusive();
-					return;
-				}
-
->>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
 				{
@@ -758,14 +743,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 						if (!IsValidEntity(entity))
 							continue;
 
-<<<<<<< HEAD
 						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)CubeBlockEntity.InvokeEntityMethod(entity, CubeBlockEntity.CubeBlockGetObjectBuilderMethod);
-=======
-						if (!objectBuilderList.ContainsKey(entity))
-							continue;
-
-						MyObjectBuilder_CubeBlock baseEntity = (MyObjectBuilder_CubeBlock)objectBuilderList[entity];
->>>>>>> parent of ad1d6a6... -Changed object manager refreshes to be more efficient
 						if (baseEntity == null)
 							continue;
 
