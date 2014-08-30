@@ -22,9 +22,18 @@ using VRage.Common.Utils;
 
 namespace SEModAPIExtensions.API
 {
+	/// <summary>
+	/// Manager for game spawned Cargo Ships
+	/// </summary>
 	public class CargoShipManager
 	{
+		#region "Attributes"
+
 		private static CargoShipManager m_instance;
+
+		#endregion
+
+		#region "Singleton Constructor & Accessor"
 
 		protected CargoShipManager()
 		{
@@ -44,6 +53,14 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
+		#endregion
+
+		#region "Methods"
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="remoteUserId"></param>
 		public void SpawnCargoShipGroup(ulong remoteUserId = 0)
 		{
 			SpawnCargoShipGroup(true, remoteUserId);
@@ -169,12 +186,14 @@ namespace SEModAPIExtensions.API
 					List<CubeBlockEntity> cubeBlocks = cubeGrid.CubeBlocks;
 				}
 
-				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.DisplayName + "' spawned with " + randomSpawnGroup.Prefabs.Length.ToString() + " ships at " + startPosition.ToString());
+				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.DisplayName + "' spawned with " + randomSpawnGroup.Prefabs.Length + " ships at " + startPosition);
 			}
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
+
+		#endregion
 	}
 }

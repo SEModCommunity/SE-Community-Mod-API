@@ -18,8 +18,13 @@ using System.Security.Permissions;
 
 namespace SEModAPIExtensions.API.IPC
 {
+	/// <summary>
+	/// Class that implements IWebServiceContract interface, see IWebServiceContract for details
+	/// </summary>
 	public class WebService : IWebServiceContract
 	{
+		#region "Routes"
+
 		public void GetOptions()
 		{
 			WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Allow-Origin", "*");
@@ -60,8 +65,14 @@ namespace SEModAPIExtensions.API.IPC
 
 			return cubeBlocks;
 		}
+
+		#endregion
 	}
 
+
+	/// <summary>
+	/// Class that implements IInternalServiceContract interface, see IInternalServiceContract for details
+	/// </summary>
 	[ServiceBehavior(
 		ConcurrencyMode=ConcurrencyMode.Single,
 		InstanceContextMode=InstanceContextMode.PerSession,
@@ -70,6 +81,7 @@ namespace SEModAPIExtensions.API.IPC
 	)]
 	public class InternalService : IInternalServiceContract
 	{
+		#region "Routes"
 		public List<ulong> GetConnectedPlayers()
 		{
 			return PlayerManager.Instance.ConnectedPlayers;
@@ -253,5 +265,7 @@ namespace SEModAPIExtensions.API.IPC
 				}
 			}
 		}
+
+		#endregion
 	}
 }

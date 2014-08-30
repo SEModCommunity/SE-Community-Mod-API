@@ -57,6 +57,8 @@ namespace SEModAPIExtensions.API
 	)]
 	public class PluginService : IPluginServiceContract
 	{
+		#region "Methods"
+
 		public List<Guid> GetPluginGuids()
 		{
 			return new List<Guid>(PluginManager.Instance.Plugins.Keys);
@@ -76,6 +78,8 @@ namespace SEModAPIExtensions.API
 		{
 			PluginManager.Instance.UnloadPlugin(guid);
 		}
+
+		#endregion
 	}
 
 	public class PluginManager

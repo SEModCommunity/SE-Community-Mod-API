@@ -330,9 +330,9 @@
 			// 
 			// PG_Control_Server_Properties
 			// 
-			this.PG_Control_Server_Properties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.PG_Control_Server_Properties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.PG_Control_Server_Properties.Location = new System.Drawing.Point(6, 19);
 			this.PG_Control_Server_Properties.Name = "PG_Control_Server_Properties";
 			this.PG_Control_Server_Properties.Size = new System.Drawing.Size(756, 486);

@@ -41,13 +41,13 @@ namespace SEModAPI.API
 		public GameInstallationInfo()
 		{
 			m_GamePath = GetGameRegistryPath();
-			if (m_GamePath == null || m_GamePath == "")
+			if (string.IsNullOrEmpty(m_GamePath))
 			{
 				m_GamePath = GetGameSteamPath();
-				if (m_GamePath == null || m_GamePath == "")
+				if (string.IsNullOrEmpty(m_GamePath))
 				{
 					m_GamePath = GetGameEXEPath();
-					if (m_GamePath == null || m_GamePath == "")
+					if (string.IsNullOrEmpty(m_GamePath))
 					{
 						throw new GameInstallationInfoException(GameInstallationInfoExceptionState.EmptyGamePath, "Can't find the game path");
 					}
@@ -66,7 +66,7 @@ namespace SEModAPI.API
 		public GameInstallationInfo(string gamePath)
 		{
 			m_GamePath = gamePath;
-			if (m_GamePath == null || m_GamePath == "")
+			if (string.IsNullOrEmpty(m_GamePath))
 				throw new GameInstallationInfoException(GameInstallationInfoExceptionState.EmptyGamePath, "The gamePath given is empty");
 
 			if (!IsValidGamePath(m_GamePath))
@@ -86,6 +86,11 @@ namespace SEModAPI.API
 
 		#region "Methods"
 
+		/// <summary>
+		/// Check the validity of the gamePath given, which should point on a Space Engineers valid game installation path
+		/// </summary>
+		/// <param name="gamePath">The path of the game installation</param>
+		/// <returns>If the given gamePath is valid</returns>
 		public static bool IsValidGamePath(string gamePath)
 		{
 			if (string.IsNullOrEmpty(gamePath))
@@ -113,7 +118,7 @@ namespace SEModAPI.API
 
 		/// <summary>
 		/// Looks for the Space Engineers install location in the Registry, which should return the form:
-		/// "C:\Program Files (x86)\Steam\steamapps\common\SpaceEngineers"
+		/// "[Drive]:\[Steam Path]\steamapps\common\SpaceEngineers"
 		/// </summary>
 		/// <returns>The absolute path to the game installation</returns>
 		public static string GetGameRegistryPath()
@@ -138,29 +143,19 @@ namespace SEModAPI.API
 
 		/// <summary>
 		/// Looks for the Steam install location in the Registry, which should return the form:
-		/// "C:\Program Files (x86)\Steam"
+		/// "[Drive]:\[Steam Path]"
 		/// </summary>
 		/// <returns>Return the Steam install location, or null if not found</returns>
 		public static string GetGameSteamPath()
 		{
-			RegistryKey key;
+			RegistryKey key = Registry.LocalMachine.OpenSubKey(Environment.Is64BitProcess ? @"SOFTWARE\Wow6432Node\Valve\Steam" : @"SOFTWARE\Valve\Steam", false);
 
-			if (Environment.Is64BitProcess)
-				key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Valve\Steam", false);
-			else
-				key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Valve\Steam", false);
+			if (key == null) return null;
 
-			if (key != null)
-			{
-				string steamBasePath = (string)key.GetValue("InstallPath");
-				string path = Path.Combine(steamBasePath, "steamapps", "common", "spaceengineers");
-				if (Directory.Exists(path))
-					return path;
-				else
-					return null;
-			}
+			string steamBasePath = (string)key.GetValue("InstallPath");
+			string path = Path.Combine(steamBasePath, "steamapps", "common", "spaceengineers");
 
-			return null;
+			return Directory.Exists(path) ? path : null;
 		}
 
 		/// <summary>
@@ -185,6 +180,32 @@ namespace SEModAPI.API
 			}
 		}
 
+		public static bool DoFilesDiffer(string directory1, string directory2, string filename)
+		{
+			return DoFilesDiffer(Path.Combine(directory1, filename), Path.Combine(directory2, filename));
+		}
+
+		public static bool DoFilesDiffer(string file1, string file2)
+		{
+			if (File.Exists(file1) != File.Exists(file2))
+				return false;
+
+			var buffer1 = File.ReadAllBytes(file1);
+			var buffer2 = File.ReadAllBytes(file2);
+
+			if (buffer1.Length != buffer2.Length)
+				return true;
+
+			var ass1 = Assembly.Load(buffer1);
+			var guid1 = ass1.ManifestModule.ModuleVersionId;
+
+			var ass2 = Assembly.Load(buffer2);
+			var guid2 = ass2.ManifestModule.ModuleVersionId;
+
+			return guid1 != guid2;
+		}
+
+		#region "Unused"
 		public bool IsBaseAssembliesChanged()
 		{
 			// We use the Bin64 Path, as these assemblies are marked "All CPU", and will work regardless of processor architecture.
@@ -217,31 +238,6 @@ namespace SEModAPI.API
 			}
 
 			return true;
-		}
-
-		public static bool DoFilesDiffer(string directory1, string directory2, string filename)
-		{
-			return DoFilesDiffer(Path.Combine(directory1, filename), Path.Combine(directory2, filename));
-		}
-
-		public static bool DoFilesDiffer(string file1, string file2)
-		{
-			if (File.Exists(file1) != File.Exists(file2))
-				return false;
-
-			var buffer1 = File.ReadAllBytes(file1);
-			var buffer2 = File.ReadAllBytes(file2);
-
-			if (buffer1.Length != buffer2.Length)
-				return true;
-
-			var ass1 = Assembly.Load(buffer1);
-			var guid1 = ass1.ManifestModule.ModuleVersionId;
-
-			var ass2 = Assembly.Load(buffer2);
-			var guid2 = ass2.ManifestModule.ModuleVersionId;
-
-			return guid1 != guid2;
 		}
 
 		internal static bool CheckIsRuningElevated()
@@ -281,6 +277,7 @@ namespace SEModAPI.API
 				return null;
 			}
 		}
+		#endregion
 
 		#endregion
 	}

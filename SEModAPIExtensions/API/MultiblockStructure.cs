@@ -14,6 +14,9 @@ using VRageMath;
 
 namespace SEModAPIExtensions.API
 {
+	/// <summary>
+	/// Class that defines a block inside a Multiblock Structure
+	/// </summary>
 	public class StructureEntry
 	{
 		public Type type;
@@ -30,6 +33,9 @@ namespace SEModAPIExtensions.API
 		}
 	}
 
+	/// <summary>
+	/// Class that defines a MultiBlock Structure
+	/// </summary>
 	public abstract class MultiblockStructure
 	{
 		#region "Attributes"
@@ -59,6 +65,15 @@ namespace SEModAPIExtensions.API
 			get { return m_parent; }
 		}
 
+		/// <summary>
+		/// ReadOnly Property to get if the MultiBlock Structure is functionnal or not
+		/// </summary>
+		///	<example>
+		///	All cube blocks needed for the structure must:
+		///		Exists,
+		///		Have integrity over 75%,
+		///		and All functional blocks must be enabled.
+		/// </example>
 		public bool IsFunctional
 		{
 			get
