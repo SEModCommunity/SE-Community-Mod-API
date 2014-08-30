@@ -410,28 +410,30 @@ namespace SEServerExtender
 				return;
 
 			TRV_Entities.BeginUpdate();
-
-			TreeNode sectorObjectsNode;
-			TreeNode sectorEventsNode;
-
-			if (TRV_Entities.Nodes.Count < 2)
+			if (TRV_Entities.Visible)
 			{
-				sectorObjectsNode = TRV_Entities.Nodes.Add("Sector Objects");
-				sectorEventsNode = TRV_Entities.Nodes.Add("Sector Events");
+				TreeNode sectorObjectsNode;
+				TreeNode sectorEventsNode;
 
-				sectorObjectsNode.Name = sectorObjectsNode.Text;
-				sectorEventsNode.Name = sectorEventsNode.Text;
+				if (TRV_Entities.Nodes.Count < 2)
+				{
+					sectorObjectsNode = TRV_Entities.Nodes.Add("Sector Objects");
+					sectorEventsNode = TRV_Entities.Nodes.Add("Sector Events");
+
+					sectorObjectsNode.Name = sectorObjectsNode.Text;
+					sectorEventsNode.Name = sectorEventsNode.Text;
+				}
+				else
+				{
+					sectorObjectsNode = TRV_Entities.Nodes[0];
+					sectorEventsNode = TRV_Entities.Nodes[1];
+				}
+
+				RenderSectorObjectChildNodes(sectorObjectsNode);
+				sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.Count.ToString() + ")";
+				sectorObjectsNode.Tag = SectorObjectManager.Instance;
+
 			}
-			else
-			{
-				sectorObjectsNode = TRV_Entities.Nodes[0];
-				sectorEventsNode = TRV_Entities.Nodes[1];
-			}
-
-			RenderSectorObjectChildNodes(sectorObjectsNode);
-			sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.Count.ToString() + ")";
-			sectorObjectsNode.Tag = SectorObjectManager.Instance;
-
 			TRV_Entities.EndUpdate();
 		}
 
@@ -439,6 +441,7 @@ namespace SEServerExtender
 		{
 			if (TRV_Entities.IsDisposed)
 				return;
+
 
 			TreeNode cubeGridsNode;
 			TreeNode charactersNode;
