@@ -30,6 +30,7 @@ using SEModAPIInternal.Support;
 
 using VRageMath;
 using VRage.Common.Utils;
+using System.Threading;
 
 namespace SEModAPIExtensions.API
 {
@@ -600,12 +601,10 @@ namespace SEModAPIExtensions.API
 					List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
 					foreach (CubeGridEntity entity in entities)
 					{
-						if (entity.Name.Equals(entity.EntityId.ToString()))
+						while (entity.CubeBlocks.Count == 0)
 						{
-							entitiesToDispose.Add(entity);
-							continue;
+							Thread.Sleep(20);
 						}
-
 						List<CubeBlockEntity> blocks = entity.CubeBlocks;
 						if (blocks.Count > 0)
 						{
