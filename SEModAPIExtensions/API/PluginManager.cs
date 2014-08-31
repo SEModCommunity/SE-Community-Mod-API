@@ -374,8 +374,9 @@ namespace SEModAPIExtensions.API
 				parameters.events = new List<EntityEventManager.EntityEvent>(events);
 				parameters.chatEvents = new List<ChatManager.ChatEvent>(chatEvents);
 
-				Thread pluginThread = new Thread(DoUpdate);
-				pluginThread.Start(parameters);
+                ThreadPool.QueueUserWorkItem(new WaitCallback(DoUpdate), parameters);
+//				Thread pluginThread = new Thread(DoUpdate);
+//				pluginThread.Start(parameters);
 			}
 
 			//Capture profiling info if debugging is on
