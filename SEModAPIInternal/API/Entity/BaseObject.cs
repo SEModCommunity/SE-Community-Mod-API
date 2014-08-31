@@ -1346,6 +1346,8 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
+				Refresh();
+
 				m_resourceLock.AcquireShared();
 
 				List<T> newList = new List<T>();
@@ -1358,8 +1360,6 @@ namespace SEModAPIInternal.API.Entity
 				}
 
 				m_resourceLock.ReleaseShared();
-
-				Refresh();
 
 				return newList;
 			}

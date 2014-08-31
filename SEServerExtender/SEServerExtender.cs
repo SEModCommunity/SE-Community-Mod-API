@@ -409,6 +409,9 @@ namespace SEServerExtender
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
 
+			if (TAB_MainTabs.SelectedTab != TAB_Entities_Page)
+				return;
+
 			TRV_Entities.BeginUpdate();
 
 			TreeNode sectorObjectsNode;
@@ -1465,13 +1468,21 @@ namespace SEServerExtender
 
 		private void ChatViewRefresh(object sender, EventArgs e)
 		{
+			//Refresh the chat history
 			LST_Chat_Messages.BeginUpdate();
-
-			string[] chatMessages = ChatManager.Instance.ChatMessages.ToArray();
-			if (chatMessages.Length != LST_Chat_Messages.Items.Count)
+			List<ChatManager.ChatEvent> chatHistory = ChatManager.Instance.ChatHistory;
+			if (chatHistory.Count != LST_Chat_Messages.Items.Count)
 			{
 				LST_Chat_Messages.Items.Clear();
-				LST_Chat_Messages.Items.AddRange(chatMessages);
+				foreach (var entry in chatHistory)
+				{
+					string timestamp = entry.timestamp.ToLongTimeString();
+					string playerName = "Server";
+					if(entry.sourceUserId != 0)
+						playerName = PlayerMap.Instance.GetPlayerNameFromSteamId(entry.sourceUserId);
+					string formattedMessage = timestamp + " - " + playerName + " - " + entry.message;
+					LST_Chat_Messages.Items.Add(formattedMessage);
+				}
 
 				//Auto-scroll to the bottom of the list
 				LST_Chat_Messages.SelectedIndex = LST_Chat_Messages.Items.Count - 1;
@@ -1479,8 +1490,8 @@ namespace SEServerExtender
 			}
 			LST_Chat_Messages.EndUpdate();
 
+			//Refresh the connected players list
 			LST_Chat_ConnectedPlayers.BeginUpdate();
-
 			List<ulong> connectedPlayers = PlayerManager.Instance.ConnectedPlayers;
 			if (connectedPlayers.Count != LST_Chat_ConnectedPlayers.Items.Count)
 			{
@@ -1492,7 +1503,6 @@ namespace SEServerExtender
 					LST_Chat_ConnectedPlayers.Items.Add(playerName);
 				}
 			}
-
 			LST_Chat_ConnectedPlayers.EndUpdate();
 		}
 
