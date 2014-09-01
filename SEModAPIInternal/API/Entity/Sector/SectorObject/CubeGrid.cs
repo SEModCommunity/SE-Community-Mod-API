@@ -481,6 +481,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(ObjectBuilder, fileInfo);
 		}
 
+		new public MyObjectBuilder_CubeGrid Export()
+		{
+			RefreshBaseCubeBlocks();
+
+			return ObjectBuilder;
+		}
+
 		new public static bool ReflectionUnitTest()
 		{
 			try

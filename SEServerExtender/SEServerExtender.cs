@@ -34,6 +34,7 @@ using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
 using VRageMath;
+using Sandbox.Definitions;
 
 namespace SEServerExtender
 {
@@ -407,6 +408,9 @@ namespace SEServerExtender
 		private void TreeViewRefresh(object sender, EventArgs e)
 		{
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+				return;
+
+			if (TAB_MainTabs.SelectedTab != TAB_Entities_Page)
 				return;
 
 			TRV_Entities.BeginUpdate();
@@ -1106,6 +1110,42 @@ namespace SEServerExtender
 				TRV_Entities.EndUpdate();
 			}
 
+			if (linkedObject is VoxelMap)
+			{
+				VoxelMap voxelMap = (VoxelMap)linkedObject;
+
+				List<MyVoxelMaterialDefinition> materialDefs = new List<MyVoxelMaterialDefinition>(MyDefinitionManager.Static.GetVoxelMaterialDefinitions());
+				Dictionary<MyVoxelMaterialDefinition, float> totalMaterials = voxelMap.Materials;
+
+				TRV_Entities.BeginUpdate();
+				if (e.Node.Nodes.Count < materialDefs.Count)
+				{
+					e.Node.Nodes.Clear();
+
+					foreach (var material in materialDefs)
+					{
+						TreeNode newNode = e.Node.Nodes.Add(material.Id.SubtypeName);
+						newNode.Name = newNode.Text;
+						newNode.Tag = material;
+					}
+				}
+
+				foreach (TreeNode node in e.Node.Nodes)
+				{
+					Object tag = node.Tag;
+					if(tag == null || !(tag is MyVoxelMaterialDefinition))
+						continue;
+					MyVoxelMaterialDefinition material = (MyVoxelMaterialDefinition)tag;
+					if (totalMaterials.ContainsKey(material))
+					{
+						float total = totalMaterials[material];
+						node.Text = node.Name + " (" + total.ToString() + ")";
+					}
+				}
+
+				TRV_Entities.EndUpdate();
+			}
+
 			if (linkedObject is CharacterEntity)
 			{
 				CharacterEntity character = (CharacterEntity)linkedObject;
@@ -1468,13 +1508,21 @@ namespace SEServerExtender
 
 		private void ChatViewRefresh(object sender, EventArgs e)
 		{
+			//Refresh the chat history
 			LST_Chat_Messages.BeginUpdate();
-
-			string[] chatMessages = ChatManager.Instance.ChatMessages.ToArray();
-			if (chatMessages.Length != LST_Chat_Messages.Items.Count)
+			List<ChatManager.ChatEvent> chatHistory = ChatManager.Instance.ChatHistory;
+			if (chatHistory.Count != LST_Chat_Messages.Items.Count)
 			{
 				LST_Chat_Messages.Items.Clear();
-				LST_Chat_Messages.Items.AddRange(chatMessages);
+				foreach (var entry in chatHistory)
+				{
+					string timestamp = entry.timestamp.ToLongTimeString();
+					string playerName = "Server";
+					if(entry.sourceUserId != 0)
+						playerName = PlayerMap.Instance.GetPlayerNameFromSteamId(entry.sourceUserId);
+					string formattedMessage = timestamp + " - " + playerName + " - " + entry.message;
+					LST_Chat_Messages.Items.Add(formattedMessage);
+				}
 
 				//Auto-scroll to the bottom of the list
 				LST_Chat_Messages.SelectedIndex = LST_Chat_Messages.Items.Count - 1;
@@ -1482,8 +1530,8 @@ namespace SEServerExtender
 			}
 			LST_Chat_Messages.EndUpdate();
 
+			//Refresh the connected players list
 			LST_Chat_ConnectedPlayers.BeginUpdate();
-
 			List<ulong> connectedPlayers = PlayerManager.Instance.ConnectedPlayers;
 			if (connectedPlayers.Count != LST_Chat_ConnectedPlayers.Items.Count)
 			{
@@ -1495,7 +1543,6 @@ namespace SEServerExtender
 					LST_Chat_ConnectedPlayers.Items.Add(playerName);
 				}
 			}
-
 			LST_Chat_ConnectedPlayers.EndUpdate();
 		}
 

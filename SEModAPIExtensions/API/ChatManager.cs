@@ -30,6 +30,7 @@ using SEModAPIInternal.Support;
 
 using VRageMath;
 using VRage.Common.Utils;
+using System.Threading;
 
 namespace SEModAPIExtensions.API
 {
@@ -99,6 +100,7 @@ namespace SEModAPIExtensions.API
 		private static ChatManager m_instance;
 
 		private static List<string> m_chatMessages;
+		private static List<ChatEvent> m_chatHistory;
 		private static bool m_chatHandlerSetup;
 
 		private List<ChatEvent> m_chatEvents;
@@ -120,6 +122,7 @@ namespace SEModAPIExtensions.API
 			m_instance = this;
 
 			m_chatMessages = new List<string>();
+			m_chatHistory = new List<ChatEvent>();
 			m_chatHandlerSetup = false;
 			m_chatEvents = new List<ChatEvent>();
 			m_chatCommands = new Dictionary<ChatCommand, Guid>();
@@ -273,10 +276,36 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
+		public List<ChatEvent> ChatHistory
+		{
+			get
+			{
+				if (!m_chatHandlerSetup)
+				{
+					if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+					{
+						Action action = SetupChatHandlers;
+						SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+					}
+				}
+
+				return m_chatHistory;
+			}
+		}
+
 		public List<ChatEvent> ChatEvents
 		{
 			get
 			{
+				if (!m_chatHandlerSetup)
+				{
+					if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+					{
+						Action action = SetupChatHandlers;
+						SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+					}
+				}
+
 				List<ChatEvent> copy = new List<ChatEvent>(m_chatEvents.ToArray());
 				return copy;
 			}
@@ -360,6 +389,8 @@ namespace SEModAPIExtensions.API
 			chatEvent.message = message;
 			chatEvent.priority = 0;
 			ChatManager.Instance.AddEvent(chatEvent);
+
+			m_chatHistory.Add(chatEvent);
 		}
 
 		public void SendPrivateChatMessage(ulong remoteUserId, string message)
@@ -389,6 +420,8 @@ namespace SEModAPIExtensions.API
 				chatEvent.message = message;
 				chatEvent.priority = 0;
 				ChatManager.Instance.AddEvent(chatEvent);
+
+				m_chatHistory.Add(chatEvent);
 			}
 			catch (Exception ex)
 			{
@@ -437,6 +470,8 @@ namespace SEModAPIExtensions.API
 				selfChatEvent.message = message;
 				selfChatEvent.priority = 0;
 				ChatManager.Instance.AddEvent(selfChatEvent);
+
+				m_chatHistory.Add(selfChatEvent);
 			}
 			catch (Exception ex)
 			{
@@ -566,12 +601,10 @@ namespace SEModAPIExtensions.API
 					List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
 					foreach (CubeGridEntity entity in entities)
 					{
-						if (entity.Name.Equals(entity.EntityId.ToString()))
+						while (entity.CubeBlocks.Count == 0)
 						{
-							entitiesToDispose.Add(entity);
-							continue;
+							Thread.Sleep(20);
 						}
-
 						List<CubeBlockEntity> blocks = entity.CubeBlocks;
 						if (blocks.Count > 0)
 						{

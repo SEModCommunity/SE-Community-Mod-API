@@ -7,15 +7,18 @@ using System.Text;
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
 
+using VRage;
+
 namespace SEModAPIInternal.API.Common
 {
 	public class GameEntityManager
 	{
 		#region "Attributes"
 
+		private static FastResourceLock m_resourceLock = new FastResourceLock();
 		private static Dictionary<long, BaseObject> m_entityMap = new Dictionary<long,BaseObject>();
 
-		public static string GameEntityManagerNamespace = "u0035BCAC68007431E61367F5B2CF24E2D6F";
+		public static string GameEntityManagerNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string GameEntityManagerClass = "CAF1EB435F77C7B77580E2E16F988BED";
 
 		public static string GameEntityManagerGetEntityByIdTypeMethod = "EB43CD3B683033145620D0931BE5041C";
@@ -37,28 +40,62 @@ namespace SEModAPIInternal.API.Common
 
 		#region "Methods"
 
+		public static bool ReflectionUnitTest()
+		{
+			try
+			{
+				bool result = true;
+
+				Type type = InternalType;
+				if (type == null)
+					throw new Exception("Could not find internal type for GameEntityManager");
+				//result &= BaseObject.HasMethod(type, GameEntityManagerGetEntityByIdTypeMethod);
+
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				return false;
+			}
+		}
+
 		public static BaseObject GetEntity(long entityId)
 		{
+			m_resourceLock.AcquireShared();
+
 			if(!m_entityMap.ContainsKey(entityId))
 				return null;
 
-			return m_entityMap[entityId];
+			BaseObject result = m_entityMap[entityId];
+
+			m_resourceLock.ReleaseShared();
+
+			return result;
 		}
 
 		internal static void AddEntity(long entityId, BaseObject entity)
 		{
+			m_resourceLock.AcquireExclusive();
+
 			if (m_entityMap.ContainsKey(entityId))
 				return;
 
 			m_entityMap.Add(entityId, entity);
+
+			m_resourceLock.ReleaseExclusive();
 		}
 
 		internal static void RemoveEntity(long entityId)
 		{
+			m_resourceLock.AcquireExclusive();
+
 			if (!m_entityMap.ContainsKey(entityId))
 				return;
 
 			m_entityMap.Remove(entityId);
+
+			m_resourceLock.ReleaseExclusive();
 		}
 
 		internal static Object GetGameEntity(long entityId, Type entityType)

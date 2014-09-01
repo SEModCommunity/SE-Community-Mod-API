@@ -311,7 +311,7 @@ namespace SEModAPIInternal.API.Common
 			try
 			{
 				Object rawPlayerItemMapping = BaseObject.InvokeEntityMethod(BackingObject, PlayerMapGetPlayerItemMappingMethod);
-				Dictionary<long, Object> allPlayersMapping = UtilityFunctions.ConvertDictionary(rawPlayerItemMapping);
+				Dictionary<long, Object> allPlayersMapping = UtilityFunctions.ConvertDictionary<long>(rawPlayerItemMapping);
 
 				return allPlayersMapping;
 			}
