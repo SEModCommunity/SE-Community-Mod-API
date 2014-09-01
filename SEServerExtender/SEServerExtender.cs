@@ -1748,6 +1748,12 @@ namespace SEServerExtender
 
 				LST_Plugins.BeginUpdate();
 				int selectedIndex = LST_Plugins.SelectedIndex;
+                if (LST_Plugins.SelectedIndex >= PluginManager.Instance.Plugins.Count)
+                {
+                    LST_Plugins.SelectedIndex = -1;
+                    selectedIndex = -1;
+                }
+
 				LST_Plugins.Items.Clear();
 				foreach (var key in PluginManager.Instance.Plugins.Keys)
 				{
@@ -1765,6 +1771,12 @@ namespace SEServerExtender
 				return;
 
 			int selectedIndex = LST_Plugins.SelectedIndex;
+            if (selectedIndex >= PluginManager.Instance.Plugins.Count())
+            {
+                LST_Plugins.SelectedIndex = -1;
+                return;
+            }
+
 			Guid selectedItem = PluginManager.Instance.Plugins.Keys.ElementAt(selectedIndex);
 			Object plugin = PluginManager.Instance.Plugins[selectedItem];
 

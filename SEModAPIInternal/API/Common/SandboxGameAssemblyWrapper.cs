@@ -479,7 +479,7 @@ namespace SEModAPIInternal.API.Common
 			string contentPath = Path.Combine(new FileInfo(MyFileSystem.ExePath).Directory.FullName, "Content");
 			string userDataPath = SandboxGameAssemblyWrapper.Instance.GetUserDataPath(instanceName);
 
-			if (reset)
+            if (reset)
 			{
 				MyFileSystem.Reset();
 			}
@@ -498,10 +498,10 @@ namespace SEModAPIInternal.API.Common
 				}
 			}
 
-			MyFileSystem.Init(contentPath, userDataPath);
-			MyFileSystem.InitUserSpecific((string)null);
+            MyFileSystem.Init(contentPath, userDataPath);
+            MyFileSystem.InitUserSpecific((string)null);
 
-			string debugContentPath = MyFileSystem.ContentPath;
+            string debugContentPath = MyFileSystem.ContentPath;
 			string debugUserDataPath = MyFileSystem.UserDataPath;
 		}
 
