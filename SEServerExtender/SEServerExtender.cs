@@ -34,6 +34,7 @@ using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
 using VRageMath;
+using Sandbox.Definitions;
 
 namespace SEServerExtender
 {
@@ -1102,6 +1103,42 @@ namespace SEServerExtender
 				TRV_Entities.BeginUpdate();
 
 				RenderCubeGridChildNodes((CubeGridEntity)linkedObject, e.Node);
+
+				TRV_Entities.EndUpdate();
+			}
+
+			if (linkedObject is VoxelMap)
+			{
+				VoxelMap voxelMap = (VoxelMap)linkedObject;
+
+				List<MyVoxelMaterialDefinition> materialDefs = new List<MyVoxelMaterialDefinition>(MyDefinitionManager.Static.GetVoxelMaterialDefinitions());
+				Dictionary<MyVoxelMaterialDefinition, float> totalMaterials = voxelMap.Materials;
+
+				TRV_Entities.BeginUpdate();
+				if (e.Node.Nodes.Count < materialDefs.Count)
+				{
+					e.Node.Nodes.Clear();
+
+					foreach (var material in materialDefs)
+					{
+						TreeNode newNode = e.Node.Nodes.Add(material.Id.SubtypeName);
+						newNode.Name = newNode.Text;
+						newNode.Tag = material;
+					}
+				}
+
+				foreach (TreeNode node in e.Node.Nodes)
+				{
+					Object tag = node.Tag;
+					if(tag == null || !(tag is MyVoxelMaterialDefinition))
+						continue;
+					MyVoxelMaterialDefinition material = (MyVoxelMaterialDefinition)tag;
+					if (totalMaterials.ContainsKey(material))
+					{
+						float total = totalMaterials[material];
+						node.Text = node.Name + " (" + total.ToString() + ")";
+					}
+				}
 
 				TRV_Entities.EndUpdate();
 			}

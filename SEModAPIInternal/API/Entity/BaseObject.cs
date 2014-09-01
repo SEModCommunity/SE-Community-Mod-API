@@ -200,6 +200,11 @@ namespace SEModAPIInternal.API.Entity
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_Base, MyObjectBuilder_BaseSerializer>(ObjectBuilder, fileInfo);
 		}
 
+		public MyObjectBuilder_Base Export()
+		{
+			return ObjectBuilder;
+		}
+
 		public static bool ReflectionUnitTest()
 		{
 			return true;

@@ -518,7 +518,7 @@ namespace SEModAPIInternal.API.Entity
 
 			if (BackingObject != null)
 			{
-				//Only move and remove if the backing object isn't already disposed
+				//Only remove if the backing object isn't already disposed
 				bool isDisposed = (bool)BaseEntity.InvokeEntityMethod(BackingObject, BaseEntity.BaseEntityGetIsDisposedMethod);
 				if (!isDisposed)
 				{
@@ -545,6 +545,11 @@ namespace SEModAPIInternal.API.Entity
 		public override void Export(FileInfo fileInfo)
 		{
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_EntityBase, MyObjectBuilder_EntityBaseSerializer>(ObjectBuilder, fileInfo);
+		}
+
+		new public MyObjectBuilder_EntityBase Export()
+		{
+			return ObjectBuilder;
 		}
 
 		new public static bool ReflectionUnitTest()
