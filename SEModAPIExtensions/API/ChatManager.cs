@@ -100,7 +100,7 @@ namespace SEModAPIExtensions.API
 		private static ChatManager m_instance;
 
 		private static List<string> m_chatMessages;
-		private static List<ChatEvent> m_chatHistory;
+		private static SynchronizedCollection<ChatEvent> m_chatHistory;
 		private static bool m_chatHandlerSetup;
 
 		private List<ChatEvent> m_chatEvents;
@@ -122,7 +122,7 @@ namespace SEModAPIExtensions.API
 			m_instance = this;
 
 			m_chatMessages = new List<string>();
-			m_chatHistory = new List<ChatEvent>();
+			m_chatHistory = new SynchronizedCollection<ChatEvent>();
 			m_chatHandlerSetup = false;
 			m_chatEvents = new List<ChatEvent>();
 			m_chatCommands = new Dictionary<ChatCommand, Guid>();
@@ -289,7 +289,7 @@ namespace SEModAPIExtensions.API
 					}
 				}
 
-				return m_chatHistory;
+                return m_chatHistory.ToList();
 			}
 		}
 
