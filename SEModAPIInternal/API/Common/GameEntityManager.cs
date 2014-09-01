@@ -76,26 +76,26 @@ namespace SEModAPIInternal.API.Common
 
 		internal static void AddEntity(long entityId, BaseObject entity)
 		{
-			m_resourceLock.AcquireExclusive();
+			//m_resourceLock.AcquireExclusive();
 
 			if (m_entityMap.ContainsKey(entityId))
 				return;
 
 			m_entityMap.Add(entityId, entity);
 
-			m_resourceLock.ReleaseExclusive();
+			//m_resourceLock.ReleaseExclusive();
 		}
 
 		internal static void RemoveEntity(long entityId)
 		{
-			m_resourceLock.AcquireExclusive();
+			//m_resourceLock.AcquireExclusive();
 
 			if (!m_entityMap.ContainsKey(entityId))
 				return;
 
 			m_entityMap.Remove(entityId);
 
-			m_resourceLock.ReleaseExclusive();
+			//m_resourceLock.ReleaseExclusive();
 		}
 
 		internal static Object GetGameEntity(long entityId, Type entityType)
