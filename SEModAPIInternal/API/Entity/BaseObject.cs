@@ -21,6 +21,7 @@ using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRage;
+using Sandbox.Definitions;
 
 namespace SEModAPIInternal.API.Entity
 {
@@ -36,6 +37,8 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		protected MyObjectBuilder_Base m_objectBuilder;
+		protected MyDefinitionId m_definitionId;
+		protected MyDefinitionBase m_definition;
 		protected Object m_backingObject;
 
 		protected bool m_isDisposed = false;
@@ -47,12 +50,38 @@ namespace SEModAPIInternal.API.Entity
 		public BaseObject(MyObjectBuilder_Base baseEntity)
 		{
 			m_objectBuilder = baseEntity;
+
+			m_definitionId = new MyDefinitionId(m_objectBuilder.TypeId, m_objectBuilder.SubtypeId.ToString());
+			if (!string.IsNullOrEmpty(m_objectBuilder.SubtypeName))
+			{
+				try
+				{
+					m_definition = MyDefinitionManager.Static.GetDefinition(m_definitionId);
+				}
+				catch (Exception)
+				{
+					//Do nothing!
+				}
+			}
 		}
 
 		public BaseObject(MyObjectBuilder_Base baseEntity, Object backingObject)
 		{
 			m_objectBuilder = baseEntity;
 			m_backingObject = backingObject;
+
+			m_definitionId = new MyDefinitionId(m_objectBuilder.TypeId, m_objectBuilder.SubtypeId.ToString());
+			if (!string.IsNullOrEmpty(m_objectBuilder.SubtypeName))
+			{
+				try
+				{
+					m_definition = MyDefinitionManager.Static.GetDefinition(m_definitionId);
+				}
+				catch (Exception)
+				{
+					//Do nothing!
+				}
+			}
 		}
 
 		#endregion
@@ -123,13 +152,29 @@ namespace SEModAPIInternal.API.Entity
 		[Category("Object")]
 		[Browsable(true)]
 		[ReadOnly(true)]
-		[TypeConverter(typeof(ObjectSerializableDefinitionIdTypeConverter))]
-		public SerializableDefinitionId Id
+		[Description("The ID representing the definition type of the object")]
+		public MyDefinitionId Id
 		{
 			get
 			{
-				SerializableDefinitionId newId = new SerializableDefinitionId(m_objectBuilder.TypeId, m_objectBuilder.SubtypeName);
-				return newId;
+				return m_definitionId;
+			}
+			private set
+			{
+				//Do nothing!
+			}
+		}
+
+		[IgnoreDataMember]
+		[Category("Object")]
+		[Browsable(true)]
+		[ReadOnly(true)]
+		[Description("The definition type of the object")]
+		public MyDefinitionBase Definition
+		{
+			get
+			{
+				return m_definition;
 			}
 			private set
 			{
@@ -142,6 +187,7 @@ namespace SEModAPIInternal.API.Entity
 		[Browsable(false)]
 		[ReadOnly(true)]
 		[Description("The value ID representing the type of the object")]
+		[Obsolete]
 		public MyObjectBuilderType TypeId
 		{
 			get { return m_objectBuilder.TypeId; }
@@ -156,6 +202,7 @@ namespace SEModAPIInternal.API.Entity
 		[Browsable(false)]
 		[ReadOnly(true)]
 		[Description("The value ID representing the sub-type of the object")]
+		[Obsolete]
 		public string Subtype
 		{
 			get { return m_objectBuilder.SubtypeName; }
@@ -1311,8 +1358,6 @@ namespace SEModAPIInternal.API.Entity
 		{
 			try
 			{
-				Refresh();
-
 				m_resourceLock.AcquireShared();
 
 				List<T> newList = new List<T>();
@@ -1325,6 +1370,8 @@ namespace SEModAPIInternal.API.Entity
 				}
 
 				m_resourceLock.ReleaseShared();
+
+				Refresh();
 
 				return newList;
 			}

@@ -448,7 +448,7 @@ namespace SEModAPIInternal.API.Entity
 							if (matchingEntity == null || matchingEntity.IsDisposed)
 								continue;
 
-							//Update the base entity (not the same as BackingObject which is the internal object)
+							matchingEntity.BackingObject = entity;
 							matchingEntity.ObjectBuilder = baseEntity;
 						}
 						else

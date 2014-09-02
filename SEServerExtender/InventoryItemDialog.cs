@@ -1,18 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
-
-using SEModAPI.Support;
-using SEModAPI.API.Definitions;
-using SEModAPI.API.Definitions.CubeBlocks;
+using Sandbox.Definitions;
 
 using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.Support;
@@ -25,11 +19,7 @@ namespace SEServerExtender
 	{
 		#region "Attributes"
 
-		private static PhysicalItemDefinitionsManager m_physicalItemsManager;
-		private static ComponentDefinitionsManager m_componentsManager;
-		private static AmmoMagazinesDefinitionsManager m_ammoManager;
-
-		private static List<SerializableDefinitionId> m_idList;
+		private static List<MyDefinitionId> m_idList;
 
 		private InventoryEntity m_container;
 
@@ -39,36 +29,20 @@ namespace SEServerExtender
 
 		public InventoryItemDialog()
 		{
-			//Load up the static item managers
-			if (m_physicalItemsManager == null)
-			{
-				m_physicalItemsManager = new PhysicalItemDefinitionsManager();
-				m_physicalItemsManager.Load(PhysicalItemDefinitionsManager.GetContentDataFile("PhysicalItems.sbc"));
-			}
-			if (m_componentsManager == null)
-			{
-				m_componentsManager = new ComponentDefinitionsManager();
-				m_componentsManager.Load(ComponentDefinitionsManager.GetContentDataFile("Components.sbc"));
-			}
-			if (m_ammoManager == null)
-			{
-				m_ammoManager = new AmmoMagazinesDefinitionsManager();
-				m_ammoManager.Load(AmmoMagazinesDefinitionsManager.GetContentDataFile("AmmoMagazines.sbc"));
-			}
-
 			//Populate the static list with the ids from the items
 			if (m_idList == null)
 			{
-				m_idList = new List<SerializableDefinitionId>();
-				foreach (var def in m_physicalItemsManager.Definitions)
+				m_idList = new List<MyDefinitionId>();
+
+				foreach (MyPhysicalItemDefinition def in Enumerable.OfType<MyPhysicalItemDefinition>((IEnumerable)MyDefinitionManager.Static.GetAllDefinitions()))
 				{
 					m_idList.Add(def.Id);
 				}
-				foreach (var def in m_componentsManager.Definitions)
+				foreach (MyComponentDefinition def in Enumerable.OfType<MyComponentDefinition>((IEnumerable)MyDefinitionManager.Static.GetAllDefinitions()))
 				{
 					m_idList.Add(def.Id);
 				}
-				foreach (var def in m_ammoManager.Definitions)
+				foreach (MyAmmoMagazineDefinition def in Enumerable.OfType<MyAmmoMagazineDefinition>((IEnumerable)MyDefinitionManager.Static.GetAllDefinitions()))
 				{
 					m_idList.Add(def.Id);
 				}
@@ -96,9 +70,9 @@ namespace SEServerExtender
 			set { m_container = value; }
 		}
 
-		public SerializableDefinitionId SelectedType
+		public MyDefinitionId SelectedType
 		{
-			get { return (SerializableDefinitionId)CMB_ItemType.SelectedItem; }
+			get { return (MyDefinitionId)CMB_ItemType.SelectedItem; }
 		}
 
 		public float Amount
@@ -133,7 +107,7 @@ namespace SEServerExtender
 			try
 			{
 				MyObjectBuilder_InventoryItem objectBuilder = MyObjectBuilder_Base.CreateNewObject<MyObjectBuilder_InventoryItem>();
-				objectBuilder.Content = MyObjectBuilder_Base.CreateNewObject(SelectedType.TypeId, SelectedType.SubtypeId);
+				objectBuilder.Content = MyObjectBuilder_Base.CreateNewObject(SelectedType.TypeId, SelectedType.SubtypeId.ToString());
 				objectBuilder.Amount = (MyFixedPoint)Amount;
 				InventoryItemEntity newItem = new InventoryItemEntity(objectBuilder);
 

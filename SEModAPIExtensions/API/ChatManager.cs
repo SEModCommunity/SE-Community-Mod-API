@@ -3,21 +3,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.ServiceModel.Description;
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Xml;
 
 using Sandbox.Common.ObjectBuilders;
-
-using SEModAPI.API.Definitions;
-
-using SEModAPIExtensions.API.IPC;
 
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.API.Common;
@@ -25,12 +18,11 @@ using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
-using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
-using VRageMath;
+using VRage;
 using VRage.Common.Utils;
-using System.Threading;
+using VRageMath;
 
 namespace SEModAPIExtensions.API
 {
@@ -102,6 +94,7 @@ namespace SEModAPIExtensions.API
 		private static List<string> m_chatMessages;
 		private static List<ChatEvent> m_chatHistory;
 		private static bool m_chatHandlerSetup;
+		private static FastResourceLock m_resourceLock;
 
 		private List<ChatEvent> m_chatEvents;
 		private Dictionary<ChatCommand, Guid> m_chatCommands;
@@ -124,6 +117,7 @@ namespace SEModAPIExtensions.API
 			m_chatMessages = new List<string>();
 			m_chatHistory = new List<ChatEvent>();
 			m_chatHandlerSetup = false;
+			m_resourceLock = new FastResourceLock();
 			m_chatEvents = new List<ChatEvent>();
 			m_chatCommands = new Dictionary<ChatCommand, Guid>();
 
@@ -289,7 +283,13 @@ namespace SEModAPIExtensions.API
 					}
 				}
 
-				return m_chatHistory;
+				m_resourceLock.AcquireShared();
+
+				List<ChatEvent> history = new List<ChatEvent>(m_chatHistory);
+
+				m_resourceLock.ReleaseShared();
+
+				return history;
 			}
 		}
 
@@ -390,7 +390,9 @@ namespace SEModAPIExtensions.API
 			chatEvent.priority = 0;
 			ChatManager.Instance.AddEvent(chatEvent);
 
+			m_resourceLock.AcquireExclusive();
 			m_chatHistory.Add(chatEvent);
+			m_resourceLock.ReleaseExclusive();
 		}
 
 		public void SendPrivateChatMessage(ulong remoteUserId, string message)
@@ -421,7 +423,9 @@ namespace SEModAPIExtensions.API
 				chatEvent.priority = 0;
 				ChatManager.Instance.AddEvent(chatEvent);
 
+				m_resourceLock.AcquireExclusive();
 				m_chatHistory.Add(chatEvent);
+				m_resourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
@@ -471,7 +475,9 @@ namespace SEModAPIExtensions.API
 				selfChatEvent.priority = 0;
 				ChatManager.Instance.AddEvent(selfChatEvent);
 
+				m_resourceLock.AcquireExclusive();
 				m_chatHistory.Add(selfChatEvent);
+				m_resourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{

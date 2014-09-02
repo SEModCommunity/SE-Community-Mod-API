@@ -46,6 +46,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
+    <Reference Include="Sandbox.Game">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\GameLibraries\Sandbox.Game.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
