@@ -634,6 +634,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		protected long GetBlockOwner()
 		{
+			if (GetFactionData() == null)
+				return 0;
 			Object rawResult = InvokeEntityMethod(ActualObject, ActualCubeBlockGetOwnerMethod);
 			if (rawResult == null)
 				return 0;
