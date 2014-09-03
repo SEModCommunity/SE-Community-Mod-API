@@ -28,6 +28,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		private CubeGridEntity m_parent;
 		private static Type m_internalType;
+		private float m_buildPercent;
+		private float m_integrityPercent;
 
 		public static string CubeBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string CubeBlockClass = "54A8BE425EAC4A11BFF922CFB5FF89D0";
@@ -87,6 +89,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			: base(definition)
 		{
 			m_parent = parent;
+
+			m_buildPercent = definition.BuildPercent;
+			m_integrityPercent = definition.IntegrityPercent;
 		}
 
 		public CubeBlockEntity(CubeGridEntity parent, MyObjectBuilder_CubeBlock definition, Object backingObject)
@@ -113,6 +118,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				GameEntityManager.AddEntity(EntityId, this);
 			}
 
+			m_buildPercent = definition.BuildPercent;
+			m_integrityPercent = definition.IntegrityPercent;
 		}
 
 		#endregion
@@ -319,14 +326,22 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[Category("Cube Block")]
 		public float BuildPercent
 		{
-			get { return ObjectBuilder.BuildPercent; }
+			get
+			{
+ 				if(BackingObject == null || ActualObject == null)
+					return ObjectBuilder.BuildPercent;
+
+				return InternalGetBuildPercent();
+			}
 			set
 			{
-				if (ObjectBuilder.BuildPercent == value) return;
+				if (BuildPercent == value) return;
 				ObjectBuilder.BuildPercent = value;
+				m_buildPercent = value;
 				Changed = true;
 
 				ObjectBuilder.IntegrityPercent = value;
+				m_integrityPercent = value;
 
 				if (BackingObject != null)
 				{
@@ -340,14 +355,22 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[Category("Cube Block")]
 		public float IntegrityPercent
 		{
-			get { return ObjectBuilder.IntegrityPercent; }
+			get
+			{
+				if (BackingObject == null || ActualObject == null)
+					return ObjectBuilder.IntegrityPercent;
+
+				return InternalGetIntegrityPercent();
+			}
 			set
 			{
-				if (ObjectBuilder.IntegrityPercent == value) return;
+				if (IntegrityPercent == value) return;
 				ObjectBuilder.IntegrityPercent = value;
+				m_integrityPercent = value;
 				Changed = true;
 
 				ObjectBuilder.BuildPercent = value;
+				m_buildPercent = value;
 
 				if (BackingObject != null)
 				{
@@ -620,8 +643,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				//Update construction manager details
 				Object constructionManager = GetConstructionManager();
 				float maxIntegrity = (float)InvokeEntityMethod(constructionManager, ConstructionManagerGetMaxIntegrityMethod);
-				float integrity = IntegrityPercent * maxIntegrity;
-				float build = BuildPercent * maxIntegrity;
+				float integrity = m_integrityPercent * maxIntegrity;
+				float build = m_buildPercent * maxIntegrity;
 
 				InvokeEntityMethod(constructionManager, ConstructionManagerSetIntegrityBuildValuesMethod, new object[] { build, integrity });
 
