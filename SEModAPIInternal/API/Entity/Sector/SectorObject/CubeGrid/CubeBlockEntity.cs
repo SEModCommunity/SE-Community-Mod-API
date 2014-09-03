@@ -30,6 +30,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		private static Type m_internalType;
 		private float m_buildPercent;
 		private float m_integrityPercent;
+		private long m_owner;
+		private MyOwnershipShareModeEnum m_shareMode;
 
 		public static string CubeBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string CubeBlockClass = "54A8BE425EAC4A11BFF922CFB5FF89D0";
@@ -92,6 +94,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 			m_buildPercent = definition.BuildPercent;
 			m_integrityPercent = definition.IntegrityPercent;
+			m_owner = definition.Owner;
+			m_shareMode = definition.ShareMode;
 		}
 
 		public CubeBlockEntity(CubeGridEntity parent, MyObjectBuilder_CubeBlock definition, Object backingObject)
@@ -120,6 +124,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 			m_buildPercent = definition.BuildPercent;
 			m_integrityPercent = definition.IntegrityPercent;
+			m_owner = definition.Owner;
+			m_shareMode = definition.ShareMode;
 		}
 
 		#endregion
@@ -384,16 +390,23 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[Category("Cube Block")]
 		public long Owner
 		{
-			get { return ObjectBuilder.Owner; }
+			get
+			{
+				if(BackingObject == null)
+					return ObjectBuilder.Owner;
+
+				return GetBlockOwner();
+			}
 			set
 			{
-				if (ObjectBuilder.Owner == value) return;
+				if (Owner == value) return;
 				ObjectBuilder.Owner = value;
+				m_owner = value;
 				Changed = true;
 
 				if (BackingObject != null)
 				{
-					Action action = InternalSetOwner;
+					Action action = InternalSetOwnerShareMode;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -403,16 +416,23 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		[Category("Cube Block")]
 		public MyOwnershipShareModeEnum ShareMode
 		{
-			get { return ObjectBuilder.ShareMode; }
+			get
+			{
+				if(BackingObject == null)
+					return ObjectBuilder.ShareMode;
+
+				return GetBlockShareMode();
+			}
 			set
 			{
-				if (ObjectBuilder.ShareMode == value) return;
+				if (ShareMode == value) return;
 				ObjectBuilder.ShareMode = value;
+				m_shareMode = value;
 				Changed = true;
 
 				if (BackingObject != null)
 				{
-					Action action = InternalSetShareMode;
+					Action action = InternalSetOwnerShareMode;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 				}
 			}
@@ -610,24 +630,29 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			return GetEntityFieldValue(BackingObject, CubeBlockConstructionManagerField);
 		}
 
-		protected void InternalSetOwner()
+		protected long GetBlockOwner()
 		{
-			try
-			{
-				InvokeEntityMethod(ActualObject, ActualCubeBlockSetFactionsDataMethod, new object[] { Owner, ShareMode });
-				m_parent.NetworkManager.BroadcastCubeBlockFactionData(this);
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-			}
+			Object rawResult = GetEntityFieldValue(GetFactionData(), FactionsDataOwnerField);
+			if (rawResult == null)
+				return 0;
+			long result = (long)rawResult;
+			return result;
 		}
 
-		protected void InternalSetShareMode()
+		protected MyOwnershipShareModeEnum GetBlockShareMode()
+		{
+			Object rawResult = GetEntityFieldValue(GetFactionData(), FactionsDataShareModeField);
+			if (rawResult == null)
+				return 0;
+			MyOwnershipShareModeEnum result = (MyOwnershipShareModeEnum)rawResult;
+			return result;
+		}
+
+		protected void InternalSetOwnerShareMode()
 		{
 			try
 			{
-				InvokeEntityMethod(ActualObject, ActualCubeBlockSetFactionsDataMethod, new object[] { Owner, ShareMode });
+				InvokeEntityMethod(ActualObject, ActualCubeBlockSetFactionsDataMethod, new object[] { m_owner, m_shareMode });
 				m_parent.NetworkManager.BroadcastCubeBlockFactionData(this);
 			}
 			catch (Exception ex)
