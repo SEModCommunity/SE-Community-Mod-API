@@ -42,6 +42,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			: base(definition, backingObject)
 		{
 			m_materialManager = new VoxelMapMaterialManager(this, GetMaterialManager());
+
+			SectorObjectManager.Instance.Refresh();
 		}
 
 		#endregion

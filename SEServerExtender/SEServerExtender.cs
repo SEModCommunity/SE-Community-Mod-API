@@ -505,6 +505,15 @@ namespace SEServerExtender
 			//Get cube grids
 			List<CubeGridEntity> list = m_cubeGridEntities;
 
+			//Sort the list of cube grids
+			list.Sort(delegate(CubeGridEntity x, CubeGridEntity y)
+			{
+				if (x.Name == null && y.Name == null) return 0;
+				else if (x.Name == null) return -1;
+				else if (y.Name == null) return 1;
+				else return x.Name.CompareTo(y.Name);
+			});
+
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
 			{

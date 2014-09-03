@@ -59,6 +59,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string ActualCubeBlockGetFactionsObjectMethod = "3E8AC70E5FAAA9C8C4992B71E12CDE28";
 		public static string ActualCubeBlockSetFactionsDataMethod = "7161368A8164DF15904DC82476F7EBBA";
 		public static string ActualCubeBlockGetMatrixMethod = "FD50436D896ACC794550210055349FE0";
+		public static string ActualCubeBlockGetOwnerMethod = "5CE075E5E73578252A4A030502881491";
 
 		/////////////////////////////////////////////////////
 
@@ -528,6 +529,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 				result &= HasMethod(type, ActualCubeBlockGetFactionsObjectMethod);
 				result &= HasMethod(type, ActualCubeBlockSetFactionsDataMethod);
 				result &= HasMethod(type, ActualCubeBlockGetMatrixMethod);
+				result &= HasMethod(type, ActualCubeBlockGetOwnerMethod);
 
 				type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FactionsDataNamespace, FactionsDataClass);
 				if (type == null)
@@ -632,7 +634,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		protected long GetBlockOwner()
 		{
-			Object rawResult = GetEntityFieldValue(GetFactionData(), FactionsDataOwnerField);
+			Object rawResult = InvokeEntityMethod(ActualObject, ActualCubeBlockGetOwnerMethod);
 			if (rawResult == null)
 				return 0;
 			long result = (long)rawResult;
@@ -641,9 +643,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		protected MyOwnershipShareModeEnum GetBlockShareMode()
 		{
-			Object rawResult = GetEntityFieldValue(GetFactionData(), FactionsDataShareModeField);
+			Object factionData = GetFactionData();
+			if (factionData == null)
+				return MyOwnershipShareModeEnum.None;
+
+			Object rawResult = GetEntityFieldValue(factionData, FactionsDataShareModeField);
 			if (rawResult == null)
-				return 0;
+				return MyOwnershipShareModeEnum.None;
 			MyOwnershipShareModeEnum result = (MyOwnershipShareModeEnum)rawResult;
 			return result;
 		}

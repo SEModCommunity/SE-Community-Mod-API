@@ -34,6 +34,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			: base(definition, backingObject)
 		{
 			m_item = new InventoryItemEntity(definition.Item);
+
+			SectorObjectManager.Instance.Refresh();
 		}
 
 		#endregion

@@ -276,7 +276,9 @@ namespace SEModAPIExtensions.API
 					//Compare the block subtype, if enabled
 					if (entry.useSubTypeName)
 					{
-						if (!entry.subTypeName.Equals(posCubeBlock.Id.SubtypeName))
+						string cleanEntrySubType = entry.subTypeName.ToLower();
+						string cleanBlockSubType = posCubeBlock.Id.SubtypeName.ToLower();
+						if (cleanEntrySubType != cleanBlockSubType)
 						{
 							isMatch = false;
 							break;
