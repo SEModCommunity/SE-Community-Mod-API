@@ -364,7 +364,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public bool EnqueueMainGameAction(Action action)
+		internal bool EnqueueMainGameAction(Action action)
 		{
 			try
 			{

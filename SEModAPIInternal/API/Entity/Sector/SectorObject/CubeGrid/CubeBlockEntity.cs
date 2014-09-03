@@ -177,9 +177,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			get
 			{
-				String name = Subtype;
+				String name = Id.SubtypeName;
 				if (name == null || name == "" )
-					name = TypeId.ToString();
+					name = Id.TypeId.ToString();
 				if (name == null || name == "")
 					name = EntityId.ToString();
 				if (name == null || name == "")

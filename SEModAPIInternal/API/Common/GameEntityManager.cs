@@ -62,14 +62,14 @@ namespace SEModAPIInternal.API.Common
 
 		public static BaseObject GetEntity(long entityId)
 		{
-			m_resourceLock.AcquireShared();
+			//m_resourceLock.AcquireShared();
 
 			if(!m_entityMap.ContainsKey(entityId))
 				return null;
 
 			BaseObject result = m_entityMap[entityId];
 
-			m_resourceLock.ReleaseShared();
+			//m_resourceLock.ReleaseShared();
 
 			return result;
 		}

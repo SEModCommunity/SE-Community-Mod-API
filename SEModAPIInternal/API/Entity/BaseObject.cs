@@ -775,8 +775,6 @@ namespace SEModAPIInternal.API.Entity
 		private double m_refreshInterval;
 
 		private static double m_averageRefreshDataTime;
-		private static double m_averageRefreshInternalDataTime;
-		private static double m_averageRefreshInternalObjectBuilderDataTime;
 		private static DateTime m_lastProfilingOutput;
 		private static DateTime m_lastInternalProfilingOutput;
 

@@ -257,14 +257,7 @@ namespace SEModAPIExtensions.API
 		{
 			get
 			{
-				if (!m_chatHandlerSetup)
-				{
-					if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
-					{
-						Action action = SetupChatHandlers;
-						SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-					}
-				}
+				SetupChatHandlers();
 
 				return m_chatMessages;
 			}
@@ -274,14 +267,7 @@ namespace SEModAPIExtensions.API
 		{
 			get
 			{
-				if (!m_chatHandlerSetup)
-				{
-					if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
-					{
-						Action action = SetupChatHandlers;
-						SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-					}
-				}
+				SetupChatHandlers();
 
 				m_resourceLock.AcquireShared();
 
@@ -297,14 +283,7 @@ namespace SEModAPIExtensions.API
 		{
 			get
 			{
-				if (!m_chatHandlerSetup)
-				{
-					if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
-					{
-						Action action = SetupChatHandlers;
-						SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-					}
-				}
+				SetupChatHandlers();
 
 				List<ChatEvent> copy = new List<ChatEvent>(m_chatEvents.ToArray());
 				return copy;
@@ -338,11 +317,14 @@ namespace SEModAPIExtensions.API
 
 		private void SetupChatHandlers()
 		{
+			if (m_chatHandlerSetup)
+				return;
+
+			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+				return;
+
 			try
 			{
-				if (m_chatHandlerSetup == true)
-					return;
-
 				var netManager = ServerNetworkManager.GetNetworkManager();
 				if (netManager == null)
 					return;
