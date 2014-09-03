@@ -21,6 +21,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 	{
 		#region "Attributes"
 
+		private string m_customName;
+
 		public static string TerminalBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string TerminalBlockClass = "CCFD704C70C3F20F7E84E8EA42D7A730";
 
@@ -35,11 +37,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public TerminalBlockEntity(CubeGridEntity parent, MyObjectBuilder_TerminalBlock definition)
 			: base(parent, definition)
 		{
+			m_customName = definition.CustomName;
 		}
 
 		public TerminalBlockEntity(CubeGridEntity parent, MyObjectBuilder_TerminalBlock definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
+			m_customName = definition.CustomName;
 		}
 
 		#endregion
@@ -89,11 +93,18 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Terminal Block")]
 		public string CustomName
 		{
-			get { return ObjectBuilder.CustomName; }
+			get
+			{
+				if(BackingObject == null || ActualObject == null)
+					return ObjectBuilder.CustomName;
+
+				return GetCustomName();
+			}
 			set
 			{
-				if (ObjectBuilder.CustomName == value) return;
+				if (CustomName == value) return;
 				ObjectBuilder.CustomName = value;
+				m_customName = value;
 				Changed = true;
 
 				if (BackingObject != null)
@@ -129,28 +140,23 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		protected string GetCustomName()
+		{
+			Object rawObject = InvokeEntityMethod(ActualObject, TerminalBlockGetCustomNameMethod);
+			if (rawObject == null)
+				return "";
+			StringBuilder result = (StringBuilder)rawObject;
+			return result.ToString();
+		}
+
 		protected void InternalSetCustomName()
 		{
 			try
 			{
-				Object actualCubeObject = GetActualObject();
+				StringBuilder newCustomName = new StringBuilder(m_customName);
 
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-				{
-					LogManager.APILog.WriteLine(this.GetType().Name + ": Setting custom name to '" + CustomName + "'");
-				}
-
-				StringBuilder newCustomName = new StringBuilder(CustomName);
-
-				Type actualType = actualCubeObject.GetType();
-				while (actualType.Name != TerminalBlockClass && actualType.Name != "" && actualType.Name != "Object")
-				{
-					actualType = actualType.BaseType;
-				}
-				MethodInfo method2 = actualType.GetMethod(TerminalBlockSetCustomNameMethod, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-				method2.Invoke(actualCubeObject, new object[] { newCustomName });
-				MethodInfo method3 = actualType.GetMethod(TerminalBlockBroadcastCustomNameMethod, BindingFlags.NonPublic | BindingFlags.Static);
-				method3.Invoke(null, new object[] { actualCubeObject, newCustomName.ToString() });
+				InvokeEntityMethod(ActualObject, TerminalBlockSetCustomNameMethod, new object[] { newCustomName });
+				InvokeStaticMethod(ActualObject.GetType(), TerminalBlockBroadcastCustomNameMethod, new object[] { ActualObject, newCustomName.ToString() });
 			}
 			catch (Exception ex)
 			{
