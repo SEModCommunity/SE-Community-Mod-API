@@ -757,7 +757,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public bool IsLoading
 		{
-			get { return m_isLoading; }
+			get
+			{
+				//Request a refresh if we are still loading
+				if (m_isLoading)
+				{
+					Refresh();
+				}
+
+				return m_isLoading;
+			}
 			private set
 			{
 				//Do nothing!
