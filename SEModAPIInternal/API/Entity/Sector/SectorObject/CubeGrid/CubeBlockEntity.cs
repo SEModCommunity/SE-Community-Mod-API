@@ -177,9 +177,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			get
 			{
-				String name = Subtype;
+				String name = Id.SubtypeName;
 				if (name == null || name == "" )
-					name = TypeId.ToString();
+					name = Id.TypeId.ToString();
 				if (name == null || name == "")
 					name = EntityId.ToString();
 				if (name == null || name == "")
@@ -634,6 +634,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		protected long GetBlockOwner()
 		{
+			if (GetFactionData() == null)
+				return 0;
 			Object rawResult = InvokeEntityMethod(ActualObject, ActualCubeBlockGetOwnerMethod);
 			if (rawResult == null)
 				return 0;
@@ -755,7 +757,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public bool IsLoading
 		{
-			get { return m_isLoading; }
+			get
+			{
+				//Request a refresh if we are still loading
+				if (m_isLoading)
+				{
+					Refresh();
+				}
+
+				return m_isLoading;
+			}
 			private set
 			{
 				//Do nothing!

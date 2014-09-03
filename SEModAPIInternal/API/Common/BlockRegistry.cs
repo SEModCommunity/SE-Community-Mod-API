@@ -83,6 +83,10 @@ namespace SEModAPIInternal.API.Common
 			Register(typeof(MyObjectBuilder_SmallGatlingGun), typeof(SmallGatlingGunEntity), weapons);
 			Register(typeof(MyObjectBuilder_MotorStator), typeof(RotorEntity), misc);
 			Register(typeof(MyObjectBuilder_PistonBase), typeof(PistonEntity), misc);
+			Register(typeof(MyObjectBuilder_VirtualMass), typeof(VirtualMassEntity), misc);
+			Register(typeof(MyObjectBuilder_CameraBlock), typeof(CameraBlockEntity), utility);
+			Register(typeof(MyObjectBuilder_OreDetector), typeof(OreDetectorEntity), tools);
+			Register(typeof(MyObjectBuilder_RemoteControl), typeof(ButtonPanelEntity), utility);
 
 			//Base Types
 			Register(typeof(MyObjectBuilder_CubeBlock), typeof(CubeBlockEntity), structural);

@@ -76,8 +76,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			newEvent.entity = this;
 			newEvent.priority = 1;
 			EntityEventManager.Instance.AddEvent(newEvent);
-
-			SectorObjectManager.Instance.Refresh();
 		}
 
 		#endregion

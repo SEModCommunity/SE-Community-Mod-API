@@ -124,8 +124,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			m_lastNameRefresh = DateTime.Now;
 			m_lastBaseCubeBlockRefresh = DateTime.Now;
 			m_name = "Cube Grid";
-
-			SectorObjectManager.Instance.Refresh();
 		}
 
 		#endregion

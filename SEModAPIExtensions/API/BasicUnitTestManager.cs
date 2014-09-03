@@ -458,6 +458,30 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("RotorEntity reflection validation failed!");
 			}
 
+			if (!VirtualMassEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("VirtualMassEntity reflection validation failed!");
+			}
+
+			if (!CameraBlockEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("CameraBlockEntity reflection validation failed!");
+			}
+
+			if (!OreDetectorEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("OreDetectorEntity reflection validation failed!");
+			}
+
+			if (!ButtonPanelEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ButtonPanelEntity reflection validation failed!");
+			}
+
 			if (result)
 			{
 				Console.WriteLine("All block types passed reflection unit tests!");
