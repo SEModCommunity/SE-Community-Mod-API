@@ -386,12 +386,6 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("CockpitEntity reflection validation failed!");
 			}
 
-			if (!CockpitNetworkManager.ReflectionUnitTest())
-			{
-				result = false;
-				Console.WriteLine("CockpitNetworkManager reflection validation failed!");
-			}
-
 			if (!TurretBaseEntity.ReflectionUnitTest())
 			{
 				result = false;
@@ -480,6 +474,18 @@ namespace SEModAPIExtensions.API
 			{
 				result = false;
 				Console.WriteLine("ButtonPanelEntity reflection validation failed!");
+			}
+
+			if (!ShipControllerEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ShipControllerEntity reflection validation failed!");
+			}
+
+			if (!ShipControllerNetworkManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ShipControllerNetworkManager reflection validation failed!");
 			}
 
 			if (result)

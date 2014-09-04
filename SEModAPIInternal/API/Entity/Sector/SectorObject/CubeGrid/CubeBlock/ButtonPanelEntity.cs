@@ -15,7 +15,7 @@ using SEModAPIInternal.Support;
 namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 {
 	[DataContract(Name = "ButtonPanelEntityProxy")]
-	public class ButtonPanelEntity : FunctionalBlockEntity
+	public class ButtonPanelEntity : ShipControllerEntity
 	{
 		#region "Attributes"
 
