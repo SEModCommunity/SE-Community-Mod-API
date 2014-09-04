@@ -379,12 +379,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string BatteryBlockNetManagerBroadcastProducerEnabledMethod = "280D7AE8C0F523FF089618970C13B55B";
 		public static string BatteryBlockNetManagerBroadcastCurrentStoredPowerMethod = "F512BA7EF29F6A8B7DE3D56BAAC0207B";
 		public static string BatteryBlockNetManagerBroadcastSemiautoEnabledMethod = "72CE36DE9C0BAB6FEADA5D10CF5B867A";
+		public static string BatteryBlockNetManagerCurrentPowerPacketReceiver = "F512BA7EF29F6A8B7DE3D56BAAC0207B";
+
+		///////////////////////////////////////////////////////////////////////
 
 		//Packets
 		//1587 - CurrentStoredPower
 		//1588 - ??
 		//15870 - ProducerEnabled On/Off
 		//15871 - SemiautoEnabled On/Off
+
+		public static string BatteryBlockNetManagerCurrentStoredPowerPacketClass = "59DE66D2ECADE0929A1C776D7FA907E2";
+
+		public static string BatteryBlockNetManagerCurrentStoredPowerPacketGetIdMethod = "6A2CF29D06D4CE84E970B97A0E9389F9";
+
+		public static string BatteryBlockNetManagerCurrentStoredPowerPacketValueField = "ADC3AB91A03B31875821D57B8B718AF5";
 
 		#endregion
 
@@ -434,6 +443,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				result &= BaseObject.HasMethod(type, BatteryBlockNetManagerBroadcastCurrentStoredPowerMethod);
 				result &= BaseObject.HasMethod(type, BatteryBlockNetManagerBroadcastSemiautoEnabledMethod);
 
+				Type packetType = InternalType.GetNestedType(BatteryBlockNetManagerCurrentStoredPowerPacketClass, BindingFlags.Public | BindingFlags.NonPublic);
+				result &= BaseObject.HasMethod(packetType, BatteryBlockNetManagerCurrentStoredPowerPacketGetIdMethod);
+				result &= BaseObject.HasField(packetType, BatteryBlockNetManagerCurrentStoredPowerPacketValueField);
+
+				Type refPacketType = packetType.MakeByRefType();
+
 				return result;
 			}
 			catch (Exception ex)
@@ -465,7 +480,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				if (m_isRegistered)
 					return;
 
-				Type packetType = InternalType.GetNestedType("59DE66D2ECADE0929A1C776D7FA907E2", BindingFlags.Public | BindingFlags.NonPublic);
+				Type packetType = InternalType.GetNestedType(BatteryBlockNetManagerCurrentStoredPowerPacketClass, BindingFlags.Public | BindingFlags.NonPublic);
 				MethodInfo method = typeof(BatteryBlockNetworkManager).GetMethod("ReceiveCurrentPowerPacket", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 				bool result = NetworkManager.RegisterCustomPacketHandler(PacketRegistrationType.Static, packetType, method, InternalType);
 				if (!result)
@@ -483,7 +498,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			try
 			{
-				object result = BaseObject.InvokeEntityMethod(packet, "F90A78E04C13997F4430A35CE2D2AF48");
+				object result = BaseObject.InvokeEntityMethod(packet, BatteryBlockNetManagerCurrentStoredPowerPacketGetIdMethod);
 				if (result == null)
 					return;
 				long entityId = (long)result;
@@ -494,17 +509,17 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 					return;
 				BatteryBlockEntity battery = (BatteryBlockEntity)matchedEntity;
 
-				result = BaseObject.GetEntityFieldValue(packet, "ADC3AB91A03B31875821D57B8B718AF5");
+				result = BaseObject.GetEntityFieldValue(packet, BatteryBlockNetManagerCurrentStoredPowerPacketValueField);
 				if (result == null)
 					return;
 				float packetPowerLevel = (float)result;
 				if (packetPowerLevel == 1.0f)
 					return;
 
-				BaseObject.SetEntityFieldValue(packet, "ADC3AB91A03B31875821D57B8B718AF5", battery.CurrentStoredPower);
+				BaseObject.SetEntityFieldValue(packet, BatteryBlockNetManagerCurrentStoredPowerPacketValueField, battery.CurrentStoredPower);
 
 				Type refPacketType = packet.GetType().MakeByRefType();
-				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(InternalType, "F512BA7EF29F6A8B7DE3D56BAAC0207B", new Type[] { refPacketType, netManager.GetType() });
+				MethodInfo basePacketHandlerMethod = BaseObject.GetStaticMethod(InternalType, BatteryBlockNetManagerCurrentPowerPacketReceiver, new Type[] { refPacketType, netManager.GetType() });
 				basePacketHandlerMethod.Invoke(null, new object[] { packet, netManager });
 			}
 			catch (Exception ex)
