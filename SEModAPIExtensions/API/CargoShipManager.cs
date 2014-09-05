@@ -58,14 +58,19 @@ namespace SEModAPIExtensions.API
 		#region "Methods"
 
 		/// <summary>
-		/// 
+		/// Spawn a random Cargo Ship Group near asteroids
 		/// </summary>
-		/// <param name="remoteUserId"></param>
+		/// <param name="remoteUserId">A user that will recieve chat message en Cargo Ship Group spawn</param>
 		public void SpawnCargoShipGroup(ulong remoteUserId = 0)
 		{
 			SpawnCargoShipGroup(true, remoteUserId);
 		}
 
+		/// <summary>
+		/// Spawn a random Cargo Ship Group near or far from asteroids
+		/// </summary>
+		/// <param name="spawnAtAsteroids">Defines wether or not the Cargo Ship Group will spawn near asteroids</param>
+		/// <param name="remoteUserId">A user that will recieve chat message en Cargo Ship Group spawn</param>
 		public void SpawnCargoShipGroup(bool spawnAtAsteroids = true, ulong remoteUserId = 0)
 		{
 			float worldSize = SandboxGameAssemblyWrapper.Instance.GetServerConfig().SessionSettings.WorldSizeKm * 1000.0f;
@@ -95,6 +100,12 @@ namespace SEModAPIExtensions.API
 			SpawnCargoShipGroup(groupPosition, destinationPosition, remoteUserId);
 		}
 
+		/// <summary>
+		/// Spawn a random Cargo Ship Group at startPosition and going to stopPosition
+		/// </summary>
+		/// <param name="startPosition">The position where</param>
+		/// <param name="stopPosition"></param>
+		/// <param name="remoteUserId"></param>
 		public void SpawnCargoShipGroup(Vector3 startPosition, Vector3 stopPosition, ulong remoteUserId = 0)
 		{
 			try

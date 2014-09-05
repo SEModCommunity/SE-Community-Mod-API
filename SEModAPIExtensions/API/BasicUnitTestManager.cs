@@ -45,6 +45,7 @@ namespace SEModAPIExtensions.API
 		#endregion
 
 		#region "Methods"
+
 		/// <summary>
 		/// Method that run all the tests
 		/// </summary>
@@ -471,6 +472,7 @@ namespace SEModAPIExtensions.API
 
 			return result;
 		}
+
 		#endregion
 	}
 }
