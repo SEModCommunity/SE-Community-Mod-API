@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
@@ -26,6 +27,28 @@ namespace SEServerExtender
 
 			Installers.Add(serviceInstaller);
 			Installers.Add(processInstaller);
+		}
+
+		public override void Install(IDictionary stateSaver)
+		{
+			this.RetrieveServiceName();
+			base.Install(stateSaver);
+		}
+
+		public override void Uninstall(IDictionary savedState)
+		{
+			this.RetrieveServiceName();
+			base.Uninstall(savedState);
+		}
+
+		private void RetrieveServiceName()
+		{
+			string nameParam = this.Context.Parameters["name"];
+			if (string.IsNullOrEmpty(nameParam))
+				return;
+
+			serviceInstaller.ServiceName = nameParam;
+			serviceInstaller.DisplayName = nameParam;
 		}
 	}
 }

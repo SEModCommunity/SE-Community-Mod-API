@@ -18,9 +18,9 @@ namespace SEModAPIInternal.API.Entity
 		public static string PowerProducerNamespace = "FB8C11741B7126BD9C97FE76747E087F";
 		public static string PowerProducerClass = "7E69388ED0DB47818FB7AFF9F16C6EDA";
 
-		public static string PowerProducerGetMaxPowerOutputMethod = "936A96B2A3EC923C52593051BAC6866A";
-		public static string PowerProducerGetCurrentOutputMethod = "D3DB8D6AF704FD953B6899CDFA049607";
-		public static string PowerProducerSetCurrentOutputMethod = "9BCD27963C372D7C42E7139F02CB2F68";
+		public static string PowerProducerGetMaxPowerOutputMethod = "4B3BC80DAB985D0FCF9464FC8F01FBFC";
+		public static string PowerProducerGetCurrentOutputMethod = "FBE4A656402544795AAE7A49B3D904C6";
+		public static string PowerProducerSetCurrentOutputMethod = "ECF8E63163DCE0C138939C9CCF5C5ACC";
 
 		#endregion
 
