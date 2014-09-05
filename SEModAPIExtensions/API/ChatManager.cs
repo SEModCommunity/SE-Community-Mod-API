@@ -26,9 +26,14 @@ using VRageMath;
 
 namespace SEModAPIExtensions.API
 {
+	/// <summary>
+	/// Interface to work with Chat
+	/// </summary>
 	[ServiceContract]
 	public interface IChatServiceContract
 	{
+		#region "Methods"
+
 		[OperationContract]
 		List<string> GetChatMessages();
 
@@ -37,8 +42,13 @@ namespace SEModAPIExtensions.API
 
 		[OperationContract]
 		void SendPublicChatMessage(string message);
+
+		#endregion
 	}
 
+	/// <summary>
+	/// Abstract class to work with chat
+	/// </summary>
 	[ServiceBehavior(
 		ConcurrencyMode = ConcurrencyMode.Single,
 		IncludeExceptionDetailInFaults = true,
@@ -46,6 +56,8 @@ namespace SEModAPIExtensions.API
 	)]
 	public class ChatService : IChatServiceContract
 	{
+		#region "Methods"
+
 		public List<string> GetChatMessages()
 		{
 			return ChatManager.Instance.ChatMessages;
@@ -60,10 +72,17 @@ namespace SEModAPIExtensions.API
 		{
 			ChatManager.Instance.SendPublicChatMessage(message);
 		}
+
+		#endregion
 	}
 
+	/// <summary>
+	/// Manager for chat and chat commands
+	/// </summary>
 	public class ChatManager
 	{
+		#region "Sub Structs and Enums"
+
 		public struct ChatCommand
 		{
 			public string command;
@@ -86,6 +105,8 @@ namespace SEModAPIExtensions.API
 			public string message;
 			public ushort priority;
 		}
+
+		#endregion
 
 		#region "Attributes"
 
@@ -296,6 +317,10 @@ namespace SEModAPIExtensions.API
 
 		#region "General"
 
+		/// <summary>
+		/// Method used for general unit tests
+		/// </summary>
+		/// <returns>True if everything went fine, else false</returns>
 		public static bool ReflectionUnitTest()
 		{
 			try
@@ -571,7 +596,7 @@ namespace SEModAPIExtensions.API
 
 		#endregion
 
-		#region "Chat Command Callbacks"
+		#region "Chat Commands Callbacks"
 
 		protected void Command_Delete(ChatEvent chatEvent)
 		{

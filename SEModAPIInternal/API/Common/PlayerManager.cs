@@ -136,7 +136,7 @@ namespace SEModAPIInternal.API.Common
 		{
 			ulong steamId = 0;
 
-			foreach (var entry in InternalGetPlayerItemMappping().Keys)
+			foreach (var entry in InternalGetPlayerItemMapping().Keys)
 			{
 				MyObjectBuilder_Checkpoint.PlayerItem playerItem = PlayerMap.Instance.GetPlayerItemFromPlayerId(entry);
 				if (!playerItem.Name.Equals(playerName))
@@ -196,7 +196,7 @@ namespace SEModAPIInternal.API.Common
 
 			try
 			{
-				Dictionary<long, Object> allPlayers = InternalGetPlayerItemMappping();
+				Dictionary<long, Object> allPlayers = InternalGetPlayerItemMapping();
 				if (!allPlayers.ContainsKey(playerId))
 					return playerItem;
 				Object item = allPlayers[playerId];
@@ -221,7 +221,7 @@ namespace SEModAPIInternal.API.Common
 
 			try
 			{
-				Dictionary<long, Object> allPlayers = InternalGetPlayerItemMappping();
+				Dictionary<long, Object> allPlayers = InternalGetPlayerItemMapping();
 				foreach (var entry in allPlayers)
 				{
 					InternalPlayerItem internalPlayerItem = new InternalPlayerItem(entry.Value);
@@ -242,7 +242,7 @@ namespace SEModAPIInternal.API.Common
 
 		public List<long> GetPlayerIds()
 		{
-			return new List<long>(InternalGetPlayerItemMappping().Keys);
+			return new List<long>(InternalGetPlayerItemMapping().Keys);
 		}
 
 		protected Object GetPlayerFromSteamId(ulong steamId)
@@ -306,7 +306,7 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		protected Dictionary<long, Object> InternalGetPlayerItemMappping()
+		protected Dictionary<long, Object> InternalGetPlayerItemMapping()
 		{
 			try
 			{

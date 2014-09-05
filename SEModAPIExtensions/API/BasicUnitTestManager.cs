@@ -17,10 +17,16 @@ using SEModAPIInternal.Support;
 
 namespace SEModAPIExtensions.API
 {
+	/// <summary>
+	/// Class designed to test the API and detect reflection errors
+	/// </summary>
 	public class BasicUnitTestManager
 	{
+		#region "Attributes"
 		private static BasicUnitTestManager m_instance;
+		#endregion
 
+		#region "Singleton Constructor and Accessor"
 		protected BasicUnitTestManager()
 		{
 			m_instance = this;
@@ -36,7 +42,14 @@ namespace SEModAPIExtensions.API
 				return m_instance;
 			}
 		}
+		#endregion
 
+		#region "Methods"
+
+		/// <summary>
+		/// Method that run all the tests
+		/// </summary>
+		/// <returns>True if everything went fine, else False</returns>
 		public bool Run()
 		{
 			bool oldDebuggingSetting = SandboxGameAssemblyWrapper.IsDebugging;
@@ -52,6 +65,10 @@ namespace SEModAPIExtensions.API
 			return result;
 		}
 
+		/// <summary>
+		/// Test run to find reflection mismatches or errors
+		/// </summary>
+		/// <returns>True if everything went fine, else False</returns>
 		protected bool RunBaseReflectionUnitTests()
 		{
 			bool result = true;
@@ -154,6 +171,10 @@ namespace SEModAPIExtensions.API
 			return result;
 		}
 
+		/// <summary>
+		/// Test run to find entities mismatches or errors
+		/// </summary>
+		/// <returns>True if everything went fine, else False</returns>
 		protected bool RunEntityReflectionUnitTests()
 		{
 			bool result = true;
@@ -274,6 +295,10 @@ namespace SEModAPIExtensions.API
 			return result;
 		}
 
+		/// <summary>
+		/// Test run to find CubeBlocks mismatches or errors
+		/// </summary>
+		/// <returns>True if everything went fine, else False</returns>
 		protected bool RunCubeBlockReflectionTests()
 		{
 			bool result = true;
@@ -495,5 +520,7 @@ namespace SEModAPIExtensions.API
 
 			return result;
 		}
+
+		#endregion
 	}
 }

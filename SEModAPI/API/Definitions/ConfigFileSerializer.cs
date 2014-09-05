@@ -8,8 +8,14 @@ namespace SEModAPI.API.Definitions
 {
 	public class ConfigFileSerializer
 	{
+		#region "Attributes"
+
 		private const string m_DefaultExtension = ".sbc";
 		private static FileInfo m_configFileInfo;
+
+		#endregion
+
+		#region "Constructors & Initialisers"
 
 		public ConfigFileSerializer(FileInfo configFileInfo, bool useDefaultFileName = true)
 		{
@@ -17,8 +23,12 @@ namespace SEModAPI.API.Definitions
 			m_configFileInfo = configFileInfo;
 		}
 
+		#endregion
+
+		#region "Methods"
+
 		/// <summary>
-		/// This method is intended to verify of the given configFileInfo is valid
+		/// This method is intended to verify if the given configFileInfo is valid
 		/// </summary>
 		/// <param name="configFileInfo">The valid FileInfo that points to a valid [config file name].sbc file</param>
 		/// <param name="defaultName">Defines if the file has the defaultName: [config file name].sbc</param>
@@ -77,5 +87,7 @@ namespace SEModAPI.API.Definitions
 			reader.Close();
 			return definitions;
 		}
+
+		#endregion
 	}
 }

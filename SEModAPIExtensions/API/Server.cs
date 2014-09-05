@@ -52,6 +52,8 @@ namespace SEModAPIExtensions.API
 	[ServiceContract]
 	public interface IServerServiceContract
 	{
+		#region "Methods"
+
 		[OperationContract]
 		Server GetServer();
 
@@ -69,6 +71,8 @@ namespace SEModAPIExtensions.API
 
 		[OperationContract]
 		void SetAutosaveInterval(double interval);
+
+		#endregion
 	}
 
 	[ServiceBehavior(
@@ -78,6 +82,8 @@ namespace SEModAPIExtensions.API
 	)]
 	public class ServerService : IServerServiceContract
 	{
+		#region "Methods"
+		
 		public Server GetServer()
 		{
 			return Server.Instance;
@@ -107,6 +113,8 @@ namespace SEModAPIExtensions.API
 		{
 			Server.Instance.AutosaveInterval = interval;
 		}
+
+		#endregion
 	}
 
 	[DataContract(

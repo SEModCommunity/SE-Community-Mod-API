@@ -7,6 +7,9 @@ using System.Text;
 
 namespace SEModAPIExtensions.API.Plugin
 {
+	/// <summary>
+	/// Standardised Abstract class for plugins
+	/// </summary>
 	public abstract class PluginBase : IPlugin
 	{
 		#region "Attributes"
