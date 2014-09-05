@@ -19,6 +19,10 @@ namespace SEModAPIInternal.Support
 	{
 		#region "Attributes"
 
+		private bool m_useInstancePath;
+		private bool m_instanceMode;
+		private string m_logFileName;
+		private StringBuilder m_appVersion;
 		private DirectoryInfo m_libraryPath;
 		private FileInfo m_filePath;
 		private StringBuilder m_stringBuilder;
@@ -30,9 +34,13 @@ namespace SEModAPIInternal.Support
 
 		public ApplicationLog(bool useGamePath = false)
 		{
-			if (useGamePath && SandboxGameAssemblyWrapper.Instance.IsGameStarted && MyFileSystem.UserDataPath != null)
+			m_useInstancePath = useGamePath;
+
+			if (m_useInstancePath && SandboxGameAssemblyWrapper.Instance.IsGameStarted && MyFileSystem.UserDataPath != null)
 			{
 				m_libraryPath = new DirectoryInfo(MyFileSystem.UserDataPath);
+
+				m_instanceMode = true;
 			}
 			else
 			{
@@ -70,7 +78,10 @@ namespace SEModAPIInternal.Support
 
 		public void Init(string logFileName, StringBuilder appVersionString)
 		{
-			m_filePath = new FileInfo(Path.Combine(m_libraryPath.ToString(), logFileName));
+			m_logFileName = logFileName;
+			m_appVersion = appVersionString;
+
+			m_filePath = new FileInfo(Path.Combine(m_libraryPath.ToString(), m_logFileName));
 
 			//If the log file already exists then archive it
 			if (m_filePath.Exists)
@@ -87,13 +98,23 @@ namespace SEModAPIInternal.Support
 
 			WriteLine("Log Started");
 			WriteLine("Timezone (local - UTC): " + num.ToString() + "h");
-			WriteLine("App Version: " + appVersionString);
+			WriteLine("App Version: " + m_appVersion);
 		}
 
 		public void WriteLine(string msg)
 		{
 			if (m_filePath == null)
 				return;
+
+			if (m_useInstancePath && !m_instanceMode && SandboxGameAssemblyWrapper.Instance.IsGameStarted && MyFileSystem.UserDataPath != null)
+			{
+				m_libraryPath = new DirectoryInfo(MyFileSystem.UserDataPath);
+
+				m_instanceMode = true;
+
+				Init(m_logFileName, m_appVersion);
+			}
+
 			try
 			{
 				lock(_logLock)

@@ -236,6 +236,49 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		[DataMember]
+		[Category("Light")]
+		[ReadOnly(true)]
+		public float BlinkIntervalSeconds
+		{
+			get
+			{
+				return ObjectBuilder.BlinkIntervalSeconds;
+			}
+			private set
+			{
+			}
+		}
+
+		[DataMember]
+		[Category("Light")]
+		[ReadOnly(true)]
+		public float BlinkLength
+		{
+			get
+			{
+				//Note: Keen's code has this misspelled. It is not a typo
+				return ObjectBuilder.BlinkLenght;
+			}
+			private set
+			{
+			}
+		}
+
+		[DataMember]
+		[Category("Light")]
+		[ReadOnly(true)]
+		public float BlinkOffset
+		{
+			get
+			{
+				return ObjectBuilder.BlinkOffset;
+			}
+			private set
+			{
+			}
+		}
+
 		#endregion
 
 		#region "Methods"

@@ -23,8 +23,10 @@ namespace SEModAPIInternal.API.Common
 			OnCubeGridLoaded,
 			OnCubeBlockCreated,
 			OnCubeBlockDeleted,
+			OnCharacterMoved,
 			OnCharacterCreated,
 			OnCharacterDeleted,
+			OnSectorSaved,
 		}
 
 		public struct EntityEvent
@@ -88,6 +90,7 @@ namespace SEModAPIInternal.API.Common
 				if (value == false)
 				{
 					m_entityEvents.AddList(m_entityEventsBuffer);
+					m_entityEventsBuffer.Clear();
 				}
 
 				m_isResourceLocked = value;
@@ -115,8 +118,7 @@ namespace SEModAPIInternal.API.Common
 			}
 			catch (Exception ex)
 			{
-				if(SandboxGameAssemblyWrapper.IsDebugging)
-					LogManager.ErrorLog.WriteLine(ex);
+				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
 

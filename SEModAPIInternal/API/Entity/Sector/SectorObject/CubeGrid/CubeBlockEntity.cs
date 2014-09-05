@@ -104,19 +104,23 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			m_parent = parent;
 
-			//Only enable events for non-structural blocks, for now
-			if (definition.EntityId != 0)
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockCreated;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			if (m_parent.IsLoading)
 			{
-				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
-				newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockCreated;
-				newEvent.timestamp = DateTime.Now;
-				newEvent.entity = this;
-				if (m_parent.IsLoading)
-					newEvent.priority = 10;
-				else
-					newEvent.priority = 1;
-				EntityEventManager.Instance.AddEvent(newEvent);
+				newEvent.priority = 10;
 			}
+			else if (EntityId != 0)
+			{
+				newEvent.priority = 1;
+			}
+			else
+			{
+				newEvent.priority = 2;
+			}
+			EntityEventManager.Instance.AddEvent(newEvent);
 
 			if (EntityId != 0)
 			{
@@ -470,21 +474,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			m_isDisposed = true;
 
-			//if(SandboxGameAssemblyWrapper.IsDebugging)
-				//LogManager.APILog.WriteLine("Disposing CubeBlockEntity '" + Name + "'");
-
 			Parent.DeleteCubeBlock(this);
 
-			//Only enable events for non-structural blocks, for now
-			if (ObjectBuilder.EntityId != 0)
-			{
-				EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
-				newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockDeleted;
-				newEvent.timestamp = DateTime.Now;
-				newEvent.entity = this;
-				newEvent.priority = 1;
-				EntityEventManager.Instance.AddEvent(newEvent);
-			}
+			EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+			newEvent.type = EntityEventManager.EntityEventType.OnCubeBlockDeleted;
+			newEvent.timestamp = DateTime.Now;
+			newEvent.entity = this;
+			newEvent.priority = (ushort)((EntityId != 0) ? 1 : 2);
+			EntityEventManager.Instance.AddEvent(newEvent);
 
 			if (EntityId != 0)
 			{
@@ -870,7 +867,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 					EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 					newEvent.type = EntityEventManager.EntityEventType.OnCubeGridLoaded;
 					newEvent.timestamp = DateTime.Now;
-					newEvent.entity = this;
+					newEvent.entity = this.m_parent;
 					newEvent.priority = 1;
 					EntityEventManager.Instance.AddEvent(newEvent);
 

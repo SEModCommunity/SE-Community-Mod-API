@@ -89,7 +89,8 @@ namespace SEModAPIInternal.API.Common
 			m_isUsingCommonProgramData = false;
 			m_isInSafeMode = false;
 
-			m_assembly = Assembly.UnsafeLoadFrom("Sandbox.Game.dll");
+			string assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sandbox.Game.dll");
+			m_assembly = Assembly.UnsafeLoadFrom(assemblyPath);
 
 			m_lastProfilingOutput = DateTime.Now;
 			m_countQueuedActions = 0;

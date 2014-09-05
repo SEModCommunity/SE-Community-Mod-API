@@ -5,6 +5,7 @@ using SteamSDK;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Linq;
 using System.Reflection;
@@ -43,7 +44,8 @@ namespace SEModAPIInternal.API.Server
 		{
 			m_instance = this;
 
-			m_assembly = Assembly.UnsafeLoadFrom("SpaceEngineersDedicated.exe");
+			string assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SpaceEngineersDedicated.exe");
+			m_assembly = Assembly.UnsafeLoadFrom(assemblyPath);
 
 			Console.WriteLine("Finished loading ServerAssemblyWrapper");
 		}
