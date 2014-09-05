@@ -21,10 +21,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Attributes"
 
 		private PowerReceiver m_powerReceiver;
+		private bool m_enabled;
 
 		public static string FunctionalBlockNamespace = "6DDCED906C852CFDABA0B56B84D0BD74";
 		public static string FunctionalBlockClass = "7085736D64DCC58ED5DCA05FFEEA9664";
 
+		public static string FunctionalBlockGetEnabledMethod = "89B34B01DCC6C8596E80023078BB9541";
 		public static string FunctionalBlockSetEnabledMethod = "97EC0047E8B562F4590B905BD8571F51";
 		public static string FunctionalBlockBroadcastEnabledMethod = "D979DB9AA474782929587EC7DE5E53AA";
 		public static string FunctionalBlockGetPowerReceiverMethod = "get_PowerReceiver";
@@ -36,11 +38,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public FunctionalBlockEntity(CubeGridEntity parent, MyObjectBuilder_FunctionalBlock definition)
 			: base(parent, definition)
 		{
+			m_enabled = definition.Enabled;
 		}
 
 		public FunctionalBlockEntity(CubeGridEntity parent, MyObjectBuilder_FunctionalBlock definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
+			m_enabled = definition.Enabled;
+
 			m_powerReceiver = new PowerReceiver(ActualObject, Parent.PowerManager, InternalGetPowerReceiver(), new Func<float>(InternalPowerReceiverCallback));
 		}
 
@@ -78,15 +83,21 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		[Category("Functional Block")]
 		public bool Enabled
 		{
-			get { return ObjectBuilder.Enabled; }
+			get
+			{
+				if(BackingObject == null || ActualObject == null)
+					return ObjectBuilder.Enabled;
+
+				return GetFunctionalBlockEnabled();
+			}
 			set
 			{
-				var baseEntity = ObjectBuilder;
-				if (baseEntity.Enabled == value) return;
-				baseEntity.Enabled = value;
+				if (Enabled == value) return;
+				ObjectBuilder.Enabled = value;
+				m_enabled = value;
 				Changed = true;
 
-				if (BackingObject != null)
+				if (BackingObject != null && ActualObject != null)
 				{
 					Action action = InternalUpdateFunctionalBlock;
 					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
@@ -96,6 +107,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		[DataMember]
 		[Category("Functional Block")]
+		[ReadOnly(true)]
 		public float CurrentInput
 		{
 			get
@@ -125,10 +137,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			try
 			{
+				bool result = true;
+
 				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(FunctionalBlockNamespace, FunctionalBlockClass);
 				if (type == null)
 					throw new Exception("Could not find internal type for FunctionalBlockEntity");
-				bool result = true;
+
+				result &= HasMethod(type, FunctionalBlockGetEnabledMethod);
 				result &= HasMethod(type, FunctionalBlockSetEnabledMethod);
 				result &= HasMethod(type, FunctionalBlockBroadcastEnabledMethod);
 				//result &= HasMethod(type, FunctionalBlockGetPowerReceiverMethod);
@@ -142,33 +157,19 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			}
 		}
 
+		protected bool GetFunctionalBlockEnabled()
+		{
+			Object rawResult = InvokeEntityMethod(ActualObject, FunctionalBlockGetEnabledMethod);
+			if (rawResult == null)
+				return false;
+			bool result = (bool)rawResult;
+			return result;
+		}
+
 		protected void InternalUpdateFunctionalBlock()
 		{
-			try
-			{
-				Object actualCubeObject = GetActualObject();
-
-				if (SandboxGameAssemblyWrapper.IsDebugging)
-				{
-					Console.WriteLine("FunctionalBlock '" + Name + "': Setting enabled/disabled to '" + (Enabled ? "enabled" : "disabled") + "'");
-				}
-
-				Type actualType = actualCubeObject.GetType();
-				int iterationCutoff = 5;
-				while (actualType.Name != FunctionalBlockClass && actualType.Name != "" && actualType.Name != "Object" && iterationCutoff > 0)
-				{
-					actualType = actualType.BaseType;
-					iterationCutoff--;
-				}
-				MethodInfo method2 = actualType.GetMethod(FunctionalBlockSetEnabledMethod);
-				method2.Invoke(actualCubeObject, new object[] { Enabled });
-				MethodInfo method3 = actualType.GetMethod(FunctionalBlockBroadcastEnabledMethod);
-				method3.Invoke(actualCubeObject, new object[] { Enabled });
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-			}
+			InvokeEntityMethod(ActualObject, FunctionalBlockSetEnabledMethod, new object[] { m_enabled });
+			InvokeEntityMethod(ActualObject, FunctionalBlockBroadcastEnabledMethod, new object[] { m_enabled });
 		}
 
 		protected virtual float InternalPowerReceiverCallback()

@@ -13,6 +13,7 @@ using SEModAPIInternal.API.Common;
 using SEModAPIInternal.Support;
 
 using VRage;
+using Sandbox.Definitions;
 
 namespace SEModAPIInternal.API.Entity
 {
@@ -340,14 +341,6 @@ namespace SEModAPIInternal.API.Entity
 
 		private InventoryEntity m_parentContainer;
 
-		private static PhysicalItemDefinitionsManager m_physicalItemsManager;
-		private static ComponentDefinitionsManager m_componentsManager;
-		private static AmmoMagazinesDefinitionsManager m_ammoManager;
-
-		private SerializableDefinitionId m_itemId;
-		private float m_itemMass = -1;
-		private float m_itemVolume = -1;
-
 		public static string InventoryItemNamespace = "33FB6E717989660631E6772B99F502AD";
 		public static string InventoryItemClass = "555069178719BB1B546FB026B906CE00";
 
@@ -362,45 +355,15 @@ namespace SEModAPIInternal.API.Entity
 		public InventoryItemEntity(MyObjectBuilder_InventoryItem definition)
 			: base(definition)
 		{
-			if (m_physicalItemsManager == null)
-			{
-				m_physicalItemsManager = new PhysicalItemDefinitionsManager();
-				m_physicalItemsManager.Load(PhysicalItemDefinitionsManager.GetContentDataFile("PhysicalItems.sbc"));
-			}
-			if (m_componentsManager == null)
-			{
-				m_componentsManager = new ComponentDefinitionsManager();
-				m_componentsManager.Load(ComponentDefinitionsManager.GetContentDataFile("Components.sbc"));
-			}
-			if (m_ammoManager == null)
-			{
-				m_ammoManager = new AmmoMagazinesDefinitionsManager();
-				m_ammoManager.Load(AmmoMagazinesDefinitionsManager.GetContentDataFile("AmmoMagazines.sbc"));
-			}
-
-			FindMatchingItem();
+			m_definition = MyDefinitionManager.Static.GetPhysicalItemDefinition(PhysicalContent);
+			m_definitionId = m_definition.Id;
 		}
 
 		public InventoryItemEntity(MyObjectBuilder_InventoryItem definition, Object backingObject)
 			: base(definition, backingObject)
 		{
-			if (m_physicalItemsManager == null)
-			{
-				m_physicalItemsManager = new PhysicalItemDefinitionsManager();
-				m_physicalItemsManager.Load(PhysicalItemDefinitionsManager.GetContentDataFile("PhysicalItems.sbc"));
-			}
-			if (m_componentsManager == null)
-			{
-				m_componentsManager = new ComponentDefinitionsManager();
-				m_componentsManager.Load(ComponentDefinitionsManager.GetContentDataFile("Components.sbc"));
-			}
-			if (m_ammoManager == null)
-			{
-				m_ammoManager = new AmmoMagazinesDefinitionsManager();
-				m_ammoManager.Load(AmmoMagazinesDefinitionsManager.GetContentDataFile("AmmoMagazines.sbc"));
-			}
-
-			FindMatchingItem();
+			m_definition = MyDefinitionManager.Static.GetPhysicalItemDefinition(PhysicalContent);
+			m_definitionId = m_definition.Id;
 		}
 
 		#endregion
@@ -424,7 +387,14 @@ namespace SEModAPIInternal.API.Entity
 		[ReadOnly(true)]
 		public override string Name
 		{
-			get { return Id.SubtypeName; }
+			get
+			{
+				MyPhysicalItemDefinition def = Definition;
+				if (def == null)
+					return base.Name;
+
+				return def.Id.SubtypeName;
+			}
 		}
 
 		[IgnoreDataMember]
@@ -445,34 +415,22 @@ namespace SEModAPIInternal.API.Entity
 
 		[IgnoreDataMember]
 		[Category("Container Item")]
+		[ReadOnly(true)]
+		new public MyPhysicalItemDefinition Definition
+		{
+			get
+			{
+				return (MyPhysicalItemDefinition)base.Definition;
+			}
+		}
+
+		[IgnoreDataMember]
+		[Category("Container Item")]
 		[Browsable(false)]
 		public InventoryEntity Container
 		{
 			get { return m_parentContainer; }
 			set { m_parentContainer = value; }
-		}
-
-		[DataMember]
-		[Category("Container Item")]
-		[ReadOnly(false)]
-		[TypeConverter(typeof(ItemSerializableDefinitionIdTypeConverter))]
-		new public SerializableDefinitionId Id
-		{
-			get { return m_itemId; }
-			set
-			{
-				if (m_itemId.Equals(value)) return;
-
-				ObjectBuilder.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(value);
-				bool result = FindMatchingItem();
-				if (!result)
-				{
-					ObjectBuilder.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(m_itemId);
-					return;
-				}
-
-				Changed = true;
-			}
 		}
 
 		[DataMember]
@@ -527,7 +485,10 @@ namespace SEModAPIInternal.API.Entity
 		[ReadOnly(true)]
 		public float TotalMass
 		{
-			get { return (float)ObjectBuilder.Amount * m_itemMass; }
+			get
+			{
+				return (float)ObjectBuilder.Amount * Mass;
+			}
 		}
 
 		[IgnoreDataMember]
@@ -535,7 +496,7 @@ namespace SEModAPIInternal.API.Entity
 		[ReadOnly(true)]
 		public float TotalVolume
 		{
-			get { return (float)ObjectBuilder.Amount * m_itemVolume; }
+			get { return (float)ObjectBuilder.Amount * Volume; }
 		}
 
 		[DataMember]
@@ -543,12 +504,15 @@ namespace SEModAPIInternal.API.Entity
 		[ReadOnly(true)]
 		public float Mass
 		{
-			get { return m_itemMass; }
-			set
+			get
 			{
-				if (m_itemMass == value) return;
-				m_itemMass = value;
-				Changed = true;
+				if (Definition == null)
+					return 0;
+				return Definition.Mass;
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 
@@ -557,12 +521,15 @@ namespace SEModAPIInternal.API.Entity
 		[ReadOnly(true)]
 		public float Volume
 		{
-			get { return m_itemVolume; }
-			set
+			get
 			{
-				if (m_itemVolume == value) return;
-				m_itemVolume = value;
-				Changed = true;
+				if (Definition == null)
+					return 0;
+				return Definition.Volume;
+			}
+			private set
+			{
+				//Do nothing!
 			}
 		}
 
@@ -606,58 +573,8 @@ namespace SEModAPIInternal.API.Entity
 		public override void Dispose()
 		{
 			Amount = 0;
-		}
 
-		private bool FindMatchingItem()
-		{
-			bool foundMatchingItem = false;
-			if (!foundMatchingItem)
-			{
-				foreach (var item in m_physicalItemsManager.Definitions)
-				{
-					if (item.Id.TypeId == PhysicalContent.TypeId && item.Id.SubtypeId == PhysicalContent.SubtypeName)
-					{
-						m_itemId = item.Id;
-						m_itemMass = item.Mass;
-						m_itemVolume = item.Volume;
-
-						foundMatchingItem = true;
-						break;
-					}
-				}
-			}
-			if (!foundMatchingItem)
-			{
-				foreach (var item in m_componentsManager.Definitions)
-				{
-					if (item.Id.TypeId == PhysicalContent.TypeId && item.Id.SubtypeId == PhysicalContent.SubtypeName)
-					{
-						m_itemId = item.Id;
-						m_itemMass = item.Mass;
-						m_itemVolume = item.Volume;
-
-						foundMatchingItem = true;
-						break;
-					}
-				}
-			}
-			if (!foundMatchingItem)
-			{
-				foreach (var item in m_ammoManager.Definitions)
-				{
-					if (item.Id.TypeId == PhysicalContent.TypeId && item.Id.SubtypeId == PhysicalContent.SubtypeName)
-					{
-						m_itemId = item.Id;
-						m_itemMass = item.Mass;
-						m_itemVolume = item.Volume;
-
-						foundMatchingItem = true;
-						break;
-					}
-				}
-			}
-
-			return foundMatchingItem;
+			base.Dispose();
 		}
 
 		#endregion
@@ -704,60 +621,12 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		protected override void InternalRefreshObjectBuilderMap()
-		{
-			try
-			{
-				if (!CanRefresh)
-					return;
-
-				m_rawDataListResourceLock.AcquireShared();
-				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
-
-				m_rawDataObjectBuilderList.Clear();
-				foreach (Object entity in GetBackingDataList())
-				{
-					try
-					{
-						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
-						if (baseEntity == null)
-							continue;
-
-						m_rawDataObjectBuilderList.Add(entity, baseEntity);
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-
-				m_rawDataListResourceLock.ReleaseShared();
-				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-				if (m_rawDataListResourceLock.Owned)
-					m_rawDataListResourceLock.ReleaseShared();
-				if(m_rawDataObjectBuilderListResourceLock.Owned)
-					m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-			}
-		}
-
 		protected override void LoadDynamic()
 		{
 			try
 			{
-				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				List<Object> rawEntities = GetBackingDataList();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
-
-				if (objectBuilderList.Count != rawEntities.Count)
-				{
-					if (SandboxGameAssemblyWrapper.IsDebugging)
-						LogManager.APILog.WriteLine("InventoryItemManager - Mismatch between raw entities and object builders");
-					return;
-				}
 
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
@@ -767,10 +636,7 @@ namespace SEModAPIInternal.API.Entity
 						if (!IsValidEntity(entity))
 							continue;
 
-						if (!objectBuilderList.ContainsKey(entity))
-							continue;
-
-						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)objectBuilderList[entity];
+						MyObjectBuilder_InventoryItem baseEntity = (MyObjectBuilder_InventoryItem)InventoryItemEntity.InvokeEntityMethod(entity, InventoryItemEntity.InventoryItemGetObjectBuilderMethod);
 						if (baseEntity == null)
 							continue;
 

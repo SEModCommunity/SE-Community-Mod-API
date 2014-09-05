@@ -3,21 +3,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.ServiceModel.Description;
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Xml;
 
 using Sandbox.Common.ObjectBuilders;
-
-using SEModAPI.API.Definitions;
-
-using SEModAPIExtensions.API.IPC;
 
 using SEModAPIInternal.API.Server;
 using SEModAPIInternal.API.Common;
@@ -25,11 +18,11 @@ using SEModAPIInternal.API.Entity;
 using SEModAPIInternal.API.Entity.Sector.SectorObject;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid;
 using SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock;
-using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
-using VRageMath;
+using VRage;
 using VRage.Common.Utils;
+using VRageMath;
 
 namespace SEModAPIExtensions.API
 {
@@ -117,7 +110,9 @@ namespace SEModAPIExtensions.API
 		private static ChatManager m_instance;
 
 		private static List<string> m_chatMessages;
+		private static List<ChatEvent> m_chatHistory;
 		private static bool m_chatHandlerSetup;
+		private static FastResourceLock m_resourceLock;
 
 		private List<ChatEvent> m_chatEvents;
 		private Dictionary<ChatCommand, Guid> m_chatCommands;
@@ -138,7 +133,9 @@ namespace SEModAPIExtensions.API
 			m_instance = this;
 
 			m_chatMessages = new List<string>();
+			m_chatHistory = new List<ChatEvent>();
 			m_chatHandlerSetup = false;
+			m_resourceLock = new FastResourceLock();
 			m_chatEvents = new List<ChatEvent>();
 			m_chatCommands = new Dictionary<ChatCommand, Guid>();
 
@@ -278,16 +275,25 @@ namespace SEModAPIExtensions.API
 		{
 			get
 			{
-				if (!m_chatHandlerSetup)
-				{
-					if (SandboxGameAssemblyWrapper.Instance.IsGameStarted)
-					{
-						Action action = SetupChatHandlers;
-						SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-					}
-				}
+				SetupChatHandlers();
 
 				return m_chatMessages;
+			}
+		}
+
+		public List<ChatEvent> ChatHistory
+		{
+			get
+			{
+				SetupChatHandlers();
+
+				m_resourceLock.AcquireShared();
+
+				List<ChatEvent> history = new List<ChatEvent>(m_chatHistory);
+
+				m_resourceLock.ReleaseShared();
+
+				return history;
 			}
 		}
 
@@ -295,6 +301,8 @@ namespace SEModAPIExtensions.API
 		{
 			get
 			{
+				SetupChatHandlers();
+
 				List<ChatEvent> copy = new List<ChatEvent>(m_chatEvents.ToArray());
 				return copy;
 			}
@@ -327,11 +335,14 @@ namespace SEModAPIExtensions.API
 
 		private void SetupChatHandlers()
 		{
+			if (m_chatHandlerSetup)
+				return;
+
+			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
+				return;
+
 			try
 			{
-				if (m_chatHandlerSetup == true)
-					return;
-
 				var netManager = ServerNetworkManager.GetNetworkManager();
 				if (netManager == null)
 					return;
@@ -378,6 +389,10 @@ namespace SEModAPIExtensions.API
 			chatEvent.message = message;
 			chatEvent.priority = 0;
 			ChatManager.Instance.AddEvent(chatEvent);
+
+			m_resourceLock.AcquireExclusive();
+			m_chatHistory.Add(chatEvent);
+			m_resourceLock.ReleaseExclusive();
 		}
 
 		public void SendPrivateChatMessage(ulong remoteUserId, string message)
@@ -407,6 +422,10 @@ namespace SEModAPIExtensions.API
 				chatEvent.message = message;
 				chatEvent.priority = 0;
 				ChatManager.Instance.AddEvent(chatEvent);
+
+				m_resourceLock.AcquireExclusive();
+				m_chatHistory.Add(chatEvent);
+				m_resourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
@@ -455,6 +474,10 @@ namespace SEModAPIExtensions.API
 				selfChatEvent.message = message;
 				selfChatEvent.priority = 0;
 				ChatManager.Instance.AddEvent(selfChatEvent);
+
+				m_resourceLock.AcquireExclusive();
+				m_chatHistory.Add(selfChatEvent);
+				m_resourceLock.ReleaseExclusive();
 			}
 			catch (Exception ex)
 			{
@@ -584,12 +607,10 @@ namespace SEModAPIExtensions.API
 					List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
 					foreach (CubeGridEntity entity in entities)
 					{
-						if (entity.Name.Equals(entity.EntityId.ToString()))
+						while (entity.CubeBlocks.Count == 0)
 						{
-							entitiesToDispose.Add(entity);
-							continue;
+							Thread.Sleep(20);
 						}
-
 						List<CubeBlockEntity> blocks = entity.CubeBlocks;
 						if (blocks.Count > 0)
 						{
@@ -611,6 +632,52 @@ namespace SEModAPIExtensions.API
 
 					foreach (CubeGridEntity entity in entitiesToDispose)
 					{
+						bool isLinkedShip = false;
+						List<CubeBlockEntity> blocks = entity.CubeBlocks;
+						foreach (CubeBlockEntity cubeBlock in blocks)
+						{
+							if (cubeBlock is MergeBlockEntity)
+							{
+								MergeBlockEntity block = (MergeBlockEntity)cubeBlock;
+								if (block.IsAttached)
+								{
+									if (!entitiesToDispose.Contains(block.AttachedCubeGrid))
+									{
+										isLinkedShip = true;
+										break;
+									}
+								}
+							}
+							if (cubeBlock is PistonEntity)
+							{
+								PistonEntity block = (PistonEntity)cubeBlock;
+								CubeBlockEntity topBlock = block.TopBlock;
+								if (topBlock != null)
+								{
+									if (!entitiesToDispose.Contains(topBlock.Parent))
+									{
+										isLinkedShip = true;
+										break;
+									}
+								}
+							}
+							if (cubeBlock is RotorEntity)
+							{
+								RotorEntity block = (RotorEntity)cubeBlock;
+								CubeBlockEntity topBlock = block.TopBlock;
+								if (topBlock != null)
+								{
+									if (!entitiesToDispose.Contains(topBlock.Parent))
+									{
+										isLinkedShip = true;
+										break;
+									}
+								}
+							}
+						}
+						if (isLinkedShip)
+							continue;
+
 						entity.Dispose();
 					}
 

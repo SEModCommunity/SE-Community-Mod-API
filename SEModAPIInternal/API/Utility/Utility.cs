@@ -86,22 +86,22 @@ namespace SEModAPIInternal.API.Utility
 			}
 		}
 
-		public static Dictionary<long, Object> ConvertDictionary(Object source)
+		public static Dictionary<T, Object> ConvertDictionary<T>(Object source)
 		{
 			try
 			{
 				Type rawType = source.GetType();
 				Type[] genericArgs = rawType.GetGenericArguments();
 				MethodInfo conversion = typeof(UtilityFunctions).GetMethod("ConvertEntityDictionary", BindingFlags.Public | BindingFlags.Static);
-				conversion = conversion.MakeGenericMethod(genericArgs[1]);
-				Dictionary<long, Object> result = (Dictionary<long, Object>)conversion.Invoke(null, new object[] { source });
+				conversion = conversion.MakeGenericMethod(genericArgs);
+				Dictionary<T, Object> result = (Dictionary<T, Object>)conversion.Invoke(null, new object[] { source });
 
 				return result;
 			}
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-				return new Dictionary<long, Object>();
+				return new Dictionary<T, Object>();
 			}
 		}
 
@@ -143,9 +143,9 @@ namespace SEModAPIInternal.API.Utility
 			return dataSet;
 		}
 
-		public static Dictionary<long, Object> ConvertEntityDictionary<T>(IEnumerable<KeyValuePair<long, T>> source)
+		public static Dictionary<T, Object> ConvertEntityDictionary<T, U>(IEnumerable<KeyValuePair<T, U>> source)
 		{
-			Dictionary<long, Object> dataSet = new Dictionary<long, Object>();
+			Dictionary<T, Object> dataSet = new Dictionary<T, Object>();
 
 			try
 			{

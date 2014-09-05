@@ -23,6 +23,8 @@ namespace SEModAPIExtensions.API
 		public Color color;
 		public bool useOrientation;
 		public MyBlockOrientation orientation;
+		public bool useSubTypeName;
+		public string subTypeName;
 
 		public StructureEntry()
 		{
@@ -30,6 +32,8 @@ namespace SEModAPIExtensions.API
 			color = new Color(0, 0, 0);
 			useOrientation = false;
 			orientation = MyBlockOrientation.Identity;
+			useSubTypeName = false;
+			subTypeName = "";
 		}
 	}
 
@@ -274,10 +278,22 @@ namespace SEModAPIExtensions.API
 						}
 					}
 
-					//Compare the block orientation, if set
+					//Compare the block orientation, if enabled
 					if (entry.useOrientation)
 					{
 						if (entry.orientation.Forward != posCubeBlock.BlockOrientation.Forward || entry.orientation.Up != posCubeBlock.BlockOrientation.Up)
+						{
+							isMatch = false;
+							break;
+						}
+					}
+
+					//Compare the block subtype, if enabled
+					if (entry.useSubTypeName)
+					{
+						string cleanEntrySubType = entry.subTypeName.ToLower();
+						string cleanBlockSubType = posCubeBlock.Id.SubtypeName.ToLower();
+						if (cleanEntrySubType != cleanBlockSubType)
 						{
 							isMatch = false;
 							break;

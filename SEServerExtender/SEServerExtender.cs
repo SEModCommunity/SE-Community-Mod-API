@@ -34,6 +34,7 @@ using SEModAPIInternal.Support;
 
 using VRage.Common.Utils;
 using VRageMath;
+using Sandbox.Definitions;
 
 namespace SEServerExtender
 {
@@ -409,29 +410,34 @@ namespace SEServerExtender
 			if (!SandboxGameAssemblyWrapper.Instance.IsGameStarted)
 				return;
 
+			if (TAB_MainTabs.SelectedTab != TAB_Entities_Page)
+				return;
+
 			TRV_Entities.BeginUpdate();
-
-			TreeNode sectorObjectsNode;
-			TreeNode sectorEventsNode;
-
-			if (TRV_Entities.Nodes.Count < 2)
+			if (TRV_Entities.Visible)
 			{
-				sectorObjectsNode = TRV_Entities.Nodes.Add("Sector Objects");
-				sectorEventsNode = TRV_Entities.Nodes.Add("Sector Events");
+				TreeNode sectorObjectsNode;
+				TreeNode sectorEventsNode;
 
-				sectorObjectsNode.Name = sectorObjectsNode.Text;
-				sectorEventsNode.Name = sectorEventsNode.Text;
+				if (TRV_Entities.Nodes.Count < 2)
+				{
+					sectorObjectsNode = TRV_Entities.Nodes.Add("Sector Objects");
+					sectorEventsNode = TRV_Entities.Nodes.Add("Sector Events");
+
+					sectorObjectsNode.Name = sectorObjectsNode.Text;
+					sectorEventsNode.Name = sectorEventsNode.Text;
+				}
+				else
+				{
+					sectorObjectsNode = TRV_Entities.Nodes[0];
+					sectorEventsNode = TRV_Entities.Nodes[1];
+				}
+
+				RenderSectorObjectChildNodes(sectorObjectsNode);
+				sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.Count.ToString() + ")";
+				sectorObjectsNode.Tag = SectorObjectManager.Instance;
+
 			}
-			else
-			{
-				sectorObjectsNode = TRV_Entities.Nodes[0];
-				sectorEventsNode = TRV_Entities.Nodes[1];
-			}
-
-			RenderSectorObjectChildNodes(sectorObjectsNode);
-			sectorObjectsNode.Text = sectorObjectsNode.Name + " (" + SectorObjectManager.Instance.Count.ToString() + ")";
-			sectorObjectsNode.Tag = SectorObjectManager.Instance;
-
 			TRV_Entities.EndUpdate();
 		}
 
@@ -439,6 +445,7 @@ namespace SEServerExtender
 		{
 			if (TRV_Entities.IsDisposed)
 				return;
+
 
 			TreeNode cubeGridsNode;
 			TreeNode charactersNode;
@@ -500,6 +507,15 @@ namespace SEServerExtender
 
 			//Get cube grids
 			List<CubeGridEntity> list = m_cubeGridEntities;
+
+			//Sort the list of cube grids
+			list.Sort(delegate(CubeGridEntity x, CubeGridEntity y)
+			{
+				if (x.Name == null && y.Name == null) return 0;
+				else if (x.Name == null) return -1;
+				else if (y.Name == null) return 1;
+				else return x.Name.CompareTo(y.Name);
+			});
 
 			//Cleanup and update the existing nodes
 			foreach (TreeNode node in rootNode.Nodes)
@@ -1103,6 +1119,42 @@ namespace SEServerExtender
 				TRV_Entities.EndUpdate();
 			}
 
+			if (linkedObject is VoxelMap)
+			{
+				VoxelMap voxelMap = (VoxelMap)linkedObject;
+
+				List<MyVoxelMaterialDefinition> materialDefs = new List<MyVoxelMaterialDefinition>(MyDefinitionManager.Static.GetVoxelMaterialDefinitions());
+				Dictionary<MyVoxelMaterialDefinition, float> totalMaterials = voxelMap.Materials;
+
+				TRV_Entities.BeginUpdate();
+				if (e.Node.Nodes.Count < materialDefs.Count)
+				{
+					e.Node.Nodes.Clear();
+
+					foreach (var material in materialDefs)
+					{
+						TreeNode newNode = e.Node.Nodes.Add(material.Id.SubtypeName);
+						newNode.Name = newNode.Text;
+						newNode.Tag = material;
+					}
+				}
+
+				foreach (TreeNode node in e.Node.Nodes)
+				{
+					Object tag = node.Tag;
+					if(tag == null || !(tag is MyVoxelMaterialDefinition))
+						continue;
+					MyVoxelMaterialDefinition material = (MyVoxelMaterialDefinition)tag;
+					if (totalMaterials.ContainsKey(material))
+					{
+						float total = totalMaterials[material];
+						node.Text = node.Name + " (" + total.ToString() + ")";
+					}
+				}
+
+				TRV_Entities.EndUpdate();
+			}
+
 			if (linkedObject is CharacterEntity)
 			{
 				CharacterEntity character = (CharacterEntity)linkedObject;
@@ -1465,13 +1517,21 @@ namespace SEServerExtender
 
 		private void ChatViewRefresh(object sender, EventArgs e)
 		{
+			//Refresh the chat history
 			LST_Chat_Messages.BeginUpdate();
-
-			string[] chatMessages = ChatManager.Instance.ChatMessages.ToArray();
-			if (chatMessages.Length != LST_Chat_Messages.Items.Count)
+			List<ChatManager.ChatEvent> chatHistory = ChatManager.Instance.ChatHistory;
+			if (chatHistory.Count != LST_Chat_Messages.Items.Count)
 			{
 				LST_Chat_Messages.Items.Clear();
-				LST_Chat_Messages.Items.AddRange(chatMessages);
+				foreach (var entry in chatHistory)
+				{
+					string timestamp = entry.timestamp.ToLongTimeString();
+					string playerName = "Server";
+					if(entry.sourceUserId != 0)
+						playerName = PlayerMap.Instance.GetPlayerNameFromSteamId(entry.sourceUserId);
+					string formattedMessage = timestamp + " - " + playerName + " - " + entry.message;
+					LST_Chat_Messages.Items.Add(formattedMessage);
+				}
 
 				//Auto-scroll to the bottom of the list
 				LST_Chat_Messages.SelectedIndex = LST_Chat_Messages.Items.Count - 1;
@@ -1479,8 +1539,8 @@ namespace SEServerExtender
 			}
 			LST_Chat_Messages.EndUpdate();
 
+			//Refresh the connected players list
 			LST_Chat_ConnectedPlayers.BeginUpdate();
-
 			List<ulong> connectedPlayers = PlayerManager.Instance.ConnectedPlayers;
 			if (connectedPlayers.Count != LST_Chat_ConnectedPlayers.Items.Count)
 			{
@@ -1492,7 +1552,6 @@ namespace SEServerExtender
 					LST_Chat_ConnectedPlayers.Items.Add(playerName);
 				}
 			}
-
 			LST_Chat_ConnectedPlayers.EndUpdate();
 		}
 

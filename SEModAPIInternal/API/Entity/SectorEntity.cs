@@ -416,61 +416,12 @@ namespace SEModAPIInternal.API.Entity
 			}
 		}
 
-		protected override void InternalRefreshObjectBuilderMap()
-		{
-			try
-			{
-				if (!CanRefresh)
-					return;
-
-				m_rawDataHashSetResourceLock.AcquireShared();
-				m_rawDataObjectBuilderListResourceLock.AcquireExclusive();
-
-				m_rawDataObjectBuilderList.Clear();
-				foreach (Object entity in GetBackingDataHashSet())
-				{
-					try
-					{
-						//TODO - Find a faster way to get updated data. This call takes ~0.15ms per entity which adds up quickly
-						MyObjectBuilder_EntityBase baseEntity = BaseEntity.GetObjectBuilder(entity);
-						if (baseEntity == null)
-							continue;
-
-						m_rawDataObjectBuilderList.Add(entity, baseEntity);
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-
-				m_rawDataHashSetResourceLock.ReleaseShared();
-				m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
-				if (m_rawDataHashSetResourceLock.Owned)
-					m_rawDataHashSetResourceLock.ReleaseShared();
-				if (m_rawDataObjectBuilderListResourceLock.Owned)
-					m_rawDataObjectBuilderListResourceLock.ReleaseExclusive();
-			}
-		}
-
 		protected override void LoadDynamic()
 		{
 			try
 			{
-				Dictionary<Object, MyObjectBuilder_Base> objectBuilderList = GetObjectBuilderMap();
 				HashSet<Object> rawEntities = GetBackingDataHashSet();
 				Dictionary<long, BaseObject> internalDataCopy = new Dictionary<long, BaseObject>(GetInternalData());
-
-				if (objectBuilderList.Count != rawEntities.Count)
-				{
-					if(SandboxGameAssemblyWrapper.IsDebugging)
-						LogManager.ErrorLog.WriteLine("SectorObjectManager - Mismatch between raw entities and object builders");
-					return;
-				}
 
 				//Update the main data mapping
 				foreach (Object entity in rawEntities)
@@ -484,10 +435,7 @@ namespace SEModAPIInternal.API.Entity
 						if (!IsValidEntity(entity))
 							continue;
 
-						if (!objectBuilderList.ContainsKey(entity))
-							continue;
-
-						MyObjectBuilder_EntityBase baseEntity = (MyObjectBuilder_EntityBase)objectBuilderList[entity];
+						MyObjectBuilder_EntityBase baseEntity = BaseEntity.GetObjectBuilder(entity);
 						if (baseEntity == null)
 							continue;
 						if (!EntityRegistry.Instance.ContainsGameType(baseEntity.TypeId))
@@ -500,7 +448,7 @@ namespace SEModAPIInternal.API.Entity
 							if (matchingEntity == null || matchingEntity.IsDisposed)
 								continue;
 
-							//Update the base entity (not the same as BackingObject which is the internal object)
+							matchingEntity.BackingObject = entity;
 							matchingEntity.ObjectBuilder = baseEntity;
 						}
 						else

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Definitions;
 
 using SEModAPI.API.Definitions;
 
@@ -19,6 +20,7 @@ using SEModAPIInternal.Support;
 
 using VRageMath;
 using VRage.Common.Utils;
+using System.Collections;
 
 namespace SEModAPIExtensions.API
 {
@@ -110,15 +112,10 @@ namespace SEModAPIExtensions.API
 		{
 			try
 			{
-				//Load the spawn groups
-				SpawnGroupsDefinitionsManager spawnGroupsDefinitionsManager = new SpawnGroupsDefinitionsManager();
-				FileInfo contentDataFile = new FileInfo(Path.Combine(MyFileSystem.ContentPath, "Data", "SpawnGroups.sbc"));
-				spawnGroupsDefinitionsManager.Load(contentDataFile);
-
 				//Calculate lowest and highest frequencies
 				float lowestFrequency = 999999;
 				float highestFrequency = 0;
-				foreach (SpawnGroupDefinition entry in spawnGroupsDefinitionsManager.Definitions)
+				foreach (MySpawnGroupDefinition entry in MyDefinitionManager.Static.GetSpawnGroupDefinitions())
 				{
 					if (entry.Frequency < lowestFrequency)
 						lowestFrequency = entry.Frequency;
@@ -132,8 +129,8 @@ namespace SEModAPIExtensions.API
 				Random random = new Random((int)DateTime.Now.ToBinary());
 				double randomChance = random.NextDouble();
 				randomChance = randomChance * (highestFrequency / lowestFrequency);
-				List<SpawnGroupDefinition> possibleGroups = new List<SpawnGroupDefinition>();
-				foreach (SpawnGroupDefinition entry in spawnGroupsDefinitionsManager.Definitions)
+				List<MySpawnGroupDefinition> possibleGroups = new List<MySpawnGroupDefinition>();
+				foreach (MySpawnGroupDefinition entry in MyDefinitionManager.Static.GetSpawnGroupDefinitions())
 				{
 					if (entry.Frequency >= randomChance)
 					{
@@ -144,21 +141,32 @@ namespace SEModAPIExtensions.API
 				//Determine which group *will* spawn
 				randomChance = random.NextDouble();
 				int randomShipIndex = Math.Max(0, Math.Min((int)Math.Round(randomChance * possibleGroups.Count, 0), possibleGroups.Count-1));
-				SpawnGroupDefinition randomSpawnGroup = possibleGroups[randomShipIndex];
+				MySpawnGroupDefinition randomSpawnGroup = possibleGroups[randomShipIndex];
 
-				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Spawning cargo group '" + randomSpawnGroup.Name + "' ...");
-
+				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Spawning cargo group '" + randomSpawnGroup.DisplayNameText.ToString() + "' ...");
 
 				//Spawn the ships in the group
 				Matrix orientation = Matrix.CreateLookAt(startPosition, stopPosition, new Vector3(0, 1, 0));
-				foreach (SpawnGroupPrefab entry in randomSpawnGroup.Prefabs)
+				foreach (MySpawnGroupDefinition.SpawnGroupPrefab entry in randomSpawnGroup.Prefabs)
 				{
-					FileInfo prefabFile = new FileInfo(Path.Combine(MyFileSystem.ContentPath, "Data", "Prefabs", entry.SubtypeId + ".sbc"));
-					if (!prefabFile.Exists)
+					MyPrefabDefinition matchedPrefab = null;
+					foreach (var prefabEntry in MyDefinitionManager.Static.GetPrefabDefinitions())
+					{
+						MyPrefabDefinition prefabDefinition = prefabEntry.Value;
+						if (prefabDefinition.Id.SubtypeId.ToString() == entry.SubtypeId)
+				{
+							matchedPrefab = prefabDefinition;
+							break;
+						}
+					}
+					if (matchedPrefab == null)
 						continue;
 
+					//TODO - Build this to iterate through all cube grids in the prefab
+					MyObjectBuilder_CubeGrid objectBuilder = matchedPrefab.CubeGrids[0];
+
 					//Create the ship
-					CubeGridEntity cubeGrid = new CubeGridEntity(prefabFile);
+					CubeGridEntity cubeGrid = new CubeGridEntity(objectBuilder);
 
 					//Set the ship position and orientation
 					Vector3 shipPosition = Vector3.Transform(entry.Position, orientation) + startPosition;
@@ -192,12 +200,9 @@ namespace SEModAPIExtensions.API
 
 					//And add the ship to the world
 					SectorObjectManager.Instance.AddEntity(cubeGrid);
-
-					//Force a refresh of the cube grid
-					List<CubeBlockEntity> cubeBlocks = cubeGrid.CubeBlocks;
 				}
 
-				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.DisplayName + "' spawned with " + randomSpawnGroup.Prefabs.Length + " ships at " + startPosition);
+				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Cargo group '" + randomSpawnGroup.DisplayNameText.ToString() + "' spawned with " + randomSpawnGroup.Prefabs.Count.ToString() + " ships at " + startPosition.ToString());
 			}
 			catch (Exception ex)
 			{

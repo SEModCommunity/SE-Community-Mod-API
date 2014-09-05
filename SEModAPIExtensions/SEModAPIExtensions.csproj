@@ -66,6 +66,9 @@
     <Reference Include="Sandbox.Common.XmlSerializers">
       <HintPath>..\GameLibraries\Sandbox.Common.XmlSerializers.dll</HintPath>
     </Reference>
+    <Reference Include="Sandbox.Game">
+      <HintPath>..\GameLibraries\Sandbox.Game.dll</HintPath>
+    </Reference>
     <Reference Include="SteamSDK">
       <HintPath>..\GameLibraries\SteamSDK.dll</HintPath>
     </Reference>

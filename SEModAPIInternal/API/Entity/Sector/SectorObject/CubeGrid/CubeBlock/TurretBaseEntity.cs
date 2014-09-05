@@ -153,15 +153,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 					if (m_target == null)
 					{
 						long entityId = BaseEntity.GetEntityId(target);
-						MyObjectBuilder_EntityBase objectBuilder = BaseEntity.GetObjectBuilder(target);
-						if (objectBuilder != null && EntityRegistry.Instance.ContainsGameType(objectBuilder.GetType()))
-						{
-							m_target = SectorObjectManager.Instance.GetEntry(entityId);
-						}
-						if (BlockRegistry.Instance.ContainsGameType(target.GetType()))
-						{
-							//TODO - Match this up with the existing block
-						}
+						m_target = GameEntityManager.GetEntity(entityId);
 					}
 
 					return m_target;

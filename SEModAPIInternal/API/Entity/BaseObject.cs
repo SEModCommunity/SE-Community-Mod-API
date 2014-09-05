@@ -21,6 +21,7 @@ using SEModAPIInternal.API.Utility;
 using SEModAPIInternal.Support;
 
 using VRage;
+using Sandbox.Definitions;
 
 namespace SEModAPIInternal.API.Entity
 {
@@ -36,6 +37,8 @@ namespace SEModAPIInternal.API.Entity
 		#region "Attributes"
 
 		protected MyObjectBuilder_Base m_objectBuilder;
+		protected MyDefinitionId m_definitionId;
+		protected MyDefinitionBase m_definition;
 		protected Object m_backingObject;
 
 		protected bool m_isDisposed = false;
@@ -47,12 +50,38 @@ namespace SEModAPIInternal.API.Entity
 		public BaseObject(MyObjectBuilder_Base baseEntity)
 		{
 			m_objectBuilder = baseEntity;
+
+			m_definitionId = new MyDefinitionId(m_objectBuilder.TypeId, m_objectBuilder.SubtypeId.ToString());
+			if (!string.IsNullOrEmpty(m_objectBuilder.SubtypeName))
+			{
+				try
+				{
+					m_definition = MyDefinitionManager.Static.GetDefinition(m_definitionId);
+				}
+				catch (Exception)
+				{
+					//Do nothing!
+				}
+			}
 		}
 
 		public BaseObject(MyObjectBuilder_Base baseEntity, Object backingObject)
 		{
 			m_objectBuilder = baseEntity;
 			m_backingObject = backingObject;
+
+			m_definitionId = new MyDefinitionId(m_objectBuilder.TypeId, m_objectBuilder.SubtypeId.ToString());
+			if (!string.IsNullOrEmpty(m_objectBuilder.SubtypeName))
+			{
+				try
+				{
+					m_definition = MyDefinitionManager.Static.GetDefinition(m_definitionId);
+				}
+				catch (Exception)
+				{
+					//Do nothing!
+				}
+			}
 		}
 
 		#endregion
@@ -123,13 +152,29 @@ namespace SEModAPIInternal.API.Entity
 		[Category("Object")]
 		[Browsable(true)]
 		[ReadOnly(true)]
-		[TypeConverter(typeof(ObjectSerializableDefinitionIdTypeConverter))]
-		public SerializableDefinitionId Id
+		[Description("The ID representing the definition type of the object")]
+		public MyDefinitionId Id
 		{
 			get
 			{
-				SerializableDefinitionId newId = new SerializableDefinitionId(m_objectBuilder.TypeId, m_objectBuilder.SubtypeName);
-				return newId;
+				return m_definitionId;
+			}
+			private set
+			{
+				//Do nothing!
+			}
+		}
+
+		[IgnoreDataMember]
+		[Category("Object")]
+		[Browsable(true)]
+		[ReadOnly(true)]
+		[Description("The definition type of the object")]
+		public MyDefinitionBase Definition
+		{
+			get
+			{
+				return m_definition;
 			}
 			private set
 			{
@@ -142,6 +187,7 @@ namespace SEModAPIInternal.API.Entity
 		[Browsable(false)]
 		[ReadOnly(true)]
 		[Description("The value ID representing the type of the object")]
+		[Obsolete]
 		public MyObjectBuilderType TypeId
 		{
 			get { return m_objectBuilder.TypeId; }
@@ -156,6 +202,7 @@ namespace SEModAPIInternal.API.Entity
 		[Browsable(false)]
 		[ReadOnly(true)]
 		[Description("The value ID representing the sub-type of the object")]
+		[Obsolete]
 		public string Subtype
 		{
 			get { return m_objectBuilder.SubtypeName; }
@@ -198,6 +245,11 @@ namespace SEModAPIInternal.API.Entity
 		public virtual void Export(FileInfo fileInfo)
 		{
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_Base, MyObjectBuilder_BaseSerializer>(ObjectBuilder, fileInfo);
+		}
+
+		public MyObjectBuilder_Base Export()
+		{
+			return ObjectBuilder;
 		}
 
 		public static bool ReflectionUnitTest()
@@ -723,8 +775,6 @@ namespace SEModAPIInternal.API.Entity
 		private double m_refreshInterval;
 
 		private static double m_averageRefreshDataTime;
-		private static double m_averageRefreshInternalDataTime;
-		private static double m_averageRefreshInternalObjectBuilderDataTime;
 		private static DateTime m_lastProfilingOutput;
 		private static DateTime m_lastInternalProfilingOutput;
 
@@ -974,7 +1024,8 @@ namespace SEModAPIInternal.API.Entity
 			m_lastLoadTime = DateTime.Now;
 
 			//Run the refresh
-			RefreshData();
+			Action action = RefreshData;
+			SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
 
 			//Update the refresh counts
 			if (!m_staticRefreshCountMap.ContainsKey(this.GetType()))
@@ -997,8 +1048,10 @@ namespace SEModAPIInternal.API.Entity
 			{
 				DateTime startRefreshTime = DateTime.Now;
 
-				Action action = RefreshInternalData;
-				SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
+				if (m_backingSourceType == InternalBackingType.Hashset)
+					InternalRefreshBackingDataHashSet();
+				if (m_backingSourceType == InternalBackingType.List)
+					InternalRefreshBackingDataList();
 
 				//Lock the main data
 				m_resourceLock.AcquireExclusive();
@@ -1038,44 +1091,6 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-			}
-		}
-
-		private void RefreshInternalData()
-		{
-			DateTime startRefreshTime = DateTime.Now;
-
-			//Request refreshes of all internal raw data
-			if (m_backingSourceType == InternalBackingType.Hashset)
-				InternalRefreshBackingDataHashSet();
-			if (m_backingSourceType == InternalBackingType.List)
-				InternalRefreshBackingDataList();
-
-			if (SandboxGameAssemblyWrapper.IsDebugging)
-			{
-				TimeSpan timeToRefresh = DateTime.Now - startRefreshTime;
-				m_averageRefreshInternalDataTime = (m_averageRefreshInternalDataTime + timeToRefresh.TotalMilliseconds) / 2;
-			}
-
-			startRefreshTime = DateTime.Now;
-
-			InternalRefreshObjectBuilderMap();
-
-			if (SandboxGameAssemblyWrapper.IsDebugging)
-			{
-				TimeSpan timeToRefresh = DateTime.Now - startRefreshTime;
-				m_averageRefreshInternalObjectBuilderDataTime = (m_averageRefreshInternalObjectBuilderDataTime + timeToRefresh.TotalMilliseconds) / 2;
-			}
-
-			if (SandboxGameAssemblyWrapper.IsDebugging)
-			{
-				TimeSpan timeSinceLastProfilingOutput = DateTime.Now - m_lastInternalProfilingOutput;
-				if (timeSinceLastProfilingOutput.TotalSeconds > 30)
-				{
-					m_lastInternalProfilingOutput = DateTime.Now;
-					LogManager.APILog.WriteLine("ObjectManager - Average of " + Math.Round(m_averageRefreshInternalDataTime, 2).ToString() + "ms to refresh internal entity data");
-					LogManager.APILog.WriteLine("ObjectManager - Average of " + Math.Round(m_averageRefreshInternalObjectBuilderDataTime, 2).ToString() + "ms to refresh internal object builder data");
-				}
 			}
 		}
 
@@ -1162,11 +1177,6 @@ namespace SEModAPIInternal.API.Entity
 				if(m_rawDataListResourceLock.Owned)
 					m_rawDataListResourceLock.ReleaseExclusive();
 			}
-		}
-
-		protected virtual void InternalRefreshObjectBuilderMap()
-		{
-			
 		}
 
 		#endregion

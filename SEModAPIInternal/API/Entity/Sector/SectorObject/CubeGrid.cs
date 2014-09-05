@@ -151,12 +151,9 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		{
 			get
 			{
-				if (ObjectBuilder == null)
-					return "Cube Grid";
-
 				string name = "";
 				TimeSpan timeSinceLastNameRefresh = DateTime.Now - m_lastNameRefresh;
-				if (timeSinceLastNameRefresh.TotalSeconds < 1)
+				if (timeSinceLastNameRefresh.TotalSeconds < 2)
 				{
 					name = m_name;
 				}
@@ -230,16 +227,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				{
 					objectBuilder = new MyObjectBuilder_CubeGrid();
 					ObjectBuilder = objectBuilder;
-				}
-
-				if (BackingObject != null)
-				{
-					TimeSpan timeSinceLastBaseCubeBlockRefresh = DateTime.Now - m_lastBaseCubeBlockRefresh;
-					if (timeSinceLastBaseCubeBlockRefresh.TotalSeconds > 30)
-					{
-						m_lastBaseCubeBlockRefresh = DateTime.Now;
-						RefreshBaseCubeBlocks();
-					}
 				}
 
 				objectBuilder.LinearVelocity = LinearVelocity;
@@ -479,6 +466,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			RefreshBaseCubeBlocks();
 
 			BaseObjectManager.SaveContentFile<MyObjectBuilder_CubeGrid, MyObjectBuilder_CubeGridSerializer>(ObjectBuilder, fileInfo);
+		}
+
+		new public MyObjectBuilder_CubeGrid Export()
+		{
+			RefreshBaseCubeBlocks();
+
+			return ObjectBuilder;
 		}
 
 		new public static bool ReflectionUnitTest()

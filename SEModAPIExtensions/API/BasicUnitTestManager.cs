@@ -157,6 +157,12 @@ namespace SEModAPIExtensions.API
 				Console.WriteLine("Faction reflection validation failed!");
 			}
 
+			if (!GameEntityManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("GameEntityManager reflection validation failed!");
+			}
+
 			if (result)
 			{
 				Console.WriteLine("All main types passed reflection unit tests!");
@@ -267,6 +273,18 @@ namespace SEModAPIExtensions.API
 			{
 				result = false;
 				Console.WriteLine("PowerReceiver reflection validation failed!");
+			}
+
+			if (!VoxelMap.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("VoxelMap reflection validation failed!");
+			}
+
+			if (!VoxelMapMaterialManager.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("VoxelMapMaterialManager reflection validation failed!");
 			}
 
 			if (result)
@@ -463,6 +481,30 @@ namespace SEModAPIExtensions.API
 			{
 				result = false;
 				Console.WriteLine("RotorEntity reflection validation failed!");
+			}
+
+			if (!VirtualMassEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("VirtualMassEntity reflection validation failed!");
+			}
+
+			if (!CameraBlockEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("CameraBlockEntity reflection validation failed!");
+			}
+
+			if (!OreDetectorEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("OreDetectorEntity reflection validation failed!");
+			}
+
+			if (!ButtonPanelEntity.ReflectionUnitTest())
+			{
+				result = false;
+				Console.WriteLine("ButtonPanelEntity reflection validation failed!");
 			}
 
 			if (result)
