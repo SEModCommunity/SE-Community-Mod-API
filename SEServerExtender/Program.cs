@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
+using System.ServiceProcess;
 
 using SEModAPI.Support;
 
@@ -18,6 +19,31 @@ namespace SEServerExtender
 {
 	public static class Program
 	{
+		public class WindowsService : ServiceBase
+		{
+			public WindowsService()
+			{
+				this.ServiceName = "SEServerExtender";
+				this.CanPauseAndContinue = false;
+				this.CanStop = true;
+				this.AutoLog = true;
+			}
+
+			protected override void OnStart(string[] args)
+			{
+				LogManager.APILog.WriteLine("Starting SEServerExtender Service with " + args.Length.ToString() + " arguments ...");
+
+				Program.Start(args);
+			}
+
+			protected override void OnStop()
+			{
+				LogManager.APILog.WriteLine("Stopping SEServerExtender Service ser...");
+
+				Program.Stop();
+			}
+		}
+
 		static SEServerExtender m_serverExtenderForm;
 		static Server m_server;
 
@@ -26,10 +52,27 @@ namespace SEServerExtender
 		/// </summary>
 		static void Main(string[] args)
 		{
+			if (!Environment.UserInteractive)
+			{
+				using (var service = new WindowsService())
+				{
+					ServiceBase.Run(service);
+				}
+			}
+			else
+			{
+				Start(args);
+			}
+		}
+
+		private static void Start(string[] args)
+		{
 			//Setup error handling for unmanaged exceptions
 			AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
 			Application.ThreadException += Application_ThreadException;
 			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
+			LogManager.APILog.WriteLine("Starting SEServerExtender with " + args.Length.ToString() + " arguments ...");
 
 			CommandLineArgs extenderArgs = new CommandLineArgs();
 
@@ -139,6 +182,7 @@ namespace SEServerExtender
 			{
 				extenderArgs.noConsole = true;
 				extenderArgs.noGUI = true;
+				extenderArgs.autoStart = true;
 			}
 
 			if (extenderArgs.debug)
@@ -175,7 +219,7 @@ namespace SEServerExtender
 			}
 			catch (AutoException eEx)
 			{
-				if(!extenderArgs.noConsole)
+				if (!extenderArgs.noConsole)
 					Console.WriteLine("AutoException - " + eEx.AdditionnalInfo + "\n\r" + eEx.GetDebugString());
 				if (!extenderArgs.noGUI)
 					MessageBox.Show(eEx.AdditionnalInfo + "\n\r" + eEx.GetDebugString(), @"SEServerExtender", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -203,6 +247,14 @@ namespace SEServerExtender
 				if (extenderArgs.noConsole && extenderArgs.noGUI)
 					throw ex;
 			}
+		}
+
+		private static void Stop()
+		{
+			if(m_server != null && m_server.IsRunning)
+				m_server.StopServer();
+			if (m_serverExtenderForm != null && m_serverExtenderForm.Visible == true)
+				m_serverExtenderForm.Close();
 		}
 
 		static void Application_ThreadException(Object sender, ThreadExceptionEventArgs e)
