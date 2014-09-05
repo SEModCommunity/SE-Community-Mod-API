@@ -76,6 +76,9 @@ namespace SEModAPIExtensions.API
 		#endregion
 	}
 
+	/// <summary>
+	/// Manager for chat and chat commands
+	/// </summary>
 	public class ChatManager
 	{
 		#region "Sub Structs and Enums"
@@ -314,6 +317,10 @@ namespace SEModAPIExtensions.API
 
 		#region "General"
 
+		/// <summary>
+		/// Method used for general unit tests
+		/// </summary>
+		/// <returns>True if everything went fine, else false</returns>
 		public static bool ReflectionUnitTest()
 		{
 			try
@@ -589,7 +596,7 @@ namespace SEModAPIExtensions.API
 
 		#endregion
 
-		#region "Chat Command Callbacks"
+		#region "Chat Commands Callbacks"
 
 		protected void Command_Delete(ChatEvent chatEvent)
 		{
