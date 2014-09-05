@@ -103,13 +103,13 @@ namespace SEServerExtender
 							argValue = argValue.Substring(0, argValue.Length - 1);
 						extenderArgs.instanceName = argValue;
 					}
-					if (argName.ToLower().Equals("gamepath"))
+					else if (argName.ToLower().Equals("gamepath"))
 					{
 						if (argValue[argValue.Length - 1] == '"')
 							argValue = argValue.Substring(0, argValue.Length - 1);
 						extenderArgs.gamePath = argValue;
 					}
-					if (argName.ToLower().Equals("autosave"))
+					else if (argName.ToLower().Equals("autosave"))
 					{
 						try
 						{
@@ -120,7 +120,7 @@ namespace SEServerExtender
 							//Do nothing
 						}
 					}
-					if (argName.ToLower().Equals("wcfport"))
+					else if (argName.ToLower().Equals("wcfport"))
 					{
 						try
 						{
@@ -131,7 +131,7 @@ namespace SEServerExtender
 							//Do nothing
 						}
 					}
-					if (argName.ToLower().Equals("path"))
+					else if (argName.ToLower().Equals("path"))
 					{
 						if (argValue[argValue.Length - 1] == '"')
 							argValue = argValue.Substring(0, argValue.Length - 1);
