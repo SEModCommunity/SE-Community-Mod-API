@@ -242,6 +242,13 @@ namespace SEModAPIInternal.API.Common
 					TimeSpan timeToSave = DateTime.Now - saveStartTime;
 					LogManager.APILog.WriteLineAndConsole("Save complete and took " + timeToSave.TotalSeconds + " seconds");
 					m_isSaving = false;
+
+					EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
+					newEvent.type = EntityEventManager.EntityEventType.OnSectorSaved;
+					newEvent.timestamp = DateTime.Now;
+					newEvent.entity = null;
+					newEvent.priority = 0;
+					EntityEventManager.Instance.AddEvent(newEvent);
 				}
 				else
 				{

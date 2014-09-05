@@ -38,7 +38,7 @@ namespace SEServerExtender
 
 			protected override void OnStop()
 			{
-				LogManager.APILog.WriteLine("Stopping SEServerExtender Service ser...");
+				LogManager.APILog.WriteLine("Stopping SEServerExtender Service ...");
 
 				Program.Stop();
 			}
