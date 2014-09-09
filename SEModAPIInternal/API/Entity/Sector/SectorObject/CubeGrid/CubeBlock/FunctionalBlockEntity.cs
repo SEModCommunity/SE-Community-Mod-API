@@ -30,6 +30,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string FunctionalBlockSetEnabledMethod = "97EC0047E8B562F4590B905BD8571F51";
 		public static string FunctionalBlockBroadcastEnabledMethod = "D979DB9AA474782929587EC7DE5E53AA";
 		public static string FunctionalBlockGetPowerReceiverMethod = "get_PowerReceiver";
+		public static string FunctionalBlockCheckIsWorkingMethod = "CheckIsWorking";
 
 		#endregion
 
@@ -146,6 +147,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				result &= HasMethod(type, FunctionalBlockGetEnabledMethod);
 				result &= HasMethod(type, FunctionalBlockSetEnabledMethod);
 				result &= HasMethod(type, FunctionalBlockBroadcastEnabledMethod);
+				result &= HasMethod(type, FunctionalBlockCheckIsWorkingMethod);
 				//result &= HasMethod(type, FunctionalBlockGetPowerReceiverMethod);
 
 				return result;
@@ -156,14 +158,19 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				return false;
 			}
 		}
-
+		public bool CheckIsWorking()
+		{
+			object rawResult = InvokeEntityMethod(ActualObject, FunctionalBlockCheckIsWorkingMethod);
+			if (rawResult == null)
+				return false;
+			return (bool)rawResult;
+		}
 		protected bool GetFunctionalBlockEnabled()
 		{
 			Object rawResult = InvokeEntityMethod(ActualObject, FunctionalBlockGetEnabledMethod);
 			if (rawResult == null)
 				return false;
-			bool result = (bool)rawResult;
-			return result;
+			return (bool)rawResult;
 		}
 
 		protected void InternalUpdateFunctionalBlock()

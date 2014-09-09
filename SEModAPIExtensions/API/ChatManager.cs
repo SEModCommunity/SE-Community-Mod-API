@@ -605,6 +605,7 @@ namespace SEModAPIExtensions.API
 			int paramCount = commandParts.Length - 1;
 
 			//All entities
+			#region "All Entities"
 			if (paramCount > 1 && commandParts[1].ToLower().Equals("all"))
 			{
 				//All cube grids that have no beacon or only a beacon with no name
@@ -736,7 +737,7 @@ namespace SEModAPIExtensions.API
 					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
 					foreach (BaseEntity entity in entities)
 					{
-						bool isMatch = Regex.IsMatch(entity.Name, entityName, RegexOptions.IgnoreCase);
+						bool isMatch = Regex.IsMatch(entity.DisplayName, entityName, RegexOptions.IgnoreCase);
 						if (!isMatch)
 							continue;
 
@@ -748,7 +749,9 @@ namespace SEModAPIExtensions.API
 					SendPrivateChatMessage(remoteUserId, matchingEntitiesCount.ToString() + " objects have been removed");
 				}
 			}
+			#endregion
 
+			#region "All Ship"
 			//All non-static cube grids
 			if (paramCount > 1 && commandParts[1].ToLower().Equals("ship"))
 			{
@@ -796,7 +799,9 @@ namespace SEModAPIExtensions.API
 					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " ships have been removed");
 				}
 			}
+			#endregion
 
+			#region "all station"
 			//All static cube grids
 			if (paramCount > 1 && commandParts[1].ToLower().Equals("station"))
 			{
@@ -844,7 +849,9 @@ namespace SEModAPIExtensions.API
 					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " stations have been removed");
 				}
 			}
+			#endregion
 
+			#region "All player"
 			//Prunes defunct player entries in the faction data
 			if (paramCount > 1 && commandParts[1].ToLower().Equals("player"))
 			{
@@ -902,7 +909,9 @@ namespace SEModAPIExtensions.API
 
 				SendPrivateChatMessage(remoteUserId, "Deleted " + playersRemovedCount.ToString() + " player entries");
 			}
+			#endregion 
 
+			#region "All faction"
 			//Prunes defunct faction entries in the faction data
 			if (paramCount > 1 && commandParts[1].ToLower().Equals("faction"))
 			{
@@ -961,6 +970,7 @@ namespace SEModAPIExtensions.API
 
 				SendPrivateChatMessage(remoteUserId, "Deleted " + factionsToRemove.Count.ToString() + " factions");
 			}
+			#endregion
 
 			//Single entity
 			if (paramCount == 1)
@@ -969,14 +979,18 @@ namespace SEModAPIExtensions.API
 
 				try
 				{
-					long entityId = long.Parse(rawEntityId);
-
-					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-					foreach (BaseEntity entity in entities)
+					long entityId = Convert.ToInt64(rawEntityId);
+					BaseObject entity = GameEntityManager.GetEntity(entityId);
+					entity.Dispose();
+				}
+				catch (FormatException)
+				{
+					string search = String.Join(" ", commandParts, 1, commandParts.Length - 1);
+					List<CubeGridEntity> grids = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					List<CubeGridEntity> entityList = grids.FindAll(x => x.DisplayName == search);
+					foreach(CubeGridEntity entity in entityList)
 					{
-						if (entity.EntityId != entityId)
-							continue;
-
+						SendPrivateChatMessage(remoteUserId, "Deleted entity: " + entity.EntityId);
 						entity.Dispose();
 					}
 				}
@@ -993,32 +1007,40 @@ namespace SEModAPIExtensions.API
 			string[] commandParts = chatEvent.message.Split(' ');
 			int paramCount = commandParts.Length - 1;
 
-			if (paramCount == 2)
+			if (paramCount >= 2)
 			{
-				string rawEntityId = commandParts[1];
-				string rawPosition = commandParts[2];
-
+				string search = String.Join(" ", commandParts, 2, commandParts.Length - 2);
+				string rawPosition = commandParts[1];
+				
+				string[] rawCoordinateValues = rawPosition.Split(',');
+				if (rawCoordinateValues.Length < 3)
+					return;
+				float x = float.Parse(rawCoordinateValues[0]);
+				float y = float.Parse(rawCoordinateValues[1]);
+				float z = float.Parse(rawCoordinateValues[2]);
 				try
 				{
-					long entityId = long.Parse(rawEntityId);
+					long entityId = Convert.ToInt64(search);
 
-					string[] rawCoordinateValues = rawPosition.Split(',');
-					if (rawCoordinateValues.Length < 3)
-						return;
+					BaseEntity entity = (BaseEntity)GameEntityManager.GetEntity(entityId);
+					Vector3 newPosition = new Vector3(x, y, z);
+					entity.Position = newPosition;
 
-					float x = float.Parse(rawCoordinateValues[0]);
-					float y = float.Parse(rawCoordinateValues[1]);
-					float z = float.Parse(rawCoordinateValues[2]);
-
-					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-					foreach (BaseEntity entity in entities)
+					SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been moved to '" + newPosition.ToString() + "'");
+					
+				}
+				catch (FormatException)
+				{
+					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					List<CubeGridEntity> findEntity = entities.FindAll(f => f.DisplayName == search);
+					if(findEntity.Count > 1)
 					{
-						if (entity.EntityId != entityId)
-							continue;
-
+						SendPrivateChatMessage(remoteUserId, "Found " + findEntity.Count + " Entities with the same name, aborting");
+					}
+					foreach (CubeGridEntity entity in findEntity)
+					{
 						Vector3 newPosition = new Vector3(x, y, z);
 						entity.Position = newPosition;
-
 						SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' has been moved to '" + newPosition.ToString() + "'");
 					}
 				}
@@ -1059,21 +1081,26 @@ namespace SEModAPIExtensions.API
 			}
 			else
 			{
-				string rawEntityId = commandParts[1];
+				string search = string.Join(" ", commandParts, 1, commandParts.Length - 1);
 
 				try
 				{
-					long entityId = long.Parse(rawEntityId);
+					long entityId = Convert.ToInt64(search);
+					BaseEntity entity = (BaseEntity)GameEntityManager.GetEntity(entityId);
+					entity.LinearVelocity = Vector3.Zero;
+					entity.AngularVelocity = Vector3.Zero;
 
-					List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-					foreach (BaseEntity entity in entities)
+					SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' is no longer moving or rotating");
+				}
+				catch (FormatException)
+				{
+					
+					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					List<CubeGridEntity> entitiesList = entities.FindAll(x => x.DisplayName == search);
+					foreach (CubeGridEntity entity in entitiesList)
 					{
-						if (entity.EntityId != entityId)
-							continue;
-
 						entity.LinearVelocity = Vector3.Zero;
 						entity.AngularVelocity = Vector3.Zero;
-
 						SendPrivateChatMessage(remoteUserId, "Entity '" + entity.EntityId.ToString() + "' is no longer moving or rotating");
 					}
 				}
@@ -1092,22 +1119,18 @@ namespace SEModAPIExtensions.API
 
 			if (paramCount > 0)
 			{
-				string entityName = commandParts[1];
-				if (commandParts.Length > 2)
-				{
-					for (int i = 2; i < commandParts.Length; i++)
-					{
-						entityName += " " + commandParts[i];
-					}
-				}
+				string entityName = String.Join(" ", commandParts, 1, commandParts.Length - 1);
 
 				List<BaseEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<BaseEntity>();
-				foreach (BaseEntity entity in entities)
-				{
-					if (!entity.Name.ToLower().Equals(entityName.ToLower()))
-						continue;
-
+				BaseEntity entity = entities.Find(x => x.Name == entityName);
+				if(entity != null)
 					SendPrivateChatMessage(remoteUserId, "Entity ID is '" + entity.EntityId.ToString() + "'");
+				
+				List<CubeGridEntity> gridEntities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+				gridEntities = gridEntities.FindAll(x => x.DisplayName == entityName);
+				foreach (CubeGridEntity foundEntity in gridEntities)
+				{
+					SendPrivateChatMessage(remoteUserId, "Entity ID is '" + foundEntity.EntityId.ToString() + "'");
 				}
 			}
 		}
@@ -1131,20 +1154,16 @@ namespace SEModAPIExtensions.API
 
 			if (paramCount == 2)
 			{
-				string rawEntityId = commandParts[1];
-				string rawOwnerId = commandParts[2];
-
+				string search = String.Join(" ", commandParts, 2, commandParts.Length - 2);
+				string rawOwnerId = commandParts[1];
 				try
 				{
-					long entityId = long.Parse(rawEntityId);
-					long ownerId = long.Parse(rawOwnerId);
-
-					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-					foreach (CubeGridEntity cubeGrid in entities)
+					long ownerId = Convert.ToInt64(rawOwnerId);
+					try
 					{
-						if (cubeGrid.EntityId != entityId)
-							continue;
+						long entityId = Convert.ToInt64(search);
 
+						CubeGridEntity cubeGrid = (CubeGridEntity)GameEntityManager.GetEntity(entityId);
 						//Update the owner of the blocks on the cube grid
 						foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
 						{
@@ -1157,11 +1176,33 @@ namespace SEModAPIExtensions.API
 
 						SendPrivateChatMessage(remoteUserId, "CubeGridEntity '" + cubeGrid.EntityId.ToString() + "' owner has been changed to '" + ownerId.ToString() + "'");
 					}
+					catch (FormatException)
+					{
+						List<CubeGridEntity> searchList = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+						List<CubeGridEntity> foundList = searchList.FindAll(x => x.DisplayName == search);
+						foreach (CubeGridEntity cubeGrid in foundList)
+						{
+							foreach (CubeBlockEntity cubeBlock in cubeGrid.CubeBlocks)
+							{
+								//Skip blocks that don't have an entity id
+								if (cubeBlock.EntityId == 0)
+									continue;
+
+								cubeBlock.Owner = ownerId;
+							}
+							SendPrivateChatMessage(remoteUserId, "CubeGridEntity '" + cubeGrid.EntityId.ToString() + "' owner has been changed to '" + ownerId.ToString() + "'");
+						}
+					}
+					catch (Exception ex)
+					{
+						LogManager.ErrorLog.WriteLine(ex);
+					}
 				}
 				catch (Exception ex)
 				{
 					LogManager.ErrorLog.WriteLine(ex);
 				}
+				
 			}
 		}
 
