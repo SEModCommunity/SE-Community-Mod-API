@@ -34,13 +34,13 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public ButtonPanelEntity(CubeGridEntity parent, MyObjectBuilder_RemoteControl definition)
 			: base(parent, definition)
 		{
-			m_currentPlayerId = definition.CurrentPlayerId.GetValueOrDefault(0);
+			m_currentPlayerId = definition.PreviousControlledEntityId.GetValueOrDefault(0);
 		}
 
 		public ButtonPanelEntity(CubeGridEntity parent, MyObjectBuilder_RemoteControl definition, Object backingObject)
 			: base(parent, definition, backingObject)
 		{
-			m_currentPlayerId = definition.CurrentPlayerId.GetValueOrDefault(0);
+			m_currentPlayerId = definition.PreviousControlledEntityId.GetValueOrDefault(0);
 		}
 
 		#endregion

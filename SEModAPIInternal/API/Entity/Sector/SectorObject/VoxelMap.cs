@@ -26,7 +26,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string VoxelMapClass = "6EC806B54BA319767DA878841A56ECD8";
 
 		public static string VoxelMapGetSizeMethod = "F7FC06F8DAF6ECC3F74F1D863DD65A36";
-		public static string VoxelMapGetVoxelMaterialManagerMethod = "53CA3BCCF58223EC592958B481349BB5";
+		public static string VoxelMapGetVoxelMaterialManagerMethod = "1543B7CCAB7538E6877BA8CCC513A070";
 		public static string VoxelMapGetMaterialAtPositionMethod = "5F7E3213E519961F42617BC410B19346";
 
 		#endregion
@@ -254,7 +254,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string VoxelMapMaterialManagerNamespace = "DC3F8F35BD18173B1D075139B475AD8E";
 		public static string VoxelMapMaterialManagerClass = "119B0A83D4E9B352826763AD3746A162";
 
-		public static string VoxelMapMaterialManagerGetVoxelsDictionaryMethod = "3B4214480FDA5B1811A72EEBB55B543C";
+		//public static string VoxelMapMaterialManagerGetVoxelsDictionaryMethod = "473DE42B0B661DE27A29562438E87943";
 
 		public static string VoxelMapMaterialManagerVoxelsField = "4E39EA62F3374F5CCE29BA40FE62818C";
 
@@ -355,7 +355,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if (type == null)
 					throw new Exception("Could not find internal type for VoxelMapMaterialManager");
 
-				result &= BaseObject.HasMethod(type, VoxelMapMaterialManagerGetVoxelsDictionaryMethod);
+				//result &= BaseObject.HasMethod(type, VoxelMapMaterialManagerGetVoxelsDictionaryMethod);
 
 				result &= BaseObject.HasField(type, VoxelMapMaterialManagerVoxelsField);
 

@@ -27,7 +27,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string CharacterClass = "3B71F31E6039CAE9D8706B5F32FE468D";
 
 		public static string CharacterGetHealthMethod = "7047AFF5D44FC8A44572E92DBAD13011";
-		public static string CharacterDamageCharacterMethod = "DoDamage";
+		public static string CharacterDamageCharacterMethod = "CF6EEF37B5AE4047E65CA4A0BB43F774";
 		public static string CharacterSetHealthMethod = "92A0500FD8772AB1AC3A6F79FD2A1C72";
 		public static string CharacterGetBatteryMethod = "CF72A89940254CB8F535F177150FC743";
 		public static string CharacterGetInventoryMethod = "GetInventory";

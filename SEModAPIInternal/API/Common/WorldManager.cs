@@ -107,20 +107,20 @@ namespace SEModAPIInternal.API.Common
 			}
 		}
 
-		public MySessionSettings SessionSettings
+		public MyObjectBuilder_SessionSettings SessionSettings
 		{
 			get
 			{
 				try
 				{
-					MySessionSettings sessionSettings = (MySessionSettings)BaseObject.GetEntityFieldValue(BackingObject, WorldManagerSessionSettingsField);
+                    MyObjectBuilder_SessionSettings sessionSettings = (MyObjectBuilder_SessionSettings)BaseObject.GetEntityFieldValue(BackingObject, WorldManagerSessionSettingsField);
 
 					return sessionSettings;
 				}
 				catch (Exception ex)
 				{
 					LogManager.ErrorLog.WriteLine(ex);
-					return new MySessionSettings();
+                    return new MyObjectBuilder_SessionSettings();
 				}
 			}
 		}
