@@ -714,6 +714,25 @@ namespace SEModAPI.API.Definitions
 		[DataMember]
 		[Browsable(true)]
 		[ReadOnly(false)]
+		[Description("Get or set the list of Steam workshop mods")]
+		[Category("Server Settings")]
+		/// <summary>
+		/// Get or set the list of Steam workshop mods
+		/// </summary>
+		public List<ulong> Mods
+		{
+			get { return m_definition.Mods; }
+			set
+			{
+				if (m_definition.Mods == value) return;
+				m_definition.Mods = value;
+				Changed = true;
+			}
+		}
+
+		[DataMember]
+		[Browsable(true)]
+		[ReadOnly(false)]
 		[Description("Get or set the GroupId of the server.\n" +
 					"Only member of this group will be able to join the server.\n" +
 					"Set to 0 to open the server to everyone")]
