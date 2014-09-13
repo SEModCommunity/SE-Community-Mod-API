@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using Sandbox.Common.ObjectBuilders.Serializer;
 
 using SEModAPI.API;
 using SEModAPI.API.Definitions;
@@ -197,7 +198,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			MyObjectBuilder_InventoryItem defaults = new MyObjectBuilder_InventoryItem();
 			SerializableDefinitionId itemTypeId = new SerializableDefinitionId(typeof(MyObjectBuilder_Ore), "Stone");
-			defaults.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilder_PhysicalObject.CreateNewObject(itemTypeId);
+			defaults.PhysicalContent = (MyObjectBuilder_PhysicalObject)MyObjectBuilderSerializer.CreateNewObject(itemTypeId);
 			defaults.Amount = 1;
 
 			InventoryItemEntity newItem = new InventoryItemEntity(defaults);

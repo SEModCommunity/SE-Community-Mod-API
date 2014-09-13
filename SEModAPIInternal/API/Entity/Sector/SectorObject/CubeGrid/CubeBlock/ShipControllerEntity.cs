@@ -30,7 +30,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string ShipControllerEntityClass = "12BACAB3471C8707CE7420AE0465548C";
 
 		public static string ShipControllerEntityGetNetworkManager = "4D19E6CD06284069B97E08353C984ABB";
-		public static string ShipControllerEntityGetPilotEntityMethod = "19CFD162A750443F856D37B6C946BFB0";
+		public static string ShipControllerEntityGetPilotEntityMethod = "7214F843D41AA5091768E08C1801E5FC";
 		public static string ShipControllerEntitySetPilotEntityMethod = "AC280CA879823319A66F3C71D6478297";
 
 		#endregion
@@ -91,7 +91,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				//Do nothing!
 			}
 		}
-
+		/*
 		[IgnoreDataMember]
 		[Category("Ship Controller")]
 		[ReadOnly(true)]
@@ -116,7 +116,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 			{
 				//Do nothing!
 			}
-		}
+		}*/
 
 		[IgnoreDataMember]
 		[Category("Ship Controller")]

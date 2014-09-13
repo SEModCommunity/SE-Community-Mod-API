@@ -41,7 +41,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string CubeBlockDamageBlockMethod = "165EAAEA972A8C5D69F391D030C48869";
 		public static string CubeBlockGetBuildValueMethod = "547DF8386C799EEBC0203BE5C6AE0870";
 		public static string CubeBlockGetBuildPercentMethod = "BE3EB9D9351E3CB273327FB522FD60E1";
-		public static string CubeBlockGetIntegrityValueMethod = "get_Integrity";
+		public static string CubeBlockGetIntegrityValueMethod = "2B57AE0A5065C0DFD03BBEF90B665ABD";
 		public static string CubeBlockGetMaxIntegrityValueMethod = "4D4887346D2D13A2C6B46A258BAD29DD";
 		public static string CubeBlockUpdateWeldProgressMethod = "A8DDA0AEB3B67EA1E62B927C9D831279";
 
@@ -59,7 +59,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		public static string ActualCubeBlockGetFactionsObjectMethod = "3E8AC70E5FAAA9C8C4992B71E12CDE28";
 		public static string ActualCubeBlockSetFactionsDataMethod = "7161368A8164DF15904DC82476F7EBBA";
 		public static string ActualCubeBlockGetMatrixMethod = "FD50436D896ACC794550210055349FE0";
-		public static string ActualCubeBlockGetOwnerMethod = "5CE075E5E73578252A4A030502881491";
+		public static string ActualCubeBlockGetOwnerMethod = "get_OwnerId";
 
 		/////////////////////////////////////////////////////
 
