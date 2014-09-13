@@ -23,16 +23,17 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		#region "Attributes"
 
 		private ShipControllerNetworkManager m_networkManager;
-		private CharacterEntity m_pilot;
 		private bool m_weaponStatus;
 
 		public static string ShipControllerEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string ShipControllerEntityClass = "12BACAB3471C8707CE7420AE0465548C";
 
 		public static string ShipControllerEntityGetNetworkManager = "4D19E6CD06284069B97E08353C984ABB";
+
+		/*
 		public static string ShipControllerEntityGetPilotEntityMethod = "7214F843D41AA5091768E08C1801E5FC";
 		public static string ShipControllerEntitySetPilotEntityMethod = "AC280CA879823319A66F3C71D6478297";
-
+		*/
 		#endregion
 
 		#region "Constructors and Initializers"
@@ -91,91 +92,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				//Do nothing!
 			}
 		}
-		/*
-		[IgnoreDataMember]
-		[Category("Ship Controller")]
-		[ReadOnly(true)]
-		public MyObjectBuilder_AutopilotBase Autopilot
-		{
-			get { return ObjectBuilder.Autopilot; }
-			private set
-			{
-				//Do nothing!
-			}
-		}
-
-		[IgnoreDataMember]
-		[Category("Ship Controller")]
-		[Browsable(false)]
-		[ReadOnly(true)]
-		[Obsolete]
-		public MyObjectBuilder_Character Pilot
-		{
-			get { return ObjectBuilder.Pilot; }
-			private set
-			{
-				//Do nothing!
-			}
-		}*/
-
-		[IgnoreDataMember]
-		[Category("Ship Controller")]
-		[Browsable(false)]
-		public CharacterEntity PilotEntity
-		{
-			get
-			{
-				if (BackingObject == null || ActualObject == null)
-					return null;
-
-				Object backingPilot = GetPilotEntity();
-				if (backingPilot == null)
-					return null;
-
-				if (m_pilot == null)
-				{
-					try
-					{
-						MyObjectBuilder_Character objectBuilder = (MyObjectBuilder_Character)BaseEntity.GetObjectBuilder(backingPilot);
-						m_pilot = new CharacterEntity(objectBuilder, backingPilot);
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-
-				if (m_pilot != null)
-				{
-					try
-					{
-						if (m_pilot.BackingObject != backingPilot)
-						{
-							MyObjectBuilder_Character objectBuilder = (MyObjectBuilder_Character)BaseEntity.GetObjectBuilder(backingPilot);
-							m_pilot.BackingObject = backingPilot;
-							m_pilot.ObjectBuilder = objectBuilder;
-						}
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-
-				return m_pilot;
-			}
-			set
-			{
-				m_pilot = value;
-				Changed = true;
-
-				if (BackingObject != null && ActualObject != null)
-				{
-					Action action = InternalUpdatePilotEntity;
-					SandboxGameAssemblyWrapper.Instance.EnqueueMainGameAction(action);
-				}
-			}
-		}
 
 		[IgnoreDataMember]
 		[Category("Ship Controller")]
@@ -201,8 +117,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 					throw new Exception("Could not find type for ShipControllerEntity");
 
 				result &= BaseObject.HasMethod(type, ShipControllerEntityGetNetworkManager);
-				result &= BaseObject.HasMethod(type, ShipControllerEntityGetPilotEntityMethod);
-				result &= BaseObject.HasMethod(type, ShipControllerEntitySetPilotEntityMethod);
 
 				return result;
 			}
@@ -217,20 +131,6 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			Object result = InvokeEntityMethod(ActualObject, ShipControllerEntityGetNetworkManager);
 			return result;
-		}
-
-		protected Object GetPilotEntity()
-		{
-			Object result = InvokeEntityMethod(ActualObject, ShipControllerEntityGetPilotEntityMethod);
-			return result;
-		}
-
-		protected void InternalUpdatePilotEntity()
-		{
-			if (m_pilot == null || m_pilot.BackingObject == null)
-				return;
-
-			BaseObject.InvokeEntityMethod(ActualObject, ShipControllerEntitySetPilotEntityMethod, new object[] { m_pilot.BackingObject, Type.Missing, Type.Missing });
 		}
 
 		#endregion
