@@ -2325,12 +2325,12 @@ namespace SEConfigTool
 			SerializableDefinitionId selectedItem = new SerializableDefinitionId(new MyObjectBuilderType(typeof(MyObjectBuilder_Ore)), "Stone");
 			MyObjectBuilder_BlueprintDefinition temp = new MyObjectBuilder_BlueprintDefinition();
 			temp.BaseProductionTimeInSeconds = 1;
-			temp.Prerequisites = new MyObjectBuilder_BlueprintDefinition.Item[1];
-			temp.Prerequisites[0] = new MyObjectBuilder_BlueprintDefinition.Item();
+			temp.Prerequisites = new BlueprintItem[1];
+			temp.Prerequisites[0] = new BlueprintItem();
 			temp.Prerequisites[0].TypeId = selectedItem.TypeId.ToString();
 			temp.Prerequisites[0].SubtypeId = selectedItem.SubtypeName;
 			temp.Prerequisites[0].Amount = "1";
-			temp.Result = new MyObjectBuilder_BlueprintDefinition.Item();
+			temp.Result = new BlueprintItem();
 			temp.Result.Amount = "1";
 			temp.Result.TypeId = selectedItem.TypeId.ToString();
 			temp.Result.SubtypeId = selectedItem.SubtypeName;
