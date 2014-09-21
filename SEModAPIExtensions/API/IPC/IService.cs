@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -60,4 +61,13 @@ namespace SEModAPIExtensions.API.IPC
 		[OperationContract]
 		void UpdateCubeBlock(CubeGridEntity parent, CubeBlockEntity cubeBlock);
 	}
+
+    [ServiceContract]
+    public interface IPolicyRetriever
+    {
+        [OperationContract, WebGet(UriTemplate = "/clientaccesspolicy.xml")]
+        Stream GetSilverlightPolicy();
+        [OperationContract, WebGet(UriTemplate = "/crossdomain.xml")]
+        Stream GetFlashPolicy();
+    }
 }

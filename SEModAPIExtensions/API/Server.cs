@@ -131,6 +131,7 @@ namespace SEModAPIExtensions.API
 		private ServiceHost m_serverHost;
 		private ServiceHost m_baseHost;
 		private WebServiceHost m_webHost;
+        private WebServiceHost m_webHostSilverlight;
 
 		//Managers
 		private PluginManager m_pluginManager;
@@ -229,6 +230,27 @@ namespace SEModAPIExtensions.API
 
 			return true;
 		}
+
+        private bool SetupWebServiceSilverlight()
+        {
+            Uri webServiceAddress = new Uri("http://localhost:" + WCFPort.ToString()+"/");
+            m_webHostSilverlight = new WebServiceHost(typeof(WebServiceSilverlight), webServiceAddress);
+            try
+            {
+                WebHttpBinding binding = new WebHttpBinding(WebHttpSecurityMode.TransportCredentialOnly);
+                ServiceEndpoint endpoint = m_webHostSilverlight.AddServiceEndpoint(typeof(IPolicyRetriever), binding, "");
+                m_webHostSilverlight.SetEndpointAddress(endpoint, "");
+                m_webHostSilverlight.Open();
+            }
+            catch (CommunicationException ex)
+            {
+                Console.WriteLine("An exception occurred: {0}", ex.Message);
+                m_webHostSilverlight.Abort();
+                return false;
+            }
+
+            return true;
+        }
 
 		private bool SetupGameInstallation()
 		{
@@ -403,6 +425,8 @@ namespace SEModAPIExtensions.API
 						m_webHost.Open();
 					if (m_baseHost != null)
 						m_baseHost.Open();
+                    if(m_webHostSilverlight != null)
+                        m_webHostSilverlight.Open();
 				}
 				else
 				{
@@ -412,6 +436,8 @@ namespace SEModAPIExtensions.API
 						m_webHost.Close();
 					if (m_baseHost != null)
 						m_baseHost.Close();
+                    if (m_webHostSilverlight != null)
+                        m_webHostSilverlight.Close();
 				}
 			}
 		}
@@ -462,9 +488,9 @@ namespace SEModAPIExtensions.API
 				Uri baseAddress = new Uri("http://localhost:" + Server.Instance.WCFPort.ToString() + "/SEServerExtender/" + urlExtension);
 				ServiceHost selfHost = new ServiceHost(serviceType, baseAddress);
 
-				WSHttpBinding binding = new WSHttpBinding();
-				binding.Security.Mode = SecurityMode.Message;
-				binding.Security.Message.ClientCredentialType = MessageCredentialType.Windows;
+                BasicHttpBinding binding = new BasicHttpBinding();
+				//binding.Security.Mode = SecurityMode.Message;
+				//binding.Security.Message.ClientCredentialType = MessageCredentialType.Windows;
 				selfHost.AddServiceEndpoint(contractType, binding, name);
 
 				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
@@ -500,6 +526,7 @@ namespace SEModAPIExtensions.API
 				SetupServerService();
 				SetupMainService();
 				SetupWebService();
+			    SetupWebServiceSilverlight();
 			}
 
 			if(m_commandLineArgs.autosave > 0)
