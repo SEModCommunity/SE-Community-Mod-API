@@ -270,7 +270,7 @@ namespace SEModAPIExtensions.API
 
         private bool SetupWebServiceSilverlight()
         {
-            Uri webServiceAddress = new Uri("http://localhost:" + WCFPort.ToString()+"/");
+            Uri webServiceAddress = new Uri("http://localhost:" + SLWCFPort.ToString()+"/");
             m_webHostSilverlight = new WebServiceHost(typeof(WebServiceSilverlight), webServiceAddress);
             try
             {
@@ -592,7 +592,7 @@ namespace SEModAPIExtensions.API
         {
             try
             {
-                Uri baseAddress = new Uri("http://localhost:" + (Server.Instance.WCFPort+1).ToString() + "/SEServerExtender/" + urlExtension);
+                Uri baseAddress = new Uri("http://localhost:" + (Server.Instance.SLWCFPort).ToString() + "/SEServerExtender/" + urlExtension);
                 ServiceHost selfHost = new ServiceHost(serviceType, baseAddress);
 
                 BasicHttpBinding binding = new BasicHttpBinding();
