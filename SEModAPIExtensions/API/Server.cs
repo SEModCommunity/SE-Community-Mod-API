@@ -44,7 +44,9 @@ namespace SEModAPIExtensions.API
 		public bool debug;
 		public string gamePath;
 		public bool noWCF;
+        public bool noSLWCF;
 		public ushort wcfPort;
+        public ushort slWcfPort;
 		public int autosave;
 		public string path;
 	}
@@ -124,6 +126,7 @@ namespace SEModAPIExtensions.API
 		private static DateTime m_lastRestart;
 		private static int m_restartLimit;
 		private static bool m_isWCFEnabled;
+        private static bool m_isSLWCFEnabled;
 
 		private CommandLineArgs m_commandLineArgs;
 		private DedicatedConfigDefinition m_dedicatedConfigDefinition;
@@ -204,6 +207,40 @@ namespace SEModAPIExtensions.API
 
 			return true;
 		}
+
+        private bool SetupSLServerService()
+        {
+            try
+            {
+                m_serverHost = CreateSLServiceHost(typeof(ServerService), typeof(IServerServiceContract), "Server/", "ServerService");
+                m_serverHost.Open();
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+                m_serverHost.Abort();
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool SetupSLMainService()
+        {
+            try
+            {
+                m_baseHost = CreateSLServiceHost(typeof(InternalService), typeof(IInternalServiceContract), "", "InternalService");
+                m_baseHost.Open();
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+                m_baseHost.Abort();
+                return false;
+            }
+
+            return true;
+        }
 
 		private bool SetupWebService()
 		{
@@ -317,10 +354,18 @@ namespace SEModAPIExtensions.API
 				{
 					Console.WriteLine("WCF disabled");
 				}
+                if (m_commandLineArgs.noSLWCF)
+                {
+                    Console.WriteLine("SLWCF disabled");
+                }
 				if (m_commandLineArgs.wcfPort > 0)
 				{
 					Console.WriteLine("WCF port: " + m_commandLineArgs.wcfPort.ToString());
 				}
+                if (m_commandLineArgs.slWcfPort > 0)
+                {
+                    Console.WriteLine("SLWCF port: " + m_commandLineArgs.slWcfPort.ToString());
+                }
 				if (m_commandLineArgs.autosave > 0)
 				{
 					Console.WriteLine("Autosave interval: " + m_commandLineArgs.autosave.ToString());
@@ -425,8 +470,6 @@ namespace SEModAPIExtensions.API
 						m_webHost.Open();
 					if (m_baseHost != null)
 						m_baseHost.Open();
-                    if(m_webHostSilverlight != null)
-                        m_webHostSilverlight.Open();
 				}
 				else
 				{
@@ -436,11 +479,31 @@ namespace SEModAPIExtensions.API
 						m_webHost.Close();
 					if (m_baseHost != null)
 						m_baseHost.Close();
-                    if (m_webHostSilverlight != null)
-                        m_webHostSilverlight.Close();
 				}
 			}
 		}
+
+        [IgnoreDataMember]
+        public bool IsSLWCFEnabled
+        {
+            get { return m_isSLWCFEnabled; }
+            set
+            {
+                if (m_isSLWCFEnabled == value) return;
+                m_isSLWCFEnabled = value;
+
+                if (m_isSLWCFEnabled)
+                {
+                    if (m_webHostSilverlight != null)
+                        m_webHostSilverlight.Open();
+                }
+                else
+                {
+                    if (m_webHostSilverlight != null)
+                        m_webHostSilverlight.Close();
+                }
+            }
+        }
 
 		[IgnoreDataMember]
 		public ushort WCFPort
@@ -455,6 +518,20 @@ namespace SEModAPIExtensions.API
 			}
 			set { m_commandLineArgs.wcfPort = value; }
 		}
+
+        [IgnoreDataMember]
+        public ushort SLWCFPort
+        {
+            get
+            {
+                ushort port = m_commandLineArgs.slWcfPort;
+                if (port == 0)
+                    port = 8001;
+
+                return port;
+            }
+            set { m_commandLineArgs.slWcfPort = value; }
+        }
 
 		[IgnoreDataMember]
 		public string Path
@@ -488,9 +565,9 @@ namespace SEModAPIExtensions.API
 				Uri baseAddress = new Uri("http://localhost:" + Server.Instance.WCFPort.ToString() + "/SEServerExtender/" + urlExtension);
 				ServiceHost selfHost = new ServiceHost(serviceType, baseAddress);
 
-                BasicHttpBinding binding = new BasicHttpBinding();
-				//binding.Security.Mode = SecurityMode.Message;
-				//binding.Security.Message.ClientCredentialType = MessageCredentialType.Windows;
+                WSHttpBinding binding = new WSHttpBinding();
+				binding.Security.Mode = SecurityMode.Message;
+				binding.Security.Message.ClientCredentialType = MessageCredentialType.Windows;
 				selfHost.AddServiceEndpoint(contractType, binding, name);
 
 				ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
@@ -511,6 +588,34 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
+        public static ServiceHost CreateSLServiceHost(Type serviceType, Type contractType, string urlExtension, string name)
+        {
+            try
+            {
+                Uri baseAddress = new Uri("http://localhost:" + (Server.Instance.WCFPort+1).ToString() + "/SEServerExtender/" + urlExtension);
+                ServiceHost selfHost = new ServiceHost(serviceType, baseAddress);
+
+                BasicHttpBinding binding = new BasicHttpBinding();
+                selfHost.AddServiceEndpoint(contractType, binding, name);
+
+                ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+                smb.HttpGetEnabled = true;
+                selfHost.Description.Behaviors.Add(smb);
+
+                if (SandboxGameAssemblyWrapper.IsDebugging)
+                {
+                    Console.WriteLine("Created WCF service at '" + baseAddress.ToString() + "'");
+                }
+
+                return selfHost;
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+                return null;
+            }
+        }
+
 		public void Init()
 		{
 			if (m_isInitialized)
@@ -526,8 +631,13 @@ namespace SEModAPIExtensions.API
 				SetupServerService();
 				SetupMainService();
 				SetupWebService();
-			    SetupWebServiceSilverlight();
 			}
+		    if (IsSLWCFEnabled)
+		    {
+                SetupSLServerService();
+                SetupSLMainService();
+                SetupWebServiceSilverlight();
+		    }
 
 			if(m_commandLineArgs.autosave > 0)
 				m_autosaveTimer.Interval = m_commandLineArgs.autosave * 60000;

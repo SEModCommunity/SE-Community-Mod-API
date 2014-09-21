@@ -122,6 +122,7 @@ namespace SEModAPIExtensions.API
 			m_blockRegistry = BlockRegistry.Instance;
 
 			SetupWCFService();
+		    SetupSLWCFService();
 
 			Console.WriteLine("Finished loading PluginManager");
 		}
@@ -147,6 +148,28 @@ namespace SEModAPIExtensions.API
 
 			return true;
 		}
+
+        private bool SetupSLWCFService()
+        {
+            if (!Server.Instance.IsSLWCFEnabled)
+                return true;
+
+            ServiceHost selfHost = null;
+            try
+            {
+                selfHost = Server.CreateSLServiceHost(typeof(PluginService), typeof(IPluginServiceContract), "Plugin/", "PluginService");
+                selfHost.Open();
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+                if (selfHost != null)
+                    selfHost.Abort();
+                return false;
+            }
+
+            return true;
+        }
 
 		#endregion
 

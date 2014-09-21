@@ -85,6 +85,7 @@ namespace SEServerExtender
 			extenderArgs.debug = false;
 			extenderArgs.gamePath = "";
 			extenderArgs.noWCF = false;
+            extenderArgs.noSLWCF = true;
 			extenderArgs.autosave = 0;
 			extenderArgs.wcfPort = 0;
 			extenderArgs.path = "";
@@ -131,12 +132,30 @@ namespace SEServerExtender
 							//Do nothing
 						}
 					}
+                    else if (argName.ToLower().Equals("slwcfport"))
+                    {
+                        try
+                        {
+                            extenderArgs.slWcfPort = ushort.Parse(argValue);
+                        }
+                        catch (Exception)
+                        {
+                            //Do nothing
+                        }
+                    }
 					else if (argName.ToLower().Equals("path"))
 					{
 						if (argValue[argValue.Length - 1] == '"')
 							argValue = argValue.Substring(0, argValue.Length - 1);
 						extenderArgs.path = argValue;
 					}
+                    else if (argName.ToLower().Equals("noslwcf"))
+                    {
+                        if (argValue.ToLower() == "false")
+                        {
+                            extenderArgs.noSLWCF = false;
+                        }
+                    }
 				}
 				else
 				{
@@ -167,6 +186,7 @@ namespace SEServerExtender
 					{
 						extenderArgs.noWCF = true;
 					}
+                    
 				}
 			}
 
@@ -197,7 +217,9 @@ namespace SEServerExtender
 				m_server = Server.Instance;
 				m_server.CommandLineArgs = extenderArgs;
 				m_server.IsWCFEnabled = !extenderArgs.noWCF;
+                m_server.IsSLWCFEnabled = !extenderArgs.noSLWCF;
 				m_server.WCFPort = extenderArgs.wcfPort;
+                m_server.SLWCFPort = extenderArgs.slWcfPort;
 				m_server.Init();
 
 				ChatManager.ChatCommand guiCommand = new ChatManager.ChatCommand();
