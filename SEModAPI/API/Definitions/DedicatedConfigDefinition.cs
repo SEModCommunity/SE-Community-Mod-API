@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using System.Xml;
 
 using Sandbox.Common.ObjectBuilders;
+using System.Linq;
 
 namespace SEModAPI.API.Definitions
 {
@@ -681,13 +682,15 @@ namespace SEModAPI.API.Definitions
         /// <summary>
         /// Get or set the list of administrators of the server
         /// </summary>
-        public List<string> Administrators
+		public BindingList<string> Administrators
         {
-            get { return m_definition.Administrators; }
+			get
+			{
+				return new BindingList<string>(m_definition.Administrators);
+			}
             set
             {
-                if (m_definition.Administrators == value) return;
-                m_definition.Administrators = value;
+				m_definition.Administrators = value.ToList();
                 Changed = true;
             }
         }
