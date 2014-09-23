@@ -220,7 +220,7 @@ namespace SEModAPIInternal.API.Entity
 		{
 			if (newType == typeof(CubeGridEntity))
 				return m_cubeGridManager.NewEntry<CubeGridEntity>();
-			if(newType == typeof(VoxelMap))
+			if (newType == typeof(VoxelMap))
 				return m_voxelMapManager.NewEntry<VoxelMap>();
 			if (newType == typeof(FloatingObject))
 				return m_floatingObjectManager.NewEntry<FloatingObject>();
@@ -411,7 +411,7 @@ namespace SEModAPIInternal.API.Entity
 			catch (Exception ex)
 			{
 				LogManager.ErrorLog.WriteLine(ex);
-				if(m_rawDataHashSetResourceLock.Owned)
+				if (m_rawDataHashSetResourceLock.Owned)
 					m_rawDataHashSetResourceLock.ReleaseExclusive();
 			}
 		}
@@ -459,9 +459,9 @@ namespace SEModAPIInternal.API.Entity
 							Type apiType = EntityRegistry.Instance.GetAPIType(baseEntity.TypeId);
 
 							//Create a new API entity
-							newEntity = (BaseEntity) Activator.CreateInstance(apiType, new object[] { baseEntity, entity });
+							newEntity = (BaseEntity)Activator.CreateInstance(apiType, new object[] { baseEntity, entity });
 
-							if(newEntity != null)
+							if (newEntity != null)
 								AddEntry(newEntity.EntityId, newEntity);
 						}
 					}
@@ -584,7 +584,7 @@ namespace SEModAPIInternal.API.Entity
 				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}
-	
+
 		#endregion
 	}
 

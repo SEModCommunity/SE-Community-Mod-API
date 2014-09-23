@@ -87,7 +87,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		}
 
 		[IgnoreDataMember]
-        [Category("Cockpit")]
+		[Category("Cockpit")]
 		[Browsable(false)]
 		public CharacterEntity PilotEntity
 		{
@@ -147,7 +147,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 
 		[IgnoreDataMember]
-        [Category("Cockpit")]
+		[Category("Cockpit")]
 		[ReadOnly(true)]
 		public MyObjectBuilder_AutopilotBase Autopilot
 		{
@@ -159,7 +159,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		}
 
 		[IgnoreDataMember]
-        [Category("Cockpit")]
+		[Category("Cockpit")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		[Obsolete]

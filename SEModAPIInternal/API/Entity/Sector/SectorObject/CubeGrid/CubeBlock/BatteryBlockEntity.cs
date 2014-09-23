@@ -263,7 +263,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				result &= HasField(type, BatteryBlockSemiautoEnabledField);
 				result &= HasField(type, BatteryBlockBatteryDefinitionField);
 				result &= HasField(type, BatteryBlockNetManagerField);
-				
+
 				return result;
 			}
 			catch (Exception ex)
@@ -277,7 +277,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		protected override float InternalPowerReceiverCallback()
 		{
-			if(ProducerEnabled || (CurrentStoredPower / MaxStoredPower) >= 0.98)
+			if (ProducerEnabled || (CurrentStoredPower / MaxStoredPower) >= 0.98)
 			{
 				return 0.0f;
 			}

@@ -122,7 +122,7 @@ namespace SEModAPIExtensions.API
 			m_blockRegistry = BlockRegistry.Instance;
 
 			SetupWCFService();
-		    SetupSLWCFService();
+			SetupSLWCFService();
 
 			Console.WriteLine("Finished loading PluginManager");
 		}
@@ -149,27 +149,27 @@ namespace SEModAPIExtensions.API
 			return true;
 		}
 
-        private bool SetupSLWCFService()
-        {
-            if (!Server.Instance.IsSLWCFEnabled)
-                return true;
+		private bool SetupSLWCFService()
+		{
+			if (!Server.Instance.IsSLWCFEnabled)
+				return true;
 
-            ServiceHost selfHost = null;
-            try
-            {
-                selfHost = Server.CreateSLServiceHost(typeof(PluginService), typeof(IPluginServiceContract), "Plugin/", "PluginService");
-                selfHost.Open();
-            }
-            catch (CommunicationException ex)
-            {
-                LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
-                if (selfHost != null)
-                    selfHost.Abort();
-                return false;
-            }
+			ServiceHost selfHost = null;
+			try
+			{
+				selfHost = Server.CreateSLServiceHost(typeof(PluginService), typeof(IPluginServiceContract), "Plugin/", "PluginService");
+				selfHost.Open();
+			}
+			catch (CommunicationException ex)
+			{
+				LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+				if (selfHost != null)
+					selfHost.Abort();
+				return false;
+			}
 
-            return true;
-        }
+			return true;
+		}
 
 		#endregion
 
@@ -248,7 +248,7 @@ namespace SEModAPIExtensions.API
 							GuidAttribute guid = (GuidAttribute)pluginAssembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
 							Guid guidValue = new Guid(guid.Value);
 
-							if(m_pluginAssemblies.ContainsKey(guidValue))
+							if (m_pluginAssemblies.ContainsKey(guidValue))
 								continue;
 
 							m_pluginAssemblies.Add(guidValue, pluginAssembly);
@@ -314,7 +314,7 @@ namespace SEModAPIExtensions.API
 				InitPlugin(key);
 			}
 
-			Console.WriteLine("Finished initializing plugins");	
+			Console.WriteLine("Finished initializing plugins");
 		}
 
 		public void Update()

@@ -839,7 +839,7 @@ namespace SEModAPIInternal.API.Entity
 		public static string BaseEntityNetworkManagerClass = "48D79F8E3C8922F14D85F6D98237314C";
 
 		public static string BaseEntityBroadcastRemovalMethod = "4C985EAE7B17072B9A29D71FF6887454";
-		
+
 		//Packets
 		//10 - ??
 		//11 - ??
