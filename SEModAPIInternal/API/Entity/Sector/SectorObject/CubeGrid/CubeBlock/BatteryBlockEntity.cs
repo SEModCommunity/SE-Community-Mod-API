@@ -263,7 +263,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 				result &= HasField(type, BatteryBlockSemiautoEnabledField);
 				result &= HasField(type, BatteryBlockBatteryDefinitionField);
 				result &= HasField(type, BatteryBlockNetManagerField);
-				
+
 				return result;
 			}
 			catch (Exception ex)
@@ -277,7 +277,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		protected override float InternalPowerReceiverCallback()
 		{
-			if(ProducerEnabled || (CurrentStoredPower / MaxStoredPower) >= 0.98)
+			if (ProducerEnabled || (CurrentStoredPower / MaxStoredPower) >= 0.98)
 			{
 				return 0.0f;
 			}
@@ -391,7 +391,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public static string BatteryBlockNetManagerCurrentStoredPowerPacketClass = "59DE66D2ECADE0929A1C776D7FA907E2";
 
-		public static string BatteryBlockNetManagerCurrentStoredPowerPacketGetIdMethod = "4B2D72489AA661FBDF1BE065ACCC1E41";
+		public static string BatteryBlockNetManagerCurrentStoredPowerPacketGetIdMethod = "050F36D200E95AD35BA7C03A4D698537";
 
 		public static string BatteryBlockNetManagerCurrentStoredPowerPacketValueField = "ADC3AB91A03B31875821D57B8B718AF5";
 

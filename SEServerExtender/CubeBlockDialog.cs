@@ -74,7 +74,7 @@ namespace SEServerExtender
 
 		public string SelectedSubType
 		{
-			get { return (string) CMB_BlockSubType.SelectedItem; }
+			get { return (string)CMB_BlockSubType.SelectedItem; }
 		}
 
 		public Vector3I Position
@@ -108,11 +108,11 @@ namespace SEServerExtender
 
 			try
 			{
-				MyObjectBuilder_CubeBlock objectBuilder = (MyObjectBuilder_CubeBlock) Activator.CreateInstance(SelectedType.Key);
+				MyObjectBuilder_CubeBlock objectBuilder = (MyObjectBuilder_CubeBlock)Activator.CreateInstance(SelectedType.Key);
 				objectBuilder.SubtypeName = SelectedSubType;
 				objectBuilder.Min = Position;
 
-				CubeBlockEntity cubeBlock = (CubeBlockEntity) Activator.CreateInstance(SelectedType.Value, new object[] { Parent, objectBuilder });
+				CubeBlockEntity cubeBlock = (CubeBlockEntity)Activator.CreateInstance(SelectedType.Value, new object[] { Parent, objectBuilder });
 				ParentCubeGrid.AddCubeBlock(cubeBlock);
 
 				this.Close();
@@ -131,7 +131,7 @@ namespace SEServerExtender
 			{
 				if (cubeBlockDefinition.Id.TypeId == SelectedType.Key)
 				{
-					CMB_BlockSubType.Items.Add(cubeBlockDefinition.Id.SubtypeName);					
+					CMB_BlockSubType.Items.Add(cubeBlockDefinition.Id.SubtypeName);
 				}
 			}
 			CMB_BlockSubType.EndUpdate();

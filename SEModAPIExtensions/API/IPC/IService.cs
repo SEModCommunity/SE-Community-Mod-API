@@ -62,12 +62,12 @@ namespace SEModAPIExtensions.API.IPC
 		void UpdateCubeBlock(CubeGridEntity parent, CubeBlockEntity cubeBlock);
 	}
 
-    [ServiceContract]
-    public interface IPolicyRetriever
-    {
-        [OperationContract, WebGet(UriTemplate = "/clientaccesspolicy.xml")]
-        Stream GetSilverlightPolicy();
-        [OperationContract, WebGet(UriTemplate = "/crossdomain.xml")]
-        Stream GetFlashPolicy();
-    }
+	[ServiceContract]
+	public interface IPolicyRetriever
+	{
+		[OperationContract, WebGet(UriTemplate = "/clientaccesspolicy.xml")]
+		Stream GetSilverlightPolicy();
+		[OperationContract, WebGet(UriTemplate = "/crossdomain.xml")]
+		Stream GetFlashPolicy();
+	}
 }
