@@ -26,7 +26,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		public static string VoxelMapClass = "6EC806B54BA319767DA878841A56ECD8";
 
 		public static string VoxelMapGetSizeMethod = "F7FC06F8DAF6ECC3F74F1D863DD65A36";
-		public static string VoxelMapGetVoxelMaterialManagerMethod = "1543B7CCAB7538E6877BA8CCC513A070";
+		public static string VoxelMapGetVoxelMaterialManagerMethod = "61D7D905B19D162AF69D27DD9B2ADC58";
 		public static string VoxelMapGetMaterialAtPositionMethod = "5F7E3213E519961F42617BC410B19346";
 
 		#endregion
