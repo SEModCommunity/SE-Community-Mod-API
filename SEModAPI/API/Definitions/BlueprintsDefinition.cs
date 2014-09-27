@@ -104,11 +104,11 @@ namespace SEModAPI.API.Definitions
 		#endregion
 	}
 
-	public class BlueprintItemDefinition : OverLayerDefinition<MyObjectBuilder_BlueprintDefinition.Item>
+	public class BlueprintItemDefinition : OverLayerDefinition<BlueprintItem>
 	{
 		#region "Constructors and Initializers"
 
-		public BlueprintItemDefinition(MyObjectBuilder_BlueprintDefinition.Item definition)
+		public BlueprintItemDefinition(BlueprintItem definition)
 			: base(definition)
 		{ }
 
@@ -153,7 +153,7 @@ namespace SEModAPI.API.Definitions
 
 		#region "Methods"
 
-		protected override string GetNameFrom(MyObjectBuilder_BlueprintDefinition.Item definition)
+		protected override string GetNameFrom(BlueprintItem definition)
 		{
 			return definition.SubtypeId + " " + definition.TypeId;
 		}
@@ -177,7 +177,7 @@ namespace SEModAPI.API.Definitions
 		#endregion
 	}
 
-	public class BlueprintItemsManager : SerializableDefinitionsManager<MyObjectBuilder_BlueprintDefinition.Item, BlueprintItemDefinition>
+	public class BlueprintItemsManager : SerializableDefinitionsManager<BlueprintItem, BlueprintItemDefinition>
 	{
 	}
 }

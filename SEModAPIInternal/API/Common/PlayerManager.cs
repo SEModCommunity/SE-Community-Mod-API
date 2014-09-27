@@ -23,10 +23,10 @@ namespace SEModAPIInternal.API.Common
 
 			public InternalPlayerItem(Object source)
 			{
-				name = (string)BaseObject.GetEntityFieldValue(source, "E520D0BC4EC9B47A81D9F52D4B70345F");
-				isDead = (bool)BaseObject.GetEntityFieldValue(source, "FE57DC9F46A21EA612B9769D5A7A9606");
-				steamId = (ulong)BaseObject.GetEntityFieldValue(source, "F18302983BC40AE893A0E0E0F2263A93");
-				model = (string)BaseObject.GetEntityFieldValue(source, "2E57D5D124FF88C06AD1DFF6FE070B73");
+				name = (string)BaseObject.GetEntityFieldValue(source, "DisplayName");
+				isDead = (bool)BaseObject.GetEntityFieldValue(source, "IsDead");
+				steamId = (ulong)BaseObject.GetEntityFieldValue(source, "SteamId");
+				model = (string)BaseObject.GetEntityFieldValue(source, "Model");
 			}
 		}
 

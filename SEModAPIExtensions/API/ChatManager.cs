@@ -232,6 +232,7 @@ namespace SEModAPIExtensions.API
 			RegisterChatCommand(kickCommand);
 
 			SetupWCFService();
+		    SetupSLWCFService();
 
 			Console.WriteLine("Finished loading ChatManager");
 		}
@@ -257,6 +258,28 @@ namespace SEModAPIExtensions.API
 
 			return true;
 		}
+
+        private bool SetupSLWCFService()
+        {
+            if (!Server.Instance.IsSLWCFEnabled)
+                return true;
+
+            ServiceHost selfHost = null;
+            try
+            {
+                selfHost = Server.CreateSLServiceHost(typeof(ChatService), typeof(IChatServiceContract), "Chat/", "ChatService");
+                selfHost.Open();
+            }
+            catch (CommunicationException ex)
+            {
+                LogManager.ErrorLog.WriteLineAndConsole("An exception occurred: " + ex.Message);
+                if (selfHost != null)
+                    selfHost.Abort();
+                return false;
+            }
+
+            return true;
+        }
 
 		#endregion
 

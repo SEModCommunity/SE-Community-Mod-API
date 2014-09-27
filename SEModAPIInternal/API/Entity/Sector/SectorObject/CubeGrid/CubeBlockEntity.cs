@@ -182,7 +182,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			get
 			{
 				String name = Id.SubtypeName;
-				if (name == null || name == "" )
+				if (name == null || name == "")
 					name = Id.TypeId.ToString();
 				if (name == null || name == "")
 					name = EntityId.ToString();
@@ -339,7 +339,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			get
 			{
- 				if(BackingObject == null || ActualObject == null)
+				if (BackingObject == null || ActualObject == null)
 					return ObjectBuilder.BuildPercent;
 
 				return InternalGetBuildPercent();
@@ -397,7 +397,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			get
 			{
-				if(BackingObject == null)
+				if (BackingObject == null)
 					return ObjectBuilder.Owner;
 
 				return GetBlockOwner();
@@ -423,7 +423,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 		{
 			get
 			{
-				if(BackingObject == null)
+				if (BackingObject == null)
 					return ObjectBuilder.ShareMode;
 
 				return GetBlockShareMode();
@@ -747,7 +747,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 			m_isLoading = true;
 			m_parent = parent;
 		}
-		
+
 		#endregion
 
 		#region "Properties"
@@ -835,7 +835,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 								newCubeBlock = (CubeBlockEntity)Activator.CreateInstance(apiType, new object[] { m_parent, baseEntity, entity });
 							}
 
-							if(newCubeBlock == null)
+							if (newCubeBlock == null)
 								newCubeBlock = new CubeBlockEntity(m_parent, baseEntity, entity);
 
 							AddEntry(packedBlockCoordinates, newCubeBlock);

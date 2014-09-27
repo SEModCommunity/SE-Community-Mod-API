@@ -60,7 +60,7 @@ namespace SEModAPIInternal.API.Common
 		public static string ConfigContainerNamespace = "00DD5482C0A3DF0D94B151167E77A6D9";
 		public static string ConfigContainerClass = "EB0B0448CDB2C619C686429C597589BC";
 
-		public static string ConfigContainerGetConfigDataMethod = "4DD64FD1D45E514D01C925D07B69B3BE";
+		public static string ConfigContainerGetConfigDataMethod = "Load";
 
 		public static string ConfigContainerDedicatedDataField = "44A1510B70FC1BBE3664969D47820439";
 

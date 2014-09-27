@@ -28,7 +28,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		public static string CockpitEntityNamespace = "5BCAC68007431E61367F5B2CF24E2D6F";
 		public static string CockpitEntityClass = "0A875207E28B2C7707366CDD300684DF";
 
-		public static string CockpitGetPilotEntityMethod = "7B47C9D59A1CEE8DA64A258449704EF8";
+		public static string CockpitGetPilotEntityMethod = "C224E94EA5EE0693FA246FBE90403A94";
 		public static string CockpitSetPilotEntityMethod = "1BB7956FA537A66315E07C562677018A";
 
 		#endregion
@@ -87,7 +87,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		}
 
 		[IgnoreDataMember]
-        [Category("Cockpit")]
+		[Category("Cockpit")]
 		[Browsable(false)]
 		public CharacterEntity PilotEntity
 		{
@@ -147,7 +147,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 
 		[IgnoreDataMember]
-        [Category("Cockpit")]
+		[Category("Cockpit")]
 		[ReadOnly(true)]
 		public MyObjectBuilder_AutopilotBase Autopilot
 		{
@@ -159,7 +159,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		}
 
 		[IgnoreDataMember]
-        [Category("Cockpit")]
+		[Category("Cockpit")]
 		[Browsable(false)]
 		[ReadOnly(true)]
 		[Obsolete]

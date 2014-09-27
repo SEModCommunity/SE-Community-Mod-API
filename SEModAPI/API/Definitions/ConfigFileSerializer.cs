@@ -62,7 +62,7 @@ namespace SEModAPI.API.Definitions
 			};
 			var writer = XmlWriter.Create(m_configFileInfo.FullName, settings);
 			var serializer = (MyObjectBuilder_DefinitionsSerializer)Activator.CreateInstance(typeof(MyObjectBuilder_DefinitionsSerializer));
-			serializer.Serialize(writer,definitions);
+			serializer.Serialize(writer, definitions);
 			writer.Close();
 		}
 
@@ -72,7 +72,8 @@ namespace SEModAPI.API.Definitions
 		/// <returns>The deserialized definition.</returns>
 		public MyObjectBuilder_Definitions Deserialize()
 		{
-			if (!m_configFileInfo.Exists){
+			if (!m_configFileInfo.Exists)
+			{
 				throw new SEConfigurationException(SEConfigurationExceptionState.InvalidFileInfo, "The file pointed by configFileInfo does not exists." + "\r\n" + "Cannot deserialize: " + m_configFileInfo.FullName);
 			}
 
@@ -83,7 +84,7 @@ namespace SEModAPI.API.Definitions
 			{
 				throw new SEConfigurationException(SEConfigurationExceptionState.InvalidConfigurationFile, "The file pointed by configFileInfo cannot be deserialized: " + m_configFileInfo.FullName);
 			}
-			var definitions = (MyObjectBuilder_Definitions) serializer.Deserialize(reader);
+			var definitions = (MyObjectBuilder_Definitions)serializer.Deserialize(reader);
 			reader.Close();
 			return definitions;
 		}

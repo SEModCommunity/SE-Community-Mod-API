@@ -19,11 +19,11 @@ namespace SEModAPI.API.Definitions
 
 		new public string Name
 		{
-			get { return m_baseDefinition.DisplayName; }
+			get { return m_baseDefinition.Id.SubtypeId; }
 			set
 			{
-				if (m_baseDefinition.DisplayName == value) return;
-				m_baseDefinition.DisplayName = value;
+				if (m_baseDefinition.Id.SubtypeId == value) return;
+				m_baseDefinition.Id.SubtypeId = value;
 				Changed = true;
 			}
 		}

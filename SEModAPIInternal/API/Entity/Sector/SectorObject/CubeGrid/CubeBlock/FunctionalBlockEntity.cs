@@ -86,7 +86,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 		{
 			get
 			{
-				if(BackingObject == null || ActualObject == null)
+				if (BackingObject == null || ActualObject == null)
 					return ObjectBuilder.Enabled;
 
 				return GetFunctionalBlockEnabled();

@@ -140,7 +140,7 @@ namespace SEModAPIExtensions.API
 
 				//Determine which group *will* spawn
 				randomChance = random.NextDouble();
-				int randomShipIndex = Math.Max(0, Math.Min((int)Math.Round(randomChance * possibleGroups.Count, 0), possibleGroups.Count-1));
+				int randomShipIndex = Math.Max(0, Math.Min((int)Math.Round(randomChance * possibleGroups.Count, 0), possibleGroups.Count - 1));
 				MySpawnGroupDefinition randomSpawnGroup = possibleGroups[randomShipIndex];
 
 				ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "Spawning cargo group '" + randomSpawnGroup.DisplayNameText.ToString() + "' ...");

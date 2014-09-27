@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -18,18 +19,51 @@ using System.Security.Permissions;
 
 namespace SEModAPIExtensions.API.IPC
 {
-	/// <summary>
-	/// Class that implements IWebServiceContract interface, see IWebServiceContract for details
-	/// </summary>
+	public class WebServiceSilverlight : IPolicyRetriever
+	{
+
+		Stream StringToStream(string result)
+		{
+			WebOperationContext.Current.OutgoingResponse.ContentType = "application/xml";
+			return new MemoryStream(Encoding.UTF8.GetBytes(result));
+		}
+		public Stream GetSilverlightPolicy()
+		{
+			string result = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<access-policy>
+    <cross-domain-access>
+        <policy>
+            <allow-from http-request-headers=""*"">
+                <domain uri=""*""/>
+            </allow-from>
+            <grant-to>
+                <resource path=""/"" include-subpaths=""true""/>
+            </grant-to>
+        </policy>
+    </cross-domain-access>
+</access-policy>";
+			return StringToStream(result);
+		}
+		public Stream GetFlashPolicy()
+		{
+			string result = @"<?xml version=""1.0""?>
+<!DOCTYPE cross-domain-policy SYSTEM ""http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd"">
+<cross-domain-policy>
+    <allow-access-from domain=""*"" />
+</cross-domain-policy>";
+			return StringToStream(result);
+		}
+	}
+
 	public class WebService : IWebServiceContract
 	{
-		#region "Routes"
-
 		public void GetOptions()
 		{
 			WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Allow-Origin", "*");
-			WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Request-Method", "POST,GET,PUT,DELETE,OPTIONS");
-			WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+			WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Request-Method",
+				"POST,GET,PUT,DELETE,OPTIONS");
+			WebOperationContext.Current.OutgoingResponse.Headers.Add("Access-Control-Allow-Headers",
+				"X-Requested-With,Content-Type");
 		}
 
 		public List<BaseEntity> GetSectorEntities()
@@ -65,23 +99,16 @@ namespace SEModAPIExtensions.API.IPC
 
 			return cubeBlocks;
 		}
-
-		#endregion
 	}
 
-
-	/// <summary>
-	/// Class that implements IInternalServiceContract interface, see IInternalServiceContract for details
-	/// </summary>
 	[ServiceBehavior(
-		ConcurrencyMode=ConcurrencyMode.Single,
-		InstanceContextMode=InstanceContextMode.PerSession,
-		IncludeExceptionDetailInFaults=true,
-		IgnoreExtensionDataObject=true
+		ConcurrencyMode = ConcurrencyMode.Single,
+		InstanceContextMode = InstanceContextMode.PerSession,
+		IncludeExceptionDetailInFaults = true,
+		IgnoreExtensionDataObject = true
 	)]
 	public class InternalService : IInternalServiceContract
 	{
-		#region "Routes"
 		public List<ulong> GetConnectedPlayers()
 		{
 			return PlayerManager.Instance.ConnectedPlayers;
@@ -265,7 +292,5 @@ namespace SEModAPIExtensions.API.IPC
 				}
 			}
 		}
-
-		#endregion
 	}
 }

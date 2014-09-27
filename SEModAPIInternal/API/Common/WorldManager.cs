@@ -235,13 +235,15 @@ namespace SEModAPIInternal.API.Common
 				Type type = BackingObject.GetType();
 				Type[] argTypes = new Type[1];
 				argTypes[0] = typeof(string);
+
+				m_isSaving = true;
 				bool result = (bool)BaseObject.InvokeEntityMethod(BackingObject, WorldManagerSaveWorldMethod, new object[] { null }, argTypes);
+				m_isSaving = false;
 
 				if (result)
 				{
 					TimeSpan timeToSave = DateTime.Now - saveStartTime;
 					LogManager.APILog.WriteLineAndConsole("Save complete and took " + timeToSave.TotalSeconds + " seconds");
-					m_isSaving = false;
 
 					EntityEventManager.EntityEvent newEvent = new EntityEventManager.EntityEvent();
 					newEvent.type = EntityEventManager.EntityEventType.OnSectorSaved;
@@ -253,11 +255,11 @@ namespace SEModAPIInternal.API.Common
 				else
 				{
 					LogManager.APILog.WriteLineAndConsole("Save failed!");
-					m_isSaving = false;
 				}
 			}
 			catch (Exception ex)
 			{
+				m_isSaving = false;
 				LogManager.ErrorLog.WriteLine(ex);
 			}
 		}

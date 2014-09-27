@@ -84,7 +84,7 @@ namespace SEServerExtender
 				Close();
 			if (!SetupControls())
 				Close();
-			if(!m_server.IsRunning)
+			if (!m_server.IsRunning)
 				m_server.LoadServerConfig();
 			UpdateControls();
 			PG_Control_Server_Properties.SelectedObject = m_server.Config;
@@ -177,7 +177,7 @@ namespace SEServerExtender
 
 			if (m_server.IsRunning)
 			{
-				if(!m_entityTreeRefreshTimer.Enabled)
+				if (!m_entityTreeRefreshTimer.Enabled)
 					m_entityTreeRefreshTimer.Start();
 				if (!m_chatViewRefreshTimer.Enabled)
 					m_chatViewRefreshTimer.Start();
@@ -315,7 +315,7 @@ namespace SEServerExtender
 			BTN_ServerControl_Stop.Enabled = m_server.IsRunning;
 			BTN_ServerControl_Start.Enabled = !m_server.IsRunning;
 			BTN_Chat_Send.Enabled = m_server.IsRunning;
-			if(!m_server.IsRunning)
+			if (!m_server.IsRunning)
 				BTN_Entities_New.Enabled = false;
 			BTN_Utilities_ClearFloatingObjectsNow.Enabled = m_server.IsRunning;
 
@@ -1142,7 +1142,7 @@ namespace SEServerExtender
 				foreach (TreeNode node in e.Node.Nodes)
 				{
 					Object tag = node.Tag;
-					if(tag == null || !(tag is MyVoxelMaterialDefinition))
+					if (tag == null || !(tag is MyVoxelMaterialDefinition))
 						continue;
 					MyVoxelMaterialDefinition material = (MyVoxelMaterialDefinition)tag;
 					if (totalMaterials.ContainsKey(material))
@@ -1527,7 +1527,7 @@ namespace SEServerExtender
 				{
 					string timestamp = entry.timestamp.ToLongTimeString();
 					string playerName = "Server";
-					if(entry.sourceUserId != 0)
+					if (entry.sourceUserId != 0)
 						playerName = PlayerMap.Instance.GetPlayerNameFromSteamId(entry.sourceUserId);
 					string formattedMessage = timestamp + " - " + playerName + " - " + entry.message;
 					LST_Chat_Messages.Items.Add(formattedMessage);
@@ -1852,7 +1852,7 @@ namespace SEServerExtender
 		{
 			if (CHK_Utilities_FloatingObjectAutoClean.Checked == true)
 			{
-				if(!m_utilitiesCleanFloatingObjectsTimer.Enabled)
+				if (!m_utilitiesCleanFloatingObjectsTimer.Enabled)
 					m_utilitiesCleanFloatingObjectsTimer.Start();
 			}
 			else
