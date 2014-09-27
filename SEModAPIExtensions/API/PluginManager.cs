@@ -493,6 +493,17 @@ namespace SEModAPIExtensions.API
 			//Run chat events
 			foreach (ChatManager.ChatEvent chatEvent in parameters.chatEvents)
 			{
+				if (chatEvent.commandParsed)
+				{
+					try
+					{
+						chatEvent.command.callback(chatEvent);
+					}
+					catch (Exception ex)
+					{
+						LogManager.ErrorLog.WriteLine(ex);
+					}
+				}
 				try
 				{
 					string methodName = chatEvent.type.ToString();

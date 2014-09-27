@@ -104,6 +104,8 @@ namespace SEModAPIExtensions.API
 			public ulong remoteUserId;
 			public string message;
 			public ushort priority;
+			public bool commandParsed;
+			public ChatCommand command;
 		}
 
 		#endregion
@@ -403,7 +405,8 @@ namespace SEModAPIExtensions.API
 		{
 			string playerName = PlayerMap.Instance.GetPlayerNameFromSteamId(remoteUserId);
 
-			bool commandParsed = ParseChatCommands(message, remoteUserId);
+			ChatCommand command;
+			bool commandParsed = ParseChatCommands(message, out command, remoteUserId);
 
 			if (!commandParsed && entryType == ChatEntryTypeEnum.ChatMsg)
 			{
@@ -418,6 +421,8 @@ namespace SEModAPIExtensions.API
 			chatEvent.remoteUserId = 0;
 			chatEvent.message = message;
 			chatEvent.priority = 0;
+			chatEvent.commandParsed = commandParsed;
+			chatEvent.command = command;
 			ChatManager.Instance.AddEvent(chatEvent);
 
 			m_resourceLock.AcquireExclusive();
@@ -470,7 +475,9 @@ namespace SEModAPIExtensions.API
 			if (string.IsNullOrEmpty(message))
 				return;
 
-			bool commandParsed = ParseChatCommands(message);
+			ChatCommand command;
+
+			bool commandParsed = ParseChatCommands(message, out command);
 
 			try
 			{
@@ -503,6 +510,8 @@ namespace SEModAPIExtensions.API
 				selfChatEvent.remoteUserId = 0;
 				selfChatEvent.message = message;
 				selfChatEvent.priority = 0;
+				selfChatEvent.commandParsed = commandParsed;
+				selfChatEvent.command = command;
 				ChatManager.Instance.AddEvent(selfChatEvent);
 
 				m_resourceLock.AcquireExclusive();
@@ -515,64 +524,38 @@ namespace SEModAPIExtensions.API
 			}
 		}
 
-		protected bool ParseChatCommands(string message, ulong remoteUserId = 0)
+		protected bool ParseChatCommands(string message, out ChatCommand commandStruct, ulong remoteUserId = 0)
 		{
-			try
-			{
-				if (string.IsNullOrEmpty(message))
-					return false;
-
-				string[] commandParts = message.Split(' ');
-				if (commandParts == null || commandParts.Length == 0)
-					return false;
-
-				//Skip if message doesn't have leading forward slash
-				if (!message.Substring(0, 1).Equals("/"))
-					return false;
-
-				//Get the base command and strip off the leading slash
-				string command = commandParts[0].ToLower().Substring(1);
-				if (string.IsNullOrEmpty(command))
-					return false;
-
-				//Search for a matching, registered command
-				bool foundMatch = false;
-				foreach (ChatCommand chatCommand in m_chatCommands.Keys)
-				{
-					try
-					{
-						if (chatCommand.requiresAdmin && remoteUserId != 0 && !PlayerManager.Instance.IsUserAdmin(remoteUserId))
-							continue;
-
-						if (command.Equals(chatCommand.command.ToLower()))
-						{
-							ChatEvent chatEvent = new ChatEvent();
-							chatEvent.message = message;
-							chatEvent.remoteUserId = remoteUserId;
-							chatEvent.timestamp = DateTime.Now;
-
-							chatCommand.callback(chatEvent);
-
-							foundMatch = true;
-							break;
-						}
-					}
-					catch (Exception ex)
-					{
-						LogManager.ErrorLog.WriteLine(ex);
-					}
-				}
-
-				if (foundMatch)
-					return true;
-				else
-					return false;
-			}
-			catch (Exception ex)
-			{
-				LogManager.ErrorLog.WriteLine(ex);
+			commandStruct = new ChatCommand();
+			if (string.IsNullOrEmpty(message))
 				return false;
+
+			string[] commandParts = message.Split(' ');
+			if (commandParts == null || commandParts.Length == 0)
+				return false;
+
+			//Skip if message doesn't have leading forward slash
+			if (!message.Substring(0, 1).Equals("/"))
+				return false;
+
+			//Get the base command and strip off the leading slash
+			string command = commandParts[0].ToLower().Substring(1);
+			if (string.IsNullOrEmpty(command))
+				return false;
+
+			//Search for a matching, registered command
+			foreach (ChatCommand chatCommand in m_chatCommands.Keys)
+			{
+				if (chatCommand.requiresAdmin && remoteUserId != 0 && !PlayerManager.Instance.IsUserAdmin(remoteUserId))
+					continue;
+
+				if (command.Equals(chatCommand.command.ToLower()))
+				{
+					commandStruct = chatCommand;
+					return true;
+				}
 			}
+			return false;
 		}
 
 		public void RegisterChatCommand(ChatCommand command)
