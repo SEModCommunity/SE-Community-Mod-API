@@ -38,14 +38,14 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid
 
 		public static string CubeBlockGetObjectBuilderMethod = "CBB75211A3B0B3188541907C9B1B0C5C";
 		public static string CubeBlockGetActualBlockMethod = "7D4CAA3CE7687B9A7D20CCF3DE6F5441";
-		public static string CubeBlockDamageBlockMethod = "165EAAEA972A8C5D69F391D030C48869";
+		public static string CubeBlockDamageBlockMethod = "DoDamage";
 		public static string CubeBlockGetBuildValueMethod = "547DF8386C799EEBC0203BE5C6AE0870";
 		public static string CubeBlockGetBuildPercentMethod = "BE3EB9D9351E3CB273327FB522FD60E1";
-		public static string CubeBlockGetIntegrityValueMethod = "2B57AE0A5065C0DFD03BBEF90B665ABD";
+		public static string CubeBlockGetIntegrityValueMethod = "get_Integrity";
 		public static string CubeBlockGetMaxIntegrityValueMethod = "4D4887346D2D13A2C6B46A258BAD29DD";
 		public static string CubeBlockUpdateWeldProgressMethod = "A8DDA0AEB3B67EA1E62B927C9D831279";
 
-		public static string CubeBlockParentCubeGridField = "7A975CBF89D2763F147297C064B1D764";
+		public static string CubeBlockParentCubeGridField = "BE23838832C47BC79393E02214912184";
 		public static string CubeBlockColorMaskHSVField = "80392678992D8667596D700F61290E02";
 		public static string CubeBlockConstructionManagerField = "C7EFFDDD3AD38830FE93363F3327C724";
 		public static string CubeBlockCubeBlockDefinitionField = "0944AA251CC68A0DA0AACFAC2E7E487A";
