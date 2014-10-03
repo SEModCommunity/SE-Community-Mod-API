@@ -614,75 +614,75 @@ namespace SEModAPIExtensions.API
 			#region "All Entities"
 			if (paramCount > 1 && commandParts[1].ToLower().Equals("all"))
 			{
-                //All cube grids that have no beacon except for those attached to a grid with a beacon
-                if (commandParts[2].ToLower().Equals("nobeacon"))
-                {
-                    while (SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>().Count == 0)
-                    {
-                        Thread.Sleep(20);
-                    }
+				//All cube grids that have no beacon except for those attached to a grid with a beacon
+				if (commandParts[2].ToLower().Equals("nobeacon"))
+				{
+					while (SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>().Count == 0)
+					{
+						Thread.Sleep(20);
+					}
 
-                    List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-                    List<CubeGridEntity> entitiesToDispose = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
+					List<CubeGridEntity> entitiesToDispose = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
 
-                    if (entities.Count == 0)
-                    {
-                        ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "No grids found. Try again later.");
-                        return;
-                    }
+					if (entities.Count == 0)
+					{
+						ChatManager.Instance.SendPrivateChatMessage(remoteUserId, "No grids found. Try again later.");
+						return;
+					}
 
-                    foreach (CubeGridEntity entity in entities)
-                    {
-                        while (entity.CubeBlocks.Count == 0)
-                        {
-                            Thread.Sleep(20);
-                        }
+					foreach (CubeGridEntity entity in entities)
+					{
+						while (entity.CubeBlocks.Count == 0)
+						{
+							Thread.Sleep(20);
+						}
 
-                        List<CubeBlockEntity> blocks = entity.CubeBlocks;
+						List<CubeBlockEntity> blocks = entity.CubeBlocks;
 
-                        //scan each grid for beacons
-                        foreach (CubeBlockEntity cubeBlock in blocks)
-                        {
-                            if (cubeBlock is BeaconEntity)
-                            {
-                                entitiesToDispose.Remove(entity);
+						//scan each grid for beacons
+						foreach (CubeBlockEntity cubeBlock in blocks)
+						{
+							if (cubeBlock is BeaconEntity)
+							{
+								entitiesToDispose.Remove(entity);
 
-                                //if the grid has a beacon remove all grids from entitiesToDispose that are attached to it
-                                foreach (CubeBlockEntity cubeBlock1 in blocks)
-                                {
-                                    if (cubeBlock1 is PistonEntity)
-                                    {
-                                        PistonEntity piston = (PistonEntity)cubeBlock1;
-                                        CubeBlockEntity pistonTop = piston.TopBlock;
+								//if the grid has a beacon remove all grids from entitiesToDispose that are attached to it
+								foreach (CubeBlockEntity cubeBlock1 in blocks)
+								{
+									if (cubeBlock1 is PistonEntity)
+									{
+										PistonEntity piston = (PistonEntity)cubeBlock1;
+										CubeBlockEntity pistonTop = piston.TopBlock;
 
-                                        if (pistonTop != null)
-                                        {
-                                            entitiesToDispose.Remove(pistonTop.Parent);
-                                        }
-                                    }
-                                    else if (cubeBlock1 is RotorEntity)
-                                    {
-                                        RotorEntity rotor = (RotorEntity)cubeBlock1;
-                                        CubeBlockEntity rotorTop = rotor.TopBlock;
-                                        if (rotorTop != null)
-                                        {
-                                            entitiesToDispose.Remove(rotorTop.Parent);
-                                        }
-                                    }
-                                }
-                                //we dont need to scan for further beacons
-                                break;
-                            }
-                        }
-                    }
+										if (pistonTop != null)
+										{
+											entitiesToDispose.Remove(pistonTop.Parent);
+										}
+									}
+									else if (cubeBlock1 is RotorEntity)
+									{
+										RotorEntity rotor = (RotorEntity)cubeBlock1;
+										CubeBlockEntity rotorTop = rotor.TopBlock;
+										if (rotorTop != null)
+										{
+											entitiesToDispose.Remove(rotorTop.Parent);
+										}
+									}
+								}
+								//we dont need to scan for further beacons
+								break;
+							}
+						}
+					}
 
-                    foreach (CubeGridEntity entity in entitiesToDispose)
-                    {
-                        entity.Dispose();
-                    }
+					foreach (CubeGridEntity entity in entitiesToDispose)
+					{
+						entity.Dispose();
+					}
 
-                    SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed.");
-                }
+					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed.");
+				}
 				//All cube grids that have no power
 				else if (commandParts[2].ToLower().Equals("nopower"))
 				{
