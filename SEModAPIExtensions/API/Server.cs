@@ -64,7 +64,7 @@ namespace SEModAPIExtensions.API
 		void StopServer();
 
 		[OperationContract]
-		void LoadServerConfig();
+		bool LoadServerConfig();
 
 		[OperationContract]
 		void SaveServerConfig();
@@ -95,9 +95,9 @@ namespace SEModAPIExtensions.API
 			Server.Instance.StopServer();
 		}
 
-		public void LoadServerConfig()
+		public bool LoadServerConfig()
 		{
-			Server.Instance.LoadServerConfig();
+			return Server.Instance.LoadServerConfig();
 		}
 
 		public void SaveServerConfig()
@@ -749,7 +749,12 @@ namespace SEModAPIExtensions.API
 					return;
 
 				if (m_dedicatedConfigDefinition == null)
-					LoadServerConfig();
+				{
+					if (!LoadServerConfig())
+					{
+						return;
+					}
+				}
 
 				m_pluginMainLoop.Start();
 				m_autosaveTimer.Start();
@@ -781,14 +786,24 @@ namespace SEModAPIExtensions.API
 			Console.WriteLine("Server has been stopped");
 		}
 
-		public void LoadServerConfig()
+		public bool LoadServerConfig()
 		{
 			FileInfo fileInfo = new FileInfo(Path + @"\SpaceEngineers-Dedicated.cfg");
 			if (fileInfo.Exists)
 			{
-				MyConfigDedicatedData config = DedicatedConfigDefinition.Load(fileInfo);
-				m_dedicatedConfigDefinition = new DedicatedConfigDefinition(config);
+				try
+				{
+					MyConfigDedicatedData config = DedicatedConfigDefinition.Load(fileInfo);
+					m_dedicatedConfigDefinition = new DedicatedConfigDefinition(config);
+				}
+				catch (GameInstallationInfoException ex)
+				{
+					LogManager.APILog.WriteLineAndConsole("GameInstallationInfoException - " + ex.StateRepresentation[ex.ExceptionStateId] + " File: " + ex.AdditionnalInfo);
+					LogManager.ErrorLog.WriteLine("GameInstallationInfoException - " + ex.StateRepresentation[ex.ExceptionStateId] + " File: " + ex.AdditionnalInfo);
+					return false;
+				}
 			}
+			return true;
 		}
 
 		public void SaveServerConfig()
