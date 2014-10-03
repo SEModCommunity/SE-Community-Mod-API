@@ -1127,13 +1127,14 @@ namespace SEServerExtender
 				if (e.Node.Nodes.Count < materialDefs.Count)
 				{
 					e.Node.Nodes.Clear();
-
+					/*
 					foreach (var material in materialDefs)
 					{
 						TreeNode newNode = e.Node.Nodes.Add(material.Id.SubtypeName);
 						newNode.Name = newNode.Text;
 						newNode.Tag = material;
 					}
+					 */
 				}
 
 				foreach (TreeNode node in e.Node.Nodes)

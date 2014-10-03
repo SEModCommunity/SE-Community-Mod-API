@@ -27,7 +27,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		public static string VoxelMapGetSizeMethod = "F7FC06F8DAF6ECC3F74F1D863DD65A36";
 		public static string VoxelMapGetVoxelMaterialManagerMethod = "61D7D905B19D162AF69D27DD9B2ADC58";
-		public static string VoxelMapGetMaterialAtPositionMethod = "5F7E3213E519961F42617BC410B19346";
+		//public static string VoxelMapGetMaterialAtPositionMethod = "5F7E3213E519961F42617BC410B19346";
 
 		#endregion
 
@@ -92,7 +92,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[ReadOnly(true)]
 		public string Filename
 		{
-			get { return ObjectBuilder.Filename; }
+			get { return ObjectBuilder.StorageName; }
 			private set
 			{
 				//Do nothing!
@@ -163,7 +163,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		[ReadOnly(true)]
 		public Dictionary<MyVoxelMaterialDefinition, float> Materials
 		{
-			get { return MaterialManager.Materials; }
+			get { return new Dictionary<MyVoxelMaterialDefinition, float>(); }//MaterialManager.Materials; }
 		}
 
 		[IgnoreDataMember]
@@ -178,7 +178,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 
 		#region "Methods"
-
+		/*
 		public MyVoxelMaterialDefinition GetMaterial(Vector3I voxelPosition)
 		{
 			try
@@ -191,7 +191,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				return null;
 			}
 		}
-
+		*/
 		new public static bool ReflectionUnitTest()
 		{
 			try
@@ -228,7 +228,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			Object result = InvokeEntityMethod(BackingObject, VoxelMapGetVoxelMaterialManagerMethod);
 			return result;
 		}
-
+		/*
 		protected MyVoxelMaterialDefinition GetMaterialAt(Vector3I voxelPosition)
 		{
 			Object rawResult = InvokeEntityMethod(BackingObject, VoxelMapGetMaterialAtPositionMethod, new object[] { voxelPosition });
@@ -237,7 +237,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			MyVoxelMaterialDefinition result = (MyVoxelMaterialDefinition)rawResult;
 			return result;
 		}
-
+		*/
 		#endregion
 	}
 
@@ -247,16 +247,16 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 
 		private VoxelMap m_parent;
 		private Object m_backingObject;
-		private int m_voxelCount;
+		private int m_voxelCount = 0;
 		private FastResourceLock m_resourceLock;
 		private Dictionary<MyVoxelMaterialDefinition, float> m_materialTotals;
 
-		public static string VoxelMapMaterialManagerNamespace = "DC3F8F35BD18173B1D075139B475AD8E";
-		public static string VoxelMapMaterialManagerClass = "119B0A83D4E9B352826763AD3746A162";
+		//public static string VoxelMapMaterialManagerNamespace = "DC3F8F35BD18173B1D075139B475AD8E";
+		//public static string VoxelMapMaterialManagerClass = "119B0A83D4E9B352826763AD3746A162";
 
 		//public static string VoxelMapMaterialManagerGetVoxelsDictionaryMethod = "473DE42B0B661DE27A29562438E87943";
 
-		public static string VoxelMapMaterialManagerVoxelsField = "4E39EA62F3374F5CCE29BA40FE62818C";
+		//public static string VoxelMapMaterialManagerVoxelsField = "4E39EA62F3374F5CCE29BA40FE62818C";
 
 		#endregion
 
@@ -274,7 +274,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 		#endregion
 
 		#region "Properties"
-
+		/*
 		public static Type InternalType
 		{
 			get
@@ -283,12 +283,12 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				return type;
 			}
 		}
-
+		*/
 		internal Object BackingObject
 		{
 			get { return m_backingObject; }
 		}
-
+		/*
 		internal Dictionary<MyVoxelMaterialDefinition, float> Materials
 		{
 			get
@@ -335,7 +335,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				return m_materialTotals;
 			}
 		}
-
+		*/
 		internal int VoxelCount
 		{
 			get { return m_voxelCount; }
@@ -350,7 +350,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			try
 			{
 				bool result = true;
-
+				/*
 				Type type = InternalType;
 				if (type == null)
 					throw new Exception("Could not find internal type for VoxelMapMaterialManager");
@@ -358,7 +358,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				//result &= BaseObject.HasMethod(type, VoxelMapMaterialManagerGetVoxelsDictionaryMethod);
 
 				result &= BaseObject.HasField(type, VoxelMapMaterialManagerVoxelsField);
-
+				*/
 				return result;
 			}
 			catch (Exception ex)
@@ -367,7 +367,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				return false;
 			}
 		}
-
+		/*
 		protected object[] GetVoxels()
 		{
 			Object rawResult = BaseObject.GetEntityFieldValue(BackingObject, VoxelMapMaterialManagerVoxelsField);
@@ -376,7 +376,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 			object[] result = (object[])rawResult;
 			return result;
 		}
-
+		*/
 		#endregion
 	}
 }
