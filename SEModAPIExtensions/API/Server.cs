@@ -786,8 +786,15 @@ namespace SEModAPIExtensions.API
 			FileInfo fileInfo = new FileInfo(Path + @"\SpaceEngineers-Dedicated.cfg");
 			if (fileInfo.Exists)
 			{
-				MyConfigDedicatedData config = DedicatedConfigDefinition.Load(fileInfo);
-				m_dedicatedConfigDefinition = new DedicatedConfigDefinition(config);
+				try
+				{
+					MyConfigDedicatedData config = DedicatedConfigDefinition.Load(fileInfo);
+					m_dedicatedConfigDefinition = new DedicatedConfigDefinition(config);
+				}
+				catch (GameInstallationInfoException ex)
+				{
+					LogManager.ErrorLog.WriteLineAndConsole("GameInstallationInfoException - " + ex.StateRepresentation[ex.ExceptionStateId] + "/n/rFile: " + ex.AdditionnalInfo);
+				}
 			}
 		}
 
