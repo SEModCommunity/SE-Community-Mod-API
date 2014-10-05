@@ -688,103 +688,6 @@ namespace SEModAPIExtensions.API
 
 					SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " cube grids have been removed");
 				}
-
-
-                //All cube grids that have no beacon or only a beacon with no name
-                else if ((commandParts[2].ToLower().Equals("noname")) && (commandParts[3]!=""))
-                {
-                    List<CubeGridEntity> entities = SectorObjectManager.Instance.GetTypedInternalData<CubeGridEntity>();
-                    List<CubeGridEntity> entitiesToDispose = new List<CubeGridEntity>();
-                    SortedList<long, CubeGridEntity> entitiesToDisposeParent = new SortedList<long, CubeGridEntity>();
-                    List<long> entitiesToNotDispose = new List<long>();
-                    foreach (CubeGridEntity entity in entities)
-                    {
-                        string deletedName = entity.Name;
-                        while (entity.CubeBlocks.Count == 0)
-                        {
-                            Thread.Sleep(20);
-                        }
-                        List<CubeBlockEntity> blocks = entity.CubeBlocks;
-                        if (blocks.Count > 0)
-                        {
-                            bool foundName = false;
-                            foreach (CubeBlockEntity cubeBlock in blocks)
-                            {
-                                if (String.Equals(cubeBlock.Name, commandParts[3])) 
-                                {
-                                    foundName = true;
-                                    break;
-                                }                                
-                            }
-                            if (!foundName)
-                            {
-                                entitiesToDispose.Add(entity);
-                            }
-                            else
-                            {
-                                foreach (CubeBlockEntity cubeBlock in blocks)
-                                {
-                                    if (cubeBlock is MergeBlockEntity)
-                                    {
-                                        MergeBlockEntity block = (MergeBlockEntity)cubeBlock;
-                                        if (block.IsAttached)
-                                        {
-                                            if (block.AttachedCubeGrid.EntityId > 0)
-                                            {
-                                                entitiesToNotDispose.Add(block.AttachedCubeGrid.EntityId);
-                                            }
-                                        }
-                                    }
-                                    
-                                    if (cubeBlock is PistonEntity)
-                                    {
-                                        PistonEntity block = (PistonEntity)cubeBlock;
-                                        if (block.TopBlockId > 0)
-                                        {
-                                            entitiesToNotDispose.Add(block.TopBlockId);
-                                        }
-                                    }
-                                    
-                                    if (cubeBlock is RotorEntity)
-                                    {
-                                        RotorEntity block = (RotorEntity)cubeBlock;
-                                        CubeBlockEntity topBlock = block.TopBlock;
-                                        if (block.TopBlockId > 0)
-                                        {
-                                            entitiesToNotDispose.Add(block.TopBlockId);
-                                        }
-                                    }
-
-                                    
-
-                                }                                
-                            }                            
-                        }
-                    }
-
-                    foreach (CubeGridEntity entity in entitiesToDispose)
-                    {
-                        bool isLinkedShip = false;
-                        List<CubeBlockEntity> blocks = entity.CubeBlocks;
-                        foreach (CubeBlockEntity cubeBlock in blocks)
-                        {
-                            if (entitiesToNotDispose.Contains(cubeBlock.EntityId))
-                            {
-                                isLinkedShip = true;
-                                break;
-                            }
-                        }
-                        if (isLinkedShip)
-                            continue;
-
-                        SendPrivateChatMessage(remoteUserId, "Removido: " + entity.Name);
-                        entity.Dispose();
-                    }
-                    
-                    SendPrivateChatMessage(remoteUserId, entitiesToDispose.Count.ToString() + " NOCODE cube grids have been removed");
-                }
-
-
 				//All cube grids that have no power
 				else if (commandParts[2].ToLower().Equals("nopower"))
 				{
@@ -1509,11 +1412,6 @@ namespace SEModAPIExtensions.API
 						functionalBlock.Enabled = false;
 						poweredOffCount++;
 					}
-                    if (commandParts[1].ToLower().Equals("turrets") && cubeBlock is TurretBaseEntity)
-                    {
-                        functionalBlock.Enabled = false;
-                        poweredOffCount++;
-                    }
 					if (commandParts[1].ToLower().Equals("beacon") && cubeBlock is BeaconEntity)
 					{
 						functionalBlock.Enabled = false;
