@@ -1760,7 +1760,7 @@ namespace SEServerExtender
 				LST_Plugins.Items.Clear();
 				foreach (var key in PluginManager.Instance.Plugins.Keys)
 				{
-					PluginBase plugin = (PluginBase)PluginManager.Instance.Plugins[key];
+					IPlugin plugin = (IPlugin)PluginManager.Instance.Plugins[key];
 					LST_Plugins.Items.Add(plugin.Name + " - " + key.ToString());
 				}
 				LST_Plugins.SelectedIndex = selectedIndex;
