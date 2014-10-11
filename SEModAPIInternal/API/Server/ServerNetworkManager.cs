@@ -21,8 +21,8 @@ namespace SEModAPIInternal.API.Server
 		public static string ServerNetworkManagerClass = "3B0B7A338600A7B9313DE1C3723DAD14";
 
 		public static string ServerNetworkManagerDisconnectPlayerMethod = "09FDD2D9700A7E602BE8722F81A55AC6";
-		public static string ServerNetworkManagerSetPlayerBannedMethod = "4D2390BE6617F85F37D1EB5610C0232F";
-		public static string ServerNetworkManagerKickPlayerMethod = "23FE4AB7133EA1F9B7E197AB4474E3AD";
+		public static string ServerNetworkManagerSetPlayerBannedMethod = "69D68093E348F3963EDFE7A6A70A11A3";
+		public static string ServerNetworkManagerKickPlayerMethod = "9DC147FFE668CE7894842AA93785A2DA";
 
 		public static string ServerNetworkManagerConnectedPlayersField = "89E92B070228A8BC746EFB57A3F6D2E5";
 
