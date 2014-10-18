@@ -125,6 +125,7 @@
     <Compile Include="API\Entity\Sector\SectorObject\VoxelMap.cs" />
     <Compile Include="API\Common\SandboxGameAssemblyWrapper.cs" />
     <Compile Include="API\Server\ServerAssemblyWrapper.cs" />
+    <Compile Include="API\Common\APIGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Support\EntityException.cs" />
     <Compile Include="Support\LogManager.cs" />
