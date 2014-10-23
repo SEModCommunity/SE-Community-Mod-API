@@ -108,7 +108,8 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject
 				if(BackingObject == null || SteamId == 0)
 					return DisplayName;
 
-				string name = PlayerMap.Instance.GetPlayerNameFromSteamId(SteamId);
+				//string name = PlayerMap.Instance.GetPlayerNameFromSteamId(SteamId);
+				string name = ""+SteamId;
 				return name;
 			}
 		}

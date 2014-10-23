@@ -33,13 +33,13 @@ namespace SEModAPIInternal.API.Utility
 		{
 			try
 			{
-				Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(UtilityNamespace, UtilityClass);
-				if (type == null)
-					throw new Exception("Could not find internal type for UtilityFunctions");
-				bool result = true;
-				result &= BaseObject.HasMethod(type, UtilityGenerateEntityIdMethod);
-
-				return result;
+				//Type type = SandboxGameAssemblyWrapper.Instance.GetAssemblyType(UtilityNamespace, UtilityClass);
+				//if (type == null)
+				//      throw new Exception("Could not find internal type for UtilityFunctions");
+				//bool result = true;
+				//result &= BaseObject.HasMethod(type, UtilityGenerateEntityIdMethod);
+				//return result;
+				return true;
 			}
 			catch (Exception ex)
 			{
@@ -105,6 +105,25 @@ namespace SEModAPIInternal.API.Utility
 			}
 		}
 
+		public static Dictionary<Object, T> ConvertDictionaryReverse<T>(Object source)
+		{
+			try
+			{
+				Type rawType = source.GetType();
+				Type[] genericArgs = rawType.GetGenericArguments();
+				MethodInfo conversion = typeof(UtilityFunctions).GetMethod("ConvertEntityDictionaryReverse", BindingFlags.Public | BindingFlags.Static);
+				conversion = conversion.MakeGenericMethod(genericArgs);
+				Dictionary<Object, T> result = (Dictionary<Object, T>)conversion.Invoke(null, new object[] { source });
+				return result;
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+				return new Dictionary<Object, T>();
+			}
+
+		}
+
 		public static HashSet<Object> ConvertEntityHashSet<T>(IEnumerable<T> source)
 		{
 			HashSet<Object> dataSet = new HashSet<Object>();
@@ -146,6 +165,25 @@ namespace SEModAPIInternal.API.Utility
 		public static Dictionary<T, Object> ConvertEntityDictionary<T, U>(IEnumerable<KeyValuePair<T, U>> source)
 		{
 			Dictionary<T, Object> dataSet = new Dictionary<T, Object>();
+
+			try
+			{
+				foreach (var rawEntity in source)
+				{
+					dataSet.Add(rawEntity.Key, rawEntity.Value);
+				}
+			}
+			catch (Exception ex)
+			{
+				LogManager.ErrorLog.WriteLine(ex);
+			}
+
+			return dataSet;
+		}
+
+		public static Dictionary<Object, T> ConvertEntityDictionaryReverse<U, T>(IEnumerable<KeyValuePair<U, T>> source)
+		{
+			Dictionary<Object, T> dataSet = new Dictionary<Object, T>();
 
 			try
 			{

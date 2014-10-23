@@ -28,7 +28,7 @@ namespace SEModAPIInternal.API.Entity.Sector.SectorObject.CubeGrid.CubeBlock
 
 		public static string TerminalBlockGetCustomNameMethod = "DE9705A29F3FE6F1E501595879B2E54F";
 		public static string TerminalBlockSetCustomNameMethod = "774FC8084C0899CEF5C8DAE867B847FE";
-		public static string TerminalBlockBroadcastCustomNameMethod = "97B2C51E83D10649FBF8E598D77C8BF8";
+		public static string TerminalBlockBroadcastCustomNameMethod = "FEBDC0DCFB7DA9823C08CE7FC0927638";
 
 		#endregion
 
